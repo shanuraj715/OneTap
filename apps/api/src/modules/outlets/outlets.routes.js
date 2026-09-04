@@ -4,6 +4,7 @@ import { z } from "zod";
 import { requireBrandContext, requireOutletContext } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import {
+  createOutlet,
   getOutletById,
   listAllOutlets,
   listOutlets,
@@ -31,6 +32,20 @@ outletsRouter.get("/", async (req, res) => {
   }
   const { brandId } = requireBrandContext(req, "outlet:read");
   res.json({ outlets: await listOutlets({ brandId }) });
+});
+
+const createOutletBody = z.object({
+  name: z.string().min(1).max(80),
+  slug: z.string().min(1).max(63),
+  hostnames: z.array(z.string()).optional(),
+});
+
+/** A new outlet for the caller's brand (or, for a super admin, whichever brand they've selected). */
+outletsRouter.post("/", async (req, res) => {
+  const ctx = requireBrandContext(req, "outlet:manage");
+  const body = createOutletBody.parse(req.body);
+  const outlet = await createOutlet(ctx, body);
+  res.status(201).json({ outlet });
 });
 
 outletsRouter.get("/:id", async (req, res) => {

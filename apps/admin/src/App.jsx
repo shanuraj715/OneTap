@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
-                                                      
+
 import { NavLink, Route, Routes } from "react-router-dom";
 import { ROLE_LABELS,                 } from "@onetap/config-schema";
 import {
   Bell,
+  Building2,
+  Check,
+  ChevronsUpDown,
   CreditCard,
   ExternalLink,
   HardDrive,
@@ -14,6 +17,7 @@ import {
   LayoutList,
   LogOut,
   Palette,
+  Plus,
   Printer,
   QrCode,
   ReceiptText,
@@ -25,8 +29,10 @@ import {
   Wand2,
 } from "lucide-react";
 import { useAuth, useLogout } from "./lib/useAuth";
-import { useOutlet } from "./lib/useOutlet";
+import { OutletSelectionProvider, useOutlets } from "./lib/useOutlet";
+import { CreateOutletModal } from "./components/CreateOutletModal";
 import { Appearance } from "./routes/Appearance";
+import { Brands } from "./routes/Brands";
 import { Customers } from "./routes/Customers";
 import { Dashboard } from "./routes/Dashboard";
 import { DashboardConfig } from "./routes/DashboardConfig";
@@ -44,6 +50,7 @@ import { Storage } from "./routes/Storage";
 import { ThemeEditor } from "./routes/ThemeEditor";
 import { TypographyEditor } from "./routes/TypographyEditor";
 import { Users } from "./routes/Users";
+import { Menu } from "./ui";
 
 const STOREFRONT_URL = "http://localhost:3070";
 
@@ -96,6 +103,15 @@ const NAV_GROUPS                                         = [
       { to: "/users", label: "Users & roles", icon: <UsersIcon size={ICON} />, permission: "user:read" },
     ],
   },
+  {
+    group: "Platform",
+    // Onboarding a brand-new tenant is platform staff's job, not a brand
+    // owner's — every real permission an owner has is scoped to their own
+    // brand, so this is gated on isSuperAdmin directly rather than a
+    // permission string.
+    superAdminOnly: true,
+    items: [{ to: "/brands", label: "Brands", icon: <Building2 size={ICON} /> }],
+  },
 ];
 
 export function App() {
@@ -108,15 +124,20 @@ export function App() {
     return <Login />;
   }
 
-  return <Shell can={can} />;
+  return (
+    <OutletSelectionProvider>
+      <Shell can={can} />
+    </OutletSelectionProvider>
+  );
 }
 
 const COLLAPSE_KEY = "onetap.sidebarCollapsed";
 
 function Shell({ can }                                     ) {
   const { user } = useAuth();
-  const { outlet } = useOutlet();
+  const { outlet, outlets, scope, selectOutlet } = useOutlets();
   const logout = useLogout();
+  const [addingOutlet, setAddingOutlet] = useState(false);
 
   // Remembered per device: a counter tablet wants the icons-only rail, a laptop
   // usually wants the labels.
@@ -148,10 +169,23 @@ function Shell({ can }                                     ) {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  const groups = NAV_GROUPS.map((g) => ({
-    ...g,
-    items: g.items.filter((n) => !n.permission || can(n.permission)),
-  })).filter((g) => g.items.length);
+  const groups = NAV_GROUPS.filter((g) => !g.superAdminOnly || user?.isSuperAdmin)
+    .map((g) => ({
+      ...g,
+      items: g.items.filter((n) => !n.permission || can(n.permission)),
+    }))
+    .filter((g) => g.items.length);
+
+  // A brand's outlets, for the switcher. An outlet's own name conventionally
+  // already includes the brand ("Gazab Momos — Laxmi Nagar"), so the label
+  // is just that as-is; for a superadmin (who sees every brand at once) the
+  // brand name additionally goes in the description line, so two outlets
+  // from different brands with similar names are still easy to tell apart.
+  const outletOptions = outlets.map((o) => ({
+    value: o._id,
+    label: o.name,
+    description: scope === "all" && o.brandName ? `${o.brandName} · ${o.slug}` : o.slug,
+  }));
 
   return (
     <div style={{ ...shell, gridTemplateColumns: `${collapsed ? 64 : 224}px 1fr` }}>
@@ -173,7 +207,36 @@ function Shell({ can }                                     ) {
           </button>
         </div>
 
-        {!collapsed ? <div style={outletChip}>{outlet ? outlet.name : "no outlet yet"}</div> : null}
+        {!collapsed ? (
+          <Menu
+            trigger={({ toggle }) => (
+              <button type="button" onClick={toggle} style={outletChip}>
+                <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  {outlet ? outlet.name : "No outlet yet"}
+                </span>
+                <ChevronsUpDown size={12} style={{ flexShrink: 0 }} />
+              </button>
+            )}
+            options={[
+              ...outletOptions,
+              ...(can("outlet:manage")
+                ? [{ value: "__add", label: "Add outlet", icon: <Plus size={13} /> }]
+                : []),
+            ]}
+            selected={outlet?._id}
+            align="left"
+            width={260}
+            onSelect={(v) => (v === "__add" ? setAddingOutlet(true) : selectOutlet(v))}
+          />
+        ) : null}
+
+        {addingOutlet ? (
+          <CreateOutletModal
+            brandId={outlet?.brandId}
+            onClose={() => setAddingOutlet(false)}
+            onCreated={(o) => selectOutlet(o._id)}
+          />
+        ) : null}
 
         <nav style={nav}>
           {groups.map((g) => (
@@ -235,6 +298,7 @@ function Shell({ can }                                     ) {
           <Route path="/settings" element={<Settings />} />
           <Route path="/dashboard-config" element={<DashboardConfig />} />
           <Route path="/users" element={<Users />} />
+          {user?.isSuperAdmin ? <Route path="/brands" element={<Brands />} /> : null}
         </Routes>
       </main>
     </div>
@@ -299,12 +363,19 @@ const sidebar                = {
 };
 const brand                = { fontFamily: "var(--font-heading)", fontWeight: 700, fontSize: 18 };
 const outletChip                = {
+  font: "inherit",
   fontSize: 12,
   color: "var(--color-text-muted)",
+  background: "var(--color-bg)",
   border: "1px solid var(--color-border)",
   borderRadius: 999,
-  padding: "4px 10px",
+  padding: "4px 8px 4px 10px",
   alignSelf: "flex-start",
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 6,
+  maxWidth: "100%",
+  cursor: "pointer",
 };
 const nav                = { display: "flex", flexDirection: "column", gap: 14, marginTop: 8 };
 const navGroup                = {

@@ -2,14 +2,20 @@ import { useState } from "react";
                                            
 import { ROLE_DESCRIPTIONS, ROLE_LABELS, ROLES,           } from "@onetap/config-schema";
 import { useAuth, useCreateUser, useDeleteUser, useUpdateUser, useUsers } from "../lib/useAuth";
+import { useOutlet } from "../lib/useOutlet";
 import { Button, Card, Field, PageHeader, TextInput, Toast } from "../ui";
 
 const ASSIGNABLE = ROLES.filter((r) => r !== "super_admin");
 
 export function Users() {
   const { user: me, can } = useAuth();
+  // A superadmin has no brand of their own — which team they're managing
+  // follows whichever outlet is selected in the switcher. Everyone else's
+  // brand is already implicit server-side, so this stays undefined for them.
+  const { outlet } = useOutlet();
+  const brandId = me?.isSuperAdmin ? outlet?.brandId : undefined;
   const manage = can("user:manage");
-  const usersQuery = useUsers(can("user:read"));
+  const usersQuery = useUsers(can("user:read"), brandId);
   const create = useCreateUser();
   const update = useUpdateUser();
   const remove = useDeleteUser();
@@ -29,7 +35,10 @@ export function Users() {
 
   const submit = (e                 ) => {
     e.preventDefault();
-    create.mutate(form, { onSuccess: () => setForm({ name: "", email: "", password: "", role: "manager" }) });
+    create.mutate(
+      { body: form, brandId },
+      { onSuccess: () => setForm({ name: "", email: "", password: "", role: "manager" }) },
+    );
   };
 
   return (
@@ -57,7 +66,7 @@ export function Users() {
                   <select
                     value={u.role ?? "manager"}
                     disabled={!manage || isMe}
-                    onChange={(e) => update.mutate({ id: u.id, body: { role: e.target.value         } })}
+                    onChange={(e) => update.mutate({ id: u.id, body: { role: e.target.value         }, brandId })}
                     style={select}
                   >
                     {ASSIGNABLE.map((r) => (
@@ -73,7 +82,7 @@ export function Users() {
                         type="button"
                         style={iconBtn}
                         title={u.isActive ? "Disable" : "Enable"}
-                        onClick={() => update.mutate({ id: u.id, body: { isActive: !u.isActive } })}
+                        onClick={() => update.mutate({ id: u.id, body: { isActive: !u.isActive }, brandId })}
                       >
                         {u.isActive ? "◉" : "○"}
                       </button>
@@ -81,7 +90,7 @@ export function Users() {
                         type="button"
                         style={iconBtn}
                         title="Remove"
-                        onClick={() => window.confirm(`Remove ${u.email}?`) && remove.mutate(u.id)}
+                        onClick={() => window.confirm(`Remove ${u.email}?`) && remove.mutate({ id: u.id, brandId })}
                       >
                         ×
                       </button>
