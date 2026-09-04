@@ -71,6 +71,8 @@ export function usePreviewSession(outlet, layout, active = true) {
       if (sendTimerRef.current) clearTimeout(sendTimerRef.current);
       socket?.close();
       socketRef.current = null;
+      setStatus("idle");
+      setSessionId(null);
     };
   }, [outletId, active]);
 
@@ -91,8 +93,8 @@ export function usePreviewSession(outlet, layout, active = true) {
   }, [layout, status]);
 
   return {
-    sessionId,
-    previewUrl: sessionId ? `${STOREFRONT_URL}/preview/${sessionId}` : null,
-    status,
+    sessionId: active ? sessionId : null,
+    previewUrl: active && sessionId ? `${STOREFRONT_URL}/preview/${sessionId}` : null,
+    status: active ? status : "idle",
   };
 }

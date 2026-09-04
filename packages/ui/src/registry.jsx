@@ -123,7 +123,7 @@ export const footerVariants                             = [
 
 export const itemCardVariants                    = [
   { ...v("card.row-compact", "C01", "Compact row", "No image — name, description, price", cards.RowCompact), layout: "grid", minWidth: 320 },
-  { ...v("card.row-thumb-left", "C02", "Thumbnail left", "Small square photo beside the text", cards.RowThumbLeft), layout: "grid", minWidth: 340 },
+  { ...v("card.row-thumb-left", "C02", "Thumbnail left", "Small square photo beside the text", cards.RowThumbLeft), layout: "grid", minWidth: 340, defaultColumns: 3 },
   { ...v("card.row-thumb-right", "C03", "Thumbnail right", "Photo on the trailing edge", cards.RowThumbRight), layout: "grid", minWidth: 340 },
   { ...v("card.image-top", "C04", "Image top", "Photo above the text, with an Add button", cards.ImageTop), layout: "grid", minWidth: 240 },
   { ...v("card.image-top-badge", "C05", "Image + price badge", "Price badged onto the photo", cards.ImageTopBadge), layout: "grid", minWidth: 240 },
@@ -132,8 +132,39 @@ export const itemCardVariants                    = [
   { ...v("card.portrait", "C08", "Portrait", "Tall photo, centred text", cards.Portrait), layout: "grid", minWidth: 210 },
   { ...v("card.circle", "C09", "Circle", "Round photo, centred text", cards.Circle), layout: "grid", minWidth: 190 },
   { ...v("card.menu-line", "C10", "Printed menu line", "Name … price with a dotted leader", cards.MenuLine), layout: "list", minWidth: 0 },
-  { ...v("card.featured-wide", "C11", "Featured wide", "Full-width hero card, photo beside the text", cards.FeaturedWide), layout: "list", minWidth: 0 },
+  { ...v("card.featured-wide", "C11", "Featured wide", "Full-width hero card, photo beside the text", cards.FeaturedWide), layout: "list", minWidth: 0, defaultColumns: 2 },
 ];
+
+/**
+ * The grid a section's item cards render in — `display`/`className` for the
+ * container, computed once here rather than duplicated in MenuSections.jsx
+ * and MenuList.jsx.
+ *
+ *  - `columns` (a section's explicit choice, 0 = unset) wins when given —
+ *    a fixed, responsive N-up grid via the `.ot-grid-cols-N` classes in
+ *    tokens.css (collapses toward 1 column on a narrow screen regardless
+ *    of N; see the CSS for the exact breakpoints).
+ *  - otherwise a variant's own `defaultColumns` (set for a couple of card
+ *    styles — C02, C11 — that don't look right left to size themselves).
+ *  - otherwise the variant's original behaviour: a "list" layout stacks in
+ *    one column, a "grid" layout self-sizes via `minWidth` + `auto-fill`.
+ *
+ * @param {{ layout: "grid" | "list"; minWidth: number; defaultColumns?: number; id: string }} variant
+ * @param {number} [columns] a section's explicit override, 0 or undefined = use the variant's own default
+ * @returns {{ className?: string; style?: Record<string, unknown> }}
+ */
+export function gridPropsFor(variant, columns) {
+  const explicit = columns || variant.defaultColumns;
+  if (explicit) {
+    return { className: `ot-grid ot-grid-cols-${Math.min(6, Math.max(1, explicit))}` };
+  }
+  if (variant.layout === "list") {
+    return { style: { display: "flex", flexDirection: "column", gap: variant.id === "card.menu-line" ? 0 : 12 } };
+  }
+  return {
+    style: { display: "grid", gridTemplateColumns: `repeat(auto-fill, minmax(${variant.minWidth}px, 1fr))`, gap: 12 },
+  };
+}
 
 /* ------------------------------------------------------------- new families */
 
@@ -471,6 +502,17 @@ export const VARIANT_SLOTS                = [
     ),
   },
   {
+    key: "popupCarouselVariant",
+    label: "Popup item carousel",
+    description: "Carousel style used in the item popup when an item has multiple photos",
+    variants: carouselVariants,
+    preview: ({ Component: C }) => (
+      <div style={{ maxWidth: 420 }}>
+        <C items={SLIDES} />
+      </div>
+    ),
+  },
+  {
     key: "dropdownVariant",
     label: "Dropdowns",
     description: "Sorting and selection menus — click to open",
@@ -543,4 +585,5 @@ function pick                                        (list     , ref            
 export const getHeaderVariant = (ref         ) => pick(headerVariants, ref);
 export const getFooterVariant = (ref         ) => pick(footerVariants, ref);
 export const getItemCardVariant = (ref         ) => pick(itemCardVariants, ref);
+export const getCarouselVariant = (ref         ) => pick(carouselVariants, ref);
 export const getVariant = (slotKey        , ref         ) => pick(slotByKey(slotKey)?.variants ?? allVariants, ref);

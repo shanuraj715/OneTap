@@ -9,7 +9,7 @@ import {
                 
                   
 } from "@onetap/config-schema";
-import { getItemCardVariant } from "./registry";
+import { getItemCardVariant, gridPropsFor } from "./registry";
 
 const FOOD_LABELS                           = { veg: "Veg", "non-veg": "Non-veg", egg: "Egg" };
 const FOOD_ORDER             = ["veg", "egg", "non-veg"];
@@ -89,14 +89,7 @@ export function MenuSections({
       {visibleSections.map((section) => {
         const variant = getItemCardVariant(section.cardVariant);
         const Card = variant.Component;
-        const grid                =
-          variant.layout === "list"
-            ? { display: "flex", flexDirection: "column", gap: variant.id === "card.menu-line" ? 0 : 12 }
-            : {
-                display: "grid",
-                gridTemplateColumns: `repeat(auto-fill, minmax(${variant.minWidth}px, 1fr))`,
-                gap: 12,
-              };
+        const gridProps = gridPropsFor(variant, section.columns);
 
         // "View all" — collapsible sections show only the first `initialItems`
         // until the diner opens them, so a long category doesn't push the whole
@@ -106,23 +99,58 @@ export function MenuSections({
         const shownItems = collapsed ? section.items.slice(0, section.initialItems) : section.items;
         const hiddenCount = section.items.length - section.initialItems;
         const align = section.titleAlign === "center" ? "center" : "left";
+        const buttonPlacement = section.viewAllPlacement || "left";
+        const isTitleRight = buttonPlacement === "title-right" && !section.hideTitle;
 
         return (
           <section key={section.id} id={`sec-${section.id}`} style={{ marginBottom: 40, scrollMarginTop: 72 }}>
             {section.hideTitle && !section.subtitle ? null : (
-              <div style={{ marginBottom: 14, textAlign: align }}>
+              <div style={{ marginBottom: 14 }}>
                 {section.hideTitle ? null : (
-                  <h2 style={{ ...heading, textAlign: align, ...(align === "center" ? { borderBottom: "none" } : null) }}>
-                    {section.title}
-                    {section.showItemCount ? (
-                      <span style={countBadge}> ({section.items.length})</span>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      gap: 12,
+                      paddingBottom: 8,
+                      borderBottom: align === "center" && !isTitleRight ? "none" : "1px solid var(--color-border)",
+                    }}
+                  >
+                    <h2
+                      style={{
+                        ...heading,
+                        borderBottom: "none",
+                        paddingBottom: 0,
+                        textAlign: align,
+                        flex: align === "center" ? 1 : undefined,
+                        margin: 0,
+                      }}
+                    >
+                      {section.title}
+                      {section.showItemCount ? (
+                        <span style={countBadge}> ({section.items.length})</span>
+                      ) : null}
+                    </h2>
+                    {isTitleRight && section.collapsible ? (
+                      <button
+                        type="button"
+                        className="ot-press"
+                        onClick={() => setExpanded((e) => ({ ...e, [section.id]: !isOpen }))}
+                        style={viewAllTitleBtn}
+                        aria-expanded={isOpen}
+                      >
+                        {isOpen
+                          ? section.showLessLabel
+                          : `${section.viewAllLabel}${hiddenCount > 0 ? ` (${hiddenCount} more)` : ""}`}
+                      </button>
                     ) : null}
-                  </h2>
+                  </div>
                 )}
                 {section.subtitle ? <p style={{ ...subtitle, textAlign: align }}>{section.subtitle}</p> : null}
               </div>
             )}
-            <div style={grid}>
+            <div className={gridProps.className} style={gridProps.style}>
               {shownItems.map((item) =>
                 onSelectItem && item.isAvailable ? (
                   <div
@@ -146,8 +174,19 @@ export function MenuSections({
                 ),
               )}
             </div>
-            {section.collapsible ? (
-              <div style={{ display: "flex", justifyContent: align === "center" ? "center" : "flex-start", marginTop: 16 }}>
+            {section.collapsible && !isTitleRight ? (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent:
+                    buttonPlacement === "center"
+                      ? "center"
+                      : buttonPlacement === "right" || buttonPlacement === "title-right"
+                      ? "flex-end"
+                      : "flex-start",
+                  marginTop: 16,
+                }}
+              >
                 <button
                   type="button"
                   className="ot-press"
@@ -242,4 +281,17 @@ const viewAllBtn                = {
   background: "var(--color-bg)",
   color: "var(--color-primary)",
   cursor: "pointer",
+};
+const viewAllTitleBtn = {
+  font: "inherit",
+  fontSize: "0.8rem",
+  fontWeight: 600,
+  padding: "5px 14px",
+  borderRadius: 999,
+  border: "1px solid var(--color-primary)",
+  background: "var(--color-bg)",
+  color: "var(--color-primary)",
+  cursor: "pointer",
+  whiteSpace: "nowrap",
+  flexShrink: 0,
 };

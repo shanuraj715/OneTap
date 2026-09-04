@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-                                           
-                                                    
+import { Plus, Trash2 } from "lucide-react";
 import { VARIANT_SLOTS } from "@onetap/ui";
 import { useOutlet, usePatchConfig } from "../lib/useOutlet";
-import { Button, Card, PageHeader, STICKY_HEADER_CLEARANCE, Toast } from "../ui";
+import { Button, Card, Field, InfoHint, PageHeader, STICKY_HEADER_CLEARANCE, TextInput, Toast } from "../ui";
+
+const MAX_NAV_LINKS = 8;
 
 const STOREFRONT = "http://localhost:3070";
 
@@ -28,6 +29,14 @@ export function Appearance() {
   const values = layout                                     ;
   const dirty = JSON.stringify(layout) !== JSON.stringify(outlet.config.layout);
   const total = VARIANT_SLOTS.reduce((n, s) => n + s.variants.length, 0);
+  const navLinks = layout.navLinks ?? [];
+
+  const addNavLink = () =>
+    setLayout({ ...layout, navLinks: [...navLinks, { label: "", href: "" }] });
+  const updateNavLink = (i, patchValue) =>
+    setLayout({ ...layout, navLinks: navLinks.map((l, n) => (n === i ? { ...l, ...patchValue } : l)) });
+  const removeNavLink = (i) =>
+    setLayout({ ...layout, navLinks: navLinks.filter((_, n) => n !== i) });
 
   return (
     <>
@@ -61,6 +70,70 @@ export function Appearance() {
           {patch.error ? <Toast kind="error">{(patch.error         ).message}</Toast> : null}
         </div>
       </div>
+
+      <Card
+        title="Header navigation links"
+        subtitle="Shown after Menu (and Order at table / Book a table, when those are on). On a narrow screen every header now collapses these into a hamburger menu automatically — no separate mobile setup needed."
+      >
+        {navLinks.length === 0 ? (
+          <p style={{ margin: "0 0 12px", fontSize: 13, color: "var(--color-text-muted)" }}>
+            No extra links yet — the header just shows the built-in ones.
+          </p>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 12 }}>
+            {navLinks.map((link, i) => (
+              <div key={i} style={navLinkRow}>
+                <Field label="Label" style={{ flex: "1 1 160px", maxWidth: "none" }}>
+                  <TextInput
+                    value={link.label}
+                    onChange={(e) => updateNavLink(i, { label: e.target.value })}
+                    placeholder="About"
+                    maxLength={30}
+                  />
+                </Field>
+                <Field
+                  label="Link"
+                  style={{ flex: "2 1 220px", maxWidth: "none" }}
+                  info="An in-page anchor like #about (jumps to a section with id='about' on this page), or a full URL like https://yoursite.com/about."
+                >
+                  <TextInput
+                    value={link.href}
+                    onChange={(e) => updateNavLink(i, { href: e.target.value })}
+                    placeholder="#about or https://…"
+                    maxLength={300}
+                  />
+                </Field>
+                <button
+                  type="button"
+                  onClick={() => removeNavLink(i)}
+                  style={navLinkRemove}
+                  aria-label={`Remove ${link.label || "this link"}`}
+                >
+                  <Trash2 size={13} />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+          <Button
+            variant="outline"
+            onClick={addNavLink}
+            disabled={navLinks.length >= MAX_NAV_LINKS}
+            style={{ display: "inline-flex", gap: 6, alignItems: "center" }}
+          >
+            <Plus size={13} /> Add link
+          </Button>
+          {navLinks.length >= MAX_NAV_LINKS ? (
+            <span style={{ fontSize: 12, color: "var(--color-text-muted)" }}>Up to {MAX_NAV_LINKS} links.</span>
+          ) : (
+            <InfoHint
+              title="Header navigation links"
+              text="These sit in the same nav as the built-in links — Menu first, then Order at table / Book a table if those channels are on, then whatever you add here, in order."
+            />
+          )}
+        </span>
+      </Card>
 
       {VARIANT_SLOTS.map((slot) => (
         <Card key={slot.key} title={`${slot.label} — ${slot.variants.length} variants`}>
@@ -98,6 +171,29 @@ export function Appearance() {
   );
 }
 
+const navLinkRow                = {
+  display: "flex",
+  gap: 10,
+  alignItems: "flex-end",
+  padding: "10px 12px",
+  border: "1px solid var(--color-border)",
+  borderRadius: 10,
+  background: "var(--color-bg)",
+};
+const navLinkRemove                = {
+  font: "inherit",
+  display: "grid",
+  placeItems: "center",
+  width: 34,
+  height: 34,
+  border: "1px solid var(--color-border)",
+  borderRadius: 8,
+  background: "var(--color-surface)",
+  color: "var(--tone-danger)",
+  cursor: "pointer",
+  flexShrink: 0,
+  marginBottom: 1,
+};
 const galleryLink                = {
   fontSize: 13,
   fontWeight: 600,

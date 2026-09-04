@@ -5,8 +5,18 @@ import { z } from "zod";
  * variant registry in @onetap/ui — swapping one changes the storefront's look
  * with no code change.
  */
+/** One extra link in the header nav — admin-added, on top of the built-in
+ *  "Menu" / "Order at table" / "Book a table" links the header always shows
+ *  when relevant. `href` can be an in-page anchor ("#about") or a full URL. */
+export const navLinkSchema = z.object({
+  label: z.string().min(1).max(30),
+  href: z.string().min(1).max(300),
+});
+
 export const layoutSchema = z.object({
   headerVariant: z.string().default("header.centered"),
+  /** admin-added header links, shown after the built-in ones — see {@link navLinkSchema} */
+  navLinks: z.array(navLinkSchema).max(8).default([]),
   footerVariant: z.string().default("footer.two-column"),
   itemCardVariant: z.string().default("card.row-compact"),
   buttonVariant: z.string().default("button.solid"),
@@ -20,6 +30,7 @@ export const layoutSchema = z.object({
   faqVariant: z.string().default("faq.stacked"),
   contentCardVariant: z.string().default("content.image-top"),
   carouselVariant: z.string().default("carousel.slider"),
+  popupCarouselVariant: z.string().default("carousel.slider"),
   dropdownVariant: z.string().default("dropdown.menu"),
   listGroupVariant: z.string().default("list.bordered"),
   paginationVariant: z.string().default("pagination.numbered"),

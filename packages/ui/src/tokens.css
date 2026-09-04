@@ -172,6 +172,46 @@
 }
 .ot-spin { animation: ot-spin 900ms linear infinite; transform-origin: 50% 50%; }
 
+/*
+ * Explicit item-card columns for a menu section (see MenuSections.jsx /
+ * homepage.js's `columns`) — an admin-chosen desktop count that always
+ * collapses toward fewer columns on a narrower screen, never a fixed
+ * layout that could clip a card on a phone. `1` stays 1 at every width on
+ * purpose (a "featured" card is meant to stay full-bleed even on tablet).
+ */
+.ot-grid { display: grid; gap: 12px; }
+.ot-grid-cols-1 { grid-template-columns: 1fr; }
+.ot-grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+.ot-grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+.ot-grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+.ot-grid-cols-5 { grid-template-columns: repeat(5, 1fr); }
+.ot-grid-cols-6 { grid-template-columns: repeat(6, 1fr); }
+
+@media (max-width: 720px) {
+  .ot-grid-cols-2, .ot-grid-cols-3, .ot-grid-cols-4, .ot-grid-cols-5, .ot-grid-cols-6 {
+    grid-template-columns: 1fr;
+  }
+}
+@media (min-width: 721px) and (max-width: 960px) {
+  .ot-grid-cols-3, .ot-grid-cols-4, .ot-grid-cols-5, .ot-grid-cols-6 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/*
+ * Header nav: the inline link row (all 8 header variants share it) shows on
+ * a wide screen; below 720px it's replaced by a hamburger button that opens
+ * an overlay panel with the same links — see the `Nav` component in
+ * headers.jsx. CSS decides WHICH one is visible (so there's no SSR/client
+ * flash), the component itself only owns the open/closed state of the panel.
+ */
+.ot-nav-inline { display: flex; }
+.ot-nav-toggle { display: none; }
+@media (max-width: 720px) {
+  .ot-nav-inline { display: none; }
+  .ot-nav-toggle { display: inline-flex; }
+}
+
 /* Anyone who asked for less motion gets none of it. */
 @media (prefers-reduced-motion: reduce) {
   .ot-anim-fade,

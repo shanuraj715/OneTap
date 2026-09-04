@@ -55,6 +55,17 @@ export const MENU_TITLE_ALIGNS = ["left", "center"];
 export const menuTitleAlignSchema = z.enum(MENU_TITLE_ALIGNS);
 /** @typedef {(typeof MENU_TITLE_ALIGNS)[number]} MenuTitleAlign */
 
+export const MENU_VIEW_ALL_PLACEMENTS = ["left", "center", "right", "title-right"];
+export const menuViewAllPlacementSchema = z.enum(MENU_VIEW_ALL_PLACEMENTS);
+/** @typedef {(typeof MENU_VIEW_ALL_PLACEMENTS)[number]} MenuViewAllPlacement */
+
+export const MENU_VIEW_ALL_PLACEMENT_LABELS = {
+  left: "Bottom — Left",
+  center: "Bottom — Centered",
+  right: "Bottom — Right",
+  "title-right": "Right side of category title",
+};
+
 export const menuSectionSchema = z.object({
   id: z.string(),
   title: z.string().max(60).default(""),
@@ -68,6 +79,15 @@ export const menuSectionSchema = z.object({
   itemIds: z.array(z.string()).default([]),
   /** item card variant id from the registry, e.g. "card.image-top" */
   cardVariant: z.string().default("card.row-compact"),
+  /**
+   * How many cards sit side by side on a wide screen. 0 = automatic — the
+   * card variant picks its own natural width and the row fills with however
+   * many fit (see each variant's `defaultColumns`/`minWidth` in the
+   * registry). A screen too narrow for the chosen count always collapses
+   * toward 1 column, whatever this is set to — this only sets the desktop
+   * target, never a fixed layout that could clip on a phone.
+   */
+  columns: z.number().int().min(0).max(6).default(0),
   /** order items within the section */
   sortBy: menuSectionSortSchema.default("default"),
   /** hard cap on how many items the section ever contains (0 = no cap) */
@@ -80,6 +100,8 @@ export const menuSectionSchema = z.object({
   viewAllLabel: z.string().max(40).default("View all"),
   /** the button text once expanded */
   showLessLabel: z.string().max(40).default("Show less"),
+  /** placement of the "View all" button: bottom left, centered, right, or beside category title */
+  viewAllPlacement: menuViewAllPlacementSchema.default("left"),
   /** hide sold-out items in this section instead of showing them greyed */
   hideUnavailable: z.boolean().default(false),
   /** drop the section heading entirely — for a bare strip that needs no label */
@@ -112,6 +134,7 @@ export const menuLayoutSchema = z.object({
  * @property {string} title
  * @property {string} subtitle
  * @property {string} cardVariant
+ * @property {number} columns 0 = automatic, else the desktop column count
  * @property {import("./menu.js").MenuItem[]} items every item in the section, in display order
  * @property {boolean} hideTitle
  * @property {MenuTitleAlign} titleAlign
@@ -120,6 +143,7 @@ export const menuLayoutSchema = z.object({
  * @property {number} initialItems
  * @property {string} viewAllLabel
  * @property {string} showLessLabel
+ * @property {MenuViewAllPlacement} viewAllPlacement
  */
 
 const bySortOrder = (a, b) => a.sortOrder - b.sortOrder;
@@ -134,6 +158,7 @@ function autoSections(menu, layout) {
       title: cat.name,
       subtitle: "",
       cardVariant: layout.defaultCardVariant,
+      columns: 0,
       items: menu.items.filter((i) => i.categoryId === cat.id).sort(bySortOrder),
       hideTitle: false,
       titleAlign: "left",
@@ -142,6 +167,7 @@ function autoSections(menu, layout) {
       initialItems: 6,
       viewAllLabel: "View all",
       showLessLabel: "Show less",
+      viewAllPlacement: "left",
     }))
     .filter((s) => s.items.length > 0);
 }
@@ -222,6 +248,7 @@ export function resolveMenuSections(menu, layout) {
       title: section.title || sectionFallbackTitle(section, menu),
       subtitle: section.subtitle,
       cardVariant: section.cardVariant || layout.defaultCardVariant,
+      columns: section.columns,
       items,
       hideTitle: section.hideTitle,
       titleAlign: section.titleAlign,
@@ -230,6 +257,7 @@ export function resolveMenuSections(menu, layout) {
       initialItems: section.initialItems,
       viewAllLabel: section.viewAllLabel || "View all",
       showLessLabel: section.showLessLabel || "Show less",
+      viewAllPlacement: section.viewAllPlacement || "left",
     });
   }
 

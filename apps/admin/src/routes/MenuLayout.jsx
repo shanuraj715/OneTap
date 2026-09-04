@@ -7,6 +7,8 @@ import {
   MENU_SECTION_SOURCE_LABELS,
   MENU_SECTION_SOURCES,
   MENU_TITLE_ALIGNS,
+  MENU_VIEW_ALL_PLACEMENTS,
+  MENU_VIEW_ALL_PLACEMENT_LABELS,
   menuLayoutSchema,
 } from "@onetap/config-schema";
 import { itemCardVariants, MenuSections } from "@onetap/ui";
@@ -37,12 +39,13 @@ export function MenuLayout() {
   const patch = usePatchConfig();
   const menu = useMenu(outlet);
   const [layout, setLayout] = useState(null);
+  const [previewActive, setPreviewActive] = useState(false);
 
   useEffect(() => {
     if (outlet && !layout) setLayout(outlet.config.menuLayout);
   }, [outlet, layout]);
 
-  const preview = usePreviewSession(outlet, layout, Boolean(outlet && layout));
+  const preview = usePreviewSession(outlet, layout, previewActive && Boolean(outlet && layout));
 
   if (!outlet || !layout) {
     return (
@@ -91,7 +94,13 @@ export function MenuLayout() {
       />
 
       <div style={{ marginBottom: 16 }}>
-        <PreviewLink preview={preview} dirty={dirty} />
+        <PreviewLink
+          preview={preview}
+          dirty={dirty}
+          active={previewActive}
+          onStart={() => setPreviewActive(true)}
+          onStop={() => setPreviewActive(false)}
+        />
       </div>
 
       <div style={grid}>
@@ -225,7 +234,7 @@ const PREVIEW_STATUS = {
   error: { text: "couldn't start — save and reload", color: "var(--tone-danger)" },
 };
 
-function PreviewLink({ preview, dirty }) {
+function PreviewLink({ preview, dirty, active, onStart, onStop }) {
   const [copied, setCopied] = useState(false);
   const meta = PREVIEW_STATUS[preview.status] ?? PREVIEW_STATUS.idle;
 
@@ -246,40 +255,70 @@ function PreviewLink({ preview, dirty }) {
       icon={<Radio size={15} />}
       subtitle="Open on a second screen or your phone. It follows your edits over a WebSocket — nothing is saved."
     >
-      <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-        <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12.5 }}>
-          <span style={{ width: 9, height: 9, borderRadius: 999, background: meta.color, flexShrink: 0 }} />
-          {meta.text}
-        </span>
+      {!active ? (
+        <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+          <Button
+            onClick={onStart}
+            style={{ display: "inline-flex", gap: 7, alignItems: "center", fontSize: 12.5, padding: "7px 14px" }}
+          >
+            <Radio size={14} /> Live Preview
+          </Button>
+          <span style={{ fontSize: 12.5, color: "var(--color-text-muted)" }}>
+            Click to start a live preview session and stream your layout changes.
+          </span>
+        </div>
+      ) : (
+        <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 12.5 }}>
+            <span style={{ width: 9, height: 9, borderRadius: 999, background: meta.color, flexShrink: 0 }} />
+            {meta.text}
+          </span>
 
-        <input
-          readOnly
-          value={preview.previewUrl ?? "…"}
-          onFocus={(e) => e.currentTarget.select()}
-          style={urlField}
-        />
+          <input
+            readOnly
+            value={preview.previewUrl ?? "…"}
+            onFocus={(e) => e.currentTarget.select()}
+            style={urlField}
+          />
 
-        <Button
-          variant="outline"
-          onClick={copy}
-          disabled={!preview.previewUrl}
-          style={{ display: "inline-flex", gap: 6, alignItems: "center", fontSize: 12.5, padding: "7px 12px" }}
-        >
-          {copied ? <Check size={13} /> : <Copy size={13} />}
-          {copied ? "Copied" : "Copy link"}
-        </Button>
+          <Button
+            variant="outline"
+            onClick={copy}
+            disabled={!preview.previewUrl}
+            style={{ display: "inline-flex", gap: 6, alignItems: "center", fontSize: 12.5, padding: "7px 12px" }}
+          >
+            {copied ? <Check size={13} /> : <Copy size={13} />}
+            {copied ? "Copied" : "Copy Link"}
+          </Button>
 
-        <a
-          href={preview.previewUrl ?? "#"}
-          target="_blank"
-          rel="noreferrer"
-          aria-disabled={!preview.previewUrl}
-          style={{ ...openLink, pointerEvents: preview.previewUrl ? "auto" : "none", opacity: preview.previewUrl ? 1 : 0.5 }}
-        >
-          <ExternalLink size={13} /> Open preview
-        </a>
-      </div>
-      {dirty ? (
+          <Button
+            onClick={() => preview.previewUrl && window.open(preview.previewUrl, "_blank", "noopener,noreferrer")}
+            disabled={!preview.previewUrl}
+            style={{ display: "inline-flex", gap: 6, alignItems: "center", fontSize: 12.5, padding: "7px 12px" }}
+          >
+            <ExternalLink size={13} /> Open Preview
+          </Button>
+
+          <Button
+            variant="outline"
+            onClick={onStop}
+            style={{
+              display: "inline-flex",
+              gap: 5,
+              alignItems: "center",
+              fontSize: 12,
+              padding: "6px 10px",
+              marginLeft: "auto",
+              color: "var(--color-text-muted)",
+              borderColor: "var(--color-border)",
+            }}
+            title="Disconnect live preview"
+          >
+            Disconnect
+          </Button>
+        </div>
+      )}
+      {dirty && active ? (
         <p style={{ margin: "10px 0 0", fontSize: 12, color: "var(--color-text-muted)" }}>
           The preview shows your unsaved edits. The live storefront still shows the last saved layout until you press
           Save.
@@ -408,6 +447,18 @@ function SectionRow({ section, index, total, categories, items, onChange, onMove
             <Field label="Card style" style={fieldMed} info="How each item in this section is drawn. Different sections can use different styles.">
               <CardVariantSelect value={section.cardVariant} onChange={(v) => onChange({ cardVariant: v })} />
             </Field>
+            <Field
+              label="Columns"
+              style={{ maxWidth: 150 }}
+              info="How many cards sit side by side on a wide screen. Auto lets the card style pick its own width and fill the row with however many fit. A narrower screen always shows fewer, whatever this is set to — it never clips a card on a phone."
+            >
+              <Select value={section.columns} onChange={(e) => onChange({ columns: Number(e.target.value) })}>
+                <option value={0}>Auto (fits screen)</option>
+                {[1, 2, 3, 4, 5, 6].map((n) => (
+                  <option key={n} value={n}>{n} column{n === 1 ? "" : "s"}</option>
+                ))}
+              </Select>
+            </Field>
             <Field label="Hard limit" style={{ maxWidth: 110 }} info="Never show more than this many items in the section, ever. 0 = no limit. (Separate from “View all”, which only hides the extras behind a button.)">
               <TextInput type="number" min={0} value={section.maxItems} onChange={(e) => onChange({ maxItems: Number(e.target.value) || 0 })} />
             </Field>
@@ -435,6 +486,18 @@ function SectionRow({ section, index, total, categories, items, onChange, onMove
                 </Field>
                 <Field label="Collapse text" style={fieldMed} info="Shown once the section is expanded.">
                   <TextInput value={section.showLessLabel} onChange={(e) => onChange({ showLessLabel: e.target.value })} placeholder="Show less" />
+                </Field>
+                <Field label="Button placement" style={fieldMed} info="Where the “View all” button appears: at the bottom (left, centered, right) or next to the category title.">
+                  <Select
+                    value={section.viewAllPlacement ?? "left"}
+                    onChange={(e) => onChange({ viewAllPlacement: e.target.value })}
+                  >
+                    {MENU_VIEW_ALL_PLACEMENTS.map((p) => (
+                      <option key={p} value={p}>
+                        {MENU_VIEW_ALL_PLACEMENT_LABELS[p]}
+                      </option>
+                    ))}
+                  </Select>
                 </Field>
               </div>
             ) : null}
@@ -536,18 +599,6 @@ const urlField = {
   borderRadius: 7,
   background: "var(--color-surface)",
   color: "var(--color-text)",
-};
-const openLink = {
-  display: "inline-flex",
-  alignItems: "center",
-  gap: 6,
-  fontSize: 12.5,
-  fontWeight: 600,
-  color: "var(--color-primary)",
-  textDecoration: "none",
-  padding: "7px 12px",
-  border: "1px solid var(--color-primary)",
-  borderRadius: 7,
 };
 const previewShell = {
   border: "1px solid var(--color-border)",

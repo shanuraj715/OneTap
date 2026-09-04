@@ -182,8 +182,8 @@ export function ImageOverlay({ item }               ) {
           <span style={{ fontSize: 12, opacity: 0.85 }}>
             {item.variants.length > 1 ? item.variants.map((v) => v.label).join(" · ") : item.description}
           </span>
-          <span style={{ fontWeight: 700, fontVariantNumeric: "tabular-nums" }}>
-            <Price item={item} />
+          <span style={{ fontWeight: 700, fontVariantNumeric: "tabular-nums", color: "#fff" }}>
+            <Price item={item} style={{ color: "#fff" }} />
           </span>
         </div>
       </div>

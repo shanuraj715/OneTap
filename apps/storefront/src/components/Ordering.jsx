@@ -14,7 +14,7 @@ import {
                   
                    
 } from "@onetap/config-schema";
-import { MenuSections } from "@onetap/ui";
+import { MenuSections, getCarouselVariant, Photo } from "@onetap/ui";
 import { AddressPicker,                                          } from "./AddressPicker";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3072";
@@ -71,6 +71,7 @@ export function Ordering({
   menu,
   cardVariant,
   menuLayout,
+  popupCarouselVariant = "carousel.slider",
   gateways,
   dineIn,
   dineInEnabled = false,
@@ -81,6 +82,7 @@ export function Ordering({
                                                                                         
                        
                                            
+                              
                           
                       
                          
@@ -269,7 +271,7 @@ export function Ordering({
       <MenuSections menu={menu} layout={layout} onSelectItem={setCustomising} />
 
       {customising ? (
-        <Customiser item={customising} menu={menu} onCancel={() => setCustomising(null)} onAdd={addLine} />
+        <Customiser item={customising} menu={menu} popupCarouselVariant={popupCarouselVariant} onCancel={() => setCustomising(null)} onAdd={addLine} />
       ) : null}
 
       {count > 0 && !open ? (
@@ -357,22 +359,164 @@ export function Ordering({
   );
 }
 
+/* --------------------------------------------------------- item image section */
+
+/**
+ * Renders item images at the top of the popup modal.
+ * - 0 images → single placeholder Photo (matching menu card appearance)
+ * - 1 image  → single full-width Photo
+ * - 2+ images → carousel using the admin-configured variant
+ */
+function ItemImageSection({ item, carouselVariantId }                                                ) {
+  try {
+    const rawImages = item?.images ?? [];
+    const imageUrls = rawImages
+      .map((img) => (typeof img === "string" ? img : img?.url))
+      .filter((url) => typeof url === "string" && url.trim().length > 0);
+
+    // If no uploaded image URLs exist:
+    // Render the default Photo component (warm gradient fallback matching the card)
+    if (imageUrls.length === 0) {
+      return (
+        <div style={popupImageWrap}>
+          <Photo
+            name={item?.name ?? "Item"}
+            alt={item?.name ?? "Item"}
+            style={{ width: "100%", aspectRatio: "16 / 9" }}
+            radius={0}
+          />
+        </div>
+      );
+    }
+
+    // Exactly one image URL: show a single photo
+    if (imageUrls.length === 1) {
+      return (
+        <div style={popupImageWrap}>
+          <Photo
+            name={item?.name ?? "Item"}
+            src={imageUrls[0]}
+            alt={item?.name ?? "Item"}
+            style={{ width: "100%", aspectRatio: "16 / 9" }}
+            radius={0}
+          />
+        </div>
+      );
+    }
+
+    // Multiple images: use the configured carousel variant
+    let Carousel = null;
+    try {
+      const variant = typeof getCarouselVariant === "function" ? getCarouselVariant(carouselVariantId) : null;
+      Carousel = variant?.Component;
+    } catch {
+      Carousel = null;
+    }
+
+    if (!Carousel) {
+      return (
+        <div style={popupImageWrap}>
+          <Photo
+            name={item?.name ?? "Item"}
+            src={imageUrls[0]}
+            alt={item?.name ?? "Item"}
+            style={{ width: "100%", aspectRatio: "16 / 9" }}
+            radius={0}
+          />
+        </div>
+      );
+    }
+
+    const carouselItems = imageUrls.map((url, idx) => ({
+      title: idx === 0 ? (item?.name ?? "Item") : `${item?.name ?? "Item"} (${idx + 1})`,
+      subtitle: undefined,
+      imageUrl: url,
+    }));
+
+    return (
+      <div style={popupImageWrap}>
+        <Carousel items={carouselItems} />
+      </div>
+    );
+  } catch (err) {
+    console.error("Failed to render item image section:", err);
+    return null;
+  }
+}
+
 /* --------------------------------------------------------------- customiser */
 
 function Customiser({
   item,
   menu,
+  popupCarouselVariant,
   onCancel,
   onAdd,
 }   
                  
              
+                              
                        
                                   
  ) {
   const [variantId, setVariantId] = useState(item.variants[0]?.id);
   const [options, setOptions] = useState          ([]);
   const [quantity, setQuantity] = useState(1);
+  const [active, setActive] = useState(false);
+  const [closing, setClosing] = useState(false);
+
+  // Disable page scroll while modal is opened, restore on unmount
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    const originalPaddingRight = document.body.style.paddingRight;
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      document.body.style.paddingRight = originalPaddingRight;
+    };
+  }, []);
+
+  // Smooth entrance transition on mount
+  useEffect(() => {
+    const frameId = requestAnimationFrame(() => setActive(true));
+    return () => cancelAnimationFrame(frameId);
+  }, []);
+
+  // Smooth exit transition before calling parent callback
+  const handleClose = useCallback(
+    (action             ) => {
+      if (closing) return;
+      setClosing(true);
+      setTimeout(() => {
+        action();
+      }, 220);
+    },
+    [closing],
+  );
+
+  const handleCancel = useCallback(() => handleClose(onCancel), [handleClose, onCancel]);
+
+  const handleAdd = useCallback(
+    (payload                                                                     ) =>
+      handleClose(() => onAdd(payload)),
+    [handleClose, onAdd],
+  );
+
+  // Close on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e              ) => {
+      if (e.key === "Escape") {
+        handleCancel();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [handleCancel]);
 
   const groups = menu.modifierGroups.filter((g) => item.modifierGroupIds.includes(g.id));
   const unit =
@@ -382,9 +526,27 @@ function Customiser({
       .filter((o) => options.includes(o.id))
       .reduce((s, o) => s + o.priceDelta, 0);
 
+  const isOpen = active && !closing;
+
+  const currentOverlay = {
+    ...overlay,
+    opacity: isOpen ? 1 : 0,
+    transition: "opacity 220ms cubic-bezier(0.16, 1, 0.3, 1)",
+  };
+
+  const currentModal = {
+    ...modal,
+    opacity: isOpen ? 1 : 0,
+    transform: isOpen ? "scale(1) translateY(0)" : "scale(0.95) translateY(12px)",
+    transition:
+      "opacity 220ms cubic-bezier(0.16, 1, 0.3, 1), transform 220ms cubic-bezier(0.16, 1, 0.3, 1)",
+    willChange: "opacity, transform",
+  };
+
   return (
-    <div style={overlay} onClick={onCancel} role="presentation">
-      <div style={modal} onClick={(e) => e.stopPropagation()} role="dialog" aria-label={item.name}>
+    <div style={currentOverlay} onClick={handleCancel} role="presentation">
+      <div style={currentModal} onClick={(e) => e.stopPropagation()} role="dialog" aria-label={item.name}>
+        <ItemImageSection item={item} carouselVariantId={popupCarouselVariant} />
         <h3 style={{ margin: "0 0 4px", fontFamily: "var(--font-heading)", fontSize: 20 }}>{item.name}</h3>
         {item.description ? <p style={muted}>{item.description}</p> : null}
 
@@ -423,12 +585,12 @@ function Customiser({
           <button
             type="button"
             style={{ ...primaryBtn, flex: 1, marginTop: 0 }}
-            onClick={() => onAdd({ itemId: item.id, variantId, modifierOptionIds: options, quantity })}
+            onClick={() => handleAdd({ itemId: item.id, variantId, modifierOptionIds: options, quantity })}
           >
             Add · {formatINR(unit * quantity)}
           </button>
         </div>
-        <button type="button" style={linkBtn} onClick={onCancel}>
+        <button type="button" style={linkBtn} onClick={handleCancel}>
           Cancel
         </button>
       </div>
@@ -1035,10 +1197,62 @@ function loadScript(src        )                {
 /* ------------------------------------------------------------------- pieces */
 
 function Panel({ children, onClose }                                                    ) {
+  const [active, setActive] = useState(false);
+  const [closing, setClosing] = useState(false);
+
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    const originalPaddingRight = document.body.style.paddingRight;
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      document.body.style.paddingRight = originalPaddingRight;
+    };
+  }, []);
+
+  useEffect(() => {
+    const frameId = requestAnimationFrame(() => setActive(true));
+    return () => cancelAnimationFrame(frameId);
+  }, []);
+
+  const handleClose = useCallback(() => {
+    if (closing) return;
+    setClosing(true);
+    setTimeout(() => {
+      onClose();
+    }, 220);
+  }, [closing, onClose]);
+
+  const isOpen = active && !closing;
+
   return (
-    <div style={overlay} onClick={onClose} role="presentation">
-      <aside style={panel} onClick={(e) => e.stopPropagation()} role="dialog" aria-label="Your order">
-        <button type="button" style={closeBtn} onClick={onClose} aria-label="Close">
+    <div
+      style={{
+        ...overlay,
+        opacity: isOpen ? 1 : 0,
+        transition: "opacity 220ms cubic-bezier(0.16, 1, 0.3, 1)",
+      }}
+      onClick={handleClose}
+      role="presentation"
+    >
+      <aside
+        style={{
+          ...panel,
+          opacity: isOpen ? 1 : 0,
+          transform: isOpen ? "scale(1) translateY(0)" : "scale(0.95) translateY(12px)",
+          transition:
+            "opacity 220ms cubic-bezier(0.16, 1, 0.3, 1), transform 220ms cubic-bezier(0.16, 1, 0.3, 1)",
+          willChange: "opacity, transform",
+        }}
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-label="Your order"
+      >
+        <button type="button" style={closeBtn} onClick={handleClose} aria-label="Close">
           ×
         </button>
         {children}
@@ -1105,11 +1319,13 @@ function Row({ label: l, value, strong, tone }                                  
 const overlay                = {
   position: "fixed",
   inset: 0,
-  background: "rgba(0,0,0,0.45)",
+  background: "rgba(0,0,0,0.5)",
   display: "grid",
   placeItems: "center",
   padding: 16,
   zIndex: 50,
+  backdropFilter: "blur(4px)",
+  WebkitBackdropFilter: "blur(4px)",
 };
 const modal                = {
   background: "var(--color-bg)",
@@ -1121,6 +1337,13 @@ const modal                = {
   maxWidth: 420,
   maxHeight: "88vh",
   overflowY: "auto",
+  boxShadow:
+    "0 24px 54px -12px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(0, 0, 0, 0.08), 0 10px 24px -5px rgba(0, 0, 0, 0.25)",
+};
+const popupImageWrap                = {
+  margin: "-22px -22px 16px",
+  borderRadius: "14px 14px 0 0",
+  overflow: "hidden",
 };
 const panel                = { ...modal, maxWidth: 460, position: "relative" };
 const panelTitle                = { margin: "0 0 8px", fontFamily: "var(--font-heading)", fontSize: 19 };

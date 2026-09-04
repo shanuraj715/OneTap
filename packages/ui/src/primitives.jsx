@@ -100,9 +100,11 @@ export function Tags({ tags }                    ) {
   );
 }
 
-export function Price({ item }                    ) {
+export function Price({ item, style, ...rest }) {
   return (
-    <span style={priceStyle}>{item.isAvailable ? itemPriceLabel(item) : "Sold out"}</span>
+    <span style={{ ...priceStyle, ...style }} {...rest}>
+      {item.isAvailable ? itemPriceLabel(item) : "Sold out"}
+    </span>
   );
 }
 

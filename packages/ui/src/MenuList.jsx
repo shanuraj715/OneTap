@@ -1,6 +1,6 @@
                                            
                                                             
-import { getItemCardVariant } from "./registry";
+import { getItemCardVariant, gridPropsFor } from "./registry";
 
 export function MenuList({
   menu,
@@ -14,19 +14,11 @@ export function MenuList({
  ) {
   const variant = getItemCardVariant(cardVariant);
   const Card = variant.Component;
+  const gridProps = gridPropsFor(variant);
 
   const categories = [...menu.categories]
     .filter((c) => c.isActive)
     .sort((a, b) => a.sortOrder - b.sortOrder);
-
-  const grid                =
-    variant.layout === "list"
-      ? { display: "flex", flexDirection: "column", gap: variant.id === "menu-line" ? 0 : 12 }
-      : {
-          display: "grid",
-          gridTemplateColumns: `repeat(auto-fill, minmax(${variant.minWidth}px, 1fr))`,
-          gap: 12,
-        };
 
   return (
     <div style={wrap}>
@@ -39,7 +31,7 @@ export function MenuList({
         return (
           <section key={cat.id} style={{ marginBottom: 40 }}>
             <h2 style={catHeading}>{cat.name}</h2>
-            <div style={grid}>
+            <div className={gridProps.className} style={gridProps.style}>
               {items.map((item) =>
                 onSelectItem && item.isAvailable ? (
                   <div

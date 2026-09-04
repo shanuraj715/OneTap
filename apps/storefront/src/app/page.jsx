@@ -47,6 +47,8 @@ export default async function HomePage() {
           { label: "Menu", href: "#menu" },
           ...(features.ordering.dineInQr ? [{ label: "Order at table", href: "#" }] : []),
           ...(features.reservations.enabled ? [{ label: "Book a table", href: "#" }] : []),
+          // Admin-added, from Appearance → Header navigation links.
+          ...layout.navLinks,
         ]}
       />
 
@@ -64,6 +66,7 @@ export default async function HomePage() {
               outletId={outlet.id}
               menu={menu}
               menuLayout={resolvedMenuLayout}
+              popupCarouselVariant={layout?.popupCarouselVariant || layout?.carouselVariant || "carousel.slider"}
               gateways={payments.enabled}
               // Lets a walk-in who never scanned a code still order to their
               // table, by picking the number at checkout.

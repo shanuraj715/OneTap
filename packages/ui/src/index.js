@@ -34,6 +34,7 @@ export {
   getHeaderVariant,
   getFooterVariant,
   getItemCardVariant,
+  getCarouselVariant,
   getVariant,
                    
                        
