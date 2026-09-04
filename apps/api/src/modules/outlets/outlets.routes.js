@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
-                                                        
-import { isProd } from "../../env.js";
+
 import { requireBrandContext, requireOutletContext } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import {
@@ -9,7 +8,6 @@ import {
   listAllOutlets,
   listOutlets,
   resolveOutlet,
-  seedGazabMomos,
   updateOutletConfig,
 } from "./outlets.service.js";
 
@@ -75,13 +73,4 @@ outletsRouter.patch("/:id/config", async (req, res) => {
 
   const config = await updateOutletConfig(ctx, req.params.id, patch);
   res.json({ config });
-});
-
-/**
- * Dev convenience: create the demo brand, outlet, menu and the first owner
- * account. Disabled in production. `?reset=true` wipes and recreates.
- */
-outletsRouter.post("/seed-demo", async (req, res) => {
-  if (isProd) throw new HttpError(403, "Seeding is disabled in production");
-  res.json(await seedGazabMomos({ reset: req.query.reset === "true" }));
 });

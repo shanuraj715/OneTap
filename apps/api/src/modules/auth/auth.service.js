@@ -70,11 +70,11 @@ export function toSessionUser(user         )              {
 }
 
 /** Create the first owner for a brand if that brand has no users yet. */
-export async function ensureOwner(input   
-                  
-                
-               
-                   
+export async function ensureOwner(input
+
+
+
+
  )                                               {
   const existing = await UserModel.findOne({ email: input.email.toLowerCase() });
   if (existing) return { created: false, email: existing.email };
@@ -85,6 +85,29 @@ export async function ensureOwner(input
     passwordHash: await hashPassword(input.password),
     isSuperAdmin: false,
     memberships: [{ brandId: input.brandId, role: "owner", outletIds: [] }],
+  });
+  return { created: true, email: input.email.toLowerCase() };
+}
+
+/**
+ * Create the platform superadmin if it doesn't exist yet. Not tied to any
+ * brand — `isSuperAdmin` alone grants every permission, across every tenant
+ * (see `toSessionUser`) — so no `memberships` entry is needed or created.
+ */
+export async function ensureSuperAdmin(input
+
+
+
+ )                                               {
+  const existing = await UserModel.findOne({ email: input.email.toLowerCase() });
+  if (existing) return { created: false, email: existing.email };
+
+  await UserModel.create({
+    email: input.email.toLowerCase(),
+    name: input.name,
+    passwordHash: await hashPassword(input.password),
+    isSuperAdmin: true,
+    memberships: [],
   });
   return { created: true, email: input.email.toLowerCase() };
 }

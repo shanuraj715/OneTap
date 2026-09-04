@@ -48,7 +48,7 @@ export const STORAGE_FIELDS = {
       label: "Bucket name",
       secret: false,
       info: "The bucket that will hold the images. It must allow public read on the objects (a bucket policy or 'public bucket' toggle), or set a Public base URL below that points at a CDN in front of it.",
-      placeholder: "gazab-momos-media",
+      placeholder: "my-restaurant-media",
     },
     {
       key: "region",

@@ -29,15 +29,14 @@ import {
 import { BarChart, DonutChart, HBarList, LineChart } from "../charts";
 import { useAuth } from "../lib/useAuth";
 import { useDashboardStats } from "../lib/useDashboard";
-import { useOutlet, useSeedDemo } from "../lib/useOutlet";
-import { Button, Card, Empty, InfoHint, PageHeader, Pill, Table, Td, Th, Toast } from "../ui";
+import { useOutlet } from "../lib/useOutlet";
+import { Card, Empty, InfoHint, PageHeader, Pill, Table, Td, Th, Toast } from "../ui";
 
 const CHANNEL_LABEL                         = { takeaway: "Takeaway", "dine-in": "Dine-in", delivery: "Delivery" };
 
 export function Dashboard() {
   const { outlet, isLoading } = useOutlet();
   const { user } = useAuth();
-  const seed = useSeedDemo();
   const stats = useDashboardStats(outlet, true);
 
   if (!isLoading && !outlet) {
@@ -46,12 +45,10 @@ export function Dashboard() {
         <PageHeader title="Dashboard" />
         <Card title="No outlet yet">
           <p style={{ color: "var(--color-text-muted)", marginTop: 0 }}>
-            Create the Gazab Momos demo brand + outlet to get started.
+            {user?.isSuperAdmin
+              ? "No brand or outlet exists yet for this account to manage."
+              : "Your account isn't attached to a brand or outlet yet. Ask your TablePe superadmin."}
           </p>
-          <Button onClick={() => seed.mutate()} disabled={seed.isPending}>
-            {seed.isPending ? "Creating…" : "Seed Gazab Momos demo"}
-          </Button>
-          {seed.error ? <Toast kind="error">{(seed.error         ).message}</Toast> : null}
         </Card>
       </>
     );

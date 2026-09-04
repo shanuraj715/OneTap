@@ -1,7 +1,5 @@
 import { useState } from "react";
-                                           
-import { useMutation } from "@tanstack/react-query";
-import { seedDemo } from "../lib/api";
+
 import { useLogin } from "../lib/useAuth";
 import { Button, Field, TextInput, Toast } from "../ui";
 
@@ -9,13 +7,6 @@ export function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const login = useLogin();
-  const seed = useMutation({
-    mutationFn: seedDemo,
-    onSuccess: (r) => {
-      setEmail(r.owner.email);
-      setPassword("momos1234");
-    },
-  });
 
   const submit = (e                 ) => {
     e.preventDefault();
@@ -57,21 +48,6 @@ export function Login() {
         </Button>
 
         {login.error ? <Toast kind="error">{(login.error         ).message}</Toast> : null}
-
-        <div style={hint}>
-          <div style={{ marginBottom: 8 }}>
-            First run? Create the demo brand, menu and owner account:
-          </div>
-          <Button type="button" variant="outline" onClick={() => seed.mutate()} disabled={seed.isPending}>
-            {seed.isPending ? "Setting up…" : "Set up demo data"}
-          </Button>
-          {seed.isSuccess ? (
-            <Toast kind="ok">
-              Ready — signed in as <code>{seed.data.owner.email}</code>. Press Sign in.
-            </Toast>
-          ) : null}
-          {seed.error ? <Toast kind="error">{(seed.error         ).message}</Toast> : null}
-        </div>
       </form>
     </div>
   );
@@ -91,12 +67,4 @@ const card                = {
   border: "1px solid var(--color-border)",
   borderRadius: 14,
   padding: 28,
-};
-const hint                = {
-  marginTop: 18,
-  paddingTop: 14,
-  borderTop: "1px solid var(--color-border)",
-  fontSize: 12.5,
-  color: "var(--color-text-muted)",
-  lineHeight: 1.6,
 };

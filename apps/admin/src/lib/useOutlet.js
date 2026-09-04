@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { listOutlets, patchOutletConfig, seedDemo,             } from "./api";
+import { listOutlets, patchOutletConfig,             } from "./api";
 
 /** The current outlet. For now: the first one (single-tenant dev). */
 export function useOutlet() {
@@ -16,14 +16,6 @@ export function usePatchConfig() {
   return useMutation({
     mutationFn: (args                                                    ) =>
       patchOutletConfig(args.outlet, args.patch),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["outlets"] }),
-  });
-}
-
-export function useSeedDemo() {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: seedDemo,
     onSuccess: () => qc.invalidateQueries({ queryKey: ["outlets"] }),
   });
 }

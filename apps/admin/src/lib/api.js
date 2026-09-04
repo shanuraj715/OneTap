@@ -108,12 +108,6 @@ export const getHealth = () => req                                              
 
 export const listOutlets = () => req                                       ("/api/outlets");
 
-export const seedDemo = () =>
-  req                                                                                (
-    "/api/outlets/seed-demo",
-    { method: "POST" },
-  );
-
 export const patchOutletConfig = (outlet        , patch                         ) =>
   req                          (`/api/outlets/${outlet._id}/config`, {
     method: "PATCH",

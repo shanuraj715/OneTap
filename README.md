@@ -41,8 +41,10 @@ Then:
 - Admin → http://localhost:3071
 - API health → http://localhost:3072/health
 
-In the admin, click **Seed Gazab Momos demo** to create the first brand + outlet
-(requires MongoDB connected).
+Run `pnpm seed` once to create the platform superadmin login (requires MongoDB
+connected) — it prints the generated password, shown only that once. Sign in
+at the admin with that account to create your first brand, outlet, owner and
+staff from inside the app.
 
 ## Individual apps
 
