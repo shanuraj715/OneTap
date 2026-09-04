@@ -348,8 +348,8 @@ function ItemForm({
       <div style={{ borderTop: "1px solid var(--color-border)", margin: "6px 0 14px", paddingTop: 14 }}>
         <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 3 }}>Photos</div>
         <div style={{ fontSize: 12, color: "var(--color-text-muted)", marginBottom: 10, lineHeight: 1.5 }}>
-          Up to {IMAGE_RULES.maxPerItem}. The first is the cover shown on menu cards. Resized automatically before
-          upload — set the storage backend under Storage.
+          Up to {IMAGE_RULES.maxPerItem}. The first is the cover shown on menu cards. Any format (JPEG, PNG, WebP,
+          AVIF, HEIC…) — compressed automatically. Backend &amp; size settings under Storage.
         </div>
         <ItemPhotos outlet={outlet} images={images} originalKeys={item?.images ?? []} onChange={setImages} />
       </div>
@@ -541,7 +541,7 @@ function ItemPhotos({ outlet, images, originalKeys, onChange }) {
       <input
         ref={inputRef}
         type="file"
-        accept={IMAGE_RULES.acceptedTypes.join(",")}
+        accept={IMAGE_RULES.acceptAttr}
         multiple
         hidden
         onChange={(e) => {

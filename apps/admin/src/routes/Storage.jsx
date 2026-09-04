@@ -1,10 +1,11 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
+  DEFAULT_IMAGE_PROCESSING,
   STORAGE_PROVIDER_DESCRIPTIONS,
   STORAGE_PROVIDER_LABELS,
   STORAGE_PROVIDERS,
 } from "@onetap/config-schema";
-import { HardDrive, Cloud, Check, Loader } from "lucide-react";
+import { HardDrive, Cloud, Check, Loader, RotateCcw } from "lucide-react";
 import { useAuth } from "../lib/useAuth";
 import { useOutlet } from "../lib/useOutlet";
 import {
@@ -30,8 +31,13 @@ export function Storage() {
 
   const [choice, setChoice] = useState(null);
   const [values, setValues] = useState({});
+  const [proc, setProc] = useState(null);
 
   const cfg = query.data;
+
+  useEffect(() => {
+    if (cfg?.processing && !proc) setProc(cfg.processing);
+  }, [cfg, proc]);
   const activeProvider = choice ?? cfg?.provider ?? "local";
   const activeSpec = useMemo(
     () => cfg?.providers?.find((p) => p.id === activeProvider),
@@ -73,6 +79,13 @@ export function Storage() {
       },
     );
   };
+
+  const procNum = (key, raw, min, max) => {
+    const n = Math.round(Number(raw));
+    setProc({ ...proc, [key]: Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : DEFAULT_IMAGE_PROCESSING[key] });
+  };
+  const procDirty = proc && JSON.stringify(proc) !== JSON.stringify(cfg.processing);
+  const saveProcessing = () => save.mutate({ processing: proc });
 
   const dirty = activeProvider !== cfg.provider || Object.keys(values).length > 0;
 
@@ -178,15 +191,98 @@ export function Storage() {
             </Toast>
           ) : null}
           {test.error ? <Toast kind="error">{test.error.message}</Toast> : null}
-          {save.isSuccess ? <Toast kind="ok">Saved. Secret keys are encrypted at rest.</Toast> : null}
-          {save.error ? <Toast kind="error">{save.error.message}</Toast> : null}
+          {save.isSuccess && save.variables?.provider ? (
+            <Toast kind="ok">Saved. Secret keys are encrypted at rest.</Toast>
+          ) : null}
+          {save.error && save.variables?.provider ? <Toast kind="error">{save.error.message}</Toast> : null}
           {reset.error ? <Toast kind="error">{reset.error.message}</Toast> : null}
+        </Card>
+      ) : null}
+
+      {proc ? (
+        <Card title="Image compression">
+          <p style={{ ...hint, margin: "0 0 12px" }}>
+            Every uploaded photo — whatever format it arrives in — is scaled down and re-encoded by the server to these
+            settings. Applies to new uploads; existing images are untouched.
+          </p>
+
+          <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
+            <Field label="Max width / height" hint="pixels — the longest edge" style={{ maxWidth: 150 }}>
+              <TextInput
+                type="number"
+                min={320}
+                max={4096}
+                step={80}
+                value={proc.maxDimension}
+                disabled={!canManage}
+                onChange={(e) => procNum("maxDimension", e.target.value, 320, 4096)}
+              />
+            </Field>
+            <Field label="Quality" hint="30–100 · lower = smaller files" style={{ maxWidth: 130 }}>
+              <TextInput
+                type="number"
+                min={30}
+                max={100}
+                value={proc.quality}
+                disabled={!canManage}
+                onChange={(e) => procNum("quality", e.target.value, 30, 100)}
+              />
+            </Field>
+            <Field
+              label="Target max size"
+              hint="KB — steps quality down to fit · 0 = off"
+              style={{ maxWidth: 160 }}
+            >
+              <TextInput
+                type="number"
+                min={0}
+                max={20000}
+                step={50}
+                value={proc.targetMaxKB}
+                disabled={!canManage}
+                onChange={(e) => procNum("targetMaxKB", e.target.value, 0, 20000)}
+              />
+            </Field>
+            <Field label="Output format" style={{ maxWidth: 320, flex: "1 1 260px" }}>
+              <select
+                value={proc.format}
+                disabled={!canManage}
+                onChange={(e) => setProc({ ...proc, format: e.target.value })}
+                style={selectStyle}
+              >
+                {cfg.formats.map((f) => (
+                  <option key={f.id} value={f.id}>
+                    {f.label}
+                  </option>
+                ))}
+              </select>
+            </Field>
+          </div>
+
+          {canManage ? (
+            <div style={{ display: "flex", gap: 10, alignItems: "center", marginTop: 6, flexWrap: "wrap" }}>
+              <Button onClick={saveProcessing} disabled={save.isPending || !procDirty}>
+                {save.isPending ? "Saving…" : "Save compression settings"}
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => setProc({ ...DEFAULT_IMAGE_PROCESSING })}
+                style={{ display: "inline-flex", gap: 6, alignItems: "center" }}
+              >
+                <RotateCcw size={13} /> Defaults
+              </Button>
+              {procDirty ? <span style={hint}>Unsaved changes</span> : null}
+            </div>
+          ) : null}
+          {save.isSuccess && save.variables?.processing ? <Toast kind="ok">Compression settings saved.</Toast> : null}
+          {save.error && save.variables?.processing ? <Toast kind="error">{save.error.message}</Toast> : null}
         </Card>
       ) : null}
 
       <Card title="How it works">
         <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13.5, lineHeight: 1.8, color: "var(--color-text-muted)" }}>
-          <li>Photos are downscaled to {cfg.limits.maxDimension}px in your browser before upload — up to {cfg.limits.maxPerItem} per item.</li>
+          <li>Upload any image — JPEG, PNG, WebP, AVIF, HEIC/HEIF, GIF, TIFF. The server re-encodes it to the format and size above.</li>
+          <li>Very large photos are trimmed in the browser first so the upload isn&apos;t tens of MB; the server does the real compression.</li>
           <li>Only the finished public image URL is stored on the menu item; the storefront never sees storage keys.</li>
           <li>The secret access key is encrypted (AES-256-GCM) before it touches the database and is never sent back here.</li>
           <li>Deleting an item (or removing a photo) deletes the underlying file, best-effort.</li>
@@ -195,6 +291,17 @@ export function Storage() {
     </>
   );
 }
+
+const selectStyle = {
+  font: "inherit",
+  fontSize: 14,
+  padding: "8px 10px",
+  borderRadius: 8,
+  border: "1px solid var(--color-border)",
+  background: "var(--color-bg)",
+  color: "var(--color-text)",
+  width: "100%",
+};
 
 const providerRow = {
   font: "inherit",

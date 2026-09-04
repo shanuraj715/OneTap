@@ -1,6 +1,9 @@
 import { randomUUID } from "node:crypto";
 import {
+  IMAGE_FORMAT_LABELS,
+  IMAGE_OUTPUT_FORMATS,
   IMAGE_RULES,
+  imageProcessingSchema,
   STORAGE_FIELDS,
   STORAGE_PROVIDERS,
   STORAGE_REQUIRED_FIELDS,
@@ -11,16 +14,17 @@ import { env, publicApiUrl } from "../../env.js";
 import { decryptSecret, encryptSecret, maskSecret } from "../../lib/crypto.js";
 import { logger } from "../../logger.js";
 import { HttpError } from "../../middleware/error.js";
+import { processImage } from "./image.js";
 import { localUploadsPath, providerFor } from "./providers/index.js";
 
 const UPLOADS_ROOT = localUploadsPath(env.UPLOADS_DIR);
-const EXT = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" };
 
 /* --------------------------------------------------------------- resolution */
 
 /**
- * The full, decrypted config the provider adapters need. Never leaves the API.
- * An outlet with no document configured falls back to local disk.
+ * The full, decrypted config the provider adapters + image pipeline need.
+ * Never leaves the API. An outlet with no document configured falls back to
+ * local disk with the default compression settings.
  */
 export async function resolveStorage(ctx) {
   const doc = await StorageConfigModel.findOne(tenantFilter(ctx)).lean();
@@ -33,6 +37,7 @@ export async function resolveStorage(ctx) {
     outletId: ctx.outletId,
     uploadsRoot: UPLOADS_ROOT,
     publicApiUrl,
+    processing: imageProcessingSchema.parse(doc?.processing ?? {}),
     ...(doc?.publicFields ?? {}),
   };
 
@@ -49,7 +54,7 @@ export async function resolveStorage(ctx) {
 
 /* ------------------------------------------------------------------ config */
 
-/** What the admin sees: active provider, fields with secrets masked, ready flag. */
+/** What the admin sees: active provider, fields with secrets masked, compression settings. */
 export async function getStorageConfig(ctx) {
   const doc = await StorageConfigModel.findOne(tenantFilter(ctx)).lean();
   const provider = doc?.provider ?? "local";
@@ -80,56 +85,65 @@ export async function getStorageConfig(ctx) {
     provider,
     updatedAt: doc?.updatedAt ?? null,
     limits: IMAGE_RULES,
+    processing: imageProcessingSchema.parse(doc?.processing ?? {}),
+    formats: IMAGE_OUTPUT_FORMATS.map((id) => ({ id, label: IMAGE_FORMAT_LABELS[id] })),
     providers,
   };
 }
 
-export async function saveStorageConfig(ctx, provider, values, userId) {
-  if (!STORAGE_PROVIDERS.includes(provider)) throw new HttpError(400, "Unknown storage provider");
-  const spec = STORAGE_FIELDS[provider];
-
-  const doc =
+async function loadOrNew(ctx) {
+  return (
     (await StorageConfigModel.findOne(tenantFilter(ctx))) ??
-    new StorageConfigModel({ brandId: ctx.brandId, outletId: ctx.outletId });
+    new StorageConfigModel({ brandId: ctx.brandId, outletId: ctx.outletId })
+  );
+}
 
-  // Switching provider starts its config clean.
-  if (doc.provider !== provider) {
-    doc.provider = provider;
-    doc.publicFields = {};
-    doc.encryptedFields = {};
-  }
+export async function saveStorageConfig(ctx, { provider, values = {}, processing }, userId) {
+  const doc = await loadOrNew(ctx);
 
-  for (const field of spec) {
-    const value = values[field.key];
-    if (value === undefined) continue;
-    if (field.secret) {
-      if (value === "") continue; // empty = "leave the stored secret alone"
-      doc.encryptedFields = { ...doc.encryptedFields, [field.key]: encryptSecret(value) };
-    } else {
-      doc.publicFields = { ...doc.publicFields, [field.key]: value.trim() };
+  if (provider) {
+    if (!STORAGE_PROVIDERS.includes(provider)) throw new HttpError(400, "Unknown storage provider");
+
+    // Switching provider starts its credentials clean (but keeps compression settings).
+    if (doc.provider !== provider) {
+      doc.provider = provider;
+      doc.publicFields = {};
+      doc.encryptedFields = {};
+    }
+
+    for (const field of STORAGE_FIELDS[provider]) {
+      const value = values[field.key];
+      if (value === undefined || value === null) continue;
+      if (field.secret) {
+        if (value === "") continue; // empty = "leave the stored secret alone"
+        doc.encryptedFields = { ...doc.encryptedFields, [field.key]: encryptSecret(value) };
+      } else {
+        doc.publicFields = { ...doc.publicFields, [field.key]: String(value).trim() };
+      }
     }
   }
 
-  // A required secret that was cleared (sent as a single space, say) — treat blanks as unset.
-  for (const key of STORAGE_SECRET_FIELDS[provider] ?? []) {
-    if (values[key] === null) {
-      const { [key]: _drop, ...rest } = doc.encryptedFields ?? {};
-      doc.encryptedFields = rest;
-    }
+  if (processing !== undefined) {
+    // Merge onto whatever is stored so a partial patch is fine, then re-validate.
+    doc.processing = imageProcessingSchema.parse({ ...(doc.processing ?? {}), ...processing });
   }
 
   doc.updatedBy = userId;
   doc.markModified("publicFields");
   doc.markModified("encryptedFields");
+  doc.markModified("processing");
   await doc.save();
 }
 
 export async function resetStorageConfig(ctx) {
-  await StorageConfigModel.findOneAndUpdate(
-    tenantFilter(ctx),
-    { provider: "local", publicFields: {}, encryptedFields: {} },
-    { upsert: true },
-  );
+  const doc = await loadOrNew(ctx);
+  doc.provider = "local";
+  doc.publicFields = {};
+  doc.encryptedFields = {};
+  // compression settings are deliberately kept
+  doc.markModified("publicFields");
+  doc.markModified("encryptedFields");
+  await doc.save();
 }
 
 /* ------------------------------------------------------------------ uploads */
@@ -145,33 +159,44 @@ function assertUsable(cfg) {
 }
 
 /**
- * Store one image and return its public URL + key. The API never decodes the
- * image — the admin resizes it on a canvas first and passes the final
- * dimensions, so no image library is needed here.
+ * Compress + store one uploaded image, and return its public URL + key and the
+ * final (post-processing) dimensions. Any format the image library can read is
+ * accepted; the pipeline scales it to the outlet's configured longest edge and
+ * re-encodes it — see {@link processImage}.
  */
-export async function putImage(ctx, { body, contentType, width, height, kind = "menu-items" }) {
-  if (!EXT[contentType]) {
-    throw new HttpError(415, `Unsupported image type ${contentType}. Use JPEG, PNG or WebP.`);
-  }
+export async function putImage(ctx, { body, kind = "menu-items" }) {
   if (!body?.length) throw new HttpError(400, "Empty upload");
-  if (body.length > IMAGE_RULES.maxBytes) {
-    throw new HttpError(413, `Image is too large (max ${Math.round(IMAGE_RULES.maxBytes / 1024 / 1024)} MB).`);
+  if (body.length > IMAGE_RULES.maxUploadBytes) {
+    throw new HttpError(413, `File is too large (max ${Math.round(IMAGE_RULES.maxUploadBytes / 1024 / 1024)} MB).`);
   }
 
   const cfg = await resolveStorage(ctx);
   assertUsable(cfg);
 
-  const safeKind = /^[a-z0-9-]+$/.test(kind) ? kind : "menu-items";
-  const key = `${ctx.brandId}/${ctx.outletId}/${safeKind}/${randomUUID()}.${EXT[contentType]}`;
+  const processed = await processImage(body, cfg.processing);
 
-  const provider = providerFor(cfg.provider);
-  const { url } = await provider.put(cfg, { key, body, contentType });
+  const safeKind = /^[a-z0-9-]+$/.test(kind) ? kind : "menu-items";
+  const key = `${ctx.brandId}/${ctx.outletId}/${safeKind}/${randomUUID()}.${processed.ext}`;
+
+  const { url } = await providerFor(cfg.provider).put(cfg, {
+    key,
+    body: processed.buffer,
+    contentType: processed.contentType,
+  });
+
+  logger.debug(
+    { key, from: `${Math.round(processed.originalBytes / 1024)}KB`, to: `${Math.round(processed.bytes / 1024)}KB`, format: processed.format, quality: processed.quality },
+    "image processed",
+  );
 
   return {
     url,
     key,
-    width: Number.isFinite(width) && width > 0 ? Math.round(width) : undefined,
-    height: Number.isFinite(height) && height > 0 ? Math.round(height) : undefined,
+    width: processed.width,
+    height: processed.height,
+    format: processed.format,
+    bytes: processed.bytes,
+    originalBytes: processed.originalBytes,
   };
 }
 

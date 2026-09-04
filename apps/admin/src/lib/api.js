@@ -134,10 +134,11 @@ export const createPreviewSession = (o        , layout        ) =>
 export const getStorageConfig = (o        ) =>
   req                ("/api/storage/config", { outletId: o._id });
 
-export const saveStorageConfig = (o        , provider        , values        ) =>
+/** payload: { provider?, values?, processing? } */
+export const saveStorageConfig = (o        , payload        ) =>
   req                ("/api/storage/config", {
     method: "PUT",
-    body: JSON.stringify({ provider, values }),
+    body: JSON.stringify(payload),
     outletId: o._id,
   });
 
@@ -148,20 +149,16 @@ export const testStorageConfig = (o        ) =>
   req                ("/api/storage/config/test", { method: "POST", body: "{}", outletId: o._id });
 
 /**
- * Upload one already-resized image. `blob` carries its own MIME type; the API
- * stores the bytes and returns { url, key, width, height }.
+ * Upload one image of any format. The API compresses + re-encodes it and
+ * returns { url, key, width, height, format, bytes, originalBytes }.
  */
-export const uploadImage = (o        , blob      , dims                                                    , kind = "menu-items") => {
-  const qs = new URLSearchParams({ kind });
-  if (dims?.width) qs.set("w", String(dims.width));
-  if (dims?.height) qs.set("h", String(dims.height));
-  return req                (`/api/storage/upload?${qs.toString()}`, {
+export const uploadImage = (o        , blob      , kind = "menu-items") =>
+  req                (`/api/storage/upload?kind=${encodeURIComponent(kind)}`, {
     method: "POST",
     body: blob,
-    headers: { "content-type": blob.type },
+    headers: { "content-type": blob.type || "application/octet-stream" },
     outletId: o._id,
   });
-};
 
 export const deleteStorageObject = (o        , key        ) =>
   req      ("/api/storage/object", {

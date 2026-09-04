@@ -1,8 +1,7 @@
 import { useCallback, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { IMAGE_RULES } from "@onetap/config-schema";
 import * as api from "./api";
-import { resizeImage } from "./resizeImage";
+import { prepareImage } from "./prepareImage";
 
 /* ---------------------------------------------------------------- config */
 
@@ -17,7 +16,8 @@ export function useStorageConfig(outlet) {
 export function useSaveStorageConfig(outlet) {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (args) => api.saveStorageConfig(outlet, args.provider, args.values),
+    // payload: { provider?, values?, processing? }
+    mutationFn: (payload) => api.saveStorageConfig(outlet, payload),
     onSuccess: (data) => qc.setQueryData(["storage-config", outlet?._id], data),
   });
 }
@@ -37,8 +37,9 @@ export function useTestStorageConfig(outlet) {
 /* ---------------------------------------------------------------- uploads */
 
 /**
- * Resize (in the browser) then upload one or more image files, returning the
- * stored { url, key, width, height } records ready to attach to a menu item.
+ * Upload one or more image files of any format. Huge photos are trimmed in the
+ * browser first; the API does the actual compression and re-encoding and
+ * returns the stored { url, key, width, height } records.
  */
 export function useImageUpload(outlet, { kind = "menu-items" } = {}) {
   const [busy, setBusy] = useState(false);
@@ -46,20 +47,15 @@ export function useImageUpload(outlet, { kind = "menu-items" } = {}) {
 
   const upload = useCallback(
     async (files) => {
-      const list = Array.from(files ?? []).filter((f) => f && f.type.startsWith("image/"));
+      const list = Array.from(files ?? []);
       if (!list.length || !outlet) return [];
       setBusy(true);
       setError(null);
       try {
         const out = [];
         for (const file of list) {
-          if (!IMAGE_RULES.acceptedTypes.includes(file.type)) {
-            throw new Error(`${file.name}: use a JPEG, PNG or WebP image.`);
-          }
-          const { blob, width, height } = await resizeImage(file, {
-            maxDimension: IMAGE_RULES.maxDimension,
-          });
-          const stored = await api.uploadImage(outlet, blob, { width, height }, kind);
+          const { blob } = await prepareImage(file);
+          const stored = await api.uploadImage(outlet, blob, kind);
           out.push(stored);
         }
         return out;

@@ -19,6 +19,10 @@ const storageConfigSchema = new Schema(
     provider: { type: String, enum: STORAGE_PROVIDERS, default: "local" },
     publicFields: { type: Schema.Types.Mixed, default: {} },
     encryptedFields: { type: Schema.Types.Mixed, default: {} },
+    // Image compression settings — parsed/defaulted through imageProcessingSchema
+    // on the way out, so adding a knob needs no migration. Untouched by a
+    // provider switch.
+    processing: { type: Schema.Types.Mixed, default: {} },
     updatedBy: String,
   },
   { timestamps: true },

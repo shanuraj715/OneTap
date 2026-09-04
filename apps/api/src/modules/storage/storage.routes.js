@@ -1,6 +1,6 @@
 import { Router, raw } from "express";
 import { z } from "zod";
-import { IMAGE_RULES, storageProviderSchema } from "@onetap/config-schema";
+import { IMAGE_RULES, imageProcessingSchema, storageProviderSchema } from "@onetap/config-schema";
 import { requireOutletContext, requireUser } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import {
@@ -22,15 +22,17 @@ storageRouter.get("/config", async (req, res) => {
 });
 
 const saveBody = z.object({
-  provider: storageProviderSchema,
-  values: z.record(z.string(), z.string().nullable()),
+  provider: storageProviderSchema.optional(),
+  values: z.record(z.string(), z.string().nullable()).optional(),
+  processing: imageProcessingSchema.partial().optional(),
 });
 
 storageRouter.put("/config", async (req, res) => {
   const ctx = await requireOutletContext(req, "storage-config:manage");
   const user = requireUser(req);
-  const { provider, values } = saveBody.parse(req.body);
-  await saveStorageConfig(ctx, provider, values, String(user._id));
+  const body = saveBody.parse(req.body);
+  if (!body.provider && !body.processing) throw new HttpError(400, "Nothing to save");
+  await saveStorageConfig(ctx, body, String(user._id));
   res.json(await getStorageConfig(ctx));
 });
 
@@ -54,23 +56,21 @@ storageRouter.post("/config/test", async (req, res) => {
 /* ------------------------------------------------------------------ uploads */
 
 /**
- * Raw image bytes in the body, `Content-Type` says the format. The admin has
- * already downscaled the picture on a canvas, so this is small and there is no
- * decode step here — dimensions ride along as query params.
+ * Raw image bytes in the body — any format the server can decode (JPEG, PNG,
+ * WebP, AVIF, HEIC/HEIF, GIF, TIFF). The API compresses and re-encodes it per
+ * the outlet's settings, so nothing about the format or size needs to be
+ * negotiated with the client.
  */
 storageRouter.post(
   "/upload",
-  raw({ type: IMAGE_RULES.acceptedTypes, limit: IMAGE_RULES.maxBytes + 1024 }),
+  raw({ type: () => true, limit: IMAGE_RULES.maxUploadBytes + 4096 }),
   async (req, res) => {
     const ctx = await requireOutletContext(req, "menu:update");
     const body = Buffer.isBuffer(req.body) ? req.body : null;
-    if (!body) throw new HttpError(415, "Send the image bytes with an image/jpeg, image/png or image/webp Content-Type.");
+    if (!body?.length) throw new HttpError(400, "Send the image bytes as the request body.");
 
     const result = await putImage(ctx, {
       body,
-      contentType: req.get("content-type")?.split(";")[0]?.trim() ?? "",
-      width: Number(req.query.w) || undefined,
-      height: Number(req.query.h) || undefined,
       kind: typeof req.query.kind === "string" ? req.query.kind : "menu-items",
     });
     res.status(201).json(result);

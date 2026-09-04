@@ -108,7 +108,8 @@ export const STORAGE_REQUIRED_FIELDS = {
 
 /**
  * One stored image on a menu item. `url` is what the storefront renders; `key`
- * is the provider-relative path, kept so the file can be deleted later.
+ * is the provider-relative path, kept so the file can be deleted later. The
+ * dimensions are the *processed* ones the API's image pipeline reports back.
  */
 export const menuImageSchema = z.object({
   url: z.string().min(1),
@@ -118,10 +119,45 @@ export const menuImageSchema = z.object({
 });
 /** @typedef {z.infer<typeof menuImageSchema>} MenuImage */
 
-/** Limits the admin enforces before upload and the API enforces on the way in. */
+/**
+ * Upload limits. The server accepts anything its image library (sharp/libvips)
+ * can decode — JPEG, PNG, WebP, AVIF, HEIC/HEIF, GIF, TIFF, SVG — and always
+ * re-encodes to a web format, so the accept list here is only a hint for the
+ * file picker.
+ */
 export const IMAGE_RULES = {
   maxPerItem: 6,
-  maxBytes: 8 * 1024 * 1024,
-  maxDimension: 1600,
-  acceptedTypes: ["image/jpeg", "image/png", "image/webp"],
+  /** raw upload cap — a phone HEIC/RAW can be big; the pipeline shrinks it after */
+  maxUploadBytes: 30 * 1024 * 1024,
+  acceptAttr: "image/*,.jpg,.jpeg,.png,.webp,.avif,.gif,.heic,.heif,.tif,.tiff,.bmp,.svg",
 };
+
+/* ----------------------------------------------------- image processing config */
+
+export const IMAGE_OUTPUT_FORMATS = ["webp", "avif", "jpeg", "original"];
+export const imageOutputFormatSchema = z.enum(IMAGE_OUTPUT_FORMATS);
+/** @typedef {(typeof IMAGE_OUTPUT_FORMATS)[number]} ImageOutputFormat */
+
+export const IMAGE_FORMAT_LABELS = {
+  webp: "WebP — best size/quality, universal support (recommended)",
+  avif: "AVIF — smallest files, slightly slower to make",
+  jpeg: "JPEG — maximum compatibility, larger files",
+  original: "Keep original format (AVIF/HEIC become AVIF)",
+};
+
+/**
+ * How the API compresses every uploaded image. Per-outlet, editable in
+ * Admin → Storage. The defaults are a good middle ground for a menu card.
+ */
+export const imageProcessingSchema = z.object({
+  /** longest edge, in pixels — larger images are scaled down to this */
+  maxDimension: z.number().int().min(320).max(4096).default(1600),
+  /** encoder quality, 30–100 */
+  quality: z.number().int().min(30).max(100).default(80),
+  format: imageOutputFormatSchema.default("webp"),
+  /** if the encoded image still exceeds this many KB, quality is stepped down to fit (0 = off) */
+  targetMaxKB: z.number().int().min(0).max(20000).default(400),
+});
+/** @typedef {z.infer<typeof imageProcessingSchema>} ImageProcessing */
+
+export const DEFAULT_IMAGE_PROCESSING = imageProcessingSchema.parse({});
