@@ -8,6 +8,7 @@ import {
   getOutletById,
   listAllOutlets,
   listOutlets,
+  resolveBrandForHost,
   resolveOutlet,
   updateOutletConfig,
 } from "./outlets.service.js";
@@ -22,6 +23,14 @@ outletsRouter.get("/resolve", async (req, res) => {
   const outlet = await resolveOutlet({ host, slug, id });
   if (!outlet) throw new HttpError(404, "No outlet for that host");
   res.json({ outlet });
+});
+
+/** Public: which brand a hostname belongs to, and every outlet under it — the storefront's root-page resolution. */
+outletsRouter.get("/for-host", async (req, res) => {
+  const host = typeof req.query.host === "string" ? req.query.host : "";
+  const resolved = host ? await resolveBrandForHost(host) : null;
+  if (!resolved) throw new HttpError(404, "No brand for that host");
+  res.json(resolved);
 });
 
 /** Outlets the signed-in user can reach. */

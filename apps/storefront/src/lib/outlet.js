@@ -35,6 +35,45 @@ export async function getOutlet()                                 {
   }
 }
 
+/**
+ * Resolve one specific outlet within the current host's brand — every
+ * outlet-scoped storefront page (`/[outletSlug]`, `/[outletSlug]/t/...`)
+ * uses this instead of the bare host-only getOutlet().
+ */
+export async function getOutletBySlug(outletSlug        )                                 {
+  const host = (await headers()).get("host") ?? "";
+  const url = `${API_BASE}/api/outlets/resolve?host=${encodeURIComponent(host)}&slug=${encodeURIComponent(outletSlug)}`;
+
+  try {
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) return null;
+    const { outlet } = (await res.json())                                                                            ;
+    return {
+      id: outlet._id,
+      name: outlet.name,
+      slug: outlet.slug,
+      config: parseOutletConfig(outlet.config),
+    };
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Which brand the current host belongs to, and every outlet under it —
+ * powers the root page's "no outlet in the URL yet" resolution.
+ */
+export async function getOutletsForHost() {
+  const host = (await headers()).get("host") ?? "";
+  try {
+    const res = await fetch(`${API_BASE}/api/outlets/for-host?host=${encodeURIComponent(host)}`, { cache: "no-store" });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
 /** Load an outlet directly by id — used by the table-QR landing page. */
 export async function getOutletById(outletId        )                                 {
   try {
