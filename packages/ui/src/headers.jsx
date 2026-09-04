@@ -6,7 +6,11 @@ const shell                = {
   borderBottom: "1px solid var(--color-border)",
   background: "var(--color-bg)",
 };
-const inner                = { maxWidth: 1080, margin: "0 auto", padding: "0 24px" };
+// Horizontal padding comes from the .ot-header-px class (tokens.css), not
+// from here — that's what lets it shrink on a narrow screen. Every div that
+// spreads `inner` must also carry that class and supply only vertical
+// padding (paddingTop/paddingBottom) of its own.
+const inner                = { maxWidth: 1080, margin: "0 auto" };
 const brand                = {
   fontFamily: "var(--font-heading)",
   fontWeight: 700,
@@ -167,7 +171,7 @@ function CloseGlyph() {
 export function HeaderCentered({ name, links }             ) {
   return (
     <header style={shell}>
-      <div style={{ ...inner, padding: "18px 24px", display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
+      <div className="ot-header-px" style={{ ...inner, paddingTop: 18, paddingBottom: 18, display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
         <span style={{ ...brand, fontSize: 22 }}>{name}</span>
         <Nav links={links} />
       </div>
@@ -179,7 +183,7 @@ export function HeaderCentered({ name, links }             ) {
 export function HeaderLeftLogo({ name, links }             ) {
   return (
     <header style={shell}>
-      <div style={{ ...inner, padding: "16px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 24 }}>
+      <div className="ot-header-px" style={{ ...inner, paddingTop: 16, paddingBottom: 16, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 24 }}>
         <span style={{ ...brand, fontSize: 20 }}>{name}</span>
         <Nav links={links} />
       </div>
@@ -192,7 +196,7 @@ export function HeaderSplitNav({ name, links }             ) {
   const half = Math.ceil((links?.length ?? 0) / 2);
   return (
     <header style={shell}>
-      <div style={{ ...inner, padding: "16px 24px", display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center", gap: 16 }}>
+      <div className="ot-header-px" style={{ ...inner, paddingTop: 16, paddingBottom: 16, display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center", gap: 16 }}>
         <Nav links={links?.slice(0, half)} mobileLinks={links} />
         <span style={{ ...brand, fontSize: 20, textAlign: "center" }}>{name}</span>
         <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: 16 }}>
@@ -210,7 +214,7 @@ export function HeaderSplitNav({ name, links }             ) {
 export function HeaderMinimal({ name }             ) {
   return (
     <header style={shell}>
-      <div style={{ ...inner, padding: "14px 24px" }}>
+      <div className="ot-header-px" style={{ ...inner, paddingTop: 14, paddingBottom: 14 }}>
         <span style={{ ...brand, fontSize: 16, letterSpacing: "0.02em", textTransform: "uppercase" }}>{name}</span>
       </div>
     </header>
@@ -222,12 +226,15 @@ export function HeaderTopBar({ name, links, tagline, phone }             ) {
   return (
     <header style={shell}>
       <div style={{ background: "var(--color-primary)", color: "var(--color-on-primary)" }}>
-        <div style={{ ...inner, padding: "7px 24px", display: "flex", justifyContent: "space-between", gap: 16, fontSize: 12.5 }}>
-          <span>{tagline ?? "Fresh, hot and made to order"}</span>
-          {phone ? <span>{phone}</span> : null}
+        <div className="ot-header-px" style={{ ...inner, paddingTop: 7, paddingBottom: 7, display: "flex", justifyContent: "space-between", gap: 16, fontSize: 12.5 }}>
+          {/* Tagline truncates first — the phone number must never wrap or break. */}
+          <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0 }}>
+            {tagline ?? "Fresh, hot and made to order"}
+          </span>
+          {phone ? <span style={{ whiteSpace: "nowrap", flexShrink: 0 }}>{phone}</span> : null}
         </div>
       </div>
-      <div style={{ ...inner, padding: "16px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 24 }}>
+      <div className="ot-header-px" style={{ ...inner, paddingTop: 16, paddingBottom: 16, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 24 }}>
         <span style={{ ...brand, fontSize: 22 }}>{name}</span>
         <Nav links={links} />
       </div>
@@ -239,11 +246,11 @@ export function HeaderTopBar({ name, links, tagline, phone }             ) {
 export function HeaderBanner({ name, tagline, links }             ) {
   return (
     <header style={shell}>
-      <div style={{ background: "var(--color-primary)", color: "var(--color-on-primary)", textAlign: "center", padding: "26px 24px 22px" }}>
+      <div className="ot-header-px" style={{ background: "var(--color-primary)", color: "var(--color-on-primary)", textAlign: "center", paddingTop: 26, paddingBottom: 22 }}>
         <div style={{ ...brand, color: "var(--color-on-primary)", fontSize: 26 }}>{name}</div>
         {tagline ? <div style={{ fontSize: 13, opacity: 0.85, marginTop: 4 }}>{tagline}</div> : null}
       </div>
-      <div style={{ ...inner, padding: "12px 24px", display: "flex", justifyContent: "center" }}>
+      <div className="ot-header-px" style={{ ...inner, paddingTop: 12, paddingBottom: 12, display: "flex", justifyContent: "center" }}>
         <Nav links={links} />
       </div>
     </header>
@@ -254,12 +261,14 @@ export function HeaderBanner({ name, tagline, links }             ) {
 export function HeaderTwoRow({ name, links, phone }             ) {
   return (
     <header style={shell}>
-      <div style={{ ...inner, padding: "16px 24px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div className="ot-header-px" style={{ ...inner, paddingTop: 16, paddingBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <span style={{ ...brand, fontSize: 21 }}>{name}</span>
-        {phone ? <span style={{ fontSize: 13, color: "var(--color-text-muted)" }}>{phone}</span> : null}
+        {phone ? (
+          <span style={{ fontSize: 13, color: "var(--color-text-muted)", whiteSpace: "nowrap", flexShrink: 0 }}>{phone}</span>
+        ) : null}
       </div>
       <div style={{ background: "var(--color-surface)", borderTop: "1px solid var(--color-border)" }}>
-        <div style={{ ...inner, padding: "11px 24px" }}>
+        <div className="ot-header-px" style={{ ...inner, paddingTop: 11, paddingBottom: 11 }}>
           <Nav links={links} />
         </div>
       </div>
@@ -271,8 +280,8 @@ export function HeaderTwoRow({ name, links, phone }             ) {
 export function HeaderBoxed({ name, links }             ) {
   return (
     <header style={shell}>
-      <div style={{ ...inner, padding: "0 24px", display: "flex", alignItems: "stretch", justifyContent: "space-between", gap: 24 }}>
-        <span style={{ ...brand, fontSize: 19, background: "var(--color-primary)", color: "var(--color-on-primary)", padding: "20px 22px", display: "flex", alignItems: "center" }}>
+      <div className="ot-header-px" style={{ ...inner, display: "flex", alignItems: "stretch", justifyContent: "space-between", gap: 24 }}>
+        <span className="ot-header-px" style={{ ...brand, fontSize: 19, background: "var(--color-primary)", color: "var(--color-on-primary)", paddingTop: 20, paddingBottom: 20, display: "flex", alignItems: "center" }}>
           {name}
         </span>
         <span style={{ display: "flex", alignItems: "center" }}>

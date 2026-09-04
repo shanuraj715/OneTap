@@ -212,6 +212,18 @@
   .ot-nav-toggle { display: inline-flex; }
 }
 
+/*
+ * Header horizontal padding: every header variant's row uses this instead of
+ * baking "24px" into its own inline style, so a narrow screen can claim that
+ * space back for content (the phone number in HeaderTopBar/HeaderTwoRow in
+ * particular — it must never be squeezed into wrapping). Same 720px
+ * breakpoint as the nav above, so both changes land together.
+ */
+.ot-header-px { padding-left: 24px; padding-right: 24px; }
+@media (max-width: 720px) {
+  .ot-header-px { padding-left: 14px; padding-right: 14px; }
+}
+
 /* Anyone who asked for less motion gets none of it. */
 @media (prefers-reduced-motion: reduce) {
   .ot-anim-fade,
