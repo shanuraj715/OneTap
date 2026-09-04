@@ -5,11 +5,13 @@ import { requireBrandContext, requireOutletContext } from "../../middleware/auth
 import { HttpError } from "../../middleware/error.js";
 import {
   createOutlet,
+  deleteOutlet,
   getOutletById,
   listAllOutlets,
   listOutlets,
   resolveBrandForHost,
   resolveOutlet,
+  updateOutlet,
   updateOutletConfig,
 } from "./outlets.service.js";
 
@@ -62,6 +64,27 @@ outletsRouter.get("/:id", async (req, res) => {
   const outlet = await getOutletById(ctx, req.params.id);
   if (!outlet) throw new HttpError(404, "Outlet not found");
   res.json({ outlet });
+});
+
+const updateOutletBody = z.object({
+  name: z.string().min(1).max(80).optional(),
+  slug: z.string().min(1).max(63).optional(),
+  hostnames: z.array(z.string()).optional(),
+});
+
+/** Rename an outlet, or move it to a new slug/hostname list. */
+outletsRouter.patch("/:id", async (req, res) => {
+  const ctx = await requireOutletContext(req, "outlet:manage");
+  const body = updateOutletBody.parse(req.body);
+  const outlet = await updateOutlet(ctx, req.params.id, body);
+  res.json({ outlet });
+});
+
+/** Remove an outlet. Refused for a brand's last outlet, or one with order history. */
+outletsRouter.delete("/:id", async (req, res) => {
+  const ctx = await requireOutletContext(req, "outlet:manage");
+  await deleteOutlet(ctx, req.params.id);
+  res.status(204).end();
 });
 
 const configPatchSchema = z.record(z.string(), z.unknown());
