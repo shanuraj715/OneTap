@@ -75,6 +75,9 @@ export async function resolveBrandForHost(host        ) {
       slug: o.slug,
       name: o.config.identity.name || o.name,
       address: o.config.identity.address || "",
+      // null until the owner drops the map pin — lets the picker fall back to
+      // the manual list for any outlet distance can't be computed for.
+      location: o.config.identity.location?.point ?? null,
     })),
   };
 }
