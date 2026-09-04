@@ -1,5 +1,4 @@
 import { z } from "zod";
-                                             
 
 /**
  * How the storefront menu is arranged.
@@ -8,23 +7,53 @@ import { z } from "zod";
  * every available item, one card style throughout.
  *
  * `custom` hands the whole thing to the owner — which sections appear, their
- * order, their titles, which items each one shows, and a card style per
- * section, so a "Chef's picks" strip of big photo cards can sit above a plain
- * list of the full menu.
+ * order, their titles, which items each one shows, a card style per section,
+ * how the items are sorted, and how many show before a "View all" button, so a
+ * "Chef's picks" strip of big photo cards can sit above a plain list of the
+ * full menu without that list running for three screens.
  */
-export const MENU_LAYOUT_MODES = ["auto", "custom"]         ;
+export const MENU_LAYOUT_MODES = ["auto", "custom"];
 export const menuLayoutModeSchema = z.enum(MENU_LAYOUT_MODES);
-                                                                
+/** @typedef {(typeof MENU_LAYOUT_MODES)[number]} MenuLayoutMode */
 
-export const MENU_SECTION_SOURCES = ["category", "picks", "all"]         ;
+export const MENU_SECTION_SOURCES = ["category", "picks", "all"];
 export const menuSectionSourceSchema = z.enum(MENU_SECTION_SOURCES);
-                                                                      
+/** @typedef {(typeof MENU_SECTION_SOURCES)[number]} MenuSectionSource */
 
-export const MENU_SECTION_SOURCE_LABELS                                    = {
+export const MENU_SECTION_SOURCE_LABELS = {
   category: "One category",
   picks: "Hand-picked items",
   all: "Everything else",
 };
+
+/**
+ * How a section fills itself with items:
+ *  - `auto`   — every item its source offers (a category's items, or the
+ *               menu's leftovers), kept in sync as the menu changes
+ *  - `manual` — only the items the owner ticked, in the order they ticked them
+ *
+ * `manual` works on top of any source: a "category" section in manual mode is
+ * "these three items from Steamed Momos", not the whole category. The old
+ * `source: "picks"` is just `source: "all"` + `manual` and is still accepted.
+ */
+export const MENU_ITEM_SELECTIONS = ["auto", "manual"];
+export const menuItemSelectionSchema = z.enum(MENU_ITEM_SELECTIONS);
+/** @typedef {(typeof MENU_ITEM_SELECTIONS)[number]} MenuItemSelection */
+
+export const MENU_SECTION_SORTS = ["default", "price-asc", "price-desc", "name-asc"];
+export const menuSectionSortSchema = z.enum(MENU_SECTION_SORTS);
+/** @typedef {(typeof MENU_SECTION_SORTS)[number]} MenuSectionSort */
+
+export const MENU_SECTION_SORT_LABELS = {
+  default: "Menu order",
+  "price-asc": "Price: low to high",
+  "price-desc": "Price: high to low",
+  "name-asc": "Name: A–Z",
+};
+
+export const MENU_TITLE_ALIGNS = ["left", "center"];
+export const menuTitleAlignSchema = z.enum(MENU_TITLE_ALIGNS);
+/** @typedef {(typeof MENU_TITLE_ALIGNS)[number]} MenuTitleAlign */
 
 export const menuSectionSchema = z.object({
   id: z.string(),
@@ -33,17 +62,35 @@ export const menuSectionSchema = z.object({
   source: menuSectionSourceSchema.default("category"),
   /** for source "category" */
   categoryId: z.string().default(""),
-  /** for source "picks" — explicit item ids, in the order they're listed */
+  /** how the section is filled — see {@link MENU_ITEM_SELECTIONS} */
+  itemSelection: menuItemSelectionSchema.default("auto"),
+  /** the hand-picked item ids, in display order — used when itemSelection is "manual" (or source is "picks") */
   itemIds: z.array(z.string()).default([]),
   /** item card variant id from the registry, e.g. "card.image-top" */
   cardVariant: z.string().default("card.row-compact"),
-  /** cap the number of items shown (0 = no cap) */
+  /** order items within the section */
+  sortBy: menuSectionSortSchema.default("default"),
+  /** hard cap on how many items the section ever contains (0 = no cap) */
   maxItems: z.number().int().min(0).max(200).default(0),
+  /** show only the first few items, and a "View all" button that reveals the rest inline */
+  collapsible: z.boolean().default(false),
+  /** how many items are visible before the "View all" button (only when collapsible) */
+  initialItems: z.number().int().min(1).max(200).default(6),
+  /** the "View all" button text — customisable per section */
+  viewAllLabel: z.string().max(40).default("View all"),
+  /** the button text once expanded */
+  showLessLabel: z.string().max(40).default("Show less"),
   /** hide sold-out items in this section instead of showing them greyed */
   hideUnavailable: z.boolean().default(false),
+  /** drop the section heading entirely — for a bare strip that needs no label */
+  hideTitle: z.boolean().default(false),
+  /** heading alignment */
+  titleAlign: menuTitleAlignSchema.default("left"),
+  /** show the item count next to the heading, e.g. "Steamed Momos (8)" */
+  showItemCount: z.boolean().default(false),
   visible: z.boolean().default(true),
 });
-                                                            
+/** @typedef {z.infer<typeof menuSectionSchema>} MenuSection */
 
 export const menuLayoutSchema = z.object({
   mode: menuLayoutModeSchema.default("auto"),
@@ -55,61 +102,106 @@ export const menuLayoutSchema = z.object({
   /** show a category quick-jump bar */
   showCategoryNav: z.boolean().default(true),
 });
-                                                          
+/** @typedef {z.infer<typeof menuLayoutSchema>} MenuLayout */
 
 /* --------------------------------------------------------------- resolution */
 
-                                  
-             
-                
-                   
-                      
-                    
- 
+/**
+ * @typedef {Object} ResolvedSection
+ * @property {string} id
+ * @property {string} title
+ * @property {string} subtitle
+ * @property {string} cardVariant
+ * @property {import("./menu.js").MenuItem[]} items every item in the section, in display order
+ * @property {boolean} hideTitle
+ * @property {MenuTitleAlign} titleAlign
+ * @property {boolean} showItemCount
+ * @property {boolean} collapsible whether the storefront should show `initialItems` and a "View all" button
+ * @property {number} initialItems
+ * @property {string} viewAllLabel
+ * @property {string} showLessLabel
+ */
 
-const bySortOrder = (a          , b          )         => a.sortOrder - b.sortOrder;
+const bySortOrder = (a, b) => a.sortOrder - b.sortOrder;
+
+/** Every active category as its own section — the "automatic" arrangement. */
+function autoSections(menu, layout) {
+  return [...menu.categories]
+    .filter((c) => c.isActive)
+    .sort((a, b) => a.sortOrder - b.sortOrder)
+    .map((cat) => ({
+      id: cat.id,
+      title: cat.name,
+      subtitle: "",
+      cardVariant: layout.defaultCardVariant,
+      items: menu.items.filter((i) => i.categoryId === cat.id).sort(bySortOrder),
+      hideTitle: false,
+      titleAlign: "left",
+      showItemCount: false,
+      collapsible: false,
+      initialItems: 6,
+      viewAllLabel: "View all",
+      showLessLabel: "Show less",
+    }))
+    .filter((s) => s.items.length > 0);
+}
+
+/** Lowest price for an item, for the price-sort options. */
+function itemSortPrice(item) {
+  if (item.variants && item.variants.length > 0) return Math.min(...item.variants.map((v) => v.price));
+  return item.basePrice;
+}
+
+/** Apply a section's `sortBy`. `default` keeps whatever order the pool arrived in. */
+function applySort(items, sortBy) {
+  const out = [...items];
+  if (sortBy === "price-asc") out.sort((a, b) => itemSortPrice(a) - itemSortPrice(b));
+  else if (sortBy === "price-desc") out.sort((a, b) => itemSortPrice(b) - itemSortPrice(a));
+  else if (sortBy === "name-asc") out.sort((a, b) => a.name.localeCompare(b.name));
+  return out;
+}
 
 /**
  * Turn a layout + the live menu into the ordered list of sections the
  * storefront renders. One function, used by the storefront and by the admin
  * preview, so what the owner arranges is exactly what a diner sees.
+ *
+ * `maxItems` is a hard cap (items past it are dropped). `collapsible` is not a
+ * cap — every item stays in the section; the renderer just hides the tail
+ * behind a "View all" button until the diner asks for it.
+ *
+ * @param {import("./menu.js").Menu} menu
+ * @param {MenuLayout} layout
+ * @returns {ResolvedSection[]}
  */
-export function resolveMenuSections(menu      , layout            )                    {
+export function resolveMenuSections(menu, layout) {
   const activeCategories = [...menu.categories]
     .filter((c) => c.isActive)
     .sort((a, b) => a.sortOrder - b.sortOrder);
 
   if (layout.mode === "auto" || layout.sections.length === 0) {
-    return activeCategories
-      .map((cat) => ({
-        id: cat.id,
-        title: cat.name,
-        subtitle: "",
-        cardVariant: layout.defaultCardVariant,
-        items: menu.items.filter((i) => i.categoryId === cat.id).sort(bySortOrder),
-      }))
-      .filter((s) => s.items.length > 0);
+    return autoSections(menu, layout);
   }
 
   // Track which items a custom "all" section still needs to sweep up.
-  const claimed = new Set        ();
+  const claimed = new Set();
   const itemsById = new Map(menu.items.map((i) => [i.id, i]));
 
-  const resolved                    = [];
+  const resolved = [];
 
   for (const section of layout.sections) {
     if (!section.visible) continue;
 
-    let items             = [];
+    // A "picks" section is manual by definition; otherwise honour itemSelection.
+    const manual = section.source === "picks" || section.itemSelection === "manual";
 
-    if (section.source === "category") {
+    let items = [];
+    if (manual) {
+      items = section.itemIds.map((id) => itemsById.get(id)).filter((i) => Boolean(i));
+    } else if (section.source === "category") {
       const cat = menu.categories.find((c) => c.id === section.categoryId);
       if (!cat) continue;
       items = menu.items.filter((i) => i.categoryId === cat.id).sort(bySortOrder);
-    } else if (section.source === "picks") {
-      items = section.itemIds
-        .map((id) => itemsById.get(id))
-        .filter((i)                => Boolean(i));
     } else {
       // "all": whatever hasn't been shown by an earlier section yet
       items = activeCategories.flatMap((cat) =>
@@ -118,6 +210,8 @@ export function resolveMenuSections(menu      , layout            )             
     }
 
     if (section.hideUnavailable) items = items.filter((i) => i.isAvailable);
+    // "default" keeps the pool order (menu order, or the hand-picked order).
+    if (section.sortBy && section.sortBy !== "default") items = applySort(items, section.sortBy);
     if (section.maxItems > 0) items = items.slice(0, section.maxItems);
     if (items.length === 0) continue;
 
@@ -129,13 +223,25 @@ export function resolveMenuSections(menu      , layout            )             
       subtitle: section.subtitle,
       cardVariant: section.cardVariant || layout.defaultCardVariant,
       items,
+      hideTitle: section.hideTitle,
+      titleAlign: section.titleAlign,
+      showItemCount: section.showItemCount,
+      collapsible: section.collapsible && items.length > section.initialItems,
+      initialItems: section.initialItems,
+      viewAllLabel: section.viewAllLabel || "View all",
+      showLessLabel: section.showLessLabel || "Show less",
     });
   }
+
+  // A custom layout whose sections all resolve to nothing (e.g. the only
+  // section points at a category that was deleted, or was never chosen) must
+  // not blank the whole menu — fall back to showing every category.
+  if (resolved.length === 0) return autoSections(menu, layout);
 
   return resolved;
 }
 
-function sectionFallbackTitle(section             , menu      )         {
+function sectionFallbackTitle(section, menu) {
   if (section.source === "category") {
     return menu.categories.find((c) => c.id === section.categoryId)?.name ?? "Menu";
   }
@@ -144,7 +250,7 @@ function sectionFallbackTitle(section             , menu      )         {
 }
 
 /** A blank section for the admin's "add section" button. */
-export function emptySection(defaultCardVariant        )              {
+export function emptySection(defaultCardVariant) {
   return menuSectionSchema.parse({
     id: `sec_${Math.random().toString(36).slice(2, 10)}`,
     source: "category",

@@ -121,6 +121,14 @@ export const patchOutletConfig = (outlet        , patch                         
     outletId: outlet._id,
   });
 
+/** Opens a live menu-layout preview session; returns its shareable id. */
+export const createPreviewSession = (o        , layout        ) =>
+  req                    ("/api/preview", {
+    method: "POST",
+    body: JSON.stringify({ layout }),
+    outletId: o._id,
+  });
+
 /* ---------------------------------------------------------------------- menu */
 
                                                                                      

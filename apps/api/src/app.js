@@ -19,6 +19,7 @@ import { notifyRouter } from "./modules/notify/notify.routes.js";
 import { ordersRouter } from "./modules/orders/orders.routes.js";
 import { outletsRouter } from "./modules/outlets/outlets.routes.js";
 import { paymentsRouter } from "./modules/payments/payments.routes.js";
+import { previewRouter } from "./modules/preview/preview.routes.js";
 import { printingRouter } from "./modules/printing/printing.routes.js";
 import { tablesRouter } from "./modules/tables/tables.routes.js";
 import { usersRouter } from "./modules/users/users.routes.js";
@@ -57,6 +58,7 @@ export function createApp()          {
   app.use("/api/payments", paymentsRouter);
   app.use("/api/tables", tablesRouter);
   app.use("/api/printing", printingRouter);
+  app.use("/api/preview", previewRouter);
   app.use("/api/customers", customersRouter);
   app.use("/api/notify", notifyRouter);
   app.use("/api/dashboard", dashboardRouter);

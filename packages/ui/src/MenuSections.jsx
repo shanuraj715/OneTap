@@ -33,6 +33,8 @@ export function MenuSections({
                                           
  ) {
   const [foodFilter, setFoodFilter] = useState                 (null);
+  // Which collapsible sections the diner has expanded, by section id.
+  const [expanded, setExpanded] = useState({});
 
   const sections = useMemo(() => resolveMenuSections(menu, layout), [menu, layout]);
 
@@ -96,14 +98,32 @@ export function MenuSections({
                 gap: 12,
               };
 
+        // "View all" — collapsible sections show only the first `initialItems`
+        // until the diner opens them, so a long category doesn't push the whole
+        // menu down three screens.
+        const isOpen = expanded[section.id] === true;
+        const collapsed = section.collapsible && !isOpen;
+        const shownItems = collapsed ? section.items.slice(0, section.initialItems) : section.items;
+        const hiddenCount = section.items.length - section.initialItems;
+        const align = section.titleAlign === "center" ? "center" : "left";
+
         return (
           <section key={section.id} id={`sec-${section.id}`} style={{ marginBottom: 40, scrollMarginTop: 72 }}>
-            <div style={{ marginBottom: 14 }}>
-              <h2 style={heading}>{section.title}</h2>
-              {section.subtitle ? <p style={subtitle}>{section.subtitle}</p> : null}
-            </div>
+            {section.hideTitle && !section.subtitle ? null : (
+              <div style={{ marginBottom: 14, textAlign: align }}>
+                {section.hideTitle ? null : (
+                  <h2 style={{ ...heading, textAlign: align, ...(align === "center" ? { borderBottom: "none" } : null) }}>
+                    {section.title}
+                    {section.showItemCount ? (
+                      <span style={countBadge}> ({section.items.length})</span>
+                    ) : null}
+                  </h2>
+                )}
+                {section.subtitle ? <p style={{ ...subtitle, textAlign: align }}>{section.subtitle}</p> : null}
+              </div>
+            )}
             <div style={grid}>
-              {section.items.map((item) =>
+              {shownItems.map((item) =>
                 onSelectItem && item.isAvailable ? (
                   <div
                     key={item.id}
@@ -126,6 +146,21 @@ export function MenuSections({
                 ),
               )}
             </div>
+            {section.collapsible ? (
+              <div style={{ display: "flex", justifyContent: align === "center" ? "center" : "flex-start", marginTop: 16 }}>
+                <button
+                  type="button"
+                  className="ot-press"
+                  onClick={() => setExpanded((e) => ({ ...e, [section.id]: !isOpen }))}
+                  style={viewAllBtn}
+                  aria-expanded={isOpen}
+                >
+                  {isOpen
+                    ? section.showLessLabel
+                    : `${section.viewAllLabel}${hiddenCount > 0 ? ` (${hiddenCount} more)` : ""}`}
+                </button>
+              </div>
+            ) : null}
           </section>
         );
       })}
@@ -196,3 +231,15 @@ const heading                = {
 };
 const subtitle                = { margin: "6px 0 0", fontSize: 13.5, color: "var(--color-text-muted)" };
 const clickable                = { cursor: "pointer", borderRadius: "var(--radius-card)" };
+const countBadge                = { fontSize: "0.7em", fontWeight: 500, color: "var(--color-text-muted)" };
+const viewAllBtn                = {
+  font: "inherit",
+  fontSize: "0.85rem",
+  fontWeight: 600,
+  padding: "9px 20px",
+  borderRadius: 999,
+  border: "1px solid var(--color-primary)",
+  background: "var(--color-bg)",
+  color: "var(--color-primary)",
+  cursor: "pointer",
+};

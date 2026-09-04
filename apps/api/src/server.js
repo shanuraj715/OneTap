@@ -4,6 +4,7 @@ import { env } from "./env.js";
 import { logger } from "./logger.js";
 import { dispatchDue } from "./modules/printing/printing.service.js";
 import { attachRealtime } from "./realtime/hub.js";
+import { attachPreview } from "./realtime/preview.js";
 
 const DISPATCH_INTERVAL_MS = 5_000;
 let printTimer                        = null;
@@ -34,6 +35,8 @@ function main()       {
 
   // Live order + print updates for the admin, on the same session cookie.
   attachRealtime(server);
+  // Live menu-layout preview sessions (/preview) for the storefront preview page.
+  attachPreview(server);
 
   server.on("listening", () => {
     logger.info(`OneTap API → http://localhost:${env.API_PORT}`);
@@ -63,7 +66,11 @@ function main()       {
     logger.info(`${signal} received — shutting down`);
     if (printTimer) clearInterval(printTimer);
     server.close(() => process.exit(0));
-    setTimeout(() => process.exit(1), 10_000).unref();
+    // Long-lived WebSocket clients (admin order feed, live preview) would keep
+    // server.close() pending forever — drop them so the port frees immediately.
+    // This is what lets `node --watch` restart cleanly on every save.
+    server.closeAllConnections?.();
+    setTimeout(() => process.exit(1), env.NODE_ENV === "production" ? 10_000 : 1_500).unref();
   };
   process.on("SIGINT", () => shutdown("SIGINT"));
   process.on("SIGTERM", () => shutdown("SIGTERM"));
