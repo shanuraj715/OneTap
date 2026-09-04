@@ -1,0 +1,26 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# builds
+dist/
+.next/
+out/
+build/
+*.tsbuildinfo
+
+# env — never commit secrets
+.env
+.env.local
+.env.*.local
+
+# local dev database (mongodb-memory-server)
+.local-db/
+.cache/mongodb-binaries/
+
+# logs / tooling
+*.log
+.turbo/
+coverage/
+.DS_Store
+.onetap-preview-*.png

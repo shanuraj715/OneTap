@@ -1,0 +1,197 @@
+/**
+ * Default OneTap design tokens.
+ *
+ * In production these values are generated per-outlet from the theme and
+ * typography editors and injected into the document head. This file is the
+ * fallback / dev default. Components must reference ONLY these variables —
+ * never a literal colour.
+ */
+:root {
+  --color-primary: #c6362f;
+  --color-on-primary: #ffffff;
+  --color-bg: #ffffff;
+  --color-surface: #f6f6f4;
+  --color-text: #1a1a1a;
+  --color-text-muted: #6b6b6b;
+  --color-border: #e4e4e0;
+  --radius-card: 12px;
+
+  /* semantic status colours — deliberately independent of the brand accent */
+  --tone-info: #1f5c7a;
+  --tone-info-wash: #dceaf1;
+  --tone-success: #2e7d46;
+  --tone-success-wash: #deede0;
+  --tone-warning: #8f6410;
+  --tone-warning-wash: #f3e7cf;
+  --tone-danger: #a5382f;
+  --tone-danger-wash: #f1ddd9;
+
+  /* typography — overwritten per outlet by typographyCss() */
+  --font-heading: "Inter", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-size-base: 16px;
+  --line-height-body: 1.6;
+  --font-weight-heading: 700;
+  --letter-spacing-heading: -0.02em;
+  --text-transform-heading: none;
+  --text-sm: 0.8rem;
+  --text-md: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.563rem;
+  --text-2xl: 1.953rem;
+  --text-3xl: 2.441rem;
+}
+
+:root[data-theme="dark"] {
+  --color-bg: #14130f;
+  --color-surface: #1e1c17;
+  --color-text: #ece6d8;
+  --color-text-muted: #9a9384;
+  --color-border: #34302a;
+
+  --tone-info: #6fa9c4;
+  --tone-info-wash: #17262d;
+  --tone-success: #74c08d;
+  --tone-success-wash: #17281c;
+  --tone-warning: #d6a24c;
+  --tone-warning-wash: #2b2314;
+  --tone-danger: #e3877a;
+  --tone-danger-wash: #2e1c19;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-bg: #14130f;
+    --color-surface: #1e1c17;
+    --color-text: #ece6d8;
+    --color-text-muted: #9a9384;
+    --color-border: #34302a;
+
+    --tone-info: #6fa9c4;
+    --tone-info-wash: #17262d;
+    --tone-success: #74c08d;
+    --tone-success-wash: #17281c;
+    --tone-warning: #d6a24c;
+    --tone-warning-wash: #2b2314;
+    --tone-danger: #e3877a;
+    --tone-danger-wash: #2e1c19;
+  }
+}
+
+/* ------------------------------------------------------------------ motion */
+
+:root {
+  --motion-fast: 120ms;
+  --motion-base: 200ms;
+  --motion-slow: 320ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes ot-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes ot-pop {
+  from { opacity: 0; transform: scale(0.94); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes ot-drop {
+  from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes ot-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes ot-slide-in {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes ot-sheet-up {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+.ot-anim-fade      { animation: ot-fade var(--motion-base) var(--ease-out) both; }
+.ot-anim-pop       { animation: ot-pop var(--motion-base) var(--ease-spring) both; }
+.ot-anim-drop      { animation: ot-drop var(--motion-fast) var(--ease-out) both; transform-origin: top center; }
+.ot-anim-rise      { animation: ot-rise var(--motion-base) var(--ease-out) both; }
+.ot-anim-slide-in  { animation: ot-slide-in var(--motion-base) var(--ease-out) both; }
+.ot-anim-sheet     { animation: ot-sheet-up var(--motion-slow) var(--ease-out) both; }
+
+/* Collapsible sections — animates to auto height without measuring anything. */
+.ot-collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--motion-base) var(--ease-out);
+}
+.ot-collapse[data-open="true"] { grid-template-rows: 1fr; }
+.ot-collapse > * { overflow: hidden; min-height: 0; }
+
+/* Interaction feedback */
+.ot-press {
+  transition:
+    transform var(--motion-fast) var(--ease-out),
+    filter var(--motion-fast) var(--ease-out),
+    background-color var(--motion-fast) var(--ease-out),
+    border-color var(--motion-fast) var(--ease-out),
+    color var(--motion-fast) var(--ease-out);
+}
+.ot-press:hover:not(:disabled)  { filter: brightness(1.06); }
+.ot-press:active:not(:disabled) { transform: scale(0.97); }
+
+.ot-lift {
+  transition:
+    transform var(--motion-base) var(--ease-out),
+    box-shadow var(--motion-base) var(--ease-out),
+    border-color var(--motion-base) var(--ease-out);
+}
+.ot-lift:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(0, 0, 0, 0.1); }
+
+.ot-chevron { transition: transform var(--motion-base) var(--ease-out); }
+.ot-chevron[data-open="true"] { transform: rotate(180deg); }
+
+.ot-bar { transition: width var(--motion-slow) var(--ease-out); }
+
+/* For controls that already own their transform (e.g. centred carousel arrows). */
+.ot-nav {
+  transition:
+    background-color var(--motion-fast) var(--ease-out),
+    box-shadow var(--motion-fast) var(--ease-out),
+    opacity var(--motion-fast) var(--ease-out);
+}
+.ot-nav:hover { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28); }
+
+.ot-swap { animation: ot-fade var(--motion-slow) var(--ease-out) both; }
+
+/* Work-in-progress spinner — a job printing, a queue refreshing. */
+@keyframes ot-spin {
+  to { transform: rotate(360deg); }
+}
+.ot-spin { animation: ot-spin 900ms linear infinite; transform-origin: 50% 50%; }
+
+/* Anyone who asked for less motion gets none of it. */
+@media (prefers-reduced-motion: reduce) {
+  .ot-anim-fade,
+  .ot-anim-pop,
+  .ot-anim-drop,
+  .ot-anim-rise,
+  .ot-anim-slide-in,
+  .ot-anim-sheet,
+  .ot-swap,
+  .ot-spin {
+    animation: none !important;
+  }
+  .ot-collapse,
+  .ot-press,
+  .ot-nav,
+  .ot-lift,
+  .ot-chevron,
+  .ot-bar {
+    transition: none !important;
+  }
+  .ot-lift:hover,
+  .ot-press:active:not(:disabled) { transform: none !important; }
+}
