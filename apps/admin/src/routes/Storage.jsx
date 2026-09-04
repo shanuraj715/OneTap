@@ -35,9 +35,15 @@ export function Storage() {
 
   const cfg = query.data;
 
+  // Re-syncs whenever fresh config data actually arrives — the initial load,
+  // after this page's own save/reset, or a brand switch (storage config is
+  // brand-level — see useStorageConfig — so two sibling outlets of the same
+  // brand share the identical query and never trigger this at all). Nothing
+  // else invalidates this query out from under an in-progress edit, so
+  // re-syncing on every `cfg` change (not just once) is safe here.
   useEffect(() => {
-    if (cfg?.processing && !proc) setProc(cfg.processing);
-  }, [cfg, proc]);
+    if (cfg?.processing) setProc(cfg.processing);
+  }, [cfg]);
   const activeProvider = choice ?? cfg?.provider ?? "local";
   const activeSpec = useMemo(
     () => cfg?.providers?.find((p) => p.id === activeProvider),

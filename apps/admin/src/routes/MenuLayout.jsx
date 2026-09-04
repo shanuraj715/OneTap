@@ -41,9 +41,14 @@ export function MenuLayout() {
   const [layout, setLayout] = useState(null);
   const [previewActive, setPreviewActive] = useState(false);
 
+  // Re-syncs whenever the selected outlet actually changes, not just once —
+  // switching in the sidebar doesn't unmount this page. Keyed on outlet?._id
+  // (not the outlet object, which gets a new reference on every background
+  // refetch) so an in-progress edit on the same outlet is never stomped.
   useEffect(() => {
-    if (outlet && !layout) setLayout(outlet.config.menuLayout);
-  }, [outlet, layout]);
+    if (outlet) setLayout(outlet.config.menuLayout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [outlet?._id]);
 
   const preview = usePreviewSession(outlet, layout, previewActive && Boolean(outlet && layout));
 

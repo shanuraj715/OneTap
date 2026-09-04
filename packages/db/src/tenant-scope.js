@@ -83,3 +83,17 @@ export function tenantFilter(
     ...(ctx.outletId ? { outletId: ctx.outletId } : {}),
   };
 }
+
+/**
+ * Like {@link tenantFilter}, but deliberately ignores `ctx.outletId` — for
+ * the handful of models (storage/notify credentials) that are shared across
+ * every outlet in a brand rather than owned by one. A document for these
+ * models is saved with no `outletId` at all (still schema-legal — see
+ * `tenantScope` above), so this always finds that one shared row.
+ */
+export function brandFilter(
+  ctx               ,
+  extra                          = {},
+)                          {
+  return { ...extra, brandId: ctx.brandId };
+}

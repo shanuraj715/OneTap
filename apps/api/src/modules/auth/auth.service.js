@@ -69,7 +69,12 @@ export function toSessionUser(user         )              {
   };
 }
 
-/** Create the first owner for a brand if that brand has no users yet. */
+/**
+ * Create the first owner for a brand. If the email is brand new, creates the
+ * user outright. If it already exists (e.g. the same person owns a second
+ * brand) but has no membership for THIS brand yet, adds one — an email
+ * collision must never silently leave a freshly created brand ownerless.
+ */
 export async function ensureOwner(input
 
 
@@ -77,7 +82,14 @@ export async function ensureOwner(input
 
  )                                               {
   const existing = await UserModel.findOne({ email: input.email.toLowerCase() });
-  if (existing) return { created: false, email: existing.email };
+  if (existing) {
+    const already = existing.memberships.some((m) => m.brandId === input.brandId);
+    if (!already) {
+      existing.memberships.push({ brandId: input.brandId, role: "owner", outletIds: [] });
+      await existing.save();
+    }
+    return { created: false, email: existing.email };
+  }
 
   await UserModel.create({
     email: input.email.toLowerCase(),

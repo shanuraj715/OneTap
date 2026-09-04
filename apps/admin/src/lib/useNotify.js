@@ -3,9 +3,12 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as api from "./api";
                                     
 
+// Notification credentials are brand-level (shared by every outlet in the
+// brand — see notify.service.js's brandFilter), so this is keyed by
+// brandId, not outletId — unlike the logs below, which stay per-outlet.
 export function useNotifyConfig(outlet                    , enabled         ) {
   return useQuery({
-    queryKey: ["notify-config", outlet?._id],
+    queryKey: ["notify-config", outlet?.brandId],
     queryFn: () => api.getNotifyConfig(outlet ),
     enabled: Boolean(outlet) && enabled,
   });

@@ -56,6 +56,7 @@ export class ApiError extends Error {
 async function req   (path        , init          = {})             {
   const headers                         = { "content-type": "application/json", ...init.headers };
   if (init.outletId) headers["x-onetap-outlet"] = init.outletId;
+  if (init.brandId) headers["x-onetap-brand"] = init.brandId;
 
   const res = await fetch(`${API_BASE}${path}`, {
     ...init,
@@ -92,21 +93,33 @@ export const me = () => req                       ("/api/auth/me");
                       
  
 
-export const listUsers = () => req                        ("/api/users");
+// brandId is only ever needed for a superadmin — everyone else's session
+// already carries their one brandId server-side, and requireBrandContext
+// falls back to it when no x-onetap-brand header is sent.
+export const listUsers = (brandId          ) => req                        ("/api/users", { brandId });
 
-export const createUser = (body                                                               ) =>
-  req                     ("/api/users", { method: "POST", body: JSON.stringify(body) });
+export const createUser = (body                                                               , brandId          ) =>
+  req                     ("/api/users", { method: "POST", body: JSON.stringify(body), brandId });
 
-export const updateUser = (id        , body                                                    ) =>
-  req                     (`/api/users/${id}`, { method: "PATCH", body: JSON.stringify(body) });
+export const updateUser = (id        , body                                                    , brandId          ) =>
+  req                     (`/api/users/${id}`, { method: "PATCH", body: JSON.stringify(body), brandId });
 
-export const deleteUser = (id        ) => req      (`/api/users/${id}`, { method: "DELETE" });
+export const deleteUser = (id        , brandId          ) =>
+  req      (`/api/users/${id}`, { method: "DELETE", brandId });
 
-/* ------------------------------------------------------------------- outlets */
+/* -------------------------------------------------------------- brands/outlets */
 
 export const getHealth = () => req                                                        ("/health");
 
 export const listOutlets = () => req                                       ("/api/outlets");
+
+export const listBrands = () => req                       ("/api/brands");
+
+export const createBrand = (body        ) =>
+  req      ("/api/brands", { method: "POST", body: JSON.stringify(body) });
+
+export const createOutlet = (brandId        , body        ) =>
+  req      ("/api/outlets", { method: "POST", body: JSON.stringify(body), brandId });
 
 export const patchOutletConfig = (outlet        , patch                         ) =>
   req                          (`/api/outlets/${outlet._id}/config`, {

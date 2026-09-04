@@ -86,9 +86,17 @@ export function ThemeEditor() {
   const [theme, setTheme] = useState              (null);
   const [dirty, setDirty] = useState(false);
 
+  // Re-syncs whenever the selected outlet actually changes, not just once —
+  // switching in the sidebar doesn't unmount this page. Keyed on outlet?._id
+  // (not the outlet object, which gets a new reference on every background
+  // refetch) so an in-progress edit on the same outlet is never stomped.
   useEffect(() => {
-    if (outlet && !theme) setTheme(outlet.config.theme);
-  }, [outlet, theme]);
+    if (outlet) {
+      setTheme(outlet.config.theme);
+      setDirty(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [outlet?._id]);
 
   // The dark palette is derived when it hasn't been customised, so the editor
   // shows what will actually render rather than a copy of the light tokens.

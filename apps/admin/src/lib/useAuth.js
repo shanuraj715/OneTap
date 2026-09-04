@@ -49,8 +49,11 @@ export function useLogout() {
 
 /* ---------------------------------------------------------------------- users */
 
-export function useUsers(enabled         ) {
-  return useQuery({ queryKey: ["users"], queryFn: api.listUsers, enabled });
+// brandId only matters for a superadmin (picking which brand's team they're
+// looking at) — everyone else's own brand is already implicit server-side,
+// so callers pass `undefined` and the request just omits the header.
+export function useUsers(enabled         , brandId          ) {
+  return useQuery({ queryKey: ["users", brandId], queryFn: () => api.listUsers(brandId), enabled });
 }
 
 function useUserMutation       (fn                                   ) {
@@ -58,7 +61,7 @@ function useUserMutation       (fn                                   ) {
   return useMutation({ mutationFn: fn, onSuccess: () => qc.invalidateQueries({ queryKey: ["users"] }) });
 }
 
-export const useCreateUser = () => useUserMutation(api.createUser);
+export const useCreateUser = () => useUserMutation((a                                       ) => api.createUser(a.body, a.brandId));
 export const useUpdateUser = () =>
-  useUserMutation((a                                                            ) => api.updateUser(a.id, a.body));
-export const useDeleteUser = () => useUserMutation(api.deleteUser);
+  useUserMutation((a                                                                       ) => api.updateUser(a.id, a.body, a.brandId));
+export const useDeleteUser = () => useUserMutation((a                                  ) => api.deleteUser(a.id, a.brandId));

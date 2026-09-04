@@ -1,7 +1,9 @@
 import {
   deepMerge,
+  defaultOutletConfig,
+  isReservedOutletSlug,
   outletConfigSchema,
-
+  slugSchema,
 } from "@onetap/config-schema";
 import {
   BrandModel,
@@ -41,7 +43,78 @@ export async function listOutlets(ctx               ) {
 /** Dev / super-admin view across all tenants — deliberately global. */
 export async function listAllOutlets() {
   const outlets = await OutletModel.find({}, null, { allowGlobalQuery: true }).sort({ createdAt: 1 }).lean();
+  const brands = await BrandModel.find({ _id: { $in: [...new Set(outlets.map((o) => o.brandId))] } }).lean();
+  const brandNameById = new Map(brands.map((b) => [String(b._id), b.name]));
+  return outlets.map((o) => ({ ...withDefaults(o), brandName: brandNameById.get(o.brandId) ?? "" }));
+}
+
+/** Every outlet for one brand — public, unauthenticated (powers the storefront's outlet picker). */
+export async function listOutletsForBrand(brandId        ) {
+  const outlets = await OutletModel.find({ brandId }, null, { allowGlobalQuery: true }).sort({ createdAt: 1 }).lean();
   return outlets.map(withDefaults);
+}
+
+/**
+ * The brand this hostname belongs to, and every outlet under it. Powers the
+ * storefront root page's "no outlet in the URL yet" resolution: a
+ * single-outlet brand redirects straight through with no picker shown; more
+ * than one shows a picker built from this list.
+ */
+export async function resolveBrandForHost(host        ) {
+  const anchor = await OutletModel.findOne({ hostnames: host }, null, { allowGlobalQuery: true }).lean();
+  if (!anchor) return null;
+
+  const brand = await BrandModel.findOne({ _id: anchor.brandId }).lean();
+  if (!brand) return null;
+
+  const outlets = await listOutletsForBrand(anchor.brandId);
+  return {
+    brand: { id: String(brand._id), name: brand.name, slug: brand.slug },
+    outlets: outlets.map((o) => ({
+      id: String(o._id),
+      slug: o.slug,
+      name: o.config.identity.name || o.name,
+      address: o.config.identity.address || "",
+      // null until the owner drops the map pin — lets the picker fall back to
+      // the manual list for any outlet distance can't be computed for.
+      location: o.config.identity.location?.point ?? null,
+    })),
+  };
+}
+
+/**
+ * A new physical location for a brand. Idempotent on slug: two outlets in
+ * the same brand can never share one (matches the unique index). Hostnames
+ * default to a sibling outlet's — every outlet in a brand shares the same
+ * domain, distinguished by slug in the URL, not by hostname.
+ */
+export async function createOutlet(ctx               , input                                             ) {
+  const slug = slugSchema.parse(input.slug.toLowerCase());
+  if (isReservedOutletSlug(slug)) {
+    throw new HttpError(400, `"${slug}" is reserved and can't be used as an outlet slug`);
+  }
+
+  const existing = await OutletModel.findOne(byBrand(ctx, { slug })).lean();
+  if (existing) throw new HttpError(409, "An outlet with that slug already exists for this brand");
+
+  let hostnames = input.hostnames?.filter(Boolean) ?? [];
+  if (hostnames.length === 0) {
+    const sibling = await OutletModel.findOne(byBrand(ctx)).sort({ createdAt: 1 }).lean();
+    hostnames = sibling?.hostnames ?? [];
+  }
+
+  const config = defaultOutletConfig();
+  config.identity.name = input.name;
+
+  const outlet = await OutletModel.create({
+    brandId: ctx.brandId,
+    name: input.name,
+    slug,
+    hostnames,
+    canonicalHostname: hostnames[0] ?? "",
+    config,
+  });
+  return withDefaults(outlet.toObject());
 }
 
 export async function getOutletById(ctx               , id        ) {
@@ -62,6 +135,25 @@ export async function resolveOutlet(opts
     const byId = await OutletModel.findOne({ _id: opts.id }, null, { allowGlobalQuery: true }).lean();
     return byId ? (withDefaults(byId)             ) : null;
   }
+
+  // Multi-outlet: every outlet in a brand shares the same domain, so a plain
+  // host lookup alone can't tell them apart. Resolve an "anchor" outlet by
+  // host first (any outlet in the brand has the same hostnames), then find
+  // the specific sibling by slug. Guarded to a bare (no "/") slug so this
+  // can never collide with the "brandSlug/outletSlug" dev-fallback shape
+  // below, which always has a slash.
+  if (opts.host && opts.slug && !opts.slug.includes("/")) {
+    const anchor = await OutletModel.findOne({ hostnames: opts.host }, null, { allowGlobalQuery: true }).lean();
+    if (anchor) {
+      const sibling = await OutletModel.findOne(
+        { brandId: anchor.brandId, slug: opts.slug },
+        null,
+        { allowGlobalQuery: true },
+      ).lean();
+      return sibling ? (withDefaults(sibling)             ) : null;
+    }
+  }
+
   if (opts.host) {
     const byHost = await OutletModel.findOne(
       { hostnames: opts.host },

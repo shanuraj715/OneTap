@@ -71,9 +71,19 @@ export function Settings() {
   const [draft, setDraft] = useState                     (null);
   const [dirty, setDirty] = useState(false);
 
+  // Re-syncs whenever the SELECTED OUTLET actually changes (switching in the
+  // sidebar doesn't unmount this page) — not just once. Any unsaved edits on
+  // the outlet just left are discarded, the same way switching away and back
+  // would; keying on outlet?._id (not the outlet object itself, which gets a
+  // new reference on every background refetch) means an in-progress edit on
+  // the SAME outlet is never stomped mid-typing.
   useEffect(() => {
-    if (outlet && !draft) setDraft(outlet.config);
-  }, [outlet, draft]);
+    if (outlet) {
+      setDraft(outlet.config);
+      setDirty(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [outlet?._id]);
 
   if (!outlet || !draft) {
     return (

@@ -28,6 +28,10 @@ export const ROLE_DESCRIPTIONS                       = {
 export const PERMISSIONS = [
   "outlet:read",
   "outlet:update",
+  // Creating a new physical location for the brand — owner/super_admin only,
+  // same tier as user:manage (see ROLE_PERMISSIONS.manager below, which
+  // deliberately doesn't get this).
+  "outlet:manage",
   "menu:read",
   "menu:update",
   "order:read",
