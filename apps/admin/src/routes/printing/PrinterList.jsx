@@ -300,66 +300,73 @@ function PrinterEditor({
           {printer ? `Edit ${printer.name}` : "Add a printer"}
         </h3>
 
-        <Field
-          label="Name"
-          info="What staff will call this printer in the queue and on the order screen. Use where it physically is — 'Kitchen Epson', 'Counter roll' — so the right person knows which machine to check when a job fails."
-        >
-          <TextInput value={form.name ?? ""} onChange={(e) => set({ name: e.target.value })} required placeholder="Kitchen Epson" />
-        </Field>
-
-        <Field
-          label="Station"
-          info="Where this printer sits. It decides what gets sent here — the kitchen station prints tickets with no prices, the counter prints the customer's receipt."
-          hint={STATION_HINTS[(form.station ?? "counter")                ]}
-        >
-          <Select
-            value={form.station}
-            onChange={(e) => {
-              const station = e.target.value                ;
-              set({ station, docType: STATION_DEFAULT_DOC[station] });
-            }}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
+          <Field
+            label="Name"
+            info="What staff will call this printer in the queue and on the order screen. Use where it physically is — 'Kitchen Epson', 'Counter roll' — so the right person knows which machine to check when a job fails."
+            style={{ maxWidth: "none" }}
           >
-            {PRINT_STATIONS.map((s) => (
-              <option key={s} value={s}>{STATION_LABELS[s]}</option>
-            ))}
-          </Select>
-        </Field>
+            <TextInput value={form.name ?? ""} onChange={(e) => set({ name: e.target.value })} required placeholder="Kitchen Epson" />
+          </Field>
 
-        <Field
-          label="Document"
-          info="Which slip this printer produces. A kitchen ticket deliberately omits prices and tax so cooks read item names fast; a receipt carries the money and the legal numbers."
-          hint={DOC_HINTS[(form.docType ?? "receipt")                ]}
-        >
-          <Select value={form.docType} onChange={(e) => set({ docType: e.target.value                , templateId: null })}>
-            {PRINT_DOCS.map((d) => (
-              <option key={d} value={d}>{DOC_LABELS[d]}</option>
-            ))}
-          </Select>
-        </Field>
+          <Field
+            label="Station"
+            info="Where this printer sits. It decides what gets sent here — the kitchen station prints tickets with no prices, the counter prints the customer's receipt."
+            hint={STATION_HINTS[(form.station ?? "counter")                ]}
+            style={{ maxWidth: "none" }}
+          >
+            <Select
+              value={form.station}
+              onChange={(e) => {
+                const station = e.target.value                ;
+                set({ station, docType: STATION_DEFAULT_DOC[station] });
+              }}
+            >
+              {PRINT_STATIONS.map((s) => (
+                <option key={s} value={s}>{STATION_LABELS[s]}</option>
+              ))}
+            </Select>
+          </Field>
 
-        <Field
-          label="Paper size"
-          info="The roll or sheet loaded in this printer. It sets how many characters fit on a line, so getting it wrong makes item names wrap in the wrong place."
-          hint={PAPER[(form.paperWidth ?? "80mm")              ].hint}
-        >
-          <Select value={form.paperWidth} onChange={(e) => set({ paperWidth: e.target.value               })}>
-            {PAPER_WIDTHS.map((w) => (
-              <option key={w} value={w}>{PAPER[w].label}</option>
-            ))}
-          </Select>
-        </Field>
+          <Field
+            label="Document"
+            info="Which slip this printer produces. A kitchen ticket deliberately omits prices and tax so cooks read item names fast; a receipt carries the money and the legal numbers."
+            hint={DOC_HINTS[(form.docType ?? "receipt")                ]}
+            style={{ maxWidth: "none" }}
+          >
+            <Select value={form.docType} onChange={(e) => set({ docType: e.target.value                , templateId: null })}>
+              {PRINT_DOCS.map((d) => (
+                <option key={d} value={d}>{DOC_LABELS[d]}</option>
+              ))}
+            </Select>
+          </Field>
 
-        <Field
-          label="Template"
-          info="The layout this printer uses. Leave it on the default unless you have made a second version — for example a bigger-type kitchen ticket for a noisy kitchen."
-        >
-          <Select value={form.templateId ?? ""} onChange={(e) => set({ templateId: e.target.value || null })}>
-            <option value="">Default for this document</option>
-            {usable.map((t) => (
-              <option key={t.id} value={t.id}>{t.name}</option>
-            ))}
-          </Select>
-        </Field>
+          <Field
+            label="Paper size"
+            info="The roll or sheet loaded in this printer. It sets how many characters fit on a line, so getting it wrong makes item names wrap in the wrong place."
+            hint={PAPER[(form.paperWidth ?? "80mm")              ].hint}
+            style={{ maxWidth: "none" }}
+          >
+            <Select value={form.paperWidth} onChange={(e) => set({ paperWidth: e.target.value               })}>
+              {PAPER_WIDTHS.map((w) => (
+                <option key={w} value={w}>{PAPER[w].label}</option>
+              ))}
+            </Select>
+          </Field>
+
+          <Field
+            label="Template"
+            info="The layout this printer uses. Leave it on the default unless you have made a second version — for example a bigger-type kitchen ticket for a noisy kitchen."
+            style={{ maxWidth: "none" }}
+          >
+            <Select value={form.templateId ?? ""} onChange={(e) => set({ templateId: e.target.value || null })}>
+              <option value="">Default for this document</option>
+              {usable.map((t) => (
+                <option key={t.id} value={t.id}>{t.name}</option>
+              ))}
+            </Select>
+          </Field>
+        </div>
 
         {/* ------------------------------------------------------ connection */}
 
@@ -411,9 +418,11 @@ function PrinterEditor({
 
         {target === "cloud" ? (
           <>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
             <Field
               label="Cloud printer id"
               info="The id your cloud print account gives this printer. In PrintNode it is the number shown beside the printer in their dashboard."
+              style={{ maxWidth: "none" }}
             >
               <TextInput value={form.connection?.cloudPrinterId ?? ""} onChange={(e) => setConn({ cloudPrinterId: e.target.value })} placeholder="70123456" />
             </Field>
@@ -421,6 +430,7 @@ function PrinterEditor({
               label="API key"
               info="The secret for your cloud print account. It is encrypted before it is stored and never sent back to this screen — leave it blank to keep the key already saved."
               hint={printer?.cloudApiKeySet ? "A key is already saved. Type a new one only to replace it." : "Required before this printer can print."}
+              style={{ maxWidth: "none" }}
             >
               <TextInput
                 type="password"
@@ -430,6 +440,7 @@ function PrinterEditor({
                 placeholder={printer?.cloudApiKeySet ? "•••••••• saved" : ""}
               />
             </Field>
+            </div>
           </>
         ) : null}
 
@@ -551,19 +562,23 @@ function AgentFields({
 
   return (
     <>
-      <Field
-        label="Agent id"
-        info="A name you choose for the computer that will do the printing — 'counter-pc', 'kitchen-pi'. You type the same name when installing the agent, and it is how this printer's jobs find that machine."
-      >
-        <TextInput value={form.connection?.agentId ?? ""} onChange={(e) => setConn({ agentId: e.target.value })} placeholder="counter-pc" />
-      </Field>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
+        <Field
+          label="Agent id"
+          info="A name you choose for the computer that will do the printing — 'counter-pc', 'kitchen-pi'. You type the same name when installing the agent, and it is how this printer's jobs find that machine."
+          style={{ maxWidth: "none" }}
+        >
+          <TextInput value={form.connection?.agentId ?? ""} onChange={(e) => setConn({ agentId: e.target.value })} placeholder="counter-pc" />
+        </Field>
 
-      <Field
-        label="Printer queue name"
-        info="The name this printer has in the operating system of that computer — exactly as it appears in Windows' Printers list or macOS' Printers & Scanners."
-      >
-        <TextInput value={form.connection?.queueName ?? ""} onChange={(e) => setConn({ queueName: e.target.value })} placeholder="EPSON TM-T82" />
-      </Field>
+        <Field
+          label="Printer queue name"
+          info="The name this printer has in the operating system of that computer — exactly as it appears in Windows' Printers list or macOS' Printers & Scanners."
+          style={{ maxWidth: "none" }}
+        >
+          <TextInput value={form.connection?.queueName ?? ""} onChange={(e) => setConn({ queueName: e.target.value })} placeholder="EPSON TM-T82" />
+        </Field>
+      </div>
 
       {printer ? (
         <div style={{ marginBottom: 14 }}>

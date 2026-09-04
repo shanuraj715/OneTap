@@ -171,11 +171,13 @@ export function Settings() {
       {tab === "business" ? (
         <>
           <Card title="Business identity" subtitle="Used on the storefront, on receipts, and on tax invoices.">
-            {IDENTITY_FIELDS.map((f) => (
-              <Field key={f.key} label={f.label} hint={f.hint} info={f.info}>
-                <TextInput value={String(draft.identity[f.key] ?? "")} onChange={(e) => setIdentity(f.key, e.target.value)} />
-              </Field>
-            ))}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14 }}>
+              {IDENTITY_FIELDS.map((f) => (
+                <Field key={f.key} label={f.label} hint={f.hint} info={f.info} style={{ maxWidth: "none" }}>
+                  <TextInput value={String(draft.identity[f.key] ?? "")} onChange={(e) => setIdentity(f.key, e.target.value)} />
+                </Field>
+              ))}
+            </div>
           </Card>
 
           <Card title="Map location" subtitle="The origin for delivery distance." icon={<MapPin size={15} />}>

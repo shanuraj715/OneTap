@@ -60,7 +60,7 @@ export function MenuEditor() {
         subtitle={`${menu.categories.length} categories · ${menu.items.length} items`}
       />
 
-      <div style={{ display: "grid", gridTemplateColumns: "230px 1fr", gap: 20, alignItems: "start" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "300px 1fr", gap: 20, alignItems: "start" }}>
         <Categories
           outlet={outlet}
           menu={menu}
@@ -142,6 +142,8 @@ function Categories({
                 >
                   <span>{c.name}</span>
                   <span style={{ opacity: 0.7, fontSize: 12 }}>{count}</span>
+                  <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.name}</span>
+                  <span style={{ opacity: 0.7, fontSize: 12, flexShrink: 0 }}>{count}</span>
                 </button>
                 <button
                   type="button"
@@ -324,26 +326,28 @@ function ItemForm({
         </Button>
       }
     >
-      <Field label="Name" info="What diners see on the menu and what the kitchen reads on the ticket. Keep it short — long names wrap awkwardly on a 58 mm receipt roll.">
-        <TextInput value={name} onChange={(e) => setName(e.target.value)} autoFocus />
-      </Field>
-      <Field label="Description" info="One line under the item on the website. Use it for what is actually in the dish; it never prints on a kitchen ticket, so it costs the cooks nothing.">
-        <TextInput value={description} onChange={(e) => setDescription(e.target.value)} />
-      </Field>
-      <Field label="Food type" hint="Shown as the FSSAI veg / non-veg mark" info="Sets the green or brown square beside the item. Indian packaging and menu rules require this mark, and diners scan for it before they read anything else — getting it wrong on a single item is a real complaint.">
-        <select
-          value={foodType}
-          onChange={(e) => setFoodType(e.target.value            )}
-          style={selectStyle}
-        >
-          <option value="veg">Veg</option>
-          <option value="non-veg">Non-veg</option>
-          <option value="egg">Contains egg</option>
-        </select>
-      </Field>
-      <Field label="Tags" hint="Comma separated, e.g. bestseller, spicy" info="Short labels shown as chips on the item card. Use them for the things people choose by — bestseller, spicy, jain — not for a second description.">
-        <TextInput value={tags} onChange={(e) => setTags(e.target.value)} />
-      </Field>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 14 }}>
+        <Field label="Name" info="What diners see on the menu and what the kitchen reads on the ticket. Keep it short — long names wrap awkwardly on a 58 mm receipt roll." style={{ maxWidth: "none" }}>
+          <TextInput value={name} onChange={(e) => setName(e.target.value)} autoFocus />
+        </Field>
+        <Field label="Description" info="One line under the item on the website. Use it for what is actually in the dish; it never prints on a kitchen ticket, so it costs the cooks nothing." style={{ maxWidth: "none" }}>
+          <TextInput value={description} onChange={(e) => setDescription(e.target.value)} />
+        </Field>
+        <Field label="Food type" hint="Shown as the FSSAI veg / non-veg mark" info="Sets the green or brown square beside the item. Indian packaging and menu rules require this mark, and diners scan for it before they read anything else — getting it wrong on a single item is a real complaint." style={{ maxWidth: "none" }}>
+          <select
+            value={foodType}
+            onChange={(e) => setFoodType(e.target.value            )}
+            style={selectStyle}
+          >
+            <option value="veg">Veg</option>
+            <option value="non-veg">Non-veg</option>
+            <option value="egg">Contains egg</option>
+          </select>
+        </Field>
+        <Field label="Tags" hint="Comma separated, e.g. bestseller, spicy" info="Short labels shown as chips on the item card. Use them for the things people choose by — bestseller, spicy, jain — not for a second description." style={{ maxWidth: "none" }}>
+          <TextInput value={tags} onChange={(e) => setTags(e.target.value)} />
+        </Field>
+      </div>
 
       <div style={{ borderTop: "1px solid var(--color-border)", margin: "6px 0 14px", paddingTop: 14 }}>
         <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 3 }}>Photos</div>
@@ -650,8 +654,9 @@ function Mark({ type }                    ) {
   );
 }
 
-const catBtn                = {
+const catBtn = {
   flex: 1,
+  minWidth: 0,
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",

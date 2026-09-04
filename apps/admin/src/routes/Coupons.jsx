@@ -275,22 +275,25 @@ function CouponEditor({ outlet, coupon, onClose }                               
           </button>
         </div>
 
-        <Field
-          label="Code"
-          info="What the customer types at checkout. Letters, digits, dash and underscore only — it's matched without caring about capitals, but shown uppercase."
-        >
-          <TextInput
-            value={form.code}
-            onChange={(e) => set({ code: e.target.value.toUpperCase().replace(/[^A-Z0-9_-]/g, "") })}
-            required
-            placeholder="SAVE20"
-            style={{ fontFamily: "ui-monospace, monospace", fontWeight: 700 }}
-          />
-        </Field>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
+          <Field
+            label="Code"
+            info="What the customer types at checkout. Letters, digits, dash and underscore only — it's matched without caring about capitals, but shown uppercase."
+            style={{ maxWidth: "none" }}
+          >
+            <TextInput
+              value={form.code}
+              onChange={(e) => set({ code: e.target.value.toUpperCase().replace(/[^A-Z0-9_-]/g, "") })}
+              required
+              placeholder="SAVE20"
+              style={{ fontFamily: "ui-monospace, monospace", fontWeight: 700 }}
+            />
+          </Field>
 
-        <Field label="Description" info="Only you see this — a note about the campaign, e.g. 'Diwali 2026 flyer'.">
-          <TextInput value={form.description} onChange={(e) => set({ description: e.target.value })} />
-        </Field>
+          <Field label="Description" info="Only you see this — a note about the campaign, e.g. 'Diwali 2026 flyer'." style={{ maxWidth: "none" }}>
+            <TextInput value={form.description} onChange={(e) => set({ description: e.target.value })} />
+          </Field>
+        </div>
 
         <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
           <Field label="Type" style={narrow} info="A flat amount off, or a percentage of the item total.">
@@ -315,15 +318,15 @@ function CouponEditor({ outlet, coupon, onClose }                               
               </Field>
             </>
           )}
-        </div>
 
-        <Field
-          label="Minimum order (₹)"
-          info="The item total must reach this before the coupon works. Set 0 for no minimum. A common lever: '₹50 off orders above ₹300'."
-          style={narrow}
-        >
-          <TextInput type="number" min={0} value={rupees(form.minOrderValue)} onChange={(e) => set({ minOrderValue: paise(e.target.value) })} />
-        </Field>
+          <Field
+            label="Minimum order (₹)"
+            info="The item total must reach this before the coupon works. Set 0 for no minimum. A common lever: '₹50 off orders above ₹300'."
+            style={narrow}
+          >
+            <TextInput type="number" min={0} value={rupees(form.minOrderValue)} onChange={(e) => set({ minOrderValue: paise(e.target.value) })} />
+          </Field>
+        </div>
 
         <fieldset style={fieldset}>
           <legend style={legend}>

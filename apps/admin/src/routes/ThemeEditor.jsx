@@ -167,11 +167,13 @@ export function ThemeEditor() {
         {/* -------------------------------------------------------- controls */}
         <div style={{ minWidth: 0 }}>
           <Card title="Colours">
-            {COLOR_FIELDS.map((f) => (
-              <Field key={f.key} label={f.label} info={f.info}>
-                <ColorInput value={tokens[f.key]} onChange={(v) => set(f.key, v)} />
-              </Field>
-            ))}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 14 }}>
+              {COLOR_FIELDS.map((f) => (
+                <Field key={f.key} label={f.label} info={f.info} style={{ maxWidth: "none" }}>
+                  <ColorInput value={tokens[f.key]} onChange={(v) => set(f.key, v)} />
+                </Field>
+              ))}
+            </div>
           </Card>
 
           <Card title="Shape">

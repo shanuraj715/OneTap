@@ -173,56 +173,62 @@ function TemplateForm({
     <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 340px)", gap: 18, alignItems: "start" }}>
       <div style={{ minWidth: 0 }}>
         <Card title="Paper & logo">
-          <Field
-            label="Template name"
-            info="Only you see this. Name it after when you'd use it — 'Kitchen ticket — big type' — so the right one is easy to pick on a printer."
-          >
-            <TextInput value={form.name} onChange={(e) => set({ name: e.target.value })} />
-          </Field>
-
-          <Field
-            label="Document type"
-            info="What kind of slip this is. It decides the defaults and, importantly, whether prices appear at all — a kitchen ticket never shows money."
-            hint={DOC_HINTS[form.docType]}
-          >
-            <Select
-              value={form.docType}
-              onChange={(e) => set({ docType: e.target.value                 })}
-              disabled={form.isDefault}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 14 }}>
+            <Field
+              label="Template name"
+              info="Only you see this. Name it after when you'd use it — 'Kitchen ticket — big type' — so the right one is easy to pick on a printer."
+              style={{ maxWidth: "none" }}
             >
-              {PRINT_DOCS.map((d) => (
-                <option key={d} value={d}>{DOC_LABELS[d]}</option>
-              ))}
-            </Select>
-          </Field>
+              <TextInput value={form.name} onChange={(e) => set({ name: e.target.value })} />
+            </Field>
 
-          <Field
-            label="Paper size"
-            info="Sets the width the layout is built for. 80 mm gives 48 characters a line, 58 mm only 32 — so the same receipt wraps very differently on each."
-            hint={`${PAPER[form.paperWidth].hint} Currently ${cols} characters per line.`}
-          >
-            <Select value={form.paperWidth} onChange={(e) => set({ paperWidth: e.target.value               })}>
-              {PAPER_WIDTHS.map((w) => (
-                <option key={w} value={w}>{PAPER[w].label}</option>
-              ))}
-            </Select>
-          </Field>
+            <Field
+              label="Document type"
+              info="What kind of slip this is. It decides the defaults and, importantly, whether prices appear at all — a kitchen ticket never shows money."
+              hint={DOC_HINTS[form.docType]}
+              style={{ maxWidth: "none" }}
+            >
+              <Select
+                value={form.docType}
+                onChange={(e) => set({ docType: e.target.value                 })}
+                disabled={form.isDefault}
+              >
+                {PRINT_DOCS.map((d) => (
+                  <option key={d} value={d}>{DOC_LABELS[d]}</option>
+                ))}
+              </Select>
+            </Field>
 
-          <Field
-            label="Colour"
-            info="Thermal receipt printers burn black only — a few models add red with special paper. Choose colour only for A4 or A5 documents going to an inkjet or laser printer."
-            hint={
-              PAPER[form.paperWidth].continuous && form.colorMode === "color"
-                ? "⚠ This is a thermal roll, so it will still print black."
-                : undefined
-            }
-          >
-            <Select value={form.colorMode} onChange={(e) => set({ colorMode: e.target.value              })}>
-              {COLOR_MODES.map((c) => (
-                <option key={c} value={c}>{COLOR_MODE_LABELS[c]}</option>
-              ))}
-            </Select>
-          </Field>
+            <Field
+              label="Paper size"
+              info="Sets the width the layout is built for. 80 mm gives 48 characters a line, 58 mm only 32 — so the same receipt wraps very differently on each."
+              hint={`${PAPER[form.paperWidth].hint} Currently ${cols} characters per line.`}
+              style={{ maxWidth: "none" }}
+            >
+              <Select value={form.paperWidth} onChange={(e) => set({ paperWidth: e.target.value               })}>
+                {PAPER_WIDTHS.map((w) => (
+                  <option key={w} value={w}>{PAPER[w].label}</option>
+                ))}
+              </Select>
+            </Field>
+
+            <Field
+              label="Colour"
+              info="Thermal receipt printers burn black only — a few models add red with special paper. Choose colour only for A4 or A5 documents going to an inkjet or laser printer."
+              hint={
+                PAPER[form.paperWidth].continuous && form.colorMode === "color"
+                  ? "⚠ This is a thermal roll, so it will still print black."
+                  : undefined
+              }
+              style={{ maxWidth: "none" }}
+            >
+              <Select value={form.colorMode} onChange={(e) => set({ colorMode: e.target.value              })}>
+                {COLOR_MODES.map((c) => (
+                  <option key={c} value={c}>{COLOR_MODE_LABELS[c]}</option>
+                ))}
+              </Select>
+            </Field>
+          </div>
 
           <LogoField form={form} set={set} />
 
