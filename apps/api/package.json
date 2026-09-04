@@ -4,18 +4,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "tsx watch --ignore \"**/.local-db/**\" src/server.ts",
-    "db:local": "tsx src/scripts/local-db.ts",
-    "build": "tsc -p tsconfig.build.json",
-    "start": "node dist/server.js",
-    "seed": "tsx src/scripts/seed.ts",
-    "typecheck": "tsc --noEmit",
-    "clean": "rm -rf dist .turbo *.tsbuildinfo"
+    "dev": "node --watch src/server.js",
+    "db:local": "node src/scripts/local-db.js",
+    "start": "node src/server.js",
+    "seed": "node src/scripts/seed.js",
+    "clean": "rm -rf dist .turbo"
   },
   "dependencies": {
     "@onetap/config-schema": "workspace:*",
     "@onetap/db": "workspace:*",
-    "@types/qrcode": "^1.5.6",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
@@ -28,15 +25,7 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@types/cookie-parser": "^1.4.8",
-    "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.0",
-    "@types/node": "^22.10.5",
-    "@types/qrcode": "^1.5.6",
-    "@types/ws": "^8.18.1",
     "mongodb-memory-server": "^10.1.2",
-    "pino-pretty": "^13.0.0",
-    "tsx": "^4.19.2",
-    "typescript": "^5.7.2"
+    "pino-pretty": "^13.0.0"
   }
 }

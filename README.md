@@ -9,7 +9,7 @@ feature-toggled entirely from the admin panel.
 | --- | --- | --- |
 | `apps/storefront` | Next.js (App Router) — customer site | **3070** |
 | `apps/admin` | React + Vite SPA — admin / CMS / counter billing | **3071** |
-| `apps/api` | Node + Express (TypeScript) + MongoDB | **3072** |
+| `apps/api` | Node + Express (JavaScript, ESM) + MongoDB | **3072** |
 | `packages/config-schema` | Zod schemas for tenant config (shared) | — |
 | `packages/db` | Mongoose models + the tenant-scoping plugin | — |
 | `packages/ui` | Shared component library + design tokens | — |

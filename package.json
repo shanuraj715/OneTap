@@ -2,7 +2,7 @@
   "name": "onetap",
   "version": "0.0.0",
   "private": true,
-  "description": "OneTap \u2014 multi-tenant restaurant platform",
+  "description": "OneTap — multi-tenant restaurant platform",
   "packageManager": "pnpm@11.25.0",
   "engines": {
     "node": ">=20.9.0"
@@ -14,14 +14,12 @@
     "dev:admin": "pnpm --filter @onetap/admin dev",
     "db:local": "pnpm --filter @onetap/api db:local",
     "build": "turbo run build",
-    "typecheck": "turbo run typecheck",
     "lint": "turbo run lint",
     "seed": "pnpm --filter @onetap/api seed",
     "kill": "lsof -ti tcp:3070 tcp:3071 tcp:3072 | xargs -r kill -9 || true",
     "clean": "turbo run clean"
   },
   "devDependencies": {
-    "turbo": "^2.3.3",
-    "typescript": "^5.7.2"
+    "turbo": "^2.3.3"
   }
 }
