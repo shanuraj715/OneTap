@@ -275,11 +275,28 @@ export function Ordering({
       ) : null}
 
       {count > 0 && !open ? (
-        <button type="button" style={cartBar} onClick={() => setOpen(true)}>
-          <span>
-            {count} item{count > 1 ? "s" : ""}
-          </span>
-          <span>{priced ? formatINR(priced.totals.grandTotal) : "…"} · View cart</span>
+        <button
+          type="button"
+          className="ot-press"
+          style={cartBar}
+          onClick={() => {
+            setStep("cart");
+            setOpen(true);
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 8, whiteSpace: "nowrap" }}>
+            <span style={{ fontWeight: 700 }}>
+              {count} {count === 1 ? "item" : "items"}
+            </span>
+            <span style={{ opacity: 0.6 }}>·</span>
+            <span style={{ fontWeight: 700, fontVariantNumeric: "tabular-nums" }}>
+              {priced ? formatINR(priced.totals.grandTotal) : "…"}
+            </span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, fontWeight: 700, whiteSpace: "nowrap" }}>
+            <span>View cart</span>
+            <span aria-hidden style={{ fontSize: 16 }}>→</span>
+          </div>
         </button>
       ) : null}
 
@@ -1390,25 +1407,30 @@ const closeBtn                = {
   cursor: "pointer",
   lineHeight: 1,
 };
-const cartBar                = {
+const cartBar = {
   position: "fixed",
   left: "50%",
-  bottom: 20,
+  bottom: "calc(20px + env(safe-area-inset-bottom, 0px))",
   transform: "translateX(-50%)",
   zIndex: 40,
   display: "flex",
   alignItems: "center",
-  gap: 20,
+  justifyContent: "space-between",
+  gap: 16,
+  width: "calc(100% - 32px)",
+  maxWidth: 420,
+  boxSizing: "border-box",
   font: "inherit",
   fontWeight: 600,
-  fontSize: 14,
-  padding: "13px 22px",
+  fontSize: 14.5,
+  padding: "13px 20px",
   borderRadius: 999,
   background: "var(--color-primary)",
   color: "var(--color-on-primary)",
   border: "none",
   cursor: "pointer",
-  boxShadow: "0 6px 24px rgba(0,0,0,0.25)",
+  boxShadow: "0 8px 30px rgba(0, 0, 0, 0.28), 0 2px 8px rgba(0, 0, 0, 0.12)",
+  whiteSpace: "nowrap",
 };
 const label                = { display: "block", fontSize: 12.5, fontWeight: 600, marginTop: 14, marginBottom: 5 };
 const input                = {
