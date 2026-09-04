@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { menuImageSchema } from "./storage.js";
 
 /** Money is always integer paise. ₹110.00 => 11000. */
 export function formatINR(paise        )         {
@@ -41,6 +42,8 @@ export const menuItemSchema = z.object({
   description: z.string().default(""),
   foodType: foodTypeSchema.default("veg"),
   tags: z.array(z.string()).default([]),
+  /** item photos, in display order — the first is the primary/card image */
+  images: z.array(menuImageSchema).default([]),
   /** used when there are no variants */
   basePrice: z.number().int().nonnegative().default(0),
   variants: z.array(variantSchema).default([]),
@@ -49,7 +52,8 @@ export const menuItemSchema = z.object({
   isAvailable: z.boolean().default(true),
   sortOrder: z.number().int().default(0),
 });
-                                                      
+/** @typedef {z.infer<typeof menuItemSchema>} MenuItem */
+/** @typedef {z.infer<typeof menuSchema>} Menu */
 
 export const menuCategorySchema = z.object({
   id: z.string(),

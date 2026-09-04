@@ -19,3 +19,4 @@ export * from "./wallet.js";
 export * from "./order-notify.js";
 export * from "./capacity.js";
 export * from "./dashboard.js";
+export * from "./storage.js";

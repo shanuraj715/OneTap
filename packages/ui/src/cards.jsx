@@ -41,7 +41,7 @@ export function RowCompact({ item }               ) {
 export function RowThumbLeft({ item }               ) {
   return (
     <article style={{ ...cardBase, ...dim(item), display: "flex", gap: 14, padding: 12 }}>
-      <Photo name={item.name} style={{ width: 72, height: 72 }} radius={10} />
+      <Photo name={item.name} src={item.images?.[0]?.url} style={{ width: 72, height: 72 }} radius={10} />
       <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", justifyContent: "center" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2 }}>
           <FoodMark type={item.foodType} size={13} />
@@ -72,7 +72,7 @@ export function RowThumbRight({ item }               ) {
           <Price item={item} />
         </div>
       </div>
-      <Photo name={item.name} style={{ width: 84, height: 84 }} radius={10} />
+      <Photo name={item.name} src={item.images?.[0]?.url} style={{ width: 84, height: 84 }} radius={10} />
     </article>
   );
 }
@@ -81,7 +81,7 @@ export function RowThumbRight({ item }               ) {
 export function ImageTop({ item }               ) {
   return (
     <article style={{ ...cardBase, ...dim(item), display: "flex", flexDirection: "column" }}>
-      <Photo name={item.name} style={{ aspectRatio: "4 / 3", width: "100%" }} radius={0} />
+      <Photo name={item.name} src={item.images?.[0]?.url} style={{ aspectRatio: "4 / 3", width: "100%" }} radius={0} />
       <div style={{ padding: 14, display: "flex", flexDirection: "column", gap: 6, flex: 1 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <FoodMark type={item.foodType} size={13} />
@@ -105,7 +105,7 @@ export function ImageTopBadge({ item }               ) {
   return (
     <article style={{ ...cardBase, ...dim(item), display: "flex", flexDirection: "column" }}>
       <div style={{ position: "relative" }}>
-        <Photo name={item.name} style={{ aspectRatio: "3 / 2", width: "100%" }} radius={0} />
+        <Photo name={item.name} src={item.images?.[0]?.url} style={{ aspectRatio: "3 / 2", width: "100%" }} radius={0} />
         <span
           style={{
             position: "absolute",
@@ -153,7 +153,7 @@ export function TextAboveImage({ item }               ) {
         </div>
         {item.description ? <div style={descStyle}>{item.description}</div> : null}
       </div>
-      <Photo name={item.name} style={{ aspectRatio: "16 / 9", width: "100%" }} radius={0} />
+      <Photo name={item.name} src={item.images?.[0]?.url} style={{ aspectRatio: "16 / 9", width: "100%" }} radius={0} />
     </article>
   );
 }
@@ -162,7 +162,7 @@ export function TextAboveImage({ item }               ) {
 export function ImageOverlay({ item }               ) {
   return (
     <article style={{ ...cardBase, ...dim(item), position: "relative", minHeight: 190, display: "flex" }}>
-      <Photo name={item.name} style={{ position: "absolute", inset: 0 }} radius={0} />
+      <Photo name={item.name} src={item.images?.[0]?.url} style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} radius={0} />
       <div
         style={{
           position: "relative",
@@ -195,7 +195,7 @@ export function ImageOverlay({ item }               ) {
 export function Portrait({ item }               ) {
   return (
     <article style={{ ...cardBase, ...dim(item), display: "flex", flexDirection: "column" }}>
-      <Photo name={item.name} style={{ aspectRatio: "3 / 4", width: "100%" }} radius={0} />
+      <Photo name={item.name} src={item.images?.[0]?.url} style={{ aspectRatio: "3 / 4", width: "100%" }} radius={0} />
       <div style={{ padding: 14, textAlign: "center" }}>
         <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 6 }}>
           <FoodMark type={item.foodType} size={13} />
@@ -225,7 +225,7 @@ export function Circle({ item }               ) {
         gap: 10,
       }}
     >
-      <Photo name={item.name} style={{ width: 104, height: 104 }} radius="50%" />
+      <Photo name={item.name} src={item.images?.[0]?.url} style={{ width: 104, height: 104 }} radius="50%" />
       <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
         <FoodMark type={item.foodType} size={13} />
         <Tags tags={item.tags} />
@@ -266,7 +266,7 @@ export function MenuLine({ item }               ) {
 export function FeaturedWide({ item }               ) {
   return (
     <article style={{ ...cardBase, ...dim(item), display: "flex", minHeight: 150, gridColumn: "1 / -1" }}>
-      <Photo name={item.name} style={{ width: "38%", minWidth: 130 }} radius={0} />
+      <Photo name={item.name} src={item.images?.[0]?.url} style={{ width: "38%", minWidth: 130, alignSelf: "stretch" }} radius={0} />
       <div style={{ flex: 1, padding: 20, display: "flex", flexDirection: "column", justifyContent: "center", gap: 8 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <FoodMark type={item.foodType} size={14} />

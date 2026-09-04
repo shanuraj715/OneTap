@@ -6,6 +6,7 @@ import {
   Bell,
   CreditCard,
   ExternalLink,
+  HardDrive,
   PanelLeftClose,
   PanelLeftOpen,
   LayoutDashboard,
@@ -39,6 +40,7 @@ import { Payments } from "./routes/Payments";
 import { Printing } from "./routes/Printing";
 import { Tables } from "./routes/Tables";
 import { Settings } from "./routes/Settings";
+import { Storage } from "./routes/Storage";
 import { ThemeEditor } from "./routes/ThemeEditor";
 import { TypographyEditor } from "./routes/TypographyEditor";
 import { Users } from "./routes/Users";
@@ -68,7 +70,10 @@ const NAV_GROUPS                                         = [
   },
   {
     group: "Catalogue",
-    items: [{ to: "/menu", label: "Menu", icon: <UtensilsCrossed size={ICON} />, permission: "menu:read" }],
+    items: [
+      { to: "/menu", label: "Menu", icon: <UtensilsCrossed size={ICON} />, permission: "menu:read" },
+      { to: "/storage", label: "Storage", icon: <HardDrive size={ICON} />, permission: "storage-config:read" },
+    ],
   },
   {
     group: "Storefront",
@@ -216,6 +221,7 @@ function Shell({ can }                                     ) {
           <Route path="/" element={<Dashboard />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/menu" element={<MenuEditor />} />
+          <Route path="/storage" element={<Storage />} />
           <Route path="/menu-layout" element={<MenuLayout />} />
           <Route path="/coupons" element={<Coupons />} />
           <Route path="/tables" element={<Tables />} />

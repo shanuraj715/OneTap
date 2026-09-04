@@ -3,8 +3,9 @@ import cors from "cors";
 import express, {              } from "express";
 import helmet from "helmet";
 import { pinoHttp } from "pino-http";
-import { corsOrigins } from "./env.js";
+import { corsOrigins, env } from "./env.js";
 import { logger } from "./logger.js";
+import { localUploadsPath } from "./modules/storage/providers/index.js";
 import { authenticate } from "./middleware/auth.js";
 import { errorHandler, notFound } from "./middleware/error.js";
 import { authRouter } from "./modules/auth/auth.routes.js";
@@ -21,6 +22,7 @@ import { outletsRouter } from "./modules/outlets/outlets.routes.js";
 import { paymentsRouter } from "./modules/payments/payments.routes.js";
 import { previewRouter } from "./modules/preview/preview.routes.js";
 import { printingRouter } from "./modules/printing/printing.routes.js";
+import { storageRouter } from "./modules/storage/storage.routes.js";
 import { tablesRouter } from "./modules/tables/tables.routes.js";
 import { usersRouter } from "./modules/users/users.routes.js";
 
@@ -29,6 +31,25 @@ export function createApp()          {
 
   app.disable("x-powered-by");
   app.set("trust proxy", 1);
+
+  // Locally-stored uploads (the `local` storage provider). Mounted before helmet
+  // so its same-origin CORP header doesn't stop the storefront — a different
+  // origin — from loading the images. Immutable: every object has a unique key.
+  app.use(
+    "/uploads",
+    express.static(localUploadsPath(env.UPLOADS_DIR), {
+      index: false,
+      dotfiles: "ignore",
+      fallthrough: true,
+      maxAge: "365d",
+      setHeaders: (res) => {
+        res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+        res.setHeader("Access-Control-Allow-Origin", "*");
+        res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+      },
+    }),
+  );
+
   app.use(helmet());
   app.use(cors({ origin: corsOrigins, credentials: true }));
   app.use(
@@ -59,6 +80,7 @@ export function createApp()          {
   app.use("/api/tables", tablesRouter);
   app.use("/api/printing", printingRouter);
   app.use("/api/preview", previewRouter);
+  app.use("/api/storage", storageRouter);
   app.use("/api/customers", customersRouter);
   app.use("/api/notify", notifyRouter);
   app.use("/api/dashboard", dashboardRouter);

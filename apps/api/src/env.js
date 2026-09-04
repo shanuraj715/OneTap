@@ -11,6 +11,10 @@ const schema = z.object({
   ENCRYPTION_KEY: z.string().min(16).default("dev-only-insecure-encryption-key-change-me"),
   /** allows the mock payment gateway; never true in production */
   ALLOW_MOCK_GATEWAY: z.coerce.boolean().default(true),
+  /** this API's own public origin — used to build URLs for locally-stored uploads */
+  PUBLIC_API_URL: z.string().default(""),
+  /** where the local storage provider writes uploads (relative to the API's working dir) */
+  UPLOADS_DIR: z.string().default(".uploads"),
 });
 
 const parsed = schema.safeParse(process.env);
@@ -22,3 +26,5 @@ if (!parsed.success) {
 export const env = parsed.data;
 export const isProd = env.NODE_ENV === "production";
 export const corsOrigins = env.CORS_ORIGINS.split(",").map((s) => s.trim()).filter(Boolean);
+/** This API's public origin, for building absolute URLs to locally-stored uploads. */
+export const publicApiUrl = (env.PUBLIC_API_URL || `http://localhost:${env.API_PORT}`).replace(/\/$/, "");

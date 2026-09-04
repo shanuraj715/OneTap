@@ -52,6 +52,8 @@ export const PERMISSIONS = [
   "notification-config:manage",
   "notification-log:read",
   "dashboard:configure",
+  "storage-config:read",
+  "storage-config:manage",
 ]         ;
                                                       
 
@@ -60,7 +62,7 @@ const ALL = [...PERMISSIONS];
 export const ROLE_PERMISSIONS                             = {
   super_admin: ALL,
   owner: ALL,
-  manager: ["outlet:read", "menu:read", "menu:update", "order:read", "order:update", "table:read", "table:manage", "payment-config:read", "printer:read", "printer:manage", "print:job", "coupon:read", "coupon:manage", "appearance:update", "theme:update", "settings:update", "customer:read", "notification-config:read", "notification-log:read", "dashboard:configure"],
+  manager: ["outlet:read", "menu:read", "menu:update", "order:read", "order:update", "table:read", "table:manage", "payment-config:read", "printer:read", "printer:manage", "print:job", "coupon:read", "coupon:manage", "appearance:update", "theme:update", "settings:update", "customer:read", "notification-config:read", "notification-log:read", "dashboard:configure", "storage-config:read"],
   // A cashier must be able to reprint a torn receipt without calling a manager.
   staff: ["outlet:read", "menu:read", "order:read", "order:update", "table:read", "table:manage", "printer:read", "print:job", "coupon:read"],
   // Same for the kitchen when a KOT is lost — but they can't reconfigure printers.

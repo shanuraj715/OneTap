@@ -37,18 +37,43 @@ export function FoodMark({ type, size = 14 }                                   )
 }
 
 /**
- * Stand-in for the item photo until asset storage lands. Deterministic warm
- * gradient per item name so cards look distinct in layout previews.
+ * The item photo. When the item has an uploaded image (`src`) it renders that,
+ * cover-cropped to the slot the card gives it. With no image it falls back to a
+ * deterministic warm gradient keyed off the name, so a menu with photos on some
+ * items and not others still looks intentional.
  */
 export function Photo({
   name,
+  src,
+  alt,
   style,
   radius = "var(--radius-card)",
-}   
-               
-                        
-                           
+}
+
+
+
+
+
  ) {
+  if (src) {
+    return (
+      <img
+        src={src}
+        alt={alt ?? name}
+        loading="lazy"
+        decoding="async"
+        style={{
+          objectFit: "cover",
+          display: "block",
+          borderRadius: radius,
+          flexShrink: 0,
+          background: "var(--color-surface)",
+          ...style,
+        }}
+      />
+    );
+  }
+
   let hash = 0;
   for (let i = 0; i < name.length; i++) hash = (hash * 31 + name.charCodeAt(i)) >>> 0;
   const hue = hash % 50; // warm food tones: reds → ambers

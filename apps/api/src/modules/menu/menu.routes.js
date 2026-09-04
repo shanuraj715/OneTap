@@ -76,12 +76,20 @@ const variantBody = z.object({
   price: z.number().int().nonnegative(),
 });
 
+const imageBody = z.object({
+  url: z.string().min(1),
+  key: z.string().optional(),
+  width: z.number().int().positive().optional(),
+  height: z.number().int().positive().optional(),
+});
+
 const itemBody = z.object({
   categoryId: z.string().min(1),
   name: z.string().min(1),
   description: z.string().optional(),
   foodType: z.enum(["veg", "non-veg", "egg"]).optional(),
   tags: z.array(z.string()).optional(),
+  images: z.array(imageBody).max(6).optional(),
   basePrice: z.number().int().nonnegative().optional(),
   variants: z.array(variantBody).optional(),
   modifierGroupIds: z.array(z.string()).optional(),

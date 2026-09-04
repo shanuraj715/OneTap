@@ -105,6 +105,20 @@ const itemSchema = new Schema             (
     description: { type: String, default: "" },
     foodType: { type: String, enum: ["veg", "non-veg", "egg"], default: "veg" },
     tags: { type: [String], default: [] },
+    images: {
+      type: [
+        new Schema(
+          {
+            url: { type: String, required: true },
+            key: { type: String, default: "" },
+            width: Number,
+            height: Number,
+          },
+          { _id: false },
+        ),
+      ],
+      default: [],
+    },
     basePrice: { type: Number, default: 0, min: 0 },
     variants: {
       type: [

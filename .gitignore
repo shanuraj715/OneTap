@@ -18,6 +18,9 @@ build/
 .local-db/
 .cache/mongodb-binaries/
 
+# local storage provider — uploaded images
+.uploads/
+
 # logs / tooling
 *.log
 .turbo/

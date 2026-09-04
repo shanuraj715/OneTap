@@ -71,8 +71,9 @@ export {
 } from "./models/wallet.js";
 export {
   NotificationCredentialModel,
-                                 
+
   NotificationLogModel,
-                          
-                             
+
+
 } from "./models/notify.js";
+export { StorageConfigModel } from "./models/storage.js";

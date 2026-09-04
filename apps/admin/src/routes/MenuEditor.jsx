@@ -1,14 +1,9 @@
-import { useEffect, useState } from "react";
-                                           
-import {
-  formatINR,
-  itemPriceLabel,
-                
-            
-                
-} from "@onetap/config-schema";
-                                         
+import { useEffect, useRef, useState } from "react";
+import { formatINR, IMAGE_RULES, itemPriceLabel } from "@onetap/config-schema";
+import { ImagePlus, Loader, Star, X } from "lucide-react";
+import * as api from "../lib/api";
 import { useOutlet } from "../lib/useOutlet";
+import { useImageUpload } from "../lib/useStorage";
 import {
   useCreateCategory,
   useCreateItem,
@@ -226,6 +221,13 @@ function Items({
         <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
           {items.map((it) => (
             <div key={it.id} style={itemRow}>
+              {it.images?.[0]?.url ? (
+                <img
+                  src={it.images[0].url}
+                  alt=""
+                  style={{ width: 34, height: 34, borderRadius: 6, objectFit: "cover", flexShrink: 0 }}
+                />
+              ) : null}
               <Mark type={it.foodType} />
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontWeight: 600, fontSize: 14 }}>{it.name}</div>
@@ -282,6 +284,7 @@ function ItemForm({
 
   const [name, setName] = useState(item?.name ?? "");
   const [description, setDescription] = useState(item?.description ?? "");
+  const [images, setImages] = useState(item?.images ?? []);
   const [foodType, setFoodType] = useState          (item?.foodType ?? "veg");
   const [basePrice, setBasePrice] = useState(toRupees(item?.basePrice ?? 0));
   const [variants, setVariants] = useState(
@@ -300,6 +303,7 @@ function ItemForm({
       name: name.trim(),
       description: description.trim(),
       foodType,
+      images: images.map((im) => ({ url: im.url, key: im.key ?? "", width: im.width, height: im.height })),
       tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
       basePrice: variants.length ? 0 : toPaise(basePrice),
       variants: variants
@@ -340,6 +344,15 @@ function ItemForm({
       <Field label="Tags" hint="Comma separated, e.g. bestseller, spicy" info="Short labels shown as chips on the item card. Use them for the things people choose by — bestseller, spicy, jain — not for a second description.">
         <TextInput value={tags} onChange={(e) => setTags(e.target.value)} />
       </Field>
+
+      <div style={{ borderTop: "1px solid var(--color-border)", margin: "6px 0 14px", paddingTop: 14 }}>
+        <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 3 }}>Photos</div>
+        <div style={{ fontSize: 12, color: "var(--color-text-muted)", marginBottom: 10, lineHeight: 1.5 }}>
+          Up to {IMAGE_RULES.maxPerItem}. The first is the cover shown on menu cards. Resized automatically before
+          upload — set the storage backend under Storage.
+        </div>
+        <ItemPhotos outlet={outlet} images={images} originalKeys={item?.images ?? []} onChange={setImages} />
+      </div>
 
       <div style={{ borderTop: "1px solid var(--color-border)", margin: "6px 0 14px", paddingTop: 14 }}>
         <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 8 }}>Pricing</div>
@@ -423,6 +436,121 @@ function ItemForm({
       </div>
       {error ? <Toast kind="error">{error.message}</Toast> : null}
     </Card>
+  );
+}
+
+/* --------------------------------------------------------------- item photos */
+
+function ItemPhotos({ outlet, images, originalKeys, onChange }) {
+  const { upload, busy, error, clearError } = useImageUpload(outlet);
+  const inputRef = useRef(null);
+  const [dragOver, setDragOver] = useState(false);
+
+  const originalKeySet = new Set((originalKeys ?? []).map((im) => im.key).filter(Boolean));
+  const room = IMAGE_RULES.maxPerItem - images.length;
+
+  const addFiles = async (fileList) => {
+    clearError();
+    const files = Array.from(fileList ?? []).slice(0, Math.max(0, room));
+    if (!files.length) return;
+    try {
+      const stored = await upload(files);
+      onChange([...images, ...stored].slice(0, IMAGE_RULES.maxPerItem));
+    } catch {
+      /* error surfaced by the hook */
+    }
+  };
+
+  const removeAt = (idx) => {
+    const img = images[idx];
+    // A photo added in this editing session (not yet saved) is safe to delete
+    // now; an original one is left for the server to clean up on save.
+    if (img?.key && !originalKeySet.has(img.key)) {
+      void api.deleteStorageObject(outlet, img.key);
+    }
+    onChange(images.filter((_, i) => i !== idx));
+  };
+
+  const move = (idx, dir) => {
+    const to = idx + dir;
+    if (to < 0 || to >= images.length) return;
+    const next = [...images];
+    [next[idx], next[to]] = [next[to], next[idx]];
+    onChange(next);
+  };
+
+  return (
+    <>
+      <div
+        onDragOver={(e) => {
+          e.preventDefault();
+          setDragOver(true);
+        }}
+        onDragLeave={() => setDragOver(false)}
+        onDrop={(e) => {
+          e.preventDefault();
+          setDragOver(false);
+          void addFiles(e.dataTransfer.files);
+        }}
+        style={{ display: "flex", flexWrap: "wrap", gap: 10 }}
+      >
+        {images.map((im, idx) => (
+          <div key={im.key || im.url} style={thumbBox}>
+            <img src={im.url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            {idx === 0 ? (
+              <span style={coverBadge}>
+                <Star size={9} fill="currentColor" /> Cover
+              </span>
+            ) : null}
+            <div style={thumbActions}>
+              {idx > 0 ? (
+                <button type="button" title="Make cover / move left" style={thumbBtn} onClick={() => move(idx, -1)}>
+                  ←
+                </button>
+              ) : null}
+              {idx < images.length - 1 ? (
+                <button type="button" title="Move right" style={thumbBtn} onClick={() => move(idx, 1)}>
+                  →
+                </button>
+              ) : null}
+              <button type="button" title="Remove" style={{ ...thumbBtn, marginLeft: "auto" }} onClick={() => removeAt(idx)}>
+                <X size={12} />
+              </button>
+            </div>
+          </div>
+        ))}
+
+        {room > 0 ? (
+          <button
+            type="button"
+            onClick={() => inputRef.current?.click()}
+            disabled={busy}
+            style={{
+              ...thumbBox,
+              ...addTile,
+              borderColor: dragOver ? "var(--color-primary)" : "var(--color-border)",
+              background: dragOver ? "color-mix(in srgb, var(--color-primary) 8%, var(--color-bg))" : "var(--color-bg)",
+            }}
+          >
+            {busy ? <Loader size={18} /> : <ImagePlus size={18} />}
+            <span style={{ fontSize: 11 }}>{busy ? "Uploading…" : "Add photo"}</span>
+          </button>
+        ) : null}
+      </div>
+
+      <input
+        ref={inputRef}
+        type="file"
+        accept={IMAGE_RULES.acceptedTypes.join(",")}
+        multiple
+        hidden
+        onChange={(e) => {
+          void addFiles(e.target.files);
+          e.target.value = "";
+        }}
+      />
+      {error ? <Toast kind="error">{error}</Toast> : null}
+    </>
   );
 }
 
@@ -567,4 +695,67 @@ const selectStyle                = {
   background: "var(--color-bg)",
   color: "var(--color-text)",
   width: 180,
+};
+const thumbBox = {
+  position: "relative",
+  width: 104,
+  height: 104,
+  borderRadius: 10,
+  overflow: "hidden",
+  border: "1px solid var(--color-border)",
+  background: "var(--color-surface)",
+  flexShrink: 0,
+};
+const addTile = {
+  font: "inherit",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: 5,
+  border: "1.5px dashed var(--color-border)",
+  color: "var(--color-text-muted)",
+  cursor: "pointer",
+};
+const coverBadge = {
+  position: "absolute",
+  top: 4,
+  left: 4,
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 3,
+  fontSize: 9.5,
+  fontWeight: 700,
+  letterSpacing: "0.04em",
+  textTransform: "uppercase",
+  padding: "2px 6px",
+  borderRadius: 5,
+  background: "var(--color-primary)",
+  color: "var(--color-on-primary)",
+};
+const thumbActions = {
+  position: "absolute",
+  left: 0,
+  right: 0,
+  bottom: 0,
+  display: "flex",
+  alignItems: "center",
+  gap: 3,
+  padding: 4,
+  background: "linear-gradient(transparent, rgba(0,0,0,0.55))",
+};
+const thumbBtn = {
+  font: "inherit",
+  fontSize: 12,
+  lineHeight: 1,
+  display: "grid",
+  placeItems: "center",
+  minWidth: 20,
+  height: 20,
+  padding: "0 4px",
+  border: "none",
+  borderRadius: 5,
+  background: "rgba(255,255,255,0.92)",
+  color: "#111",
+  cursor: "pointer",
 };

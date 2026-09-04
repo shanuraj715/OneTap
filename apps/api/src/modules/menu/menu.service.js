@@ -1,13 +1,12 @@
 import { randomUUID } from "node:crypto";
-                                                                                         
 import {
   MenuCategoryModel,
   MenuItemModel,
   ModifierGroupModel,
   tenantFilter,
-                     
 } from "@onetap/db";
 import { HttpError } from "../../middleware/error.js";
+import { removeObject } from "../storage/storage.service.js";
 
 /*
  * Menu documents live UNDER an outlet, so every query is scoped by both
@@ -31,6 +30,12 @@ const toItem = (d                     )           => ({
   description: d.description ?? "",
   foodType: d.foodType ?? "veg",
   tags: d.tags ?? [],
+  images: (d.images ?? []).map((im     ) => ({
+    url: im.url,
+    key: im.key ?? "",
+    ...(im.width ? { width: im.width } : {}),
+    ...(im.height ? { height: im.height } : {}),
+  })),
   basePrice: d.basePrice ?? 0,
   variants: (d.variants ?? []).map((v     ) => ({ id: v.id, label: v.label, price: v.price })),
   modifierGroupIds: d.modifierGroupIds ?? [],
@@ -105,6 +110,18 @@ function normalizeVariants(variants                       ) {
   return (variants ?? []).map((v) => ({ id: v.id ?? randomUUID(), label: v.label, price: v.price }));
 }
 
+function normalizeImages(images) {
+  return (images ?? [])
+    .filter((im) => im && typeof im.url === "string" && im.url)
+    .slice(0, 6)
+    .map((im) => ({
+      url: im.url,
+      key: typeof im.key === "string" ? im.key : "",
+      ...(Number(im.width) > 0 ? { width: Math.round(Number(im.width)) } : {}),
+      ...(Number(im.height) > 0 ? { height: Math.round(Number(im.height)) } : {}),
+    }));
+}
+
 export async function createItem(ctx               , input                                                  ) {
   const doc = await MenuItemModel.create({
     brandId: ctx.brandId,
@@ -114,6 +131,7 @@ export async function createItem(ctx               , input                      
     description: input.description ?? "",
     foodType: input.foodType ?? "veg",
     tags: input.tags ?? [],
+    images: normalizeImages(input.images),
     basePrice: input.basePrice ?? 0,
     variants: normalizeVariants(input.variants),
     modifierGroupIds: input.modifierGroupIds ?? [],
@@ -128,14 +146,31 @@ export async function updateItem(ctx               , id        , patch          
   const update                          = { ...patch };
   if (patch.variants) update.variants = normalizeVariants(patch.variants);
 
+  let removedImageKeys           = [];
+  if (patch.images !== undefined) {
+    const next = normalizeImages(patch.images);
+    update.images = next;
+    const prev = await MenuItemModel.findOne(tenantFilter(ctx, { _id: id }), { images: 1 }).lean();
+    const keptKeys = new Set(next.map((im) => im.key).filter(Boolean));
+    removedImageKeys = (prev?.images ?? [])
+      .map((im     ) => im.key)
+      .filter((k        ) => k && !keptKeys.has(k));
+  }
+
   const doc = await MenuItemModel.findOneAndUpdate(tenantFilter(ctx, { _id: id }), update, { new: true }).lean();
   if (!doc) throw new HttpError(404, "Item not found");
+
+  // Delete files an edit dropped — after the DB is the source of truth.
+  for (const key of removedImageKeys) void removeObject(ctx, key);
+
   return toItem(doc);
 }
 
 export async function deleteItem(ctx               , id        ) {
+  const doc = await MenuItemModel.findOne(tenantFilter(ctx, { _id: id }), { images: 1 }).lean();
   const res = await MenuItemModel.deleteOne(tenantFilter(ctx, { _id: id }));
   if (res.deletedCount === 0) throw new HttpError(404, "Item not found");
+  for (const im of doc?.images ?? []) if (im.key) void removeObject(ctx, im.key);
 }
 
 /* ---------------------------------------------------------- modifier groups */

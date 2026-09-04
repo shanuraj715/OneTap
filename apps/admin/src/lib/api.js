@@ -129,6 +129,47 @@ export const createPreviewSession = (o        , layout        ) =>
     outletId: o._id,
   });
 
+/* ------------------------------------------------------------------ storage */
+
+export const getStorageConfig = (o        ) =>
+  req                ("/api/storage/config", { outletId: o._id });
+
+export const saveStorageConfig = (o        , provider        , values        ) =>
+  req                ("/api/storage/config", {
+    method: "PUT",
+    body: JSON.stringify({ provider, values }),
+    outletId: o._id,
+  });
+
+export const resetStorageConfig = (o        ) =>
+  req                ("/api/storage/config", { method: "DELETE", outletId: o._id });
+
+export const testStorageConfig = (o        ) =>
+  req                ("/api/storage/config/test", { method: "POST", body: "{}", outletId: o._id });
+
+/**
+ * Upload one already-resized image. `blob` carries its own MIME type; the API
+ * stores the bytes and returns { url, key, width, height }.
+ */
+export const uploadImage = (o        , blob      , dims                                                    , kind = "menu-items") => {
+  const qs = new URLSearchParams({ kind });
+  if (dims?.width) qs.set("w", String(dims.width));
+  if (dims?.height) qs.set("h", String(dims.height));
+  return req                (`/api/storage/upload?${qs.toString()}`, {
+    method: "POST",
+    body: blob,
+    headers: { "content-type": blob.type },
+    outletId: o._id,
+  });
+};
+
+export const deleteStorageObject = (o        , key        ) =>
+  req      ("/api/storage/object", {
+    method: "DELETE",
+    body: JSON.stringify({ key }),
+    outletId: o._id,
+  });
+
 /* ---------------------------------------------------------------------- menu */
 
                                                                                      
