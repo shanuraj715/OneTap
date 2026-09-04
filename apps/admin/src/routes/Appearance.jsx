@@ -13,9 +13,14 @@ export function Appearance() {
   const patch = usePatchConfig();
   const [layout, setLayout] = useState               (null);
 
+  // Re-syncs whenever the selected outlet actually changes, not just once —
+  // switching in the sidebar doesn't unmount this page. Keyed on outlet?._id
+  // (not the outlet object, which gets a new reference on every background
+  // refetch) so an in-progress edit on the same outlet is never stomped.
   useEffect(() => {
-    if (outlet && !layout) setLayout(outlet.config.layout);
-  }, [outlet, layout]);
+    if (outlet) setLayout(outlet.config.layout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [outlet?._id]);
 
   if (!outlet || !layout) {
     return (

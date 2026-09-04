@@ -22,9 +22,14 @@ export function DashboardConfig() {
   const patch = usePatchConfig();
   const [widgets, setWidgets] = useState                                  (null);
 
+  // Re-syncs whenever the selected outlet actually changes, not just once —
+  // switching in the sidebar doesn't unmount this page. Keyed on outlet?._id
+  // (not the outlet object, which gets a new reference on every background
+  // refetch) so an in-progress edit on the same outlet is never stomped.
   useEffect(() => {
-    if (outlet && !widgets) setWidgets(resolveDashboardWidgets(outlet.config.dashboard));
-  }, [outlet, widgets]);
+    if (outlet) setWidgets(resolveDashboardWidgets(outlet.config.dashboard));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [outlet?._id]);
 
   if (!can("dashboard:configure")) {
     return (

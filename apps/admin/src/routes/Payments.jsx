@@ -23,9 +23,14 @@ export function Payments() {
   const patch = usePatchConfig();
   const [enabled, setEnabled] = useState                  (null);
 
+  // Re-syncs whenever the selected outlet actually changes, not just once —
+  // switching in the sidebar doesn't unmount this page. Keyed on outlet?._id
+  // (not the outlet object, which gets a new reference on every background
+  // refetch) so an in-progress edit on the same outlet is never stomped.
   useEffect(() => {
-    if (outlet && !enabled) setEnabled(outlet.config.payments.enabled);
-  }, [outlet, enabled]);
+    if (outlet) setEnabled(outlet.config.payments.enabled);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [outlet?._id]);
 
   if (!canRead) {
     return (
