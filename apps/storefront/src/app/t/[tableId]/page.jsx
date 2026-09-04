@@ -97,6 +97,7 @@ export default async function TablePage({
           }
           gateways={outlet.config.payments.enabled}
           popupCarouselVariant={layout?.popupCarouselVariant || layout?.carouselVariant || "carousel.slider"}
+          toastVariant={layout?.toastVariant || "toast.solid"}
           dineIn={{ tableId: scan.table.id, tableNumber: scan.table.number, token: k }}
         />
       )}

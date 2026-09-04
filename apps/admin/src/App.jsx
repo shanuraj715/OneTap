@@ -159,7 +159,7 @@ function Shell({ can }                                     ) {
         <div style={{ display: "flex", alignItems: "center", justifyContent: collapsed ? "center" : "space-between", gap: 8 }}>
           {!collapsed ? (
             <div style={brand}>
-              OneTap<span style={{ color: "var(--color-text-muted)", fontWeight: 400 }}> admin</span>
+              TablePe<span style={{ color: "var(--color-text-muted)", fontWeight: 400 }}> admin</span>
             </div>
           ) : null}
           <button

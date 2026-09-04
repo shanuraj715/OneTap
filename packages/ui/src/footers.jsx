@@ -42,7 +42,7 @@ export function FooterTwoColumn(p             ) {
         </div>
         <div style={{ textAlign: "right" }}>
           <Licences fssaiLicense={p.fssaiLicense} gstin={p.gstin} />
-          <div style={{ ...muted, marginTop: 8 }}>Powered by OneTap</div>
+          <div style={{ ...muted, marginTop: 8 }}>Powered by TablePe</div>
         </div>
       </div>
     </footer>
@@ -66,7 +66,7 @@ export function FooterCentered(p             ) {
           }}
         >
           <Licences fssaiLicense={p.fssaiLicense} gstin={p.gstin} />
-          <div style={{ ...muted, marginTop: 6 }}>Powered by OneTap</div>
+          <div style={{ ...muted, marginTop: 6 }}>Powered by TablePe</div>
         </div>
       </div>
     </footer>
@@ -103,7 +103,7 @@ export function FooterColumns(p             ) {
         <div>
           <div style={colTitle}>Legal</div>
           <Licences fssaiLicense={p.fssaiLicense} gstin={p.gstin} />
-          <div style={{ ...muted, marginTop: 6 }}>Powered by OneTap</div>
+          <div style={{ ...muted, marginTop: 6 }}>Powered by TablePe</div>
         </div>
       </div>
     </footer>
@@ -119,7 +119,7 @@ export function FooterMinimalBar(p             ) {
     <footer style={{ ...shell, marginTop: 48 }}>
       <div style={{ ...inner, padding: "16px 24px", display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
         <span style={muted}>{bits}</span>
-        <span style={muted}>Powered by OneTap</span>
+        <span style={muted}>Powered by TablePe</span>
       </div>
     </footer>
   );
@@ -160,7 +160,7 @@ export function FooterInverted(p             ) {
         <div style={{ textAlign: "right", opacity: 0.7 }}>
           {p.fssaiLicense ? <div style={{ ...muted, color: "var(--color-bg)" }}>FSSAI Lic. No. {p.fssaiLicense}</div> : null}
           {p.gstin ? <div style={{ ...muted, color: "var(--color-bg)" }}>GSTIN {p.gstin}</div> : null}
-          <div style={{ ...muted, color: "var(--color-bg)", marginTop: 8 }}>Powered by OneTap</div>
+          <div style={{ ...muted, color: "var(--color-bg)", marginTop: 8 }}>Powered by TablePe</div>
         </div>
       </div>
     </footer>
@@ -191,7 +191,7 @@ export function FooterContact(p             ) {
       </div>
       <div style={{ borderTop: "1px solid var(--color-border)" }}>
         <div style={{ ...inner, padding: "12px 24px", textAlign: "center" }}>
-          <span style={muted}>{p.name} · Powered by OneTap</span>
+          <span style={muted}>{p.name} · Powered by TablePe</span>
         </div>
       </div>
     </footer>
@@ -219,7 +219,7 @@ export function FooterNewsletter(p             ) {
         </div>
         <div style={{ textAlign: "right" }}>
           <Licences fssaiLicense={p.fssaiLicense} gstin={p.gstin} />
-          <div style={{ ...muted, marginTop: 8 }}>Powered by OneTap</div>
+          <div style={{ ...muted, marginTop: 8 }}>Powered by TablePe</div>
         </div>
       </div>
     </footer>

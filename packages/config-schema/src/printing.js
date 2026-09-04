@@ -155,7 +155,7 @@ export const TARGETS                                  = {
     caveat: "A paid third-party account, or a CloudPRNT-capable printer.",
   },
   agent: {
-    label: "OneTap print agent",
+    label: "TablePe print agent",
     silent: true,
     escpos: true,
     hint: "A small program on an always-on computer at the outlet, which collects jobs and prints them.",

@@ -6,7 +6,7 @@ import { getMenu } from "@/lib/menu";
 import { getOutlet } from "@/lib/outlet";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Component variants · OneTap" };
+export const metadata = { title: "Component variants · TablePe" };
 
 export default async function VariantsPage() {
   const outlet = await getOutlet();
@@ -42,7 +42,7 @@ export default async function VariantsPage() {
       <ThemeStyle theme={theme} typography={typography} />
       <main style={page}>
         <header>
-          <p style={eyebrow}>OneTap · component variants</p>
+          <p style={eyebrow}>TablePe · component variants</p>
           <h1 style={h1}>Every variant, side by side</h1>
           <p style={lede}>
             {total} variants across {VARIANT_SLOTS.length} component families, rendered with{" "}

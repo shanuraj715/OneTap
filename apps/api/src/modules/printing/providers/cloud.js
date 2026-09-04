@@ -40,7 +40,7 @@ export const cloudProvider                = {
       title: `${job.docType} ${job.orderNumber ?? String(job._id)}`,
       contentType: raw ? "raw_base64" : "pdf_base64",
       content: raw ?? Buffer.from(job.payload.html, "utf8").toString("base64"),
-      source: "OneTap",
+      source: "TablePe",
       qty: job.copies,
     };
 

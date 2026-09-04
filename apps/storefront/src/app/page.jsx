@@ -67,6 +67,7 @@ export default async function HomePage() {
               menu={menu}
               menuLayout={resolvedMenuLayout}
               popupCarouselVariant={layout?.popupCarouselVariant || layout?.carouselVariant || "carousel.slider"}
+              toastVariant={layout?.toastVariant || "toast.solid"}
               gateways={payments.enabled}
               // Lets a walk-in who never scanned a code still order to their
               // table, by picking the number at checkout.

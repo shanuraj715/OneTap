@@ -17,7 +17,7 @@ const hmac = (secret        , data        ) => createHmac("sha256", secret).upda
 
 /**
  * Razorpay, using the outlet's OWN account. Money settles directly to the
- * restaurant — OneTap never holds funds, which keeps us outside RBI Payment
+ * restaurant — TablePe never holds funds, which keeps us outside RBI Payment
  * Aggregator regulation.
  *
  * Docs: https://razorpay.com/docs/api/orders/ and /docs/webhooks/validate-test/

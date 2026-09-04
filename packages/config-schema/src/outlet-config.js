@@ -14,7 +14,7 @@ import { typographySchema } from "./typography.js";
 import { walletSettingsSchema } from "./wallet.js";
 
 export const outletIdentitySchema = z.object({
-  name: z.string().default("OneTap Restaurant"),
+  name: z.string().default("TablePe Restaurant"),
   tagline: z.string().default(""),
   logoAssetId: z.string().nullable().default(null),
   /** 14-digit FSSAI licence number — shown in the storefront footer */

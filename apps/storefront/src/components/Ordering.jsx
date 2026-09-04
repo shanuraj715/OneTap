@@ -14,7 +14,7 @@ import {
                   
                    
 } from "@onetap/config-schema";
-import { MenuSections, getCarouselVariant, Photo } from "@onetap/ui";
+import { MenuSections, getCarouselVariant, getVariant, Photo } from "@onetap/ui";
 import { AddressPicker,                                          } from "./AddressPicker";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3072";
@@ -72,22 +72,24 @@ export function Ordering({
   cardVariant,
   menuLayout,
   popupCarouselVariant = "carousel.slider",
+  toastVariant = "toast.solid",
   gateways,
   dineIn,
   dineInEnabled = false,
   deliveryEnabled = false,
-}   
-                   
-             
-                                                                                        
-                       
-                                           
-                              
-                          
-                      
-                         
-                          
-                            
+}
+
+
+
+
+
+
+
+
+
+
+
+
  ) {
   const [sessionId, setSessionId] = useState               (null);
   const [tab, setTab] = useState               (null);
@@ -96,6 +98,7 @@ export function Ordering({
   const [customising, setCustomising] = useState                 (null);
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState      ("cart");
+  const [addedToast, setAddedToast] = useState                 (null);
   const [priced, setPriced] = useState                    (null);
   const [error, setError] = useState               (null);
   const [placed, setPlaced] = useState                    (null);
@@ -234,11 +237,19 @@ export function Ordering({
   const addLine = (line          ) => {
     setLines((prev) => [...prev, line]);
     setCustomising(null);
-    setOpen(true);
-    setStep("cart");
+    // Just confirm it landed in the cart — don't jump straight into checkout.
+    // The diner opens the cart panel themselves via the "View cart" bar.
+    setAddedToast(itemsById.get(line.itemId)?.name ?? "Item");
   };
   const setQty = (index        , qty        ) =>
     setLines((prev) => (qty <= 0 ? prev.filter((_, i) => i !== index) : prev.map((l, i) => (i === index ? { ...l, quantity: qty } : l))));
+
+  // Auto-dismiss the "added to cart" toast.
+  useEffect(() => {
+    if (!addedToast) return;
+    const t = setTimeout(() => setAddedToast(null), 2400);
+    return () => clearTimeout(t);
+  }, [addedToast]);
 
   /* ------------------------------------------------------------------ coupon */
   const applyCoupon = async (code        )                         => {
@@ -272,6 +283,15 @@ export function Ordering({
 
       {customising ? (
         <Customiser item={customising} menu={menu} popupCarouselVariant={popupCarouselVariant} onCancel={() => setCustomising(null)} onAdd={addLine} />
+      ) : null}
+
+      {addedToast ? (
+        <div style={toastWrap} role="status" aria-live="polite">
+          {(() => {
+            const Toast = getVariant("toastVariant", toastVariant).Component;
+            return <Toast title="Added to cart" message={addedToast} tone="success" />;
+          })()}
+        </div>
       ) : null}
 
       {count > 0 && !open ? (
@@ -1442,6 +1462,22 @@ const input                = {
   border: "1px solid var(--color-border)",
   background: "var(--color-bg)",
   color: "var(--color-text)",
+};
+const toastWrap = {
+  position: "fixed",
+  // Stacks above the "View cart" bar (which shows at the same moment, since
+  // the item just landed in the cart) — bottom placement also keeps it clear
+  // of the header, whose height varies a lot across the 8 header variants.
+  bottom: "calc(20px + env(safe-area-inset-bottom, 0px) + 68px)",
+  left: "50%",
+  transform: "translateX(-50%)",
+  zIndex: 80,
+  paddingInline: 16,
+  width: "100%",
+  maxWidth: 420,
+  boxSizing: "border-box",
+  display: "flex",
+  justifyContent: "center",
 };
 const tableBanner                = {
   maxWidth: 1080,

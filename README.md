@@ -1,4 +1,4 @@
-# OneTap
+# TablePe
 
 Multi-tenant restaurant platform. One codebase renders many restaurants, each themed and
 feature-toggled entirely from the admin panel.

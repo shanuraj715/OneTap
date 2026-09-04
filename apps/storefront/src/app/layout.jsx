@@ -4,7 +4,7 @@ import "./globals.css";
                                        
 
 export const metadata           = {
-  title: "OneTap",
+  title: "TablePe",
   description: "Multi-tenant restaurant platform",
 };
 

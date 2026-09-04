@@ -2,7 +2,7 @@
   "name": "onetap",
   "version": "0.0.0",
   "private": true,
-  "description": "OneTap — multi-tenant restaurant platform",
+  "description": "TablePe — multi-tenant restaurant platform",
   "packageManager": "pnpm@11.25.0",
   "engines": {
     "node": ">=20.9.0"

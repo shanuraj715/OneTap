@@ -39,7 +39,7 @@ function main()       {
   attachPreview(server);
 
   server.on("listening", () => {
-    logger.info(`OneTap API → http://localhost:${env.API_PORT}`);
+    logger.info(`TablePe API → http://localhost:${env.API_PORT}`);
   });
 
   server.on("error", (err                       ) => {

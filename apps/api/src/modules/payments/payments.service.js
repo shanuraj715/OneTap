@@ -134,7 +134,7 @@ export async function createIntent(ctx               , orderId        ) {
   const missing = provider.requiredFields.filter((f) => !creds[f]);
   if (missing.length) throw new HttpError(409, `${gateway} is not fully configured (missing ${missing.join(", ")})`);
 
-  // A failure from the gateway's own API is not an OneTap bug — surface the
+  // A failure from the gateway's own API is not an TablePe bug — surface the
   // real reason (bad keys, account not activated, amount limits) as a 502 so
   // the customer and the restaurant can see what to fix, not "Internal error".
   let intent;

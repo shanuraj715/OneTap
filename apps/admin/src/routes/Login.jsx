@@ -27,7 +27,7 @@ export function Login() {
       <form onSubmit={submit} style={card}>
         <div style={{ marginBottom: 22 }}>
           <div style={{ fontFamily: "var(--font-heading)", fontWeight: 700, fontSize: 20 }}>
-            OneTap<span style={{ color: "var(--color-text-muted)", fontWeight: 400 }}> admin</span>
+            TablePe<span style={{ color: "var(--color-text-muted)", fontWeight: 400 }}> admin</span>
           </div>
           <p style={{ margin: "6px 0 0", fontSize: 14, color: "var(--color-text-muted)" }}>
             Sign in to manage your restaurant.
