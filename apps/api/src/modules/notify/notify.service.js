@@ -10,13 +10,13 @@ import {
                    
 } from "@onetap/config-schema";
 import {
+  brandFilter,
   NotificationCredentialModel,
   NotificationLogModel,
   OutletModel,
   tenantFilter,
-                             
-                
-                     
+
+
 } from "@onetap/db";
 import { decryptSecret, encryptSecret, maskSecret } from "../../lib/crypto.js";
 import { logger } from "../../logger.js";
@@ -26,7 +26,7 @@ import { providerFor,                        } from "./providers/index.js";
 /* -------------------------------------------------------------- credentials */
 
 async function credentialsFor(ctx               , channel                    )                             {
-  const doc = await NotificationCredentialModel.findOne(tenantFilter(ctx, { channel })).lean();
+  const doc = await NotificationCredentialModel.findOne(brandFilter(ctx, { channel })).lean();
   if (!doc) return {};
 
   const creds                    = { ...(doc.publicFields ?? {}) };
@@ -43,7 +43,7 @@ async function credentialsFor(ctx               , channel                    )  
 
 /** What the admin sees: which channels are configured, secrets masked. */
 export async function listNotifyConfig(ctx               ) {
-  const docs = await NotificationCredentialModel.find(tenantFilter(ctx)).lean();
+  const docs = await NotificationCredentialModel.find(brandFilter(ctx)).lean();
   const byChannel = new Map(docs.map((d) => [d.channel, d]));
 
   return NOTIFY_CHANNELS.map((channel) => {
@@ -79,8 +79,8 @@ export async function saveNotifyCredentials(
   if (!spec) throw new HttpError(400, "Unknown notification channel");
 
   const doc =
-    (await NotificationCredentialModel.findOne(tenantFilter(ctx, { channel }))) ??
-    new NotificationCredentialModel({ brandId: ctx.brandId, outletId: ctx.outletId, channel });
+    (await NotificationCredentialModel.findOne(brandFilter(ctx, { channel }))) ??
+    new NotificationCredentialModel({ brandId: ctx.brandId, channel });
 
   for (const field of spec) {
     const value = values[field.key];
@@ -102,7 +102,7 @@ export async function saveNotifyCredentials(
 }
 
 export async function clearNotifyCredentials(ctx               , channel                    ) {
-  await NotificationCredentialModel.deleteOne(tenantFilter(ctx, { channel }));
+  await NotificationCredentialModel.deleteOne(brandFilter(ctx, { channel }));
 }
 
 /* ---------------------------------------------------------------- dispatch */

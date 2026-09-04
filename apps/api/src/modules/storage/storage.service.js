@@ -9,7 +9,7 @@ import {
   STORAGE_REQUIRED_FIELDS,
   STORAGE_SECRET_FIELDS,
 } from "@onetap/config-schema";
-import { StorageConfigModel, tenantFilter } from "@onetap/db";
+import { brandFilter, StorageConfigModel } from "@onetap/db";
 import { env, publicApiUrl } from "../../env.js";
 import { decryptSecret, encryptSecret, maskSecret } from "../../lib/crypto.js";
 import { logger } from "../../logger.js";
@@ -23,11 +23,12 @@ const UPLOADS_ROOT = localUploadsPath(env.UPLOADS_DIR);
 
 /**
  * The full, decrypted config the provider adapters + image pipeline need.
- * Never leaves the API. An outlet with no document configured falls back to
- * local disk with the default compression settings.
+ * Never leaves the API. Shared by every outlet in the brand (see
+ * `brandFilter`) — a brand with no document configured falls back to local
+ * disk with the default compression settings.
  */
 export async function resolveStorage(ctx) {
-  const doc = await StorageConfigModel.findOne(tenantFilter(ctx)).lean();
+  const doc = await StorageConfigModel.findOne(brandFilter(ctx)).lean();
   const provider = doc?.provider ?? "local";
 
   /** @type {import("./providers/types.js").ResolvedStorage} */
@@ -56,7 +57,7 @@ export async function resolveStorage(ctx) {
 
 /** What the admin sees: active provider, fields with secrets masked, compression settings. */
 export async function getStorageConfig(ctx) {
-  const doc = await StorageConfigModel.findOne(tenantFilter(ctx)).lean();
+  const doc = await StorageConfigModel.findOne(brandFilter(ctx)).lean();
   const provider = doc?.provider ?? "local";
 
   const providers = STORAGE_PROVIDERS.map((id) => {
@@ -93,8 +94,8 @@ export async function getStorageConfig(ctx) {
 
 async function loadOrNew(ctx) {
   return (
-    (await StorageConfigModel.findOne(tenantFilter(ctx))) ??
-    new StorageConfigModel({ brandId: ctx.brandId, outletId: ctx.outletId })
+    (await StorageConfigModel.findOne(brandFilter(ctx))) ??
+    new StorageConfigModel({ brandId: ctx.brandId })
   );
 }
 
