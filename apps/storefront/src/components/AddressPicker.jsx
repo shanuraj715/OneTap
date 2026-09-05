@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
                                            
 import { formatINR } from "@onetap/config-schema";
 
-const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3072";
+import { getApiBase } from "@/lib/clientApi";
 
                                   
                
@@ -91,7 +91,7 @@ export function AddressPicker({
     async (p                              ) => {
       setChecking(true);
       try {
-        const res = await fetch(`${API}/api/delivery/check`, {
+        const res = await fetch(`${getApiBase()}/api/delivery/check`, {
           method: "POST",
           headers: { "content-type": "application/json" },
           body: JSON.stringify({ outletId, lat: p.lat, lng: p.lng, subtotal }),

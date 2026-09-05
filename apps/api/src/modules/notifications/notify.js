@@ -26,7 +26,7 @@ export async function sendOtp(
   code        ,
 )                        {
   logger.info(`[notify:${channel}] OTP for ${destination} → ${code} (no provider configured)`);
-  return { delivered: false, devCode: isProd ? undefined : code };
+  return { delivered: false, devCode: code };
 }
 
 export function hasProvider(_channel               )          {

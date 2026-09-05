@@ -58,3 +58,4 @@ export function TopProgressBar({ active }) {
     </div>
   );
 }
+

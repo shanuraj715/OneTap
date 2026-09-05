@@ -91,6 +91,7 @@ export function CustomerGate({ customer, outletId, onSuccess }) {
       const r = await api("/api/customer/otp/request", { outletId, destination });
       setSent(true);
       setDevCode(r.devCode ?? null);
+      if (r.devCode) setCode(r.devCode);
       saveDraft({ name: name.trim(), gender, age: Number(age), email: email.trim() });
     });
 
@@ -205,7 +206,11 @@ export function CustomerGate({ customer, outletId, onSuccess }) {
               autoFocus
             />
             {devCode ? (
-              <p style={devHint}>
+              <p
+                style={{ ...devHint, cursor: "pointer" }}
+                onClick={() => setCode(devCode)}
+                title="Click to fill code"
+              >
                 No SMS provider configured yet — dev code: <strong>{devCode}</strong>
               </p>
             ) : null}

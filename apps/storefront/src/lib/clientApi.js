@@ -9,10 +9,25 @@
  * flag, a forgotten `credentials: "include"`, the two would disagree exactly
  * where it's hardest to notice.
  */
-export const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3072";
+export function getApiBase() {
+  if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL;
+  if (typeof window !== "undefined") {
+    const host = window.location.hostname;
+    if (host !== "localhost" && host !== "127.0.0.1") {
+      if (host.startsWith("food.")) {
+        return `https://api.${host}`;
+      }
+      return "https://api.food.shanuthewebdev.in";
+    }
+  }
+  return "http://localhost:3072";
+}
+
+export const API = getApiBase();
 
 export async function api(path, body) {
-  const res = await fetch(`${API}${path}`, {
+  const base = getApiBase();
+  const res = await fetch(`${base}${path}`, {
     method: body ? "POST" : "GET",
     headers: { "content-type": "application/json" },
     credentials: "include",
@@ -25,7 +40,8 @@ export async function api(path, body) {
 
 /** Same as `api`, but for PATCH — used by the profile-completion step. */
 export async function apiPatch(path, body) {
-  const res = await fetch(`${API}${path}`, {
+  const base = getApiBase();
+  const res = await fetch(`${base}${path}`, {
     method: "PATCH",
     headers: { "content-type": "application/json" },
     credentials: "include",
