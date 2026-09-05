@@ -30,6 +30,15 @@ export function errorHandler(
     res.status(err.status).json({ error: err.message, details: err.details });
     return;
   }
+  // body-parser and friends throw errors that already carry a client-safe
+  // status and set `expose` when the message is meant to be shown. Without
+  // this, posting an over-sized body reports "Internal server error" and the
+  // caller has no idea their upload was simply too big.
+  const status = err?.status ?? err?.statusCode;
+  if (err?.expose && typeof status === "number" && status >= 400 && status < 500) {
+    res.status(status).json({ error: err.message });
+    return;
+  }
   logger.error({ err }, "Unhandled error");
   res.status(500).json({ error: "Internal server error" });
 }

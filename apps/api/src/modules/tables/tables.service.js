@@ -51,6 +51,21 @@ export async function listTables(ctx               ) {
   return tables.map((t) => shape(t            ));
 }
 
+/**
+ * Every table with its signed URL, in one query. The card designer prints a
+ * sheet of forty cards and needs forty distinct codes, so this exists to keep
+ * that a single round trip rather than one request per table.
+ *
+ * `qrSecret` never leaves this function — only the signed URL derived from it.
+ */
+export async function listTableQrUrls(ctx               , storefrontOrigin        ) {
+  const tables = await TableModel.find(tenantFilter(ctx)).sort({ zone: 1, number: 1 }).lean();
+  return tables.map((t) => ({
+    ...shape(t            ),
+    url: tableUrl(storefrontOrigin, t            ),
+  }));
+}
+
 export async function createTable(ctx               , input                                                   ) {
   const exists = await TableModel.exists(tenantFilter(ctx, { number: input.number }));
   if (exists) throw new HttpError(409, `Table ${input.number} already exists`);

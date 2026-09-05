@@ -44,7 +44,17 @@ export const cardColorSchema = z
  * embedding; the total-spec size is capped in the service rather than per
  * field, so one big background and three small icons is fine.
  */
-export const cardImageSchema = z.string().max(1_500_000).default("");
+export const cardImageSchema = z.string().max(3_500_000).default("");
+
+/**
+ * Guard on the whole serialised design rather than on any one field. Size is
+ * only ever a property of the document — one 3MB background and four small
+ * icons is the same problem as five 700KB images — and a single limit means a
+ * single readable error ("use a smaller photo") instead of a schema dump about
+ * a string length. The per-field cap above matches it so no one field can
+ * exceed the whole.
+ */
+export const CARD_SPEC_MAX_BYTES = 3_500_000;
 
 export const cardAlignSchema = z.enum(["left", "center", "right"]);
 
@@ -446,6 +456,3 @@ export const QR_COMFORTABLE_MM = 28;
 export const QR_QUIET_MODULES = 4;
 export const QR_LOGO_WARN_PCT = 24;
 export const QR_MIN_CONTRAST = 4;
-
-/** Guard on the whole serialised design, mirrored in the API. */
-export const CARD_SPEC_MAX_BYTES = 3_500_000;
