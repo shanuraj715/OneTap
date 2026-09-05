@@ -30,6 +30,7 @@ import { useMenu } from "../lib/useMenu";
 import { useOutlet, usePatchConfig } from "../lib/useOutlet";
 import { usePreviewSession } from "../lib/usePreviewSession";
 import { Button, Card, Checkbox, Empty, Field, Note, PageHeader, Pill, Select, STICKY_HEADER_CLEARANCE, TextInput, Toast } from "../ui";
+import { StorefrontNav } from "../components/SubNav";
 
 const ITEM_SELECTION_LABELS = { auto: "Automatic — every item", manual: "Hand-picked items" };
 const TITLE_ALIGN_LABELS = { left: "Left", center: "Centred" };
@@ -56,6 +57,7 @@ export function MenuLayout() {
     return (
       <>
         <PageHeader title="Menu layout" />
+        <StorefrontNav />
         <Card>Seed an outlet from the Dashboard first.</Card>
       </>
     );
@@ -97,6 +99,8 @@ export function MenuLayout() {
           </span>
         }
       />
+
+      <StorefrontNav />
 
       <div style={{ marginBottom: 16 }}>
         <PreviewLink

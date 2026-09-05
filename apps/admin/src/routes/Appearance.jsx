@@ -3,6 +3,7 @@ import { Plus, Trash2 } from "lucide-react";
 import { VARIANT_SLOTS } from "@onetap/ui";
 import { useOutlet, usePatchConfig } from "../lib/useOutlet";
 import { Button, Card, Field, InfoHint, PageHeader, STICKY_HEADER_CLEARANCE, TextInput, Toast } from "../ui";
+import { StorefrontNav } from "../components/SubNav";
 
 const MAX_NAV_LINKS = 8;
 
@@ -26,6 +27,7 @@ export function Appearance() {
     return (
       <>
         <PageHeader title="Appearance" />
+        <StorefrontNav />
         <Card>Seed an outlet from the Dashboard first.</Card>
       </>
     );
@@ -49,6 +51,8 @@ export function Appearance() {
         title="Appearance"
         subtitle={`${total} variants across ${VARIANT_SLOTS.length} families. Every one has a unique code and id.`}
       />
+
+      <StorefrontNav />
 
       <Card>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>

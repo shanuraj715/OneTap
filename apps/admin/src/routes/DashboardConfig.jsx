@@ -12,6 +12,7 @@ import { BarChart3, ChevronDown, ChevronUp, LayoutGrid, ListTree, Save } from "l
 import { useAuth } from "../lib/useAuth";
 import { useOutlet, usePatchConfig } from "../lib/useOutlet";
 import { Button, Card, InfoHint, PageHeader, Toast } from "../ui";
+import { SettingsNav } from "../components/SubNav";
 
 const CATEGORY_LABEL = { stat: "Stat card", chart: "Chart", list: "List" }         ;
 const CATEGORY_ICON = { stat: LayoutGrid, chart: BarChart3, list: ListTree }         ;
@@ -35,6 +36,7 @@ export function DashboardConfig() {
     return (
       <>
         <PageHeader title="Configure dashboard" />
+        <SettingsNav />
         <Card>Your role can&apos;t configure the dashboard.</Card>
       </>
     );
@@ -43,6 +45,7 @@ export function DashboardConfig() {
     return (
       <>
         <PageHeader title="Configure dashboard" />
+        <SettingsNav />
         <Card>Seed an outlet from the Dashboard first.</Card>
       </>
     );
@@ -84,6 +87,8 @@ export function DashboardConfig() {
           </Button>
         }
       />
+
+      <SettingsNav />
 
       <Card>
         <p style={{ margin: "0 0 16px", fontSize: 13, color: "var(--color-text-muted)", lineHeight: 1.6 }}>

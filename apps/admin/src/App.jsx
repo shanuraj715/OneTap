@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-import { NavLink, Route, Routes } from "react-router-dom";
-import { ROLE_LABELS,                 } from "@onetap/config-schema";
+import { NavLink, Route, Routes, useLocation } from "react-router-dom";
+import { ROLE_LABELS } from "@onetap/config-schema";
 import {
   Bell,
   Building2,
@@ -59,16 +59,8 @@ const STOREFRONT_URL = "http://localhost:3070";
 
 const ICON = 15.5;
 
-                    
-             
-                
-                  
-                
-                          
- 
-
-/** Grouped so the sidebar reads as sections rather than one long list. */
-const NAV_GROUPS                                         = [
+/** Full navigation list showing every single option — for Super Admins. */
+const SUPER_ADMIN_NAV_GROUPS = [
   {
     group: "Service",
     items: [
@@ -110,12 +102,59 @@ const NAV_GROUPS                                         = [
   },
   {
     group: "Platform",
-    // Onboarding a brand-new tenant is platform staff's job, not a brand
-    // owner's — every real permission an owner has is scoped to their own
-    // brand, so this is gated on isSuperAdmin directly rather than a
-    // permission string.
     superAdminOnly: true,
     items: [{ to: "/brands", label: "Brands", icon: <Building2 size={ICON} /> }],
+  },
+];
+
+/** Streamlined navigation list with consolidated sections — for Owners and managers. */
+const OWNER_NAV_GROUPS = [
+  {
+    group: "Service",
+    items: [
+      { to: "/", label: "Dashboard", icon: <LayoutDashboard size={ICON} />, end: true },
+      { to: "/orders", label: "Orders", icon: <ReceiptText size={ICON} />, permission: "order:read" },
+      {
+        to: "/tables",
+        label: "Tables & QR",
+        icon: <QrCode size={ICON} />,
+        permission: "table:read",
+        matchPaths: ["/tables", "/table-cards"],
+      },
+      { to: "/printing", label: "Printing", icon: <Printer size={ICON} />, permission: "printer:read" },
+    ],
+  },
+  {
+    group: "Catalogue",
+    items: [
+      { to: "/menu", label: "Menu", icon: <UtensilsCrossed size={ICON} />, permission: "menu:read" },
+    ],
+  },
+  {
+    group: "Storefront",
+    items: [
+      {
+        to: "/menu-layout",
+        label: "Storefront",
+        icon: <Wand2 size={ICON} />,
+        permission: "appearance:update",
+        matchPaths: ["/menu-layout", "/appearance", "/theme", "/typography"],
+      },
+    ],
+  },
+  {
+    group: "Business",
+    items: [
+      { to: "/coupons", label: "Coupons", icon: <Tag size={ICON} />, permission: "coupon:read" },
+      { to: "/customers", label: "Customers", icon: <UsersIcon size={ICON} />, permission: "customer:read" },
+      {
+        to: "/settings",
+        label: "Settings",
+        icon: <SettingsIcon size={ICON} />,
+        permission: "settings:update",
+        matchPaths: ["/settings", "/outlets", "/payments", "/notifications", "/users", "/storage", "/dashboard-config"],
+      },
+    ],
   },
 ];
 
@@ -174,7 +213,9 @@ function Shell({ can }                                     ) {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  const groups = NAV_GROUPS.filter((g) => !g.superAdminOnly || user?.isSuperAdmin)
+  const navGroups = user?.isSuperAdmin ? SUPER_ADMIN_NAV_GROUPS : OWNER_NAV_GROUPS;
+  const groups = navGroups
+    .filter((g) => !g.superAdminOnly || user?.isSuperAdmin)
     .map((g) => ({
       ...g,
       items: g.items.filter((n) => !n.permission || can(n.permission)),
@@ -249,7 +290,15 @@ function Shell({ can }                                     ) {
             <div key={g.group} style={{ display: "flex", flexDirection: "column", gap: 3 }}>
               {!collapsed ? <span style={navGroup}>{g.group}</span> : <span style={navRule} aria-hidden />}
               {g.items.map((n) => (
-                <NavItem key={n.to} to={n.to} label={n.label} icon={n.icon} end={n.end} collapsed={collapsed} />
+                <NavItem
+                  key={n.to}
+                  to={n.to}
+                  label={n.label}
+                  icon={n.icon}
+                  end={n.end}
+                  collapsed={collapsed}
+                  matchPaths={n.matchPaths}
+                />
               ))}
             </div>
           ))}
@@ -319,26 +368,31 @@ function NavItem({
   icon,
   end,
   collapsed,
-}   
-             
-                
-                  
-                
-                     
- ) {
+  matchPaths,
+}) {
+  const location = useLocation();
+  const isMatchPathActive =
+    Array.isArray(matchPaths) &&
+    matchPaths.some(
+      (p) => location.pathname === p || (p !== "/" && location.pathname.startsWith(p + "/"))
+    );
+
   return (
     <NavLink
       to={to}
       end={end}
       // The label is gone when collapsed, so the icon carries a tooltip.
       title={collapsed ? label : undefined}
-      style={({ isActive }) => ({
-        ...navItem,
-        justifyContent: collapsed ? "center" : "flex-start",
-        padding: collapsed ? "10px 0" : "8px 12px",
-        background: isActive ? "var(--color-primary)" : "transparent",
-        color: isActive ? "var(--color-on-primary)" : "var(--color-text)",
-      })}
+      style={({ isActive }) => {
+        const active = isActive || isMatchPathActive;
+        return {
+          ...navItem,
+          justifyContent: collapsed ? "center" : "flex-start",
+          padding: collapsed ? "10px 0" : "8px 12px",
+          background: active ? "var(--color-primary)" : "transparent",
+          color: active ? "var(--color-on-primary)" : "var(--color-text)",
+        };
+      }}
     >
       <span style={{ display: "inline-flex", flexShrink: 0 }} aria-hidden>
         {icon}
