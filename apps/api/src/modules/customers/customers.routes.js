@@ -29,6 +29,8 @@ customersRouter.get("/", async (req, res) => {
       name: c.name ?? null,
       email: c.email ?? null,
       phone: c.phone ?? null,
+      gender: c.gender ?? null,
+      age: c.age ?? null,
       orderCount: c.orderCount,
       walletBalance: c.walletBalance ?? 0,
       lastOrderAt: c.lastOrderAt ?? null,

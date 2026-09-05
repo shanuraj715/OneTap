@@ -3,11 +3,10 @@ import {
   CustomerModel,
   CustomerSessionModel,
   OtpChallengeModel,
-                   
 } from "@onetap/db";
 import { isProd } from "../../env.js";
 import { HttpError } from "../../middleware/error.js";
-import { hasProvider, sendOtp,                    } from "../notifications/notify.js";
+import { hasProvider, sendOtp } from "../notifications/notify.js";
 
 const OTP_TTL_MIN = 10;
 const MAX_ATTEMPTS = 5;
@@ -62,12 +61,24 @@ export async function requestOtp(input
   return { channel, devCode: result.devCode };
 }
 
-export async function verifyOtp(input   
-                  
-                      
-               
-                
- )                                                                     {
+/**
+ * Every field a brand-new customer must supply, checked here rather than
+ * trusted from the client's own "is this a signup" flag — the client can't be
+ * trusted to know whether the phone it just verified already has an account
+ * (that would leak which numbers are registered before proving ownership of
+ * one), so the service is what actually knows, right after the OTP check.
+ */
+function requireSignupFields(input) {
+  const missing = [];
+  if (!input.name?.trim()) missing.push("name");
+  if (!input.gender) missing.push("gender");
+  if (!input.age) missing.push("age");
+  if (missing.length) {
+    throw new HttpError(400, `Enter your ${missing.join(" and ")} to finish signing up`);
+  }
+}
+
+export async function verifyOtp(input) {
   const destination = normalizeDestination(input.destination);
 
   const challenge = await OtpChallengeModel.findOne({
@@ -95,10 +106,42 @@ export async function verifyOtp(input
     : { brandId: input.brandId, phone: destination };
 
   let customer = await CustomerModel.findOne(query);
-  customer ??= await CustomerModel.create({ ...query, name: input.name });
-  if (input.name && !customer.name) {
-    customer.name = input.name;
-    await customer.save();
+
+  if (!customer) {
+    // A phone nobody has verified before is a signup — the full profile is
+    // mandatory here, not optional, however the caller phrased the request.
+    requireSignupFields(input);
+    customer = await CustomerModel.create({
+      ...query,
+      name: input.name.trim(),
+      gender: input.gender,
+      age: input.age,
+      email: !isEmail && input.email ? input.email : undefined,
+    });
+  } else {
+    // A returning customer is never re-asked for their profile — but if this
+    // record predates gender/age (or, from the old flow, predates name being
+    // mandatory), backfill whatever it's still missing from what was
+    // submitted rather than leaving it incomplete forever. Never overwrites a
+    // value the customer already has.
+    let dirty = false;
+    if (input.name?.trim() && !customer.name) {
+      customer.name = input.name.trim();
+      dirty = true;
+    }
+    if (input.gender && !customer.gender) {
+      customer.gender = input.gender;
+      dirty = true;
+    }
+    if (input.age && !customer.age) {
+      customer.age = input.age;
+      dirty = true;
+    }
+    if (!isEmail && input.email && !customer.email) {
+      customer.email = input.email;
+      dirty = true;
+    }
+    if (dirty) await customer.save();
   }
 
   const token = randomBytes(32).toString("base64url");
@@ -111,6 +154,26 @@ export async function verifyOtp(input
   });
 
   return { token, expiresAt, customer };
+}
+
+/**
+ * For a customer who is already logged in (a session from before this
+ * feature, or one created for someone else and backfilled without gender/age)
+ * but still fails `isProfileComplete` — fills in the rest without going
+ * through OTP again, since owning the session cookie already proves identity.
+ */
+export async function completeProfile(customer, input) {
+  requireSignupFields({
+    name: input.name ?? customer.name,
+    gender: input.gender ?? customer.gender,
+    age: input.age ?? customer.age,
+  });
+  if (input.name?.trim()) customer.name = input.name.trim();
+  if (input.gender) customer.gender = input.gender;
+  if (input.age) customer.age = input.age;
+  if (input.email && !customer.email) customer.email = input.email;
+  await customer.save();
+  return customer;
 }
 
 export async function customerFromToken(token                    )                              {

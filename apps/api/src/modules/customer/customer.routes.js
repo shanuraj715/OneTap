@@ -1,9 +1,10 @@
-import { Router,              } from "express";
+import { Router } from "express";
 import { z } from "zod";
-import { OutletModel,                  } from "@onetap/db";
+import { customerAgeSchema, customerEmailSchema, customerGenderSchema, customerNameSchema, isProfileComplete } from "@onetap/config-schema";
+import { OutletModel } from "@onetap/db";
 import { isProd } from "../../env.js";
 import { HttpError } from "../../middleware/error.js";
-import { customerFromToken, endCustomerSession, requestOtp, verifyOtp } from "./customer.service.js";
+import { completeProfile, customerFromToken, endCustomerSession, requestOtp, verifyOtp } from "./customer.service.js";
 
 export const CUSTOMER_COOKIE = "onetap_customer";
 
@@ -19,6 +20,24 @@ async function outletOf(outletId        ) {
 export async function currentCustomer(req         )                              {
   const token = (req.cookies                                      )?.[CUSTOMER_COOKIE];
   return customerFromToken(token);
+}
+
+/** The shape the storefront gets back for a customer, everywhere it's returned. */
+function shapeCustomer(customer) {
+  return {
+    id: String(customer._id),
+    name: customer.name ?? null,
+    phone: customer.phone ?? null,
+    email: customer.email ?? null,
+    gender: customer.gender ?? null,
+    age: customer.age ?? null,
+    walletBalance: customer.walletBalance ?? 0,
+    // A session from before this feature (or backfilled for someone else) can
+    // be logged in and still lack gender/age — this is what tells the
+    // storefront to show the "complete your profile" step before the order
+    // page, rather than the coupon/coins content that needs a full profile.
+    profileComplete: isProfileComplete(customer),
+  };
 }
 
 const requestBody = z.object({
@@ -37,11 +56,22 @@ customerRouter.post("/otp/request", async (req, res) => {
   res.json(result);
 });
 
+/**
+ * `name`/`gender`/`age` arrive here even though a returning customer doesn't
+ * need them — the storefront's single login/signup form sends them
+ * unconditionally, since it can't know in advance whether this phone already
+ * has an account. The service decides whether they're required (see
+ * `requireSignupFields`); a returning customer's submitted values are simply
+ * ignored in favour of what's already on file.
+ */
 const verifyBody = z.object({
   outletId: z.string().min(1),
   destination: z.string().min(3),
   code: z.string().min(4).max(8),
-  name: z.string().max(80).optional(),
+  name: customerNameSchema.optional(),
+  gender: customerGenderSchema.optional(),
+  age: customerAgeSchema.optional(),
+  email: customerEmailSchema.optional(),
 });
 
 customerRouter.post("/otp/verify", async (req, res) => {
@@ -53,6 +83,9 @@ customerRouter.post("/otp/verify", async (req, res) => {
     destination: body.destination,
     code: body.code,
     name: body.name,
+    gender: body.gender,
+    age: body.age,
+    email: body.email,
   });
 
   res.cookie(CUSTOMER_COOKIE, result.token, {
@@ -62,15 +95,7 @@ customerRouter.post("/otp/verify", async (req, res) => {
     expires: result.expiresAt,
     path: "/",
   });
-  res.json({
-    customer: {
-      id: String(result.customer._id),
-      name: result.customer.name ?? null,
-      phone: result.customer.phone ?? null,
-      email: result.customer.email ?? null,
-      walletBalance: result.customer.walletBalance ?? 0,
-    },
-  });
+  res.json({ customer: shapeCustomer(result.customer) });
 });
 
 customerRouter.get("/me", async (req, res) => {
@@ -79,15 +104,27 @@ customerRouter.get("/me", async (req, res) => {
     res.json({ customer: null });
     return;
   }
-  res.json({
-    customer: {
-      id: String(customer._id),
-      name: customer.name ?? null,
-      phone: customer.phone ?? null,
-      email: customer.email ?? null,
-      walletBalance: customer.walletBalance ?? 0,
-    },
-  });
+  res.json({ customer: shapeCustomer(customer) });
+});
+
+const completeProfileBody = z.object({
+  name: customerNameSchema.optional(),
+  gender: customerGenderSchema.optional(),
+  age: customerAgeSchema.optional(),
+  email: customerEmailSchema.optional(),
+});
+
+/**
+ * For a customer who is already logged in — a session cookie from before
+ * gender/age existed — to finish their profile without going through OTP
+ * again. Owning the session cookie already proves who they are.
+ */
+customerRouter.patch("/profile", async (req, res) => {
+  const customer = await currentCustomer(req);
+  if (!customer) throw new HttpError(401, "Sign in first");
+  const body = completeProfileBody.parse(req.body);
+  const updated = await completeProfile(customer, body);
+  res.json({ customer: shapeCustomer(updated) });
 });
 
 customerRouter.post("/logout", async (req, res) => {
