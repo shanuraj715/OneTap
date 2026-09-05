@@ -827,24 +827,18 @@ export function Th({
   children,
   align = "left",
   width,
-}   
-                       
-                                      
-                          
- ) {
-  return <th style={{ ...th, textAlign: align, width }}>{children}</th>;
+  style: customStyle,
+}) {
+  return <th style={{ ...th, textAlign: align, width, ...customStyle }}>{children}</th>;
 }
 
 export function Td({
   children,
   align = "left",
   nowrap,
-}   
-                       
-                                      
-                   
- ) {
-  return <td style={{ ...td, textAlign: align, whiteSpace: nowrap ? "nowrap" : undefined }}>{children}</td>;
+  style: customStyle,
+}) {
+  return <td style={{ ...td, textAlign: align, whiteSpace: nowrap ? "nowrap" : undefined, ...customStyle }}>{children}</td>;
 }
 
 /** A short explanatory panel — the "why does this section exist" note. */
@@ -1041,9 +1035,10 @@ const filterCount                = {
   background: "var(--color-primary)",
   color: "var(--color-on-primary)",
 };
-const tableScroll                = {
+const tableScroll = {
   width: "100%",
   overflowX: "auto",
+  WebkitOverflowScrolling: "touch",
   border: "1px solid var(--color-border)",
   borderRadius: "var(--radius-card)",
   background: "var(--color-surface)",
