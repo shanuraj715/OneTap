@@ -656,14 +656,16 @@ export function Menu                  ({
   align = "right",
   header,
   width = 230,
-}   
-                                                                       
-                           
-                               
-               
-                           
-                  
-                 
+  fullWidth = false,
+}
+
+
+
+
+
+
+
+
  ) {
   const [open, setOpen] = useState(false);
   const triggerRef = useRef                 (null);
@@ -688,7 +690,7 @@ export function Menu                  ({
   }, [open]);
 
   return (
-    <span ref={triggerRef} style={{ display: "inline-flex" }}>
+    <span ref={triggerRef} style={{ display: fullWidth ? "flex" : "inline-flex", width: fullWidth ? "100%" : undefined }}>
       {trigger({ open, toggle: () => setOpen((o) => !o) })}
       <FloatingPanel anchor={anchor} width={width} panelRef={panelRef}>
         {header ? <span style={menuHeader}>{header}</span> : null}

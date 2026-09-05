@@ -7,8 +7,8 @@ import {
 } from "@onetap/config-schema";
 import {
   BrandModel,
+  OrderModel,
   OutletModel,
-
 
 } from "@onetap/db";
 import { HttpError } from "../../middleware/error.js";
@@ -120,6 +120,67 @@ export async function createOutlet(ctx               , input                    
 export async function getOutletById(ctx               , id        ) {
   const outlet = await OutletModel.findOne(byBrand(ctx, { _id: id })).lean();
   return outlet ? withDefaults(outlet) : null;
+}
+
+/** Rename an outlet, or move it to a new slug/hostname list. */
+export async function updateOutlet(ctx               , id        , input) {
+  const outlet = await OutletModel.findOne(byBrand(ctx, { _id: id }));
+  if (!outlet) throw new HttpError(404, "Outlet not found");
+
+  if (input.slug !== undefined) {
+    const slug = slugSchema.parse(input.slug.toLowerCase());
+    if (isReservedOutletSlug(slug)) {
+      throw new HttpError(400, `"${slug}" is reserved and can't be used as an outlet slug`);
+    }
+    if (slug !== outlet.slug) {
+      const existing = await OutletModel.findOne(byBrand(ctx, { slug, _id: { $ne: id } })).lean();
+      if (existing) throw new HttpError(409, "An outlet with that slug already exists for this brand");
+    }
+    outlet.slug = slug;
+  }
+
+  if (input.name !== undefined) {
+    outlet.name = input.name;
+    // The outlet's own name is what the picker/switcher fall back to when
+    // the config hasn't set a storefront-facing name of its own.
+    if (!outlet.config.identity.name) outlet.config.identity.name = input.name;
+  }
+
+  if (input.hostnames !== undefined) {
+    const hostnames = input.hostnames.filter(Boolean);
+    outlet.hostnames = hostnames;
+    outlet.canonicalHostname = hostnames[0] ?? "";
+  }
+
+  outlet.markModified("config");
+  await outlet.save();
+  return withDefaults(outlet.toObject());
+}
+
+/**
+ * Remove an outlet entirely. Refuses to remove a brand's last outlet (every
+ * brand must have somewhere to resolve to), and refuses one with any order
+ * history — the same "don't destroy real data, make them deal with it first"
+ * rule menu.service.js already applies to a category with items in it.
+ * Menu items, tables, printers etc. under a deleted outlet are left in
+ * place rather than cascade-deleted — orphaned, but harmless, since nothing
+ * can ever query them again without that outlet's id.
+ */
+export async function deleteOutlet(ctx               , id        ) {
+  const outlet = await OutletModel.findOne(byBrand(ctx, { _id: id })).lean();
+  if (!outlet) throw new HttpError(404, "Outlet not found");
+
+  const siblingCount = await OutletModel.countDocuments(byBrand(ctx));
+  if (siblingCount <= 1) {
+    throw new HttpError(409, "Can't delete a brand's only outlet");
+  }
+
+  const hasOrders = await OrderModel.exists({ brandId: ctx.brandId, outletId: id });
+  if (hasOrders) {
+    throw new HttpError(409, "This outlet has order history and can't be deleted");
+  }
+
+  await OutletModel.deleteOne(byBrand(ctx, { _id: id }));
 }
 
 /**

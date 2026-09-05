@@ -43,6 +43,7 @@ import { MenuEditor } from "./routes/MenuEditor";
 import { MenuLayout } from "./routes/MenuLayout";
 import { Notifications } from "./routes/Notifications";
 import { Orders } from "./routes/Orders";
+import { Outlets } from "./routes/Outlets";
 import { Payments } from "./routes/Payments";
 import { Printing } from "./routes/Printing";
 import { TableCards } from "./routes/cards/TableCards";
@@ -102,6 +103,7 @@ const NAV_GROUPS                                         = [
       { to: "/notifications", label: "Notifications", icon: <Bell size={ICON} />, permission: "notification-config:read" },
       { to: "/customers", label: "Customers", icon: <UsersIcon size={ICON} />, permission: "customer:read" },
       { to: "/settings", label: "Settings", icon: <SettingsIcon size={ICON} />, permission: "settings:update" },
+      { to: "/outlets", label: "Outlets", icon: <Building2 size={ICON} />, permission: "outlet:manage" },
       { to: "/dashboard-config", label: "Configure dashboard", icon: <LayoutGrid size={ICON} />, permission: "dashboard:configure" },
       { to: "/users", label: "Users & roles", icon: <UsersIcon size={ICON} />, permission: "user:read" },
     ],
@@ -212,6 +214,7 @@ function Shell({ can }                                     ) {
 
         {!collapsed ? (
           <Menu
+            fullWidth
             trigger={({ toggle }) => (
               <button type="button" onClick={toggle} style={outletChip}>
                 <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
@@ -300,6 +303,7 @@ function Shell({ can }                                     ) {
           <Route path="/theme" element={<ThemeEditor />} />
           <Route path="/typography" element={<TypographyEditor />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/outlets" element={<Outlets />} />
           <Route path="/dashboard-config" element={<DashboardConfig />} />
           <Route path="/users" element={<Users />} />
           {user?.isSuperAdmin ? <Route path="/brands" element={<Brands />} /> : null}
@@ -373,12 +377,13 @@ const outletChip                = {
   background: "var(--color-bg)",
   border: "1px solid var(--color-border)",
   borderRadius: 999,
-  padding: "4px 8px 4px 10px",
-  alignSelf: "flex-start",
-  display: "inline-flex",
+  padding: "6px 10px",
+  alignSelf: "stretch",
+  width: "100%",
+  display: "flex",
   alignItems: "center",
+  justifyContent: "space-between",
   gap: 6,
-  maxWidth: "100%",
   cursor: "pointer",
 };
 const nav                = { display: "flex", flexDirection: "column", gap: 14, marginTop: 8 };

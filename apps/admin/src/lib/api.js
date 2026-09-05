@@ -121,6 +121,12 @@ export const createBrand = (body        ) =>
 export const createOutlet = (brandId        , body        ) =>
   req      ("/api/outlets", { method: "POST", body: JSON.stringify(body), brandId });
 
+export const updateOutlet = (id        , body        ) =>
+  req      (`/api/outlets/${id}`, { method: "PATCH", body: JSON.stringify(body), outletId: id });
+
+export const deleteOutlet = (id        ) =>
+  req      (`/api/outlets/${id}`, { method: "DELETE", outletId: id });
+
 export const patchOutletConfig = (outlet        , patch                         ) =>
   req                          (`/api/outlets/${outlet._id}/config`, {
     method: "PATCH",

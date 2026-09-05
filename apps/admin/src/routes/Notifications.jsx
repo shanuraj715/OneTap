@@ -268,8 +268,9 @@ function CredentialCard({
 
   return (
     <Card title="Connection" subtitle={config.configured ? "Configured" : "Not configured yet"}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14 }}>
       {config.fields.map((f) => (
-        <Field key={f.key} label={f.label} hint={f.hint} info={f.info}>
+        <Field key={f.key} label={f.label} hint={f.hint} info={f.info} style={{ maxWidth: "none", gridColumn: f.multiline ? "1 / -1" : undefined }}>
           {f.multiline ? (
             <textarea
               value={values[f.key] ?? (f.secret ? "" : f.value)}
@@ -290,6 +291,7 @@ function CredentialCard({
           )}
         </Field>
       ))}
+      </div>
 
       {canManage ? (
         <div style={{ display: "flex", gap: 10, alignItems: "center" }}>

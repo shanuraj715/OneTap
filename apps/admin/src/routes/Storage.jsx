@@ -144,17 +144,19 @@ export function Storage() {
 
       {activeSpec && activeSpec.fields.length > 0 ? (
         <Card title={`${STORAGE_PROVIDER_LABELS[activeProvider]} — settings`}>
-          {activeSpec.fields.map((f) => (
-            <Field key={f.key} label={f.label} hint={f.hint} info={f.info}>
-              <TextInput
-                type={f.secret ? "password" : "text"}
-                value={values[f.key] ?? (f.secret ? "" : f.value)}
-                placeholder={f.secret && f.isSet ? `saved · ${f.value}` : (f.placeholder ?? "")}
-                disabled={!canManage}
-                onChange={(e) => setValues({ ...values, [f.key]: e.target.value })}
-              />
-            </Field>
-          ))}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14 }}>
+            {activeSpec.fields.map((f) => (
+              <Field key={f.key} label={f.label} hint={f.hint} info={f.info} style={{ maxWidth: "none" }}>
+                <TextInput
+                  type={f.secret ? "password" : "text"}
+                  value={values[f.key] ?? (f.secret ? "" : f.value)}
+                  placeholder={f.secret && f.isSet ? `saved · ${f.value}` : (f.placeholder ?? "")}
+                  disabled={!canManage}
+                  onChange={(e) => setValues({ ...values, [f.key]: e.target.value })}
+                />
+              </Field>
+            ))}
+          </div>
           {activeProvider === "s3" ? (
             <p style={hint}>
               The key needs only <code>PutObject</code> and <code>DeleteObject</code> on this one bucket. Objects must be

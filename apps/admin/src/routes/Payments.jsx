@@ -136,27 +136,30 @@ function CredentialCard({
     <Card title={GATEWAY_LABELS[gateway.gateway]}>
       <p style={hint}>{GATEWAY_DESCRIPTIONS[gateway.gateway]}</p>
 
-      {gateway.fields.map((f) => (
-        <Field key={f.key} label={f.label} hint={f.hint} info={f.info}>
-          <TextInput
-            type={f.secret ? "password" : "text"}
-            value={values[f.key] ?? (f.secret ? "" : f.value)}
-            placeholder={f.secret && f.isSet ? `saved · ${f.value}` : ""}
-            disabled={!canManage}
-            onChange={(e) => setValues({ ...values, [f.key]: e.target.value })}
-          />
-        </Field>
-      ))}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14 }}>
+        {gateway.fields.map((f) => (
+          <Field key={f.key} label={f.label} hint={f.hint} info={f.info} style={{ maxWidth: "none" }}>
+            <TextInput
+              type={f.secret ? "password" : "text"}
+              value={values[f.key] ?? (f.secret ? "" : f.value)}
+              placeholder={f.secret && f.isSet ? `saved · ${f.value}` : ""}
+              disabled={!canManage}
+              onChange={(e) => setValues({ ...values, [f.key]: e.target.value })}
+            />
+          </Field>
+        ))}
 
-      {gateway.gateway === "razorpay" ? (
-        <Field
-          label="Webhook URL"
-          hint="Add this in your Razorpay dashboard under Settings → Webhooks"
-          info="Razorpay calls this address to tell us a payment succeeded or failed. Without it, an order paid by a customer whose phone died mid-payment stays marked unpaid until somebody checks the Razorpay dashboard by hand."
-        >
-          <code style={codeBox}>{webhookUrl}</code>
-        </Field>
-      ) : null}
+        {gateway.gateway === "razorpay" ? (
+          <Field
+            label="Webhook URL"
+            hint="Add this in your Razorpay dashboard under Settings → Webhooks"
+            info="Razorpay calls this address to tell us a payment succeeded or failed. Without it, an order paid by a customer whose phone died mid-payment stays marked unpaid until somebody checks the Razorpay dashboard by hand."
+            style={{ maxWidth: "none", gridColumn: "1 / -1" }}
+          >
+            <code style={codeBox}>{webhookUrl}</code>
+          </Field>
+        ) : null}
+      </div>
 
       {canManage ? (
         <div style={{ display: "flex", gap: 10, alignItems: "center" }}>

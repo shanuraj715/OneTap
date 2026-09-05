@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createOutlet, listOutlets, patchOutletConfig } from "./api";
+import { createOutlet, deleteOutlet, listOutlets, patchOutletConfig, updateOutlet } from "./api";
 
 const SELECTED_KEY = "onetap.selectedOutletId";
 
@@ -83,5 +83,27 @@ export function useCreateOutlet() {
   return useMutation({
     mutationFn: (args) => createOutlet(args.brandId, args.body),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["outlets"] }),
+  });
+}
+
+export function useUpdateOutlet() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (args) => updateOutlet(args.id, args.body),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["outlets"] }),
+  });
+}
+
+/** Clears the selection too, so a deleted outlet never lingers as "current". */
+export function useDeleteOutlet() {
+  const qc = useQueryClient();
+  const ctx = useContext(OutletSelectionContext);
+  const setSelectedId = ctx?.[1];
+  return useMutation({
+    mutationFn: (id) => deleteOutlet(id),
+    onSuccess: () => {
+      setSelectedId?.(null);
+      qc.invalidateQueries({ queryKey: ["outlets"] });
+    },
   });
 }
