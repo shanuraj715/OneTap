@@ -1,4 +1,4 @@
-import { getFooterVariant, getHeaderVariant, Hero } from "@onetap/ui";
+import { getFooterVariant, getHeaderVariant } from "@onetap/ui";
 import { Ordering } from "@/components/Ordering";
 import { ThemeStyle } from "@/components/ThemeStyle";
 import { getMenu } from "@/lib/menu";
@@ -75,12 +75,48 @@ export default async function TablePage({
     );
   }
 
+  const locationFromOutletName = outlet.name.includes("—")
+    ? outlet.name.split("—")[1]?.trim()
+    : outlet.name.includes("-")
+      ? outlet.name.split("-")[1]?.trim()
+      : "";
+  const outletLocation = identity.address || identity.location?.formattedAddress || locationFromOutletName;
+  const outletDisplayName = identity.name || (locationFromOutletName ? outlet.name.split(/—|-/)[0]?.trim() : outlet.name);
+
   return (
     <>
       <ThemeStyle theme={theme} typography={typography} />
       <Header name={name} tagline={identity.tagline || undefined} phone={identity.phone || undefined} links={[]} />
 
-      <Hero title={`Table ${scan.table.number}`} subtitle={`${name} · order straight from your seat`} />
+      <section style={tableHeaderWrap}>
+        <h1 style={tableHeading}>Table {scan.table.number}</h1>
+        <div style={tableMeta}>
+          <span style={outletNameStyle}>{outletDisplayName}</span>
+          {outletLocation ? (
+            <>
+              <span style={metaDot} aria-hidden>·</span>
+              <span style={locationStyle}>
+                <svg
+                  width="13"
+                  height="13"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  style={{ flexShrink: 0 }}
+                  aria-hidden
+                >
+                  <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+                {outletLocation}
+              </span>
+            </>
+          ) : null}
+        </div>
+      </section>
 
       {scan.occupiedByOther ? (
         <p style={{ maxWidth: 560, margin: "0 auto 20px", padding: "12px 16px", textAlign: "center", color: "var(--tone-warning)", background: "var(--tone-warning-wash)", borderRadius: 10 }}>
@@ -112,3 +148,50 @@ export default async function TablePage({
     </>
   );
 }
+
+const tableHeaderWrap = {
+  maxWidth: 1080,
+  margin: "0 auto",
+  padding: "20px 16px 14px",
+  textAlign: "center",
+  boxSizing: "border-box",
+};
+
+const tableHeading = {
+  fontFamily: "var(--font-heading)",
+  fontSize: "clamp(1.5rem, 4vw, 2.15rem)",
+  fontWeight: 700,
+  letterSpacing: "-0.02em",
+  margin: 0,
+  lineHeight: 1.2,
+  color: "var(--color-text)",
+};
+
+const tableMeta = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: 8,
+  flexWrap: "wrap",
+  margin: "6px auto 0",
+  fontSize: "clamp(13px, 2.5vw, 15px)",
+  lineHeight: 1.4,
+  color: "var(--color-text-muted)",
+};
+
+const outletNameStyle = {
+  fontWeight: 600,
+  color: "var(--color-text)",
+};
+
+const metaDot = {
+  color: "var(--color-text-muted)",
+  opacity: 0.6,
+};
+
+const locationStyle = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 4,
+  color: "var(--color-text-muted)",
+};

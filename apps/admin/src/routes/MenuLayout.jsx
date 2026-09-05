@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   emptySection,
+  fontById,
   MENU_ITEM_SELECTIONS,
   MENU_SECTION_SORT_LABELS,
   MENU_SECTION_SORTS,
@@ -10,6 +11,9 @@ import {
   MENU_VIEW_ALL_PLACEMENTS,
   MENU_VIEW_ALL_PLACEMENT_LABELS,
   menuLayoutSchema,
+  themeTokensSchema,
+  tokensToCssVars,
+  TONES_LIGHT,
 } from "@onetap/config-schema";
 import { itemCardVariants, MenuSections } from "@onetap/ui";
 import {
@@ -20,16 +24,19 @@ import {
   ExternalLink,
   Eye,
   LayoutList,
+  Maximize2,
+  Monitor,
   Plus,
   Radio,
   RotateCcw,
   Save,
   Trash2,
+  X,
 } from "lucide-react";
 import { useMenu } from "../lib/useMenu";
 import { useOutlet, usePatchConfig } from "../lib/useOutlet";
 import { usePreviewSession } from "../lib/usePreviewSession";
-import { Button, Card, Checkbox, Empty, Field, Note, PageHeader, Pill, Select, STICKY_HEADER_CLEARANCE, TextInput, Toast } from "../ui";
+import { Button, Card, Checkbox, Empty, Field, Modal, Note, PageHeader, Pill, Select, STICKY_HEADER_CLEARANCE, TextInput, Toast } from "../ui";
 import { StorefrontNav } from "../components/SubNav";
 
 const ITEM_SELECTION_LABELS = { auto: "Automatic — every item", manual: "Hand-picked items" };
@@ -41,6 +48,7 @@ export function MenuLayout() {
   const menu = useMenu(outlet);
   const [layout, setLayout] = useState(null);
   const [previewActive, setPreviewActive] = useState(false);
+  const [desktopModal, setDesktopModal] = useState(false);
 
   // Re-syncs whenever the selected outlet actually changes, not just once —
   // switching in the sidebar doesn't unmount this page. Keyed on outlet?._id
@@ -52,6 +60,22 @@ export function MenuLayout() {
   }, [outlet?._id]);
 
   const preview = usePreviewSession(outlet, layout, previewActive && Boolean(outlet && layout));
+
+  const themeVars = useMemo(() => {
+    if (!outlet?.config?.theme) return {};
+    const lightTokens = themeTokensSchema.parse(outlet.config.theme.light ?? {});
+    const typo = outlet.config.typography;
+    return {
+      ...tokensToCssVars(lightTokens),
+      ...TONES_LIGHT,
+      ...(outlet.config.theme?.radius !== undefined ? { "--radius-card": `${outlet.config.theme.radius}px` } : {}),
+      ...(typo ? {
+        "--font-heading": fontById(typo.headingFont)?.stack ?? "inherit",
+        "--font-body": fontById(typo.bodyFont)?.stack ?? "inherit",
+        "--font-size-base": `${typo.baseSize}px`,
+      } : {}),
+    };
+  }, [outlet?.config?.theme, outlet?.config?.typography]);
 
   if (!outlet || !layout) {
     return (
@@ -217,9 +241,31 @@ export function MenuLayout() {
 
         {/* inline preview */}
         <div style={{ position: "sticky", top: STICKY_HEADER_CLEARANCE, minWidth: 0 }}>
-          <Card title="Preview" icon={<Eye size={15} />} subtitle="The real storefront menu components, with your live menu.">
+          <Card
+            title="Preview"
+            icon={<Eye size={15} />}
+            subtitle="The real storefront menu components, with your live menu."
+            action={
+              <Button
+                variant="outline"
+                onClick={() => setDesktopModal(true)}
+                style={{ display: "inline-flex", gap: 5, alignItems: "center", fontSize: 12, padding: "4px 8px" }}
+                title="Preview full desktop layout"
+              >
+                <Maximize2 size={13} /> Desktop view
+              </Button>
+            }
+          >
             {menu.data ? (
-              <div style={previewShell}>
+              <div
+                className="ot-preview-shell is-mobile"
+                style={{
+                  ...themeVars,
+                  ...previewShell,
+                  background: themeVars["--color-bg"] || "var(--color-bg)",
+                  color: themeVars["--color-text"] || "var(--color-text)",
+                }}
+              >
                 <MenuSections menu={menu.data} layout={menuLayoutSchema.parse(layout)} />
               </div>
             ) : (
@@ -227,6 +273,45 @@ export function MenuLayout() {
             )}
           </Card>
         </div>
+
+        {desktopModal && menu.data ? (
+          <Modal onClose={() => setDesktopModal(false)} ariaLabel="Desktop storefront preview" width={1120}>
+            <header style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 20px", borderBottom: "1px solid var(--color-border)" }}>
+              <div style={{ fontWeight: 600, fontSize: 15, display: "flex", alignItems: "center", gap: 8 }}>
+                <Monitor size={16} /> Desktop Storefront Preview (1080px)
+              </div>
+              <button
+                type="button"
+                onClick={() => setDesktopModal(false)}
+                style={{
+                  border: "none",
+                  background: "none",
+                  cursor: "pointer",
+                  padding: 4,
+                  borderRadius: 6,
+                  color: "var(--color-text-muted)",
+                }}
+                aria-label="Close"
+              >
+                <X size={18} />
+              </button>
+            </header>
+            <div
+              style={{
+                maxHeight: "80vh",
+                overflowY: "auto",
+                padding: "20px 24px",
+                ...themeVars,
+                background: themeVars["--color-bg"] || "var(--color-bg)",
+                color: themeVars["--color-text"] || "var(--color-text)",
+              }}
+            >
+              <div style={{ maxWidth: 1080, margin: "0 auto" }}>
+                <MenuSections menu={menu.data} layout={menuLayoutSchema.parse(layout)} />
+              </div>
+            </div>
+          </Modal>
+        ) : null}
       </div>
     </>
   );
