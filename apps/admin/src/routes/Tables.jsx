@@ -1,6 +1,7 @@
 import { useState } from "react";
                                            
 import { useMutation } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 import { formatINR, TABLE_STATUS_LABELS,                              } from "@onetap/config-schema";
 import { getTableQr, rotateTableQr,                    } from "../lib/api";
 import { useAuth } from "../lib/useAuth";
@@ -227,6 +228,15 @@ function QrPanel({
                 </Button>
               ) : null}
             </div>
+            {/* The plain code above is what staff need day to day. This is for
+                the moment someone looks at it and wants something they can put
+                on a table. */}
+            <p style={{ textAlign: "center", margin: "14px 0 0", fontSize: 12.5 }}>
+              <Link to="/table-cards" style={{ color: "var(--color-primary)" }}>
+                Design a printable card
+              </Link>{" "}
+              <span style={{ color: "var(--color-text-muted)" }}>with this code on it</span>
+            </p>
           </>
         ) : (
           <p style={{ textAlign: "center", color: "var(--color-text-muted)" }}>
