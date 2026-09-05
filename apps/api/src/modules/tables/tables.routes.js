@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
 import { tableStatusSchema } from "@onetap/config-schema";
+import { env } from "../../env.js";
 import { requireOutletContext, requireUser } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import { currentCustomer } from "../customer/customer.routes.js";
@@ -25,7 +26,12 @@ import {
 
 export const tablesRouter         = Router();
 
-const STOREFRONT_ORIGIN = process.env.STOREFRONT_ORIGIN ?? "http://localhost:3070";
+/**
+ * From the validated env, not `process.env` directly — reading it here is how
+ * it stayed unset in production without anything noticing. `env.js` refuses to
+ * start with a localhost value when NODE_ENV is production.
+ */
+const STOREFRONT_ORIGIN = env.STOREFRONT_ORIGIN;
 
 /* -------------------------------------------------------------- staff CRUD */
 
