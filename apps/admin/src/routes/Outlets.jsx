@@ -4,6 +4,7 @@ import { CreateOutletModal } from "../components/CreateOutletModal";
 import { useAuth } from "../lib/useAuth";
 import { useDeleteOutlet, useOutlets } from "../lib/useOutlet";
 import { Button, Card, PageHeader, Toast } from "../ui";
+import { SettingsNav } from "../components/SubNav";
 
 /**
  * Every outlet in the current brand, with edit/delete — the management
@@ -20,6 +21,7 @@ export function Outlets() {
     return (
       <>
         <PageHeader title="Outlets" />
+        <SettingsNav />
         <Card>Your role can&apos;t manage outlets.</Card>
       </>
     );
@@ -44,6 +46,8 @@ export function Outlets() {
           </Button>
         }
       />
+
+      <SettingsNav />
 
       <Card title={`Outlets — ${siblings.length}`}>
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>

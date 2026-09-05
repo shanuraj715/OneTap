@@ -23,6 +23,7 @@ import {
   TextInput,
   Toast,
 } from "../../ui";
+import { TablesNav } from "../../components/SubNav";
 import { BlockRow, ImagePicker } from "./BlockRow";
 import { CardPreview, CardWarnings } from "./CardPreview";
 import { ExportPanel } from "./ExportPanel";
@@ -96,6 +97,7 @@ export function TableCards() {
     return (
       <>
         <PageHeader title="Table cards" icon={<IdCard size={23} />} subtitle="Loading your design…" />
+        <TablesNav />
       </>
     );
   }
@@ -134,15 +136,21 @@ export function TableCards() {
               disabled={!dirty}
               style={{ display: "inline-flex", gap: 6, alignItems: "center" }}
             >
-              <RotateCcw size={14} /> Discard
+              <RotateCcw size={14} /> Reset
             </Button>
-            <Button onClick={doSave} disabled={!dirty || save.isPending} style={{ display: "inline-flex", gap: 7, alignItems: "center" }}>
+            <Button
+              onClick={doSave}
+              disabled={!dirty || save.isPending || blockingErrors > 0}
+              style={{ display: "inline-flex", gap: 7, alignItems: "center" }}
+            >
               <Save size={15} />
               {save.isPending ? "Saving…" : dirty ? "Save design" : "Saved"}
             </Button>
           </span>
         }
       />
+
+      <TablesNav />
 
       {localOrigin ? (
         <Note icon={<IdCard size={15} />}>

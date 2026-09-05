@@ -9,6 +9,7 @@ import {
 } from "@onetap/config-schema";
 import { useOutlet, usePatchConfig } from "../lib/useOutlet";
 import { Button, Card, Field, PageHeader, TextInput, Toast } from "../ui";
+import { StorefrontNav } from "../components/SubNav";
 
 const CATEGORIES = ["sans", "serif", "display", "mono"]         ;
 const CATEGORY_LABELS = { sans: "Sans-serif", serif: "Serif", display: "Display", mono: "Monospace" };
@@ -46,6 +47,7 @@ export function TypographyEditor() {
     return (
       <>
         <PageHeader title="Typography" />
+        <StorefrontNav />
         <Card>Seed an outlet from the Dashboard first.</Card>
       </>
     );
@@ -59,6 +61,8 @@ export function TypographyEditor() {
   return (
     <>
       <PageHeader title="Typography" subtitle="Fonts and type scale. Applies to every storefront component." />
+
+      <StorefrontNav />
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: 20, alignItems: "start" }}>
         <div>

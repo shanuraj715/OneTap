@@ -18,6 +18,7 @@ import { useAuth } from "../lib/useAuth";
 import { useNotificationLogs, useClearNotifyConfig, useNotifyConfig, useSaveNotifyConfig } from "../lib/useNotify";
 import { useOutlet, usePatchConfig } from "../lib/useOutlet";
 import { Button, Card, Checkbox, Empty, Field, MultiFilter, Note, PageHeader, Table, Td, Tabs, TextInput, Th, Toast } from "../ui";
+import { SettingsNav } from "../components/SubNav";
 
                                        
 
@@ -31,6 +32,7 @@ export function Notifications() {
     return (
       <>
         <PageHeader title="Notifications" />
+        <SettingsNav />
         <Card>Your role can&apos;t view notification settings.</Card>
       </>
     );
@@ -39,6 +41,7 @@ export function Notifications() {
     return (
       <>
         <PageHeader title="Notifications" />
+        <SettingsNav />
         <Card>Seed an outlet from the Dashboard first.</Card>
       </>
     );
@@ -51,6 +54,8 @@ export function Notifications() {
         icon={<Bell size={23} />}
         subtitle="Order-lifecycle alerts to the customer over WhatsApp or SMS."
       />
+
+      <SettingsNav />
 
       <Tabs
         value={tab}

@@ -22,6 +22,7 @@ import { getItemCardVariant, getVariant } from "@onetap/ui";
 import { Moon, Palette, RotateCcw, Save, Sun } from "lucide-react";
 import { useOutlet, usePatchConfig } from "../lib/useOutlet";
 import { Button, Card, ColorInput, Field, InfoHint, Note, PageHeader, STICKY_HEADER_CLEARANCE, Tabs, TextInput, Toast } from "../ui";
+import { StorefrontNav } from "../components/SubNav";
 
                              
 
@@ -109,6 +110,7 @@ export function ThemeEditor() {
     return (
       <>
         <PageHeader title="Theme" />
+        <StorefrontNav />
         <Card>Seed an outlet from the Dashboard first.</Card>
       </>
     );
@@ -147,6 +149,8 @@ export function ThemeEditor() {
           </span>
         }
       />
+
+      <StorefrontNav />
 
       <Tabs
         value={mode}

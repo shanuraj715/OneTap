@@ -15,6 +15,7 @@ import {
   useTables,
 } from "../lib/useTables";
 import { Button, Card, Field, PageHeader, TextInput, Toast } from "../ui";
+import { TablesNav } from "../components/SubNav";
 
 export function Tables() {
   const { outlet } = useOutlet();
@@ -33,6 +34,7 @@ export function Tables() {
     return (
       <>
         <PageHeader title="Tables" />
+        <TablesNav />
         <Card>Your role can&apos;t view tables.</Card>
       </>
     );
@@ -45,6 +47,8 @@ export function Tables() {
   return (
     <>
       <PageHeader title="Tables" subtitle="Floor plan, QR codes, and who's seated where." />
+
+      <TablesNav />
 
       {open.length > 0 ? (
         <Card title={`Seated now — ${open.length}`}>

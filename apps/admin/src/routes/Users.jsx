@@ -4,6 +4,7 @@ import { ROLE_DESCRIPTIONS, ROLE_LABELS, ROLES,           } from "@onetap/config
 import { useAuth, useCreateUser, useDeleteUser, useUpdateUser, useUsers } from "../lib/useAuth";
 import { useOutlet } from "../lib/useOutlet";
 import { Button, Card, Field, PageHeader, TextInput, Toast } from "../ui";
+import { SettingsNav } from "../components/SubNav";
 
 const ASSIGNABLE = ROLES.filter((r) => r !== "super_admin");
 
@@ -26,6 +27,7 @@ export function Users() {
     return (
       <>
         <PageHeader title="Users & roles" />
+        <SettingsNav />
         <Card>Your role can&apos;t view users.</Card>
       </>
     );
@@ -44,6 +46,8 @@ export function Users() {
   return (
     <>
       <PageHeader title="Users & roles" subtitle="Who can sign in, and what each role may do." />
+
+      <SettingsNav />
 
       <Card title={`Team — ${users.length}`}>
         {usersQuery.isLoading ? (

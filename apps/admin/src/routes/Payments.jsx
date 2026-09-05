@@ -11,6 +11,7 @@ import { useAuth } from "../lib/useAuth";
 import { useOutlet, usePatchConfig } from "../lib/useOutlet";
 import { useClearPaymentConfig, usePaymentConfig, useSavePaymentConfig } from "../lib/usePayments";
 import { Button, Card, Field, PageHeader, TextInput, Toast } from "../ui";
+import { SettingsNav } from "../components/SubNav";
 
 const API_BASE = import.meta.env.VITE_API_URL ?? "http://localhost:3072";
 
@@ -36,6 +37,7 @@ export function Payments() {
     return (
       <>
         <PageHeader title="Payments" />
+        <SettingsNav />
         <Card>Your role can&apos;t view payment settings.</Card>
       </>
     );
@@ -44,6 +46,7 @@ export function Payments() {
     return (
       <>
         <PageHeader title="Payments" />
+        <SettingsNav />
         <Card>Seed an outlet from the Dashboard first.</Card>
       </>
     );
@@ -66,6 +69,8 @@ export function Payments() {
         title="Payments"
         subtitle="Your own gateway account — money settles directly to you. TablePe never holds funds."
       />
+
+      <SettingsNav />
 
       <Card title="Offered at checkout">
         <p style={hint}>Diners see these in this order. A gateway must be configured before it can be offered.</p>

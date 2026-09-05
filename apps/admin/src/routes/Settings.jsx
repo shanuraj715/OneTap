@@ -21,6 +21,7 @@ import {
 import { useOutlet, usePatchConfig } from "../lib/useOutlet";
 import { LocationField } from "./settings/LocationField";
 import { Button, Card, Checkbox, Field, InfoHint, Note, PageHeader, Select, Tabs, TextInput, Toast } from "../ui";
+import { SettingsNav } from "../components/SubNav";
 
                                                                                                                     
 
@@ -89,6 +90,7 @@ export function Settings() {
     return (
       <>
         <PageHeader title="Settings" />
+        <SettingsNav />
         <Card>Seed an outlet from the Dashboard first.</Card>
       </>
     );
@@ -149,6 +151,8 @@ export function Settings() {
           </Button>
         }
       />
+
+      <SettingsNav />
 
       <Tabs
         value={tab}

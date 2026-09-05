@@ -15,6 +15,7 @@ import {
   useTestStorageConfig,
 } from "../lib/useStorage";
 import { Button, Card, Field, PageHeader, Pill, TextInput, Toast } from "../ui";
+import { SettingsNav } from "../components/SubNav";
 
 const ICONS = { local: HardDrive, s3: Cloud };
 
@@ -54,6 +55,7 @@ export function Storage() {
     return (
       <>
         <PageHeader title="Storage" />
+        <SettingsNav />
         <Card>Your role can&apos;t view storage settings.</Card>
       </>
     );
@@ -62,6 +64,7 @@ export function Storage() {
     return (
       <>
         <PageHeader title="Storage" />
+        <SettingsNav />
         <Card>{query.error ? `⚠ ${query.error.message}` : "Loading…"}</Card>
       </>
     );
@@ -102,6 +105,8 @@ export function Storage() {
         icon={<HardDrive size={22} />}
         subtitle="Where menu photos (and later, logos) are kept. Change it any time — existing images keep working."
       />
+
+      <SettingsNav />
 
       <Card title="Where images are stored">
         <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
