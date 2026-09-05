@@ -51,21 +51,34 @@ function measureCtx() {
  * at the very end, on export, after all the design work. Refusing the source up
  * front turns that into a message next to the picker.
  */
+/**
+ * Decoded images, keyed by their data URL.
+ *
+ * The editor re-renders on every keystroke and slider tick, and a background
+ * photo is a megabyte of base64 — decoding it afresh each time makes dragging a
+ * slider visibly stutter. The key is the URL itself, so changing the image
+ * naturally misses the cache.
+ */
+const decoded = new Map();
+const DECODE_CACHE_MAX = 12;
+
 function loadImage(src) {
-  return new Promise((resolve) => {
-    if (!src) {
-      resolve(null);
-      return;
-    }
-    if (!src.startsWith("data:")) {
-      resolve(null);
-      return;
-    }
+  if (!src || !src.startsWith("data:")) return Promise.resolve(null);
+  const hit = decoded.get(src);
+  if (hit) return hit;
+
+  const promise = new Promise((resolve) => {
     const img = new Image();
     img.onload = () => resolve(img);
     img.onerror = () => resolve(null);
     img.src = src;
   });
+
+  // Bounded, oldest-out. Without this, every photo an owner tries in a session
+  // stays in memory for as long as the tab is open.
+  if (decoded.size >= DECODE_CACHE_MAX) decoded.delete(decoded.keys().next().value);
+  decoded.set(src, promise);
+  return promise;
 }
 
 export async function prepareCard({ spec, data = {} }) {
