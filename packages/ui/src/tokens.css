@@ -198,6 +198,35 @@
   }
 }
 
+/* Container queries: inside embedded or side-panel preview widgets, grids collapse by container width */
+.ot-preview-shell,
+.ot-container-query-wrap {
+  container-type: inline-size;
+}
+
+@container (max-width: 680px) {
+  .ot-grid-cols-2, .ot-grid-cols-3, .ot-grid-cols-4, .ot-grid-cols-5, .ot-grid-cols-6 {
+    grid-template-columns: 1fr !important;
+  }
+}
+@container (min-width: 681px) and (max-width: 960px) {
+  .ot-grid-cols-3, .ot-grid-cols-4, .ot-grid-cols-5, .ot-grid-cols-6 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* Preview shell: provide realistic phone padding and guarantee single-column cards */
+.ot-preview-shell.is-mobile .ot-grid-cols-2,
+.ot-preview-shell.is-mobile .ot-grid-cols-3,
+.ot-preview-shell.is-mobile .ot-grid-cols-4,
+.ot-preview-shell.is-mobile .ot-grid-cols-5,
+.ot-preview-shell.is-mobile .ot-grid-cols-6 {
+  grid-template-columns: 1fr !important;
+}
+.ot-preview-shell .ot-menu-sections {
+  padding: 8px 10px !important;
+}
+
 /*
  * Header nav: the inline link row (all 8 header variants share it) shows on
  * a wide screen; below 720px it's replaced by a hamburger button that opens

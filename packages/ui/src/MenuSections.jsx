@@ -56,7 +56,7 @@ export function MenuSections({
   }
 
   return (
-    <div style={wrap}>
+    <div className="ot-menu-sections" style={wrap}>
       {(layout.showCategoryNav && visibleSections.length > 1) || (layout.showFoodTypeFilter && foodTypesPresent.length > 1) ? (
         <div style={toolbar}>
           {layout.showFoodTypeFilter && foodTypesPresent.length > 1 ? (

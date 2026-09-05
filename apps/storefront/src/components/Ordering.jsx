@@ -271,11 +271,13 @@ export function Ordering({
   return (
     <>
       {dineIn ? (
-        <div className="ot-anim-fade" style={tableBanner}>
-          <span>
-            Ordering to <strong>Table {dineIn.tableNumber}</strong>
-          </span>
-          {tab !== null && tab > 0 ? <span>Running tab {formatINR(tab)}</span> : null}
+        <div style={tableBannerWrap}>
+          <div className="ot-anim-fade" style={tableBanner}>
+            <span>
+              Ordering to <strong>Table {dineIn.tableNumber}</strong>
+            </span>
+            {tab !== null && tab > 0 ? <span>Running tab {formatINR(tab)}</span> : null}
+          </div>
         </div>
       ) : null}
 
@@ -1479,11 +1481,18 @@ const toastWrap = {
   display: "flex",
   justifyContent: "center",
 };
-const tableBanner                = {
+const tableBannerWrap = {
   maxWidth: 1080,
   margin: "0 auto 16px",
-  padding: "10px 24px",
+  padding: "0 16px",
+  boxSizing: "border-box",
+  width: "100%",
+};
+const tableBanner = {
+  width: "100%",
+  padding: "10px 18px",
   display: "flex",
+  alignItems: "center",
   justifyContent: "space-between",
   gap: 12,
   flexWrap: "wrap",
@@ -1491,6 +1500,7 @@ const tableBanner                = {
   color: "var(--color-on-primary)",
   background: "var(--color-primary)",
   borderRadius: "var(--radius-card)",
+  boxSizing: "border-box",
 };
 const payOption                = {
   display: "flex",
