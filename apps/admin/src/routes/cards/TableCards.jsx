@@ -25,6 +25,7 @@ import {
 } from "../../ui";
 import { BlockRow, ImagePicker } from "./BlockRow";
 import { CardPreview, CardWarnings } from "./CardPreview";
+import { ExportPanel } from "./ExportPanel";
 import { GradientEditor, defaultGradient } from "./GradientEditor";
 import { TemplateGallery } from "./TemplateGallery";
 import { mm, Row, Segmented, Slider } from "./controls";
@@ -166,12 +167,23 @@ export function TableCards() {
               { id: "blocks", label: "Content" },
               { id: "card", label: "Card & layout" },
               { id: "background", label: "Background" },
+              { id: "print", label: "Print & download" },
             ]}
           />
 
           {tab === "blocks" ? <BlocksPanel draft={draft} update={update} short={short} /> : null}
           {tab === "card" ? <CardPanel draft={draft} patch={patch} pct={pct} /> : null}
           {tab === "background" ? <BackgroundPanel draft={draft} patch={patch} pct={pct} /> : null}
+          {tab === "print" ? (
+            <ExportPanel
+              spec={draft}
+              data={data}
+              tables={tables}
+              patch={patch}
+              outletName={outlet.config.identity.name || outlet.name}
+              blockingErrors={blockingErrors}
+            />
+          ) : null}
 
           {save.error ? <Toast kind="error">{save.error.message}</Toast> : null}
           {save.isSuccess && !dirty ? <Toast kind="ok">Saved. Every table's card uses this design.</Toast> : null}
