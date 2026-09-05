@@ -458,19 +458,19 @@ export function Orders() {
           </Empty>
         </Card>
       ) : (
-        <Table minWidth={1020}>
+        <Table minWidth={1040}>
           <thead>
             <tr>
               <Th width={34} />
               <Th width={92}>Order</Th>
-              <Th>Customer</Th>
+              <Th width={170}>Customer</Th>
               <Th width={68} align="center">Type</Th>
               <Th width={70} align="center">Items</Th>
               <Th width={104} align="right">Amount</Th>
               <Th width={52} align="center">Print</Th>
               <Th width={148}>Status</Th>
               <Th width={92}>Waiting</Th>
-              <Th width={210} align="right">Actions</Th>
+              <Th width={220} align="right">Actions</Th>
             </tr>
           </thead>
           <tbody>
@@ -654,10 +654,25 @@ function OrderRow({
       </Td>
 
       <Td>
-        <span style={{ fontWeight: 600 }}>{order.customer?.name || "Walk-in"}</span>
-        {order.customer?.phone ? (
-          <span style={{ display: "block", fontSize: 11.5, color: "var(--color-text-muted)" }}>{order.customer.phone}</span>
-        ) : null}
+        <div style={{ maxWidth: 180 }}>
+          <span
+            style={{
+              fontWeight: 600,
+              display: "block",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+            title={order.customer?.name || "Walk-in"}
+          >
+            {order.customer?.name || "Walk-in"}
+          </span>
+          {order.customer?.phone ? (
+            <span style={{ display: "block", fontSize: 11.5, color: "var(--color-text-muted)", whiteSpace: "nowrap" }}>
+              {order.customer.phone}
+            </span>
+          ) : null}
+        </div>
       </Td>
 
       <Td align="center">
