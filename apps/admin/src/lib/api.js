@@ -375,6 +375,29 @@ export const moveSession = (o        , sessionId        , toTableId        ) =>
 export const closeSession = (o        , sessionId        ) =>
   req         (`/api/tables/sessions/${sessionId}/close`, { method: "POST", body: "{}", outletId: o._id });
 
+/* ---------------------------------------------------------------- QR cards */
+
+/**
+ * Every table's signed URL in one call, plus the storefront origin the server
+ * resolved. The origin comes back so the editor can refuse to let someone
+ * print forty cards pointing at localhost.
+ */
+export const listTableQrUrls = (o) =>
+  req("/api/tables/qr-urls", { outletId: o._id });
+
+export const getCardDesign = (o) => req("/api/qr-cards/design", { outletId: o._id });
+
+/**
+ * Sends the whole spec. `baseUpdatedAt` is what this client last read; the
+ * server rejects the save if the stored design has moved on since, so two
+ * managers editing at once can't silently overwrite each other.
+ */
+export const saveCardDesign = (o, body) =>
+  req("/api/qr-cards/design", { method: "PUT", body: JSON.stringify(body), outletId: o._id });
+
+export const resetCardDesign = (o) =>
+  req("/api/qr-cards/design/reset", { method: "POST", body: "{}", outletId: o._id });
+
 /* ------------------------------------------------------------------ printing */
 
 /** The API never returns a stored cloud key — only whether one is set. */

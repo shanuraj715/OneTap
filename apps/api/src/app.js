@@ -23,6 +23,7 @@ import { outletsRouter } from "./modules/outlets/outlets.routes.js";
 import { paymentsRouter } from "./modules/payments/payments.routes.js";
 import { previewRouter } from "./modules/preview/preview.routes.js";
 import { printingRouter } from "./modules/printing/printing.routes.js";
+import { qrCardsRouter } from "./modules/qr-cards/qr-cards.routes.js";
 import { storageRouter } from "./modules/storage/storage.routes.js";
 import { tablesRouter } from "./modules/tables/tables.routes.js";
 import { usersRouter } from "./modules/users/users.routes.js";
@@ -53,6 +54,18 @@ export function createApp()          {
 
   app.use(helmet());
   app.use(cors({ origin: corsOrigins, credentials: true }));
+
+  // A table-card design embeds its background photo, logo and QR centre-mark as
+  // data URLs — a canvas that drew a remote image is tainted and cannot be
+  // exported at all, so there is no version of this that stays under 1mb.
+  //
+  // This has to sit ABOVE the global parser rather than inside the router:
+  // express.json sets `req._body` once it has run, and every later json()
+  // middleware sees that flag and skips. A router-level limit would therefore
+  // never get the chance to raise it — the body would already have been
+  // rejected at 1mb.
+  app.use("/api/qr-cards", express.json({ limit: "6mb" }));
+
   app.use(
     express.json({
       limit: "1mb",
@@ -80,6 +93,7 @@ export function createApp()          {
   app.use("/api/delivery", deliveryRouter);
   app.use("/api/payments", paymentsRouter);
   app.use("/api/tables", tablesRouter);
+  app.use("/api/qr-cards", qrCardsRouter);
   app.use("/api/printing", printingRouter);
   app.use("/api/preview", previewRouter);
   app.use("/api/storage", storageRouter);

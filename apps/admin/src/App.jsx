@@ -19,6 +19,7 @@ import {
   Palette,
   Plus,
   Printer,
+  IdCard,
   QrCode,
   ReceiptText,
   Settings as SettingsIcon,
@@ -44,6 +45,7 @@ import { Notifications } from "./routes/Notifications";
 import { Orders } from "./routes/Orders";
 import { Payments } from "./routes/Payments";
 import { Printing } from "./routes/Printing";
+import { TableCards } from "./routes/cards/TableCards";
 import { Tables } from "./routes/Tables";
 import { Settings } from "./routes/Settings";
 import { Storage } from "./routes/Storage";
@@ -72,6 +74,7 @@ const NAV_GROUPS                                         = [
       { to: "/", label: "Dashboard", icon: <LayoutDashboard size={ICON} />, end: true },
       { to: "/orders", label: "Orders", icon: <ReceiptText size={ICON} />, permission: "order:read" },
       { to: "/tables", label: "Tables & QR", icon: <QrCode size={ICON} />, permission: "table:read" },
+      { to: "/table-cards", label: "Table cards", icon: <IdCard size={ICON} />, permission: "table:read" },
       { to: "/printing", label: "Printing", icon: <Printer size={ICON} />, permission: "printer:read" },
     ],
   },
@@ -288,6 +291,7 @@ function Shell({ can }                                     ) {
           <Route path="/menu-layout" element={<MenuLayout />} />
           <Route path="/coupons" element={<Coupons />} />
           <Route path="/tables" element={<Tables />} />
+          <Route path="/table-cards" element={<TableCards />} />
           <Route path="/printing" element={<Printing />} />
           <Route path="/payments" element={<Payments />} />
           <Route path="/notifications" element={<Notifications />} />

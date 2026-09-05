@@ -77,3 +77,4 @@ export {
 
 } from "./models/notify.js";
 export { StorageConfigModel } from "./models/storage.js";
+export { QrCardDesignModel } from "./models/qr-card.js";

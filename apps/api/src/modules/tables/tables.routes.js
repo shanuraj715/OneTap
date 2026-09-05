@@ -10,6 +10,7 @@ import {
   deleteTable,
   getTable,
   listActiveSessions,
+  listTableQrUrls,
   listTables,
   moveSession,
   openSession,
@@ -61,6 +62,21 @@ tablesRouter.delete("/:id", async (req, res) => {
 });
 
 /* ----------------------------------------------------------------- QR codes */
+
+/**
+ * Every table's signed URL in one call — what the card designer needs to print
+ * a sheet of forty cards without forty round trips. Deliberately returns URLs
+ * rather than images: the designer draws its own QR from the module matrix so
+ * it can style it, which a baked PNG cannot support.
+ *
+ * `origin` comes back so the editor can check it. STOREFRONT_ORIGIN falling
+ * back to localhost is silent and catastrophic here — the cards print fine and
+ * every one of them is useless.
+ */
+tablesRouter.get("/qr-urls", async (req, res) => {
+  const ctx = await requireOutletContext(req, "table:read");
+  res.json({ origin: STOREFRONT_ORIGIN, tables: await listTableQrUrls(ctx, STOREFRONT_ORIGIN) });
+});
 
 tablesRouter.get("/:id/qr", async (req, res) => {
   const ctx = await requireOutletContext(req, "table:read");
