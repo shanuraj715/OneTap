@@ -1,10 +1,13 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   CARD_BLOCK_HINTS,
   CARD_BLOCK_LABELS,
+  CARD_FONT_GROUPS,
   CARD_ICONS,
   CARD_TOKENS,
-  FONT_FAMILIES,
+  cardFontGroupOf,
+  cardFontsInGroup,
+  fontIsItalicOnly,
   isRiskyEyePairing,
 } from "@onetap/config-schema";
 import {
@@ -22,7 +25,7 @@ import {
   Type,
   Upload,
 } from "lucide-react";
-import { weightsFor } from "../../lib/card/cardFonts";
+import { clampWeight, weightsFor } from "../../lib/card/cardFonts";
 import { fileToCardImage, IMAGE_ACCEPT } from "../../lib/card/imageInput";
 import { Button, Checkbox, ColorInput, Field, Select, TextInput } from "../../ui";
 import { GradientEditor, defaultGradient } from "./GradientEditor";
@@ -132,10 +135,101 @@ export function BlockRow({ block, shortMm, cardGapPct, onChange, onRemove, onMov
 
 /* -------------------------------------------------------------------- text */
 
+/**
+ * Category first, then the faces in it.
+ *
+ * Sixty-two fonts in one dropdown is a wall nobody reads to the bottom of, and
+ * the choice is never "which of these sixty-two" — it is "something like
+ * handwriting", then which one. Splitting it in two also means only the group
+ * you opened is even on screen.
+ *
+ * Nothing is previewed in its own face here on purpose: a font list that shows
+ * each name in its own lettering has to download all sixty-two to do it. The
+ * card beside the editor is the preview, and it redraws the moment you choose.
+ */
+function FontPicker({ fontId, weight, onChange, colour }) {
+  const currentGroup = cardFontGroupOf(fontId);
+  const [group, setGroup] = useState(currentGroup);
+
+  // Following the selection keeps the two dropdowns honest when the font is
+  // changed from elsewhere — applying a template, for instance.
+  useEffect(() => setGroup(currentGroup), [currentGroup]);
+
+  const fonts = cardFontsInGroup(group);
+  const weights = weightsFor(fontId);
+  const groupMeta = CARD_FONT_GROUPS.find((g) => g.id === group);
+
+  const pickGroup = (next) => {
+    setGroup(next);
+    // Move to the first face in the new group straight away, so the card
+    // updates on one click instead of leaving the old font showing until a
+    // second choice is made.
+    const first = cardFontsInGroup(next)[0];
+    if (first && first.id !== fontId) {
+      onChange({ fontId: first.id, weight: clampWeight(first.id, weight) });
+    }
+  };
+
+  return (
+    <>
+      <Row>
+        <Field label="Style of lettering" hint={groupMeta?.hint}>
+          <Select value={group} onChange={(e) => pickGroup(e.target.value)}>
+            {CARD_FONT_GROUPS.map((g) => (
+              <option key={g.id} value={g.id}>
+                {g.label}
+              </option>
+            ))}
+          </Select>
+        </Field>
+        <Field label="Font">
+          <Select
+            value={fontId}
+            onChange={(e) => onChange({ fontId: e.target.value, weight: clampWeight(e.target.value, weight) })}
+          >
+            {fonts.map((f) => (
+              <option key={f.id} value={f.id}>
+                {f.name}
+              </option>
+            ))}
+          </Select>
+        </Field>
+      </Row>
+      <Row>
+        <Field label="Weight" hint={weights.length === 1 ? "This font ships in one weight only." : undefined}>
+          <Select value={String(clampWeight(fontId, weight))} onChange={(e) => onChange({ weight: Number(e.target.value) })}>
+            {/* Only the weights the face actually ships. Offering the rest gets
+                a smeared synthetic bold that reads as a rendering fault. */}
+            {weights.map((w) => (
+              <option key={w} value={w}>
+                {w}
+                {WEIGHT_NAMES[w] ? ` — ${WEIGHT_NAMES[w]}` : ""}
+              </option>
+            ))}
+          </Select>
+        </Field>
+        <Field label="Colour">{colour}</Field>
+      </Row>
+    </>
+  );
+}
+
+const WEIGHT_NAMES = {
+  100: "Thin",
+  200: "Extra light",
+  300: "Light",
+  400: "Regular",
+  500: "Medium",
+  600: "Semi bold",
+  700: "Bold",
+  800: "Extra bold",
+  900: "Black",
+};
+
 function TextControls({ block, setGroup, pct }) {
   const t = block.text;
   const set = (patch) => setGroup("text", patch);
-  const weights = weightsFor(t.fontId);
+  const italicOnly = fontIsItalicOnly(t.fontId);
 
   return (
     <>
@@ -157,34 +251,12 @@ function TextControls({ block, setGroup, pct }) {
         ))}
       </div>
 
-      <Row>
-        <Field label="Font">
-          <Select value={t.fontId} onChange={(e) => set({ fontId: e.target.value })}>
-            {FONT_FAMILIES.map((f) => (
-              <option key={f.id} value={f.id}>
-                {f.name}
-              </option>
-            ))}
-          </Select>
-        </Field>
-        <Field
-          label="Weight"
-          hint={weights.length === 1 ? "This font ships in one weight only." : undefined}
-        >
-          <Select value={String(t.weight)} onChange={(e) => set({ weight: Number(e.target.value) })}>
-            {/* Only the weights the face actually ships. Offering the rest gets
-                a smeared synthetic bold that reads as a rendering fault. */}
-            {weights.map((w) => (
-              <option key={w} value={w}>
-                {w}
-              </option>
-            ))}
-          </Select>
-        </Field>
-        <Field label="Colour">
-          <ColorInput value={t.color} onChange={(color) => set({ color })} />
-        </Field>
-      </Row>
+      <FontPicker
+        fontId={t.fontId}
+        weight={t.weight}
+        onChange={(patch) => set(patch)}
+        colour={<ColorInput value={t.color} onChange={(color) => set({ color })} />}
+      />
 
       <Row>
         <Slider label="Size" value={t.sizePct} onChange={(v) => set({ sizePct: v })} min={1} max={30} step={0.1} resolve={pct} />
@@ -223,7 +295,12 @@ function TextControls({ block, setGroup, pct }) {
       </Row>
 
       <div style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "center" }}>
-        <Checkbox checked={t.italic} onChange={(italic) => set({ italic })} label="Italic" />
+        {/* Molle only exists as an italic, so the control would be a lie. */}
+        {italicOnly ? (
+          <span style={hint}>This font is only made in italic.</span>
+        ) : (
+          <Checkbox checked={t.italic} onChange={(italic) => set({ italic })} label="Italic" />
+        )}
         <Checkbox
           checked={t.chip}
           onChange={(chip) => set({ chip })}

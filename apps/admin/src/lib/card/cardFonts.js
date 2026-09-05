@@ -1,4 +1,10 @@
-import { fontById } from "@onetap/config-schema";
+import {
+  cardFontById,
+  cardFontWeights,
+  clampCardFontWeight,
+  fontIsItalicOnly,
+  parseFontSpec,
+} from "@onetap/config-schema";
 
 /**
  * Canvas text falls back silently. Ask for a face the browser has not loaded
@@ -21,9 +27,32 @@ import { fontById } from "@onetap/config-schema";
  */
 const links = new Map();
 
+/**
+ * Google serves the CSS from one host and the font files from another, so a
+ * cold font costs two DNS lookups and two TLS handshakes before a byte of
+ * lettering arrives. Warming both once removes that from the first font an
+ * owner picks — which is the one moment the delay is visible.
+ */
+let preconnected = false;
+function preconnect() {
+  if (preconnected) return;
+  preconnected = true;
+  for (const [href, crossOrigin] of [
+    ["https://fonts.googleapis.com", false],
+    ["https://fonts.gstatic.com", true],
+  ]) {
+    const link = document.createElement("link");
+    link.rel = "preconnect";
+    link.href = href;
+    if (crossOrigin) link.crossOrigin = "anonymous";
+    document.head.appendChild(link);
+  }
+}
+
 function linkFor(spec) {
   const existing = links.get(spec);
   if (existing) return existing;
+  preconnect();
 
   const promise = new Promise((resolve) => {
     const link = document.createElement("link");
@@ -46,39 +75,16 @@ function linkFor(spec) {
   return promise;
 }
 
-/** "Plus+Jakarta+Sans:wght@400;500;700;800" → { family, weights } */
-function parseGoogleSpec(spec) {
-  if (!spec) return null;
-  const [name, axis] = spec.split(":");
-  const family = name.replace(/\+/g, " ");
-  const weights = axis?.startsWith("wght@")
-    ? axis
-        .slice(5)
-        .split(";")
-        .map((w) => Number.parseInt(w, 10))
-        .filter((w) => Number.isFinite(w))
-    : [400];
-  return { family, weights: weights.length ? weights : [400] };
-}
-
 /**
  * The weights a face actually ships. Bebas Neue and Archivo Black have no
  * weight axis at all: ask for 700 and the browser synthesises a smeared faux
  * bold, which looks like a rendering bug rather than a design choice.
  */
-export function weightsFor(fontId) {
-  const parsed = parseGoogleSpec(fontById(fontId).google);
-  return parsed ? parsed.weights : [300, 400, 500, 600, 700, 800, 900];
-}
-
-export function clampWeight(fontId, weight) {
-  const available = weightsFor(fontId);
-  if (available.includes(weight)) return weight;
-  return available.reduce((best, w) => (Math.abs(w - weight) < Math.abs(best - weight) ? w : best), available[0]);
-}
+export const weightsFor = cardFontWeights;
+export const clampWeight = clampCardFontWeight;
 
 /** The full stack, so canvas still has somewhere to land if a face is missing. */
-export const canvasFamily = (fontId) => fontById(fontId).stack;
+export const canvasFamily = (fontId) => cardFontById(fontId).stack;
 
 /**
  * Load every face a design needs, and say which ones did not arrive.
@@ -93,25 +99,34 @@ export async function ensureFonts(pairs) {
   const specs = new Map();
 
   for (const { fontId } of pairs) {
-    const parsed = parseGoogleSpec(fontById(fontId).google);
-    if (parsed) specs.set(fontById(fontId).google, parsed);
+    const font = cardFontById(fontId);
+    const parsed = parseFontSpec(font.google);
+    if (parsed) specs.set(font.google, parsed);
   }
   if (specs.size === 0) return warnings;
 
   // The stylesheets have to be PARSED before `document.fonts.load` has any
   // @font-face rule to match against — injecting the links is not enough.
+  //
+  // Only the families this design actually uses reach here, which is what keeps
+  // a catalogue of sixty-odd faces from costing anything: a card using two of
+  // them fetches two stylesheets.
   await Promise.all([...specs.keys()].map(linkFor));
 
   const wanted = new Map();
   for (const { fontId, weight } of pairs) {
-    const parsed = parseGoogleSpec(fontById(fontId).google);
+    const parsed = parseFontSpec(cardFontById(fontId).google);
     if (!parsed) continue;
-    wanted.set(`${parsed.family}|${clampWeight(fontId, weight)}`, { family: parsed.family, weight: clampWeight(fontId, weight) });
+    const w = clampWeight(fontId, weight);
+    // Molle ships italic only. Probing for an upright face it does not have
+    // reports a perfectly good font as missing.
+    const italic = fontIsItalicOnly(fontId);
+    wanted.set(`${parsed.family}|${w}|${italic}`, { family: parsed.family, weight: w, italic });
   }
 
   await Promise.all(
-    [...wanted.values()].map(async ({ family, weight }) => {
-      const probe = () => document.fonts.load(`${weight} 16px "${family}"`, "ABCabc123");
+    [...wanted.values()].map(async ({ family, weight, italic }) => {
+      const probe = () => document.fonts.load(`${italic ? "italic " : ""}${weight} 16px "${family}"`, "ABCabc123");
       try {
         // `.load()` resolves with the array of faces it matched — and resolves
         // with an EMPTY array rather than rejecting when the family is missing.
@@ -146,7 +161,10 @@ export async function ensureFonts(pairs) {
  */
 export function applyTextStyle(ctx, style, fontSizePx) {
   const weight = clampWeight(style.fontId, style.weight);
-  ctx.font = `${style.italic ? "italic " : ""}${weight} ${fontSizePx}px ${canvasFamily(style.fontId)}`;
+  // An italic-only face has to be asked for as italic; requesting upright makes
+  // the browser slant a face it does not have, or fall back entirely.
+  const italic = style.italic || fontIsItalicOnly(style.fontId);
+  ctx.font = `${italic ? "italic " : ""}${weight} ${fontSizePx}px ${canvasFamily(style.fontId)}`;
   if ("letterSpacing" in ctx) {
     ctx.letterSpacing = `${(style.letterSpacing ?? 0) * fontSizePx}px`;
   }
