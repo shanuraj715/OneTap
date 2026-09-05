@@ -84,6 +84,15 @@ function sizeOf(presetId, land) {
 
 const solid = (color) => ({ kind: "color", color });
 
+/** Blend two hex colours; `t` is how much of `b` to take. */
+function mix(a, b, t) {
+  const hex = (c) => [1, 3, 5].map((i) => Number.parseInt(c.slice(i, i + 2), 16));
+  const [r1, g1, b1] = hex(a);
+  const [r2, g2, b2] = hex(b);
+  const ch = (x, y) => Math.round(x + (y - x) * t).toString(16).padStart(2, "0");
+  return `#${ch(r1, r2)}${ch(g1, g2)}${ch(b1, b2)}`.toUpperCase();
+}
+
 /**
  * Type has an absolute legibility floor that percentages do not respect: 2.6%
  * of the short edge is a comfortable 3.8mm caption on an A5 card and an
@@ -106,6 +115,37 @@ function applyTypeFloor(spec) {
         ? { ...b, text: { ...b.text, sizePct: Math.round(floorPct * 10) / 10 } }
         : b,
     ),
+  };
+}
+
+/**
+ * The same idea for the code itself, and for the same reason: a percentage that
+ * gives a comfortable QR on an A6 card gives an unprintable one on A7.
+ *
+ * The number that decides whether a printed code scans is the size of a single
+ * module, not the size of the code — a long URL at high error correction packs
+ * more modules into the same square. Below about 0.5mm an office printer bleeds
+ * neighbouring modules together. So the library sizes its QR to clear that,
+ * whatever card it lands on.
+ *
+ * A URL of ~80 characters at level H is 57 modules including the quiet zone,
+ * which is what this assumes; the renderer measures the real matrix and warns
+ * if a longer URL pushes it under anyway.
+ */
+const MIN_MODULE_MM = 0.52;
+const ASSUMED_MODULES = 57;
+
+function applyQrFloor(spec) {
+  const short = Math.min(spec.size.widthMm, spec.size.heightMm);
+  return {
+    ...spec,
+    blocks: spec.blocks.map((b) => {
+      if (b.kind !== "qr") return b;
+      const usable = 1 - (b.qr.paddingPct / 100) * 2;
+      const neededMm = (MIN_MODULE_MM * ASSUMED_MODULES) / usable;
+      const neededPct = Math.ceil((neededMm / short) * 100);
+      return b.qr.sizePct >= neededPct ? b : { ...b, qr: { ...b.qr, sizePct: Math.min(90, neededPct) } };
+    }),
   };
 }
 
@@ -211,8 +251,11 @@ const photo = (p, land) => ({
     kind: "image",
     image: "",
     imageFit: "cover",
-    gradient: { kind: "linear", angle: 155, stops: [{ color: p.fg, at: 0 }, { color: p.accent, at: 100 }] },
-    color: p.fg,
+    // Runs from the palette's own dark ground into its accent, so the 42%
+    // black scrim deepens the image rather than muddying a light one — and so
+    // white type holds up across the whole ramp.
+    gradient: { kind: "linear", angle: 155, stops: [{ color: p.bg, at: 0 }, { color: p.accent, at: 100 }] },
+    color: p.bg,
     scrimColor: "#000000",
     scrimOpacity: 42,
   },
@@ -229,7 +272,10 @@ const photo = (p, land) => ({
 });
 
 const gradientFamily = (p, land) => ({
-  background: linear(155, p.bg, p.accent),
+  // Only part-way to the accent. A full bg→accent ramp crosses too much of the
+  // value range for one text colour to stay readable at both ends: whichever
+  // end you tune for, the type disappears at the other.
+  background: linear(155, p.bg, mix(p.bg, p.accent, 0.5)),
   gapPct: land ? 2 : 2.8,
   blocks: seq([
     t("SCAN TO ORDER", { fontId: "outfit", sizePct: land ? 2.6 : 2.9, weight: 600, letterSpacing: 0.28, transform: "upper", color: p.fg, opacity: 78 }),
@@ -263,16 +309,26 @@ const emblem = (p, land) => ({
     t("EST. HERE", { fontId: "work-sans", sizePct: land ? 2.3 : 2.6, weight: 600, letterSpacing: 0.3, transform: "upper", color: p.mute }),
     t("{outlet}", { fontId: "fraunces", sizePct: land ? 6.6 : 8, weight: 700, color: p.fg, maxLines: 2, lineHeight: 1.08 }),
     q({
-      sizePct: land ? 38 : 46,
+      // Larger than the other families, because a round plate spends 16% of
+      // the box on padding to contain the square code. Keep these in step: drop
+      // the size back and the modules fall under the printable limit.
+      sizePct: land ? 46 : 54,
       color: p.qr,
       plate: true,
       plateColor: p.plate,
       plateRadiusPct: 50,
-      paddingPct: 11,
+      // A round plate only contains the square code inside its inscribed
+      // square, which is 70.7% of the diameter — so a circle needs at least
+      // ~15% padding or the corners of the QR hang outside the plate.
+      paddingPct: 16,
       moduleStyle: "dot",
       eyeFrame: "circle",
       eyeBall: "circle",
-      eyeColor: p.accent,
+      // The finder patterns stay the module colour rather than taking the
+      // accent. A scanner locates the code by these three squares before
+      // reading anything, and half these palettes have a light accent that
+      // would leave them invisible on a light plate. The round shape is what
+      // gives this family its character; the colour is not worth the risk.
     }),
     t("TABLE {table}", {
       fontId: "work-sans",
@@ -396,8 +452,10 @@ export const CARD_TEMPLATES = VARIANTS.map(([familyKey, paletteKey, presetId, la
     heightMm: size.heightMm,
     /** Parsed on demand — see the note at the top of this file. */
     build: () =>
-      applyTypeFloor(
-        qrCardSpecSchema.parse({ ...family.build(palette, land), templateId: `${familyKey}-${paletteKey}`, size }),
+      applyQrFloor(
+        applyTypeFloor(
+          qrCardSpecSchema.parse({ ...family.build(palette, land), templateId: `${familyKey}-${paletteKey}`, size }),
+        ),
       ),
   };
 });
