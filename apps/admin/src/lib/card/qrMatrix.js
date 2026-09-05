@@ -15,9 +15,26 @@ import { QR_QUIET_MODULES } from "@onetap/config-schema";
 /** Finder patterns are 7×7 and live in three corners. */
 const FINDER = 7;
 
+/**
+ * Encoding is pure, so results are memoised. The template gallery draws 36
+ * cards that all carry the same URL, and the editor re-renders on every
+ * keystroke — recomputing an identical matrix each time is the single most
+ * expensive thing either of them would otherwise do.
+ */
+const matrices = new Map();
+const MATRIX_CACHE_MAX = 24;
+
 export function buildMatrix(text, ecc = "H") {
+  const key = `${ecc}|${text}`;
+  const hit = matrices.get(key);
+  if (hit) return hit;
+
   const qr = QRCode.create(text || "https://example.com", { errorCorrectionLevel: ecc });
-  return { size: qr.modules.size, get: (r, c) => qr.modules.get(r, c) === 1, version: qr.version };
+  const matrix = { size: qr.modules.size, get: (r, c) => qr.modules.get(r, c) === 1, version: qr.version };
+
+  if (matrices.size >= MATRIX_CACHE_MAX) matrices.delete(matrices.keys().next().value);
+  matrices.set(key, matrix);
+  return matrix;
 }
 
 /** Top-left corners of the three finder patterns. */

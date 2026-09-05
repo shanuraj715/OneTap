@@ -6,7 +6,7 @@ import {
   cardSizeById,
   qrCardSpecSchema,
 } from "@onetap/config-schema";
-import { IdCard, Plus, RotateCcw, RotateCw, Save } from "lucide-react";
+import { IdCard, LayoutTemplate, Plus, RotateCcw, RotateCw, Save } from "lucide-react";
 import { useCardDesign, useResetCardDesign, useSaveCardDesign, useTableQrUrls } from "../../lib/useCardDesign";
 import { useOutlet } from "../../lib/useOutlet";
 import {
@@ -26,6 +26,7 @@ import {
 import { BlockRow, ImagePicker } from "./BlockRow";
 import { CardPreview, CardWarnings } from "./CardPreview";
 import { GradientEditor, defaultGradient } from "./GradientEditor";
+import { TemplateGallery } from "./TemplateGallery";
 import { mm, Row, Segmented, Slider } from "./controls";
 
 /**
@@ -48,6 +49,7 @@ export function TableCards() {
   const [tab, setTab] = useState("blocks");
   const [warnings, setWarnings] = useState([]);
   const [previewTableId, setPreviewTableId] = useState("");
+  const [galleryOpen, setGalleryOpen] = useState(false);
 
   // Keyed on the outlet id, not on "have I loaded yet". Guarding with `!draft`
   // leaves the previous outlet's design on screen after a switch — and saving
@@ -117,6 +119,9 @@ export function TableCards() {
         subtitle="Design one card, print it for every table. Each printed card carries its own table's code."
         action={
           <span style={{ display: "flex", gap: 8 }}>
+            <Button variant="outline" onClick={() => setGalleryOpen(true)} style={{ display: "inline-flex", gap: 6, alignItems: "center" }}>
+              <LayoutTemplate size={14} /> Browse designs
+            </Button>
             <Button
               variant="outline"
               onClick={() => {
@@ -212,6 +217,15 @@ export function TableCards() {
           </Card>
         </div>
       </div>
+
+      {galleryOpen ? (
+        <TemplateGallery
+          data={data}
+          currentSize={draft.size}
+          onApply={update}
+          onClose={() => setGalleryOpen(false)}
+        />
+      ) : null}
     </>
   );
 }
