@@ -10,6 +10,9 @@ import { Check, ChevronDown, Info, X } from "lucide-react";
  * call site that needs otherwise still can (`size="md"` overrides this).
  * Import `Button` from here, not `@onetap/ui`, everywhere under `routes/`.
  */
+export { AwesomeLoader } from "./components/AwesomeLoader";
+export { TopProgressBar } from "./components/TopProgressBar";
+
 export function Button(props             ) {
   return <BaseButton size="sm" {...props} />;
 }

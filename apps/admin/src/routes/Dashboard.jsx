@@ -30,7 +30,7 @@ import { BarChart, DonutChart, HBarList, LineChart } from "../charts";
 import { useAuth } from "../lib/useAuth";
 import { useDashboardStats } from "../lib/useDashboard";
 import { useOutlet } from "../lib/useOutlet";
-import { Card, Empty, InfoHint, PageHeader, Pill, Table, Td, Th, Toast } from "../ui";
+import { AwesomeLoader, Card, Empty, InfoHint, PageHeader, Pill, Table, Td, Th, Toast } from "../ui";
 
 const CHANNEL_LABEL                         = { takeaway: "Takeaway", "dine-in": "Dine-in", delivery: "Delivery" };
 
@@ -62,7 +62,9 @@ export function Dashboard() {
       <PageHeader title="Dashboard" subtitle={outlet.name} />
 
       {stats.isLoading ? (
-        <Card>Loading…</Card>
+        <Card>
+          <AwesomeLoader compact label="Loading dashboard metrics…" />
+        </Card>
       ) : stats.error ? (
         <Card>
           <Toast kind="error">{(stats.error         ).message}</Toast>

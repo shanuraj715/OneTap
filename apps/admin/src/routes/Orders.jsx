@@ -56,7 +56,7 @@ import { useOutlet } from "../lib/useOutlet";
 import { usePrinters, usePrintOrderOn } from "../lib/usePrinting";
 import { useSlaAlerts } from "../lib/useSlaAlerts";
 import { useManualStatus } from "../lib/useOrders";
-import { Button, Card, Empty, IconChip, Menu, Modal, MultiFilter, Pill, Select, Table, Td, TextInput, Th, Toast } from "../ui";
+import { AwesomeLoader, Button, Card, Empty, IconChip, Menu, Modal, MultiFilter, Pill, Select, Table, Td, TextInput, Th, Toast } from "../ui";
 import { OrderEditModal } from "./orders/OrderEditModal";
 
 /** Rows-per-page, remembered per browser. */
@@ -443,7 +443,9 @@ export function Orders() {
       {/* -------------------------------------------------------------- table */}
 
       {orders.isLoading ? (
-        <Card>Loading…</Card>
+        <Card>
+          <AwesomeLoader compact label="Loading orders…" subtext="Connecting to live stream" />
+        </Card>
       ) : !sorted.length ? (
         <Card>
           <Empty

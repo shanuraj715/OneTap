@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { NavLink, Route, Routes, useLocation } from "react-router-dom";
+import { AwesomeLoader } from "./components/AwesomeLoader";
+import { TopProgressBar } from "./components/TopProgressBar";
 import { ROLE_LABELS } from "@onetap/config-schema";
 import {
   Bell,
@@ -58,6 +60,29 @@ import { Menu } from "./ui";
 const STOREFRONT_URL = "http://localhost:3070";
 
 const ICON = 15.5;
+
+const ROUTE_META = {
+  "/": { title: "Dashboard", icon: LayoutDashboard },
+  "/orders": { title: "Orders", icon: ReceiptText },
+  "/menu": { title: "Menu", icon: UtensilsCrossed },
+  "/storage": { title: "Storage", icon: HardDrive },
+  "/menu-layout": { title: "Menu layout", icon: LayoutList },
+  "/coupons": { title: "Coupons", icon: Tag },
+  "/tables": { title: "Tables & QR", icon: QrCode },
+  "/table-cards": { title: "Table cards", icon: IdCard },
+  "/printing": { title: "Printing", icon: Printer },
+  "/payments": { title: "Payments", icon: CreditCard },
+  "/notifications": { title: "Notifications", icon: Bell },
+  "/customers": { title: "Customers", icon: UsersIcon },
+  "/appearance": { title: "Appearance", icon: Wand2 },
+  "/theme": { title: "Theme", icon: Palette },
+  "/typography": { title: "Typography", icon: Type },
+  "/settings": { title: "Settings", icon: SettingsIcon },
+  "/outlets": { title: "Outlets", icon: Building2 },
+  "/dashboard-config": { title: "Configure dashboard", icon: LayoutGrid },
+  "/users": { title: "Users & roles", icon: UsersIcon },
+  "/brands": { title: "Brands", icon: Building2 },
+};
 
 /** Full navigation list showing every single option — for Super Admins. */
 const SUPER_ADMIN_NAV_GROUPS = [
@@ -162,7 +187,7 @@ export function App() {
   const { user, isLoading, can } = useAuth();
 
   if (isLoading) {
-    return <div style={splash}>Loading…</div>;
+    return <AwesomeLoader fullScreen label="Loading TablePe" subtext="Preparing your workspace…" />;
   }
   if (!user) {
     return <Login />;
@@ -178,6 +203,31 @@ export function App() {
 const COLLAPSE_KEY = "onetap.sidebarCollapsed";
 
 function Shell({ can }                                     ) {
+  const location = useLocation();
+  const [navigating, setNavigating] = useState(false);
+  const prevPathRef = useRef(location.pathname);
+  const navTimerRef = useRef(null);
+
+  useEffect(() => {
+    if (prevPathRef.current !== location.pathname) {
+      prevPathRef.current = location.pathname;
+      setNavigating(true);
+
+      if (navTimerRef.current) clearTimeout(navTimerRef.current);
+      navTimerRef.current = setTimeout(() => {
+        setNavigating(false);
+      }, 340);
+    }
+    return () => {
+      if (navTimerRef.current) clearTimeout(navTimerRef.current);
+    };
+  }, [location.pathname]);
+
+  const currentMeta = ROUTE_META[location.pathname] || {
+    title: location.pathname.slice(1).replace("-", " ") || "page",
+    icon: UtensilsCrossed,
+  };
+
   const { user } = useAuth();
   const { outlet, outlets, scope, selectOutlet } = useOutlets();
   const logout = useLogout();
@@ -334,29 +384,54 @@ function Shell({ can }                                     ) {
         </div>
       </aside>
 
-      <main style={content}>
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/orders" element={<Orders />} />
-          <Route path="/menu" element={<MenuEditor />} />
-          <Route path="/storage" element={<Storage />} />
-          <Route path="/menu-layout" element={<MenuLayout />} />
-          <Route path="/coupons" element={<Coupons />} />
-          <Route path="/tables" element={<Tables />} />
-          <Route path="/table-cards" element={<TableCards />} />
-          <Route path="/printing" element={<Printing />} />
-          <Route path="/payments" element={<Payments />} />
-          <Route path="/notifications" element={<Notifications />} />
-          <Route path="/customers" element={<Customers />} />
-          <Route path="/appearance" element={<Appearance />} />
-          <Route path="/theme" element={<ThemeEditor />} />
-          <Route path="/typography" element={<TypographyEditor />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/outlets" element={<Outlets />} />
-          <Route path="/dashboard-config" element={<DashboardConfig />} />
-          <Route path="/users" element={<Users />} />
-          {user?.isSuperAdmin ? <Route path="/brands" element={<Brands />} /> : null}
-        </Routes>
+      <main style={{ ...content, position: "relative" }}>
+        <TopProgressBar active={navigating} />
+
+        {navigating ? (
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              display: "grid",
+              placeItems: "center",
+              background: "var(--color-bg)",
+              zIndex: 40,
+              minHeight: "100%",
+              animation: "ot-fade-in 0.18s ease-out",
+            }}
+          >
+            <AwesomeLoader
+              label={`Loading ${currentMeta.title}…`}
+              subtext="Preparing page view…"
+              icon={currentMeta.icon}
+            />
+          </div>
+        ) : null}
+
+        <div style={{ opacity: navigating ? 0 : 1, transition: "opacity 0.22s ease-out", minHeight: "100%" }}>
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/orders" element={<Orders />} />
+            <Route path="/menu" element={<MenuEditor />} />
+            <Route path="/storage" element={<Storage />} />
+            <Route path="/menu-layout" element={<MenuLayout />} />
+            <Route path="/coupons" element={<Coupons />} />
+            <Route path="/tables" element={<Tables />} />
+            <Route path="/table-cards" element={<TableCards />} />
+            <Route path="/printing" element={<Printing />} />
+            <Route path="/payments" element={<Payments />} />
+            <Route path="/notifications" element={<Notifications />} />
+            <Route path="/customers" element={<Customers />} />
+            <Route path="/appearance" element={<Appearance />} />
+            <Route path="/theme" element={<ThemeEditor />} />
+            <Route path="/typography" element={<TypographyEditor />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/outlets" element={<Outlets />} />
+            <Route path="/dashboard-config" element={<DashboardConfig />} />
+            <Route path="/users" element={<Users />} />
+            {user?.isSuperAdmin ? <Route path="/brands" element={<Brands />} /> : null}
+          </Routes>
+        </div>
       </main>
     </div>
   );

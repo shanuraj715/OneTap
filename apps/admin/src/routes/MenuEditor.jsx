@@ -15,7 +15,7 @@ import {
   useUpdateCategory,
   useUpdateItem,
 } from "../lib/useMenu";
-import { Button, Card, Field, PageHeader, TextInput, Toast } from "../ui";
+import { AwesomeLoader, Button, Card, Field, PageHeader, TextInput, Toast } from "../ui";
 
 const toPaise = (rupees        ) => Math.round(Number(rupees || 0) * 100);
 const toRupees = (paise        ) => String(paise / 100);
@@ -44,7 +44,13 @@ export function MenuEditor() {
     return (
       <>
         <PageHeader title="Menu" />
-        <Card>{menuQuery.error ? `⚠ ${(menuQuery.error         ).message}` : "Loading…"}</Card>
+        <Card>
+          {menuQuery.error ? (
+            `⚠ ${(menuQuery.error         ).message}`
+          ) : (
+            <AwesomeLoader compact label="Loading menu items & categories…" />
+          )}
+        </Card>
       </>
     );
   }
