@@ -23,4 +23,5 @@ export * from "./storage.js";
 export * from "./slug.js";
 export * from "./qr-card.js";
 export * from "./card-fonts.js";
+export * from "./customer.js";
 export * from "./qr-card-templates.js";

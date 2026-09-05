@@ -1,7 +1,6 @@
 import { useState } from "react";
-                                           
+import { CUSTOMER_GENDER_LABELS } from "@onetap/config-schema";
 import { ChevronDown, ChevronRight, Coins, Search, Users as UsersIcon } from "lucide-react";
-                                                    
 import { useAuth } from "../lib/useAuth";
 import { useCustomers, useCustomerWallet } from "../lib/useCustomers";
 import { useOutlet } from "../lib/useOutlet";
@@ -71,13 +70,15 @@ export function Customers() {
             Anyone who orders through the storefront shows up here.
           </Empty>
         ) : (
-          <Table minWidth={760}>
+          <Table minWidth={900}>
             <thead>
               <tr>
                 <Th width={26} />
                 <Th>Name</Th>
                 <Th>Email</Th>
                 <Th>Mobile</Th>
+                <Th width={80}>Gender</Th>
+                <Th align="center" width={56}>Age</Th>
                 <Th align="center" width={70}>Orders</Th>
                 <Th align="center" width={90}>Coins</Th>
                 <Th width={140}>Last order</Th>
@@ -97,6 +98,8 @@ export function Customers() {
                       <Td>{c.name || <span style={{ color: "var(--color-text-muted)" }}>—</span>}</Td>
                       <Td>{c.email || <span style={{ color: "var(--color-text-muted)" }}>—</span>}</Td>
                       <Td nowrap>{c.phone || <span style={{ color: "var(--color-text-muted)" }}>—</span>}</Td>
+                      <Td>{c.gender ? CUSTOMER_GENDER_LABELS[c.gender] : <span style={{ color: "var(--color-text-muted)" }}>—</span>}</Td>
+                      <Td align="center">{c.age ?? <span style={{ color: "var(--color-text-muted)" }}>—</span>}</Td>
                       <Td align="center">{c.orderCount}</Td>
                       <Td align="center">
                         <span style={coinPill}>
@@ -107,7 +110,7 @@ export function Customers() {
                     </tr>
                     {isOpen ? (
                       <tr key={`${c.id}-detail`}>
-                        <td colSpan={7} style={detailCell}>
+                        <td colSpan={9} style={detailCell}>
                           <WalletLedger customerId={c.id} />
                         </td>
                       </tr>

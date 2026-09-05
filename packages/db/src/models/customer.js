@@ -1,28 +1,25 @@
-import mongoose, {            } from "mongoose";
+import mongoose from "mongoose";
+import { CUSTOMER_GENDERS } from "@onetap/config-schema";
 
 const { Schema, model, models } = mongoose;
 
-/** A diner. Identified by phone or email, per brand. Not a staff user. */
-                              
-              
-                  
-                 
-                 
-                
-                     
-                     
-                                                                                  
-                        
-                  
-                  
- 
-
-const customerSchema = new Schema             (
+/**
+ * A diner. Identified by phone or email, per brand. Not a staff user.
+ *
+ * `gender` and `age` were added after `name` — a customer who signed up
+ * before this feature shipped has neither. Both stay optional at the schema
+ * level for exactly that reason: `isProfileComplete()` in config-schema is
+ * what decides whether a customer still needs to fill them in, not a
+ * `required: true` here that would make existing rows invalid.
+ */
+const customerSchema = new Schema(
   {
     brandId: { type: String, required: true, index: true },
     phone: { type: String, trim: true },
     email: { type: String, lowercase: true, trim: true },
     name: { type: String, trim: true },
+    gender: { type: String, enum: CUSTOMER_GENDERS, default: null },
+    age: { type: Number, min: 1, max: 120, default: null },
     orderCount: { type: Number, default: 0 },
     lastOrderAt: Date,
     walletBalance: { type: Number, default: 0 },

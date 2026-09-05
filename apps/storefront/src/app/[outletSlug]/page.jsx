@@ -16,7 +16,7 @@ export default async function OutletHomePage({ params }) {
   if (!outlet) notFound();
 
   const menu = await getMenu(outlet.id);
-  const { identity, theme, typography, features, layout, payments, menuLayout } = outlet.config;
+  const { identity, theme, typography, features, layout, menuLayout } = outlet.config;
   // Fall back to the single card style if the menu layout hasn't been touched.
   const resolvedMenuLayout =
     menuLayout.mode === "auto" && menuLayout.sections.length === 0
@@ -63,11 +63,7 @@ export default async function OutletHomePage({ params }) {
               menuLayout={resolvedMenuLayout}
               popupCarouselVariant={layout?.popupCarouselVariant || layout?.carouselVariant || "carousel.slider"}
               toastVariant={layout?.toastVariant || "toast.solid"}
-              gateways={payments.enabled}
-              // Lets a walk-in who never scanned a code still order to their
-              // table, by picking the number at checkout.
-              dineInEnabled={features.ordering.dineInQr}
-              deliveryEnabled={features.ordering.delivery}
+              orderHref={`/${outletSlug}/order`}
             />
           ) : (
             <MenuSections menu={menu} layout={resolvedMenuLayout} />
