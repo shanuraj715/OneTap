@@ -10,8 +10,13 @@ const nextConfig = {
   async redirects() {
     return [
       {
+        source: "/variants",
+        destination: "/",
+        permanent: false,
+      },
+      {
         source: "/variation",
-        destination: "/variants",
+        destination: "/",
         permanent: false,
       },
     ];
