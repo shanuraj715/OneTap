@@ -21,6 +21,9 @@ import * as pagination from "./variants/pagination";
 import * as popovers from "./variants/popovers";
 import * as progress from "./variants/progress";
 import * as toasts from "./variants/toasts";
+import { DatePicker, DatePickerInput } from "./DatePicker";
+import { StatCard } from "./StatCard";
+import { AnalyticsChart } from "./AnalyticsChart";
 
 /**
  * The variant registry.
@@ -328,6 +331,50 @@ export const progressVariants = [
   v("progress.gradient", "PRG08", "Gradient", "Gradient fill", progress.ProgressGradient),
 ];
 
+export const datePickerVariants = [
+  v("datepicker.ring", "DP01", "Ring selection (Material)", "Circle outline on selected date with theme color accent", DatePicker),
+  v("datepicker.filled", "DP02", "Filled selection", "Solid theme color fill on selected date", (props) => <DatePicker {...props} variant="filled" />),
+  v("datepicker.input", "DP03", "Popover input", "Calendar input trigger that opens the picker on click", (props) => (
+    <DatePickerInput {...props} label="Select date" />
+  )),
+  v("datepicker.themed-amber", "DP04", "Themed amber", "DatePicker styled with custom amber brand color", (props) => (
+    <DatePicker {...props} themeColor="#d97706" />
+  )),
+  v("datepicker.themed-emerald", "DP05", "Themed emerald", "DatePicker styled with emerald green brand color", (props) => (
+    <DatePicker {...props} themeColor="#10b981" />
+  )),
+];
+
+export const statCardVariants = [
+  v("stat.users", "MC01", "Users sparkline", "Positive trend with green sparkline and badge", () => (
+    <StatCard title="Users" value="14k" change="+25%" subtitle="Last 30 days" tone="positive" />
+  )),
+  v("stat.conversions", "MC02", "Conversions sparkline", "Negative trend with red sparkline and badge", () => (
+    <StatCard
+      title="Conversions"
+      value="325"
+      change="-25%"
+      subtitle="Last 30 days"
+      tone="negative"
+      data={[35, 30, 32, 31, 28, 33, 29, 31, 30, 24, 27, 26, 29, 28, 27, 26, 25]}
+    />
+  )),
+  v("stat.events", "MC03", "Event count sparkline", "Neutral trend with slate sparkline and badge", () => (
+    <StatCard
+      title="Event count"
+      value="200k"
+      change="+5%"
+      subtitle="Last 30 days"
+      tone="neutral"
+      data={[15, 18, 17, 19, 18, 22, 17, 18, 20, 18, 17, 19, 18, 20, 17, 18, 18]}
+    />
+  )),
+];
+
+export const analyticsChartVariants = [
+  v("chart.sessions", "CHT01", "Sessions stacked area", "Multi-layer stacked area chart with axis labels and grid lines", AnalyticsChart),
+];
+
 /* -------------------------------------------------------------------- slots */
 
 const headerProps = (ctx                )              => ({
@@ -549,6 +596,39 @@ export const VARIANT_SLOTS                = [
     preview: ({ Component: C }) => (
       <div style={{ maxWidth: 380, display: "flex", flexDirection: "column", gap: 14 }}>
         <C value={62} label="Order progress" />
+      </div>
+    ),
+  },
+  {
+    key: "datePickerVariant",
+    label: "Date Pickers",
+    description: "Calendar date selection with month/year navigation, circular day ring, and theme color support",
+    variants: datePickerVariants,
+    preview: ({ Component: C }) => (
+      <div style={{ display: "flex", gap: 24, flexWrap: "wrap", alignItems: "flex-start" }}>
+        <C />
+      </div>
+    ),
+  },
+  {
+    key: "statCardVariant",
+    label: "Metric Sparkline Cards",
+    description: "Summary statistic cards with smooth SVG sparkline trends and change badges",
+    variants: statCardVariants,
+    preview: ({ Component: C }) => (
+      <div style={{ maxWidth: 280 }}>
+        <C />
+      </div>
+    ),
+  },
+  {
+    key: "analyticsChartVariant",
+    label: "Analytics Charts",
+    description: "Stacked area visualizations with axes, ticks, and legend",
+    variants: analyticsChartVariants,
+    preview: ({ Component: C }) => (
+      <div style={{ maxWidth: 660 }}>
+        <C />
       </div>
     ),
   },

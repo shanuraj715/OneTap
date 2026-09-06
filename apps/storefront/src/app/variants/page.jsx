@@ -55,6 +55,47 @@ export default async function VariantsPage() {
             <strong>BTN04</strong>…) and a unique id (<code style={code}>card.image-overlay</code>).
             Use either to refer to one exactly.
           </p>
+
+          <div
+            style={{
+              marginTop: 20,
+              padding: "16px 20px",
+              borderRadius: 12,
+              background: "color-mix(in srgb, var(--color-primary) 10%, var(--color-surface, #ffffff))",
+              border: "1px solid var(--color-primary)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 16,
+              flexWrap: "wrap",
+            }}
+          >
+            <div>
+              <div style={{ fontWeight: 700, fontSize: 15, color: "var(--color-text)" }}>
+                Components Catalog has moved to Admin App
+              </div>
+              <p style={{ margin: "3px 0 0", fontSize: 13, color: "var(--color-text-muted)" }}>
+                Explore, test, and filter all UI components, Date Pickers, and live theme customization inside the Admin Panel.
+              </p>
+            </div>
+            <a
+              href="http://localhost:3071/components"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                background: "var(--color-primary)",
+                color: "var(--color-on-primary)",
+                padding: "8px 16px",
+                borderRadius: 8,
+                fontSize: 13,
+                fontWeight: 700,
+                textDecoration: "none",
+              }}
+            >
+              Open Admin Components →
+            </a>
+          </div>
         </header>
 
         <nav style={indexNav} aria-label="Jump to a family">

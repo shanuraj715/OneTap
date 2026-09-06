@@ -7,6 +7,15 @@ const workspaceRoot = fileURLToPath(new URL("../../", import.meta.url));
 const nextConfig = {
   transpilePackages: ["@onetap/ui", "@onetap/config-schema"],
   outputFileTracingRoot: workspaceRoot,
+  async redirects() {
+    return [
+      {
+        source: "/variation",
+        destination: "/variants",
+        permanent: false,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

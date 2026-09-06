@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Plus, Trash2 } from "lucide-react";
 import { VARIANT_SLOTS } from "@onetap/ui";
 import { useOutlet, usePatchConfig } from "../lib/useOutlet";
@@ -59,9 +60,9 @@ export function Appearance() {
           <span style={{ fontSize: 14, color: "var(--color-text-muted)" }}>
             See every variant rendered with your real menu, theme and fonts:
           </span>
-          <a href={`${STOREFRONT}/variants`} target="_blank" rel="noreferrer" style={galleryLink}>
-            Open variant gallery ↗
-          </a>
+          <Link to="/components" style={galleryLink}>
+            Browse all components & variants →
+          </Link>
         </div>
       </Card>
 

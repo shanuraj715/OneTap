@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import {
   Bell,
+  Boxes,
   Building2,
   CreditCard,
   HardDrive,
@@ -98,6 +99,7 @@ export function StorefrontNav() {
     { to: "/appearance", label: "Appearance", icon: <Wand2 size={ICON_SIZE} />, permission: "appearance:update" },
     { to: "/theme", label: "Theme", icon: <Palette size={ICON_SIZE} />, permission: "theme:update" },
     { to: "/typography", label: "Typography", icon: <Type size={ICON_SIZE} />, permission: "theme:update" },
+    { to: "/components", label: "Components", icon: <Boxes size={ICON_SIZE} /> },
   ];
 
   const visibleItems = allItems.filter((i) => !i.permission || can(i.permission));
