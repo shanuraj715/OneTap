@@ -90,8 +90,8 @@ export function Photo({
   );
 }
 
-export function Tags({ tags }                    ) {
-  if (tags.length === 0) return null;
+export function Tags({ tags }) {
+  if (!tags || !Array.isArray(tags) || tags.length === 0) return null;
   return (
     <>
       {tags.includes("bestseller") ? <span style={tagStyle}>Bestseller</span> : null}
@@ -101,6 +101,7 @@ export function Tags({ tags }                    ) {
 }
 
 export function Price({ item, style, ...rest }) {
+  if (!item) return null;
   return (
     <span style={{ ...priceStyle, ...style }} {...rest}>
       {item.isAvailable ? itemPriceLabel(item) : "Sold out"}
@@ -108,9 +109,13 @@ export function Price({ item, style, ...rest }) {
   );
 }
 
-export function VariantLine({ item }                    ) {
-  if (item.variants.length < 2) return null;
-  return <div style={variantLineStyle}>{item.variants.map((v) => v.label).join(" · ")}</div>;
+export function VariantLine({ item }) {
+  if (!item?.variants || !Array.isArray(item.variants) || item.variants.length < 2) return null;
+  return (
+    <div style={variantLineStyle}>
+      {item.variants.map((v) => v.label || v.name).join(" · ")}
+    </div>
+  );
 }
 
 export const cardBase                = {
