@@ -3,6 +3,7 @@ import {
   MenuCategoryModel,
   MenuItemModel,
   ModifierGroupModel,
+  OutletModel,
   tenantFilter,
 } from "@onetap/db";
 import { HttpError } from "../../middleware/error.js";
@@ -215,4 +216,166 @@ export async function deleteModifierGroup(ctx               , id        ) {
   });
   const res = await ModifierGroupModel.deleteOne(tenantFilter(ctx, { _id: id }));
   if (res.deletedCount === 0) throw new HttpError(404, "Modifier group not found");
+}
+
+/* --------------------------------------------------------------- import menu */
+
+export async function importMenu(ctx, input) {
+  const { sourceOutletId, categoryIds = [], itemIds = [], targetCategoryId } = input;
+  if (!sourceOutletId) throw new HttpError(400, "sourceOutletId is required");
+  if (sourceOutletId === ctx.outletId) {
+    throw new HttpError(400, "Source and destination outlet cannot be the same");
+  }
+
+  const sourceOutlet = await OutletModel.findOne({ _id: sourceOutletId }, null, {
+    allowGlobalQuery: true,
+  }).lean();
+  if (!sourceOutlet) throw new HttpError(404, "Source outlet not found");
+
+  if (!ctx.isSuperAdmin && String(sourceOutlet.brandId) !== String(ctx.brandId)) {
+    throw new HttpError(403, "Cannot import from an outlet belonging to another brand");
+  }
+
+  // Fetch source menu
+  const srcScope = { brandId: String(sourceOutlet.brandId), outletId: sourceOutletId };
+  const [sourceCategories, sourceItems, sourceGroups] = await Promise.all([
+    MenuCategoryModel.find(tenantFilter(srcScope)).lean(),
+    MenuItemModel.find(tenantFilter(srcScope)).lean(),
+    ModifierGroupModel.find(tenantFilter(srcScope)).lean(),
+  ]);
+
+  // Fetch target menu
+  const [targetCategories, targetGroups, targetItemMaxSort] = await Promise.all([
+    MenuCategoryModel.find(tenantFilter(ctx)).lean(),
+    ModifierGroupModel.find(tenantFilter(ctx)).lean(),
+    MenuItemModel.findOne(tenantFilter(ctx)).sort({ sortOrder: -1 }).select("sortOrder").lean(),
+  ]);
+
+  // Verify targetCategoryId if provided
+  if (targetCategoryId) {
+    const validTargetCat = targetCategories.some((c) => String(c._id) === targetCategoryId);
+    if (!validTargetCat) throw new HttpError(400, "Selected target category does not exist");
+  }
+
+  // Category mapping: sourceCategoryId -> targetCategoryId
+  const categoryMap = new Map();
+  const targetCategoryByName = new Map(
+    targetCategories.map((c) => [c.name.trim().toLowerCase(), String(c._id)])
+  );
+
+  let nextCatSortOrder = targetCategories.length;
+  let importedCategoriesCount = 0;
+
+  async function resolveTargetCategory(srcCatId) {
+    if (categoryMap.has(srcCatId)) return categoryMap.get(srcCatId);
+    const srcCat = sourceCategories.find((c) => String(c._id) === srcCatId);
+    if (!srcCat) return null;
+
+    const normalizedName = srcCat.name.trim().toLowerCase();
+    if (targetCategoryByName.has(normalizedName)) {
+      const existingId = targetCategoryByName.get(normalizedName);
+      categoryMap.set(srcCatId, existingId);
+      return existingId;
+    }
+
+    const newCat = await MenuCategoryModel.create({
+      brandId: ctx.brandId,
+      outletId: ctx.outletId,
+      name: srcCat.name,
+      sortOrder: nextCatSortOrder++,
+      isActive: srcCat.isActive ?? true,
+    });
+    const newId = String(newCat._id);
+    categoryMap.set(srcCatId, newId);
+    targetCategoryByName.set(normalizedName, newId);
+    importedCategoriesCount++;
+    return newId;
+  }
+
+  // 1. Process categories explicitly selected for import
+  for (const srcCatId of categoryIds) {
+    await resolveTargetCategory(srcCatId);
+  }
+
+  // 2. Modifier group mapping: sourceGroupId -> targetGroupId
+  const groupMap = new Map();
+  const targetGroupByName = new Map(
+    targetGroups.map((g) => [g.name.trim().toLowerCase(), String(g._id)])
+  );
+  let importedModifierGroupsCount = 0;
+
+  async function resolveTargetModifierGroup(srcGroupId) {
+    if (groupMap.has(srcGroupId)) return groupMap.get(srcGroupId);
+    const srcGroup = sourceGroups.find((g) => String(g._id) === srcGroupId);
+    if (!srcGroup) return null;
+
+    const normalizedName = srcGroup.name.trim().toLowerCase();
+    if (targetGroupByName.has(normalizedName)) {
+      const existingId = targetGroupByName.get(normalizedName);
+      groupMap.set(srcGroupId, existingId);
+      return existingId;
+    }
+
+    const newGroup = await ModifierGroupModel.create({
+      brandId: ctx.brandId,
+      outletId: ctx.outletId,
+      name: srcGroup.name,
+      required: srcGroup.required ?? false,
+      minSelect: srcGroup.minSelect ?? 0,
+      maxSelect: srcGroup.maxSelect ?? 1,
+      options: (srcGroup.options ?? []).map((o) => ({
+        id: randomUUID(),
+        label: o.label,
+        priceDelta: o.priceDelta ?? 0,
+      })),
+    });
+    const newId = String(newGroup._id);
+    groupMap.set(srcGroupId, newId);
+    targetGroupByName.set(normalizedName, newId);
+    importedModifierGroupsCount++;
+    return newId;
+  }
+
+  // 3. Process items to import
+  const selectedItems = sourceItems.filter((i) => itemIds.includes(String(i._id)));
+  let nextItemSortOrder = (targetItemMaxSort?.sortOrder ?? 0) + 1;
+  let importedItemsCount = 0;
+
+  for (const srcItem of selectedItems) {
+    let destCatId = targetCategoryId;
+    if (!destCatId) {
+      destCatId = await resolveTargetCategory(srcItem.categoryId);
+    }
+    if (!destCatId) continue;
+
+    const targetModGroupIds = [];
+    for (const srcGid of srcItem.modifierGroupIds ?? []) {
+      const mappedGid = await resolveTargetModifierGroup(srcGid);
+      if (mappedGid) targetModGroupIds.push(mappedGid);
+    }
+
+    await MenuItemModel.create({
+      brandId: ctx.brandId,
+      outletId: ctx.outletId,
+      categoryId: destCatId,
+      name: srcItem.name,
+      description: srcItem.description ?? "",
+      foodType: srcItem.foodType ?? "veg",
+      tags: srcItem.tags ?? [],
+      images: normalizeImages(srcItem.images),
+      basePrice: srcItem.basePrice ?? 0,
+      variants: normalizeVariants(srcItem.variants),
+      modifierGroupIds: targetModGroupIds,
+      gstRatePct: srcItem.gstRatePct ?? 5,
+      isAvailable: srcItem.isAvailable ?? true,
+      sortOrder: nextItemSortOrder++,
+    });
+    importedItemsCount++;
+  }
+
+  return {
+    importedCategoriesCount,
+    importedItemsCount,
+    importedModifierGroupsCount,
+  };
 }

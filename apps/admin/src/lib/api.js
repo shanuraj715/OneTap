@@ -217,6 +217,10 @@ export const createModifierGroup = (o        , body                             
 export const deleteModifierGroup = (o        , id        ) =>
   req      (`/api/menu/modifier-groups/${id}`, { method: "DELETE", outletId: o._id });
 
+export const importMenu = (o        , body        ) =>
+  req("/api/menu/import", { method: "POST", body: JSON.stringify(body), outletId: o._id });
+
+
 /* -------------------------------------------------------------------- orders */
 
                              

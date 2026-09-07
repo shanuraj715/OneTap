@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { formatINR, IMAGE_RULES, itemPriceLabel } from "@onetap/config-schema";
-import { ImagePlus, Loader, Star, X } from "lucide-react";
+import { Download, ImagePlus, Loader, Star, X } from "lucide-react";
 import * as api from "../lib/api";
+import { ImportMenuModal } from "../components/ImportMenuModal";
+
 import { useOutlet } from "../lib/useOutlet";
 import { useImageUpload } from "../lib/useStorage";
 import {
@@ -25,6 +27,7 @@ export function MenuEditor() {
   const menuQuery = useMenu(outlet);
   const [categoryId, setCategoryId] = useState               (null);
   const [editing, setEditing] = useState                         (null);
+  const [importModal, setImportModal] = useState(null);
 
   const menu = menuQuery.data;
 
@@ -64,6 +67,14 @@ export function MenuEditor() {
       <PageHeader
         title="Menu"
         subtitle={`${menu.categories.length} categories · ${menu.items.length} items`}
+        action={
+          <Button
+            onClick={() => setImportModal({ targetCategoryId: null })}
+            style={{ display: "inline-flex", gap: 6, alignItems: "center" }}
+          >
+            <Download size={14} /> Import from outlet
+          </Button>
+        }
       />
 
       <div style={{ display: "grid", gridTemplateColumns: "300px 1fr", gap: 20, alignItems: "start" }}>
@@ -75,6 +86,7 @@ export function MenuEditor() {
             setCategoryId(id);
             setEditing(null);
           }}
+          onImport={() => setImportModal({ targetCategoryId: null })}
         />
 
         <div>
@@ -93,12 +105,22 @@ export function MenuEditor() {
               disabled={!categoryId}
               onNew={() => setEditing("new")}
               onEdit={setEditing}
+              onImport={() => setImportModal({ targetCategoryId: categoryId })}
             />
           )}
         </div>
       </div>
 
       <ModifierGroups outlet={outlet} menu={menu} />
+
+      {importModal && (
+        <ImportMenuModal
+          outlet={outlet}
+          currentMenu={menu}
+          initialTargetCategoryId={importModal.targetCategoryId}
+          onClose={() => setImportModal(null)}
+        />
+      )}
     </>
   );
 }
@@ -110,12 +132,8 @@ function Categories({
   menu,
   selected,
   onSelect,
-}   
-                 
-             
-                          
-                                 
- ) {
+  onImport,
+}) {
   const [name, setName] = useState("");
   const create = useCreateCategory(outlet);
   const update = useUpdateCategory(outlet);
@@ -127,7 +145,33 @@ function Categories({
   };
 
   return (
-    <Card title="Categories">
+    <Card
+      title="Categories"
+      action={
+        onImport ? (
+          <button
+            type="button"
+            onClick={onImport}
+            style={{
+              font: "inherit",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 4,
+              fontSize: 12,
+              padding: "2px 7px",
+              borderRadius: 6,
+              border: "1px solid var(--color-border)",
+              background: "var(--color-bg)",
+              color: "var(--color-text)",
+              cursor: "pointer",
+            }}
+            title="Import categories from another outlet"
+          >
+            <Download size={12} /> Import
+          </button>
+        ) : null
+      }
+    >
       <div style={{ display: "flex", flexDirection: "column", gap: 2, marginBottom: 12 }}>
         {menu.categories
           .slice()
@@ -146,8 +190,6 @@ function Categories({
                     color: active ? "var(--color-on-primary)" : "var(--color-text)",
                   }}
                 >
-                  <span>{c.name}</span>
-                  <span style={{ opacity: 0.7, fontSize: 12 }}>{count}</span>
                   <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.name}</span>
                   <span style={{ opacity: 0.7, fontSize: 12, flexShrink: 0 }}>{count}</span>
                 </button>
@@ -202,13 +244,8 @@ function Items({
   disabled,
   onNew,
   onEdit,
-}   
-                 
-                    
-                    
-                    
-                                   
- ) {
+  onImport,
+}) {
   const update = useUpdateItem(outlet);
   const remove = useDeleteItem(outlet);
 
@@ -216,9 +253,21 @@ function Items({
     <Card
       title="Items"
       action={
-        <Button onClick={onNew} disabled={disabled}>
-          Add item
-        </Button>
+        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          {onImport && (
+            <Button
+              onClick={onImport}
+              disabled={disabled}
+              style={{ display: "inline-flex", gap: 6, alignItems: "center" }}
+              title="Import items into this category from another outlet"
+            >
+              <Download size={13} /> Import
+            </Button>
+          )}
+          <Button onClick={onNew} disabled={disabled}>
+            Add item
+          </Button>
+        </div>
       }
     >
       {items.length === 0 ? (

@@ -53,3 +53,7 @@ export const useCreateModifierGroup = (o         ) =>
 
 export const useDeleteModifierGroup = (o         ) =>
   useMenuMutation        (o, (outlet, id) => api.deleteModifierGroup(outlet, id));
+
+export const useImportMenu = (o         ) =>
+  useMenuMutation        (o, (outlet, body) => api.importMenu(outlet, body));
+

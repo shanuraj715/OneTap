@@ -11,6 +11,7 @@ import {
   deleteItem,
   deleteModifierGroup,
   getMenu,
+  importMenu,
   updateCategory,
   updateItem,
   updateModifierGroup,
@@ -139,3 +140,18 @@ menuRouter.delete("/modifier-groups/:id", async (req, res) => {
   await deleteModifierGroup(await writeContext(req), req.params.id);
   res.status(204).end();
 });
+
+/* --------------------------------------------------------------- import menu */
+
+const importBody = z.object({
+  sourceOutletId: z.string().min(1),
+  categoryIds: z.array(z.string()).optional(),
+  itemIds: z.array(z.string()).optional(),
+  targetCategoryId: z.string().optional(),
+});
+
+menuRouter.post("/import", async (req, res) => {
+  const body = importBody.parse(req.body);
+  res.status(201).json(await importMenu(await writeContext(req), body));
+});
+
