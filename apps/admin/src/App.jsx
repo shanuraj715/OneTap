@@ -6,6 +6,7 @@ import { TopProgressBar } from "./components/TopProgressBar";
 import { ROLE_LABELS } from "@onetap/config-schema";
 import {
   Bell,
+  Boxes,
   Building2,
   Check,
   ChevronsUpDown,
@@ -36,6 +37,7 @@ import { OutletSelectionProvider, useOutlets } from "./lib/useOutlet";
 import { CreateOutletModal } from "./components/CreateOutletModal";
 import { Appearance } from "./routes/Appearance";
 import { Brands } from "./routes/Brands";
+import { ComponentsCatalog } from "./routes/ComponentsCatalog";
 import { Customers } from "./routes/Customers";
 import { Dashboard } from "./routes/Dashboard";
 import { DashboardConfig } from "./routes/DashboardConfig";
@@ -65,6 +67,7 @@ const ROUTE_META = {
   "/": { title: "Dashboard", icon: LayoutDashboard },
   "/orders": { title: "Orders", icon: ReceiptText },
   "/menu": { title: "Menu", icon: UtensilsCrossed },
+  "/components": { title: "Components", icon: Boxes },
   "/storage": { title: "Storage", icon: HardDrive },
   "/menu-layout": { title: "Menu layout", icon: LayoutList },
   "/coupons": { title: "Coupons", icon: Tag },
@@ -100,6 +103,7 @@ const SUPER_ADMIN_NAV_GROUPS = [
     group: "Catalogue",
     items: [
       { to: "/menu", label: "Menu", icon: <UtensilsCrossed size={ICON} />, permission: "menu:read" },
+      { to: "/components", label: "Components", icon: <Boxes size={ICON} /> },
       { to: "/storage", label: "Storage", icon: <HardDrive size={ICON} />, permission: "storage-config:read" },
     ],
   },
@@ -153,6 +157,7 @@ const OWNER_NAV_GROUPS = [
     group: "Catalogue",
     items: [
       { to: "/menu", label: "Menu", icon: <UtensilsCrossed size={ICON} />, permission: "menu:read" },
+      { to: "/components", label: "Components", icon: <Boxes size={ICON} /> },
     ],
   },
   {
@@ -413,6 +418,7 @@ function Shell({ can }                                     ) {
             <Route path="/" element={<Dashboard />} />
             <Route path="/orders" element={<Orders />} />
             <Route path="/menu" element={<MenuEditor />} />
+            <Route path="/components" element={<ComponentsCatalog />} />
             <Route path="/storage" element={<Storage />} />
             <Route path="/menu-layout" element={<MenuLayout />} />
             <Route path="/coupons" element={<Coupons />} />

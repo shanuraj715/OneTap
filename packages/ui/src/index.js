@@ -9,6 +9,10 @@ export { MenuSections } from "./MenuSections";
                                              
 export * from "./variants/types";
 
+export { DatePicker, DatePickerInput, formatDate, parseDate } from "./DatePicker";
+export { StatCard } from "./StatCard";
+export { AnalyticsChart } from "./AnalyticsChart";
+
 export {
   VARIANT_SLOTS,
   slotByKey,
@@ -31,6 +35,9 @@ export {
   listGroupVariants,
   paginationVariants,
   progressVariants,
+  datePickerVariants,
+  statCardVariants,
+  analyticsChartVariants,
   getHeaderVariant,
   getFooterVariant,
   getItemCardVariant,
