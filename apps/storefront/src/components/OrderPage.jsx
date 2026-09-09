@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { formatINR, GATEWAY_LABELS } from "@onetap/config-schema";
-import { DropdownSoft } from "@onetap/ui";
+import { DropdownSoft, ProgressSteps } from "@onetap/ui";
 import { ArrowLeft, Check, ChevronRight, Coins, MapPin, ShoppingBag, Sparkles, Tag, Utensils, Wallet, X } from "lucide-react";
 import { api, payOnline } from "@/lib/clientApi";
 import { useCapacity } from "@/lib/useCapacity";
@@ -13,6 +13,15 @@ import { useDineInSession } from "@/lib/useDineInSession";
 import { AddressPicker } from "./AddressPicker";
 import { CustomerGate } from "./CustomerGate";
 import { Stepper } from "./Stepper";
+
+/**
+ * The whole checkout journey, not just what any one screen collects. "Items
+ * selected" is already true by the time any of this can render — you only
+ * reach it with something in the cart. The last step's own label is decided
+ * per fulfilment (see `journeyStepLabel` below) since "Delivery address"
+ * would be a lie for a takeaway order.
+ */
+const JOURNEY_STEPS = ["Items selected", "Your details", "About you", "Delivery address"];
 
 /**
  * The dedicated order page — what used to be the "Your order" popup.
@@ -112,6 +121,34 @@ export function OrderPage({
 
   /* --------------------------------------------------------------- gating */
 
+  // One number driving the bar across every screen this page can show — not
+  // just the ones CustomerGate itself renders. Null hides it entirely: there
+  // is no "step" to show before the cart is even known, or once the order is
+  // placed and the journey is simply over.
+  const journeyIndex =
+    customerLoading || !hydrated || (lines.length === 0 && !placed) || placed
+      ? null
+      : !customer || !customer.profileComplete
+        ? customer
+          ? 2
+          : 1
+        : 3;
+  const journeyStepLabel =
+    journeyIndex !== 3
+      ? journeyIndex !== null
+        ? JOURNEY_STEPS[journeyIndex]
+        : null
+      : // "Delivery address" is only true for a delivery order — a dine-in
+        // diner is picking a table here, and a takeaway order has neither, so
+        // the last step's own displayed name follows what's actually on screen.
+        effectiveChannel === "delivery"
+        ? "Delivery address"
+        : effectiveChannel === "dine-in"
+          ? "Table number"
+          : "Review & pay";
+  const progressLabel =
+    journeyIndex !== null ? `Step ${journeyIndex + 1} of ${JOURNEY_STEPS.length} · ${journeyStepLabel}` : null;
+
   if (customerLoading || !hydrated) {
     return <PageShell menuHref={menuHref} title="Your order" />;
   }
@@ -126,7 +163,7 @@ export function OrderPage({
 
   if (!customer || !customer.profileComplete) {
     return (
-      <PageShell menuHref={menuHref} title={customer ? "Complete your profile" : "Sign in to order"}>
+      <PageShell menuHref={menuHref} title={customer ? "Complete your profile" : "Sign in to order"} progress={journeyIndex} progressLabel={progressLabel}>
         <CustomerGate customer={customer} outletId={outletId} onSuccess={refresh} />
       </PageShell>
     );
@@ -141,7 +178,7 @@ export function OrderPage({
   }
 
   return (
-    <PageShell menuHref={menuHref} title="Your order" customer={customer}>
+    <PageShell menuHref={menuHref} title="Your order" customer={customer} progress={journeyIndex} progressLabel={progressLabel}>
       <ReviewOrder
         outletId={outletId}
         outletName={outletName}
@@ -194,7 +231,7 @@ export function OrderPage({
 
 /* -------------------------------------------------------------------- shell */
 
-function PageShell({ menuHref, title, customer, children }) {
+function PageShell({ menuHref, title, customer, progress, progressLabel, children }) {
   return (
     <div style={page}>
       <header style={topBar}>
@@ -210,6 +247,11 @@ function PageShell({ menuHref, title, customer, children }) {
           <span style={{ width: 19 }} aria-hidden />
         )}
       </header>
+      {progress !== null && progress !== undefined ? (
+        <div style={pageProgressWrap}>
+          <ProgressSteps steps={JOURNEY_STEPS} value={(progress / JOURNEY_STEPS.length) * 100} label={progressLabel} />
+        </div>
+      ) : null}
       <main style={main}>{children}</main>
     </div>
   );
@@ -677,6 +719,13 @@ const walletChip = {
   color: "var(--tone-warning, #8A5A00)",
   background: "var(--tone-warning-wash, rgba(180,130,0,0.12))",
   flexShrink: 0,
+};
+const pageProgressWrap = {
+  maxWidth: 640,
+  margin: "0 auto",
+  padding: "14px 16px 12px",
+  background: "var(--color-bg)",
+  borderBottom: "1px solid var(--color-border)",
 };
 const main = { maxWidth: 640, margin: "0 auto", padding: "16px 16px 100px" };
 const section = { background: "var(--color-bg)", border: "1px solid var(--color-border)", borderRadius: 14, padding: 16, marginBottom: 12 };

@@ -2,22 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import { CUSTOMER_AGE_MAX, CUSTOMER_AGE_MIN, CUSTOMER_GENDER_LABELS, CUSTOMER_GENDERS } from "@onetap/config-schema";
-import { ProgressSteps } from "@onetap/ui";
 import { Calendar, Check, Loader2, LogIn, Mail, Phone, ShieldCheck, User } from "lucide-react";
 import { api, apiPatch } from "@/lib/clientApi";
 
 const DRAFT_KEY = "onetap.customerDraft";
 const RESEND_COOLDOWN_SEC = 30;
-
-/**
- * The checkout journey as a whole, not just what this component collects.
- * "Items selected" is already true the moment CustomerGate can even render —
- * you only reach it with something in the cart — so it always shows done.
- * "Delivery address" is genuinely a later screen (OrderPage's own fulfilment
- * step, after `onSuccess`), included here so the bar tells the truth about
- * how many steps are actually left, not just what this one component does.
- */
-const JOURNEY_STEPS = ["Items selected", "Your details", "About you", "Delivery address"];
 
 /** Remembers what a returning visitor typed last time, on this device only — never sent anywhere until they submit. */
 function loadDraft() {
@@ -169,27 +158,10 @@ export function CustomerGate({ customer, outletId, onSuccess }) {
   const submitDisabled =
     busy || (isCompletion ? !profileValid : sent ? code.length !== 6 : !detailsValid);
 
-  // Index 0 ("Items selected") never appears here — reaching this component
-  // at all already implies it. This component only ever occupies index 1
-  // (name + mobile, OTP included) or index 2 (whatever's still missing);
-  // index 3 (address) is a later screen this component never shows, kept in
-  // the bar only so it reads honestly as "2 more after this" rather than
-  // pretending the journey ends where this component's part does.
-  const journeyIndex = isCompletion ? 2 : 1;
-  const journeyValue = (journeyIndex / JOURNEY_STEPS.length) * 100;
-
   return (
     <div style={shell}>
       <div style={card} className="ot-anim-pop">
         <div style={iconBadge}>{isCompletion ? <User size={22} /> : <LogIn size={22} />}</div>
-
-        <div style={stepBarWrap}>
-          <ProgressSteps
-            steps={JOURNEY_STEPS}
-            value={journeyValue}
-            label={`Step ${journeyIndex + 1} of ${JOURNEY_STEPS.length} · ${JOURNEY_STEPS[journeyIndex]}`}
-          />
-        </div>
 
         <h1 style={title}>{isCompletion ? "Just a couple more details" : sent ? "Enter the code" : "Sign in to order"}</h1>
         <p style={subtitle}>
@@ -472,7 +444,6 @@ const iconBadge = {
   marginBottom: 14,
   boxShadow: "0 6px 16px -6px color-mix(in srgb, var(--color-primary) 45%, transparent)",
 };
-const stepBarWrap = { marginBottom: 16 };
 const title = { margin: "0 0 6px", fontFamily: "var(--font-heading)", fontSize: 21, lineHeight: 1.25 };
 const subtitle = { margin: "0 0 20px", color: "var(--color-text-muted)", fontSize: 13.5, lineHeight: 1.5 };
 const fieldWrap = { display: "block", marginBottom: 15 };
