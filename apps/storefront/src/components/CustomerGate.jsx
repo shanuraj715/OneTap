@@ -307,7 +307,13 @@ const segmentBtn = {
   fontWeight: 600,
   padding: "10px 8px",
   borderRadius: 10,
-  border: "1.5px solid var(--color-border)",
+  // Long-hand border props (not the `border` shorthand) so the active state
+  // below can override just the colour — mixing shorthand and longhand across
+  // a rerender is what React's dev overlay flags as a styling-bug risk, since
+  // the shorthand silently resets everything the longhand didn't re-set.
+  borderWidth: 1.5,
+  borderStyle: "solid",
+  borderColor: "var(--color-border)",
   background: "var(--color-bg)",
   color: "var(--color-text)",
   cursor: "pointer",
