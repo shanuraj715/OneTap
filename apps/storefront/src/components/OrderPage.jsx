@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { formatINR, GATEWAY_LABELS } from "@onetap/config-schema";
+import { DropdownSoft } from "@onetap/ui";
 import { ArrowLeft, Check, ChevronRight, Coins, MapPin, ShoppingBag, Sparkles, Tag, Utensils, Wallet, X } from "lucide-react";
 import { api, payOnline } from "@/lib/clientApi";
 import { useCapacity } from "@/lib/useCapacity";
@@ -269,6 +270,11 @@ function ReviewOrder({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
   const [pendingOrder, setPendingOrder] = useState(null);
+  const [tablePickerOpen, setTablePickerOpen] = useState(false);
+  // Same ref serves the dropdown's trigger button and the plain-input
+  // fallback below — whichever actually renders, `focusTablePicker` just
+  // needs one element it can scroll to and focus.
+  const tablePickerRef = useRef(null);
 
   const t = priced?.totals;
   const subtotalPaise = priced?.totals.subtotal ?? 0;
@@ -343,7 +349,19 @@ function ReviewOrder({
       onPlaced(order);
     });
 
-  const placeDisabled = !priced || deliveryBlocked || tableMissing || (isDineIn && !dineIn && !tableNumber.trim());
+  // tableMissing does NOT disable the button — clicking it in that state is
+  // now a real action (scroll to and focus the table picker) rather than
+  // nothing at all, so it stays clickable.
+  const placeDisabled = !priced || deliveryBlocked;
+
+  /** The bottom button's fallback action when a table hasn't been picked yet. */
+  const focusTablePicker = () => {
+    tablePickerRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    setTablePickerOpen(true);
+    // Give the scroll a moment to land before stealing focus, so the ring
+    // appears on something already in view rather than the page still moving.
+    window.setTimeout(() => tablePickerRef.current?.focus(), 350);
+  };
 
   return (
     <>
@@ -391,21 +409,30 @@ function ReviewOrder({
             <div style={{ marginTop: 14 }}>
               <p style={{ ...muted, margin: "0 0 8px" }}>Your table number — it&apos;s printed on the table.</p>
               {tables.length ? (
-                <div style={tableGrid}>
-                  {tables.map((tb) => (
-                    <button
-                      key={tb.number}
-                      type="button"
-                      disabled={tb.occupied}
-                      onClick={() => onTableNumber(tb.number)}
-                      style={{ ...tableChip, ...(tableNumber === tb.number ? tableChipActive : {}), opacity: tb.occupied ? 0.4 : 1 }}
-                    >
-                      {tb.number}
-                    </button>
-                  ))}
-                </div>
+                <DropdownSoft
+                  label="Select your table"
+                  fullWidth
+                  value={tableNumber}
+                  onChange={onTableNumber}
+                  open={tablePickerOpen}
+                  onOpenChange={setTablePickerOpen}
+                  triggerRef={tablePickerRef}
+                  options={tables.map((tb) => ({
+                    value: tb.number,
+                    label: tb.number,
+                    disabled: tb.occupied,
+                    tag: tb.occupied ? "Unavailable" : undefined,
+                  }))}
+                />
               ) : (
-                <input style={input} value={tableNumber} onChange={(e) => onTableNumber(e.target.value)} placeholder="e.g. 7" inputMode="numeric" />
+                <input
+                  ref={tablePickerRef}
+                  style={input}
+                  value={tableNumber}
+                  onChange={(e) => onTableNumber(e.target.value)}
+                  placeholder="e.g. 7"
+                  inputMode="numeric"
+                />
               )}
             </div>
           ) : null}
@@ -527,7 +554,7 @@ function ReviewOrder({
           <div style={bottomBarLabel}>To pay</div>
           <div style={bottomBarPrice}>{t ? formatINR(t.grandTotal) : "…"}</div>
         </div>
-        <button type="button" style={placeBtn} disabled={busy || placeDisabled} onClick={place}>
+        <button type="button" style={placeBtn} disabled={busy || placeDisabled} onClick={tableMissing ? focusTablePicker : place}>
           {busy
             ? "Please wait…"
             : deliveryBlocked
@@ -670,9 +697,6 @@ const bannerWarn = {};
 const bannerError = { background: "color-mix(in srgb, #B23B3B 14%, var(--color-surface))" };
 const choiceBtn = { font: "inherit", flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 4, padding: "12px 10px", borderRadius: 12, borderWidth: 1.5, borderStyle: "solid", borderColor: "var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)", fontSize: "0.85rem", fontWeight: 600, cursor: "pointer" };
 const choiceBtnActive = { borderColor: "var(--color-primary)", background: "color-mix(in srgb, var(--color-primary) 10%, var(--color-bg))", color: "var(--color-primary)" };
-const tableGrid = { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(52px, 1fr))", gap: 7 };
-const tableChip = { font: "inherit", fontSize: "0.9rem", fontWeight: 700, padding: "11px 4px", borderRadius: 10, borderWidth: 1.5, borderStyle: "solid", borderColor: "var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)" };
-const tableChipActive = { borderColor: "var(--color-primary)", background: "var(--color-primary)", color: "var(--color-on-primary)" };
 const payOption = { display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", border: "1px solid var(--color-border)", borderRadius: 9, fontSize: 14, cursor: "pointer" };
 const totalsList = { margin: 0, display: "flex", flexDirection: "column", gap: 7 };
 const bottomBar = {

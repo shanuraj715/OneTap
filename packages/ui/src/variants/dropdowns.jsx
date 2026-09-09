@@ -38,40 +38,99 @@ const option                = {
   cursor: "pointer",
   color: "var(--color-text)",
 };
+const optionRow = { display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 };
+const optionDisabled = { opacity: 0.45, cursor: "not-allowed" };
+const optionTag = {
+  flexShrink: 0,
+  fontSize: "0.68rem",
+  fontWeight: 700,
+  padding: "1px 6px",
+  borderRadius: 999,
+  background: "var(--tone-danger-wash)",
+  color: "var(--tone-danger)",
+};
 
+/** A plain string/number option, or a richer `{ value, label, disabled, tag }` one — normalized to the latter either way. */
+function normalizeOption(o) {
+  return o !== null && typeof o === "object" ? o : { value: o, label: String(o) };
+}
+
+/**
+ * Uncontrolled by default — exactly its original catalog-only behaviour, an
+ * internal `chosen` state seeded from the first option. Passing `value` (even
+ * `""`) switches it to controlled, driven entirely by the caller; same for
+ * `open`. Both are opt-in additions so every existing call site (the catalog
+ * preview included, which passes neither) renders identically to before.
+ */
 function Shell({
   label,
   options,
+  value: valueProp,
+  onChange,
+  open: openProp,
+  onOpenChange,
+  fullWidth = false,
+  triggerRef,
   triggerStyle,
   panelStyle,
   optionStyle,
   caret = "⌄",
 }                                                                                                                           ) {
-  const [open, setOpen] = useState(false);
-  const [chosen, setChosen] = useState(options[0]);
+  const normalized = options.map(normalizeOption);
+  const controlled = valueProp !== undefined;
+  const [internalChosen, setInternalChosen] = useState(normalized[0]?.value);
+  const chosenValue = controlled ? valueProp : internalChosen;
+  const chosenOption = normalized.find((o) => o.value === chosenValue);
+
+  const openControlled = openProp !== undefined;
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = openControlled ? openProp : internalOpen;
+  const setOpen = (v) => (openControlled ? onOpenChange?.(v) : setInternalOpen(v));
+
   const ref = useDismiss(open, () => setOpen(false));
+
+  const select = (o) => {
+    if (o.disabled) return;
+    if (controlled) onChange?.(o.value);
+    else setInternalChosen(o.value);
+    setOpen(false);
+  };
+
   return (
-    <div ref={ref} style={{ position: "relative", display: "inline-block" }}>
-      <button type="button" className="ot-press" style={{ ...trigger, ...triggerStyle }} aria-expanded={open} onClick={() => setOpen(!open)}>
-        <span>{chosen ?? label}</span>
+    <div ref={ref} style={{ position: "relative", display: fullWidth ? "block" : "inline-block" }}>
+      <button
+        ref={triggerRef}
+        type="button"
+        className="ot-press"
+        style={{ ...trigger, ...(fullWidth ? { width: "100%", justifyContent: "space-between" } : {}), ...triggerStyle }}
+        aria-expanded={open}
+        onClick={() => setOpen(!open)}
+      >
+        <span>{chosenOption?.label ?? label}</span>
         <span aria-hidden className="ot-chevron" data-open={open} style={{ color: "var(--color-text-muted)" }}>{caret}</span>
       </button>
       {open ? (
-        <div className="ot-anim-drop" style={{ ...panel, ...panelStyle }} role="menu">
-          {options.map((o) => (
+        <div className="ot-anim-drop" style={{ ...panel, ...(fullWidth ? { width: "100%", minWidth: 0 } : {}), ...panelStyle }} role="menu">
+          {normalized.map((o) => (
             <div
-              key={o}
+              key={o.value}
               role="menuitem"
-              tabIndex={0}
-              onClick={() => {
-                setChosen(o);
-                setOpen(false);
+              aria-disabled={o.disabled || undefined}
+              tabIndex={o.disabled ? -1 : 0}
+              onClick={() => select(o)}
+              onKeyDown={(e) => e.key === "Enter" && select(o)}
+              className={o.disabled ? undefined : "ot-press"}
+              style={{
+                ...option,
+                ...optionStyle,
+                ...(o.value === chosenValue ? { background: "var(--color-surface)", fontWeight: 600 } : {}),
+                ...(o.disabled ? optionDisabled : {}),
               }}
-              onKeyDown={(e) => e.key === "Enter" && (setChosen(o), setOpen(false))}
-              className="ot-press"
-              style={{ ...option, ...optionStyle, ...(o === chosen ? { background: "var(--color-surface)", fontWeight: 600 } : {}) }}
             >
-              {o}
+              <span style={optionRow}>
+                <span>{o.label}</span>
+                {o.disabled && o.tag ? <span style={optionTag}>{o.tag}</span> : null}
+              </span>
             </div>
           ))}
         </div>

@@ -4,6 +4,7 @@ export { Hero,                } from "./Hero";
 export { MenuList } from "./MenuList";
 export { MenuSections } from "./MenuSections";
 export { ProgressSteps } from "./variants/progress";
+export { DropdownSoft } from "./variants/dropdowns";
 
                                              
                                              
