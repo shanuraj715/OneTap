@@ -104,10 +104,18 @@ export function ProgressRing({ value, label: text }               ) {
   );
 }
 
-/** 07 numbered step track */
-export function ProgressSteps({ value, label: text }               ) {
+/**
+ * 07 numbered step track.
+ *
+ * `steps` defaults to order-status labels — its original and, until now,
+ * only use — so every existing call site (the catalog preview included)
+ * keeps working unchanged. Pass your own labels to repurpose the same
+ * component for a different fixed sequence, e.g. a checkout wizard: `value`
+ * still drives which node is active, just resolved against however many
+ * labels you passed instead of a hardcoded four.
+ */
+export function ProgressSteps({ value, label: text, steps = ["Placed", "Preparing", "Ready", "Done"] }               ) {
   const v = clamp(value);
-  const steps = ["Placed", "Preparing", "Ready", "Done"];
   const active = Math.min(steps.length - 1, Math.floor((v / 100) * steps.length));
   return (
     <div>

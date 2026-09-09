@@ -2,11 +2,22 @@
 
 import { useEffect, useRef, useState } from "react";
 import { CUSTOMER_AGE_MAX, CUSTOMER_AGE_MIN, CUSTOMER_GENDER_LABELS, CUSTOMER_GENDERS } from "@onetap/config-schema";
+import { ProgressSteps } from "@onetap/ui";
 import { Calendar, Check, Loader2, LogIn, Mail, Phone, ShieldCheck, User } from "lucide-react";
 import { api, apiPatch } from "@/lib/clientApi";
 
 const DRAFT_KEY = "onetap.customerDraft";
 const RESEND_COOLDOWN_SEC = 30;
+
+/**
+ * The checkout journey as a whole, not just what this component collects.
+ * "Items selected" is already true the moment CustomerGate can even render —
+ * you only reach it with something in the cart — so it always shows done.
+ * "Delivery address" is genuinely a later screen (OrderPage's own fulfilment
+ * step, after `onSuccess`), included here so the bar tells the truth about
+ * how many steps are actually left, not just what this one component does.
+ */
+const JOURNEY_STEPS = ["Items selected", "Your details", "About you", "Delivery address"];
 
 /** Remembers what a returning visitor typed last time, on this device only — never sent anywhere until they submit. */
 function loadDraft() {
@@ -24,14 +35,12 @@ function saveDraft(d) {
   }
 }
 
-const STEP_LABELS = ["Your details", "About you"];
-
 /**
  * Stands between "click the cart" and "see your order" for anyone not signed
  * in, and reappears (in a shorter form) for a session that predates gender
  * and age.
  *
- * A two-step form either way, tracked by `StepProgress`:
+ * A two-step form either way, tracked against the four-stage journey above:
  *  1. Name and mobile number — enough to send and check a code. A brand-new
  *     account is created right after the code checks out, holding just the
  *     name; gender and age are deliberately NOT collected here, so this step
@@ -160,12 +169,27 @@ export function CustomerGate({ customer, outletId, onSuccess }) {
   const submitDisabled =
     busy || (isCompletion ? !profileValid : sent ? code.length !== 6 : !detailsValid);
 
+  // Index 0 ("Items selected") never appears here — reaching this component
+  // at all already implies it. This component only ever occupies index 1
+  // (name + mobile, OTP included) or index 2 (whatever's still missing);
+  // index 3 (address) is a later screen this component never shows, kept in
+  // the bar only so it reads honestly as "2 more after this" rather than
+  // pretending the journey ends where this component's part does.
+  const journeyIndex = isCompletion ? 2 : 1;
+  const journeyValue = (journeyIndex / JOURNEY_STEPS.length) * 100;
+
   return (
     <div style={shell}>
       <div style={card} className="ot-anim-pop">
         <div style={iconBadge}>{isCompletion ? <User size={22} /> : <LogIn size={22} />}</div>
 
-        <StepProgress index={isCompletion ? 1 : 0} />
+        <div style={stepBarWrap}>
+          <ProgressSteps
+            steps={JOURNEY_STEPS}
+            value={journeyValue}
+            label={`Step ${journeyIndex + 1} of ${JOURNEY_STEPS.length} · ${JOURNEY_STEPS[journeyIndex]}`}
+          />
+        </div>
 
         <h1 style={title}>{isCompletion ? "Just a couple more details" : sent ? "Enter the code" : "Sign in to order"}</h1>
         <p style={subtitle}>
@@ -313,26 +337,6 @@ export function CustomerGate({ customer, outletId, onSuccess }) {
 }
 
 /**
- * Two numbered nodes joined by a connector, filled as you move through them —
- * the same "circle + line" language the storefront's own order-progress
- * variant (`ProgressSteps`) already uses, adapted here for a form's two
- * steps rather than an order's four statuses.
- */
-function StepProgress({ index }) {
-  return (
-    <div style={stepTrack} aria-hidden>
-      {STEP_LABELS.map((l, i) => (
-        <div key={l} style={{ display: "flex", alignItems: "center", flex: i === STEP_LABELS.length - 1 ? "0 0 auto" : 1 }}>
-          <span style={{ ...stepNode, ...(i <= index ? stepNodeFilled : {}) }}>{i < index ? <Check size={12} /> : i + 1}</span>
-          <span style={{ ...stepNodeLabel, ...(i <= index ? stepNodeLabelActive : {}) }}>{l}</span>
-          {i < STEP_LABELS.length - 1 ? <span style={{ ...stepConnector, ...(i < index ? stepConnectorFilled : {}) }} /> : null}
-        </div>
-      ))}
-    </div>
-  );
-}
-
-/**
  * A `<div>`, not a `<label>` — `Field` also wraps the gender picker's three
  * separate buttons, and a native `<label>` is only valid around exactly one
  * form control. Wrapping several confuses assistive tech and, in practice,
@@ -468,32 +472,7 @@ const iconBadge = {
   marginBottom: 14,
   boxShadow: "0 6px 16px -6px color-mix(in srgb, var(--color-primary) 45%, transparent)",
 };
-const stepTrack = { display: "flex", alignItems: "center", marginBottom: 16 };
-const stepNode = {
-  display: "grid",
-  placeItems: "center",
-  width: 22,
-  height: 22,
-  borderRadius: "50%",
-  flexShrink: 0,
-  fontSize: 11,
-  fontWeight: 700,
-  background: "var(--color-border)",
-  color: "var(--color-text-muted)",
-  transition: "background var(--motion-base) var(--ease-out), color var(--motion-base) var(--ease-out)",
-};
-const stepNodeFilled = { background: "var(--color-primary)", color: "var(--color-on-primary)" };
-const stepNodeLabel = {
-  fontSize: 11.5,
-  fontWeight: 600,
-  color: "var(--color-text-muted)",
-  marginLeft: 6,
-  whiteSpace: "nowrap",
-  transition: "color var(--motion-base) var(--ease-out)",
-};
-const stepNodeLabelActive = { color: "var(--color-text)" };
-const stepConnector = { flex: 1, height: 2, margin: "0 8px", background: "var(--color-border)", transition: "background var(--motion-base) var(--ease-out)" };
-const stepConnectorFilled = { background: "var(--color-primary)" };
+const stepBarWrap = { marginBottom: 16 };
 const title = { margin: "0 0 6px", fontFamily: "var(--font-heading)", fontSize: 21, lineHeight: 1.25 };
 const subtitle = { margin: "0 0 20px", color: "var(--color-text-muted)", fontSize: 13.5, lineHeight: 1.5 };
 const fieldWrap = { display: "block", marginBottom: 15 };
