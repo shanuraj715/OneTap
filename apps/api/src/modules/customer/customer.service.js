@@ -106,14 +106,19 @@ export async function verifyOtp(input) {
   let customer = await CustomerModel.findOne(query);
 
   if (!customer) {
-    // A phone nobody has verified before is a signup — the full profile is
-    // mandatory here, not optional, however the caller phrased the request.
-    requireSignupFields(input);
+    // A phone nobody has verified before is a signup — but only the name is
+    // required to create the account here. Gender and age are collected in a
+    // second step (the storefront's own two-step form), through the same
+    // `completeProfile` below that an old session missing them goes through.
+    // The account this creates is real but intentionally incomplete —
+    // `isProfileComplete` is what tells the caller to ask for the rest before
+    // treating this as a finished signup.
+    if (!input.name?.trim()) throw new HttpError(400, "Enter your name to finish signing up");
     customer = await CustomerModel.create({
       ...query,
       name: input.name.trim(),
-      gender: input.gender,
-      age: input.age,
+      gender: input.gender || undefined,
+      age: input.age || undefined,
       email: !isEmail && input.email ? input.email : undefined,
     });
   } else {
