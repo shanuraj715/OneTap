@@ -48,6 +48,10 @@ export function OrderPage({
 
   const [placed, setPlaced] = useState(null);
   const { sessionId, setSessionId, tab, refreshTab } = useDineInSession(dineIn, outletId, placed?.id);
+  // Which of CustomerGate's own steps it's currently showing — the `customer`
+  // prop alone can't tell us this, since a fresh signup never touches it until
+  // the whole gate succeeds. CustomerGate reports it directly.
+  const [gateStep, setGateStep] = useState("details");
 
   const [fulfilment, setFulfilment] = useState("takeaway");
   const [tableNumber, setTableNumber] = useState("");
@@ -124,12 +128,16 @@ export function OrderPage({
   // One number driving the bar across every screen this page can show — not
   // just the ones CustomerGate itself renders. Null hides it entirely: there
   // is no "step" to show before the cart is even known, or once the order is
-  // placed and the journey is simply over.
+  // placed and the journey is simply over. While the gate is up, this follows
+  // `gateStep` (what CustomerGate itself reports) rather than `customer` —
+  // `customer` doesn't change until the whole gate succeeds, so a fresh
+  // signup moving from "your details" into "about you" would otherwise leave
+  // the bar frozen on step 2 for the entire rest of the gate.
   const journeyIndex =
     customerLoading || !hydrated || (lines.length === 0 && !placed) || placed
       ? null
       : !customer || !customer.profileComplete
-        ? customer
+        ? gateStep === "profile"
           ? 2
           : 1
         : 3;
@@ -164,7 +172,7 @@ export function OrderPage({
   if (!customer || !customer.profileComplete) {
     return (
       <PageShell menuHref={menuHref} title={customer ? "Complete your profile" : "Sign in to order"} progress={journeyIndex} progressLabel={progressLabel}>
-        <CustomerGate customer={customer} outletId={outletId} onSuccess={refresh} />
+        <CustomerGate customer={customer} outletId={outletId} onSuccess={refresh} onStepChange={setGateStep} />
       </PageShell>
     );
   }

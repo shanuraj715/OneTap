@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { CUSTOMER_AGE_MAX, CUSTOMER_AGE_MIN, CUSTOMER_GENDER_LABELS, CUSTOMER_GENDERS } from "@onetap/config-schema";
-import { Calendar, Check, Loader2, LogIn, Mail, Phone, ShieldCheck, User } from "lucide-react";
+import { Calendar, Check, ChevronLeft, Loader2, LogIn, Mail, Phone, ShieldCheck, User } from "lucide-react";
 import { api, apiPatch } from "@/lib/clientApi";
 
 const DRAFT_KEY = "onetap.customerDraft";
@@ -48,7 +48,7 @@ function saveDraft(d) {
  * are pre-filled from what this device typed last time (`loadDraft`), never
  * from anything sent to the server.
  */
-export function CustomerGate({ customer, outletId, onSuccess }) {
+export function CustomerGate({ customer, outletId, onSuccess, onStepChange }) {
   const [destination, setDestination] = useState("");
   const [name, setName] = useState(customer?.name ?? "");
   const [gender, setGender] = useState(customer?.gender ?? "");
@@ -145,15 +145,43 @@ export function CustomerGate({ customer, outletId, onSuccess }) {
       onSuccess();
     });
 
-  const useDifferentNumber = () => {
+  /**
+   * Steps back within this component's own two steps.
+   *
+   * One handler for both places it can fire from — `setVerifiedCustomer(null)`
+   * is a harmless no-op on the "otp" step (nothing's been verified yet, so
+   * there's nothing there to clear), and `setSent(false)` is what actually
+   * lands "profile" back on "details" (that step is otherwise driven purely by
+   * `isCompletion`, not by `sent`). The account "profile" created on step 1
+   * isn't deleted — it just sits exactly like any other incomplete signup
+   * until the same number verifies again, same as closing the tab would.
+   *
+   * Only ever shown when there IS a previous step in this component to return
+   * to: never on "details" (that's step 1 — the page's own back arrow already
+   * exits to the menu from there), and never on "profile" for an existing
+   * session that arrived already signed in, which has no earlier step here at
+   * all.
+   */
+  const goBack = () => {
     setSent(false);
     setCode("");
     setDevCode(null);
     setResendCooldown(0);
     setError(null);
+    setVerifiedCustomer(null);
   };
 
   const step = isCompletion ? "profile" : sent ? "otp" : "details";
+  const canGoBack = step === "otp" || (step === "profile" && Boolean(verifiedCustomer));
+
+  // Reports this component's OWN step upward — OrderPage's journey bar has no
+  // other way to know it, since a fresh signup never touches the `customer`
+  // prop at all until `onSuccess` fires. Without this the bar sat frozen on
+  // "Your details" through the entire otp AND profile steps, the whole time
+  // this card had already moved on to showing something else.
+  useEffect(() => {
+    onStepChange?.(step);
+  }, [step, onStepChange]);
   const submit = isCompletion ? completeProfile : sent ? verify : requestCode;
   const submitDisabled =
     busy || (isCompletion ? !profileValid : sent ? code.length !== 6 : !detailsValid);
@@ -161,6 +189,19 @@ export function CustomerGate({ customer, outletId, onSuccess }) {
   return (
     <div style={shell}>
       <div style={card} className="ot-anim-pop">
+        {canGoBack ? (
+          <button
+            type="button"
+            className="ot-press"
+            style={backBtn}
+            onClick={goBack}
+            onMouseEnter={(e) => (e.currentTarget.style.background = "var(--color-surface)")}
+            onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+          >
+            <ChevronLeft size={16} /> Back
+          </button>
+        ) : null}
+
         <div style={iconBadge}>{isCompletion ? <User size={22} /> : <LogIn size={22} />}</div>
 
         <h1 style={title}>{isCompletion ? "Just a couple more details" : sent ? "Enter the code" : "Sign in to order"}</h1>
@@ -285,9 +326,6 @@ export function CustomerGate({ customer, outletId, onSuccess }) {
 
         {step === "otp" ? (
           <div style={linkRow}>
-            <button type="button" style={linkBtn} onClick={useDifferentNumber}>
-              Use a different number
-            </button>
             <button
               type="button"
               style={{ ...linkBtn, ...(resendCooldown > 0 ? linkBtnDisabled : {}) }}
@@ -432,6 +470,22 @@ const card = {
   padding: "30px 24px 26px",
   boxShadow: "0 20px 50px -20px rgba(0,0,0,0.25)",
 };
+const backBtn = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 2,
+  font: "inherit",
+  fontSize: 13,
+  fontWeight: 600,
+  padding: "6px 10px 6px 4px",
+  marginBottom: 10,
+  marginLeft: -4,
+  border: "none",
+  borderRadius: "calc(var(--radius-card) - 4px)",
+  background: "transparent",
+  color: "var(--color-text-muted)",
+  cursor: "pointer",
+};
 const iconBadge = {
   width: 46,
   height: 46,
@@ -557,9 +611,8 @@ const primaryBtn = {
   border: "none",
   cursor: "pointer",
 };
-const linkRow = { display: "flex", justifyContent: "space-between", gap: 8, marginTop: 4 };
+const linkRow = { display: "flex", justifyContent: "center", marginTop: 4 };
 const linkBtn = {
-  flex: 1,
   font: "inherit",
   fontSize: 12.5,
   fontWeight: 600,
