@@ -25,6 +25,7 @@ import { fx, getItemCardVariant, getVariant } from "@onetap/ui";
 import { Moon, Palette, RotateCcw, Save, Sparkles, Sun, Undo2 } from "lucide-react";
 import { useOutlet, usePatchConfig } from "../lib/useOutlet";
 import { useStorePlan } from "../lib/useStorePlan";
+import { useEffectCss } from "../lib/storePreview";
 import { Button, Card, ColorInput, Field, InfoHint, Note, PageHeader, STICKY_HEADER_CLEARANCE, Tabs, TextInput, Toast } from "../ui";
 import { StorefrontNav } from "../components/SubNav";
 
@@ -428,24 +429,6 @@ function ThemePreview({ tokens, mode, effect, outletName }) {
  * admin bundle never carries any effect up front and only the chosen one is
  * ever downloaded.
  */
-function useEffectCss(effect) {
-  const [css, setCss] = useState("");
-  useEffect(() => {
-    let live = true;
-    if (!effect || effect === "none") {
-      setCss("");
-      return;
-    }
-    import("@onetap/ui/effects")
-      .then(({ loadEffectCss }) => loadEffectCss(effect, { scope: "[data-fx-preview]", page: "[data-fx-preview]" }))
-      .then((c) => live && setCss(c))
-      .catch(() => live && setCss(""));
-    return () => {
-      live = false;
-    };
-  }, [effect]);
-  return css;
-}
 
 /* ---------------------------------------------------------- effect picker */
 
