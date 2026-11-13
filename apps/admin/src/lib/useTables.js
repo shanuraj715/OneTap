@@ -34,6 +34,11 @@ function useTableMutation   (outlet                    , fn                     
 export const useCreateTable = (o         ) =>
   useTableMutation                                                   (o, api.createTable);
 export const useDeleteTable = (o         ) => useTableMutation        (o, api.deleteTable);
+export const useUpdateTable = (o         ) =>
+  useTableMutation                                          (o, (out, a) => api.updateTable(out, a.id, a.patch));
 export const useMoveSession = (o         ) =>
   useTableMutation                                          (o, (out, a) => api.moveSession(out, a.sessionId, a.toTableId));
 export const useCloseSession = (o         ) => useTableMutation        (o, api.closeSession);
+export const useConfirmPayment = (o         ) => useTableMutation        (o, api.confirmSessionPayment);
+export const useVoidSession = (o         ) =>
+  useTableMutation                                          (o, (out, a) => api.voidSession(out, a.sessionId, a.reason));

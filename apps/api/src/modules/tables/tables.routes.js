@@ -7,6 +7,7 @@ import { HttpError } from "../../middleware/error.js";
 import { currentCustomer } from "../customer/customer.routes.js";
 import {
   closeSession,
+  confirmSessionPayment,
   createTable,
   deleteTable,
   getTable,
@@ -22,6 +23,7 @@ import {
   sessionTab,
   tableUrl,
   updateTable,
+  voidSession,
 } from "./tables.service.js";
 
 export const tablesRouter         = Router();
@@ -117,6 +119,22 @@ tablesRouter.post("/sessions/:id/close", async (req, res) => {
   const ctx = await requireOutletContext(req, "table:manage");
   const user = requireUser(req);
   res.json({ session: await closeSession(ctx, req.params.id, String(user._id)) });
+});
+
+/** The owner has confirmed cash (or whatever was owed) changed hands — this
+ *  is what `close` above requires before it will unlock the table. */
+tablesRouter.post("/sessions/:id/confirm-payment", async (req, res) => {
+  const ctx = await requireOutletContext(req, "table:manage");
+  res.json(await confirmSessionPayment(ctx, req.params.id));
+});
+
+/** A party walked out, or a table was claimed by mistake — free it without
+ *  requiring payment. Cancels every open order on the session first. */
+tablesRouter.post("/sessions/:id/void", async (req, res) => {
+  const ctx = await requireOutletContext(req, "table:manage");
+  const user = requireUser(req);
+  const { reason } = z.object({ reason: z.string().max(200).optional() }).parse(req.body);
+  res.json({ session: await voidSession(ctx, req.params.id, String(user._id), reason) });
 });
 
 /* ------------------------------------------------------------ diner (public) */

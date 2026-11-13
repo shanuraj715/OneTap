@@ -146,7 +146,7 @@ export async function fireOrderNotifications(ctx               , order          
   if (!outlet) return;
   const { config } = outlet;
   const orderId = String(order._id);
-  const to = order.customer.phone ?? "";
+  const to = order.customer?.phone ?? "";
 
   for (const channel of NOTIFY_CHANNELS) {
     const settings = config.orderNotify[channel];

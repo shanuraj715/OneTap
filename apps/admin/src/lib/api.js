@@ -306,6 +306,11 @@ export const editOrder = (o        , id        , body           ) =>
     outletId: o._id,
   });
 
+/** Staff placing an order on a diner's behalf — a walk-in, a phoned-in order,
+ *  or a second round added to a table already in service (`sessionId`). */
+export const placeOrder = (o        , body           ) =>
+  req                       ("/api/orders", { method: "POST", body: JSON.stringify(body), outletId: o._id });
+
 /* ------------------------------------------------------------------ payments */
 
                                
@@ -384,6 +389,14 @@ export const moveSession = (o        , sessionId        , toTableId        ) =>
 
 export const closeSession = (o        , sessionId        ) =>
   req         (`/api/tables/sessions/${sessionId}/close`, { method: "POST", body: "{}", outletId: o._id });
+
+export const confirmSessionPayment = (o        , sessionId        ) =>
+  req      (`/api/tables/sessions/${sessionId}/confirm-payment`, { method: "POST", body: "{}", outletId: o._id });
+
+export const voidSession = (o        , sessionId        , reason         ) =>
+  req         (`/api/tables/sessions/${sessionId}/void`, {
+    method: "POST", body: JSON.stringify({ reason }), outletId: o._id,
+  });
 
 /* ---------------------------------------------------------------- QR cards */
 

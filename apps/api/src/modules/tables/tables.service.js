@@ -12,6 +12,7 @@ import {
 import { env } from "../../env.js";
 import { safeEqual } from "../../lib/crypto.js";
 import { HttpError } from "../../middleware/error.js";
+import { cancelOrdersForSession } from "../orders/orders.service.js";
 
 /* ---------------------------------------------------------------------- QR */
 
@@ -165,10 +166,11 @@ export async function sessionForCustomer(ctx               , customerId        )
   return TableSessionModel.findOne(tenantFilter(ctx, { customerId, status: "open" })).lean();
 }
 
-/** Every order on a session, plus the running tab. */
+/** Every order on a session, plus the running tab and what's still unpaid. */
 export async function sessionTab(ctx               , sessionId        ) {
   const orders = await OrderModel.find(tenantFilter(ctx, { sessionId })).sort({ createdAt: 1 }).lean();
   const open = orders.filter((o) => o.status !== "cancelled");
+  const unpaid = open.filter((o) => o.payment.status !== "paid");
   return {
     orders: open.map((o) => ({
       id: String(o._id),
@@ -176,10 +178,62 @@ export async function sessionTab(ctx               , sessionId        ) {
       status: o.status,
       lines: o.lines,
       totals: o.totals,
+      payment: o.payment,
       createdAt: o.createdAt,
     })),
     tab: open.reduce((sum, o) => sum + o.totals.grandTotal, 0),
+    unpaidTotal: unpaid.reduce((sum, o) => sum + o.totals.grandTotal, 0),
+    allPaid: unpaid.length === 0,
   };
+}
+
+/** Unlocks a table once its session is done with it — free for the next party
+ *  to claim, once staff have physically cleared it (see `updateTable`). */
+async function unlockTable(ctx               , session                          ) {
+  const table = await TableModel.findOne(tenantFilter(ctx, { _id: session.tableId }));
+  if (table) {
+    table.activeSessionId = null;
+    table.status = "needs-cleaning";
+    await table.save();
+  }
+}
+
+/**
+ * Mark every unpaid order on a session as paid — the owner has confirmed cash
+ * (or whatever was owed) actually changed hands. This is what `closeSession`
+ * requires before it will unlock the table.
+ */
+export async function confirmSessionPayment(ctx               , sessionId        ) {
+  const session = await TableSessionModel.findOne(tenantFilter(ctx, { _id: sessionId, status: "open" })).lean();
+  if (!session) throw new HttpError(404, "No open session here");
+
+  await OrderModel.updateMany(
+    tenantFilter(ctx, { sessionId, status: { $ne: "cancelled" }, "payment.status": { $ne: "paid" } }),
+    { $set: { "payment.status": "paid" } },
+  );
+
+  return sessionTab(ctx, sessionId);
+}
+
+/**
+ * A party walked out, or a table was claimed by mistake — free it without
+ * requiring payment. Every still-open order on the session is cancelled first
+ * (see {@link cancelOrdersForSession}), so nothing is left dangling in the
+ * kitchen queue for a table nobody is sitting at any more.
+ */
+export async function voidSession(ctx               , sessionId        , byUserId         , reason         ) {
+  const session = await TableSessionModel.findOne(tenantFilter(ctx, { _id: sessionId, status: "open" }));
+  if (!session) throw new HttpError(404, "No open session to void");
+
+  await cancelOrdersForSession(ctx, sessionId, byUserId, reason);
+
+  session.status = "closed";
+  session.closedAt = new Date();
+  session.closedBy = byUserId;
+  await session.save();
+
+  await unlockTable(ctx, session);
+  return session.toObject();
 }
 
 /**
@@ -224,17 +278,20 @@ export async function closeSession(ctx               , sessionId        , byUser
   const session = await TableSessionModel.findOne(tenantFilter(ctx, { _id: sessionId, status: "open" }));
   if (!session) throw new HttpError(404, "No open session to close");
 
+  const { allPaid, unpaidTotal } = await sessionTab(ctx, sessionId);
+  if (!allPaid) {
+    throw new HttpError(
+      409,
+      `Confirm payment before marking this table vacant — ₹${(unpaidTotal / 100).toFixed(0)} still unpaid.`,
+    );
+  }
+
   session.status = "closed";
   session.closedAt = new Date();
   session.closedBy = byUserId;
   await session.save();
 
-  const table = await TableModel.findOne(tenantFilter(ctx, { _id: session.tableId }));
-  if (table) {
-    table.activeSessionId = null;
-    table.status = "needs-cleaning";
-    await table.save();
-  }
+  await unlockTable(ctx, session);
   return session.toObject();
 }
 
@@ -246,7 +303,7 @@ export async function listActiveSessions(ctx               ) {
 
   return Promise.all(
     sessions.map(async (s) => {
-      const { orders, tab } = await sessionTab(ctx, String(s._id));
+      const { orders, tab, unpaidTotal, allPaid } = await sessionTab(ctx, String(s._id));
       return {
         id: String(s._id),
         tableId: s.tableId,
@@ -255,6 +312,8 @@ export async function listActiveSessions(ctx               ) {
         openedAt: s.openedAt,
         orderCount: orders.length,
         tab,
+        unpaidTotal,
+        allPaid,
         tableHistory: s.tableHistory,
       };
     }),

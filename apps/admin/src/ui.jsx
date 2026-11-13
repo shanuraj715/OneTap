@@ -18,7 +18,7 @@ export function Button(props             ) {
 }
 
 /** Freezes the page underneath while something (a modal, a dialog) is open. */
-function useLockBodyScroll(locked         ) {
+export function useLockBodyScroll(locked         ) {
   useEffect(() => {
     if (!locked) return;
     const prev = document.body.style.overflow;

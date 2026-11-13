@@ -56,3 +56,17 @@ export const useManualStatus = (o                    ) =>
 
 export const useEditOrder = (o                    ) =>
   useOrderMutation                                     (o, (out, a) => api.editOrder(out, a.id, a.body));
+
+/** Staff placing a new order — a walk-in, or a second round on an open table
+ *  session (`body.sessionId`). Also refreshes the table/session views, since
+ *  a dine-in order changes that session's running tab. */
+export function usePlaceOrder(outlet                    ) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (body   ) => api.placeOrder(outlet , body),
+    onSuccess: () => {
+      void qc.invalidateQueries({ queryKey: ["orders"] });
+      void qc.invalidateQueries({ queryKey: ["sessions"] });
+    },
+  });
+}

@@ -107,6 +107,7 @@ ordersRouter.post("/", async (req, res) => {
       placedBy: "staff",
       staffId: String(user._id),
       staffName: user.name,
+      ...(await dineInContextForStaff(ctx, body)),
     });
     res.status(201).json({ order: shape(order, true) });
     return;
@@ -160,6 +161,41 @@ async function dineInContext(
   if (!session) throw new HttpError(403, "That table session isn't yours, or it has been closed");
 
   return { tableId: session.tableId, sessionId: String(session._id) };
+}
+
+/**
+ * Staff adding a round to a table already in service — e.g. from the admin's
+ * table overview. No ownership check: staff placing this is already the
+ * trusted party (gated on `order:update`), unlike the diner path above.
+ *
+ * Attributes the order to the session's actual diner rather than leaving it
+ * on whatever bare `{ name }` the outer call defaults to — staff adding a
+ * second round rarely retype the table's name, and an order with no customer
+ * at all crashes anything downstream that expects one (notifications, etc).
+ */
+async function dineInContextForStaff(
+  ctx               ,
+  body                                         ,
+)                                                    {
+  if (body.channel !== "dine-in" || !body.sessionId) return {};
+
+  const { TableSessionModel, CustomerModel } = await import("@onetap/db");
+  const session = await TableSessionModel.findOne({
+    _id: body.sessionId,
+    brandId: ctx.brandId,
+    outletId: ctx.outletId,
+    status: "open",
+  }).lean();
+  if (!session) throw new HttpError(404, "That table session has been closed");
+
+  const customer = await CustomerModel.findOne({ _id: session.customerId }).lean();
+  return {
+    tableId: session.tableId,
+    sessionId: String(session._id),
+    ...(customer
+      ? { customer: { customerId: String(customer._id), name: customer.name, phone: customer.phone, email: customer.email } }
+      : {}),
+  };
 }
 
 /* --------------------------------------------------------------- staff views */

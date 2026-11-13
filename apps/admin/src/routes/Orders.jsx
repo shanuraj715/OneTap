@@ -29,6 +29,7 @@ import {
   Filter,
   Gauge,
   Keyboard,
+  LayoutGrid,
   MapPin,
   MoreHorizontal,
   Pencil,
@@ -58,6 +59,7 @@ import { useSlaAlerts } from "../lib/useSlaAlerts";
 import { useManualStatus } from "../lib/useOrders";
 import { AwesomeLoader, Button, Card, Empty, IconChip, Menu, Modal, MultiFilter, Pill, Select, Table, Td, TextInput, Th, Toast } from "../ui";
 import { OrderEditModal } from "./orders/OrderEditModal";
+import { TableOverviewModal } from "./orders/TableOverviewModal";
 
 /** Rows-per-page, remembered per browser. */
 const PAGE_SIZE_KEY = "onetap.ordersPageSize";
@@ -70,6 +72,7 @@ const SHORTCUTS                                      = [
   { keys: ["/"], label: "Focus the search box" },
   { keys: ["R"], label: "Refresh the order list" },
   { keys: ["O"], label: "Toggle ‘Open only’" },
+  { keys: ["T"], label: "Toggle the table overview" },
   { keys: ["?"], label: "Show this shortcuts panel" },
   { keys: ["\\"], label: "Collapse or expand the sidebar (any page)" },
   { keys: ["Enter"], label: "Confirm a status change" },
@@ -164,6 +167,7 @@ export function Orders() {
   const [editing, setEditing] = useState                   (null);
   const [expanded, setExpanded] = useState             (new Set());
   const [showShortcuts, setShowShortcuts] = useState(false);
+  const [showTables, setShowTables] = useState(false);
   const [confirming, setConfirming] = useState                                                                    (null);
   const [pageSize, setPageSize] = useState(loadPageSize);
   const [page, setPage] = useState(1);
@@ -274,6 +278,8 @@ export function Orders() {
         void refetchRef.current();
       } else if (e.key === "o") {
         setOnlyOpen((v) => !v);
+      } else if (e.key === "t") {
+        setShowTables((v) => !v);
       } else if (e.key === "?") {
         setShowShortcuts(true);
       }
@@ -326,6 +332,14 @@ export function Orders() {
               ))}
             </Select>
           </label>
+          <Button
+            variant="outline"
+            onClick={() => setShowTables(true)}
+            style={{ display: "inline-flex", gap: 6, alignItems: "center" }}
+            title="Shortcut key: T"
+          >
+            <LayoutGrid size={13} /> Tables
+          </Button>
           <Button
             variant="outline"
             onClick={() => setShowShortcuts(true)}
@@ -537,6 +551,20 @@ export function Orders() {
         <OrderEditModal outlet={outlet} order={editing} menu={menu.data} onClose={() => setEditing(null)} />
       ) : null}
 
+      {showTables && outlet ? (
+        <TableOverviewModal
+          outlet={outlet}
+          orders={all}
+          menu={menu.data}
+          canManage={can("table:manage")}
+          onClose={() => setShowTables(false)}
+          onFilterTable={(number) => {
+            setSearch(number);
+            setShowTables(false);
+          }}
+        />
+      ) : null}
+
       {confirming ? (
         <ConfirmDialog
           order={confirming.order}
@@ -730,7 +758,7 @@ function OrderRow({
         >
           {canUpdate && primary ? (
             <Button onClick={() => onRequestStatus(primary, false)} style={actionStyle(primary)}>
-              {ORDER_STATUS_LABELS[primary]}
+              {order.channel === "dine-in" && primary === "accepted" ? "Approve" : ORDER_STATUS_LABELS[primary]}
             </Button>
           ) : null}
 
