@@ -93,6 +93,7 @@ const configPatchSchema = z.record(z.string(), z.unknown());
 const AREA_PERMISSIONS                             = {
   theme: "theme:update",
   typography: "theme:update",
+  effect: "theme:update",
   layout: "appearance:update",
   identity: "settings:update",
   // Opening hours, missed-order alerts, prep times and order handling all live

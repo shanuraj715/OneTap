@@ -1,4 +1,5 @@
 export * from "./theme.js";
+export * from "./effect.js";
 export * from "./typography.js";
 export * from "./features.js";
 export * from "./layout.js";

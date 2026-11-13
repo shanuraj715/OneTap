@@ -9,6 +9,7 @@ import {
                 
                   
 } from "@onetap/config-schema";
+import { fx } from "./fx";
 import { getItemCardVariant, gridPropsFor } from "./registry";
 
 const FOOD_LABELS                           = { veg: "Veg", "non-veg": "Non-veg", egg: "Egg" };
@@ -58,7 +59,7 @@ export function MenuSections({
   return (
     <div className="ot-menu-sections" style={wrap}>
       {(layout.showCategoryNav && visibleSections.length > 1) || (layout.showFoodTypeFilter && foodTypesPresent.length > 1) ? (
-        <div style={toolbar}>
+        <div className="ot-fx-bar" style={fx("bar", toolbar)}>
           {layout.showFoodTypeFilter && foodTypesPresent.length > 1 ? (
             <div style={{ display: "flex", gap: 6 }}>
               <FilterChip active={foodFilter === null} onClick={() => setFoodFilter(null)}>
@@ -77,7 +78,7 @@ export function MenuSections({
           {layout.showCategoryNav && visibleSections.length > 1 ? (
             <nav style={{ display: "flex", gap: 6, flexWrap: "wrap", overflowX: "auto" }}>
               {visibleSections.map((s) => (
-                <a key={s.id} href={`#sec-${s.id}`} style={jumpLink}>
+                <a key={s.id} href={`#sec-${s.id}`} className="ot-fx-chip" style={fx("chip", jumpLink)}>
                   {s.title}
                 </a>
               ))}
@@ -135,9 +136,9 @@ export function MenuSections({
                     {isTitleRight && section.collapsible ? (
                       <button
                         type="button"
-                        className="ot-press"
+                        className="ot-press ot-fx-chip"
                         onClick={() => setExpanded((e) => ({ ...e, [section.id]: !isOpen }))}
-                        style={viewAllTitleBtn}
+                        style={fx("chip", viewAllTitleBtn)}
                         aria-expanded={isOpen}
                       >
                         {isOpen
@@ -189,9 +190,9 @@ export function MenuSections({
               >
                 <button
                   type="button"
-                  className="ot-press"
+                  className="ot-press ot-fx-chip"
                   onClick={() => setExpanded((e) => ({ ...e, [section.id]: !isOpen }))}
-                  style={viewAllBtn}
+                  style={fx("chip", viewAllBtn)}
                   aria-expanded={isOpen}
                 >
                   {isOpen
@@ -212,13 +213,14 @@ function FilterChip({ active, onClick, children }                               
     <button
       type="button"
       onClick={onClick}
-      className="ot-press"
-      style={{
+      className="ot-press ot-fx-chip"
+      data-active={active}
+      style={fx("chip", {
         ...chip,
         background: active ? "var(--color-primary)" : "var(--color-bg)",
         color: active ? "var(--color-on-primary)" : "var(--color-text)",
-        borderColor: active ? "var(--color-primary)" : "var(--color-border)",
-      }}
+        border: `1px solid ${active ? "var(--color-primary)" : "var(--color-border)"}`,
+      })}
     >
       {children}
     </button>

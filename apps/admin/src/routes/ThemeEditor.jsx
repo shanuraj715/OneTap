@@ -9,6 +9,9 @@ import { useEffect, useMemo, useState } from "react";
                 
                     
 import {
+  EFFECT_IDS,
+  EFFECT_PRESETS,
+  effectPreset,
   resolveDarkTokens,
   themeTokensSchema,
   tokensToCssVars,
@@ -18,8 +21,8 @@ import {
              
                    
 } from "@onetap/config-schema";
-import { getItemCardVariant, getVariant } from "@onetap/ui";
-import { Moon, Palette, RotateCcw, Save, Sun } from "lucide-react";
+import { fx, getItemCardVariant, getVariant } from "@onetap/ui";
+import { Moon, Palette, RotateCcw, Save, Sparkles, Sun, Undo2 } from "lucide-react";
 import { useOutlet, usePatchConfig } from "../lib/useOutlet";
 import { Button, Card, ColorInput, Field, InfoHint, Note, PageHeader, STICKY_HEADER_CLEARANCE, Tabs, TextInput, Toast } from "../ui";
 import { StorefrontNav } from "../components/SubNav";
@@ -85,6 +88,10 @@ export function ThemeEditor() {
   const patch = usePatchConfig();
   const [mode, setMode] = useState      ("light");
   const [theme, setTheme] = useState              (null);
+  const [effect, setEffect] = useState("none");
+  // The theme as it was before an effect's suggested palette was applied, so
+  // the owner can take the effect's look but keep their own colours.
+  const [beforePalette, setBeforePalette] = useState(null);
   const [dirty, setDirty] = useState(false);
 
   // Re-syncs whenever the selected outlet actually changes, not just once —
@@ -94,6 +101,8 @@ export function ThemeEditor() {
   useEffect(() => {
     if (outlet) {
       setTheme(outlet.config.theme);
+      setEffect(outlet.config.effect?.style ?? "none");
+      setBeforePalette(null);
       setDirty(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -101,10 +110,15 @@ export function ThemeEditor() {
 
   // The dark palette is derived when it hasn't been customised, so the editor
   // shows what will actually render rather than a copy of the light tokens.
+  const forcesDark = effectPreset(effect).forcesDark;
+  // A dark-only effect never shows the light palette, so editing it would be
+  // editing something no visitor sees.
+  const shownMode = forcesDark ? "dark" : mode;
+
   const tokens = useMemo                    (() => {
     if (!theme) return null;
-    return mode === "light" ? themeTokensSchema.parse(theme.light ?? {}) : resolveDarkTokens(theme);
-  }, [theme, mode]);
+    return shownMode === "light" ? themeTokensSchema.parse(theme.light ?? {}) : resolveDarkTokens(theme);
+  }, [theme, shownMode]);
 
   if (!outlet || !theme || !tokens) {
     return (
@@ -117,12 +131,38 @@ export function ThemeEditor() {
   }
 
   const set = (key                   , value        ) => {
-    setTheme({ ...theme, [mode]: { ...tokens, [key]: value } });
+    setTheme({ ...theme, [shownMode]: { ...tokens, [key]: value } });
     setDirty(true);
   };
 
+  /** Switch effect and load its suggested palette into the draft — the owner can still edit or undo it. */
+  const chooseEffect = (id) => {
+    if (id === effect) return;
+    const palette = EFFECT_PRESETS[id].palette;
+    setEffect(id);
+    setDirty(true);
+    if (!palette) {
+      setBeforePalette(null);
+      return;
+    }
+    setBeforePalette({ theme, effectLabel: EFFECT_PRESETS[id].label });
+    setTheme({
+      ...theme,
+      light: palette.light ? { ...theme.light, ...palette.light } : theme.light,
+      dark: palette.dark ? { ...theme.dark, ...palette.dark } : theme.dark,
+    });
+  };
+
   const save = () =>
-    patch.mutate({ outlet, patch: { theme } }, { onSuccess: () => setDirty(false) });
+    patch.mutate(
+      { outlet, patch: { theme, effect: { style: effect } } },
+      {
+        onSuccess: () => {
+          setDirty(false);
+          setBeforePalette(null);
+        },
+      },
+    );
 
   return (
     <>
@@ -136,6 +176,8 @@ export function ThemeEditor() {
               variant="outline"
               onClick={() => {
                 setTheme(outlet.config.theme);
+                setEffect(outlet.config.effect?.style ?? "none");
+                setBeforePalette(null);
                 setDirty(false);
               }}
               style={{ display: "inline-flex", gap: 6, alignItems: "center" }}
@@ -152,20 +194,53 @@ export function ThemeEditor() {
 
       <StorefrontNav />
 
-      <Tabs
-        value={mode}
-        onChange={setMode}
-        tabs={[
-          { id: "light", label: "Light mode", icon: <Sun size={14} /> },
-          { id: "dark", label: "Dark mode", icon: <Moon size={14} /> },
-        ]}
-      />
+      <Card
+        title="Effect"
+        icon={<Sparkles size={16} />}
+        subtitle="The look of every card, popup and page on your storefront. Your admin panel isn't affected."
+      >
+        <EffectPicker value={effect} onChange={chooseEffect} primary={tokens.colorPrimary} />
+        {beforePalette ? (
+          <div style={paletteNotice}>
+            <span>
+              Colours set to the {beforePalette.effectLabel} palette. Your brand colour is unchanged.
+            </span>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setTheme(beforePalette.theme);
+                setBeforePalette(null);
+              }}
+              style={{ display: "inline-flex", gap: 6, alignItems: "center", fontSize: 12.5, padding: "5px 11px" }}
+            >
+              <Undo2 size={13} /> Keep my colours
+            </Button>
+          </div>
+        ) : null}
+      </Card>
 
-      <Note icon={mode === "light" ? <Sun size={15} /> : <Moon size={15} />}>
-        {mode === "light"
-          ? "The palette most visitors see. Everything below previews with these exact values."
-          : "Shown to visitors whose phone is in dark mode. Start from the derived values and adjust — don't just invert the light palette, or text ends up unreadable on tinted panels."}
-      </Note>
+      {forcesDark ? (
+        <Note icon={<Moon size={15} />}>
+          {EFFECT_PRESETS[effect].label} always shows your dark palette, whatever the visitor&apos;s phone is set to — so that&apos;s the one you&apos;re editing.
+        </Note>
+      ) : (
+        <>
+          <Tabs
+            value={mode}
+            onChange={setMode}
+            tabs={[
+              { id: "light", label: "Light mode", icon: <Sun size={14} /> },
+              { id: "dark", label: "Dark mode", icon: <Moon size={14} /> },
+            ]}
+          />
+
+          <Note icon={mode === "light" ? <Sun size={15} /> : <Moon size={15} />}>
+            {mode === "light"
+              ? "The palette most visitors see. Everything below previews with these exact values."
+              : "Shown to visitors whose phone is in dark mode. Start from the derived values and adjust — don't just invert the light palette, or text ends up unreadable on tinted panels."}
+          </Note>
+        </>
+      )}
 
       <div style={grid}>
         {/* -------------------------------------------------------- controls */}
@@ -202,7 +277,7 @@ export function ThemeEditor() {
         </div>
 
         {/* --------------------------------------------------------- preview */}
-        <ThemePreview tokens={tokens} mode={mode} outletName={outlet.config.identity.name || outlet.name} />
+        <ThemePreview tokens={tokens} mode={shownMode} effect={effect} outletName={outlet.config.identity.name || outlet.name} />
       </div>
     </>
   );
@@ -217,17 +292,18 @@ export function ThemeEditor() {
  * component inside picks them up exactly as it would on the storefront — this
  * is the actual UI, not a mock-up of it.
  */
-function ThemePreview({ tokens, mode, outletName }                                                         ) {
+function ThemePreview({ tokens, mode, effect, outletName }) {
   const vars = { ...tokensToCssVars(tokens), ...(mode === "light" ? TONES_LIGHT : TONES_DARK) }                 ;
+  const effectCss = useEffectCss(effect);
 
   // Resolved through the registry, so the preview always shows whichever
   // variant the registry considers first for that family.
-  const Alert = getVariant("alert").Component                                   ;
-  const Badge = getVariant("badge").Component                                   ;
-  const Chip = getVariant("chip").Component                                  ;
-  const Accordion = getVariant("accordion").Component                                       ;
-  const ContentCard = getVariant("content-card").Component                                         ;
-  const Progress = getVariant("progress").Component                                      ;
+  const Alert = getVariant("alertVariant").Component                                   ;
+  const Badge = getVariant("badgeVariant").Component                                   ;
+  const Chip = getVariant("chipVariant").Component                                  ;
+  const Accordion = getVariant("accordionVariant").Component                                       ;
+  const ContentCard = getVariant("contentCardVariant").Component                                         ;
+  const Progress = getVariant("progressVariant").Component                                      ;
   const ItemCard = getItemCardVariant().Component;
 
   return (
@@ -237,9 +313,16 @@ function ThemePreview({ tokens, mode, outletName }                              
         subtitle="These are the real storefront components."
         action={<InfoHint title="Live preview" text="Every component here is the same code the storefront renders, with your draft colours applied. If something looks wrong here, it will look wrong on the site." />}
       >
-        <div style={{ ...vars, ...previewShell, background: tokens.colorBg, color: tokens.colorText }}>
+        {/* The effect's CSS is scoped to [data-fx-preview], so it can't leak
+            into the admin around it. `transform` makes this box the
+            containing block for the effect's fixed background layer, keeping
+            it inside the preview; the inner div is what scrolls, so that
+            layer stays put behind the content. */}
+        {effectCss ? <style>{effectCss}</style> : null}
+        <div data-fx-preview="" data-theme={mode} style={{ ...vars, ...previewFrame, background: tokens.colorBg, color: tokens.colorText }}>
+        <div style={previewScroll}>
           {/* header */}
-          <div style={{ ...previewHeader, borderColor: tokens.colorBorder, background: tokens.colorSurface }}>
+          <div className="ot-fx-bar" style={fx("bar", { ...previewHeader, border: `1px solid ${tokens.colorBorder}`, background: tokens.colorSurface })}>
             <strong style={{ fontFamily: "var(--font-heading)", fontSize: 15 }}>{outletName}</strong>
             <span style={{ display: "flex", gap: 7 }}>
               <Button style={{ fontSize: 12, padding: "6px 12px" }}>Order now</Button>
@@ -248,6 +331,22 @@ function ThemePreview({ tokens, mode, outletName }                              
               </Button>
             </span>
           </div>
+
+          <PreviewSection label="Ordering" stack>
+            <div style={{ display: "flex", gap: 8 }}>
+              <button type="button" className="ot-fx-chip" data-active="true" style={fx("chip", { ...sampleChip, border: "1.5px solid var(--color-primary)", background: "color-mix(in srgb, var(--color-primary) 10%, var(--color-bg))", color: "var(--color-primary)" })}>
+                Takeaway
+              </button>
+              <button type="button" className="ot-fx-chip" data-active="false" style={fx("chip", { ...sampleChip, border: "1.5px solid var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)" })}>
+                Delivery
+              </button>
+            </div>
+            <input className="ot-fx-input" placeholder="Note for the kitchen" readOnly style={fx("input", sampleInput)} />
+            <button type="button" className="ot-fx-btn" style={fx("btn", sampleCartBar)}>
+              <span>2 items · ₹220</span>
+              <span>View cart →</span>
+            </button>
+          </PreviewSection>
 
           <PreviewSection label="Buttons">
             <Button style={btn}>Primary</Button>
@@ -305,7 +404,7 @@ function ThemePreview({ tokens, mode, outletName }                              
           </PreviewSection>
 
           <PreviewSection label="Surfaces" stack>
-            <div style={{ background: tokens.colorSurface, border: `1px solid ${tokens.colorBorder}`, borderRadius: tokens.radiusCard, padding: 12 }}>
+            <div className="ot-fx-card" style={fx("card", { background: tokens.colorSurface, border: `1px solid ${tokens.colorBorder}`, borderRadius: tokens.radiusCard, padding: 12 })}>
               <div style={{ fontWeight: 600, marginBottom: 3, fontSize: 13.5 }}>Card on surface</div>
               <div style={{ color: tokens.colorTextMuted, fontSize: 12.5 }}>Muted text, as it appears on a panel.</div>
             </div>
@@ -316,8 +415,101 @@ function ThemePreview({ tokens, mode, outletName }                              
             FSSAI: 12345678901234 · © {new Date().getFullYear()} {outletName}
           </div>
         </div>
+        </div>
       </Card>
     </div>
+  );
+}
+
+/**
+ * The selected effect's CSS, scoped to the preview box. Dynamic import, so the
+ * admin bundle never carries any effect up front and only the chosen one is
+ * ever downloaded.
+ */
+function useEffectCss(effect) {
+  const [css, setCss] = useState("");
+  useEffect(() => {
+    let live = true;
+    if (!effect || effect === "none") {
+      setCss("");
+      return;
+    }
+    import("@onetap/ui/effects")
+      .then(({ loadEffectCss }) => loadEffectCss(effect, { scope: "[data-fx-preview]", page: "[data-fx-preview]" }))
+      .then((c) => live && setCss(c))
+      .catch(() => live && setCss(""));
+    return () => {
+      live = false;
+    };
+  }, [effect]);
+  return css;
+}
+
+/* ---------------------------------------------------------- effect picker */
+
+function EffectPicker({ value, onChange, primary }) {
+  return (
+    <div style={tileGrid} role="radiogroup" aria-label="Storefront effect">
+      {EFFECT_IDS.map((id) => {
+        const p = EFFECT_PRESETS[id];
+        const active = value === id;
+        return (
+          <button
+            key={id}
+            type="button"
+            role="radio"
+            aria-checked={active}
+            onClick={() => onChange(id)}
+            className="ot-press"
+            style={{ ...tile, ...(active ? tileActive : {}) }}
+          >
+            <EffectSwatch id={id} primary={primary} />
+            <span style={{ fontWeight: 600, fontSize: 13 }}>{p.label}</span>
+            <span style={{ fontSize: 11.5, color: "var(--color-text-muted)", lineHeight: 1.4 }}>{p.description}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+/**
+ * A thumbnail of each effect drawn with a few inline styles — deliberately
+ * NOT the effect's real CSS, so showing all seven tiles downloads none of it.
+ */
+function EffectSwatch({ id, primary }) {
+  const tint = (pct) => `color-mix(in srgb, ${primary} ${pct}%, transparent)`;
+  const looks = {
+    none: { bg: "#F6F6F4", card: { background: "#fff", border: "1px solid #E4E4E0" } },
+    glass: {
+      bg: `radial-gradient(60% 70% at 15% 20%, ${tint(45)}, transparent 70%), radial-gradient(60% 70% at 90% 30%, rgba(91,140,255,.4), transparent 70%), #EEF1F7`,
+      card: { background: "rgba(255,255,255,.5)", border: "1px solid rgba(255,255,255,.75)", boxShadow: "0 6px 16px rgba(22,30,56,.12)" },
+    },
+    neumorph: { bg: "#E6E9EF", card: { background: "#E6E9EF", boxShadow: "5px 5px 10px #BDC2CA, -5px -5px 10px #FFFFFF" } },
+    clay: {
+      bg: "#F6F0FF",
+      card: { background: "#fff", borderRadius: 16, boxShadow: `0 8px 14px ${tint(22)}, inset 0 2px 1px #fff, inset 0 -4px 8px rgba(40,24,80,.1)` },
+    },
+    aurora: {
+      bg: "radial-gradient(45% 60% at 20% 30%, rgba(139,92,246,.75), transparent 70%), radial-gradient(45% 60% at 80% 25%, rgba(34,211,238,.6), transparent 70%), radial-gradient(45% 60% at 70% 85%, rgba(236,72,153,.55), transparent 70%), #0B0A1A",
+      card: { background: "rgba(21,19,43,.6)", border: "1px solid rgba(167,139,250,.3)" },
+    },
+    cyberpunk: {
+      bg: `linear-gradient(${tint(18)} 1px, transparent 1px) 0 0 / 12px 12px, linear-gradient(90deg, ${tint(18)} 1px, transparent 1px) 0 0 / 12px 12px, #07060D`,
+      card: { background: "#0F0E1A", border: `1px solid ${primary}`, borderRadius: 3, boxShadow: `0 0 10px ${tint(55)}` },
+    },
+    "dark-premium": {
+      bg: `radial-gradient(90% 60% at 50% -10%, ${tint(30)}, transparent 70%), #0B0B0C`,
+      card: { background: "linear-gradient(180deg, #202023, #151517)", border: "1px solid rgba(255,255,255,.09)" },
+    },
+  };
+  const look = looks[id] ?? looks.none;
+  return (
+    <span aria-hidden style={{ ...swatchBox, background: look.bg }}>
+      <span style={{ ...swatchCard, ...look.card }}>
+        <span style={{ ...swatchDot, background: primary }} />
+      </span>
+    </span>
   );
 }
 
@@ -387,14 +579,82 @@ const grid                = {
   gap: 22,
   alignItems: "start",
 };
-const previewShell                = {
+const previewFrame                = {
+  position: "relative",
+  transform: "translateZ(0)",
+  overflow: "hidden",
   border: "1px solid var(--color-border)",
   borderRadius: 12,
-  padding: 14,
-  maxHeight: "76vh",
-  overflowY: "auto",
   fontFamily: "var(--font-body)",
 };
+const previewScroll = { padding: 14, maxHeight: "76vh", overflowY: "auto" };
+const sampleChip = { flex: 1, font: "inherit", fontSize: 13, fontWeight: 600, padding: "10px 8px", borderRadius: 12, cursor: "pointer" };
+const sampleInput = {
+  width: "100%",
+  boxSizing: "border-box",
+  font: "inherit",
+  fontSize: 13.5,
+  padding: "9px 11px",
+  borderRadius: 9,
+  border: "1px solid var(--color-border)",
+  background: "var(--color-bg)",
+  color: "var(--color-text)",
+};
+const sampleCartBar = {
+  display: "flex",
+  justifyContent: "space-between",
+  font: "inherit",
+  fontSize: 13.5,
+  fontWeight: 700,
+  padding: "11px 18px",
+  borderRadius: 999,
+  border: "none",
+  background: "var(--color-primary)",
+  color: "var(--color-on-primary)",
+  boxShadow: "0 8px 30px rgba(0, 0, 0, 0.28)",
+  cursor: "pointer",
+};
+const paletteNotice                = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: 12,
+  flexWrap: "wrap",
+  marginTop: 14,
+  padding: "9px 12px",
+  borderRadius: 9,
+  fontSize: 12.5,
+  background: "var(--tone-info-wash)",
+  color: "var(--tone-info)",
+};
+const tileGrid                = { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: 10 };
+const tile                = {
+  font: "inherit",
+  textAlign: "left",
+  display: "flex",
+  flexDirection: "column",
+  gap: 5,
+  padding: 8,
+  borderRadius: 11,
+  border: "1.5px solid var(--color-border)",
+  background: "var(--color-bg)",
+  color: "var(--color-text)",
+  cursor: "pointer",
+};
+const tileActive                = {
+  border: "1.5px solid var(--color-primary)",
+  boxShadow: "0 0 0 3px color-mix(in srgb, var(--color-primary) 18%, transparent)",
+};
+const swatchBox                = {
+  display: "grid",
+  placeItems: "center",
+  height: 58,
+  borderRadius: 7,
+  marginBottom: 3,
+  overflow: "hidden",
+};
+const swatchCard                = { width: "56%", height: 30, borderRadius: 8, display: "flex", alignItems: "center", padding: "0 8px" };
+const swatchDot                = { width: 14, height: 6, borderRadius: 3 };
 const previewHeader                = {
   display: "flex",
   justifyContent: "space-between",

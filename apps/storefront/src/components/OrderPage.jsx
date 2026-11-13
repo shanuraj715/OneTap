@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { formatINR, GATEWAY_LABELS } from "@onetap/config-schema";
-import { DropdownSoft, ProgressSteps } from "@onetap/ui";
+import { DropdownSoft, fx, ProgressSteps } from "@onetap/ui";
 import { ArrowLeft, Check, ChevronRight, Coins, MapPin, ShoppingBag, Sparkles, Tag, Utensils, Wallet, X } from "lucide-react";
 import { api, payOnline } from "@/lib/clientApi";
 import { useCapacity } from "@/lib/useCapacity";
@@ -242,7 +242,7 @@ export function OrderPage({
 function PageShell({ menuHref, title, customer, progress, progressLabel, children }) {
   return (
     <div style={page}>
-      <header style={topBar}>
+      <header className="ot-fx-bar" style={fx("bar", topBar)}>
         <Link href={menuHref} style={backLink} aria-label="Back to menu">
           <ArrowLeft size={19} />
         </Link>
@@ -256,7 +256,7 @@ function PageShell({ menuHref, title, customer, progress, progressLabel, childre
         )}
       </header>
       {progress !== null && progress !== undefined ? (
-        <div style={pageProgressWrap}>
+        <div className="ot-fx-bar" style={fx("bar", pageProgressWrap)}>
           <ProgressSteps steps={JOURNEY_STEPS} value={(progress / JOURNEY_STEPS.length) * 100} label={progressLabel} />
         </div>
       ) : null}
@@ -271,7 +271,7 @@ function EmptyCart({ menuHref }) {
       <ShoppingBag size={38} style={{ color: "var(--color-text-muted)", opacity: 0.6 }} />
       <p style={{ margin: "14px 0 4px", fontWeight: 600, fontSize: 15.5 }}>Your cart is empty</p>
       <p style={{ margin: "0 0 20px", color: "var(--color-text-muted)", fontSize: 13.5 }}>Add something from the menu to get started.</p>
-      <Link href={menuHref} style={primaryLinkBtn}>
+      <Link href={menuHref} className="ot-fx-btn" style={fx("btn", primaryLinkBtn)}>
         Browse the menu
       </Link>
     </div>
@@ -436,7 +436,7 @@ function ReviewOrder({
         </div>
         <label style={noteLabel}>
           <span>Note for the kitchen (optional)</span>
-          <input style={input} value={note} onChange={(e) => setNote(e.target.value)} placeholder="e.g. less spicy" maxLength={200} />
+          <input className="ot-fx-input" style={fx("input", input)} value={note} onChange={(e) => setNote(e.target.value)} placeholder="e.g. less spicy" maxLength={200} />
         </label>
       </Section>
 
@@ -476,7 +476,8 @@ function ReviewOrder({
               ) : (
                 <input
                   ref={tablePickerRef}
-                  style={input}
+                  className="ot-fx-input"
+                  style={fx("input", input)}
                   value={tableNumber}
                   onChange={(e) => onTableNumber(e.target.value)}
                   placeholder="e.g. 7"
@@ -505,7 +506,8 @@ function ReviewOrder({
         ) : (
           <div style={{ display: "flex", gap: 8 }}>
             <input
-              style={{ ...input, textTransform: "uppercase" }}
+              className="ot-fx-input"
+              style={{ ...fx("input", input), textTransform: "uppercase" }}
               value={couponInput}
               onChange={(e) => {
                 setCouponInput(e.target.value);
@@ -515,7 +517,8 @@ function ReviewOrder({
             />
             <button
               type="button"
-              style={applyBtn}
+              className="ot-fx-btn"
+              style={fx("btn", applyBtn)}
               disabled={couponBusy || couponInput.trim().length < 3}
               onClick={async () => {
                 setCouponBusy(true);
@@ -546,8 +549,8 @@ function ReviewOrder({
             </AppliedPill>
           ) : (
             <div style={{ display: "flex", gap: 8 }}>
-              <input style={input} type="number" min={0} max={walletBalance} inputMode="numeric" value={coinInput} onChange={(e) => setCoinInput(e.target.value)} placeholder="0" />
-              <button type="button" style={applyBtn} disabled={!coinInput || Number(coinInput) <= 0} onClick={() => onRedeemCoins(Math.floor(Number(coinInput)))}>
+              <input className="ot-fx-input" style={fx("input", input)} type="number" min={0} max={walletBalance} inputMode="numeric" value={coinInput} onChange={(e) => setCoinInput(e.target.value)} placeholder="0" />
+              <button type="button" className="ot-fx-btn" style={fx("btn", applyBtn)} disabled={!coinInput || Number(coinInput) <= 0} onClick={() => onRedeemCoins(Math.floor(Number(coinInput)))}>
                 Apply
               </button>
             </div>
@@ -560,7 +563,7 @@ function ReviewOrder({
         <Section icon={<Sparkles size={16} />} title="Pay with">
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {gateways.map((g) => (
-              <label key={g} style={payOption}>
+              <label key={g} className="ot-fx-chip" data-active={gateway === g} style={fx("chip", payOption)}>
                 <input
                   type="radio"
                   name="gateway"
@@ -615,12 +618,12 @@ function ReviewOrder({
       {/* Spacer so content never sits under the sticky bottom bar. */}
       <div style={{ height: 8 }} />
 
-      <div style={bottomBar}>
+      <div className="ot-fx-bar" style={fx("bar", bottomBar)}>
         <div>
           <div style={bottomBarLabel}>To pay</div>
           <div style={bottomBarPrice}>{t ? formatINR(t.grandTotal) : "…"}</div>
         </div>
-        <button type="button" style={placeBtn} disabled={busy || placeDisabled} onClick={tableMissing ? focusTablePicker : place}>
+        <button type="button" className="ot-fx-btn" style={fx("btn", placeBtn)} disabled={busy || placeDisabled} onClick={tableMissing ? focusTablePicker : place}>
           {busy
             ? "Please wait…"
             : deliveryBlocked
@@ -666,7 +669,7 @@ function DoneView({ order, dineIn, tab, channel, menuHref }) {
             : `${formatINR(order.totals.grandTotal)} — the kitchen has it.${order.etaMinutes ? ` Ready in about ${order.etaMinutes} minutes.` : ""}`}
       </p>
       {(dineIn || channel === "dine-in") && tab !== null ? <p style={{ ...muted, fontWeight: 700, color: "var(--color-text)" }}>Running tab: {formatINR(tab)}</p> : null}
-      <Link href={menuHref} style={primaryLinkBtn}>
+      <Link href={menuHref} className="ot-fx-btn" style={fx("btn", primaryLinkBtn)}>
         Back to menu
       </Link>
     </div>
@@ -677,7 +680,7 @@ function DoneView({ order, dineIn, tab, channel, menuHref }) {
 
 function Section({ icon, title, children }) {
   return (
-    <section style={section}>
+    <section className="ot-fx-card" style={fx("card", section)}>
       <h2 style={sectionTitle}>
         <span style={sectionIcon}>{icon}</span>
         {title}
@@ -704,7 +707,7 @@ function AppliedPill({ children, onRemove }) {
 
 function ChoiceBtn({ active, onClick, emoji, label }) {
   return (
-    <button type="button" onClick={onClick} style={{ ...choiceBtn, ...(active ? choiceBtnActive : {}) }}>
+    <button type="button" onClick={onClick} className="ot-fx-chip" data-active={active} aria-pressed={active} style={fx("chip", { ...choiceBtn, ...(active ? choiceBtnActive : {}) })}>
       <span style={{ fontSize: 18 }}>{emoji}</span>
       {label}
     </button>
@@ -722,7 +725,8 @@ function TotalRow({ label, value, strong, tone }) {
 
 /* ------------------------------------------------------------------- styles */
 
-const page = { minHeight: "100dvh", background: "var(--color-surface, var(--color-bg))" };
+// --fx-page-bg lets a visual effect clear this so its page backdrop shows through.
+const page = { minHeight: "100dvh", background: "var(--fx-page-bg, var(--color-surface, var(--color-bg)))" };
 const topBar = {
   position: "sticky",
   top: 0,
@@ -772,8 +776,8 @@ const errorText = { color: "#B23B3B", fontSize: 12.5, margin: "8px 0 0" };
 const banner = { fontSize: 12.5, lineHeight: 1.5, margin: "0 0 12px", padding: "10px 13px", borderRadius: 10, background: "color-mix(in srgb, var(--tone-warning, #B27B1A) 14%, var(--color-surface))", color: "var(--color-text)" };
 const bannerWarn = {};
 const bannerError = { background: "color-mix(in srgb, #B23B3B 14%, var(--color-surface))" };
-const choiceBtn = { font: "inherit", flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 4, padding: "12px 10px", borderRadius: 12, borderWidth: 1.5, borderStyle: "solid", borderColor: "var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)", fontSize: "0.85rem", fontWeight: 600, cursor: "pointer" };
-const choiceBtnActive = { borderColor: "var(--color-primary)", background: "color-mix(in srgb, var(--color-primary) 10%, var(--color-bg))", color: "var(--color-primary)" };
+const choiceBtn = { font: "inherit", flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 4, padding: "12px 10px", borderRadius: 12, border: "1.5px solid var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)", fontSize: "0.85rem", fontWeight: 600, cursor: "pointer" };
+const choiceBtnActive = { border: "1.5px solid var(--color-primary)", background: "color-mix(in srgb, var(--color-primary) 10%, var(--color-bg))", color: "var(--color-primary)" };
 const payOption = { display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", border: "1px solid var(--color-border)", borderRadius: 9, fontSize: 14, cursor: "pointer" };
 const totalsList = { margin: 0, display: "flex", flexDirection: "column", gap: 7 };
 const bottomBar = {

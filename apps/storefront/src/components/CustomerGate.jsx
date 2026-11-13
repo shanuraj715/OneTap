@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { CUSTOMER_AGE_MAX, CUSTOMER_AGE_MIN, CUSTOMER_GENDER_LABELS, CUSTOMER_GENDERS } from "@onetap/config-schema";
+import { fx } from "@onetap/ui";
 import { Calendar, Check, ChevronLeft, Loader2, LogIn, Mail, Phone, ShieldCheck, User } from "lucide-react";
 import { api, apiPatch } from "@/lib/clientApi";
 
@@ -188,7 +189,7 @@ export function CustomerGate({ customer, outletId, onSuccess, onStepChange }) {
 
   return (
     <div style={shell}>
-      <div style={card} className="ot-anim-pop">
+      <div style={card} className="ot-anim-pop ot-fx-card">
         {canGoBack ? (
           <button
             type="button"
@@ -241,9 +242,10 @@ export function CustomerGate({ customer, outletId, onSuccess, onStepChange }) {
                       <button
                         key={g}
                         type="button"
-                        className="ot-press"
+                        className="ot-press ot-fx-chip"
+                        data-active={gender === g}
                         onClick={() => setGender(g)}
-                        style={{ ...segmentBtn, ...(gender === g ? segmentBtnActive : {}) }}
+                        style={{ ...fx("chip", segmentBtn), ...(gender === g ? segmentBtnActive : {}) }}
                       >
                         {gender === g ? <Check size={13} style={{ marginRight: 5, verticalAlign: -2 }} /> : null}
                         {CUSTOMER_GENDER_LABELS[g]}
@@ -291,7 +293,8 @@ export function CustomerGate({ customer, outletId, onSuccess, onStepChange }) {
                 <div style={inputWrap}>
                   <span style={prefixChip}>+91</span>
                   <input
-                    style={{ ...input, paddingLeft: 58 }}
+                    className="ot-fx-input"
+                    style={{ ...fx("input", input), paddingLeft: 58 }}
                     type="tel"
                     inputMode="numeric"
                     value={destination}
@@ -317,7 +320,7 @@ export function CustomerGate({ customer, outletId, onSuccess, onStepChange }) {
 
         {error ? <p style={errorBox}>{error}</p> : null}
 
-        <button type="button" className="ot-press" style={primaryBtn} disabled={submitDisabled} onClick={submit}>
+        <button type="button" className="ot-press ot-fx-btn" style={fx("btn", primaryBtn)} disabled={submitDisabled} onClick={submit}>
           {busy ? (
             <Loader2 size={16} className="ot-spin" style={{ verticalAlign: -3, marginRight: 7 }} />
           ) : null}
@@ -369,7 +372,7 @@ function IconInput({ icon: Icon, style, ...props }) {
   return (
     <div style={inputWrap}>
       <Icon size={16} style={inputIcon} />
-      <input {...props} style={{ ...input, paddingLeft: 38, ...style }} />
+      <input {...props} className="ot-fx-input" style={{ ...fx("input", input), paddingLeft: 38, ...style }} />
     </div>
   );
 }
@@ -444,7 +447,8 @@ function OtpInput({ value, onChange, error }) {
           autoComplete={i === 0 ? "one-time-code" : "off"}
           autoFocus={i === 0}
           aria-label={`Digit ${i + 1} of 6`}
-          style={{ ...otpBox, ...(d ? otpBoxFilled : {}), ...(error ? otpBoxError : {}) }}
+          className="ot-fx-input"
+          style={{ ...fx("input", otpBox), ...(d ? otpBoxFilled : {}), ...(error ? otpBoxError : {}) }}
         />
       ))}
     </div>
@@ -460,15 +464,19 @@ const shell = {
   justifyContent: "center",
   padding: "24px 16px",
 };
+// The brand-coloured top edge sits outside fx() so it survives every visual
+// effect — it's this card's identity, not its surface treatment.
 const card = {
-  width: "100%",
-  maxWidth: 400,
-  background: "var(--color-bg)",
-  border: "1px solid var(--color-border)",
+  ...fx("card", {
+    width: "100%",
+    maxWidth: 400,
+    background: "var(--color-bg)",
+    border: "1px solid var(--color-border)",
+    borderRadius: "calc(var(--radius-card) + 6px)",
+    padding: "30px 24px 26px",
+    boxShadow: "0 20px 50px -20px rgba(0,0,0,0.25)",
+  }),
   borderTop: "3px solid var(--color-primary)",
-  borderRadius: "calc(var(--radius-card) + 6px)",
-  padding: "30px 24px 26px",
-  boxShadow: "0 20px 50px -20px rgba(0,0,0,0.25)",
 };
 const backBtn = {
   display: "inline-flex",

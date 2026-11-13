@@ -6,7 +6,8 @@
   "main": "./src/index.js",
   "exports": {
     ".": "./src/index.js",
-    "./tokens.css": "./src/tokens.css"
+    "./tokens.css": "./src/tokens.css",
+    "./effects": "./src/effects/index.js"
   },
   "scripts": {
     "clean": "rm -rf dist .turbo"

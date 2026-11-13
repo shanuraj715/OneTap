@@ -1,3 +1,4 @@
+import { fx } from "./fx";
                                            
 
                             
@@ -13,7 +14,7 @@ export function Hero({ title, subtitle, ctaLabel, ctaHref }           ) {
       <h1 style={h1}>{title}</h1>
       {subtitle ? <p style={sub}>{subtitle}</p> : null}
       {ctaLabel && ctaHref ? (
-        <a href={ctaHref} style={cta}>
+        <a href={ctaHref} className="ot-fx-btn" style={fx("btn", cta)}>
           {ctaLabel}
         </a>
       ) : null}

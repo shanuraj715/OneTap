@@ -1,5 +1,6 @@
 export { Button,                  } from "./Button";
 export { useDismiss } from "./useDismiss";
+export { fx, fxClass, FX_ROLES } from "./fx";
 export { Hero,                } from "./Hero";
 export { MenuList } from "./MenuList";
 export { MenuSections } from "./MenuSections";

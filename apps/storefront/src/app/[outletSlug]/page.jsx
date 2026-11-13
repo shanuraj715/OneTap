@@ -33,7 +33,7 @@ export default async function OutletHomePage({ params }) {
 
   return (
     <>
-      <ThemeStyle theme={theme} typography={typography} />
+      <ThemeStyle theme={theme} typography={typography} effect={outlet.config.effect} />
       <Header
         name={name}
         tagline={identity.tagline || undefined}
