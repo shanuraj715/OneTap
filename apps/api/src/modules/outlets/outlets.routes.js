@@ -62,6 +62,8 @@ const createOutletBody = z.object({
 outletsRouter.post("/", async (req, res) => {
   const ctx = requireBrandContext(req, "outlet:manage");
   const body = createOutletBody.parse(req.body);
+  // Domains are the platform's to set; a store's new outlet shares its existing ones.
+  if (!req.user?.isSuperAdmin) delete body.hostnames;
   const outlet = await createOutlet(ctx, body, { asPlatform: Boolean(req.user?.isSuperAdmin) });
   res.status(201).json({ outlet });
 });
@@ -83,6 +85,9 @@ const updateOutletBody = z.object({
 outletsRouter.patch("/:id", async (req, res) => {
   const ctx = await requireOutletContext(req, "outlet:manage");
   const body = updateOutletBody.parse(req.body);
+  if (body.hostnames !== undefined && !req.user?.isSuperAdmin) {
+    throw new HttpError(403, "Domains are managed by TablePe.");
+  }
   const outlet = await updateOutlet(ctx, req.params.id, body);
   res.json({ outlet });
 });

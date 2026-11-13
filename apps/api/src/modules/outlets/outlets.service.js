@@ -15,6 +15,7 @@ import {
 import { HttpError } from "../../middleware/error.js";
 import { invalidateStorePlan, storePlan } from "../platform/plan.service.js";
 import { APPEARANCE_AREAS, effectiveConfig, ownerConfig } from "./config.service.js";
+import { assertHostnamesFree, normalizeHostnames } from "./domains.js";
 
 /**
  * The Outlet model is scoped by brandId only — it IS the outlet, so it has no
@@ -118,7 +119,8 @@ export async function createOutlet(ctx               , input                    
   const existing = await OutletModel.findOne(byBrand(ctx, { slug })).lean();
   if (existing) throw new HttpError(409, "An outlet with that slug already exists for this brand");
 
-  let hostnames = input.hostnames?.filter(Boolean) ?? [];
+  let hostnames = normalizeHostnames(input.hostnames);
+  await assertHostnamesFree(hostnames, ctx.brandId);
   if (hostnames.length === 0) {
     const sibling = await OutletModel.findOne(byBrand(ctx)).sort({ createdAt: 1 }).lean();
     hostnames = sibling?.hostnames ?? [];
@@ -169,7 +171,8 @@ export async function updateOutlet(ctx               , id        , input) {
   }
 
   if (input.hostnames !== undefined) {
-    const hostnames = input.hostnames.filter(Boolean);
+    const hostnames = normalizeHostnames(input.hostnames);
+    await assertHostnamesFree(hostnames, ctx.brandId);
     outlet.hostnames = hostnames;
     outlet.canonicalHostname = hostnames[0] ?? "";
   }

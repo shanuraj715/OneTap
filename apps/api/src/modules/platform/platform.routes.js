@@ -60,6 +60,16 @@ platformRouter.patch("/stores/:id/plan", async (req, res) => {
   res.json({ store: await platform.setStorePlan(req.params.id, planBody.parse(req.body)) });
 });
 
+const domainsBody = z.object({
+  hostnames: z.array(z.string().max(260)).max(20),
+  primary: z.string().max(260).optional(),
+});
+
+/** The domains a store's storefront answers on (dominos.com, www.dominos.com) and its main one. */
+platformRouter.put("/stores/:id/domains", async (req, res) => {
+  res.json({ store: await platform.updateStoreDomains(req.params.id, domainsBody.parse(req.body)) });
+});
+
 platformRouter.post("/stores/:id/outlets/:outletId/block", async (req, res) => {
   res.json({ store: await platform.setOutletBlocked(req.params.id, req.params.outletId, true, String(req.user._id)) });
 });

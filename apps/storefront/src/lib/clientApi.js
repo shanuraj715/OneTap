@@ -9,18 +9,20 @@
  * flag, a forgotten `credentials: "include"`, the two would disagree exactly
  * where it's hardest to notice.
  */
+/**
+ * In the browser the API is always reached through the storefront's own
+ * domain — `/api/...` on dominos.com, which next.config.mjs passes through to
+ * the API. That keeps the customer's sign-in cookie first-party on whatever
+ * domain the store runs on; a cookie set by a separate API domain is a
+ * third-party cookie there, and browsers block those. It also means a new
+ * store domain never needs adding to the API's CORS list.
+ *
+ * On the server (rendering) there's no "own domain" to go through, so it
+ * talks to the API directly.
+ */
 export function getApiBase() {
-  if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL;
-  if (typeof window !== "undefined") {
-    const host = window.location.hostname;
-    if (host !== "localhost" && host !== "127.0.0.1") {
-      if (host.startsWith("food.")) {
-        return `https://api.${host}`;
-      }
-      return "https://api.food.shanuthewebdev.in";
-    }
-  }
-  return "http://localhost:3072";
+  if (typeof window !== "undefined") return "";
+  return process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3072";
 }
 
 export const API = getApiBase();

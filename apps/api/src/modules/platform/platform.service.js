@@ -21,6 +21,7 @@ import { HttpError } from "../../middleware/error.js";
 import { ensureOwner } from "../auth/auth.service.js";
 import { hashPassword } from "../auth/password.js";
 import { invalidateStorePlan, platformSettings, storePlan } from "./plan.service.js";
+import { setStoreDomains, storeDomains } from "../outlets/domains.js";
 
 /*
  * The platform console's back end — everything here is for the platform super
@@ -161,7 +162,15 @@ export async function getStore(id) {
       createdAt: o.createdAt,
     })),
     people: people.map((u) => shapePerson(u, String(brand._id))),
+    domains: await storeDomains(String(brand._id)),
   };
+}
+
+/** Set the domains a store's storefront is served on, and its main one. */
+export async function updateStoreDomains(id, input) {
+  await loadBrand(id);
+  await setStoreDomains(id, input);
+  return getStore(id);
 }
 
 /** Assign a plan (or `null` for unlimited) and set this store's overrides on top of it. */

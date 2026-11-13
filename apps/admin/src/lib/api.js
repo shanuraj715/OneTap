@@ -651,6 +651,7 @@ export const updatePlatformSettings = (body) => req("/api/platform/settings", js
 export const listStores = () => req("/api/platform/stores");
 export const getStore = (id) => req(`/api/platform/stores/${id}`);
 export const setStorePlan = (id, body) => req(`/api/platform/stores/${id}/plan`, json("PATCH", body));
+export const setStoreDomains = (id, body) => req(`/api/platform/stores/${id}/domains`, json("PUT", body));
 export const setOutletBlocked = (id, outletId, blocked) =>
   req(`/api/platform/stores/${id}/outlets/${outletId}/${blocked ? "block" : "unblock"}`, json("POST"));
 export const deleteStoreOutlet = (id, outletId, confirmName) =>

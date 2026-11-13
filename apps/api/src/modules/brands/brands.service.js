@@ -2,6 +2,7 @@ import { defaultOutletConfig, isReservedOutletSlug, slugSchema } from "@onetap/c
 import { BrandModel, OutletModel, PlanModel } from "@onetap/db";
 import { HttpError } from "../../middleware/error.js";
 import { ensureOwner } from "../auth/auth.service.js";
+import { assertHostnamesFree, normalizeHostnames } from "../outlets/domains.js";
 
 /** Every brand on the platform — for the superadmin's brand/outlet switcher. */
 export async function listBrands() {
@@ -41,7 +42,8 @@ export async function createBrand(input) {
   // A brand with no outlet or no owner is useless and confusing to leave
   // behind — best-effort clean up if anything after this point fails.
   try {
-    const hostnames = input.hostnames.filter(Boolean);
+    const hostnames = normalizeHostnames(input.hostnames);
+    await assertHostnamesFree(hostnames, brand._id);
     const config = defaultOutletConfig();
     config.identity.name = input.outletName;
 

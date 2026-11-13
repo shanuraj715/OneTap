@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { CARD_TEMPLATE_FAMILIES, EFFECT_IDS, EFFECT_PRESETS, FEATURES } from "@onetap/config-schema";
-import { ArrowLeft, ExternalLink, Save, Store } from "lucide-react";
+import { ArrowLeft, ExternalLink, Globe, Save, Store, Trash2 } from "lucide-react";
 import * as api from "../../lib/api";
 import { useOpenStore } from "../../lib/useOutlet";
 import { usePlans, usePlatformMutation, useStore } from "../../lib/usePlatform";
@@ -13,6 +13,7 @@ const TABS = [
   { id: "features", label: "Features" },
   { id: "owners", label: "Owners" },
   { id: "outlets", label: "Outlets" },
+  { id: "domains", label: "Domains" },
   { id: "people", label: "People" },
   { id: "appearance", label: "Appearance" },
 ];
@@ -118,6 +119,7 @@ export function PlatformStoreDetail() {
       {tab === "features" ? <FeaturesTab draft={draft} setDraft={setDraft} selectedPlan={selectedPlan} /> : null}
       {tab === "owners" ? <OwnersTab store={store} /> : null}
       {tab === "outlets" ? <OutletsTab store={store} /> : null}
+      {tab === "domains" ? <DomainsTab store={store} /> : null}
       {tab === "people" ? <PeopleTab store={store} /> : null}
       {tab === "appearance" ? <AppearanceTab open={open} /> : null}
     </>
@@ -265,6 +267,94 @@ function FeaturesTab({ draft, setDraft, selectedPlan }) {
       </div>
     </Card>
   ));
+}
+
+/* ------------------------------------------------------------- domains tab */
+
+/**
+ * The domains the store's website answers on — every outlet shares them,
+ * told apart by path (dominos.com/laxmi-nagar). The main one is what table
+ * QR codes and "View storefront" use. A domain can belong to one store only.
+ */
+function DomainsTab({ store }) {
+  const [hostnames, setHostnames] = useState(store.domains.hostnames);
+  const [primary, setPrimary] = useState(store.domains.primary);
+  const [adding, setAdding] = useState("");
+  const save = usePlatformMutation(() => api.setStoreDomains(store.id, { hostnames, primary }));
+  const dirty = JSON.stringify(hostnames) !== JSON.stringify(store.domains.hostnames) || primary !== store.domains.primary;
+
+  const add = () => {
+    const h = adding.trim().toLowerCase().replace(/^[a-z]+:\/\//, "").replace(/\/.*$/, "");
+    if (!h || hostnames.includes(h)) return setAdding("");
+    setHostnames([...hostnames, h]);
+    if (!primary) setPrimary(h);
+    setAdding("");
+  };
+  const remove = (h) => {
+    const next = hostnames.filter((x) => x !== h);
+    setHostnames(next);
+    if (primary === h) setPrimary(next[0] ?? "");
+  };
+
+  return (
+    <>
+      <Card title="Domains" icon={<Globe size={16} />} subtitle="Where this store's website opens. Every outlet shares these — customers pick an outlet from the path, like dominos.com/laxmi-nagar.">
+        {hostnames.length === 0 ? <p style={muted}>No domains yet — the store isn't reachable on its own address.</p> : null}
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          {hostnames.map((h) => (
+            <div key={h} style={row}>
+              <label style={{ display: "flex", alignItems: "center", gap: 10, flex: 1, minWidth: 0, cursor: "pointer" }}>
+                <input type="radio" name="primary-domain" checked={primary === h} onChange={() => setPrimary(h)} style={{ accentColor: "var(--color-primary)" }} />
+                <span style={{ fontWeight: 600, fontFamily: "ui-monospace, monospace", fontSize: 13.5 }}>{h}</span>
+                {primary === h ? <Pill tone="ok">Main</Pill> : null}
+              </label>
+              <Button variant="outline" onClick={() => remove(h)} aria-label={`Remove ${h}`} style={{ display: "inline-flex", alignItems: "center" }}>
+                <Trash2 size={13} />
+              </Button>
+            </div>
+          ))}
+        </div>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            add();
+          }}
+          style={{ display: "flex", gap: 8, marginTop: 12, flexWrap: "wrap" }}
+        >
+          <TextInput value={adding} onChange={(e) => setAdding(e.target.value)} placeholder="dominos.com" style={{ flex: "1 1 220px" }} aria-label="Add a domain" />
+          <Button type="submit" variant="outline" disabled={!adding.trim()}>
+            Add domain
+          </Button>
+        </form>
+        <div style={{ display: "flex", gap: 10, alignItems: "center", marginTop: 16 }}>
+          <Button onClick={() => save.mutate()} disabled={!dirty || save.isPending}>
+            {save.isPending ? "Saving…" : "Save domains"}
+          </Button>
+          {dirty ? <span style={muted}>Unsaved changes</span> : null}
+        </div>
+        {save.error ? <Toast kind="error">{save.error.message}</Toast> : null}
+        {save.isSuccess && !dirty ? <Toast kind="ok">Saved. Table QR codes now point to {primary || "the platform address"}.</Toast> : null}
+      </Card>
+
+      <Card title="Connecting a new domain" subtitle="What the store (or whoever manages their domain) does, and what you do.">
+        <ol style={{ margin: 0, paddingLeft: 18, lineHeight: 1.8, fontSize: 13.5 }}>
+          <li>
+            At their domain registrar, add an <strong>A record</strong> for the domain (and for <code>www</code>) pointing to your server's IP address.
+          </li>
+          <li>Add the domain here and save.</li>
+          <li>
+            On the server, issue its certificate:{" "}
+            <code>
+              certbot --nginx{" "}
+              {(store.domains.hostnames.filter((h) => h.includes(".") && !/\.(test|local)$/.test(h)).map((h) => `-d ${h}`).join(" ")) || "-d dominos.com -d www.dominos.com"}
+            </code>
+            .
+          </li>
+          <li>Open the domain — the store's website appears. Reprint table QR cards if the main domain changed.</li>
+        </ol>
+      </Card>
+    </>
+  );
 }
 
 /* -------------------------------------------------------------- owners tab */

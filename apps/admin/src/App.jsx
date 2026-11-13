@@ -75,7 +75,20 @@ import { PlatformStoreDetail } from "./routes/platform/PlatformStoreDetail";
 import { PlatformStores } from "./routes/platform/PlatformStores";
 import { Menu } from "./ui";
 
-const STOREFRONT_URL = "http://localhost:3070";
+const STOREFRONT_URL = import.meta.env.VITE_STOREFRONT_URL ?? "http://localhost:3070";
+
+/**
+ * The current outlet's page on its store's own website — dominos.com/laxmi-nagar
+ * in production. In development (or before a store has a public domain) it's
+ * the platform storefront.
+ */
+function storefrontHref(outlet) {
+  const host = outlet?.canonicalHostname || "";
+  const path = outlet?.slug ? `/${outlet.slug}` : "";
+  const isPublic = host.includes(".") && !/^(localhost|127\.|\[::1\])/.test(host) && !/\.(test|local)(:\d+)?$/.test(host);
+  if (!import.meta.env.DEV && isPublic) return `https://${host}${path}`;
+  return `${STOREFRONT_URL.replace(/\/$/, "")}${path}`;
+}
 
 const ICON = 15.5;
 
@@ -388,7 +401,7 @@ function Shell({ can }                                     ) {
           {/* One fixed storefront address — meaningless across every store, so not in the platform console. */}
           {!platformMode ? (
             <a
-              href={STOREFRONT_URL}
+              href={storefrontHref(outlet)}
               target="_blank"
               rel="noreferrer"
               style={{ ...storefrontLink, justifyContent: railCollapsed ? "center" : "flex-start" }}
