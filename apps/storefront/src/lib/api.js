@@ -1,4 +1,5 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3072";
+import { apiServerUrl } from "@/lib/api-config";
+const API_BASE = apiServerUrl();
 
                             
               

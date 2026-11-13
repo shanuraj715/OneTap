@@ -1,4 +1,5 @@
 "use client";
+import { apiServerUrl } from "./api-config";
 
 /**
  * The one fetch wrapper every client component talks to the API through.
@@ -22,7 +23,7 @@
  */
 export function getApiBase() {
   if (typeof window !== "undefined") return "";
-  return process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3072";
+  return apiServerUrl();
 }
 
 export const API = getApiBase();

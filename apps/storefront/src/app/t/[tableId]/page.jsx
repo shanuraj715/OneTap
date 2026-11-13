@@ -1,3 +1,4 @@
+import { apiServerUrl } from "@/lib/api-config";
 import { getFooterVariant, getHeaderVariant } from "@onetap/ui";
 import { Ordering } from "@/components/Ordering";
 import { OutletUnavailable } from "@/components/OutletUnavailable";
@@ -7,7 +8,7 @@ import { getOutletById } from "@/lib/outlet";
 
 export const dynamic = "force-dynamic";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3072";
+const API_BASE = apiServerUrl();
 
                       
                    

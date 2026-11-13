@@ -1,15 +1,15 @@
 import { fileURLToPath } from "node:url";
+import { apiServerUrl } from "./src/lib/api-config.js";
 
 /** monorepo root — silences the "multiple lockfiles" warning and fixes file tracing */
 const workspaceRoot = fileURLToPath(new URL("../../", import.meta.url));
 
 /**
  * Where `/api/*` on the storefront's own domain is passed through to (see
- * src/lib/clientApi.js). On the server this should be the API's internal
- * address (API_INTERNAL_URL, e.g. http://127.0.0.1:3072) so the hop never
- * leaves the machine; it falls back to the public API URL.
+ * src/lib/clientApi.js) — the API address from src/lib/api-config.js, which
+ * ships with a default and can be overridden per deployment.
  */
-const apiTarget = (process.env.API_INTERNAL_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:3072").replace(/\/$/, "");
+const apiTarget = apiServerUrl();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {

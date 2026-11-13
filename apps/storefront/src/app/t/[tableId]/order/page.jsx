@@ -1,3 +1,4 @@
+import { apiServerUrl } from "@/lib/api-config";
 import { OrderPage } from "@/components/OrderPage";
 import { OutletUnavailable } from "@/components/OutletUnavailable";
 import { ThemeStyle } from "@/components/ThemeStyle";
@@ -6,7 +7,7 @@ import { getOutletById } from "@/lib/outlet";
 
 export const dynamic = "force-dynamic";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3072";
+const API_BASE = apiServerUrl();
 
 /** Validates the signed QR before revealing anything about the restaurant — same check the table page itself makes. */
 async function resolveScan(tableId, token) {
