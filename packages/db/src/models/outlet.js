@@ -26,6 +26,11 @@ const outletSchema = new Schema           (
     hostnames: { type: [String], default: [] },
     canonicalHostname: { type: String, default: "" },
     config: { type: Schema.Types.Mixed, default: () => defaultOutletConfig() },
+    /** set by the platform when a store is over its outlet limit — closed to customers and staff, data kept */
+    blocked: {
+      type: new Schema({ at: { type: Date, required: true }, by: { type: String } }, { _id: false }),
+      default: null,
+    },
   },
   { timestamps: true },
 );

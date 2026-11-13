@@ -13,6 +13,7 @@ import { env } from "../../env.js";
 import { safeEqual } from "../../lib/crypto.js";
 import { HttpError } from "../../middleware/error.js";
 import { cancelOrdersForSession } from "../orders/orders.service.js";
+import { assertOutletOpen } from "../outlets/config.service.js";
 
 /* ---------------------------------------------------------------------- QR */
 
@@ -131,6 +132,7 @@ export async function resolveScan(tableId        , token        ) {
 }
 
 export async function openSession(ctx               , tableId        , customerId        ) {
+  await assertOutletOpen(ctx.outletId);
   const table = await TableModel.findOne(tenantFilter(ctx, { _id: tableId }));
   if (!table) throw new HttpError(404, "Table not found");
 

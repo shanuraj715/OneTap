@@ -2,6 +2,7 @@ export * from "./connection.js";
 export * from "./tenant-scope.js";
 export { BrandModel,               } from "./models/brand.js";
 export { OutletModel,                } from "./models/outlet.js";
+export { PlanModel, PlatformSettingsModel } from "./models/plan.js";
 export {
   UserModel,
                

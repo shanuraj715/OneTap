@@ -3,7 +3,6 @@ import {
   NOTIFY_CHANNELS,
   NOTIFY_FIELDS,
   ORDER_STATUS_LABELS,
-  outletConfigSchema,
   renderTemplate,
                           
                       
@@ -21,6 +20,8 @@ import {
 import { decryptSecret, encryptSecret, maskSecret } from "../../lib/crypto.js";
 import { logger } from "../../logger.js";
 import { HttpError } from "../../middleware/error.js";
+import { effectiveConfig } from "../outlets/config.service.js";
+import { storePlan } from "../platform/plan.service.js";
 import { providerFor,                        } from "./providers/index.js";
 
 /* -------------------------------------------------------------- credentials */
@@ -110,7 +111,7 @@ export async function clearNotifyCredentials(ctx               , channel        
 async function outletConfigFor(ctx               ) {
   const outlet = await OutletModel.findOne({ _id: ctx.outletId }, null, { allowGlobalQuery: true }).lean();
   if (!outlet) return null;
-  return { config: outletConfigSchema.parse(outlet.config ?? {}), outletName: outlet.config?.identity?.name };
+  return { config: await effectiveConfig(outlet), outletName: outlet.config?.identity?.name };
 }
 
 async function log(
@@ -142,6 +143,7 @@ async function log(
  * whether an outbound message could be sent.
  */
 export async function fireOrderNotifications(ctx               , order          , status             )                {
+  if (!(await storePlan(ctx.brandId)).entitlements.features.includes("notifications")) return;
   const outlet = await outletConfigFor(ctx);
   if (!outlet) return;
   const { config } = outlet;

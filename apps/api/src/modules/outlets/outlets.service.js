@@ -1,5 +1,6 @@
 import {
   deepMerge,
+  effectAllowed,
   defaultOutletConfig,
   isReservedOutletSlug,
   outletConfigSchema,
@@ -12,6 +13,8 @@ import {
 
 } from "@onetap/db";
 import { HttpError } from "../../middleware/error.js";
+import { invalidateStorePlan, storePlan } from "../platform/plan.service.js";
+import { APPEARANCE_AREAS, effectiveConfig, ownerConfig } from "./config.service.js";
 
 /**
  * The Outlet model is scoped by brandId only — it IS the outlet, so it has no
@@ -22,22 +25,25 @@ function byBrand(ctx               , extra                          = {}) {
   return { ...extra, brandId: ctx.brandId };
 }
 
-/**
- * Fill in anything the stored config predates.
- *
- * An outlet saved before a new settings group existed has no key for it, and a
- * client reading `config.operations.sla` would get a crash rather than a
- * default. Parsing on the way out means adding a settings group needs no
- * migration and no backfill — every outlet is upgraded as it is read.
+/*
+ * Every read parses the stored config, filling in any settings group the
+ * outlet predates — so adding one needs no migration or backfill.
  */
-function withDefaults                                (outlet   )    {
-  return { ...outlet, config: outletConfigSchema.parse(outlet.config ?? {}) };
+
+/** For the admin: the owner's own settings, with the brand's shared look on top. */
+async function forOwner(outlet) {
+  return { ...outlet, config: await ownerConfig(outlet) };
+}
+
+/** For customers: what actually applies, after the store's plan. */
+async function forPublic(outlet) {
+  return { ...outlet, config: await effectiveConfig(outlet) };
 }
 
 /** Outlets for one brand — tenant-scoped. */
 export async function listOutlets(ctx               ) {
   const outlets = await OutletModel.find(byBrand(ctx)).sort({ createdAt: 1 }).lean();
-  return outlets.map(withDefaults);
+  return Promise.all(outlets.map(forOwner));
 }
 
 /** Dev / super-admin view across all tenants — deliberately global. */
@@ -45,13 +51,16 @@ export async function listAllOutlets() {
   const outlets = await OutletModel.find({}, null, { allowGlobalQuery: true }).sort({ createdAt: 1 }).lean();
   const brands = await BrandModel.find({ _id: { $in: [...new Set(outlets.map((o) => o.brandId))] } }).lean();
   const brandNameById = new Map(brands.map((b) => [String(b._id), b.name]));
-  return outlets.map((o) => ({ ...withDefaults(o), brandName: brandNameById.get(o.brandId) ?? "" }));
+  return Promise.all(outlets.map(async (o) => ({ ...(await forOwner(o)), brandName: brandNameById.get(o.brandId) ?? "" })));
 }
 
-/** Every outlet for one brand — public, unauthenticated (powers the storefront's outlet picker). */
+/**
+ * Every open outlet for one brand — public, unauthenticated (powers the
+ * storefront's outlet picker). A blocked outlet isn't offered to customers.
+ */
 export async function listOutletsForBrand(brandId        ) {
-  const outlets = await OutletModel.find({ brandId }, null, { allowGlobalQuery: true }).sort({ createdAt: 1 }).lean();
-  return outlets.map(withDefaults);
+  const outlets = await OutletModel.find({ brandId, blocked: null }, null, { allowGlobalQuery: true }).sort({ createdAt: 1 }).lean();
+  return Promise.all(outlets.map(forPublic));
 }
 
 /**
@@ -88,7 +97,19 @@ export async function resolveBrandForHost(host        ) {
  * default to a sibling outlet's — every outlet in a brand shares the same
  * domain, distinguished by slug in the URL, not by hostname.
  */
-export async function createOutlet(ctx               , input                                             ) {
+export async function createOutlet(ctx               , input                                             , { asPlatform = false } = {}) {
+  // The plan decides how many outlets a store may have (one, when multi-outlet
+  // is off). The platform itself can always add one.
+  if (!asPlatform) {
+    const plan = await storePlan(ctx.brandId);
+    if (!plan.limits.multiOutlet && plan.usage.outlets >= 1) {
+      throw new HttpError(409, "Multiple outlets aren't included in your plan. Ask TablePe to enable multi-outlet.");
+    }
+    if (plan.max.outlets !== null && plan.usage.outlets >= plan.max.outlets) {
+      throw new HttpError(409, `Your plan allows ${plan.max.outlets} outlets and all are in use. Ask TablePe to raise the limit.`);
+    }
+  }
+
   const slug = slugSchema.parse(input.slug.toLowerCase());
   if (isReservedOutletSlug(slug)) {
     throw new HttpError(400, `"${slug}" is reserved and can't be used as an outlet slug`);
@@ -114,12 +135,13 @@ export async function createOutlet(ctx               , input                    
     canonicalHostname: hostnames[0] ?? "",
     config,
   });
-  return withDefaults(outlet.toObject());
+  invalidateStorePlan(ctx.brandId);
+  return forOwner(outlet.toObject());
 }
 
 export async function getOutletById(ctx               , id        ) {
   const outlet = await OutletModel.findOne(byBrand(ctx, { _id: id })).lean();
-  return outlet ? withDefaults(outlet) : null;
+  return outlet ? forOwner(outlet) : null;
 }
 
 /** Rename an outlet, or move it to a new slug/hostname list. */
@@ -154,7 +176,7 @@ export async function updateOutlet(ctx               , id        , input) {
 
   outlet.markModified("config");
   await outlet.save();
-  return withDefaults(outlet.toObject());
+  return forOwner(outlet.toObject());
 }
 
 /**
@@ -181,6 +203,7 @@ export async function deleteOutlet(ctx               , id        ) {
   }
 
   await OutletModel.deleteOne(byBrand(ctx, { _id: id }));
+  invalidateStorePlan(ctx.brandId);
 }
 
 /**
@@ -194,7 +217,7 @@ export async function resolveOutlet(opts
  )                            {
   if (opts.id) {
     const byId = await OutletModel.findOne({ _id: opts.id }, null, { allowGlobalQuery: true }).lean();
-    return byId ? (withDefaults(byId)             ) : null;
+    return byId ? forPublic(byId) : null;
   }
 
   // Multi-outlet: every outlet in a brand shares the same domain, so a plain
@@ -211,7 +234,7 @@ export async function resolveOutlet(opts
         null,
         { allowGlobalQuery: true },
       ).lean();
-      return sibling ? (withDefaults(sibling)             ) : null;
+      return sibling ? forPublic(sibling) : null;
     }
   }
 
@@ -221,7 +244,7 @@ export async function resolveOutlet(opts
       null,
       { allowGlobalQuery: true },
     ).lean();
-    if (byHost) return withDefaults(byHost)             ;
+    if (byHost) return forPublic(byHost);
   }
 
   if (opts.slug?.includes("/")) {
@@ -233,13 +256,21 @@ export async function resolveOutlet(opts
       null,
       { allowGlobalQuery: true },
     ).lean();
-    return bySlug ? (withDefaults(bySlug)             ) : null;
+    return bySlug ? forPublic(bySlug) : null;
   }
 
   return null;
 }
 
-/** Deep-merge a partial config patch, re-validate, and persist. */
+/**
+ * Deep-merge a partial config patch, re-validate, and persist.
+ *
+ * The appearance areas (theme, typography, effect, layout) are shared by every
+ * outlet of the brand, so they're written to `Brand.appearance` — saving the
+ * theme from any outlet restyles all of them. Everything else stays on the
+ * outlet. The first appearance save for a brand that has none yet starts from
+ * this outlet's current look, so nothing visibly changes until the owner edits.
+ */
 export async function updateOutletConfig(
   ctx               ,
   id        ,
@@ -248,12 +279,31 @@ export async function updateOutletConfig(
   const outlet = await OutletModel.findOne(byBrand(ctx, { _id: id }));
   if (!outlet) throw new HttpError(404, "Outlet not found");
 
-  const current = outletConfigSchema.parse(outlet.config ?? {});
-  const next = outletConfigSchema.parse(deepMerge(current, patch));
+  const appearancePatch = Object.fromEntries(Object.entries(patch).filter(([k]) => APPEARANCE_AREAS.includes(k)));
+  const outletPatch = Object.fromEntries(Object.entries(patch).filter(([k]) => !APPEARANCE_AREAS.includes(k)));
 
-  outlet.config = next;
-  outlet.markModified("config");
-  await outlet.save();
-  return next;
+  if (Object.keys(outletPatch).length) {
+    const current = outletConfigSchema.parse(outlet.config ?? {});
+    outlet.config = outletConfigSchema.parse(deepMerge(current, outletPatch));
+    outlet.markModified("config");
+    await outlet.save();
+  }
+
+  if (Object.keys(appearancePatch).length) {
+    const plan = await storePlan(ctx.brandId);
+    const style = appearancePatch.effect?.style;
+    if (style && !effectAllowed(plan.entitlements, style)) {
+      throw new HttpError(403, "That effect isn't included in your plan.");
+    }
+    const brand = await BrandModel.findOne({ _id: ctx.brandId });
+    const ownLook = outletConfigSchema.parse(outlet.config ?? {});
+    const base = brand.appearance ?? Object.fromEntries(APPEARANCE_AREAS.map((k) => [k, ownLook[k]]));
+    const merged = outletConfigSchema.parse(deepMerge({ ...ownLook, ...base }, appearancePatch));
+    brand.appearance = Object.fromEntries(APPEARANCE_AREAS.map((k) => [k, merged[k]]));
+    brand.markModified("appearance");
+    await brand.save();
+    invalidateStorePlan(ctx.brandId);
+  }
+
+  return ownerConfig(outlet.toObject());
 }
-

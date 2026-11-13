@@ -24,6 +24,7 @@ import {
 import { fx, getItemCardVariant, getVariant } from "@onetap/ui";
 import { Moon, Palette, RotateCcw, Save, Sparkles, Sun, Undo2 } from "lucide-react";
 import { useOutlet, usePatchConfig } from "../lib/useOutlet";
+import { useStorePlan } from "../lib/useStorePlan";
 import { Button, Card, ColorInput, Field, InfoHint, Note, PageHeader, STICKY_HEADER_CLEARANCE, Tabs, TextInput, Toast } from "../ui";
 import { StorefrontNav } from "../components/SubNav";
 
@@ -86,6 +87,7 @@ const SAMPLE_ITEM           = {
 export function ThemeEditor() {
   const { outlet } = useOutlet();
   const patch = usePatchConfig();
+  const { effectAllowed } = useStorePlan();
   const [mode, setMode] = useState      ("light");
   const [theme, setTheme] = useState              (null);
   const [effect, setEffect] = useState("none");
@@ -199,7 +201,7 @@ export function ThemeEditor() {
         icon={<Sparkles size={16} />}
         subtitle="The look of every card, popup and page on your storefront. Your admin panel isn't affected."
       >
-        <EffectPicker value={effect} onChange={chooseEffect} primary={tokens.colorPrimary} />
+        <EffectPicker value={effect} onChange={chooseEffect} primary={tokens.colorPrimary} isAllowed={effectAllowed} />
         {beforePalette ? (
           <div style={paletteNotice}>
             <span>
@@ -447,25 +449,32 @@ function useEffectCss(effect) {
 
 /* ---------------------------------------------------------- effect picker */
 
-function EffectPicker({ value, onChange, primary }) {
+function EffectPicker({ value, onChange, primary, isAllowed }) {
   return (
     <div style={tileGrid} role="radiogroup" aria-label="Storefront effect">
       {EFFECT_IDS.map((id) => {
         const p = EFFECT_PRESETS[id];
         const active = value === id;
+        // An effect outside the plan can't be newly chosen — but one already
+        // in use stays shown as selected (the storefront shows "none" for it).
+        const locked = !isAllowed(id);
         return (
           <button
             key={id}
             type="button"
             role="radio"
             aria-checked={active}
-            onClick={() => onChange(id)}
-            className="ot-press"
-            style={{ ...tile, ...(active ? tileActive : {}) }}
+            aria-disabled={locked || undefined}
+            onClick={() => !locked && onChange(id)}
+            className={locked ? undefined : "ot-press"}
+            title={locked ? "Not in your plan" : undefined}
+            style={{ ...tile, ...(active ? tileActive : {}), ...(locked ? tileLocked : {}) }}
           >
             <EffectSwatch id={id} primary={primary} />
             <span style={{ fontWeight: 600, fontSize: 13 }}>{p.label}</span>
-            <span style={{ fontSize: 11.5, color: "var(--color-text-muted)", lineHeight: 1.4 }}>{p.description}</span>
+            <span style={{ fontSize: 11.5, color: "var(--color-text-muted)", lineHeight: 1.4 }}>
+              {locked ? "Not in your plan" : p.description}
+            </span>
           </button>
         );
       })}
@@ -641,6 +650,7 @@ const tile                = {
   color: "var(--color-text)",
   cursor: "pointer",
 };
+const tileLocked = { opacity: 0.5, cursor: "not-allowed" };
 const tileActive                = {
   border: "1.5px solid var(--color-primary)",
   boxShadow: "0 0 0 3px color-mix(in srgb, var(--color-primary) 18%, transparent)",

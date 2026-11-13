@@ -1,0 +1,127 @@
+import { Router } from "express";
+import { z } from "zod";
+import { requireBrandContext, requireSuperAdmin } from "../../middleware/auth.js";
+import { storePlan } from "./plan.service.js";
+import * as platform from "./platform.service.js";
+
+/** The platform console — TablePe's own super admin, managing client stores. */
+export const platformRouter = Router();
+
+platformRouter.use((req, _res, next) => {
+  requireSuperAdmin(req);
+  next();
+});
+
+platformRouter.get("/overview", async (_req, res) => {
+  res.json(await platform.overview());
+});
+
+/* ------------------------------------------------------------------- plans */
+
+platformRouter.get("/plans", async (_req, res) => {
+  res.json({ plans: await platform.listPlans() });
+});
+
+platformRouter.post("/plans", async (req, res) => {
+  res.status(201).json({ plan: await platform.createPlan(req.body) });
+});
+
+platformRouter.patch("/plans/:id", async (req, res) => {
+  res.json({ plan: await platform.updatePlan(req.params.id, req.body ?? {}) });
+});
+
+/* ---------------------------------------------------------------- settings */
+
+platformRouter.get("/settings", async (_req, res) => {
+  res.json({ settings: await platform.getSettings() });
+});
+
+platformRouter.put("/settings", async (req, res) => {
+  const body = z.object({ graceDays: z.number().int().min(0).max(365) }).parse(req.body);
+  res.json({ settings: await platform.updateSettings(body) });
+});
+
+/* ------------------------------------------------------------------ stores */
+
+platformRouter.get("/stores", async (_req, res) => {
+  res.json({ stores: await platform.listStores() });
+});
+
+platformRouter.get("/stores/:id", async (req, res) => {
+  res.json({ store: await platform.getStore(req.params.id) });
+});
+
+const planBody = z.object({
+  planId: z.string().min(1).nullable().optional(),
+  overrides: z.record(z.string(), z.unknown()).optional(),
+});
+
+platformRouter.patch("/stores/:id/plan", async (req, res) => {
+  res.json({ store: await platform.setStorePlan(req.params.id, planBody.parse(req.body)) });
+});
+
+platformRouter.post("/stores/:id/outlets/:outletId/block", async (req, res) => {
+  res.json({ store: await platform.setOutletBlocked(req.params.id, req.params.outletId, true, String(req.user._id)) });
+});
+
+platformRouter.post("/stores/:id/outlets/:outletId/unblock", async (req, res) => {
+  res.json({ store: await platform.setOutletBlocked(req.params.id, req.params.outletId, false) });
+});
+
+platformRouter.delete("/stores/:id/outlets/:outletId", async (req, res) => {
+  const { confirmName } = z.object({ confirmName: z.string() }).parse(req.body ?? {});
+  res.json({ store: await platform.deleteBlockedOutlet(req.params.id, req.params.outletId, confirmName) });
+});
+
+platformRouter.post("/stores/:id/people/:userId/block", async (req, res) => {
+  res.json({ store: await platform.setPersonBlocked(req.params.id, req.params.userId, true) });
+});
+
+platformRouter.post("/stores/:id/people/:userId/unblock", async (req, res) => {
+  res.json({ store: await platform.setPersonBlocked(req.params.id, req.params.userId, false) });
+});
+
+platformRouter.delete("/stores/:id/people/:userId", async (req, res) => {
+  res.json({ store: await platform.deleteBlockedPerson(req.params.id, req.params.userId) });
+});
+
+/* ------------------------------------------------------------------ owners */
+
+const ownerBody = z.object({
+  email: z.string().email(),
+  name: z.string().min(1).max(80),
+  password: z.string().min(8, "Use at least 8 characters").optional(),
+});
+
+platformRouter.post("/stores/:id/owners", async (req, res) => {
+  res.status(201).json({ store: await platform.addOwner(req.params.id, ownerBody.parse(req.body)) });
+});
+
+const ownerUpdateBody = z.object({
+  name: z.string().min(1).max(80).optional(),
+  password: z.string().min(8, "Use at least 8 characters").optional(),
+  isActive: z.boolean().optional(),
+});
+
+platformRouter.patch("/stores/:id/owners/:userId", async (req, res) => {
+  res.json({ store: await platform.updateOwner(req.params.id, req.params.userId, ownerUpdateBody.parse(req.body)) });
+});
+
+platformRouter.delete("/stores/:id/owners/:userId", async (req, res) => {
+  res.json({ store: await platform.removeOwner(req.params.id, req.params.userId) });
+});
+
+/* ------------------------------------------------- store-facing (not platform) */
+
+/**
+ * What a store's own dashboard needs to know about its plan: limits, what's
+ * unlocked, current usage and any grace period. Any member of the store can
+ * read it — it decides which buttons are greyed out.
+ */
+export const storeRouter = Router();
+
+storeRouter.get("/plan", async (req, res) => {
+  const { brandId } = requireBrandContext(req);
+  const { appearance: _appearance, ...plan } = await storePlan(brandId);
+  res.json({ plan });
+});

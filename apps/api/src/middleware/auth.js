@@ -29,6 +29,15 @@ export function requireUser(req         )          {
   return req.user;
 }
 
+/** Platform-only routes — the super admin who runs TablePe, not a store's owner. */
+export function requireSuperAdmin(req         )          {
+  const user = requireUser(req);
+  if (!user.isSuperAdmin) throw new HttpError(403, "Only a platform superadmin can do this");
+  return user;
+}
+
+const PAUSED = "Your access to this store is paused. Please contact the store owner.";
+
 function membershipFor(user         , brandId        )                    {
   return user.memberships.find((m) => m.brandId === brandId) ?? null;
 }
@@ -59,9 +68,13 @@ export async function requireOutletContext(
   const membership = membershipFor(user, outlet.brandId);
   if (!user.isSuperAdmin) {
     if (!membership) throw new HttpError(403, "You don't have access to this restaurant");
+    if (membership.blockedAt) throw new HttpError(403, PAUSED);
     if (membership.outletIds.length > 0 && !membership.outletIds.includes(outletId)) {
       throw new HttpError(403, "You don't have access to this outlet");
     }
+    // The platform super admin still gets in — that's how a blocked outlet is
+    // inspected, unblocked or deleted.
+    if (outlet.blocked) throw new HttpError(403, "This outlet is blocked — your store is over its plan's outlet limit.");
   }
 
   if (permission) {
@@ -84,6 +97,7 @@ export function requireBrandContext(req         , permission             )      
 
   const membership = membershipFor(user, brandId);
   if (!user.isSuperAdmin && !membership) throw new HttpError(403, "You don't have access to this brand");
+  if (!user.isSuperAdmin && membership.blockedAt) throw new HttpError(403, PAUSED);
 
   if (permission) {
     const role = effectiveRole(user, membership);

@@ -28,6 +28,7 @@ export async function getOutlet()                                 {
       id: outlet._id,
       name: outlet.name,
       slug: outlet.slug,
+      blocked: Boolean(outlet.blocked),
       config: parseOutletConfig(outlet.config),
     };
   } catch {
@@ -52,6 +53,7 @@ export async function getOutletBySlug(outletSlug        )                       
       id: outlet._id,
       name: outlet.name,
       slug: outlet.slug,
+      blocked: Boolean(outlet.blocked),
       config: parseOutletConfig(outlet.config),
     };
   } catch {
@@ -82,7 +84,13 @@ export async function getOutletById(outletId        )                           
     });
     if (res.ok) {
       const { outlet } = (await res.json())                                                                            ;
-      return { id: outlet._id, name: outlet.name, slug: outlet.slug, config: parseOutletConfig(outlet.config) };
+      return {
+        id: outlet._id,
+        name: outlet.name,
+        slug: outlet.slug,
+        blocked: Boolean(outlet.blocked),
+        config: parseOutletConfig(outlet.config),
+      };
     }
   } catch {
     /* fall through */

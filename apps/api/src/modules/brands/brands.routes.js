@@ -1,21 +1,9 @@
 import { Router } from "express";
 import { z } from "zod";
-import { requireUser } from "../../middleware/auth.js";
-import { HttpError } from "../../middleware/error.js";
+import { requireSuperAdmin } from "../../middleware/auth.js";
 import { createBrand, listBrands } from "./brands.service.js";
 
 export const brandsRouter = Router();
-
-/**
- * Brands aren't tenant-scoped (there's no brand yet to check membership
- * against), so access here is a direct isSuperAdmin check — same pattern
- * already used for other platform-wide routes (e.g. the realtime hub).
- */
-function requireSuperAdmin(req) {
-  const user = requireUser(req);
-  if (!user.isSuperAdmin) throw new HttpError(403, "Only a platform superadmin can do this");
-  return user;
-}
 
 brandsRouter.get("/", async (req, res) => {
   requireSuperAdmin(req);
@@ -31,6 +19,8 @@ const createBrandBody = z.object({
   ownerEmail: z.string().email(),
   ownerName: z.string().min(1),
   ownerPassword: z.string().min(8, "Use at least 8 characters"),
+  /** the plan this store starts on — omit for an unlimited (no-plan) store */
+  planId: z.string().min(1).nullable().optional(),
 });
 
 brandsRouter.post("/", async (req, res) => {

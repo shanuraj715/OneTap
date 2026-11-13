@@ -1,11 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 
-import { NavLink, Route, Routes, useLocation } from "react-router-dom";
+import { Navigate, NavLink, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { AwesomeLoader } from "./components/AwesomeLoader";
 import { TopProgressBar } from "./components/TopProgressBar";
 import { ROLE_LABELS } from "@onetap/config-schema";
 import {
+  AlertTriangle,
+  ArrowLeft,
   Bell,
+  Layers,
+  Store,
   Boxes,
   Building2,
   Check,
@@ -33,11 +37,12 @@ import {
   Wand2,
 } from "lucide-react";
 import { useAuth, useLogout } from "./lib/useAuth";
-import { OutletSelectionProvider, useOutlets } from "./lib/useOutlet";
+import { OutletSelectionProvider, useOpenStore, useOutlets } from "./lib/useOutlet";
+import { useStore } from "./lib/usePlatform";
+import { useStorePlan } from "./lib/useStorePlan";
 import { CreateOutletModal } from "./components/CreateOutletModal";
 import { SETTINGS_TABS, STOREFRONT_TABS, TABLES_TABS } from "./components/SubNav";
 import { Appearance } from "./routes/Appearance";
-import { Brands } from "./routes/Brands";
 import { ComponentsCatalog } from "./routes/ComponentsCatalog";
 import { Customers } from "./routes/Customers";
 import { Dashboard } from "./routes/Dashboard";
@@ -58,6 +63,11 @@ import { Storage } from "./routes/Storage";
 import { ThemeEditor } from "./routes/ThemeEditor";
 import { TypographyEditor } from "./routes/TypographyEditor";
 import { Users } from "./routes/Users";
+import { PlatformOverview } from "./routes/platform/PlatformOverview";
+import { PlatformPlans } from "./routes/platform/PlatformPlans";
+import { PlatformSettings } from "./routes/platform/PlatformSettings";
+import { PlatformStoreDetail } from "./routes/platform/PlatformStoreDetail";
+import { PlatformStores } from "./routes/platform/PlatformStores";
 import { Menu } from "./ui";
 
 const STOREFRONT_URL = "http://localhost:3070";
@@ -85,7 +95,10 @@ const ROUTE_META = {
   "/outlets": { title: "Outlets", icon: Building2 },
   "/dashboard-config": { title: "Configure dashboard", icon: LayoutGrid },
   "/users": { title: "Users & roles", icon: UsersIcon },
-  "/brands": { title: "Brands", icon: Building2 },
+  "/platform": { title: "Platform overview", icon: LayoutDashboard },
+  "/platform/stores": { title: "Stores", icon: Store },
+  "/platform/plans": { title: "Plans", icon: Layers },
+  "/platform/settings": { title: "Platform settings", icon: SettingsIcon },
 };
 
 /**
@@ -103,7 +116,7 @@ const NAV_GROUPS = [
       { to: "/", label: "Dashboard", icon: <LayoutDashboard size={ICON} />, end: true },
       { to: "/orders", label: "Orders", icon: <ReceiptText size={ICON} />, permission: "order:read" },
       family("Tables", <QrCode size={ICON} />, TABLES_TABS),
-      { to: "/printing", label: "Printing", icon: <Printer size={ICON} />, permission: "printer:read" },
+      { to: "/printing", label: "Printing", icon: <Printer size={ICON} />, permission: "printer:read", feature: "printing" },
     ],
   },
   {
@@ -117,22 +130,35 @@ const NAV_GROUPS = [
   {
     group: "Business",
     items: [
-      { to: "/coupons", label: "Coupons", icon: <Tag size={ICON} />, permission: "coupon:read" },
+      { to: "/coupons", label: "Coupons", icon: <Tag size={ICON} />, permission: "coupon:read", feature: "coupons" },
       { to: "/customers", label: "Customers", icon: <UsersIcon size={ICON} />, permission: "customer:read" },
       family("Settings", <SettingsIcon size={ICON} />, SETTINGS_TABS),
     ],
   },
+];
+
+/** The platform super admin's own console — managing client stores, not running one. */
+const PLATFORM_NAV_GROUPS = [
   {
     group: "Platform",
-    superAdminOnly: true,
-    items: [{ to: "/brands", label: "Brands", icon: <Building2 size={ICON} /> }],
+    items: [
+      { to: "/platform", label: "Overview", icon: <LayoutDashboard size={ICON} />, end: true },
+      { to: "/platform/stores", label: "Stores", icon: <Store size={ICON} /> },
+      { to: "/platform/plans", label: "Plans", icon: <Layers size={ICON} /> },
+      { to: "/platform/settings", label: "Settings", icon: <SettingsIcon size={ICON} /> },
+    ],
   },
 ];
 
-/** Resolve a nav entry for this user: a family becomes a plain link to its first permitted tab, or disappears. */
-function resolveNavItem(n, can) {
-  if (!n.tabs) return !n.permission || can(n.permission) ? n : null;
-  const allowed = n.tabs.filter((t) => !t.permission || can(t.permission));
+/**
+ * Resolve a nav entry for this user: hidden when their role lacks the
+ * permission or the store's plan doesn't include the feature; a family becomes
+ * a plain link to its first tab they can open, or disappears.
+ */
+function resolveNavItem(n, can, hasFeature) {
+  const open = (x) => (!x.permission || can(x.permission)) && (!x.feature || hasFeature(x.feature));
+  if (!n.tabs) return open(n) ? n : null;
+  const allowed = n.tabs.filter(open);
   if (!allowed.length) return null;
   return { to: allowed[0].to, label: n.label, icon: n.icon, matchPaths: n.tabs.map((t) => t.to) };
 }
@@ -145,6 +171,9 @@ export function App() {
   }
   if (!user) {
     return <Login />;
+  }
+  if (user.blockedAt && !user.isSuperAdmin) {
+    return <Paused />;
   }
 
   return (
@@ -177,13 +206,20 @@ function Shell({ can }                                     ) {
     };
   }, [location.pathname]);
 
-  const currentMeta = ROUTE_META[location.pathname] || {
+  const currentMeta = ROUTE_META[location.pathname] || (location.pathname.startsWith("/platform/stores/") ? ROUTE_META["/platform/stores"] : null) || {
     title: location.pathname.slice(1).replace("-", " ") || "page",
     icon: UtensilsCrossed,
   };
 
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const { openStoreId, closeStore } = useOpenStore();
+  // The platform super admin works in their own console unless they've opened
+  // a store's dashboard — and any /platform page is always the console.
+  const platformMode = Boolean(user?.isSuperAdmin) && (!openStoreId || location.pathname.startsWith("/platform"));
+  const openedStore = useStore(user?.isSuperAdmin && !platformMode ? openStoreId : null).data?.store;
   const { outlet, outlets, scope, selectOutlet } = useOutlets();
+  const storePlan = useStorePlan();
   const logout = useLogout();
   const [addingOutlet, setAddingOutlet] = useState(false);
 
@@ -217,13 +253,18 @@ function Shell({ can }                                     ) {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  const groups = NAV_GROUPS
-    .filter((g) => !g.superAdminOnly || user?.isSuperAdmin)
+  const groups = (platformMode ? PLATFORM_NAV_GROUPS : NAV_GROUPS)
     .map((g) => ({
       ...g,
-      items: g.items.map((n) => resolveNavItem(n, can)).filter(Boolean),
+      items: g.items.map((n) => resolveNavItem(n, can, platformMode ? () => true : storePlan.hasFeature)).filter(Boolean),
     }))
     .filter((g) => g.items.length);
+
+  const leaveStore = () => {
+    const id = openStoreId;
+    closeStore();
+    navigate(id ? `/platform/stores/${id}` : "/platform");
+  };
 
   // A brand's outlets, for the switcher. An outlet's own name conventionally
   // already includes the brand ("Gazab Momos — Laxmi Nagar"), so the label
@@ -233,8 +274,14 @@ function Shell({ can }                                     ) {
   const outletOptions = outlets.map((o) => ({
     value: o._id,
     label: o.name,
-    description: scope === "all" && o.brandName ? `${o.brandName} · ${o.slug}` : o.slug,
+    description: o.blocked
+      ? "Blocked — over plan limit"
+      : scope === "all" && o.brandName
+        ? `${o.brandName} · ${o.slug}`
+        : o.slug,
   }));
+  // The platform can always add an outlet; a store only while its plan allows.
+  const canAddOutlet = can("outlet:manage") && (user?.isSuperAdmin || storePlan.canAddOutlet);
 
   return (
     <div style={{ ...shell, gridTemplateColumns: `${collapsed ? 64 : 224}px 1fr` }}>
@@ -256,7 +303,7 @@ function Shell({ can }                                     ) {
           </button>
         </div>
 
-        {!collapsed ? (
+        {!collapsed && !platformMode ? (
           <Menu
             fullWidth
             trigger={({ toggle }) => (
@@ -269,9 +316,7 @@ function Shell({ can }                                     ) {
             )}
             options={[
               ...outletOptions,
-              ...(can("outlet:manage")
-                ? [{ value: "__add", label: "Add outlet", icon: <Plus size={13} /> }]
-                : []),
+              ...(canAddOutlet ? [{ value: "__add", label: "Add outlet", icon: <Plus size={13} /> }] : []),
             ]}
             selected={outlet?._id}
             align="left"
@@ -308,16 +353,19 @@ function Shell({ can }                                     ) {
         </nav>
 
         <div style={{ marginTop: "auto", display: "flex", flexDirection: "column", gap: 10, alignItems: collapsed ? "center" : "stretch" }}>
-          <a
-            href={STOREFRONT_URL}
-            target="_blank"
-            rel="noreferrer"
-            style={{ ...storefrontLink, justifyContent: collapsed ? "center" : "flex-start" }}
-            title="View storefront"
-          >
-            <ExternalLink size={13} />
-            {!collapsed ? "View storefront" : null}
-          </a>
+          {/* One fixed storefront address — meaningless across every store, so not in the platform console. */}
+          {!platformMode ? (
+            <a
+              href={STOREFRONT_URL}
+              target="_blank"
+              rel="noreferrer"
+              style={{ ...storefrontLink, justifyContent: collapsed ? "center" : "flex-start" }}
+              title="View storefront"
+            >
+              <ExternalLink size={13} />
+              {!collapsed ? "View storefront" : null}
+            </a>
+          ) : null}
 
           {collapsed ? (
             <button type="button" onClick={() => logout.mutate()} style={collapseBtn} aria-label="Sign out" title="Sign out">
@@ -362,6 +410,32 @@ function Shell({ can }                                     ) {
         ) : null}
 
         <div style={{ opacity: navigating ? 0 : 1, transition: "opacity 0.22s ease-out", minHeight: "100%" }}>
+          {(user?.isSuperAdmin && !platformMode) || (!platformMode && storePlan.plan?.grace.over) ? (
+            // The page column has no top padding (headers bring their own margin) — keep the bars off the edge.
+            <div style={{ paddingTop: 16 }}>
+              {user?.isSuperAdmin && !platformMode ? (
+                <div style={viewingBar}>
+                  <span>
+                    Viewing <strong>{openedStore?.name ?? "store"}</strong> as its owner sees it
+                  </span>
+                  <button type="button" onClick={leaveStore} style={viewingBack}>
+                    <ArrowLeft size={13} /> Back to my dashboard
+                  </button>
+                </div>
+              ) : null}
+              {!platformMode && storePlan.plan?.grace.over ? <OverLimitBanner plan={storePlan.plan} /> : null}
+            </div>
+          ) : null}
+          {platformMode ? (
+            <Routes>
+              <Route path="/platform" element={<PlatformOverview />} />
+              <Route path="/platform/stores" element={<PlatformStores />} />
+              <Route path="/platform/stores/:id" element={<PlatformStoreDetail />} />
+              <Route path="/platform/plans" element={<PlatformPlans />} />
+              <Route path="/platform/settings" element={<PlatformSettings />} />
+              <Route path="*" element={<Navigate to="/platform" replace />} />
+            </Routes>
+          ) : (
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/orders" element={<Orders />} />
@@ -383,8 +457,8 @@ function Shell({ can }                                     ) {
             <Route path="/outlets" element={<Outlets />} />
             <Route path="/dashboard-config" element={<DashboardConfig />} />
             <Route path="/users" element={<Users />} />
-            {user?.isSuperAdmin ? <Route path="/brands" element={<Brands />} /> : null}
           </Routes>
+          )}
         </div>
       </main>
     </div>
@@ -555,3 +629,80 @@ const signOut                = {
 // PageHeader / Orders' pageHead), so it stays put at the very top of this
 // scroll container instead of scrolling out from under a padding gap.
 const content                = { padding: "0 32px 28px", width: "100%", minWidth: 0, height: "100%", overflowX: "hidden", overflowY: "auto" };
+
+const fmtDay = (d) => new Date(d).toLocaleDateString([], { day: "numeric", month: "short", year: "numeric" });
+
+/** Shown on every store page while the store is over its plan's limits. */
+function OverLimitBanner({ plan }) {
+  const parts = [];
+  if (plan.max.users !== null && plan.usage.users > plan.max.users) parts.push(`${plan.usage.users} people (plan allows ${plan.max.users})`);
+  if (plan.max.outlets !== null && plan.usage.outlets > plan.max.outlets) parts.push(`${plan.usage.outlets} outlets (plan allows ${plan.max.outlets})`);
+  return (
+    <div role="status" style={overLimitBar}>
+      <AlertTriangle size={16} style={{ flexShrink: 0, marginTop: 1 }} />
+      <span>
+        Your store has {parts.join(" and ")}.{" "}
+        {plan.grace.ended
+          ? `The grace period ended on ${fmtDay(plan.grace.until)} — extra outlets or people may be blocked by TablePe.`
+          : `Everything keeps working until ${fmtDay(plan.grace.until)}. Remove the extras, or contact TablePe to upgrade your plan.`}
+      </span>
+    </div>
+  );
+}
+
+/** A person the platform has blocked (store over its people limit). */
+function Paused() {
+  const logout = useLogout();
+  return (
+    <div style={{ minHeight: "100vh", display: "grid", placeItems: "center", padding: 24, background: "var(--color-surface)" }}>
+      <div style={{ maxWidth: 400, textAlign: "center", background: "var(--color-bg)", border: "1px solid var(--color-border)", borderRadius: 14, padding: 28 }}>
+        <h1 style={{ fontSize: 20, margin: "0 0 8px" }}>Your access is paused</h1>
+        <p style={{ color: "var(--color-text-muted)", fontSize: 14, lineHeight: 1.5, margin: "0 0 18px" }}>
+          Your store is over its plan&apos;s limit for people, so your access has been paused. Please contact your store owner.
+        </p>
+        <button type="button" onClick={() => logout.mutate()} style={signOut}>
+          <LogOut size={12} /> Sign out
+        </button>
+      </div>
+    </div>
+  );
+}
+
+const viewingBar                = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: 12,
+  flexWrap: "wrap",
+  padding: "9px 14px",
+  marginBottom: 14,
+  borderRadius: 10,
+  fontSize: 13,
+  background: "var(--tone-info-wash)",
+  color: "var(--tone-info)",
+};
+const viewingBack                = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 5,
+  font: "inherit",
+  fontSize: 12.5,
+  fontWeight: 700,
+  padding: "5px 11px",
+  borderRadius: 999,
+  border: "1px solid currentColor",
+  background: "transparent",
+  color: "inherit",
+  cursor: "pointer",
+};
+const overLimitBar                = {
+  display: "flex",
+  gap: 9,
+  padding: "10px 14px",
+  marginBottom: 14,
+  borderRadius: 10,
+  fontSize: 13,
+  lineHeight: 1.5,
+  background: "var(--tone-warning-wash)",
+  color: "var(--tone-warning)",
+};

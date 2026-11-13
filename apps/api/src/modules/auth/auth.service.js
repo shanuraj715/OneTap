@@ -23,6 +23,11 @@ export async function login(email        , password        , meta           ) {
   if (!user || !user.isActive || !(await verifyPassword(password, user.passwordHash))) {
     throw new HttpError(401, "Incorrect email or password");
   }
+  // Blocked by the platform in every store they belong to (over a plan's
+  // people limit) — the password was right, so say why instead of "incorrect".
+  if (!user.isSuperAdmin && user.memberships.length > 0 && user.memberships.every((m) => m.blockedAt)) {
+    throw new HttpError(403, "Your access is paused. Please contact your store owner.");
+  }
 
   const token = randomBytes(32).toString("base64url");
   const expiresAt = new Date(Date.now() + SESSION_DAYS * 24 * 60 * 60 * 1000);
@@ -65,6 +70,8 @@ export function toSessionUser(user         )              {
     isSuperAdmin: user.isSuperAdmin,
     role,
     brandId: membership?.brandId ?? null,
+    /** set when the platform has paused this person's access to their store */
+    blockedAt: membership?.blockedAt ?? null,
     permissions: role ? permissionsForRole(role) : [],
   };
 }

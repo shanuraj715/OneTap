@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getFooterVariant, getHeaderVariant, Hero, MenuSections } from "@onetap/ui";
 import { Ordering } from "@/components/Ordering";
+import { OutletUnavailable } from "@/components/OutletUnavailable";
 import { ThemeStyle } from "@/components/ThemeStyle";
 import { getMenu } from "@/lib/menu";
 import { getOutletBySlug } from "@/lib/outlet";
@@ -14,6 +15,7 @@ export default async function OutletHomePage({ params }) {
   // A real outlet resolves at "/" already for a single-outlet brand — this
   // slug just doesn't exist for the current host's brand.
   if (!outlet) notFound();
+  if (outlet.blocked) return <OutletUnavailable outlet={outlet} />;
 
   const menu = await getMenu(outlet.id);
   const { identity, theme, typography, features, layout, menuLayout } = outlet.config;

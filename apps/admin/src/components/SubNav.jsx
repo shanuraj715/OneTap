@@ -16,6 +16,7 @@ import {
   Wand2,
 } from "lucide-react";
 import { useAuth } from "../lib/useAuth";
+import { useStorePlan } from "../lib/useStorePlan";
 
 const ICON_SIZE = 14;
 
@@ -65,7 +66,7 @@ export const SETTINGS_TABS = [
   { to: "/settings", label: "Outlet Settings", icon: <Building2 size={ICON_SIZE} />, end: true, permission: "settings:update" },
   { to: "/outlets", label: "Outlets", icon: <Store size={ICON_SIZE} />, permission: "outlet:manage" },
   { to: "/payments", label: "Payments", icon: <CreditCard size={ICON_SIZE} />, permission: "payment-config:read" },
-  { to: "/notifications", label: "Notifications", icon: <Bell size={ICON_SIZE} />, permission: "notification-config:read" },
+  { to: "/notifications", label: "Notifications", icon: <Bell size={ICON_SIZE} />, permission: "notification-config:read", feature: "notifications" },
   { to: "/users", label: "Users & roles", icon: <UsersIcon size={ICON_SIZE} />, permission: "user:read" },
   { to: "/storage", label: "Storage", icon: <HardDrive size={ICON_SIZE} />, permission: "storage-config:read" },
   { to: "/dashboard-config", label: "Configure dashboard", icon: <LayoutGrid size={ICON_SIZE} />, permission: "dashboard:configure" },
@@ -86,7 +87,8 @@ export const TABLES_TABS = [
 
 function FamilyNav({ tabs }) {
   const { can } = useAuth();
-  return <SubNav items={tabs.filter((i) => !i.permission || can(i.permission))} />;
+  const { hasFeature } = useStorePlan();
+  return <SubNav items={tabs.filter((i) => (!i.permission || can(i.permission)) && (!i.feature || hasFeature(i.feature)))} />;
 }
 
 export const SettingsNav = () => <FamilyNav tabs={SETTINGS_TABS} />;

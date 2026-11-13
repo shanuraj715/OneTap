@@ -35,6 +35,7 @@ import { encryptSecret, maskSecret } from "../../lib/crypto.js";
 import { logger } from "../../logger.js";
 import { HttpError } from "../../middleware/error.js";
 import { broadcast } from "../../realtime/hub.js";
+import { storePlan } from "../platform/plan.service.js";
 import { toEscPos } from "./escpos.js";
 import { providerFor } from "./providers/index.js";
 import { renderHtml, renderText,                                                       } from "./render.js";
@@ -424,6 +425,7 @@ export async function enqueueJob(args             )                             
  * moment staff accept an order, with nobody pressing print.
  */
 export async function autoPrintForOrder(ctx               , order          , status             )                  {
+  if (!(await storePlan(ctx.brandId)).entitlements.features.includes("printing")) return 0;
   const printers = await PrinterModel.find(tenantFilter(ctx, { isActive: true, autoPrintOn: status }));
 
   let queued = 0;

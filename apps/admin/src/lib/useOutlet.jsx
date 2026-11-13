@@ -3,6 +3,23 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createOutlet, deleteOutlet, listOutlets, patchOutletConfig, updateOutlet } from "./api";
 
 const SELECTED_KEY = "onetap.selectedOutletId";
+const OPEN_STORE_KEY = "onetap.openStoreId";
+
+const load = (key) => {
+  try {
+    return localStorage.getItem(key) || null;
+  } catch {
+    return null;
+  }
+};
+const save = (key, value) => {
+  try {
+    if (value) localStorage.setItem(key, value);
+    else localStorage.removeItem(key);
+  } catch {
+    /* private browsing, storage disabled — selection just won't persist */
+  }
+};
 
 // Every page calls useOutlet()/useOutlets() independently, so "which outlet
 // is selected" has to live in one shared place, not a useState local to each
@@ -12,24 +29,35 @@ const OutletSelectionContext = createContext(null);
 
 /** Wrap the signed-in app shell in this once, above every route. */
 export function OutletSelectionProvider({ children }) {
-  const [selectedId, setSelectedId] = useState(() => {
-    try {
-      return localStorage.getItem(SELECTED_KEY) || null;
-    } catch {
-      return null;
-    }
-  });
+  const [selectedId, setSelectedId] = useState(() => load(SELECTED_KEY));
+  // The platform super admin's "open store dashboard": which store they're
+  // looking at, or null while they're in the platform console.
+  const [openStoreId, setOpenStoreId] = useState(() => load(OPEN_STORE_KEY));
 
   useEffect(() => {
-    if (!selectedId) return;
-    try {
-      localStorage.setItem(SELECTED_KEY, selectedId);
-    } catch {
-      /* private browsing, storage disabled — selection just won't persist */
-    }
+    if (selectedId) save(SELECTED_KEY, selectedId);
   }, [selectedId]);
+  useEffect(() => save(OPEN_STORE_KEY, openStoreId), [openStoreId]);
 
-  return <OutletSelectionContext.Provider value={[selectedId, setSelectedId]}>{children}</OutletSelectionContext.Provider>;
+  const value = useMemo(
+    () => ({ selectedId, setSelectedId, openStoreId, setOpenStoreId }),
+    [selectedId, openStoreId],
+  );
+  return <OutletSelectionContext.Provider value={value}>{children}</OutletSelectionContext.Provider>;
+}
+
+/** The platform's store-viewing state — `openStore(id)` enters a store's dashboard, `closeStore()` leaves it. */
+export function useOpenStore() {
+  const ctx = useContext(OutletSelectionContext);
+  if (!ctx) throw new Error("useOpenStore() must be called within <OutletSelectionProvider>");
+  return {
+    openStoreId: ctx.openStoreId,
+    openStore: (id) => {
+      ctx.setSelectedId(null);
+      ctx.setOpenStoreId(id);
+    },
+    closeStore: () => ctx.setOpenStoreId(null),
+  };
 }
 
 /**
@@ -40,13 +68,15 @@ export function OutletSelectionProvider({ children }) {
  * and no extra click.
  */
 export function useOutlets() {
-  const query = useQuery({ queryKey: ["outlets"], queryFn: listOutlets });
-  const outlets = query.data?.outlets ?? [];
-  const scope = query.data?.scope; // "all" for a superadmin, across every brand
-
   const ctx = useContext(OutletSelectionContext);
   if (!ctx) throw new Error("useOutlets() must be called within <OutletSelectionProvider>");
-  const [selectedId, setSelectedId] = ctx;
+  const { selectedId, setSelectedId, openStoreId } = ctx;
+
+  // A super admin viewing one store sees just that store's outlets; owners
+  // and staff get their own store's outlets either way.
+  const query = useQuery({ queryKey: ["outlets", openStoreId ?? "own"], queryFn: () => listOutlets(openStoreId ?? undefined) });
+  const outlets = query.data?.outlets ?? [];
+  const scope = query.data?.scope; // "all" (every brand) / "store" (one opened store) for a superadmin
 
   const outlet = useMemo(
     () => outlets.find((o) => o._id === selectedId) ?? outlets[0],
@@ -82,7 +112,10 @@ export function useCreateOutlet() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (args) => createOutlet(args.brandId, args.body),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["outlets"] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["outlets"] });
+      qc.invalidateQueries({ queryKey: ["store-plan"] });
+    },
   });
 }
 
@@ -98,12 +131,13 @@ export function useUpdateOutlet() {
 export function useDeleteOutlet() {
   const qc = useQueryClient();
   const ctx = useContext(OutletSelectionContext);
-  const setSelectedId = ctx?.[1];
+  const setSelectedId = ctx?.setSelectedId;
   return useMutation({
     mutationFn: (id) => deleteOutlet(id),
     onSuccess: () => {
       setSelectedId?.(null);
       qc.invalidateQueries({ queryKey: ["outlets"] });
+      qc.invalidateQueries({ queryKey: ["store-plan"] });
     },
   });
 }

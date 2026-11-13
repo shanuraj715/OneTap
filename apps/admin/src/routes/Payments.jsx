@@ -10,6 +10,7 @@ import {
 import { useAuth } from "../lib/useAuth";
 import { useOutlet, usePatchConfig } from "../lib/useOutlet";
 import { useClearPaymentConfig, usePaymentConfig, useSavePaymentConfig } from "../lib/usePayments";
+import { useStorePlan } from "../lib/useStorePlan";
 import { Button, Card, Field, PageHeader, TextInput, Toast } from "../ui";
 import { SettingsNav } from "../components/SubNav";
 
@@ -23,6 +24,9 @@ export function Payments() {
   const config = usePaymentConfig(outlet, canRead);
   const patch = usePatchConfig();
   const [enabled, setEnabled] = useState                  (null);
+  const { hasFeature } = useStorePlan();
+  // Online gateways are a plan feature; cash on delivery is always available.
+  const planLocks = (gateway) => gateway !== "cod" && !hasFeature("onlinePayments");
 
   // Re-syncs whenever the selected outlet actually changes, not just once —
   // switching in the sidebar doesn't unmount this page. Keyed on outlet?._id
@@ -76,20 +80,26 @@ export function Payments() {
         <p style={hint}>Diners see these in this order. A gateway must be configured before it can be offered.</p>
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {gateways.map((g) => (
-            <label key={g.gateway} style={{ ...row, opacity: g.available ? 1 : 0.5 }}>
+            <label key={g.gateway} style={{ ...row, opacity: g.available && !planLocks(g.gateway) ? 1 : 0.5 }}>
               <input
                 type="checkbox"
                 checked={enabled.includes(g.gateway)}
-                disabled={!canManage || !g.configured || !g.available}
+                disabled={!canManage || !g.configured || !g.available || planLocks(g.gateway)}
                 onChange={() => toggle(g.gateway)}
               />
               <span style={{ flex: 1 }}>
                 <span style={{ fontWeight: 600, fontSize: 14 }}>{GATEWAY_LABELS[g.gateway]}</span>
                 <span style={{ ...hint, display: "block", margin: 0 }}>{GATEWAY_DESCRIPTIONS[g.gateway]}</span>
               </span>
-              <span style={{ ...pill, ...(g.configured ? pillOk : pillWarn) }}>
-                {g.configured ? "configured" : "needs keys"}
-              </span>
+              {planLocks(g.gateway) ? (
+                <span style={{ ...pill, ...pillWarn }} title="Online payments aren't included in your plan — customers won't be offered this.">
+                  not in your plan
+                </span>
+              ) : (
+                <span style={{ ...pill, ...(g.configured ? pillOk : pillWarn) }}>
+                  {g.configured ? "configured" : "needs keys"}
+                </span>
+              )}
             </label>
           ))}
         </div>

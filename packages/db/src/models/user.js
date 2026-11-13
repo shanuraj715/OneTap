@@ -42,6 +42,8 @@ const userSchema = new Schema         (
             brandId: { type: String, required: true, index: true },
             role: { type: String, enum: ROLES, required: true },
             outletIds: { type: [String], default: [] },
+            /** blocked by the platform (store over its people limit) — no access to THIS store; other brands unaffected */
+            blockedAt: { type: Date, default: null },
           },
           { _id: false },
         ),

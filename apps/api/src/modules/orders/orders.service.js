@@ -3,7 +3,6 @@ import {
   checkDelivery,
   evaluateCapacity,
   NEXT_STATUSES,
-  outletConfigSchema,
   priceCart,
   PricingError,
                       
@@ -20,7 +19,6 @@ import {
   CustomerModel,
   nextSequence,
   OrderModel,
-  OutletModel,
   tenantFilter,
                 
                      
@@ -30,6 +28,7 @@ import { HttpError } from "../../middleware/error.js";
 import { broadcast } from "../../realtime/hub.js";
 import { checkCoupon, recordRedemption } from "../coupons/coupons.service.js";
 import { getMenu } from "../menu/menu.service.js";
+import { assertOutletOpen, effectiveOutletConfig } from "../outlets/config.service.js";
 import { fireOrderNotifications } from "../notify/notify.service.js";
 import { autoPrintForOrder } from "../printing/printing.service.js";
 import { earnForOrder, previewRedeem, redeemForOrder, reverseRedeemForOrder } from "../wallet/wallet.service.js";
@@ -85,10 +84,9 @@ function fireNotifications(ctx               , order          , status          
   });
 }
 
+/** The outlet's config as it actually applies — the owner's settings within what the store's plan unlocks. */
 export async function outletConfigFor(ctx               ) {
-  const outlet = await OutletModel.findOne({ _id: ctx.outletId }, null, { allowGlobalQuery: true }).lean();
-  if (!outlet) throw new HttpError(404, "Outlet not found");
-  return outletConfigSchema.parse(outlet.config ?? {});
+  return effectiveOutletConfig(ctx);
 }
 
 /** "In the queue" for load-management purposes — placed, accepted or preparing. */
@@ -270,6 +268,7 @@ export async function placeOrder(input
  )                    {
   const { ctx } = input;
   const placedBy           = input.placedBy ?? "customer";
+  await assertOutletOpen(ctx.outletId);
   const config = await outletConfigFor(ctx);
 
   const enabled                                = {

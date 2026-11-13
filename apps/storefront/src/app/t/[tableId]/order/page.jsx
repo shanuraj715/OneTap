@@ -1,4 +1,5 @@
 import { OrderPage } from "@/components/OrderPage";
+import { OutletUnavailable } from "@/components/OutletUnavailable";
 import { ThemeStyle } from "@/components/ThemeStyle";
 import { getMenu } from "@/lib/menu";
 import { getOutletById } from "@/lib/outlet";
@@ -48,6 +49,7 @@ export default async function TableOrderPage({ params, searchParams }) {
       </main>
     );
   }
+  if (outlet.blocked) return <OutletUnavailable outlet={outlet} />;
 
   const menu = await getMenu(outlet.id);
   const { identity, theme, typography, features } = outlet.config;

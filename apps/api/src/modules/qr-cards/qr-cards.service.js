@@ -1,6 +1,7 @@
-import { CARD_SPEC_MAX_BYTES, defaultQrCardSpec, qrCardSpecSchema } from "@onetap/config-schema";
+import { CARD_SPEC_MAX_BYTES, cardTemplateById, defaultQrCardSpec, qrCardSpecSchema } from "@onetap/config-schema";
 import { QrCardDesignModel, tenantFilter } from "@onetap/db";
 import { HttpError } from "../../middleware/error.js";
+import { storePlan } from "../platform/plan.service.js";
 
 /**
  * Parse on the way out, exactly like `withDefaults` in outlets.service.js. A
@@ -57,6 +58,14 @@ export async function saveDesign(ctx, input, userId) {
   const spec = qrCardSpecSchema.parse(input.spec);
 
   const existing = await QrCardDesignModel.findOne(tenantFilter(ctx)).lean();
+
+  // A card style outside the store's plan can't be newly picked — but a design
+  // already saved in that style keeps saving, so a downgrade never breaks it.
+  const family = cardTemplateById(spec.templateId).family;
+  const previousFamily = existing ? cardTemplateById(existing.spec?.templateId).family : null;
+  if (family !== previousFamily && !(await storePlan(ctx.brandId)).entitlements.qrCardFamilies.includes(family)) {
+    throw new HttpError(403, "That card style isn't included in your plan.");
+  }
 
   // Optimistic concurrency. `baseUpdatedAt` is what the client last read; if the
   // stored row has moved on, someone else saved in between.

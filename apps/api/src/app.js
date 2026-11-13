@@ -10,6 +10,7 @@ import { authenticate } from "./middleware/auth.js";
 import { errorHandler, notFound } from "./middleware/error.js";
 import { authRouter } from "./modules/auth/auth.routes.js";
 import { brandsRouter } from "./modules/brands/brands.routes.js";
+import { platformRouter, storeRouter } from "./modules/platform/platform.routes.js";
 import { couponsRouter } from "./modules/coupons/coupons.routes.js";
 import { customerRouter } from "./modules/customer/customer.routes.js";
 import { customersRouter } from "./modules/customers/customers.routes.js";
@@ -84,6 +85,8 @@ export function createApp()          {
   app.use("/health", healthRouter);
   app.use("/api/auth", authRouter);
   app.use("/api/brands", brandsRouter);
+  app.use("/api/platform", platformRouter);
+  app.use("/api/store", storeRouter);
   app.use("/api/users", usersRouter);
   app.use("/api/outlets", outletsRouter);
   app.use("/api/menu", menuRouter);

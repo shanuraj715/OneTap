@@ -3,10 +3,14 @@ import { useState } from "react";
 import { ROLE_DESCRIPTIONS, ROLE_LABELS, ROLES,           } from "@onetap/config-schema";
 import { useAuth, useCreateUser, useDeleteUser, useUpdateUser, useUsers } from "../lib/useAuth";
 import { useOutlet } from "../lib/useOutlet";
+import { useStorePlan } from "../lib/useStorePlan";
 import { Button, Card, Field, PageHeader, TextInput, Toast } from "../ui";
 import { SettingsNav } from "../components/SubNav";
 
-const ASSIGNABLE = ROLES.filter((r) => r !== "super_admin");
+const ALL_ASSIGNABLE = ROLES.filter((r) => r !== "super_admin");
+// Store owners are added and managed by TablePe from the platform console,
+// so the store's own dashboard can't hand out (or take away) the owner role.
+const STORE_ASSIGNABLE = ALL_ASSIGNABLE.filter((r) => r !== "owner");
 
 export function Users() {
   const { user: me, can } = useAuth();
@@ -20,6 +24,8 @@ export function Users() {
   const create = useCreateUser();
   const update = useUpdateUser();
   const remove = useDeleteUser();
+  const { plan, canAddPerson } = useStorePlan();
+  const ASSIGNABLE = me?.isSuperAdmin ? ALL_ASSIGNABLE : STORE_ASSIGNABLE;
 
   const [form, setForm] = useState({ name: "", email: "", password: "", role: "manager"         });
 
@@ -49,13 +55,22 @@ export function Users() {
 
       <SettingsNav />
 
-      <Card title={`Team — ${users.length}`}>
+      <Card
+        title={`Team — ${users.length}`}
+        subtitle={
+          plan && plan.max.users !== null
+            ? `${plan.usage.users} of ${plan.max.users} people on your plan (owners included${users.some((u) => u.blockedAt) ? ", paused people not counted" : ""}).`
+            : undefined
+        }
+      >
         {usersQuery.isLoading ? (
           <p style={{ margin: 0, color: "var(--color-text-muted)" }}>Loading…</p>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {users.map((u) => {
               const isMe = u.id === me?.id;
+              // owner rows are read-only here — TablePe manages them
+              const platformManaged = u.role === "owner" && !me?.isSuperAdmin;
               return (
                 <div key={u.id} style={row}>
                   <div style={{ flex: 1, minWidth: 0 }}>
@@ -63,10 +78,22 @@ export function Users() {
                       {u.name}
                       {isMe ? <span style={youChip}>you</span> : null}
                       {!u.isActive ? <span style={{ ...youChip, background: "var(--color-text-muted)" }}>disabled</span> : null}
+                      {u.blockedAt ? (
+                        <span style={{ ...youChip, background: "var(--tone-danger, #b42318)" }} title="Paused by TablePe — the store is over its plan's people limit">
+                          paused
+                        </span>
+                      ) : null}
                     </div>
                     <div style={{ fontSize: 12.5, color: "var(--color-text-muted)" }}>{u.email}</div>
                   </div>
 
+                  {platformManaged ? (
+                    <span style={{ fontSize: 12.5, color: "var(--color-text-muted)", textAlign: "right" }}>
+                      <strong style={{ color: "var(--color-text)" }}>{ROLE_LABELS.owner}</strong>
+                      <br />
+                      Managed by TablePe
+                    </span>
+                  ) : (
                   <select
                     value={u.role ?? "manager"}
                     disabled={!manage || isMe}
@@ -79,8 +106,9 @@ export function Users() {
                       </option>
                     ))}
                   </select>
+                  )}
 
-                  {manage && !isMe ? (
+                  {manage && !isMe && !platformManaged ? (
                     <>
                       <button
                         type="button"
@@ -110,7 +138,14 @@ export function Users() {
       </Card>
 
       {manage ? (
-        <Card title="Add someone">
+        <Card
+          title="Add someone"
+          subtitle={
+            canAddPerson
+              ? undefined
+              : `Your plan allows ${plan?.max.users} people and all are in use. Remove someone, or ask TablePe to raise the limit.`
+          }
+        >
           <form onSubmit={submit}>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 14 }}>
               <Field label="Name" info="How this person appears in the order history and the audit trail — so when a refund is questioned, you know who pressed the button.">
@@ -132,7 +167,12 @@ export function Users() {
                 </select>
               </Field>
             </div>
-            <Button type="submit" disabled={create.isPending}>
+            <Button
+              type="submit"
+              disabled={create.isPending || !canAddPerson}
+              // the shared Button doesn't dim when disabled — make the plan block visible
+              style={canAddPerson ? undefined : { opacity: 0.5, cursor: "not-allowed" }}
+            >
               {create.isPending ? "Adding…" : "Add user"}
             </Button>
             {create.error ? <Toast kind="error">{(create.error         ).message}</Toast> : null}

@@ -24,7 +24,8 @@ outletsRouter.get("/resolve", async (req, res) => {
   const id = typeof req.query.id === "string" && req.query.id ? req.query.id : undefined;
   const outlet = await resolveOutlet({ host, slug, id });
   if (!outlet) throw new HttpError(404, "No outlet for that host");
-  res.json({ outlet });
+  // Public: say only THAT it's blocked, not when or by whom.
+  res.json({ outlet: { ...outlet, blocked: Boolean(outlet.blocked) } });
 });
 
 /** Public: which brand a hostname belongs to, and every outlet under it — the storefront's root-page resolution. */
@@ -38,6 +39,12 @@ outletsRouter.get("/for-host", async (req, res) => {
 /** Outlets the signed-in user can reach. */
 outletsRouter.get("/", async (req, res) => {
   if (req.user?.isSuperAdmin) {
+    // `?brandId=` is the platform's "open store dashboard": just that store's outlets.
+    const brandId = typeof req.query.brandId === "string" ? req.query.brandId : "";
+    if (brandId) {
+      res.json({ outlets: await listOutlets({ brandId }), scope: "store" });
+      return;
+    }
     res.json({ outlets: await listAllOutlets(), scope: "all" });
     return;
   }
@@ -55,7 +62,7 @@ const createOutletBody = z.object({
 outletsRouter.post("/", async (req, res) => {
   const ctx = requireBrandContext(req, "outlet:manage");
   const body = createOutletBody.parse(req.body);
-  const outlet = await createOutlet(ctx, body);
+  const outlet = await createOutlet(ctx, body, { asPlatform: Boolean(req.user?.isSuperAdmin) });
   res.status(201).json({ outlet });
 });
 

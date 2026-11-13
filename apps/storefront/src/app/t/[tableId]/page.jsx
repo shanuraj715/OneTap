@@ -1,5 +1,6 @@
 import { getFooterVariant, getHeaderVariant } from "@onetap/ui";
 import { Ordering } from "@/components/Ordering";
+import { OutletUnavailable } from "@/components/OutletUnavailable";
 import { ThemeStyle } from "@/components/ThemeStyle";
 import { getMenu } from "@/lib/menu";
 import { getOutletById } from "@/lib/outlet";
@@ -56,6 +57,7 @@ export default async function TablePage({
       </main>
     );
   }
+  if (outlet.blocked) return <OutletUnavailable outlet={outlet} />;
 
   const menu = await getMenu(outlet.id);
   const { identity, theme, typography, features, layout } = outlet.config;

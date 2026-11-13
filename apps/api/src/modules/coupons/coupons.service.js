@@ -16,6 +16,9 @@ import {
                      
 } from "@onetap/db";
 import { HttpError } from "../../middleware/error.js";
+import { storePlan } from "../platform/plan.service.js";
+
+const entitled = async (brandId, key) => (await storePlan(brandId)).entitlements.features.includes(key);
 
 /* ------------------------------------------------------------------ shaping */
 
@@ -124,6 +127,11 @@ export async function checkCoupon(input                  )                      
   const { ctx, subtotal, channel, customerId } = input;
   const code = input.code.trim().toUpperCase();
 
+  // One check covers the quote, checkout and the storefront's "Apply" button.
+  if (!(await entitled(ctx.brandId, "coupons"))) {
+    return { ok: false, discount: 0, code, reason: "Coupons aren't available at this store." };
+  }
+
   const doc = await CouponModel.findOne(tenantFilter(ctx, { code }));
   if (!doc) return { ok: false, discount: 0, code, reason: "That coupon code isn't recognised." };
 
@@ -192,6 +200,7 @@ export async function recordRedemption(input
 
 /** Coupons a customer could plausibly use, for the "available offers" list. */
 export async function publicCoupons(ctx               )                    {
+  if (!(await entitled(ctx.brandId, "coupons"))) return [];
   const now = Date.now();
   const docs = await CouponModel.find(tenantFilter(ctx, { active: true }));
   return docs

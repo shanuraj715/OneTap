@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { OutletPicker } from "@/components/OutletPicker";
+import { OutletUnavailable } from "@/components/OutletUnavailable";
 import { getOutletsForHost } from "@/lib/outlet";
 
 export const dynamic = "force-dynamic";
@@ -19,7 +20,10 @@ const CHOICE_COOKIE = "onetap_outlet_slug";
 export default async function RootPage() {
   const resolved = await getOutletsForHost();
 
-  if (!resolved || resolved.outlets.length === 0) {
+  // The store exists but every outlet is blocked by the platform.
+  if (resolved && resolved.outlets.length === 0) return <OutletUnavailable outlet={null} />;
+
+  if (!resolved) {
     return (
       <main style={{ maxWidth: 560, margin: "120px auto", padding: 24, textAlign: "center" }}>
         <h1>Storefront not configured</h1>

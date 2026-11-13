@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { OrderPage } from "@/components/OrderPage";
+import { OutletUnavailable } from "@/components/OutletUnavailable";
 import { ThemeStyle } from "@/components/ThemeStyle";
 import { getMenu } from "@/lib/menu";
 import { getOutletBySlug } from "@/lib/outlet";
@@ -18,6 +19,7 @@ export default async function OutletOrderPage({ params }) {
   const { outletSlug } = await params;
   const outlet = await getOutletBySlug(outletSlug);
   if (!outlet) notFound();
+  if (outlet.blocked) return <OutletUnavailable outlet={outlet} />;
 
   const menu = await getMenu(outlet.id);
   const { identity, theme, typography, features, layout } = outlet.config;

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { CARD_TEMPLATES, CARD_TEMPLATE_FAMILIES } from "@onetap/config-schema";
 import { Check, LayoutTemplate, X } from "lucide-react";
 import { layoutCard, prepareCard, renderCard } from "../../lib/card/cardRenderer";
+import { useStorePlan } from "../../lib/useStorePlan";
 import { Button, Checkbox, Modal } from "../../ui";
 
 /**
@@ -17,6 +18,7 @@ export function TemplateGallery({ data, currentSize, onApply, onClose }) {
   const [family, setFamily] = useState("all");
   const [orientation, setOrientation] = useState("all");
   const [keepSize, setKeepSize] = useState(false);
+  const { qrFamilyAllowed } = useStorePlan();
 
   const shown = useMemo(
     () =>
@@ -78,7 +80,7 @@ export function TemplateGallery({ data, currentSize, onApply, onClose }) {
         ) : (
           <div style={grid}>
             {shown.map((tpl) => (
-              <TemplateTile key={tpl.id} tpl={tpl} data={data} onApply={() => apply(tpl)} />
+              <TemplateTile key={tpl.id} tpl={tpl} data={data} locked={!qrFamilyAllowed(tpl.family)} onApply={() => apply(tpl)} />
             ))}
           </div>
         )}
@@ -87,7 +89,7 @@ export function TemplateGallery({ data, currentSize, onApply, onClose }) {
   );
 }
 
-function TemplateTile({ tpl, data, onApply }) {
+function TemplateTile({ tpl, data, locked, onApply }) {
   const canvasRef = useRef(null);
   const [ready, setReady] = useState(false);
 
@@ -113,7 +115,13 @@ function TemplateTile({ tpl, data, onApply }) {
   }, [tpl, data]);
 
   return (
-    <button type="button" onClick={onApply} style={tile} title={tpl.hint}>
+    <button
+      type="button"
+      onClick={locked ? undefined : onApply}
+      aria-disabled={locked || undefined}
+      style={{ ...tile, ...(locked ? { cursor: "not-allowed", opacity: 0.55 } : {}) }}
+      title={locked ? "This card style isn't in your plan" : tpl.hint}
+    >
       <span style={{ ...tileArt, opacity: ready ? 1 : 0 }}>
         <canvas ref={canvasRef} style={{ display: "block", borderRadius: 2, boxShadow: "0 1px 6px rgba(0,0,0,0.18)" }} />
       </span>
@@ -123,9 +131,13 @@ function TemplateTile({ tpl, data, onApply }) {
           {tpl.widthMm}×{tpl.heightMm}mm
         </span>
       </span>
-      <span style={tileUse}>
-        <Check size={12} /> Use this
-      </span>
+      {locked ? (
+        <span style={{ ...tileUse, color: "var(--color-text-muted)" }}>Not in your plan</span>
+      ) : (
+        <span style={tileUse}>
+          <Check size={12} /> Use this
+        </span>
+      )}
     </button>
   );
 }
