@@ -17,7 +17,18 @@ const EMPTY = {
   /** proof the customer read back their code — tied to the number it was for */
   approval: null,
   approvalPhone: null,
+  /**
+   * Which party the typed customer details belong to: "<tableId>|<sessionId or
+   * free>". When the table's party changes — the last guests left and new ones
+   * sat down — the details no longer match and are cleared.
+   */
+  customerKey: null,
 };
+
+const NO_CUSTOMER = { phone: "", name: "", email: "", useCoins: false, coins: 0, approval: null, approvalPhone: null, customerKey: null };
+
+/** A half-taken order older than this is someone else's by now — start fresh. */
+const STALE_MS = 2 * 60 * 60 * 1000;
 
 const keyFor = (outletId) => `onetap.takeOrder.${outletId}`;
 
@@ -25,7 +36,10 @@ function load(outletId) {
   if (!outletId) return EMPTY;
   try {
     const raw = sessionStorage.getItem(keyFor(outletId));
-    return raw ? { ...EMPTY, ...JSON.parse(raw) } : EMPTY;
+    if (!raw) return EMPTY;
+    const saved = JSON.parse(raw);
+    if (!saved.savedAt || Date.now() - saved.savedAt > STALE_MS) return EMPTY;
+    return { ...EMPTY, ...saved };
   } catch {
     return EMPTY;
   }
@@ -34,7 +48,7 @@ function load(outletId) {
 function save(outletId, state) {
   if (!outletId) return;
   try {
-    sessionStorage.setItem(keyFor(outletId), JSON.stringify(state));
+    sessionStorage.setItem(keyFor(outletId), JSON.stringify({ ...state, savedAt: Date.now() }));
   } catch {
     /* private mode / storage full — the order still works, it just won't survive a refresh */
   }
@@ -53,10 +67,11 @@ export function useTakeOrder(outletId) {
   const set = useCallback((patch) => setState((s) => ({ ...s, ...patch })), []);
 
   /** Picking a table: the customer belongs to the table, so they're cleared — the cart stays. */
-  const setTable = useCallback(
-    (tableId) => setState((s) => (s.tableId === tableId ? s : { ...s, tableId, phone: "", name: "", email: "", useCoins: false, coins: 0, approval: null, approvalPhone: null })),
-    [],
-  );
+  const setTable = useCallback((tableId) => setState((s) => (s.tableId === tableId ? s : { ...s, tableId, ...NO_CUSTOMER })), []);
+
+  /** Customer details typed (or picked) for the party now at the table. */
+  const setCustomer = useCallback((patch, customerKey) => setState((s) => ({ ...s, ...patch, customerKey })), []);
+  const clearCustomer = useCallback(() => setState((s) => ({ ...s, ...NO_CUSTOMER })), []);
 
   const addLine = useCallback((line) => {
     setState((s) => {
@@ -76,9 +91,14 @@ export function useTakeOrder(outletId) {
     }));
   }, []);
 
-  /** After sending: the items are gone, the table (and who's at it) stays for "add more". */
-  const clearItems = useCallback(() => setState((s) => ({ ...s, lines: [], note: "", useCoins: false, coins: 0, approval: null, approvalPhone: null })), []);
+  /**
+   * After sending: the items and the typed customer are gone — the table
+   * stays for "add more", and from now on the table itself knows who's
+   * sitting there (it shows as their bill), so nothing typed is carried over
+   * to whoever sits there next.
+   */
+  const clearItems = useCallback(() => setState((s) => ({ ...s, lines: [], note: "", ...NO_CUSTOMER })), []);
   const reset = useCallback(() => setState(EMPTY), []);
 
-  return { state, set, setTable, addLine, setQty, clearItems, reset };
+  return { state, set, setTable, setCustomer, clearCustomer, addLine, setQty, clearItems, reset };
 }

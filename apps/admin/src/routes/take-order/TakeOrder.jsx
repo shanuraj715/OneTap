@@ -59,6 +59,16 @@ export function TakeOrder() {
   const sessions = sessionsQ.data?.sessions ?? [];
   const table = tables.find((t) => t.id === state.tableId) ?? null;
   const session = useMemo(() => sessions.find((s) => s.tableId === state.tableId) ?? null, [sessions, state.tableId]);
+  // Who's at the table right now. Customer details typed for a different party
+  // (the one before, who has since left) never carry over to the next guests.
+  const partyKey = state.tableId ? `${state.tableId}|${session?.id ?? "free"}` : null;
+  useEffect(() => {
+    if (!sessionsQ.isSuccess || !partyKey) return;
+    const hasCustomer = state.phone || state.name || state.email;
+    if (hasCustomer && state.customerKey !== partyKey) order.clearCustomer();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessionsQ.isSuccess, partyKey, state.customerKey]);
+
   const itemCount = state.lines.reduce((s, l) => s + l.quantity, 0);
   const estimate = state.lines.reduce((s, l) => s + l.unitPrice * l.quantity, 0);
 
@@ -158,6 +168,7 @@ export function TakeOrder() {
         outlet={outlet}
         table={table}
         session={session}
+        partyKey={partyKey}
         order={order}
         wide={wide}
         onChangeTable={() => setView("table")}

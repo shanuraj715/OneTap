@@ -316,6 +316,9 @@ export const placeOrder = (o        , body           ) =>
 export const staffCustomerLookup = (o, phone) =>
   req(`/api/orders/staff/customer?phone=${encodeURIComponent(phone)}`, { outletId: o._id });
 
+export const searchStaffCustomers = (o, q) =>
+  req(`/api/orders/staff/customers?q=${encodeURIComponent(q)}`, { outletId: o._id });
+
 export const staffQuote = (o, body) =>
   req("/api/orders/staff/quote", { method: "POST", body: JSON.stringify(body), outletId: o._id });
 

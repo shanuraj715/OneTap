@@ -69,7 +69,16 @@ export function TablePicker({ tables, sessions, selectedId, onPick, loading }) {
           <div style={grid}>
             {list.map((t) => {
               const s = sessionByTable.get(t.id);
-              const state = s ? "seated" : t.status === "needs-cleaning" ? "cleaning" : t.status === "reserved" ? "reserved" : "free";
+              // a seated party with nothing left to make or pay for has finished — the table just needs freeing
+              const state = s
+                ? s.allPaid && s.openOrders === 0
+                  ? "done"
+                  : "seated"
+                : t.status === "needs-cleaning"
+                  ? "cleaning"
+                  : t.status === "reserved"
+                    ? "reserved"
+                    : "free";
               const tone = TONES[state];
               const selected = t.id === selectedId;
               return (
@@ -118,6 +127,7 @@ export function TablePicker({ tables, sessions, selectedId, onPick, loading }) {
 const TONES = {
   free: { label: "Free", fg: "var(--tone-success)", bg: "var(--color-bg)", border: "var(--color-border)" },
   seated: { label: "Seated", fg: "var(--tone-warning)", bg: "var(--tone-warning-wash)", border: "color-mix(in srgb, var(--tone-warning) 35%, transparent)" },
+  done: { label: "Meal done · free it", fg: "var(--tone-success)", bg: "var(--tone-success-wash)", border: "color-mix(in srgb, var(--tone-success) 30%, transparent)" },
   cleaning: { label: "Needs cleaning", fg: "var(--color-text-muted)", bg: "var(--color-surface)", border: "var(--color-border)" },
   reserved: { label: "Reserved", fg: "var(--tone-info)", bg: "var(--tone-info-wash)", border: "color-mix(in srgb, var(--tone-info) 30%, transparent)" },
 };

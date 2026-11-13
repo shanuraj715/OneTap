@@ -7,6 +7,7 @@ import {
   confirmCoinsCode,
   lookupCustomer,
   placeStaffOrder,
+  searchCustomers,
   sendCoinsCode,
   staffQuote,
 } from "./staff-orders.service.js";
@@ -24,6 +25,13 @@ const phoneParam = z.string().min(8).max(20);
 staffOrdersRouter.get("/customer", async (req, res) => {
   const ctx = await requireOutletContext(req, "order:create");
   res.json(await lookupCustomer(ctx, phoneParam.parse(req.query.phone)));
+});
+
+/** Customers matching the digits typed so far — for the dropdown under the mobile field. */
+staffOrdersRouter.get("/customers", async (req, res) => {
+  const ctx = await requireOutletContext(req, "order:create");
+  const q = z.string().max(20).parse(req.query.q ?? "");
+  res.json({ customers: await searchCustomers(ctx, q) });
 });
 
 const quoteBody = z.object({

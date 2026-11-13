@@ -311,6 +311,8 @@ export async function listActiveSessions(ctx               ) {
   return Promise.all(
     sessions.map(async (s) => {
       const { orders, tab, unpaidTotal, allPaid } = await sessionTab(ctx, String(s._id));
+      // still being made / served — a party with none left and nothing unpaid is done
+      const openOrders = orders.filter((o) => o.status !== "completed").length;
       return {
         id: String(s._id),
         tableId: s.tableId,
@@ -320,6 +322,7 @@ export async function listActiveSessions(ctx               ) {
         customerPhone: customerById.get(s.customerId)?.phone ?? null,
         openedAt: s.openedAt,
         orderCount: orders.length,
+        openOrders,
         tab,
         unpaidTotal,
         allPaid,

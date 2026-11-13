@@ -84,6 +84,7 @@ export async function lookupCustomer(ctx, rawPhone) {
       ? {
           id: String(customer._id),
           name: customer.name ?? null,
+          email: customer.email ?? null,
           visits: customer.orderCount ?? 0,
           coins: customer.walletBalance ?? 0,
           hasEmail: Boolean(customer.email),
@@ -96,6 +97,27 @@ export async function lookupCustomer(ctx, rawPhone) {
     },
     smsCodes: Boolean(sender),
   };
+}
+
+/**
+ * Customers whose mobile starts with what staff have typed so far — the
+ * dropdown under the mobile field. Three digits minimum, most recent first.
+ */
+export async function searchCustomers(ctx, rawQuery) {
+  const digits = String(rawQuery ?? "").replace(/\D/g, "").slice(0, 10);
+  if (digits.length < 3) return [];
+  const customers = await CustomerModel.find({ brandId: ctx.brandId, phone: { $regex: `^${digits}` } })
+    .sort({ lastOrderAt: -1, createdAt: -1 })
+    .limit(8)
+    .lean();
+  return customers.map((c) => ({
+    id: String(c._id),
+    name: c.name ?? null,
+    phone: c.phone,
+    email: c.email ?? null,
+    visits: c.orderCount ?? 0,
+    coins: c.walletBalance ?? 0,
+  }));
 }
 
 /** The customer an order on this table would be for: the seated party's, or whoever owns this number. */
