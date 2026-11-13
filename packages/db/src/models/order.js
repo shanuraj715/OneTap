@@ -73,6 +73,11 @@ const { Schema, model, models } = mongoose;
 const orderSchema = new Schema          (
   {
     orderNumber: { type: String, required: true },
+    // The `YYYYMMDD` the number was issued on — the counter that produces
+    // `orderNumber` resets every day, so uniqueness has to be scoped to the
+    // same day it counts within, or two orders on different days eventually
+    // land on the same number and collide (see the index below).
+    orderDay: { type: String, required: true },
     channel: { type: String, enum: ORDER_CHANNELS, required: true },
     placedBy: { type: String, enum: PLACED_BY_VALUES, default: "customer", index: true },
     staffId: { type: String },
@@ -127,7 +132,7 @@ const orderSchema = new Schema          (
 
 orderSchema.plugin(tenantScope);
 orderSchema.index({ brandId: 1, outletId: 1, createdAt: -1 });
-orderSchema.index({ brandId: 1, outletId: 1, orderNumber: 1 }, { unique: true });
+orderSchema.index({ brandId: 1, outletId: 1, orderDay: 1, orderNumber: 1 }, { unique: true });
 
 export const OrderModel                  =
   (models.Order                               ) ?? model          ("Order", orderSchema);

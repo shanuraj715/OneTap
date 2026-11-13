@@ -240,9 +240,14 @@ export async function resolveDelivery(
   return result;
 }
 
-function orderNumberKey(outletId        )         {
+/** `YYYYMMDD` for "today" — the counter resets on this boundary, so anything
+ *  keyed or scoped by day must derive it from here, never recompute it. */
+function orderDay()         {
   const d = new Date();
-  const day = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}`;
+  return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}`;
+}
+
+function orderNumberKey(outletId        , day        )         {
   return `order:${outletId}:${day}`;
 }
 
@@ -339,12 +344,14 @@ export async function placeOrder(input
     throw new HttpError(409, priced.coinsError);
   }
 
-  const seq = await nextSequence(orderNumberKey(ctx.outletId ));
+  const day = orderDay();
+  const seq = await nextSequence(orderNumberKey(ctx.outletId , day));
 
   const order = await OrderModel.create({
     brandId: ctx.brandId,
     outletId: ctx.outletId,
     orderNumber: String(seq).padStart(4, "0"),
+    orderDay: day,
     channel: input.channel,
     placedBy,
     staffId: input.staffId,
@@ -539,6 +546,33 @@ export async function setStatusManual(
   firePrinters(ctx, updated, status);
   fireNotifications(ctx, updated, status);
   return updated;
+}
+
+/**
+ * Force-cancel every still-open order on a table session — a party walked out,
+ * or a table was claimed by mistake. Deliberately bypasses `allowStatusRewind`:
+ * that gate is about a routine manual correction to one order, not this — staff
+ * must always be able to void a table, whatever an order's current status.
+ */
+export async function cancelOrdersForSession(
+  ctx               ,
+  sessionId        ,
+  byUserId         ,
+  reason         ,
+)                {
+  const orders = await OrderModel.find(tenantFilter(ctx, { sessionId, status: { $nin: ["completed", "cancelled"] } }));
+  for (const order of orders) {
+    const from = order.status;
+    order.status = "cancelled";
+    order.statusHistory.push({ status: "cancelled", at: new Date(), by: byUserId, manual: true, from, reason: reason?.slice(0, 200) ?? "Table voided" });
+    await settleWallet(ctx, order, "cancelled");
+    await order.save();
+
+    const updated = order.toObject();
+    broadcast(ctx.outletId , { type: "order.updated", order: wire(updated) });
+    firePrinters(ctx, updated, "cancelled");
+    fireNotifications(ctx, updated, "cancelled");
+  }
 }
 
 /**
