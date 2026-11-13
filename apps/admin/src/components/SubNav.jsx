@@ -57,73 +57,41 @@ export function SubNav({ items }) {
 }
 
 /**
- * Sub-navigation for the Settings family:
- * - Outlet Settings (General)
- * - Outlets (Multi-outlet management)
- * - Payments
- * - Notifications
- * - Users & Roles
- * - Storage
- * - Dashboard Config
+ * Each tab family's pages, in tab order. The sidebar builds its single entry
+ * per family from these same lists (see App.jsx), so a page is never listed
+ * both as a sidebar item and as a tab — and the two can't drift apart.
  */
-export function SettingsNav() {
+export const SETTINGS_TABS = [
+  { to: "/settings", label: "Outlet Settings", icon: <Building2 size={ICON_SIZE} />, end: true, permission: "settings:update" },
+  { to: "/outlets", label: "Outlets", icon: <Store size={ICON_SIZE} />, permission: "outlet:manage" },
+  { to: "/payments", label: "Payments", icon: <CreditCard size={ICON_SIZE} />, permission: "payment-config:read" },
+  { to: "/notifications", label: "Notifications", icon: <Bell size={ICON_SIZE} />, permission: "notification-config:read" },
+  { to: "/users", label: "Users & roles", icon: <UsersIcon size={ICON_SIZE} />, permission: "user:read" },
+  { to: "/storage", label: "Storage", icon: <HardDrive size={ICON_SIZE} />, permission: "storage-config:read" },
+  { to: "/dashboard-config", label: "Configure dashboard", icon: <LayoutGrid size={ICON_SIZE} />, permission: "dashboard:configure" },
+];
+
+export const STOREFRONT_TABS = [
+  { to: "/menu-layout", label: "Menu layout", icon: <LayoutList size={ICON_SIZE} />, permission: "appearance:update" },
+  { to: "/appearance", label: "Appearance", icon: <Wand2 size={ICON_SIZE} />, permission: "appearance:update" },
+  { to: "/theme", label: "Theme", icon: <Palette size={ICON_SIZE} />, permission: "theme:update" },
+  { to: "/typography", label: "Typography", icon: <Type size={ICON_SIZE} />, permission: "theme:update" },
+  { to: "/components", label: "Components", icon: <Boxes size={ICON_SIZE} /> },
+];
+
+export const TABLES_TABS = [
+  { to: "/tables", label: "Tables & QR", icon: <QrCode size={ICON_SIZE} />, permission: "table:read" },
+  { to: "/table-cards", label: "Table cards", icon: <IdCard size={ICON_SIZE} />, permission: "table:read" },
+];
+
+function FamilyNav({ tabs }) {
   const { can } = useAuth();
-
-  const allItems = [
-    { to: "/settings", label: "Outlet Settings", icon: <Building2 size={ICON_SIZE} />, end: true, permission: "settings:update" },
-    { to: "/outlets", label: "Outlets", icon: <Store size={ICON_SIZE} />, permission: "outlet:manage" },
-    { to: "/payments", label: "Payments", icon: <CreditCard size={ICON_SIZE} />, permission: "payment-config:read" },
-    { to: "/notifications", label: "Notifications", icon: <Bell size={ICON_SIZE} />, permission: "notification-config:read" },
-    { to: "/users", label: "Users & roles", icon: <UsersIcon size={ICON_SIZE} />, permission: "user:read" },
-    { to: "/storage", label: "Storage", icon: <HardDrive size={ICON_SIZE} />, permission: "storage-config:read" },
-    { to: "/dashboard-config", label: "Configure dashboard", icon: <LayoutGrid size={ICON_SIZE} />, permission: "dashboard:configure" },
-  ];
-
-  const visibleItems = allItems.filter((i) => !i.permission || can(i.permission));
-
-  return <SubNav items={visibleItems} />;
+  return <SubNav items={tabs.filter((i) => !i.permission || can(i.permission))} />;
 }
 
-/**
- * Sub-navigation for the Storefront family:
- * - Menu Layout
- * - Appearance
- * - Theme
- * - Typography
- */
-export function StorefrontNav() {
-  const { can } = useAuth();
-
-  const allItems = [
-    { to: "/menu-layout", label: "Menu layout", icon: <LayoutList size={ICON_SIZE} />, permission: "appearance:update" },
-    { to: "/appearance", label: "Appearance", icon: <Wand2 size={ICON_SIZE} />, permission: "appearance:update" },
-    { to: "/theme", label: "Theme", icon: <Palette size={ICON_SIZE} />, permission: "theme:update" },
-    { to: "/typography", label: "Typography", icon: <Type size={ICON_SIZE} />, permission: "theme:update" },
-    { to: "/components", label: "Components", icon: <Boxes size={ICON_SIZE} /> },
-  ];
-
-  const visibleItems = allItems.filter((i) => !i.permission || can(i.permission));
-
-  return <SubNav items={visibleItems} />;
-}
-
-/**
- * Sub-navigation for the Tables family:
- * - Tables & QR Codes
- * - Table Cards Designer
- */
-export function TablesNav() {
-  const { can } = useAuth();
-
-  const allItems = [
-    { to: "/tables", label: "Tables & QR", icon: <QrCode size={ICON_SIZE} />, permission: "table:read" },
-    { to: "/table-cards", label: "Table cards", icon: <IdCard size={ICON_SIZE} />, permission: "table:read" },
-  ];
-
-  const visibleItems = allItems.filter((i) => !i.permission || can(i.permission));
-
-  return <SubNav items={visibleItems} />;
-}
+export const SettingsNav = () => <FamilyNav tabs={SETTINGS_TABS} />;
+export const StorefrontNav = () => <FamilyNav tabs={STOREFRONT_TABS} />;
+export const TablesNav = () => <FamilyNav tabs={TABLES_TABS} />;
 
 const navWrap = {
   display: "block",

@@ -35,6 +35,7 @@ import {
 import { useAuth, useLogout } from "./lib/useAuth";
 import { OutletSelectionProvider, useOutlets } from "./lib/useOutlet";
 import { CreateOutletModal } from "./components/CreateOutletModal";
+import { SETTINGS_TABS, STOREFRONT_TABS, TABLES_TABS } from "./components/SubNav";
 import { Appearance } from "./routes/Appearance";
 import { Brands } from "./routes/Brands";
 import { ComponentsCatalog } from "./routes/ComponentsCatalog";
@@ -87,46 +88,38 @@ const ROUTE_META = {
   "/brands": { title: "Brands", icon: Building2 },
 };
 
-/** Full navigation list showing every single option — for Super Admins. */
-const SUPER_ADMIN_NAV_GROUPS = [
+/**
+ * A sidebar entry standing in for a whole tab family (see SubNav.jsx): shown
+ * if the user can open ANY of its tabs, linking to the first one they can,
+ * and highlighted on every page in the family. The pages themselves are
+ * reached through the tab bar — never listed twice.
+ */
+const family = (label, icon, tabs) => ({ label, icon, tabs });
+
+const NAV_GROUPS = [
   {
     group: "Service",
     items: [
       { to: "/", label: "Dashboard", icon: <LayoutDashboard size={ICON} />, end: true },
       { to: "/orders", label: "Orders", icon: <ReceiptText size={ICON} />, permission: "order:read" },
-      { to: "/tables", label: "Tables & QR", icon: <QrCode size={ICON} />, permission: "table:read" },
-      { to: "/table-cards", label: "Table cards", icon: <IdCard size={ICON} />, permission: "table:read" },
+      family("Tables", <QrCode size={ICON} />, TABLES_TABS),
       { to: "/printing", label: "Printing", icon: <Printer size={ICON} />, permission: "printer:read" },
     ],
   },
   {
     group: "Catalogue",
-    items: [
-      { to: "/menu", label: "Menu", icon: <UtensilsCrossed size={ICON} />, permission: "menu:read" },
-      { to: "/components", label: "Components", icon: <Boxes size={ICON} /> },
-      { to: "/storage", label: "Storage", icon: <HardDrive size={ICON} />, permission: "storage-config:read" },
-    ],
+    items: [{ to: "/menu", label: "Menu", icon: <UtensilsCrossed size={ICON} />, permission: "menu:read" }],
   },
   {
     group: "Storefront",
-    items: [
-      { to: "/menu-layout", label: "Menu layout", icon: <LayoutList size={ICON} />, permission: "appearance:update" },
-      { to: "/appearance", label: "Appearance", icon: <Wand2 size={ICON} />, permission: "appearance:update" },
-      { to: "/theme", label: "Theme", icon: <Palette size={ICON} />, permission: "theme:update" },
-      { to: "/typography", label: "Typography", icon: <Type size={ICON} />, permission: "theme:update" },
-    ],
+    items: [family("Storefront", <Wand2 size={ICON} />, STOREFRONT_TABS)],
   },
   {
     group: "Business",
     items: [
       { to: "/coupons", label: "Coupons", icon: <Tag size={ICON} />, permission: "coupon:read" },
-      { to: "/payments", label: "Payments", icon: <CreditCard size={ICON} />, permission: "payment-config:read" },
-      { to: "/notifications", label: "Notifications", icon: <Bell size={ICON} />, permission: "notification-config:read" },
       { to: "/customers", label: "Customers", icon: <UsersIcon size={ICON} />, permission: "customer:read" },
-      { to: "/settings", label: "Settings", icon: <SettingsIcon size={ICON} />, permission: "settings:update" },
-      { to: "/outlets", label: "Outlets", icon: <Building2 size={ICON} />, permission: "outlet:manage" },
-      { to: "/dashboard-config", label: "Configure dashboard", icon: <LayoutGrid size={ICON} />, permission: "dashboard:configure" },
-      { to: "/users", label: "Users & roles", icon: <UsersIcon size={ICON} />, permission: "user:read" },
+      family("Settings", <SettingsIcon size={ICON} />, SETTINGS_TABS),
     ],
   },
   {
@@ -136,57 +129,13 @@ const SUPER_ADMIN_NAV_GROUPS = [
   },
 ];
 
-/** Streamlined navigation list with consolidated sections — for Owners and managers. */
-const OWNER_NAV_GROUPS = [
-  {
-    group: "Service",
-    items: [
-      { to: "/", label: "Dashboard", icon: <LayoutDashboard size={ICON} />, end: true },
-      { to: "/orders", label: "Orders", icon: <ReceiptText size={ICON} />, permission: "order:read" },
-      {
-        to: "/tables",
-        label: "Tables & QR",
-        icon: <QrCode size={ICON} />,
-        permission: "table:read",
-        matchPaths: ["/tables", "/table-cards"],
-      },
-      { to: "/printing", label: "Printing", icon: <Printer size={ICON} />, permission: "printer:read" },
-    ],
-  },
-  {
-    group: "Catalogue",
-    items: [
-      { to: "/menu", label: "Menu", icon: <UtensilsCrossed size={ICON} />, permission: "menu:read" },
-      { to: "/components", label: "Components", icon: <Boxes size={ICON} /> },
-    ],
-  },
-  {
-    group: "Storefront",
-    items: [
-      {
-        to: "/menu-layout",
-        label: "Storefront",
-        icon: <Wand2 size={ICON} />,
-        permission: "appearance:update",
-        matchPaths: ["/menu-layout", "/appearance", "/theme", "/typography"],
-      },
-    ],
-  },
-  {
-    group: "Business",
-    items: [
-      { to: "/coupons", label: "Coupons", icon: <Tag size={ICON} />, permission: "coupon:read" },
-      { to: "/customers", label: "Customers", icon: <UsersIcon size={ICON} />, permission: "customer:read" },
-      {
-        to: "/settings",
-        label: "Settings",
-        icon: <SettingsIcon size={ICON} />,
-        permission: "settings:update",
-        matchPaths: ["/settings", "/outlets", "/payments", "/notifications", "/users", "/storage", "/dashboard-config"],
-      },
-    ],
-  },
-];
+/** Resolve a nav entry for this user: a family becomes a plain link to its first permitted tab, or disappears. */
+function resolveNavItem(n, can) {
+  if (!n.tabs) return !n.permission || can(n.permission) ? n : null;
+  const allowed = n.tabs.filter((t) => !t.permission || can(t.permission));
+  if (!allowed.length) return null;
+  return { to: allowed[0].to, label: n.label, icon: n.icon, matchPaths: n.tabs.map((t) => t.to) };
+}
 
 export function App() {
   const { user, isLoading, can } = useAuth();
@@ -268,12 +217,11 @@ function Shell({ can }                                     ) {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  const navGroups = user?.isSuperAdmin ? SUPER_ADMIN_NAV_GROUPS : OWNER_NAV_GROUPS;
-  const groups = navGroups
+  const groups = NAV_GROUPS
     .filter((g) => !g.superAdminOnly || user?.isSuperAdmin)
     .map((g) => ({
       ...g,
-      items: g.items.filter((n) => !n.permission || can(n.permission)),
+      items: g.items.map((n) => resolveNavItem(n, can)).filter(Boolean),
     }))
     .filter((g) => g.items.length);
 
