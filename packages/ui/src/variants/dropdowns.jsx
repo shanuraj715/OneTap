@@ -119,7 +119,7 @@ function Shell({
               tabIndex={o.disabled ? -1 : 0}
               onClick={() => select(o)}
               onKeyDown={(e) => e.key === "Enter" && select(o)}
-              className={o.disabled ? undefined : "ot-press"}
+              className={o.disabled ? undefined : "ot-option ot-press"}
               style={{
                 ...option,
                 ...optionStyle,

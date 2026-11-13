@@ -447,11 +447,10 @@ function ReviewOrder({
         <Section icon={<Utensils size={16} />} title={`Table ${dineIn.tableNumber}`}>
           <p style={muted}>This joins your running tab — settle everything together when you're done.</p>
         </Section>
-      ) : showFulfilmentPicker(dineInEnabled, deliveryAvailable) ? (
+      ) : showFulfilmentPicker(deliveryAvailable) ? (
         <Section icon={<Utensils size={16} />} title="How would you like it?">
           <div style={{ display: "flex", gap: 8 }}>
             <ChoiceBtn active={fulfilment === "takeaway"} onClick={() => onFulfilment("takeaway")} emoji="🥡" label="Takeaway" />
-            {dineInEnabled ? <ChoiceBtn active={fulfilment === "dinein"} onClick={() => onFulfilment("dinein")} emoji="🍽️" label="At a table" /> : null}
             {deliveryAvailable ? <ChoiceBtn active={fulfilment === "delivery"} onClick={() => onFulfilment("delivery")} emoji="🛵" label="Delivery" /> : null}
           </div>
 
@@ -469,7 +468,7 @@ function ReviewOrder({
                   triggerRef={tablePickerRef}
                   options={tables.map((tb) => ({
                     value: tb.number,
-                    label: tb.number,
+                    label: `Table ${tb.number} - ${tb.seats} ${tb.seats === 1 ? "Person" : "People"}`,
                     disabled: tb.occupied,
                     tag: tb.occupied ? "Unavailable" : undefined,
                   }))}
@@ -562,7 +561,24 @@ function ReviewOrder({
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {gateways.map((g) => (
               <label key={g} style={payOption}>
-                <input type="radio" name="gateway" checked={gateway === g} onChange={() => setGateway(g)} />
+                <input
+                  type="radio"
+                  name="gateway"
+                  checked={gateway === g}
+                  onChange={() => {
+                    setGateway(g);
+                    // A pending order was created with whatever gateway was
+                    // selected at the time — the server has no way to change
+                    // an order's gateway after the fact, so reusing it here
+                    // would send this new choice to checkout while quietly
+                    // billing the OLD one underneath. Forcing a fresh order
+                    // keeps the two in sync.
+                    if (pendingOrder) {
+                      setPendingOrder(null);
+                      setError(null);
+                    }
+                  }}
+                />
                 <span>{GATEWAY_LABELS[g]}</span>
               </label>
             ))}
@@ -625,8 +641,12 @@ function ReviewOrder({
   );
 }
 
-function showFulfilmentPicker(dineInEnabled, deliveryAvailable) {
-  return dineInEnabled || deliveryAvailable;
+function showFulfilmentPicker(deliveryAvailable) {
+  // Dine-in is never offered here — only a scanned table QR can put a diner
+  // on the dine-in path (see the `dineIn` branch above). Without it, this
+  // picker's only real choice is takeaway vs delivery; with neither, there's
+  // nothing to pick and takeaway (the default) is used silently.
+  return deliveryAvailable;
 }
 
 /* -------------------------------------------------------------------- done */
