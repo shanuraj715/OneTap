@@ -1,4 +1,5 @@
 import {
+  DEFAULT_OTP_TEMPLATE,
   formatINR,
   NOTIFY_CHANNELS,
   NOTIFY_FIELDS,
@@ -9,6 +10,7 @@ import {
                    
 } from "@onetap/config-schema";
 import {
+  BrandModel,
   brandFilter,
   NotificationCredentialModel,
   NotificationLogModel,
@@ -104,6 +106,34 @@ export async function saveNotifyCredentials(
 
 export async function clearNotifyCredentials(ctx               , channel                    ) {
   await NotificationCredentialModel.deleteOne(brandFilter(ctx, { channel }));
+}
+
+/* ------------------------------------------------------------- SMS codes */
+
+/**
+ * The store's sender for one-time codes (customer sign-in, and staff spending
+ * a customer's coins) — or null when the store hasn't switched "Send login &
+ * coin codes by SMS" on, or its SMS gateway isn't set up. Null is the signal
+ * every caller uses for "codes aren't configured here": sign-in falls back to
+ * the on-screen code, and staff can spend coins without one.
+ */
+export async function smsCodeSender(brandId        ) {
+  const ctx = { brandId: String(brandId) };
+  const creds = await credentialsFor(ctx, "sms");
+  const provider = providerFor("sms");
+  const ready = creds.otpEnabled === "on" && provider.requiredFields.every((k) => Boolean(creds[k]));
+  if (!ready) return null;
+
+  return {
+    async send(to        , code        ) {
+      const brand = await BrandModel.findOne({ _id: ctx.brandId }).lean();
+      const template = creds.otpTemplate?.trim() || DEFAULT_OTP_TEMPLATE;
+      const message = template.replaceAll("{{code}}", code).replaceAll("{{store}}", brand?.name ?? "");
+      const result = await provider.send(creds, { to, event: "otp", values: {}, message });
+      if (!result.ok) logger.error({ brandId: ctx.brandId, reason: result.reason }, "SMS code could not be sent");
+      return result;
+    },
+  };
 }
 
 /* ---------------------------------------------------------------- dispatch */

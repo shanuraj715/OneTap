@@ -27,6 +27,8 @@ function useTableMutation   (outlet                    , fn                     
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["tables"] });
       qc.invalidateQueries({ queryKey: ["sessions"] });
+      // moving or voiding a party changes its orders' table / status too
+      qc.invalidateQueries({ queryKey: ["orders"] });
     },
   });
 }

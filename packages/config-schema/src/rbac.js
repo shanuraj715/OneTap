@@ -35,6 +35,10 @@ export const PERMISSIONS = [
   "menu:read",
   "menu:update",
   "order:read",
+  // Taking an order on a customer's behalf (the staff "Take order" screen).
+  // Separate from order:update so the kitchen can move statuses without
+  // being able to put food on anyone's bill.
+  "order:create",
   "order:update",
   "order:refund",
   "table:read",
@@ -66,9 +70,9 @@ const ALL = [...PERMISSIONS];
 export const ROLE_PERMISSIONS                             = {
   super_admin: ALL,
   owner: ALL,
-  manager: ["outlet:read", "menu:read", "menu:update", "order:read", "order:update", "table:read", "table:manage", "payment-config:read", "printer:read", "printer:manage", "print:job", "coupon:read", "coupon:manage", "appearance:update", "theme:update", "settings:update", "customer:read", "notification-config:read", "notification-log:read", "dashboard:configure", "storage-config:read"],
+  manager: ["outlet:read", "menu:read", "menu:update", "order:read", "order:create", "order:update", "table:read", "table:manage", "payment-config:read", "printer:read", "printer:manage", "print:job", "coupon:read", "coupon:manage", "appearance:update", "theme:update", "settings:update", "customer:read", "notification-config:read", "notification-log:read", "dashboard:configure", "storage-config:read"],
   // A cashier must be able to reprint a torn receipt without calling a manager.
-  staff: ["outlet:read", "menu:read", "order:read", "order:update", "table:read", "table:manage", "printer:read", "print:job", "coupon:read"],
+  staff: ["outlet:read", "menu:read", "order:read", "order:create", "order:update", "table:read", "table:manage", "printer:read", "print:job", "coupon:read"],
   // Same for the kitchen when a KOT is lost — but they can't reconfigure printers.
   kitchen: ["outlet:read", "menu:read", "order:read", "order:update", "table:read", "printer:read", "print:job"],
   editor: ["outlet:read", "menu:read", "appearance:update", "theme:update"],

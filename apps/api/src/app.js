@@ -20,6 +20,7 @@ import { healthRouter } from "./modules/health/health.routes.js";
 import { menuRouter } from "./modules/menu/menu.routes.js";
 import { notifyRouter } from "./modules/notify/notify.routes.js";
 import { ordersRouter } from "./modules/orders/orders.routes.js";
+import { staffOrdersRouter } from "./modules/orders/staff-orders.routes.js";
 import { outletsRouter } from "./modules/outlets/outlets.routes.js";
 import { paymentsRouter } from "./modules/payments/payments.routes.js";
 import { previewRouter } from "./modules/preview/preview.routes.js";
@@ -91,6 +92,8 @@ export function createApp()          {
   app.use("/api/outlets", outletsRouter);
   app.use("/api/menu", menuRouter);
   app.use("/api/customer", customerRouter);
+  // before /api/orders, so its paths can never be read as an order id
+  app.use("/api/orders/staff", staffOrdersRouter);
   app.use("/api/orders", ordersRouter);
   app.use("/api/coupons", couponsRouter);
   app.use("/api/delivery", deliveryRouter);

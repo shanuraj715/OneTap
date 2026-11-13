@@ -2,6 +2,7 @@ import { createHmac, randomBytes } from "node:crypto";
 import QRCode from "qrcode";
                                                          
 import {
+  CustomerModel,
   OrderModel,
   TableModel,
   TableSessionModel,
@@ -302,6 +303,10 @@ export async function listActiveSessions(ctx               ) {
   const sessions = await TableSessionModel.find(tenantFilter(ctx, { status: "open" })).sort({ openedAt: 1 }).lean();
   const tables = await TableModel.find(tenantFilter(ctx)).lean();
   const byId = new Map(tables.map((t) => [String(t._id), t]));
+  // who's sitting there — staff recognise a party by name, and the Take order
+  // screen locks a seated table's customer to them
+  const customers = await CustomerModel.find({ brandId: ctx.brandId, _id: { $in: sessions.map((s) => s.customerId) } }).lean();
+  const customerById = new Map(customers.map((c) => [String(c._id), c]));
 
   return Promise.all(
     sessions.map(async (s) => {
@@ -311,6 +316,8 @@ export async function listActiveSessions(ctx               ) {
         tableId: s.tableId,
         tableNumber: byId.get(s.tableId)?.number ?? "?",
         customerId: s.customerId,
+        customerName: customerById.get(s.customerId)?.name ?? null,
+        customerPhone: customerById.get(s.customerId)?.phone ?? null,
         openedAt: s.openedAt,
         orderCount: orders.length,
         tab,

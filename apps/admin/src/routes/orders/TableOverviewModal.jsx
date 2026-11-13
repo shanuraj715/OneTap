@@ -1,14 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
+import { useNavigate } from "react-router-dom";
 import { formatINR, TABLE_STATUS_LABELS } from "@onetap/config-schema";
 import {
   ArrowLeft,
   Ban,
   CheckCircle2,
   ChevronRight,
-  Minus,
   Plus,
-  Search,
   ShoppingBasket,
   Sparkles,
   User,
@@ -16,7 +15,6 @@ import {
   Wallet,
   X,
 } from "lucide-react";
-import { usePlaceOrder } from "../../lib/useOrders";
 import {
   useActiveSessions,
   useCloseSession,
@@ -26,7 +24,7 @@ import {
   useUpdateTable,
   useVoidSession,
 } from "../../lib/useTables";
-import { Button, Note, Pill, TextInput, Toast, useLockBodyScroll } from "../../ui";
+import { Button, Note, Pill, Toast, useLockBodyScroll } from "../../ui";
 
 /**
  * Full-screen: this replaces the whole working view rather than sitting over
@@ -194,7 +192,7 @@ function TableDetail({
   const confirmPayment = useConfirmPayment(outlet);
   const voidSession = useVoidSession(outlet);
   const [moveTo, setMoveTo] = useState("");
-  const [addItemOpen, setAddItemOpen] = useState(false);
+  const navigate = useNavigate();
 
   // Orders for THIS session only — a table's id is reused by every party that
   // ever sat there, so anything from before this session opened belongs to a
@@ -274,7 +272,8 @@ function TableDetail({
         <>
           <div style={sectionHead}>Actions</div>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 14 }}>
-            <Button variant="outline" onClick={() => setAddItemOpen((v) => !v)}>
+            {/* The full Take order screen, opened on this table — sizes, add-ons and notes included. */}
+            <Button variant="outline" onClick={() => navigate(`/take-order?table=${table.id}`)}>
               <Plus size={14} style={{ marginRight: 6, verticalAlign: -2 }} />
               Add item
             </Button>
@@ -332,15 +331,6 @@ function TableDetail({
         </>
       ) : null}
 
-      {addItemOpen ? (
-        <AddItemPanel
-          outlet={outlet}
-          table={table}
-          session={session}
-          menu={menu}
-          onDone={() => setAddItemOpen(false)}
-        />
-      ) : null}
     </div>
   );
 }
@@ -354,97 +344,6 @@ function StatCard({ icon, label, value, sub, tone: t = "neutral" }) {
       </div>
       <div style={{ fontSize: 18, fontWeight: 700, marginTop: 4 }}>{value}</div>
       {sub ? <div style={{ fontSize: 12, color, marginTop: 2 }}>{sub}</div> : null}
-    </div>
-  );
-}
-
-/* ---------------------------------------------------------------- add item */
-
-function AddItemPanel({ outlet, table, session, menu, onDone }) {
-  const place = usePlaceOrder(outlet);
-  const [search, setSearch] = useState("");
-  const [cart, setCart] = useState([]);
-
-  const catalogue = useMemo(() => {
-    if (!menu) return [];
-    const q = search.trim().toLowerCase();
-    return menu.items.filter((item) => item.isAvailable && (!q || item.name.toLowerCase().includes(q))).slice(0, 30);
-  }, [menu, search]);
-
-  const addToCart = (item          ) => {
-    const variant = item.variants?.[0];
-    setCart((prev) => {
-      const key = `${item.id}:${variant?.id ?? ""}`;
-      const existing = prev.find((l) => l.key === key);
-      if (existing) return prev.map((l) => (l.key === key ? { ...l, quantity: l.quantity + 1 } : l));
-      return [...prev, { key, itemId: item.id, variantId: variant?.id, name: item.name, price: variant?.price ?? item.basePrice, quantity: 1 }];
-    });
-  };
-
-  const setQty = (key        , q        ) =>
-    setCart((prev) => (q <= 0 ? prev.filter((l) => l.key !== key) : prev.map((l) => (l.key === key ? { ...l, quantity: q } : l))));
-
-  const total = cart.reduce((sum, l) => sum + l.price * l.quantity, 0);
-
-  return (
-    <div style={addItemPanel}>
-      <div style={sectionHead}>
-        <Search size={14} />
-        Add to table {table.number}
-      </div>
-
-      <TextInput value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search the menu…" style={{ marginBottom: 10 }} />
-
-      <div style={{ display: "flex", flexDirection: "column", gap: 4, maxHeight: 180, overflowY: "auto", marginBottom: 12 }}>
-        {catalogue.map((item) => (
-          <button key={item.id} type="button" className="ot-press" onClick={() => addToCart(item)} style={catalogueRow}>
-            <span>{item.name}</span>
-            <span style={{ color: "var(--color-text-muted)", fontSize: 12.5 }}>{formatINR(item.variants?.[0]?.price ?? item.basePrice)}</span>
-          </button>
-        ))}
-        {menu && catalogue.length === 0 ? <p style={{ fontSize: 12.5, color: "var(--color-text-muted)" }}>No matching items.</p> : null}
-      </div>
-
-      {cart.length > 0 ? (
-        <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 12 }}>
-          {cart.map((l) => (
-            <div key={l.key} style={cartRow}>
-              <span style={{ flex: 1 }}>{l.name}</span>
-              <button type="button" onClick={() => setQty(l.key, l.quantity - 1)} style={stepBtn} aria-label={`Remove one ${l.name}`}>
-                <Minus size={12} />
-              </button>
-              <span style={{ minWidth: 18, textAlign: "center", fontVariantNumeric: "tabular-nums" }}>{l.quantity}</span>
-              <button type="button" onClick={() => setQty(l.key, l.quantity + 1)} style={stepBtn} aria-label={`Add one more ${l.name}`}>
-                <Plus size={12} />
-              </button>
-            </div>
-          ))}
-        </div>
-      ) : null}
-
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <span style={{ fontSize: 13, color: "var(--color-text-muted)" }}>{cart.length ? `Est. ${formatINR(total)}` : "Nothing added yet"}</span>
-        <span style={{ display: "flex", gap: 8 }}>
-          <Button variant="outline" onClick={onDone}>Cancel</Button>
-          <Button
-            disabled={cart.length === 0 || place.isPending}
-            onClick={() =>
-              place.mutate(
-                {
-                  outletId: outlet._id,
-                  channel: "dine-in",
-                  sessionId: session.id,
-                  cart: { lines: cart.map((l) => ({ itemId: l.itemId, variantId: l.variantId, quantity: l.quantity, modifierOptionIds: [] })) },
-                },
-                { onSuccess: onDone },
-              )
-            }
-          >
-            {place.isPending ? "Sending…" : "Send to kitchen"}
-          </Button>
-        </span>
-      </div>
-      {place.error ? <Toast kind="error">{(place.error         ).message}</Toast> : null}
     </div>
   );
 }
@@ -554,41 +453,4 @@ const select                = {
   border: "1px solid var(--color-border)",
   background: "var(--color-bg)",
   color: "var(--color-text)",
-};
-const addItemPanel                = {
-  marginTop: 6,
-  padding: 16,
-  border: "1px solid var(--color-border)",
-  borderRadius: 12,
-  background: "var(--color-surface)",
-};
-const catalogueRow                = {
-  font: "inherit",
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  padding: "8px 10px",
-  borderRadius: 7,
-  border: "1px solid transparent",
-  background: "var(--color-bg)",
-  cursor: "pointer",
-  fontSize: 13,
-};
-const cartRow                = {
-  display: "flex",
-  alignItems: "center",
-  gap: 8,
-  fontSize: 13,
-};
-const stepBtn                = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  width: 22,
-  height: 22,
-  borderRadius: 6,
-  border: "1px solid var(--color-border)",
-  background: "var(--color-bg)",
-  color: "var(--color-text)",
-  cursor: "pointer",
 };

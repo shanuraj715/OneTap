@@ -274,7 +274,18 @@ function CredentialCard({
   return (
     <Card title="Connection" subtitle={config.configured ? "Configured" : "Not configured yet"}>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14 }}>
-      {config.fields.map((f) => (
+      {config.fields.map((f) =>
+        f.toggle ? (
+          // an on/off setting (stored as "on" / "") — e.g. sending sign-in codes by SMS
+          <div key={f.key} style={{ gridColumn: "1 / -1", padding: "4px 0" }}>
+            <Checkbox
+              checked={(values[f.key] ?? f.value) === "on"}
+              onChange={(v) => canManage && setValues({ ...values, [f.key]: v ? "on" : "" })}
+              label={f.label}
+              info={f.info}
+            />
+          </div>
+        ) : (
         <Field key={f.key} label={f.label} hint={f.hint} info={f.info} style={{ maxWidth: "none", gridColumn: f.multiline ? "1 / -1" : undefined }}>
           {f.multiline ? (
             <textarea
@@ -295,7 +306,8 @@ function CredentialCard({
             />
           )}
         </Field>
-      ))}
+        ),
+      )}
       </div>
 
       {canManage ? (

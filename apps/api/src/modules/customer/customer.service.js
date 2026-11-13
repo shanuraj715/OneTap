@@ -6,7 +6,8 @@ import {
 } from "@onetap/db";
 import { isProd } from "../../env.js";
 import { HttpError } from "../../middleware/error.js";
-import { hasProvider, sendOtp } from "../notifications/notify.js";
+import { sendOtp } from "../notifications/notify.js";
+import { smsCodeSender } from "../notify/notify.service.js";
 
 const OTP_TTL_MIN = 10;
 const MAX_ATTEMPTS = 5;
@@ -19,11 +20,17 @@ const looksLikeEmail = (v        ) => v.includes("@");
 export const normalizeDestination = (v        ) =>
   looksLikeEmail(v) ? v.toLowerCase().trim() : v.replace(/[^\d+]/g, "");
 
-export async function requestOtp(input   
-                  
-                   
-                      
- )                                                        {
+/**
+ * Send a 6-digit code. `purpose` keeps sign-in codes and staff coin codes
+ * apart, so one flow can never consume the other's code.
+ *
+ * When the store has "Send login & coin codes by SMS" switched on, the code
+ * goes out by SMS and is never returned. When it hasn't, nothing is sent and
+ * the code comes back as `devCode` for the screen to show — today's behaviour,
+ * kept for stores that haven't set SMS up.
+ */
+export async function requestOtp(input) {
+  const purpose = input.purpose ?? "login";
   const destination = normalizeDestination(input.destination);
   const channel                = looksLikeEmail(destination) ? "email" : "sms";
 
@@ -50,12 +57,55 @@ export async function requestOtp(input
     outletId: input.outletId,
     destination,
     channel,
+    purpose,
     codeHash: sha(code),
     expiresAt: new Date(Date.now() + OTP_TTL_MIN * 60 * 1000),
   });
 
+  const sender = channel === "sms" ? await smsCodeSender(input.brandId) : null;
+  if (sender) {
+    const sent = await sender.send(destination, code);
+    if (!sent.ok) throw new HttpError(502, "Couldn't send the code. Check the number and try again.");
+    return { channel, sent: true };
+  }
+
   const result = await sendOtp(channel, destination, code);
   return { channel, devCode: result.devCode };
+}
+
+/**
+ * Check a code for `purpose` and consume it. 123456 is accepted only for a
+ * store that doesn't send real codes — once SMS codes are on, only the code
+ * that was actually sent works.
+ */
+async function consumeCode({ brandId, destination, code, purpose }) {
+  const challenge = await OtpChallengeModel.findOne({
+    brandId,
+    destination,
+    // older challenges have no purpose — they were all sign-in codes
+    purpose: purpose === "login" ? { $ne: "coins" } : purpose,
+    consumedAt: { $exists: false },
+    expiresAt: { $gt: new Date() },
+  }).sort({ createdAt: -1 });
+
+  if (!challenge) throw new HttpError(400, "That code has expired. Request a new one.");
+  if (challenge.attempts >= MAX_ATTEMPTS) throw new HttpError(429, "Too many attempts. Request a new code.");
+
+  const smsCodesOn = Boolean(await smsCodeSender(brandId));
+  const isValidCode = challenge.codeHash === sha(code.trim()) || (!smsCodesOn && code.trim() === "123456");
+  if (!isValidCode) {
+    challenge.attempts += 1;
+    await challenge.save();
+    throw new HttpError(400, "That code isn't right");
+  }
+
+  challenge.consumedAt = new Date();
+  await challenge.save();
+}
+
+/** Staff spending a customer's coins: the customer read back the code sent to their phone. */
+export async function verifyCoinsCode({ brandId, phone, code }) {
+  await consumeCode({ brandId, destination: normalizeDestination(phone), code, purpose: "coins" });
 }
 
 /**
@@ -77,26 +127,7 @@ function requireSignupFields(input) {
 
 export async function verifyOtp(input) {
   const destination = normalizeDestination(input.destination);
-
-  const challenge = await OtpChallengeModel.findOne({
-    brandId: input.brandId,
-    destination,
-    consumedAt: { $exists: false },
-    expiresAt: { $gt: new Date() },
-  }).sort({ createdAt: -1 });
-
-  if (!challenge) throw new HttpError(400, "That code has expired. Request a new one.");
-  if (challenge.attempts >= MAX_ATTEMPTS) throw new HttpError(429, "Too many attempts. Request a new code.");
-
-  const isValidCode = challenge.codeHash === sha(input.code.trim()) || input.code.trim() === "123456";
-  if (!isValidCode) {
-    challenge.attempts += 1;
-    await challenge.save();
-    throw new HttpError(400, "That code isn't right");
-  }
-
-  challenge.consumedAt = new Date();
-  await challenge.save();
+  await consumeCode({ brandId: input.brandId, destination, code: input.code, purpose: "login" });
 
   const isEmail = looksLikeEmail(destination);
   const query = isEmail

@@ -54,6 +54,10 @@ const otpSchema = new Schema                 (
     outletId: { type: String, required: true },
     destination: { type: String, required: true, index: true },
     channel: { type: String, enum: ["sms", "email"], required: true },
+    // "login" (storefront sign-in) or "coins" (staff spending a customer's
+    // coins) — each flow only ever consumes its own codes. Older rows have
+    // no purpose and count as login.
+    purpose: { type: String, enum: ["login", "coins"], default: "login" },
     codeHash: { type: String, required: true },
     attempts: { type: Number, default: 0 },
     expiresAt: { type: Date, required: true },

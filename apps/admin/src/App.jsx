@@ -14,6 +14,9 @@ import {
   Building2,
   Check,
   ChevronsUpDown,
+  ConciergeBell,
+  Menu as MenuIcon,
+  X,
   CreditCard,
   ExternalLink,
   HardDrive,
@@ -40,6 +43,7 @@ import { useAuth, useLogout } from "./lib/useAuth";
 import { OutletSelectionProvider, useOpenStore, useOutlets } from "./lib/useOutlet";
 import { useStore } from "./lib/usePlatform";
 import { useStorePlan } from "./lib/useStorePlan";
+import { useMedia } from "./lib/useMedia";
 import { CreateOutletModal } from "./components/CreateOutletModal";
 import { SETTINGS_TABS, STOREFRONT_TABS, TABLES_TABS } from "./components/SubNav";
 import { Appearance } from "./routes/Appearance";
@@ -63,6 +67,7 @@ import { Storage } from "./routes/Storage";
 import { ThemeEditor } from "./routes/ThemeEditor";
 import { TypographyEditor } from "./routes/TypographyEditor";
 import { Users } from "./routes/Users";
+import { TakeOrder } from "./routes/take-order/TakeOrder";
 import { PlatformOverview } from "./routes/platform/PlatformOverview";
 import { PlatformPlans } from "./routes/platform/PlatformPlans";
 import { PlatformSettings } from "./routes/platform/PlatformSettings";
@@ -95,6 +100,7 @@ const ROUTE_META = {
   "/outlets": { title: "Outlets", icon: Building2 },
   "/dashboard-config": { title: "Configure dashboard", icon: LayoutGrid },
   "/users": { title: "Users & roles", icon: UsersIcon },
+  "/take-order": { title: "Take order", icon: ConciergeBell },
   "/platform": { title: "Platform overview", icon: LayoutDashboard },
   "/platform/stores": { title: "Stores", icon: Store },
   "/platform/plans": { title: "Plans", icon: Layers },
@@ -113,6 +119,7 @@ const NAV_GROUPS = [
   {
     group: "Service",
     items: [
+      { to: "/take-order", label: "Take order", icon: <ConciergeBell size={ICON} />, permission: "order:create" },
       { to: "/", label: "Dashboard", icon: <LayoutDashboard size={ICON} />, end: true },
       { to: "/orders", label: "Orders", icon: <ReceiptText size={ICON} />, permission: "order:read" },
       family("Tables", <QrCode size={ICON} />, TABLES_TABS),
@@ -241,17 +248,27 @@ function Shell({ can }                                     ) {
     }
   }, [collapsed]);
 
+  // Phones get the sidebar as a slide-in menu instead of a fixed column.
+  const narrow = useMedia("(max-width: 767px)");
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  useEffect(() => setDrawerOpen(false), [location.pathname, narrow]);
+  const railCollapsed = collapsed && !narrow;
+
+  const canTakeOrders = can("order:create") && !platformMode;
+
   // Works on any page, not just Orders — the sidebar is global chrome.
   useEffect(() => {
     const onKey = (e               ) => {
       const t = e.target                      ;
-      if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return;
+      if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.tagName === "SELECT" || t.isContentEditable)) return;
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       if (e.key === "\\") setCollapsed((c) => !c);
+      // N — new order, from anywhere in the store dashboard
+      else if ((e.key === "n" || e.key === "N") && canTakeOrders) navigate("/take-order");
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, []);
+  }, [canTakeOrders, navigate]);
 
   const groups = (platformMode ? PLATFORM_NAV_GROUPS : NAV_GROUPS)
     .map((g) => ({
@@ -284,26 +301,41 @@ function Shell({ can }                                     ) {
   const canAddOutlet = can("outlet:manage") && (user?.isSuperAdmin || storePlan.canAddOutlet);
 
   return (
-    <div style={{ ...shell, gridTemplateColumns: `${collapsed ? 64 : 224}px 1fr` }}>
-      <aside style={{ ...sidebar, padding: collapsed ? "20px 10px" : 20 }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: collapsed ? "center" : "space-between", gap: 8 }}>
-          {!collapsed ? (
+    <div style={{ ...shell, gridTemplateColumns: narrow ? "1fr" : `${railCollapsed ? 64 : 224}px 1fr` }}>
+      {narrow && drawerOpen ? <div style={drawerScrim} onClick={() => setDrawerOpen(false)} aria-hidden /> : null}
+      <aside
+        style={{
+          ...sidebar,
+          padding: railCollapsed ? "20px 10px" : 20,
+          ...(narrow ? { ...drawer, transform: drawerOpen ? "translateX(0)" : "translateX(-105%)", boxShadow: drawerOpen ? drawer.boxShadow : "none" } : {}),
+        }}
+        // closed on a phone: off-screen AND unreachable by keyboard / screen reader
+        inert={narrow && !drawerOpen}
+      >
+        <div style={{ display: "flex", alignItems: "center", justifyContent: railCollapsed ? "center" : "space-between", gap: 8 }}>
+          {!railCollapsed ? (
             <div style={brand}>
               TablePe<span style={{ color: "var(--color-text-muted)", fontWeight: 400 }}> admin</span>
             </div>
           ) : null}
-          <button
-            type="button"
-            onClick={() => setCollapsed((c) => !c)}
-            style={collapseBtn}
-            aria-label={collapsed ? "Expand the sidebar" : "Collapse the sidebar"}
-            title={"Shortcut key: \\"}
-          >
-            {collapsed ? <PanelLeftOpen size={15} /> : <PanelLeftClose size={15} />}
-          </button>
+          {narrow ? (
+            <button type="button" onClick={() => setDrawerOpen(false)} style={collapseBtn} aria-label="Close the menu">
+              <X size={15} />
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setCollapsed((c) => !c)}
+              style={collapseBtn}
+              aria-label={railCollapsed ? "Expand the sidebar" : "Collapse the sidebar"}
+              title={"Shortcut key: \\"}
+            >
+              {railCollapsed ? <PanelLeftOpen size={15} /> : <PanelLeftClose size={15} />}
+            </button>
+          )}
         </div>
 
-        {!collapsed && !platformMode ? (
+        {!railCollapsed && !platformMode ? (
           <Menu
             fullWidth
             trigger={({ toggle }) => (
@@ -336,7 +368,7 @@ function Shell({ can }                                     ) {
         <nav style={nav}>
           {groups.map((g) => (
             <div key={g.group} style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-              {!collapsed ? <span style={navGroup}>{g.group}</span> : <span style={navRule} aria-hidden />}
+              {!railCollapsed ? <span style={navGroup}>{g.group}</span> : <span style={navRule} aria-hidden />}
               {g.items.map((n) => (
                 <NavItem
                   key={n.to}
@@ -344,7 +376,7 @@ function Shell({ can }                                     ) {
                   label={n.label}
                   icon={n.icon}
                   end={n.end}
-                  collapsed={collapsed}
+                  collapsed={railCollapsed}
                   matchPaths={n.matchPaths}
                 />
               ))}
@@ -352,22 +384,22 @@ function Shell({ can }                                     ) {
           ))}
         </nav>
 
-        <div style={{ marginTop: "auto", display: "flex", flexDirection: "column", gap: 10, alignItems: collapsed ? "center" : "stretch" }}>
+        <div style={{ marginTop: "auto", display: "flex", flexDirection: "column", gap: 10, alignItems: railCollapsed ? "center" : "stretch" }}>
           {/* One fixed storefront address — meaningless across every store, so not in the platform console. */}
           {!platformMode ? (
             <a
               href={STOREFRONT_URL}
               target="_blank"
               rel="noreferrer"
-              style={{ ...storefrontLink, justifyContent: collapsed ? "center" : "flex-start" }}
+              style={{ ...storefrontLink, justifyContent: railCollapsed ? "center" : "flex-start" }}
               title="View storefront"
             >
               <ExternalLink size={13} />
-              {!collapsed ? "View storefront" : null}
+              {!railCollapsed ? "View storefront" : null}
             </a>
           ) : null}
 
-          {collapsed ? (
+          {railCollapsed ? (
             <button type="button" onClick={() => logout.mutate()} style={collapseBtn} aria-label="Sign out" title="Sign out">
               <LogOut size={14} />
             </button>
@@ -385,8 +417,23 @@ function Shell({ can }                                     ) {
         </div>
       </aside>
 
-      <main style={{ ...content, position: "relative" }}>
+      <main style={{ ...content, ...(narrow ? { padding: "0 16px 24px" } : {}), position: "relative" }}>
         <TopProgressBar active={navigating} />
+        {narrow ? (
+          <div style={mobileBar}>
+            <button type="button" onClick={() => setDrawerOpen(true)} style={mobileMenuBtn} aria-label="Open the menu">
+              <MenuIcon size={19} />
+            </button>
+            <span style={{ flex: 1, minWidth: 0, fontWeight: 700, fontSize: 15, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              {platformMode ? "Platform" : outlet?.name ?? "TablePe"}
+            </span>
+            {canTakeOrders ? (
+              <NavLink to="/take-order" style={mobileTakeOrder}>
+                <ConciergeBell size={15} /> Take order
+              </NavLink>
+            ) : null}
+          </div>
+        ) : null}
 
         {navigating ? (
           <div
@@ -457,6 +504,7 @@ function Shell({ can }                                     ) {
             <Route path="/outlets" element={<Outlets />} />
             <Route path="/dashboard-config" element={<DashboardConfig />} />
             <Route path="/users" element={<Users />} />
+            <Route path="/take-order" element={<TakeOrder />} />
           </Routes>
           )}
         </div>
@@ -628,6 +676,56 @@ const signOut                = {
 // No top padding here on purpose — the page header supplies its own (see
 // PageHeader / Orders' pageHead), so it stays put at the very top of this
 // scroll container instead of scrolling out from under a padding gap.
+const drawer = {
+  position: "fixed",
+  top: 0,
+  left: 0,
+  bottom: 0,
+  width: "min(290px, 86vw)",
+  zIndex: 70,
+  boxShadow: "0 0 40px rgba(0,0,0,0.22)",
+  transition: "transform var(--motion-base) var(--ease-out)",
+};
+const drawerScrim = { position: "fixed", inset: 0, zIndex: 69, background: "rgba(16, 12, 10, 0.4)" };
+const mobileBar = {
+  position: "sticky",
+  top: 0,
+  zIndex: 20,
+  display: "flex",
+  alignItems: "center",
+  gap: 10,
+  margin: "0 -16px",
+  padding: "10px 16px",
+  background: "var(--color-bg)",
+  borderBottom: "1px solid var(--color-border)",
+};
+const mobileMenuBtn = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: 40,
+  height: 40,
+  borderRadius: 12,
+  border: "1px solid var(--color-border)",
+  background: "var(--color-bg)",
+  color: "var(--color-text)",
+  cursor: "pointer",
+  flexShrink: 0,
+};
+const mobileTakeOrder = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 6,
+  minHeight: 40,
+  padding: "0 14px",
+  borderRadius: 999,
+  background: "var(--color-primary)",
+  color: "var(--color-on-primary)",
+  fontWeight: 700,
+  fontSize: 13.5,
+  textDecoration: "none",
+  flexShrink: 0,
+};
 const content                = { padding: "0 32px 28px", width: "100%", minWidth: 0, height: "100%", overflowX: "hidden", overflowY: "auto" };
 
 const fmtDay = (d) => new Date(d).toLocaleDateString([], { day: "numeric", month: "short", year: "numeric" });

@@ -34,7 +34,7 @@ import { autoPrintForOrder } from "../printing/printing.service.js";
 import { earnForOrder, previewRedeem, redeemForOrder, reverseRedeemForOrder } from "../wallet/wallet.service.js";
 
 /** Shape an order for the wire the same way the REST routes do. */
-function wire(o          ) {
+export function wire(o          ) {
   return {
     id: String(o._id),
     orderNumber: o.orderNumber,
@@ -51,6 +51,7 @@ function wire(o          ) {
     note: o.note ?? null,
     customer: o.customer,
     tableId: o.tableId ?? null,
+    sessionId: o.sessionId ?? null,
     couponCode: o.couponCode ?? null,
     deliveryAddress: o.deliveryAddress ?? null,
     etaMinutes: o.etaMinutes ?? null,
@@ -276,7 +277,12 @@ export async function placeOrder(input
     "dine-in": config.features.ordering.dineInQr,
     delivery: config.features.ordering.delivery,
   };
-  if (!enabled[input.channel]) {
+  // "Dine-in QR ordering" is about customers ordering for themselves from the
+  // table QR. Staff taking an order at a table is a different thing and always
+  // works — a restaurant can turn QR self-ordering off and still have its
+  // waiters take orders on their phones.
+  const staffAtTable = placedBy === "staff" && input.channel === "dine-in";
+  if (!staffAtTable && !enabled[input.channel]) {
     throw new HttpError(409, `${input.channel} ordering is switched off for this outlet`);
   }
 

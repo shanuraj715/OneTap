@@ -94,7 +94,7 @@ ordersRouter.post("/", async (req, res) => {
   const body = placeBody.parse(req.body);
 
   if (req.header("x-onetap-outlet")) {
-    const ctx = await requireOutletContext(req, "order:update");
+    const ctx = await requireOutletContext(req, "order:create");
     const user = requireUser(req);
     const order = await placeOrder({
       ctx,
@@ -298,6 +298,7 @@ function shape(o                     , includeCustomer         ) {
     note: o.note ?? null,
     customer: includeCustomer ? o.customer : undefined,
     tableId: o.tableId ?? null,
+    sessionId: o.sessionId ?? null,
     couponCode: o.couponCode ?? null,
     deliveryAddress: o.deliveryAddress ?? null,
     etaMinutes: o.etaMinutes ?? null,

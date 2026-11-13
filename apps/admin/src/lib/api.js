@@ -311,6 +311,23 @@ export const editOrder = (o        , id        , body           ) =>
 export const placeOrder = (o        , body           ) =>
   req                       ("/api/orders", { method: "POST", body: JSON.stringify(body), outletId: o._id });
 
+/* ------------------------------------------------------- staff "Take order" */
+
+export const staffCustomerLookup = (o, phone) =>
+  req(`/api/orders/staff/customer?phone=${encodeURIComponent(phone)}`, { outletId: o._id });
+
+export const staffQuote = (o, body) =>
+  req("/api/orders/staff/quote", { method: "POST", body: JSON.stringify(body), outletId: o._id });
+
+export const sendStaffCoinsCode = (o, phone) =>
+  req("/api/orders/staff/coins-code", { method: "POST", body: JSON.stringify({ phone }), outletId: o._id });
+
+export const verifyStaffCoinsCode = (o, phone, code) =>
+  req("/api/orders/staff/coins-code/verify", { method: "POST", body: JSON.stringify({ phone, code }), outletId: o._id });
+
+export const placeStaffOrder = (o, body) =>
+  req("/api/orders/staff", { method: "POST", body: JSON.stringify(body), outletId: o._id });
+
 /* ------------------------------------------------------------------ payments */
 
                                
