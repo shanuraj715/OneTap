@@ -2,7 +2,10 @@ import { defaultOutletConfig, isReservedOutletSlug, slugSchema } from "@onetap/c
 import { BrandModel, OutletModel, PlanModel } from "@onetap/db";
 import { HttpError } from "../../middleware/error.js";
 import { ensureOwner } from "../auth/auth.service.js";
+import { resolvePlan } from "@onetap/config-schema";
 import { assertHostnamesFree, normalizeHostnames } from "../outlets/domains.js";
+import { assertOwnDomainsAllowed, normalizeLabel } from "../outlets/subdomains.js";
+import { platformSettings } from "../platform/plan.service.js";
 
 /** Every brand on the platform — for the superadmin's brand/outlet switcher. */
 export async function listBrands() {
@@ -27,9 +30,21 @@ export async function createBrand(input) {
     throw new HttpError(400, `"${outletSlug}" is reserved and can't be used as an outlet slug`);
   }
 
+  let plan = null;
   if (input.planId) {
-    const plan = await PlanModel.findById(input.planId).lean();
+    plan = await PlanModel.findById(input.planId).lean();
     if (!plan || plan.archived) throw new HttpError(400, "That plan doesn't exist or is archived");
+  }
+
+  // The store's addresses, checked before anything is created: an own domain needs the plan's
+  // "Own domain name" feature; a TablePe address needs the base domain to be set up.
+  const { subdomainBase } = await platformSettings();
+  const ownDomains = normalizeHostnames(input.hostnames);
+  assertOwnDomainsAllowed(ownDomains, { entitlements: resolvePlan(plan, {}).entitlements, base: subdomainBase, planName: plan?.name });
+  let tablepeAddress = "";
+  if (input.subdomain?.trim()) {
+    if (!subdomainBase) throw new HttpError(400, "Set the base domain in Platform settings before giving stores a TablePe address.");
+    tablepeAddress = `${normalizeLabel(input.subdomain)}.${subdomainBase}`;
   }
 
   const brand = await BrandModel.create({
@@ -42,7 +57,8 @@ export async function createBrand(input) {
   // A brand with no outlet or no owner is useless and confusing to leave
   // behind — best-effort clean up if anything after this point fails.
   try {
-    const hostnames = normalizeHostnames(input.hostnames);
+    // an own domain, when there is one, is the main address; the TablePe address works alongside it
+    const hostnames = [...new Set([...ownDomains, ...(tablepeAddress ? [tablepeAddress] : [])])];
     await assertHostnamesFree(hostnames, brand._id);
     const config = defaultOutletConfig();
     config.identity.name = input.outletName;

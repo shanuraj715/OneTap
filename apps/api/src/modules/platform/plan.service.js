@@ -23,7 +23,7 @@ export function invalidateStorePlan(brandId) {
 
 export async function platformSettings() {
   const doc = await PlatformSettingsModel.findOne({ key: "platform" }).lean();
-  return { graceDays: doc?.graceDays ?? 30 };
+  return { graceDays: doc?.graceDays ?? 30, subdomainBase: doc?.subdomainBase ?? "" };
 }
 
 /** People counted toward the limit: everyone with access to the store — owners included — who isn't blocked or deactivated. */

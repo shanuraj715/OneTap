@@ -1,4 +1,4 @@
-import { CUSTOM_PLAN_BASE, planMarketingSchema, planOverridesSchema, planSchema } from "@onetap/config-schema";
+import { CUSTOM_PLAN_BASE, hasFeature, planMarketingSchema, planOverridesSchema, planSchema } from "@onetap/config-schema";
 import {
   BrandModel,
   MenuCategoryModel,
@@ -21,7 +21,8 @@ import { HttpError } from "../../middleware/error.js";
 import { ensureOwner } from "../auth/auth.service.js";
 import { hashPassword } from "../auth/password.js";
 import { countActiveOutlets, countActiveUsers, invalidateStorePlan, platformSettings, storePlan } from "./plan.service.js";
-import { setStoreDomains, storeDomains } from "../outlets/domains.js";
+import { normalizeHostnames, setStoreDomains, storeDomains } from "../outlets/domains.js";
+import { assertStoreMayAddDomains, normalizeBase, removeStoreSubdomain, setStoreSubdomain, subdomainInfo } from "../outlets/subdomains.js";
 import { notifyWebsite } from "../site/revalidate.js";
 
 /*
@@ -95,12 +96,20 @@ export async function updatePlan(id, input) {
 
 export const getSettings = platformSettings;
 
-export async function updateSettings({ graceDays }) {
-  await PlatformSettingsModel.findOneAndUpdate(
-    { key: "platform" },
-    { $set: { graceDays }, $setOnInsert: { key: "platform" } },
-    { upsert: true },
-  );
+export async function updateSettings({ graceDays, subdomainBase }) {
+  const $set = {};
+  if (graceDays !== undefined) $set.graceDays = graceDays;
+  if (subdomainBase !== undefined) {
+    const base = normalizeBase(subdomainBase);
+    const current = (await platformSettings()).subdomainBase;
+    if (base !== current && current) {
+      // stores' addresses are built from the base; changing it under them would orphan every one
+      const inUse = await OutletModel.exists({ hostnames: { $regex: `\\.${current.replace(/\./g, "\\.")}$` } }, { allowGlobalQuery: true });
+      if (inUse) throw new HttpError(409, `Stores still have addresses under ${current}. Remove those first, then change the base domain.`);
+    }
+    $set.subdomainBase = base;
+  }
+  await PlatformSettingsModel.findOneAndUpdate({ key: "platform" }, { $set, $setOnInsert: { key: "platform" } }, { upsert: true });
   invalidateStorePlan();
   return platformSettings();
 }
@@ -182,13 +191,30 @@ export async function getStore(id) {
     })),
     people: people.map((u) => shapePerson(u, String(brand._id))),
     domains: await storeDomains(String(brand._id)),
+    /** the store's TablePe address (acme.<base>), and whether its plan lets it have an own domain too */
+    subdomain: await subdomainInfo(String(brand._id)),
+    canUseOwnDomain: hasFeature(plan.entitlements, "customDomain"),
   };
 }
 
 /** Set the domains a store's storefront is served on, and its main one. */
 export async function updateStoreDomains(id, input) {
   await loadBrand(id);
+  await assertStoreMayAddDomains(id, normalizeHostnames(input.hostnames));
   await setStoreDomains(id, input);
+  return getStore(id);
+}
+
+/** Give the store a TablePe address, change it, or take it away (subdomains.js has the rules). */
+export async function setSubdomain(id, label) {
+  await loadBrand(id);
+  await setStoreSubdomain(id, label);
+  return getStore(id);
+}
+
+export async function removeSubdomain(id) {
+  await loadBrand(id);
+  await removeStoreSubdomain(id);
   return getStore(id);
 }
 
