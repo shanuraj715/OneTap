@@ -7,6 +7,7 @@ import {
   planLimitsSchema,
   entitlementsSchema,
   planMarketingSchema,
+  planPrices,
   siteSectionSchema,
   sitePageSchema,
   siteSettingsSchema,
@@ -238,19 +239,26 @@ export async function publicPricing() {
     .map((p) => ({ p, m: planMarketingSchema.parse(p.marketing ?? {}) }))
     .filter(({ m }) => m.show)
     .sort((a, b) => a.m.order - b.m.order)
-    .map(({ p, m }) => ({
-      id: String(p._id),
-      name: p.name,
-      description: p.description ?? "",
-      price: m.price,
-      period: m.period,
-      pitch: m.pitch,
-      highlight: m.highlight,
-      custom: Boolean(p.custom),
-      lines: planLines(p),
-      // for the "compare plans" table
-      compare: planCompare(p),
-    }));
+    .map(({ p, m }) => {
+      const prices = planPrices(m);
+      return {
+        id: String(p._id),
+        name: p.name,
+        description: p.description ?? "",
+        // rupees per month before GST; 0 means there's no number — `price` is then shown as written
+        monthly: prices.monthly,
+        // paying for the year up front: { total, perMonth, discount, saves }, or null when there's no discount
+        yearly: prices.yearly,
+        price: prices.monthly ? "" : m.price,
+        period: m.period,
+        pitch: m.pitch,
+        highlight: m.highlight,
+        custom: Boolean(p.custom),
+        lines: planLines(p),
+        // for the "compare plans" table
+        compare: planCompare(p),
+      };
+    });
 }
 
 /* ------------------------------------------------------------------- leads */

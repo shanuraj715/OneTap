@@ -2,6 +2,8 @@ import Link from "next/link";
 import { Check, Clock, Mail, MapPin, MessageCircle, Minus, Phone } from "lucide-react";
 import { FEATURES, renderMarkdown, slugifyHeading } from "@onetap/config-schema";
 import { getPricing } from "@/lib/site";
+import { inr } from "@/lib/money";
+import { Billing } from "./Billing";
 import { ContactForm } from "./ContactForm";
 import { Icon } from "./Icon";
 import { KitchenTicket, ProductVisual } from "./Mockups";
@@ -309,64 +311,114 @@ function Testimonials({ s, h1, page }) {
   );
 }
 
+/** The price line of a plan card: both billing cycles are in the HTML; the Billing switch decides which shows. */
+function PlanPrice({ p }) {
+  if (p.monthly) {
+    const y = p.yearly;
+    return (
+      <>
+        <div className="plan-price">
+          <span className={y ? "cy-m" : undefined}>
+            <b>{inr(p.monthly)}</b>
+            <span>/month</span>
+          </span>
+          {y ? (
+            <span className="cy-y">
+              <s>{inr(p.monthly)}</s>
+              <b>{inr(y.perMonth)}</b>
+              <span>/month</span>
+            </span>
+          ) : null}
+        </div>
+        <p className="plan-bill">
+          {y ? (
+            <>
+              <span className="cy-m">Billed monthly</span>
+              <span className="cy-y">
+                Billed {inr(y.total)} a year · <strong>{y.discount}% off</strong>, you save {inr(y.saves)}
+              </span>
+            </>
+          ) : (
+            "Billed monthly"
+          )}
+        </p>
+      </>
+    );
+  }
+  return (
+    <div className="plan-price">
+      {p.price ? <b className="on-request">{p.price}</b> : <b className="on-request">{p.custom ? "Custom pricing" : "Price on request"}</b>}
+    </div>
+  );
+}
+
 async function Pricing({ s, h1, page }) {
   const plans = await getPricing();
+  const discount = Math.max(0, ...plans.map((p) => p.yearly?.discount ?? 0));
   return (
     <Wrap s={s}>
       <Head {...s} h1={h1} fallbackTitle={page.title} center />
-      {plans.length ? (
-        <div className="plans">
-          {plans.map((p) => (
-            <article key={p.id} className={`plan${p.highlight ? " pop" : ""}`}>
-              {p.highlight ? <span className="plan-badge">Most popular</span> : null}
-              <h3>{p.name}</h3>
-              {p.price ? (
-                <div className="plan-price">
-                  <b>{p.price}</b>
-                  {p.period ? <span>{p.period}</span> : null}
-                </div>
-              ) : (
-                <div className="plan-price">
-                  <b className="on-request">{p.custom ? "Custom pricing" : "Price on request"}</b>
-                </div>
-              )}
-              {p.pitch || p.description ? <p className="plan-pitch">{p.pitch || p.description}</p> : null}
-              <ul>
-                {p.lines.map((l, i) => (
-                  <li key={i}>
-                    <Check size={16} aria-hidden="true" />
-                    <span>{l}</span>
-                  </li>
-                ))}
-              </ul>
-              <Link className={`btn ${p.highlight ? "btn-brand" : "btn-ghost"}`} href={`/contact?plan=${encodeURIComponent(p.name)}`}>
-                Talk to us about {p.name}
-              </Link>
-            </article>
-          ))}
-        </div>
-      ) : (
-        <div className="empty-plans">
-          <p>Every restaurant is different — tell us about yours and we'll recommend a plan.</p>
-          <Link className="btn btn-brand" href="/contact">
-            Talk to us
-          </Link>
-        </div>
-      )}
-      {plans.length && s.included.filter(Boolean).length ? (
-        <div className="included">
-          <h3>Every plan includes</h3>
-          <ul>
-            {s.included.filter(Boolean).map((x, i) => (
-              <li key={i}>
-                <Check size={16} aria-hidden="true" />
-                {x}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
-      {plans.length > 1 && s.compare ? <CompareTable plans={plans} /> : null}
+      <Billing discount={discount}>
+        {plans.length ? (
+          <div className="plans">
+            {plans.map((p) => {
+              const to = `/contact?plan=${encodeURIComponent(p.name)}`;
+              const cls = `btn ${p.highlight ? "btn-brand" : "btn-ghost"}`;
+              return (
+                <article key={p.id} className={`plan${p.highlight ? " pop" : ""}`}>
+                  {p.highlight ? <span className="plan-badge">Most popular</span> : null}
+                  <h3>{p.name}</h3>
+                  <PlanPrice p={p} />
+                  {p.pitch || p.description ? <p className="plan-pitch">{p.pitch || p.description}</p> : null}
+                  <ul>
+                    {p.lines.map((l, i) => (
+                      <li key={i}>
+                        <Check size={16} aria-hidden="true" />
+                        <span>{l}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  {p.yearly ? (
+                    <>
+                      <Link className={`${cls} cy-m`} href={to}>
+                        Talk to us about {p.name}
+                      </Link>
+                      <Link className={`${cls} cy-y`} href={`${to}&billing=yearly`}>
+                        Talk to us about {p.name}
+                      </Link>
+                    </>
+                  ) : (
+                    <Link className={cls} href={to}>
+                      Talk to us about {p.name}
+                    </Link>
+                  )}
+                </article>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="empty-plans">
+            <p>Every restaurant is different — tell us about yours and we'll recommend a plan.</p>
+            <Link className="btn btn-brand" href="/contact">
+              Talk to us
+            </Link>
+          </div>
+        )}
+        {plans.length && s.included.filter(Boolean).length ? (
+          <div className="included">
+            <h3>Every plan includes</h3>
+            <ul>
+              {s.included.filter(Boolean).map((x, i) => (
+                <li key={i}>
+                  <Check size={16} aria-hidden="true" />
+                  {x}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+        {plans.length > 1 && s.compare ? <CompareTable plans={plans} /> : null}
+      </Billing>
       {s.note ? <p className="pricing-note">{s.note}</p> : null}
     </Wrap>
   );
@@ -391,7 +443,24 @@ function CompareTable({ plans }) {
               {plans.map((p) => (
                 <th scope="col" key={p.id} className={p.highlight ? "pop" : undefined}>
                   {p.name}
-                  <small>{p.price ? `${p.price}${p.period}` : p.custom ? "Custom pricing" : "Price on request"}</small>
+                  <small>
+                    {p.monthly ? (
+                      p.yearly ? (
+                        <>
+                          <span className="cy-m">{inr(p.monthly)}/month</span>
+                          <span className="cy-y">{inr(p.yearly.perMonth)}/month · billed yearly</span>
+                        </>
+                      ) : (
+                        `${inr(p.monthly)}/month`
+                      )
+                    ) : p.price ? (
+                      `${p.price}${p.period}`
+                    ) : p.custom ? (
+                      "Custom pricing"
+                    ) : (
+                      "Price on request"
+                    )}
+                  </small>
                 </th>
               ))}
             </tr>

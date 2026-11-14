@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CARD_TEMPLATE_FAMILIES, EFFECT_IDS, EFFECT_PRESETS, FEATURE_KEYS, FEATURES, QR_CARD_FAMILY_IDS } from "@onetap/config-schema";
+import { CARD_TEMPLATE_FAMILIES, EFFECT_IDS, EFFECT_PRESETS, FEATURE_KEYS, FEATURES, planPrices, QR_CARD_FAMILY_IDS } from "@onetap/config-schema";
 import { Layers, Pencil, Plus } from "lucide-react";
 import * as api from "../../lib/api";
 import { usePlans, usePlatformMutation } from "../../lib/usePlatform";
@@ -14,8 +14,16 @@ const NEW_PLAN = {
   custom: false,
   limits: { maxUsers: 5, multiOutlet: false, maxOutlets: 1 },
   entitlements: { features: [...FEATURE_KEYS], effects: [...EFFECTS], qrCardFamilies: [...QR_CARD_FAMILY_IDS] },
-  marketing: { show: false, price: "", period: "/month", pitch: "", highlight: false, order: 50 },
+  marketing: { show: false, monthly: 0, yearlyDiscount: 0, price: "", period: "/month", pitch: "", highlight: false, order: 50 },
 };
+
+const rupees = (n) => `₹${new Intl.NumberFormat("en-IN").format(n)}`;
+/** "₹999/month · ₹9,590/year at 20% off", as the website shows it. */
+function priceSummary(m) {
+  const { monthly, yearly } = planPrices(m);
+  if (!monthly) return m.price || "no price";
+  return `${rupees(monthly)}/month${yearly ? ` · ${rupees(yearly.total)}/year at ${yearly.discount}% off` : ""}`;
+}
 
 /** The plans stores can be put on — limits and what each one unlocks. */
 export function PlatformPlans() {
@@ -66,8 +74,7 @@ export function PlatformPlans() {
               )}
               {p.marketing?.show ? (
                 <div style={{ fontSize: 12.5 }}>
-                  On the website: <strong>{p.marketing.price || "no price"}</strong>
-                  {p.marketing.price ? p.marketing.period : ""}
+                  On the website: <strong>{priceSummary(p.marketing)}</strong>
                   {p.marketing.highlight ? " · most popular" : ""}
                 </div>
               ) : (
@@ -111,7 +118,11 @@ function Note() {
 }
 
 function PlanModal({ plan, onClose }) {
-  const [draft, setDraft] = useState(() => ({ ...structuredClone(plan), marketing: { ...NEW_PLAN.marketing, ...(plan.marketing ?? {}) } }));
+  const [draft, setDraft] = useState(() => {
+    const marketing = { ...NEW_PLAN.marketing, ...(plan.marketing ?? {}) };
+    // a price typed as text before there was a number ("₹999") is brought across, so saving makes it a real one
+    return { ...structuredClone(plan), marketing: { ...marketing, monthly: marketing.monthly || planPrices(marketing).monthly } };
+  });
   const save = usePlatformMutation(() => {
     const body = { name: draft.name, description: draft.description, custom: draft.custom, limits: draft.limits, entitlements: draft.entitlements, marketing: draft.marketing };
     return draft.id ? api.updatePlan(draft.id, body) : api.createPlan(body);
@@ -177,16 +188,46 @@ function PlanModal({ plan, onClose }) {
             {draft.marketing.show ? (
               <>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 110px", gap: 12 }}>
-                  <Field label="Price" hint={draft.custom ? "Leave empty to show “Custom pricing”" : "As written — \"₹1,499\" or \"Custom\""}>
-                    <TextInput value={draft.marketing.price} onChange={(e) => setMarketing({ price: e.target.value })} maxLength={30} placeholder="₹1,499" />
+                  <Field label="Monthly price (₹)" hint="Before GST. Empty = no number shown">
+                    <TextInput
+                      type="number"
+                      min={0}
+                      max={1000000}
+                      value={draft.marketing.monthly || ""}
+                      onChange={(e) => setMarketing({ monthly: Math.max(0, Math.floor(Number(e.target.value) || 0)) })}
+                      placeholder="999"
+                    />
                   </Field>
-                  <Field label="Per">
-                    <TextInput value={draft.marketing.period} onChange={(e) => setMarketing({ period: e.target.value })} maxLength={20} placeholder="/month" />
+                  <Field label="Yearly discount (%)" hint="When paid for the year. 0 = no yearly option">
+                    <TextInput
+                      type="number"
+                      min={0}
+                      max={90}
+                      value={draft.marketing.yearlyDiscount || ""}
+                      onChange={(e) => setMarketing({ yearlyDiscount: Math.max(0, Math.min(90, Math.floor(Number(e.target.value) || 0))) })}
+                      placeholder="20"
+                      disabled={!draft.marketing.monthly}
+                    />
                   </Field>
                   <Field label="Order">
                     <TextInput type="number" min={0} max={99} value={draft.marketing.order} onChange={(e) => setMarketing({ order: Math.max(0, Math.min(99, Number(e.target.value) || 0)) })} />
                   </Field>
                 </div>
+                <div style={{ fontSize: 13, ...muted }}>
+                  {draft.marketing.monthly ? (
+                    <>
+                      Visitors will see <strong>{priceSummary(draft.marketing)}</strong>
+                      {planPrices(draft.marketing).yearly ? ` — about ${rupees(planPrices(draft.marketing).yearly.perMonth)} a month, saving ${rupees(planPrices(draft.marketing).yearly.saves)} a year.` : "."}
+                    </>
+                  ) : (
+                    "No monthly price, so the card shows the text below — or “Price on request”."
+                  )}
+                </div>
+                {!draft.marketing.monthly ? (
+                  <Field label="Price as text" hint={draft.custom ? "Leave empty to show “Custom pricing”" : "Only used with no monthly price — e.g. “Custom”"}>
+                    <TextInput value={draft.marketing.price} onChange={(e) => setMarketing({ price: e.target.value })} maxLength={30} placeholder="Custom" />
+                  </Field>
+                ) : null}
                 <Field label="One-line pitch">
                   <TextInput value={draft.marketing.pitch} onChange={(e) => setMarketing({ pitch: e.target.value })} maxLength={140} placeholder="For a single café or quick-service counter." />
                 </Field>
