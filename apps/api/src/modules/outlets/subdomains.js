@@ -1,10 +1,11 @@
 import dns from "node:dns/promises";
+import http from "node:http";
 import https from "node:https";
 import { randomBytes } from "node:crypto";
 import { hasFeature } from "@onetap/config-schema";
 import { HttpError } from "../../middleware/error.js";
-import { platformSettings, storePlan } from "../platform/plan.service.js";
-import { assertHostnamesFree, isPublicHost, normalizeHostname, setStoreDomains, storeDomains } from "./domains.js";
+import { storePlan } from "../platform/plan.service.js";
+import { assertHostnamesFree, configuredBase, isLocalHost, isPublicHost, setStoreDomains, storeDomains } from "./domains.js";
 
 /**
  * A store's TablePe address — acme.<base domain> — and who may have their own
@@ -45,15 +46,6 @@ export function normalizeLabel(raw) {
   return label;
 }
 
-/** The base domain stores' addresses live under ("tablepe.in"), or "" for none. */
-export function normalizeBase(raw) {
-  const text = String(raw ?? "").trim();
-  if (!text) return "";
-  const host = normalizeHostname(text);
-  if (!host.includes(".") || host.includes(":")) throw new HttpError(400, `"${text}" isn't a domain you can put stores under. Use something like tablepe.in.`);
-  return host;
-}
-
 /** Exactly one label below the base — what a wildcard certificate (*.base) covers. */
 export const isUnderBase = (host, base) => Boolean(base) && host.endsWith(`.${base}`) && !host.slice(0, -(base.length + 1)).includes(".");
 
@@ -61,22 +53,22 @@ export const isUnderBase = (host, base) => Boolean(base) && host.endsWith(`.${ba
 export const subdomainOf = (hostnames, base) => hostnames.find((h) => isUnderBase(h, base)) ?? null;
 const labelOf = (host, base) => host.slice(0, -(base.length + 1));
 
-async function base() {
-  return (await platformSettings()).subdomainBase;
-}
+const base = async () => configuredBase();
+const NO_BASE = "This server has no base domain for store addresses. Set STORE_SUBDOMAIN_BASE (for example tablepe.in) in the API's .env and restart it.";
 
 /** What the console shows about a store's TablePe address. */
 export async function subdomainInfo(brandId) {
   const b = await base();
   const { hostnames } = await storeDomains(brandId);
   const host = b ? subdomainOf(hostnames, b) : null;
-  return { base: b, host, label: host ? labelOf(host, b) : "" };
+  // a store address on this machine (acme.localhost:3070) is plain http; on the internet it is always https
+  return { base: b, host, label: host ? labelOf(host, b) : "", scheme: isLocalHost(b) ? "http" : "https" };
 }
 
 /** Is `rawLabel` free for this store, and what would its address be? For live feedback while typing. */
 export async function checkLabel(rawLabel, brandId) {
   const b = await base();
-  if (!b) return { available: false, reason: "Set the base domain in Platform settings first." };
+  if (!b) return { available: false, reason: NO_BASE };
   let label;
   try {
     label = normalizeLabel(rawLabel);
@@ -95,7 +87,7 @@ export async function checkLabel(rawLabel, brandId) {
 /** Give a store its TablePe address, or change it. */
 export async function setStoreSubdomain(brandId, rawLabel) {
   const b = await base();
-  if (!b) throw new HttpError(400, "Set the base domain in Platform settings before creating store addresses.");
+  if (!b) throw new HttpError(400, NO_BASE);
   const label = normalizeLabel(rawLabel);
   const host = `${label}.${b}`;
   const current = await storeDomains(brandId);
@@ -152,6 +144,8 @@ export async function assertStoreMayAddDomains(brandId, hostnames) {
  * request, so this can't be pointed at anything else.
  */
 export async function hostStatus(host, { port = 443 } = {}) {
+  // on this machine there is no DNS or certificate to check: just ask the storefront, naming the address in the Host header
+  if (isLocalHost(host)) return localStatus(host);
   const out = { host, dns: false, addresses: [], tls: null, httpStatus: null, error: "" };
   try {
     const found = await dns.lookup(host, { all: true });
@@ -183,9 +177,28 @@ export async function hostStatus(host, { port = 443 } = {}) {
   return { ...out, state };
 }
 
+async function localStatus(host) {
+  const out = { host, dns: true, addresses: ["127.0.0.1"], tls: true, httpStatus: null, error: "", local: true };
+  const port = host.split(":")[1];
+  await new Promise((resolve) => {
+    const req = http.request({ host: "127.0.0.1", port: Number(port) || 80, method: "HEAD", path: "/", headers: { host }, timeout: 4000 }, (res) => {
+      out.httpStatus = res.statusCode ?? null;
+      res.resume();
+      resolve();
+    });
+    req.on("timeout", () => req.destroy(Object.assign(new Error("timed out"), { code: "ETIMEDOUT" })));
+    req.on("error", (err) => {
+      out.error = err.code ?? err.message;
+      resolve();
+    });
+    req.end();
+  });
+  return { ...out, state: out.httpStatus === null ? "no-https" : out.httpStatus >= 500 ? "error" : "live" };
+}
+
 /** A made-up address under the base domain: if it gets as far as the storefront, DNS + certificate + nginx are all set up. */
 export async function probeBase() {
   const b = await base();
-  if (!b) throw new HttpError(400, "Set the base domain first.");
+  if (!b) throw new HttpError(400, NO_BASE);
   return hostStatus(`check-${randomBytes(4).toString("hex")}.${b}`);
 }

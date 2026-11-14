@@ -3,9 +3,8 @@ import { BrandModel, OutletModel, PlanModel } from "@onetap/db";
 import { HttpError } from "../../middleware/error.js";
 import { ensureOwner } from "../auth/auth.service.js";
 import { resolvePlan } from "@onetap/config-schema";
-import { assertHostnamesFree, normalizeHostnames } from "../outlets/domains.js";
+import { assertHostnamesFree, configuredBase, normalizeHostnames } from "../outlets/domains.js";
 import { assertOwnDomainsAllowed, normalizeLabel } from "../outlets/subdomains.js";
-import { platformSettings } from "../platform/plan.service.js";
 
 /** Every brand on the platform — for the superadmin's brand/outlet switcher. */
 export async function listBrands() {
@@ -38,12 +37,12 @@ export async function createBrand(input) {
 
   // The store's addresses, checked before anything is created: an own domain needs the plan's
   // "Own domain name" feature; a TablePe address needs the base domain to be set up.
-  const { subdomainBase } = await platformSettings();
+  const subdomainBase = configuredBase();
   const ownDomains = normalizeHostnames(input.hostnames);
   assertOwnDomainsAllowed(ownDomains, { entitlements: resolvePlan(plan, {}).entitlements, base: subdomainBase, planName: plan?.name });
   let tablepeAddress = "";
   if (input.subdomain?.trim()) {
-    if (!subdomainBase) throw new HttpError(400, "Set the base domain in Platform settings before giving stores a TablePe address.");
+    if (!subdomainBase) throw new HttpError(400, "This server has no base domain for store addresses. Set STORE_SUBDOMAIN_BASE (for example tablepe.in) in the API's .env and restart it.");
     tablepeAddress = `${normalizeLabel(input.subdomain)}.${subdomainBase}`;
   }
 

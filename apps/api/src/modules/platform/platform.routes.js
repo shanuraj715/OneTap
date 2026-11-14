@@ -39,9 +39,7 @@ platformRouter.get("/settings", async (_req, res) => {
 });
 
 platformRouter.put("/settings", async (req, res) => {
-  const body = z
-    .object({ graceDays: z.number().int().min(0).max(365).optional(), subdomainBase: z.string().max(253).optional() })
-    .parse(req.body);
+  const body = z.object({ graceDays: z.number().int().min(0).max(365) }).parse(req.body);
   res.json({ settings: await platform.updateSettings(body) });
 });
 

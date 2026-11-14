@@ -1,31 +1,68 @@
-# Store addresses on a subdomain — one-time server setup
+# Store addresses on a subdomain — tablepe.in
 
-A store without an own domain opens on `acme.<base domain>` (for example `acme.tablepe.in`).
-The storefront already finds a store from the address it was opened on, so **one storefront
-serves every store**. You do the three steps below **once**; after that, creating, renaming and
-removing a store's address happens only in the platform console (Stores → a store → Domains) and
-needs no nginx edit, no certificate and no restart.
+A store without an own domain opens on `acme.tablepe.in`. The storefront already finds a store
+from the address it was opened on, so **one storefront serves every store**. You do the steps
+below **once**; after that, creating, renaming and removing a store's address happens only in the
+platform console (Stores → a store → Domains) and needs no nginx edit, no certificate and no
+restart.
 
-Replace `BASE` with your base domain (e.g. `tablepe.in`). Use a domain separate from your
-marketing site and dashboard, and one where each store is a single label below it
-(`acme.BASE`, not `acme.stores.BASE`) — a wildcard certificate covers one level only.
+The domain stores live under is a **server setting**, `STORE_SUBDOMAIN_BASE` in the API's `.env`:
 
-## 1. DNS — one wildcard record
+| Where | Value | A store named acme opens on |
+|-------|-------|-----------------------------|
+| Production | `STORE_SUBDOMAIN_BASE=tablepe.in` | `https://acme.tablepe.in` |
+| Your machine | `STORE_SUBDOMAIN_BASE=localhost:3070` | `http://acme.localhost:3070` |
 
-At your DNS provider (Cloudflare), for the `BASE` zone:
+It is a setting rather than something saved in the database because local development and
+production share one database: each needs its own base.
 
-| Type | Name | Content | Proxy |
-|------|------|---------|-------|
-| A | `*` | your server's IP | DNS only |
+## Running it locally (nothing to install)
 
-(Keep `BASE` itself pointing wherever you want — e.g. your marketing site.)
+1. Put `STORE_SUBDOMAIN_BASE=localhost:3070` in `apps/api/.env` and restart the API.
+2. Platform console → Stores → a store → **Domains** → create an address, e.g. `acme`.
+3. Open `http://acme.localhost:3070`. Browsers open any `*.localhost` on your own machine, so
+   there is no DNS or certificate involved. The "Check again" button just asks the local storefront.
 
-## 2. One wildcard certificate
+## Production — three one-time steps on the server
 
-A wildcard certificate can only be issued by proving you control the DNS, so use certbot's DNS
-plugin. With Cloudflare:
+`tablepe.in` can keep hosting your marketing site, dashboard and API as well: names such as `www`,
+`admin`, `api`, `app` and `mail` are reserved and can never be given to a store, and an exact DNS
+record or nginx `server_name` always wins over the wildcard. (Login cookies belong to one exact
+address, so a store can't read the dashboard's session.)
 
-1. Cloudflare → My Profile → API Tokens → Create Token → *Edit zone DNS*, limited to the `BASE` zone.
+### 1. DNS — one wildcard record
+
+`tablepe.in` is already on Cloudflare, and random names under it (`acme.tablepe.in`, …) already
+resolve to Cloudflare — so a wildcard `*` record exists. Open Cloudflare → DNS and check that it
+points at **your server's IP** (the same server that runs the storefront). If there is none, add:
+
+| Type | Name | Content |
+|------|------|---------|
+| A | `*` | your server's IP |
+
+Keep your existing records (`@`, `www`, `admin`, `api`, …) as they are. Whether the orange
+cloud (proxied) is on decides which way to get the certificate in step 2.
+
+### 2. The certificate — pick one
+
+**A. Proxied by Cloudflare (orange cloud) — simplest, nothing to renew.** Cloudflare itself covers
+`tablepe.in` and `*.tablepe.in` for visitors (Universal SSL), so you only need a certificate that
+Cloudflare trusts on the way to your server:
+
+1. Cloudflare → SSL/TLS → Overview → set the mode to **Full (strict)**.
+2. SSL/TLS → Origin Server → **Create Certificate** → hostnames `tablepe.in` and `*.tablepe.in`,
+   15 years. Save the two pieces on the server as `/etc/ssl/cloudflare/tablepe.in.pem` and
+   `/etc/ssl/cloudflare/tablepe.in.key` (`chmod 600` the key).
+3. Because every visitor now arrives via Cloudflare, nginx must be told to read their real address
+   from Cloudflare's header (otherwise per-visitor limits see only Cloudflare). In the nginx block
+   below add `real_ip_header CF-Connecting-IP;` and one `set_real_ip_from <range>;` line for each
+   range on <https://www.cloudflare.com/ips/> (the list changes occasionally).
+
+**B. Not proxied (grey cloud) — a Let's Encrypt wildcard.** A wildcard certificate can only be
+issued by proving you control the DNS, so use certbot's DNS plugin with Cloudflare:
+
+1. Cloudflare → My Profile → API Tokens → Create Token → *Edit zone DNS*, limited to the
+   `tablepe.in` zone.
 2. On the server:
 
 ```bash
@@ -36,35 +73,44 @@ chmod 600 /root/.secrets/cloudflare.ini
 
 certbot certonly --dns-cloudflare \
   --dns-cloudflare-credentials /root/.secrets/cloudflare.ini \
-  -d BASE -d '*.BASE' \
+  -d tablepe.in -d '*.tablepe.in' \
   --deploy-hook 'systemctl reload nginx'
 ```
 
 It renews itself with the server's existing certbot timer (check with `certbot renew --dry-run`).
 This server hosts other sites: only this certificate is new, nothing existing is touched.
 
-## 3. One nginx block for every store
+### 3. One nginx block for every store
 
-Create `/etc/nginx/sites-available/stores.BASE`, link it into `sites-enabled`, then
+Create `/etc/nginx/sites-available/stores.tablepe.in`, link it into `sites-enabled`, then
 `nginx -t && systemctl reload nginx`. Copy the `location /` proxy settings from the storefront's
 existing server block (`food.shanuthewebdev.in`) if they differ from the ones below — the
-storefront is the same app on the same port (3070).
+storefront is the same app on the same port (3070). Use the certificate paths of the option you
+chose in step 2.
 
 ```nginx
 server {
     listen 80;
-    server_name *.BASE;
+    server_name *.tablepe.in;
     return 301 https://$host$request_uri;
 }
 
 server {
     listen 443 ssl;
-    server_name *.BASE;
+    server_name *.tablepe.in;
 
-    ssl_certificate     /etc/letsencrypt/live/BASE/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/BASE/privkey.pem;
-    include /etc/letsencrypt/options-ssl-nginx.conf;
-    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+    # A (Cloudflare Origin certificate):
+    ssl_certificate     /etc/ssl/cloudflare/tablepe.in.pem;
+    ssl_certificate_key /etc/ssl/cloudflare/tablepe.in.key;
+    # B (Let's Encrypt) instead:
+    #   ssl_certificate     /etc/letsencrypt/live/tablepe.in/fullchain.pem;
+    #   ssl_certificate_key /etc/letsencrypt/live/tablepe.in/privkey.pem;
+    #   include /etc/letsencrypt/options-ssl-nginx.conf;
+    #   ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    # A only — see step 2.3:
+    # real_ip_header CF-Connecting-IP;
+    # set_real_ip_from <each range from https://www.cloudflare.com/ips/>;
 
     location / {
         proxy_pass http://127.0.0.1:3070;
@@ -77,14 +123,17 @@ server {
 }
 ```
 
-Other sites on the box are unaffected: nginx prefers an exact `server_name` (such as
-`api.food.shanuthewebdev.in`) over a wildcard.
+If `tablepe.in` and `www.tablepe.in` (marketing site) or `admin.` / `api.` already have their own
+server blocks, leave them: nginx prefers an exact `server_name` over `*.tablepe.in`.
 
-## 4. Tell the platform, then check
+### 4. Tell the API, then check
 
-1. Platform console → **Settings → Store addresses** → enter `BASE` → Save.
-2. Click **Check the server setup**. It tries a made-up address under `BASE` and reports DNS,
-   certificate and storefront separately, so a mistake in any step is named.
+1. In the API's production `.env`: `STORE_SUBDOMAIN_BASE=tablepe.in`, then restart the API
+   (`pm2 restart food-api`).
+2. Platform console → **Settings → Store addresses** → **Check the server setup**. It tries a
+   made-up address under `tablepe.in` and reports DNS, certificate and storefront separately, so a
+   mistake in any step is named. Behind Cloudflare, a 521 / 525 / 526 is explained in plain words
+   (server down / no certificate on the server / certificate Cloudflare doesn't accept).
 3. Open a store → **Domains** → **TablePe address** → Create address. It opens within seconds.
 
 ## Own domains (higher plans)

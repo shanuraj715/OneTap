@@ -31,8 +31,6 @@ const platformSettingsSchema = new Schema(
     key: { type: String, required: true, unique: true, default: "platform" },
     /** days a store may stay over a lowered limit before you're asked to block the extras */
     graceDays: { type: Number, default: 30, min: 0, max: 365 },
-    /** the domain stores' TablePe addresses live under — a store "acme" opens on acme.<this>. Empty = none offered. */
-    subdomainBase: { type: String, default: "" },
   },
   { timestamps: true },
 );

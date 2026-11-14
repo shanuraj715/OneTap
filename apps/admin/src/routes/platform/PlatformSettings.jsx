@@ -3,7 +3,7 @@ import { Check, Globe, Settings as SettingsIcon, X } from "lucide-react";
 import * as api from "../../lib/api";
 import { usePlatformMutation, usePlatformSettings } from "../../lib/usePlatform";
 import { Button, Card, Field, Note, PageHeader, TextInput, Toast } from "../../ui";
-import { muted } from "./shared";
+import { describeHttpError, muted, row } from "./shared";
 
 /** Platform-wide settings. */
 export function PlatformSettings() {
@@ -17,14 +17,9 @@ export function PlatformSettings() {
 
   const valid = /^\d+$/.test(graceDays) && Number(graceDays) <= 365;
 
-  // the domain stores' TablePe addresses live under
-  const [base, setBase] = useState("");
-  const saveBase = usePlatformMutation(() => api.updatePlatformSettings({ subdomainBase: base }));
+  // the domain stores' TablePe addresses live under — set on the server (STORE_SUBDOMAIN_BASE), not here
   const probe = usePlatformMutation(api.probeSubdomains);
-  useEffect(() => {
-    if (q.data) setBase(q.data.settings.subdomainBase ?? "");
-  }, [q.data]);
-  const savedBase = q.data?.settings.subdomainBase ?? "";
+  const base = q.data?.settings.subdomainBase ?? "";
 
   return (
     <>
@@ -59,38 +54,36 @@ export function PlatformSettings() {
         icon={<Globe size={16} />}
         subtitle="Every store without its own domain opens on a TablePe address — acme.yourdomain.com. You create, rename and remove these on each store's Domains tab; there is nothing to install per store."
       >
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            saveBase.mutate(undefined, { onSuccess: () => probe.reset() });
-          }}
-          style={{ display: "flex", gap: 12, alignItems: "flex-end", flexWrap: "wrap" }}
-        >
-          <Field label="Base domain" hint="e.g. tablepe.in — a store named acme opens on acme.tablepe.in">
-            <TextInput value={base} onChange={(e) => setBase(e.target.value)} placeholder="tablepe.in" style={{ width: 280 }} maxLength={253} />
-          </Field>
-          <div style={{ marginBottom: 14 }}>
-            <Button type="submit" disabled={saveBase.isPending || base.trim() === savedBase}>
-              {saveBase.isPending ? "Saving…" : "Save"}
-            </Button>
-          </div>
-        </form>
-        {saveBase.error ? <Toast kind="error">{saveBase.error.message}</Toast> : null}
-        {saveBase.isSuccess && !saveBase.isPending ? <Toast kind="ok">Saved.</Toast> : null}
-        <p style={muted}>
-          Use a domain separate from your marketing site and dashboard. It's set up once on the server — a wildcard DNS record, one wildcard certificate and one
-          nginx block (steps in <code>deploy/wildcard-subdomains.md</code>). After that, no store ever needs server work.
-        </p>
-
-        {savedBase ? (
-          <div style={{ marginTop: 14 }}>
-            <Button variant="outline" disabled={probe.isPending} onClick={() => probe.mutate()}>
-              {probe.isPending ? "Checking…" : "Check the server setup"}
-            </Button>
-            {probe.error ? <Toast kind="error">{probe.error.message}</Toast> : null}
-            {probe.data ? <ProbeResult status={probe.data.status} base={savedBase} /> : null}
-          </div>
-        ) : null}
+        {base ? (
+          <>
+            <div style={{ ...row, marginBottom: 12 }}>
+              <div style={{ flex: 1 }}>
+                <div style={muted}>Base domain</div>
+                <div style={{ fontWeight: 700, fontFamily: "ui-monospace, monospace", fontSize: 15 }}>{base}</div>
+              </div>
+              <span style={muted}>
+                a store named <strong>acme</strong> opens on <strong>acme.{base}</strong>
+              </span>
+            </div>
+            <p style={muted}>
+              This comes from the server's <code>STORE_SUBDOMAIN_BASE</code> setting (production: your real domain, such as <code>tablepe.in</code>; on a developer's machine:
+              <code> localhost:3070</code>), so local work and production can differ even though they share a database. It's set up once on the server — a wildcard DNS
+              record, one wildcard certificate and one nginx block (steps in <code>deploy/wildcard-subdomains.md</code>). After that, no store ever needs server work.
+            </p>
+            <div style={{ marginTop: 14 }}>
+              <Button variant="outline" disabled={probe.isPending} onClick={() => probe.mutate()}>
+                {probe.isPending ? "Checking…" : "Check the server setup"}
+              </Button>
+              {probe.error ? <Toast kind="error">{probe.error.message}</Toast> : null}
+              {probe.data ? <ProbeResult status={probe.data.status} base={base} /> : null}
+            </div>
+          </>
+        ) : (
+          <Note>
+            This server has no base domain for store addresses yet. Add <code>STORE_SUBDOMAIN_BASE=tablepe.in</code> to the API's <code>.env</code> and restart it (for local
+            development use <code>STORE_SUBDOMAIN_BASE=localhost:3070</code>). The steps are in <code>deploy/wildcard-subdomains.md</code>.
+          </Note>
+        )}
       </Card>
     </>
   );
@@ -99,7 +92,7 @@ export function PlatformSettings() {
 /** What a visitor's browser would run into on an address under the base domain, step by step. */
 function ProbeResult({ status, base }) {
   const steps = [
-    { ok: status.dns, label: `DNS: *.${base} points to a server`, detail: status.dns ? status.addresses.join(", ") : "Add a wildcard A record (*) for the base domain." },
+    { ok: status.dns, label: status.local ? "This machine: the storefront is reachable" : `DNS: *.${base} points to a server`, detail: status.dns ? status.addresses.join(", ") : "Add a wildcard A record (*) for the base domain." },
     {
       ok: status.dns && status.tls === true,
       label: "HTTPS: the certificate covers any subdomain",
@@ -108,12 +101,13 @@ function ProbeResult({ status, base }) {
     {
       ok: status.state === "live",
       label: "The storefront answers",
-      detail: status.state === "live" ? "" : status.state === "error" ? `It answered with an error (${status.httpStatus}).` : "",
+      detail: status.state === "live" ? "" : status.state === "error" ? describeHttpError(status.httpStatus) : "",
     },
   ];
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 12 }}>
-      {steps.map((s) => (
+      {/* there is no certificate to check on a developer's machine */}
+      {steps.filter((s) => !(status.local && s.label.startsWith("HTTPS"))).map((s) => (
         <div key={s.label} style={{ display: "flex", gap: 8, alignItems: "flex-start", fontSize: 13.5 }}>
           {s.ok ? <Check size={16} color="var(--tone-ok, #1a7f37)" style={{ marginTop: 2 }} /> : <X size={16} color="var(--tone-error, #c0392b)" style={{ marginTop: 2 }} />}
           <span>

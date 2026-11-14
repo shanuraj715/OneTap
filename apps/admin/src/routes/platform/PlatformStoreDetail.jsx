@@ -7,7 +7,7 @@ import * as api from "../../lib/api";
 import { useOpenStore } from "../../lib/useOutlet";
 import { usePlans, usePlatformMutation, useStore } from "../../lib/usePlatform";
 import { Button, Card, Field, Note, PageHeader, Pill, Select, Tabs, TextInput, Toast } from "../../ui";
-import { fmtDate, muted, planLabel, row, StatusPill, usageText } from "./shared";
+import { describeHttpError, fmtDate, muted, planLabel, row, StatusPill, usageText } from "./shared";
 
 const TABS = [
   { id: "plan", label: "Plan & limits" },
@@ -519,14 +519,18 @@ function SubdomainCard({ store }) {
   const remove = usePlatformMutation(() => api.removeStoreSubdomain(store.id));
   const error = save.error ?? remove.error;
   const result = status.data?.status;
-  const [tone, statusText] = result ? (STATUS_TEXT[result.state] ?? ["warn", result.state]) : ["neutral", "Checking…"];
+  const [tone, statusText] = result
+    ? result.state === "error"
+      ? ["error", describeHttpError(result.httpStatus)]
+      : (STATUS_TEXT[result.state] ?? ["warn", result.state])
+    : ["neutral", "Checking…"];
   const typedMatches = typed.trim().toLowerCase() === label.trim().toLowerCase();
 
   if (!sub.base) {
     return (
       <Card title="TablePe address" icon={<Globe size={16} />} subtitle="A free address on your own domain — acme.yourdomain.com — for stores without a domain of their own.">
         <Note>
-          Choose the domain these addresses live under first, in <Link to="/platform/settings">Platform settings</Link>.
+          This server has no base domain for store addresses yet — see <Link to="/platform/settings">Platform settings</Link> for the one setting to add.
         </Note>
       </Card>
     );
@@ -541,7 +545,7 @@ function SubdomainCard({ store }) {
       {sub.host ? (
         <div style={{ ...row, marginBottom: 14 }}>
           <div style={{ flex: 1, minWidth: 220 }}>
-            <a href={`https://${sub.host}`} target="_blank" rel="noreferrer" style={{ fontWeight: 700, fontFamily: "ui-monospace, monospace", fontSize: 14 }}>
+            <a href={`${sub.scheme}://${sub.host}`} target="_blank" rel="noreferrer" style={{ fontWeight: 700, fontFamily: "ui-monospace, monospace", fontSize: 14 }}>
               {sub.host}
             </a>
             <div style={{ marginTop: 4 }}>

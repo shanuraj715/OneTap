@@ -21,8 +21,8 @@ import { HttpError } from "../../middleware/error.js";
 import { ensureOwner } from "../auth/auth.service.js";
 import { hashPassword } from "../auth/password.js";
 import { countActiveOutlets, countActiveUsers, invalidateStorePlan, platformSettings, storePlan } from "./plan.service.js";
-import { normalizeHostnames, setStoreDomains, storeDomains } from "../outlets/domains.js";
-import { assertStoreMayAddDomains, normalizeBase, removeStoreSubdomain, setStoreSubdomain, subdomainInfo } from "../outlets/subdomains.js";
+import { configuredBase, normalizeHostnames, setStoreDomains, storeDomains } from "../outlets/domains.js";
+import { assertStoreMayAddDomains, removeStoreSubdomain, setStoreSubdomain, subdomainInfo } from "../outlets/subdomains.js";
 import { notifyWebsite } from "../site/revalidate.js";
 
 /*
@@ -94,24 +94,17 @@ export async function updatePlan(id, input) {
 
 /* ----------------------------------------------------------------- settings */
 
-export const getSettings = platformSettings;
+/** Platform-wide settings, plus the domain store addresses are built on (a server setting: STORE_SUBDOMAIN_BASE). */
+export const getSettings = async () => ({ ...(await platformSettings()), subdomainBase: configuredBase() });
 
-export async function updateSettings({ graceDays, subdomainBase }) {
-  const $set = {};
-  if (graceDays !== undefined) $set.graceDays = graceDays;
-  if (subdomainBase !== undefined) {
-    const base = normalizeBase(subdomainBase);
-    const current = (await platformSettings()).subdomainBase;
-    if (base !== current && current) {
-      // stores' addresses are built from the base; changing it under them would orphan every one
-      const inUse = await OutletModel.exists({ hostnames: { $regex: `\\.${current.replace(/\./g, "\\.")}$` } }, { allowGlobalQuery: true });
-      if (inUse) throw new HttpError(409, `Stores still have addresses under ${current}. Remove those first, then change the base domain.`);
-    }
-    $set.subdomainBase = base;
-  }
-  await PlatformSettingsModel.findOneAndUpdate({ key: "platform" }, { $set, $setOnInsert: { key: "platform" } }, { upsert: true });
+export async function updateSettings({ graceDays }) {
+  await PlatformSettingsModel.findOneAndUpdate(
+    { key: "platform" },
+    { $set: { graceDays }, $setOnInsert: { key: "platform" } },
+    { upsert: true },
+  );
   invalidateStorePlan();
-  return platformSettings();
+  return getSettings();
 }
 
 /* ------------------------------------------------------------------- stores */
