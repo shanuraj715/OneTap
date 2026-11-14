@@ -136,37 +136,94 @@ function PlanTab({ store, draft, setDraft, plans, selectedPlan }) {
     setDraft({ ...draft, limits: rest });
   };
   const choosable = plans.filter((p) => !p.archived || p.id === draft.planId);
+  const custom = Boolean(selectedPlan?.custom);
+
+  const choosePlan = (planId) => {
+    const next = plans.find((p) => p.id === planId) ?? null;
+    if (next?.custom && !custom) {
+      // Onto a custom plan: start from what the store has today — its current
+      // limits, and everything it can use now unlocked — then trim from there.
+      const keep = (list) => ({ unlock: list.filter((k) => k !== "none"), lock: [] });
+      setDraft({
+        planId,
+        limits: { maxUsers: store.limits.maxUsers, multiOutlet: store.limits.multiOutlet, maxOutlets: store.limits.maxOutlets },
+        entitlements: {
+          features: keep(store.entitlements.features),
+          effects: keep(store.entitlements.effects),
+          qrCardFamilies: keep(store.entitlements.qrCardFamilies),
+        },
+      });
+    } else if (!next?.custom && custom) {
+      // Off a custom plan: the new plan brings its own limits and features.
+      setDraft({ planId, limits: {}, entitlements: emptyAdjust() });
+    } else {
+      setDraft({ ...draft, planId });
+    }
+  };
 
   return (
     <>
       <Card title="Plan" subtitle="What this store has bought. Payment is handled outside the app.">
         <Field label="Plan" style={{ maxWidth: 360 }}>
-          <Select value={draft.planId} onChange={(e) => setDraft({ ...draft, planId: e.target.value })}>
+          <Select value={draft.planId} onChange={(e) => choosePlan(e.target.value)}>
             <option value="">No plan — unlimited, everything unlocked</option>
             {choosable.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.name}
+                {p.custom && !/custom/i.test(p.name) ? " (custom)" : ""}
                 {p.archived ? " (archived)" : ""}
               </option>
             ))}
           </Select>
         </Field>
+        {custom ? (
+          <div style={{ marginTop: 12 }}>
+            <Note>
+              Custom plan: nothing comes from the plan. This store gets exactly the limits below and what you unlock on the <strong>Features</strong> tab.
+              {selectedPlan.id !== store.plan?.id ? " To start with, it keeps what it has today — trim it before saving." : ""}
+            </Note>
+          </div>
+        ) : null}
       </Card>
 
-      <Card title="Limits for this store" subtitle="Leave on “From plan” to follow the plan; change one to override it for this store only.">
+      <Card
+        title="Limits for this store"
+        subtitle={custom ? "Set by you for this store — the custom plan has no limits of its own." : "Leave on “From plan” to follow the plan; change one to override it for this store only."}
+      >
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16 }}>
-          <NumberLimit label="People (owners included)" base={base.maxUsers} value={draft.limits.maxUsers} onSet={(v) => setLimit("maxUsers", v)} onInherit={() => unset("maxUsers")} />
+          <NumberLimit
+            label="People (owners included)"
+            custom={custom}
+            base={base.maxUsers}
+            value={draft.limits.maxUsers}
+            onSet={(v) => setLimit("maxUsers", v)}
+            onInherit={() => unset("maxUsers")}
+          />
           <Field label="Multi-outlet">
-            <Select
-              value={draft.limits.multiOutlet === undefined ? "plan" : draft.limits.multiOutlet ? "on" : "off"}
-              onChange={(e) => (e.target.value === "plan" ? unset("multiOutlet") : setLimit("multiOutlet", e.target.value === "on"))}
-            >
-              <option value="plan">From plan — {base.multiOutlet ? "on" : "off"}</option>
-              <option value="on">On for this store</option>
-              <option value="off">Off for this store (1 outlet)</option>
-            </Select>
+            {custom ? (
+              <Select value={(draft.limits.multiOutlet ?? base.multiOutlet) ? "on" : "off"} onChange={(e) => setLimit("multiOutlet", e.target.value === "on")}>
+                <option value="on">On</option>
+                <option value="off">Off (1 outlet)</option>
+              </Select>
+            ) : (
+              <Select
+                value={draft.limits.multiOutlet === undefined ? "plan" : draft.limits.multiOutlet ? "on" : "off"}
+                onChange={(e) => (e.target.value === "plan" ? unset("multiOutlet") : setLimit("multiOutlet", e.target.value === "on"))}
+              >
+                <option value="plan">From plan — {base.multiOutlet ? "on" : "off"}</option>
+                <option value="on">On for this store</option>
+                <option value="off">Off for this store (1 outlet)</option>
+              </Select>
+            )}
           </Field>
-          <NumberLimit label="Outlets" base={base.maxOutlets} value={draft.limits.maxOutlets} onSet={(v) => setLimit("maxOutlets", v)} onInherit={() => unset("maxOutlets")} />
+          <NumberLimit
+            label="Outlets"
+            custom={custom}
+            base={base.maxOutlets}
+            value={draft.limits.maxOutlets}
+            onSet={(v) => setLimit("maxOutlets", v)}
+            onInherit={() => unset("maxOutlets")}
+          />
         </div>
       </Card>
 
@@ -189,7 +246,9 @@ function PlanTab({ store, draft, setDraft, plans, selectedPlan }) {
   );
 }
 
-function NumberLimit({ label, base, value, onSet, onInherit }) {
+/** A limit: from the plan, a number, or unlimited. On a custom plan there's no "from the plan" — it's always the store's own. */
+function NumberLimit({ label, base, value, onSet, onInherit, custom = false }) {
+  if (custom && value === undefined) value = base;
   const mode = value === undefined ? "plan" : value === null ? "unlimited" : "custom";
   return (
     <Field label={label}>
@@ -204,8 +263,8 @@ function NumberLimit({ label, base, value, onSet, onInherit }) {
           }}
           style={{ flex: 1 }}
         >
-          <option value="plan">From plan — {base ?? "unlimited"}</option>
-          <option value="custom">Custom number</option>
+          {custom ? null : <option value="plan">From plan — {base ?? "unlimited"}</option>}
+          <option value="custom">{custom ? "Number" : "Custom number"}</option>
           <option value="unlimited">Unlimited</option>
         </Select>
         {mode === "custom" ? (
@@ -226,11 +285,15 @@ function NumberLimit({ label, base, value, onSet, onInherit }) {
 
 function FeaturesTab({ draft, setDraft, selectedPlan }) {
   const ent = selectedPlan?.entitlements;
+  const custom = Boolean(selectedPlan?.custom);
   const sections = [
     { key: "features", title: "Features", subtitle: "What the store can switch on. The owner can still turn an unlocked feature off.", items: FEATURES, base: ent?.features },
     { key: "effects", title: "Visual effects", subtitle: "Which storefront effects the owner can pick (“None” is always available).", items: EFFECT_ITEMS, base: ent?.effects },
     { key: "qrCardFamilies", title: "QR card styles", subtitle: "Which table-card styles the owner can design with.", items: QR_ITEMS, base: ent?.qrCardFamilies },
   ];
+  // custom plans include nothing — the store has exactly what's unlocked here
+  const setAll = (section, items) =>
+    setDraft({ ...draft, entitlements: { ...draft.entitlements, [section]: { unlock: items.map((i) => i.key), lock: [] } } });
 
   const setChoice = (section, key, choice) => {
     const adj = draft.entitlements[section];
@@ -242,7 +305,23 @@ function FeaturesTab({ draft, setDraft, selectedPlan }) {
   };
 
   return sections.map((s) => (
-    <Card key={s.key} title={s.title} subtitle={s.subtitle}>
+    <Card
+      key={s.key}
+      title={s.title}
+      subtitle={custom ? `Custom plan — nothing is included until you unlock it here. ${s.subtitle}` : s.subtitle}
+      action={
+        custom ? (
+          <span style={{ display: "flex", gap: 6 }}>
+            <Button variant="outline" onClick={() => setAll(s.key, s.items)}>
+              Unlock all
+            </Button>
+            <Button variant="outline" onClick={() => setAll(s.key, [])}>
+              Clear
+            </Button>
+          </span>
+        ) : undefined
+      }
+    >
       <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
         {s.items.map((item) => {
           const inPlan = !s.base || s.base.includes(item.key);
@@ -255,11 +334,18 @@ function FeaturesTab({ draft, setDraft, selectedPlan }) {
                 <div style={{ fontWeight: 600, fontSize: 13.5 }}>{item.label}</div>
                 {item.description ? <div style={muted}>{item.description}</div> : null}
               </div>
-              <Select value={choice} onChange={(e) => setChoice(s.key, item.key, e.target.value)} style={{ width: 230 }}>
-                <option value="plan">From plan — {inPlan ? "unlocked" : "locked"}</option>
-                <option value="unlock">Unlocked for this store</option>
-                <option value="lock">Locked for this store</option>
-              </Select>
+              {custom ? (
+                <Select value={choice === "unlock" ? "unlock" : "plan"} onChange={(e) => setChoice(s.key, item.key, e.target.value)} style={{ width: 230 }}>
+                  <option value="plan">Not included</option>
+                  <option value="unlock">Unlocked for this store</option>
+                </Select>
+              ) : (
+                <Select value={choice} onChange={(e) => setChoice(s.key, item.key, e.target.value)} style={{ width: 230 }}>
+                  <option value="plan">From plan — {inPlan ? "unlocked" : "locked"}</option>
+                  <option value="unlock">Unlocked for this store</option>
+                  <option value="lock">Locked for this store</option>
+                </Select>
+              )}
               <Pill tone={effective ? "ok" : "neutral"}>{effective ? "Unlocked" : "Locked"}</Pill>
             </div>
           );

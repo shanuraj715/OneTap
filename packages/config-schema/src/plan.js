@@ -45,8 +45,25 @@ export const entitlementsSchema = z.object({
 export const planSchema = z.object({
   name: z.string().trim().min(1).max(60),
   description: z.string().max(300).default(""),
+  /**
+   * A custom plan includes nothing by itself: each store on it gets exactly
+   * the limits and features the super admin sets on that store. Its own
+   * limits/entitlements are ignored (see `CUSTOM_PLAN_BASE`).
+   */
+  custom: z.boolean().default(false),
   limits: planLimitsSchema.default({}),
   entitlements: entitlementsSchema.default({}),
+});
+
+/**
+ * What a store on a custom plan starts from before its own settings: the
+ * owner alone, one outlet, nothing unlocked. Every store on a custom plan
+ * carries its own limits (filled in when it's put on the plan), so in
+ * practice this only shows through if those are cleared.
+ */
+export const CUSTOM_PLAN_BASE = Object.freeze({
+  limits: Object.freeze({ maxUsers: 1, multiOutlet: false, maxOutlets: 1 }),
+  entitlements: Object.freeze({ features: [], effects: [], qrCardFamilies: [] }),
 });
 
 /** Per item: inherit from the plan unless listed — `unlock` grants it on top of the plan, `lock` takes it away. */
@@ -81,9 +98,11 @@ const defined = (obj = {}) => Object.fromEntries(Object.entries(obj).filter(([, 
 
 /** The limits and entitlements that actually apply to a store: its plan, with the store's overrides on top. */
 export function resolvePlan(plan, overrides) {
-  const base = plan
-    ? { limits: planLimitsSchema.parse(plan.limits ?? {}), entitlements: entitlementsSchema.parse(plan.entitlements ?? {}) }
-    : UNLIMITED;
+  const base = !plan
+    ? UNLIMITED
+    : plan.custom
+      ? CUSTOM_PLAN_BASE
+      : { limits: planLimitsSchema.parse(plan.limits ?? {}), entitlements: entitlementsSchema.parse(plan.entitlements ?? {}) };
   const o = planOverridesSchema.parse(overrides ?? {});
   const adjust = (list, { unlock, lock }) => [...new Set([...list, ...unlock])].filter((k) => !lock.includes(k));
   return {

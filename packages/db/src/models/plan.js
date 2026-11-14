@@ -11,6 +11,8 @@ const planSchema = new Schema(
   {
     name: { type: String, required: true, trim: true },
     description: { type: String, default: "" },
+    /** includes nothing by itself — each store's limits and features are set by hand */
+    custom: { type: Boolean, default: false },
     limits: { type: Schema.Types.Mixed, default: () => ({}) },
     entitlements: { type: Schema.Types.Mixed, default: () => ({}) },
     /** how the plan appears on the TablePe website's Pricing — `planMarketingSchema` */

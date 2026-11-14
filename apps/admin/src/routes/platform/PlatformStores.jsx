@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Plus, Store } from "lucide-react";
 import * as api from "../../lib/api";
 import { usePlans, usePlatformMutation, useStores } from "../../lib/usePlatform";
-import { Button, Card, Field, PageHeader, Select, TextInput, Toast } from "../../ui";
+import { Button, Card, Field, Note, PageHeader, Select, TextInput, Toast } from "../../ui";
 import { muted, planLabel, row, StatusPill, usageText } from "./shared";
 
 function slugify(s) {
@@ -39,6 +39,8 @@ export function PlatformStores() {
   const brandSlug = brandSlugTouched ? form.brandSlug : slugify(form.brandName);
   const outletSlug = outletSlugTouched ? form.outletSlug : slugify(form.outletName);
   const activePlans = (plans.data?.plans ?? []).filter((p) => !p.archived);
+  const customPlan = Boolean(activePlans.find((p) => p.id === form.planId)?.custom);
+  const navigate = useNavigate();
   const list = stores.data?.stores ?? [];
 
   const submit = (e) => {
@@ -56,11 +58,14 @@ export function PlatformStores() {
         planId: form.planId || null,
       },
       {
-        onSuccess: () => {
+        onSuccess: (result) => {
           setForm(EMPTY);
           setBrandSlugTouched(false);
           setOutletSlugTouched(false);
           setAdding(false);
+          // a custom-plan store has nothing yet — go straight to setting it up
+          const id = result?.brand?._id;
+          if (customPlan && id) navigate(`/platform/stores/${id}`);
         },
       },
     );
@@ -103,6 +108,7 @@ export function PlatformStores() {
                   {activePlans.map((p) => (
                     <option key={p.id} value={p.id}>
                       {p.name}
+                      {p.custom && !/custom/i.test(p.name) ? " (custom)" : ""}
                     </option>
                   ))}
                 </Select>
@@ -134,8 +140,16 @@ export function PlatformStores() {
                 <TextInput type="password" value={form.ownerPassword} onChange={(e) => setForm({ ...form, ownerPassword: e.target.value })} required minLength={8} />
               </Field>
             </div>
+            {customPlan ? (
+              <div style={{ margin: "14px 0" }}>
+                <Note>
+                  Custom plan: the store starts with just its owner, one outlet and nothing unlocked. After creating it you'll land on its page to set its limits and
+                  unlock its features.
+                </Note>
+              </div>
+            ) : null}
             <Button type="submit" disabled={create.isPending}>
-              {create.isPending ? "Creating…" : "Create store"}
+              {create.isPending ? "Creating…" : customPlan ? "Create store and set it up" : "Create store"}
             </Button>
             {create.error ? <Toast kind="error">{create.error.message}</Toast> : null}
           </form>

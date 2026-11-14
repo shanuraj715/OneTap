@@ -197,8 +197,17 @@ export async function getPreviewPage(id, token) {
 
 /* ----------------------------------------------------------------- pricing */
 
+/** A custom plan's card: nothing is fixed, so it says what the restaurant gets to choose. */
+const CUSTOM_LINES = [
+  "Only the features you pick",
+  "As many outlets and staff logins as you need",
+  "Storefront looks and table-card styles you choose",
+  "Priced on what you pick",
+];
+
 /** Plain-English lines for a plan's card, from its real limits and features. */
 function planLines(plan) {
+  if (plan.custom) return CUSTOM_LINES;
   const limits = planLimitsSchema.parse(plan.limits ?? {});
   const ent = entitlementsSchema.parse(plan.entitlements ?? {});
   const lines = [];
@@ -211,6 +220,7 @@ function planLines(plan) {
 
 /** One plan's row values for the comparison table: limits in words, and which features it has. */
 function planCompare(plan) {
+  if (plan.custom) return { custom: true, outlets: "As you need", staff: "As you need", styles: 0, features: [] };
   const limits = planLimitsSchema.parse(plan.limits ?? {});
   const ent = entitlementsSchema.parse(plan.entitlements ?? {});
   return {
@@ -236,6 +246,7 @@ export async function publicPricing() {
       period: m.period,
       pitch: m.pitch,
       highlight: m.highlight,
+      custom: Boolean(p.custom),
       lines: planLines(p),
       // for the "compare plans" table
       compare: planCompare(p),

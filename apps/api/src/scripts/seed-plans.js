@@ -1,13 +1,17 @@
-import { planSchema } from "@onetap/config-schema";
+import { planMarketingSchema, planSchema } from "@onetap/config-schema";
 import { connectDb, disconnectDb, PlanModel } from "@onetap/db";
 import { env } from "../env.js";
 import { logger } from "../logger.js";
 
 /**
- * Two example plans to start from — editable afterwards in the platform
- * console. Assigns them to NO store: every existing store stays on "no plan"
+ * Example plans to start from — editable afterwards in the platform console.
+ * Assigns them to NO store: every existing store stays on "no plan"
  * (unlimited) until you choose one for it. Skips any plan name that already
  * exists, so it's safe to run twice.
+ *
+ * "Custom" includes nothing by itself: each store on it gets the limits and
+ * features you set on that store's page. It's shown on the website's Pricing
+ * as "Custom pricing".
  *
  *   node src/scripts/seed-plans.js
  */
@@ -24,6 +28,18 @@ const PLANS = [
     limits: { maxUsers: 20, multiOutlet: true, maxOutlets: 3 },
     entitlements: {},
   },
+  {
+    name: "Custom",
+    description: "Built around one restaurant — only the features and limits you agree on.",
+    custom: true,
+    marketing: {
+      show: true,
+      price: "",
+      period: "",
+      pitch: "Pick only what you need — we set up your account and features for you.",
+      order: 90,
+    },
+  },
 ];
 
 async function run() {
@@ -33,7 +49,7 @@ async function run() {
       logger.info({ plan: p.name }, "Plan already exists — skipped");
       continue;
     }
-    await PlanModel.create(planSchema.parse(p));
+    await PlanModel.create({ ...planSchema.parse(p), ...(p.marketing ? { marketing: planMarketingSchema.parse(p.marketing) } : {}) });
     logger.info({ plan: p.name }, "Plan created");
   }
   await disconnectDb();

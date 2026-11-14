@@ -3,7 +3,7 @@ import { CARD_TEMPLATE_FAMILIES, EFFECT_IDS, EFFECT_PRESETS, FEATURE_KEYS, FEATU
 import { Layers, Pencil, Plus } from "lucide-react";
 import * as api from "../../lib/api";
 import { usePlans, usePlatformMutation } from "../../lib/usePlatform";
-import { Button, Card, Checkbox, Field, Modal, PageHeader, Pill, TextInput, Toast } from "../../ui";
+import { Button, Card, Checkbox, Field, Modal, Note as Callout, PageHeader, Pill, TextInput, Toast } from "../../ui";
 import { muted, row } from "./shared";
 
 const EFFECTS = EFFECT_IDS.filter((id) => id !== "none");
@@ -11,6 +11,7 @@ const EFFECTS = EFFECT_IDS.filter((id) => id !== "none");
 const NEW_PLAN = {
   name: "",
   description: "",
+  custom: false,
   limits: { maxUsers: 5, multiOutlet: false, maxOutlets: 1 },
   entitlements: { features: [...FEATURE_KEYS], effects: [...EFFECTS], qrCardFamilies: [...QR_CARD_FAMILY_IDS] },
   marketing: { show: false, price: "", period: "/month", pitch: "", highlight: false, order: 50 },
@@ -44,14 +45,25 @@ export function PlatformPlans() {
             key={p.id}
             title={p.name}
             subtitle={p.description || undefined}
-            action={p.archived ? <Pill tone="warn">Archived</Pill> : <Pill tone="ok">{p.storeCount} store{p.storeCount === 1 ? "" : "s"}</Pill>}
+            action={
+              <span style={{ display: "flex", gap: 6 }}>
+                {p.custom ? <Pill>Custom</Pill> : null}
+                {p.archived ? <Pill tone="warn">Archived</Pill> : <Pill tone="ok">{p.storeCount} store{p.storeCount === 1 ? "" : "s"}</Pill>}
+              </span>
+            }
           >
             <div style={{ display: "flex", flexDirection: "column", gap: 4, fontSize: 13 }}>
-              <div>
-                <strong>{p.limits.maxUsers ?? "Unlimited"}</strong> people ·{" "}
-                <strong>{p.limits.multiOutlet ? p.limits.maxOutlets ?? "Unlimited" : 1}</strong> outlet{p.limits.multiOutlet && p.limits.maxOutlets !== 1 ? "s" : ""}
-                {!p.limits.multiOutlet ? " (multi-outlet off)" : ""}
-              </div>
+              {p.custom ? (
+                <div>
+                  <strong>Nothing included</strong> — you set each store's limits and features on its page
+                </div>
+              ) : (
+                <div>
+                  <strong>{p.limits.maxUsers ?? "Unlimited"}</strong> people ·{" "}
+                  <strong>{p.limits.multiOutlet ? p.limits.maxOutlets ?? "Unlimited" : 1}</strong> outlet{p.limits.multiOutlet && p.limits.maxOutlets !== 1 ? "s" : ""}
+                  {!p.limits.multiOutlet ? " (multi-outlet off)" : ""}
+                </div>
+              )}
               {p.marketing?.show ? (
                 <div style={{ fontSize: 12.5 }}>
                   On the website: <strong>{p.marketing.price || "no price"}</strong>
@@ -61,10 +73,12 @@ export function PlatformPlans() {
               ) : (
                 <div style={muted}>Not on the website</div>
               )}
-              <div style={muted}>
-                {p.entitlements.features.length}/{FEATURES.length} features · {p.entitlements.effects.filter((e) => e !== "none").length}/{EFFECTS.length} effects ·{" "}
-                {p.entitlements.qrCardFamilies.length}/{CARD_TEMPLATE_FAMILIES.length} card styles
-              </div>
+              {p.custom ? null : (
+                <div style={muted}>
+                  {p.entitlements.features.length}/{FEATURES.length} features · {p.entitlements.effects.filter((e) => e !== "none").length}/{EFFECTS.length} effects ·{" "}
+                  {p.entitlements.qrCardFamilies.length}/{CARD_TEMPLATE_FAMILIES.length} card styles
+                </div>
+              )}
             </div>
             <div style={{ display: "flex", gap: 8, marginTop: 14 }}>
               <Button variant="outline" onClick={() => setEditing(p)} style={{ display: "inline-flex", gap: 6, alignItems: "center" }}>
@@ -99,10 +113,12 @@ function Note() {
 function PlanModal({ plan, onClose }) {
   const [draft, setDraft] = useState(() => ({ ...structuredClone(plan), marketing: { ...NEW_PLAN.marketing, ...(plan.marketing ?? {}) } }));
   const save = usePlatformMutation(() => {
-    const body = { name: draft.name, description: draft.description, limits: draft.limits, entitlements: draft.entitlements, marketing: draft.marketing };
+    const body = { name: draft.name, description: draft.description, custom: draft.custom, limits: draft.limits, entitlements: draft.entitlements, marketing: draft.marketing };
     return draft.id ? api.updatePlan(draft.id, body) : api.createPlan(body);
   });
   const setLimit = (k, v) => setDraft({ ...draft, limits: { ...draft.limits, [k]: v } });
+  // switching a plan that stores use between custom and regular would change what all of them get at once
+  const typeLocked = Boolean(draft.id && plan.storeCount);
   const setMarketing = (patch) => setDraft({ ...draft, marketing: { ...draft.marketing, ...patch } });
   const toggle = (k, item) => {
     const list = draft.entitlements[k];
@@ -129,37 +145,31 @@ function PlanModal({ plan, onClose }) {
           </Field>
         </div>
 
-        <Section title="Limits">
-          <div style={{ display: "flex", gap: 18, flexWrap: "wrap", alignItems: "flex-end" }}>
-            <LimitInput label="People (owners included)" value={draft.limits.maxUsers} onChange={(v) => setLimit("maxUsers", v)} />
-            <Checkbox checked={draft.limits.multiOutlet} onChange={(v) => setLimit("multiOutlet", v)} label="Multi-outlet" />
-            {draft.limits.multiOutlet ? <LimitInput label="Outlets" value={draft.limits.maxOutlets} onChange={(v) => setLimit("maxOutlets", v)} /> : null}
+        <div style={{ marginTop: 18 }}>
+          <Checkbox
+            checked={Boolean(draft.custom)}
+            onChange={(v) => setDraft({ ...draft, custom: v })}
+            disabled={typeLocked}
+            label="Custom plan — nothing included; I set each store's limits and features myself"
+          />
+          {typeLocked ? (
+            <p style={{ ...muted, margin: "6px 0 0" }}>
+              {plan.storeCount} store{plan.storeCount === 1 ? " is" : "s are"} on this plan, so it can't switch between custom and regular. Create a new plan instead.
+            </p>
+          ) : null}
+        </div>
+
+        {draft.custom ? (
+          <div style={{ marginTop: 14 }}>
+            <Callout>
+              A store on this plan gets nothing until you set it up: open the store from Stores, set its people and outlets on <strong>Plan &amp; limits</strong>, and
+              unlock what it bought on <strong>Features</strong> — features, visual effects and QR card styles. A store moved onto this plan keeps what it has today
+              until you change it.
+            </Callout>
           </div>
-        </Section>
-
-        <Section title="Features">
-          <Grid>
-            {FEATURES.map((f) => (
-              <Checkbox key={f.key} checked={draft.entitlements.features.includes(f.key)} onChange={() => toggle("features", f.key)} label={f.label} />
-            ))}
-          </Grid>
-        </Section>
-
-        <Section title="Visual effects" hint="“None” is always available.">
-          <Grid>
-            {EFFECTS.map((id) => (
-              <Checkbox key={id} checked={draft.entitlements.effects.includes(id)} onChange={() => toggle("effects", id)} label={EFFECT_PRESETS[id].label} />
-            ))}
-          </Grid>
-        </Section>
-
-        <Section title="QR card styles">
-          <Grid>
-            {CARD_TEMPLATE_FAMILIES.map((f) => (
-              <Checkbox key={f.id} checked={draft.entitlements.qrCardFamilies.includes(f.id)} onChange={() => toggle("qrCardFamilies", f.id)} label={f.label} />
-            ))}
-          </Grid>
-        </Section>
+        ) : (
+          <PlanContents draft={draft} setLimit={setLimit} toggle={toggle} />
+        )}
 
         <Section title="On the website" hint="The Pricing page's card for this plan. Buying is never online — its button opens Contact.">
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -167,7 +177,7 @@ function PlanModal({ plan, onClose }) {
             {draft.marketing.show ? (
               <>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 110px", gap: 12 }}>
-                  <Field label="Price" hint={"As written — \"₹1,499\" or \"Custom\""}>
+                  <Field label="Price" hint={draft.custom ? "Leave empty to show “Custom pricing”" : "As written — \"₹1,499\" or \"Custom\""}>
                     <TextInput value={draft.marketing.price} onChange={(e) => setMarketing({ price: e.target.value })} maxLength={30} placeholder="₹1,499" />
                   </Field>
                   <Field label="Per">
@@ -197,6 +207,45 @@ function PlanModal({ plan, onClose }) {
         </div>
       </form>
     </Modal>
+  );
+}
+
+/** A regular plan's limits and what it unlocks. */
+function PlanContents({ draft, setLimit, toggle }) {
+  return (
+    <>
+      <Section title="Limits">
+        <div style={{ display: "flex", gap: 18, flexWrap: "wrap", alignItems: "flex-end" }}>
+          <LimitInput label="People (owners included)" value={draft.limits.maxUsers} onChange={(v) => setLimit("maxUsers", v)} />
+          <Checkbox checked={draft.limits.multiOutlet} onChange={(v) => setLimit("multiOutlet", v)} label="Multi-outlet" />
+          {draft.limits.multiOutlet ? <LimitInput label="Outlets" value={draft.limits.maxOutlets} onChange={(v) => setLimit("maxOutlets", v)} /> : null}
+        </div>
+      </Section>
+
+      <Section title="Features">
+        <Grid>
+          {FEATURES.map((f) => (
+            <Checkbox key={f.key} checked={draft.entitlements.features.includes(f.key)} onChange={() => toggle("features", f.key)} label={f.label} />
+          ))}
+        </Grid>
+      </Section>
+
+      <Section title="Visual effects" hint="“None” is always available.">
+        <Grid>
+          {EFFECTS.map((id) => (
+            <Checkbox key={id} checked={draft.entitlements.effects.includes(id)} onChange={() => toggle("effects", id)} label={EFFECT_PRESETS[id].label} />
+          ))}
+        </Grid>
+      </Section>
+
+      <Section title="QR card styles">
+        <Grid>
+          {CARD_TEMPLATE_FAMILIES.map((f) => (
+            <Checkbox key={f.id} checked={draft.entitlements.qrCardFamilies.includes(f.id)} onChange={() => toggle("qrCardFamilies", f.id)} label={f.label} />
+          ))}
+        </Grid>
+      </Section>
+    </>
   );
 }
 

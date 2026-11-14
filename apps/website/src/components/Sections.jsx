@@ -327,7 +327,7 @@ async function Pricing({ s, h1, page }) {
                 </div>
               ) : (
                 <div className="plan-price">
-                  <b className="on-request">Price on request</b>
+                  <b className="on-request">{p.custom ? "Custom pricing" : "Price on request"}</b>
                 </div>
               )}
               {p.pitch || p.description ? <p className="plan-pitch">{p.pitch || p.description}</p> : null}
@@ -376,6 +376,8 @@ async function Pricing({ s, h1, page }) {
 function CompareTable({ plans }) {
   const yes = <Check size={18} className="yes" aria-label="Included" />;
   const no = <Minus size={18} className="no" aria-label="Not included" />;
+  // a custom plan has nothing fixed — the restaurant chooses each one
+  const pick = <span className="pick">Your pick</span>;
   return (
     <div className="compare">
       <h3>Compare plans</h3>
@@ -389,7 +391,7 @@ function CompareTable({ plans }) {
               {plans.map((p) => (
                 <th scope="col" key={p.id} className={p.highlight ? "pop" : undefined}>
                   {p.name}
-                  <small>{p.price ? `${p.price}${p.period}` : "Price on request"}</small>
+                  <small>{p.price ? `${p.price}${p.period}` : p.custom ? "Custom pricing" : "Price on request"}</small>
                 </th>
               ))}
             </tr>
@@ -414,14 +416,14 @@ function CompareTable({ plans }) {
                   <small>{f.description}</small>
                 </th>
                 {plans.map((p) => (
-                  <td key={p.id}>{p.compare.features.includes(f.key) ? yes : no}</td>
+                  <td key={p.id}>{p.compare.custom ? pick : p.compare.features.includes(f.key) ? yes : no}</td>
                 ))}
               </tr>
             ))}
             <tr>
               <th scope="row">Storefront styles</th>
               {plans.map((p) => (
-                <td key={p.id}>{p.compare.styles ? `${p.compare.styles} + classic` : "Classic"}</td>
+                <td key={p.id}>{p.compare.custom ? pick : p.compare.styles ? `${p.compare.styles} + classic` : "Classic"}</td>
               ))}
             </tr>
             <tr>

@@ -536,4 +536,5 @@ p { margin: 0; text-wrap: pretty; }
 .compare tfoot td { border-bottom: 0; }
 .compare .yes { color: var(--veg); }
 .compare .no { color: color-mix(in srgb, var(--muted) 55%, transparent); }
+.compare .pick { display: inline-block; font-size: 12px; font-weight: 600; color: var(--brand); padding: 3px 9px; border-radius: 999px; border: 1px dashed color-mix(in srgb, var(--brand) 45%, transparent); white-space: nowrap; }
 .compare tbody tr:hover td, .compare tbody tr:hover th { background: color-mix(in srgb, var(--brand) 4%, var(--surface)); }

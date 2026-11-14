@@ -1,4 +1,4 @@
-import { planMarketingSchema, planOverridesSchema, planSchema } from "@onetap/config-schema";
+import { CUSTOM_PLAN_BASE, planMarketingSchema, planOverridesSchema, planSchema } from "@onetap/config-schema";
 import {
   BrandModel,
   MenuCategoryModel,
@@ -20,7 +20,7 @@ import {
 import { HttpError } from "../../middleware/error.js";
 import { ensureOwner } from "../auth/auth.service.js";
 import { hashPassword } from "../auth/password.js";
-import { invalidateStorePlan, platformSettings, storePlan } from "./plan.service.js";
+import { countActiveOutlets, countActiveUsers, invalidateStorePlan, platformSettings, storePlan } from "./plan.service.js";
 import { setStoreDomains, storeDomains } from "../outlets/domains.js";
 import { notifyWebsite } from "../site/revalidate.js";
 
@@ -32,9 +32,15 @@ import { notifyWebsite } from "../site/revalidate.js";
 
 /* -------------------------------------------------------------------- plans */
 
+/** A custom plan stores nothing of its own — its stores' settings are all there is. */
+const planData = (input) => {
+  const data = planSchema.parse(input);
+  return data.custom ? { ...data, limits: { ...CUSTOM_PLAN_BASE.limits }, entitlements: { features: [], effects: [], qrCardFamilies: [] } } : data;
+};
+
 const shapePlan = (p, storeCount = 0) => ({
   id: String(p._id),
-  ...planSchema.parse({ name: p.name, description: p.description, limits: p.limits, entitlements: p.entitlements }),
+  ...planData({ name: p.name, description: p.description, custom: p.custom, limits: p.limits, entitlements: p.entitlements }),
   marketing: planMarketingSchema.parse(p.marketing ?? {}),
   archived: Boolean(p.archived),
   storeCount,
@@ -50,7 +56,7 @@ export async function listPlans() {
 }
 
 export async function createPlan(input) {
-  const data = planSchema.parse(input);
+  const data = planData(input);
   const plan = await PlanModel.create({ ...data, marketing: planMarketingSchema.parse(input.marketing ?? {}) });
   notifyWebsite();
   return shapePlan(plan.toObject());
@@ -59,9 +65,13 @@ export async function createPlan(input) {
 export async function updatePlan(id, input) {
   const plan = await PlanModel.findById(id);
   if (!plan) throw new HttpError(404, "Plan not found");
-  const data = planSchema.parse({
+  if (input.custom !== undefined && Boolean(input.custom) !== Boolean(plan.custom) && (await BrandModel.exists({ planId: String(plan._id) }))) {
+    throw new HttpError(400, "Stores are on this plan, so it can't switch between custom and regular. Create a new plan instead.");
+  }
+  const data = planData({
     name: input.name ?? plan.name,
     description: input.description ?? plan.description,
+    custom: input.custom ?? plan.custom ?? false,
     limits: input.limits ?? plan.limits,
     entitlements: input.entitlements ?? plan.entitlements,
   });
@@ -182,6 +192,25 @@ export async function updateStoreDomains(id, input) {
   return getStore(id);
 }
 
+/**
+ * A store on a custom plan always carries its own limits. Any it's missing
+ * are set to what it uses right now (at least the owner and one outlet), so
+ * putting a store on a custom plan never pushes it over its limits.
+ */
+async function fillCustomLimits(brand) {
+  if (!brand.planId) return;
+  const plan = await PlanModel.findById(brand.planId).select("custom").lean();
+  if (!plan?.custom) return;
+  const o = planOverridesSchema.parse(brand.overrides ?? {});
+  const missing = ["maxUsers", "multiOutlet", "maxOutlets"].filter((k) => o.limits[k] === undefined);
+  if (!missing.length) return;
+  const [users, outlets] = await Promise.all([countActiveUsers(brand._id), countActiveOutlets(brand._id)]);
+  const now = { maxUsers: Math.max(1, users), multiOutlet: outlets > 1, maxOutlets: Math.max(1, outlets) };
+  for (const k of missing) o.limits[k] = now[k];
+  brand.overrides = o;
+  brand.markModified("overrides");
+}
+
 /** Assign a plan (or `null` for unlimited) and set this store's overrides on top of it. */
 export async function setStorePlan(id, { planId, overrides }) {
   const brand = await BrandModel.findById(id);
@@ -199,6 +228,7 @@ export async function setStorePlan(id, { planId, overrides }) {
     brand.overrides = planOverridesSchema.parse(overrides);
     brand.markModified("overrides");
   }
+  await fillCustomLimits(brand);
   await brand.save();
   invalidateStorePlan(id);
   return getStore(id);
