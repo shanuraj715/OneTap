@@ -3,7 +3,7 @@ import { Check, Globe, Settings as SettingsIcon, X } from "lucide-react";
 import * as api from "../../lib/api";
 import { usePlatformMutation, usePlatformSettings } from "../../lib/usePlatform";
 import { Button, Card, Field, Note, PageHeader, TextInput, Toast } from "../../ui";
-import { describeHttpError, muted, row } from "./shared";
+import { browserCanOpen, describeHttpError, muted, row, SERVER_CHECK_FAILED } from "./shared";
 
 /** Platform-wide settings. */
 export function PlatformSettings() {
@@ -90,7 +90,22 @@ export function PlatformSettings() {
 }
 
 /** What a visitor's browser would run into on an address under the base domain, step by step. */
-function ProbeResult({ status, base }) {
+function ProbeResult({ status: serverStatus, base }) {
+  // The server checks from inside its hosting network, where a firewall can block a brand-new domain that
+  // every visitor reaches fine. If its check failed, ask this browser too — a visitor's view.
+  const serverFailed = !serverStatus.local && SERVER_CHECK_FAILED.includes(serverStatus.state);
+  const [browserOk, setBrowserOk] = useState(null); // null = not asked / still asking
+  useEffect(() => {
+    setBrowserOk(null);
+    if (!serverFailed) return undefined;
+    let current = true;
+    browserCanOpen(`https://${serverStatus.host}/`).then((ok) => current && setBrowserOk(ok));
+    return () => {
+      current = false;
+    };
+  }, [serverFailed, serverStatus.host]);
+  const status = serverFailed && browserOk ? { ...serverStatus, dns: true, tls: true, state: "live", addresses: ["checked from your browser"] } : serverStatus;
+
   const steps = [
     { ok: status.dns, label: status.local ? "This machine: the storefront is reachable" : `DNS: *.${base} points to a server`, detail: status.dns ? status.addresses.join(", ") : "Add a wildcard A record (*) for the base domain." },
     {
@@ -116,7 +131,15 @@ function ProbeResult({ status, base }) {
           </span>
         </div>
       ))}
-      {status.state === "live" ? <Note>All set — any address under {base} will open its store as soon as you create it.</Note> : null}
+      {serverFailed && browserOk === null ? <p style={muted}>The server couldn't check this itself — asking your browser…</p> : null}
+      {status.state === "live" ? (
+        <Note>
+          All set — any address under {base} will open its store as soon as you create it.
+          {serverFailed
+            ? " The server's own check couldn't get through, because the network around it blocks this domain (a firewall there rates brand-new domains “Unrated”). Visitors aren't affected — your browser reached it."
+            : ""}
+        </Note>
+      ) : null}
     </div>
   );
 }

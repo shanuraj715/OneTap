@@ -23,6 +23,34 @@ export function describeHttpError(code) {
   return `The server answered with an error${code ? ` (${code})` : ""}.`;
 }
 
+/**
+ * Results of the server's own check of an address that mean "it couldn't get
+ * through" — which is not always the address's fault. The server checks from
+ * inside its hosting network, and a firewall there can block or re-sign
+ * connections to a brand-new domain (FortiGuard rates unknown domains
+ * "Unrated" and blocks them) while every visitor on the internet is fine.
+ */
+export const SERVER_CHECK_FAILED = ["bad-cert", "no-https", "no-dns"];
+
+/**
+ * Can THIS browser open the address? A no-cors request can't read the page,
+ * but it only succeeds when DNS, the certificate and the connection all work
+ * — which is exactly what a visitor needs. Used to double-check a failed
+ * server-side check from where it matters.
+ */
+export async function browserCanOpen(url, ms = 8000) {
+  const abort = new AbortController();
+  const timer = setTimeout(() => abort.abort(), ms);
+  try {
+    await fetch(url, { mode: "no-cors", cache: "no-store", signal: abort.signal });
+    return true;
+  } catch {
+    return false;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 export const planLabel = (plan) => plan?.name ?? "No plan — unlimited";
 
 export const row = {

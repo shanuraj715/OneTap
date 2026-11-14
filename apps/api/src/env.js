@@ -32,6 +32,13 @@ const schema = z.object({
    * website still refreshes on its own every few minutes.
    */
   WEBSITE_URL: z.string().default("http://localhost:3073"),
+  /**
+   * Where this server itself reaches the website for that refresh, when it is on
+   * the same machine (http://127.0.0.1:3073). Keeps the call off the public
+   * internet — a hosting firewall or a Cloudflare hiccup can't break it. Blank
+   * = use WEBSITE_URL.
+   */
+  WEBSITE_INTERNAL_URL: z.string().default(""),
   WEBSITE_REVALIDATE_SECRET: z.string().default("dev-only-website-revalidate-secret"),
   /**
    * Cloudflare Turnstile for the website's enquiry form — a real "are you a

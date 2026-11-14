@@ -7,7 +7,7 @@ import * as api from "../../lib/api";
 import { useOpenStore } from "../../lib/useOutlet";
 import { usePlans, usePlatformMutation, useStore } from "../../lib/usePlatform";
 import { Button, Card, Field, Note, PageHeader, Pill, Select, Tabs, TextInput, Toast } from "../../ui";
-import { describeHttpError, fmtDate, muted, planLabel, row, StatusPill, usageText } from "./shared";
+import { browserCanOpen, describeHttpError, fmtDate, muted, planLabel, row, SERVER_CHECK_FAILED, StatusPill, usageText } from "./shared";
 
 const TABS = [
   { id: "plan", label: "Plan & limits" },
@@ -519,11 +519,25 @@ function SubdomainCard({ store }) {
   const remove = usePlatformMutation(() => api.removeStoreSubdomain(store.id));
   const error = save.error ?? remove.error;
   const result = status.data?.status;
-  const [tone, statusText] = result
-    ? result.state === "error"
-      ? ["error", describeHttpError(result.httpStatus)]
-      : (STATUS_TEXT[result.state] ?? ["warn", result.state])
-    : ["neutral", "Checking…"];
+  // When the server couldn't get through to the address, ask this browser — a visitor's view of it.
+  const serverFailed = Boolean(result) && !result.local && SERVER_CHECK_FAILED.includes(result.state);
+  const fromBrowser = useQuery({
+    queryKey: ["platform", "subdomain-browser", sub.host, status.dataUpdatedAt],
+    queryFn: () => browserCanOpen(`${sub.scheme}://${sub.host}/`),
+    enabled: Boolean(sub.host) && serverFailed,
+    staleTime: 60_000,
+    retry: false,
+  });
+  const opensForVisitors = serverFailed && fromBrowser.data === true;
+  const [tone, statusText] = !result
+    ? ["neutral", "Checking…"]
+    : opensForVisitors
+      ? ["ok", "Live — it opens from your browser"]
+      : serverFailed && fromBrowser.isFetching
+        ? ["neutral", "Checking from your browser…"]
+        : result.state === "error"
+          ? ["error", describeHttpError(result.httpStatus)]
+          : (STATUS_TEXT[result.state] ?? ["warn", result.state]);
   const typedMatches = typed.trim().toLowerCase() === label.trim().toLowerCase();
 
   if (!sub.base) {
@@ -551,6 +565,12 @@ function SubdomainCard({ store }) {
             <div style={{ marginTop: 4 }}>
               <Pill tone={tone}>{statusText}</Pill>
             </div>
+            {opensForVisitors ? (
+              <p style={{ ...muted, marginTop: 6 }}>
+                The server's own check said “{STATUS_TEXT[result.state][1]}”, but visitors aren't affected: that check runs from inside the server's network, and a
+                firewall there can block a brand-new domain. This is the view that counts.
+              </p>
+            ) : null}
           </div>
           <Button variant="outline" onClick={() => status.refetch()} disabled={status.isFetching} style={{ display: "inline-flex", gap: 6, alignItems: "center" }}>
             <RefreshCw size={13} /> {status.isFetching ? "Checking…" : "Check again"}
