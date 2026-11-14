@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { Component, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Plus, Trash2 } from "lucide-react";
-import { VARIANT_SLOTS } from "@onetap/ui";
+import { getVariant, VARIANT_SLOTS } from "@onetap/ui";
+import { useMenu } from "../lib/useMenu";
 import { useOutlet, usePatchConfig } from "../lib/useOutlet";
+import { StorePreviewFrame } from "../lib/storePreview";
 import { Button, Card, Field, InfoHint, PageHeader, STICKY_HEADER_CLEARANCE, TextInput, Toast } from "../ui";
 import { StorefrontNav } from "../components/SubNav";
 
@@ -14,6 +16,25 @@ export function Appearance() {
   const { outlet } = useOutlet();
   const patch = usePatchConfig();
   const [layout, setLayout] = useState               (null);
+  const menuQ = useMenu(outlet);
+
+  // What the previews are filled with: this outlet's own name, details and a
+  // few real dishes (ones with photos first), falling back to samples.
+  const previewCtx = useMemo(() => {
+    const id = outlet?.config?.identity ?? {};
+    const available = (menuQ.data?.items ?? []).filter((i) => i.isAvailable);
+    const withPhotos = available.filter((i) => i.images?.length);
+    const items = (withPhotos.length >= 3 ? withPhotos : available).slice(0, 3);
+    return {
+      outletName: id.name || outlet?.name || "Your restaurant",
+      tagline: id.tagline || "Freshly made, every day",
+      phone: id.phone || "+91 98765 43210",
+      address: id.address || "Shop 12, Main Market",
+      fssaiLicense: id.fssaiLicense || "",
+      gstin: id.gstin || "",
+      items: items.length ? items : SAMPLE_ITEMS,
+    };
+  }, [outlet, menuQ.data]);
 
   // Re-syncs whenever the selected outlet actually changes, not just once —
   // switching in the sidebar doesn't unmount this page. Keyed on outlet?._id
@@ -175,11 +196,107 @@ export function Appearance() {
               );
             })}
           </div>
+          <SlotPreview
+            slot={slot}
+            selectedId={values[slot.key]}
+            savedId={outlet.config.layout?.[slot.key]}
+            ctx={previewCtx}
+            config={outlet.config}
+            navLinks={navLinks}
+          />
         </Card>
       ))}
     </>
   );
 }
+
+/**
+ * The selected variant of one family, drawn with the store's own colours,
+ * fonts and effect, at the bottom of that family's card. It follows the
+ * selection live — before saving — so you see what you're about to choose.
+ */
+function SlotPreview({ slot, selectedId, savedId, ctx, config, navLinks }) {
+  // resolved the way the storefront resolves it (falls back to the family's default)
+  const meta = getVariant(slot.key, selectedId);
+  if (!meta) return null;
+  const unsaved = (selectedId ?? null) !== (savedId ?? null);
+
+  let body;
+  if (slot.key === "headerVariant") {
+    // the header shows the same links the storefront's would, including the
+    // extra ones edited above
+    const features = config?.features ?? {};
+    const links = [
+      { label: "Menu", href: "#" },
+      ...(features.ordering?.dineInQr ? [{ label: "Order at table", href: "#" }] : []),
+      ...(features.reservations?.enabled ? [{ label: "Book a table", href: "#" }] : []),
+      ...navLinks.filter((l) => l.label?.trim()).map((l) => ({ label: l.label, href: "#" })),
+    ];
+    const Header = meta.Component;
+    body = <Header name={ctx.outletName} tagline={ctx.tagline} phone={ctx.phone} links={links} />;
+  } else {
+    body = slot.preview(meta, ctx);
+  }
+
+  return (
+    <div style={{ marginTop: 18 }}>
+      <div style={previewHead}>
+        <span style={previewLabel}>Preview</span>
+        <span style={codeBadge}>{meta.code}</span>
+        <span style={{ fontWeight: 600, fontSize: 13 }}>{meta.name}</span>
+        {unsaved ? <span style={unsavedPill}>Not saved yet</span> : null}
+      </div>
+      <PreviewBoundary resetKey={meta.id}>
+        <StorePreviewFrame config={config} flush={slot.flush}>
+          {body}
+        </StorePreviewFrame>
+      </PreviewBoundary>
+    </div>
+  );
+}
+
+/** One broken preview must never take the whole Appearance page down with it. */
+class PreviewBoundary extends Component {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  componentDidUpdate(prev) {
+    if (prev.resetKey !== this.props.resetKey && this.state.failed) this.setState({ failed: false });
+  }
+  render() {
+    if (this.state.failed) {
+      return <p style={{ margin: 0, fontSize: 13, color: "var(--color-text-muted)" }}>This preview couldn't be drawn here — check it on the storefront.</p>;
+    }
+    return this.props.children;
+  }
+}
+
+/** Shown when the outlet's menu has nothing in it yet. Prices in paise, like the real menu. */
+const SAMPLE_ITEMS = [
+  {
+    id: "sample-1",
+    categoryId: "sample",
+    name: "Steamed Veg Momos",
+    description: "Hand-folded, cabbage & carrot, steamed to order",
+    foodType: "veg",
+    tags: ["bestseller"],
+    images: [],
+    basePrice: 0,
+    variants: [
+      { id: "half", label: "Half (5 pcs)", price: 6000 },
+      { id: "full", label: "Full (10 pcs)", price: 11000 },
+    ],
+    modifierGroupIds: [],
+    isAvailable: true,
+  },
+  { id: "sample-2", categoryId: "sample", name: "Kurkure Momos", description: "Crisp-fried with a spicy schezwan dip", foodType: "veg", tags: ["spicy"], images: [], basePrice: 15000, variants: [], modifierGroupIds: [], isAvailable: true },
+  { id: "sample-3", categoryId: "sample", name: "Chicken Tandoori Momos", description: "Char-grilled, with mint chutney", foodType: "non-veg", tags: [], images: [], basePrice: 16000, variants: [], modifierGroupIds: [], isAvailable: true },
+];
+
+const previewHead = { display: "flex", alignItems: "center", gap: 8, marginBottom: 8, flexWrap: "wrap" };
+const previewLabel = { fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--color-text-muted)" };
+const unsavedPill = { fontSize: 11, fontWeight: 700, padding: "2px 8px", borderRadius: 999, background: "var(--tone-warning-wash)", color: "var(--tone-warning)" };
 
 const navLinkRow                = {
   display: "flex",

@@ -18,7 +18,7 @@ export function Button(props             ) {
 }
 
 /** Freezes the page underneath while something (a modal, a dialog) is open. */
-function useLockBodyScroll(locked         ) {
+export function useLockBodyScroll(locked         ) {
   useEffect(() => {
     if (!locked) return;
     const prev = document.body.style.overflow;
@@ -298,16 +298,23 @@ export function Checkbox({
   onChange,
   label,
   info,
-}   
-                   
-                                 
-                
-                
+  disabled = false,
+}
+
+
+
+
  ) {
   return (
-    <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 13.5 }}>
-      <label style={{ display: "inline-flex", alignItems: "center", gap: 7, cursor: "pointer" }}>
-        <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} style={{ accentColor: "var(--color-primary)", width: 15, height: 15 }} />
+    <span style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 13.5, opacity: disabled ? 0.55 : 1 }}>
+      <label style={{ display: "inline-flex", alignItems: "center", gap: 7, cursor: disabled ? "not-allowed" : "pointer" }}>
+        <input
+          type="checkbox"
+          checked={checked}
+          disabled={disabled}
+          onChange={(e) => onChange(e.target.checked)}
+          style={{ accentColor: "var(--color-primary)", width: 15, height: 15 }}
+        />
         {label}
       </label>
       {info ? <InfoHint text={info} title={label} /> : null}

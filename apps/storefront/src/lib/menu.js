@@ -1,6 +1,7 @@
+import { apiServerUrl } from "@/lib/api-config";
 import { menuSchema,           } from "@onetap/config-schema";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3072";
+const API_BASE = apiServerUrl();
 
 const EMPTY       = { categories: [], items: [], modifierGroups: [] };
 

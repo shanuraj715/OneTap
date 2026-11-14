@@ -1,12 +1,10 @@
 import {
   GATEWAY_FIELDS,
   GATEWAY_LABELS,
-  outletConfigSchema,
                
 } from "@onetap/config-schema";
 import {
   OrderModel,
-  OutletModel,
   PaymentCredentialModel,
   PaymentModel,
   tenantFilter,
@@ -17,6 +15,7 @@ import { env } from "../../env.js";
 import { decryptSecret, encryptSecret, maskSecret } from "../../lib/crypto.js";
 import { logger } from "../../logger.js";
 import { HttpError } from "../../middleware/error.js";
+import { effectiveOutletConfig } from "../outlets/config.service.js";
 import { providerFor,                         } from "./providers/index.js";
 
 /* -------------------------------------------------------------- credentials */
@@ -107,9 +106,7 @@ export async function clearCredentials(ctx               , gateway         ) {
 /* ------------------------------------------------------------------ intents */
 
 async function outletConfigFor(ctx               ) {
-  const outlet = await OutletModel.findOne({ _id: ctx.outletId }, null, { allowGlobalQuery: true }).lean();
-  if (!outlet) throw new HttpError(404, "Outlet not found");
-  return outletConfigSchema.parse(outlet.config ?? {});
+  return effectiveOutletConfig(ctx);
 }
 
 /** Create (or reuse) a payment intent for an order that still owes money. */

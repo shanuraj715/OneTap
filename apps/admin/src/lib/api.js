@@ -111,9 +111,9 @@ export const deleteUser = (id        , brandId          ) =>
 
 export const getHealth = () => req                                                        ("/health");
 
-export const listOutlets = () => req                                       ("/api/outlets");
-
-export const listBrands = () => req                       ("/api/brands");
+/** For the platform's "open store dashboard", pass the store's brand id to list just its outlets. */
+export const listOutlets = (brandId) =>
+  req(brandId ? `/api/outlets?brandId=${encodeURIComponent(brandId)}` : "/api/outlets");
 
 export const createBrand = (body        ) =>
   req      ("/api/brands", { method: "POST", body: JSON.stringify(body) });
@@ -306,6 +306,31 @@ export const editOrder = (o        , id        , body           ) =>
     outletId: o._id,
   });
 
+/** Staff placing an order on a diner's behalf — a walk-in, a phoned-in order,
+ *  or a second round added to a table already in service (`sessionId`). */
+export const placeOrder = (o        , body           ) =>
+  req                       ("/api/orders", { method: "POST", body: JSON.stringify(body), outletId: o._id });
+
+/* ------------------------------------------------------- staff "Take order" */
+
+export const staffCustomerLookup = (o, phone) =>
+  req(`/api/orders/staff/customer?phone=${encodeURIComponent(phone)}`, { outletId: o._id });
+
+export const searchStaffCustomers = (o, q) =>
+  req(`/api/orders/staff/customers?q=${encodeURIComponent(q)}`, { outletId: o._id });
+
+export const staffQuote = (o, body) =>
+  req("/api/orders/staff/quote", { method: "POST", body: JSON.stringify(body), outletId: o._id });
+
+export const sendStaffCoinsCode = (o, phone) =>
+  req("/api/orders/staff/coins-code", { method: "POST", body: JSON.stringify({ phone }), outletId: o._id });
+
+export const verifyStaffCoinsCode = (o, phone, code) =>
+  req("/api/orders/staff/coins-code/verify", { method: "POST", body: JSON.stringify({ phone, code }), outletId: o._id });
+
+export const placeStaffOrder = (o, body) =>
+  req("/api/orders/staff", { method: "POST", body: JSON.stringify(body), outletId: o._id });
+
 /* ------------------------------------------------------------------ payments */
 
                                
@@ -384,6 +409,14 @@ export const moveSession = (o        , sessionId        , toTableId        ) =>
 
 export const closeSession = (o        , sessionId        ) =>
   req         (`/api/tables/sessions/${sessionId}/close`, { method: "POST", body: "{}", outletId: o._id });
+
+export const confirmSessionPayment = (o        , sessionId        ) =>
+  req      (`/api/tables/sessions/${sessionId}/confirm-payment`, { method: "POST", body: "{}", outletId: o._id });
+
+export const voidSession = (o        , sessionId        , reason         ) =>
+  req         (`/api/tables/sessions/${sessionId}/void`, {
+    method: "POST", body: JSON.stringify({ reason }), outletId: o._id,
+  });
 
 /* ---------------------------------------------------------------- QR cards */
 
@@ -602,3 +635,50 @@ export const listNotificationLogs = (
   const q = qs.toString();
   return req                                  (`/api/notify/logs${q ? `?${q}` : ""}`, { outletId: o._id });
 };
+
+/* ------------------------------------------------------------ store plan */
+
+/** The current store's plan: limits, what's unlocked, usage and any grace period. */
+export const getStorePlan = (brandId) => req("/api/store/plan", { brandId });
+
+/* -------------------------------------------------------- platform console */
+
+const json = (method, body) => ({ method, body: JSON.stringify(body ?? {}) });
+
+export const platformOverview = () => req("/api/platform/overview");
+export const listPlans = () => req("/api/platform/plans");
+export const createPlan = (body) => req("/api/platform/plans", json("POST", body));
+export const updatePlan = (id, body) => req(`/api/platform/plans/${id}`, json("PATCH", body));
+export const getPlatformSettings = () => req("/api/platform/settings");
+export const updatePlatformSettings = (body) => req("/api/platform/settings", json("PUT", body));
+export const listStores = () => req("/api/platform/stores");
+export const getStore = (id) => req(`/api/platform/stores/${id}`);
+export const setStorePlan = (id, body) => req(`/api/platform/stores/${id}/plan`, json("PATCH", body));
+export const setStoreDomains = (id, body) => req(`/api/platform/stores/${id}/domains`, json("PUT", body));
+export const setOutletBlocked = (id, outletId, blocked) =>
+  req(`/api/platform/stores/${id}/outlets/${outletId}/${blocked ? "block" : "unblock"}`, json("POST"));
+export const deleteStoreOutlet = (id, outletId, confirmName) =>
+  req(`/api/platform/stores/${id}/outlets/${outletId}`, json("DELETE", { confirmName }));
+export const setPersonBlocked = (id, userId, blocked) =>
+  req(`/api/platform/stores/${id}/people/${userId}/${blocked ? "block" : "unblock"}`, json("POST"));
+export const deleteStorePerson = (id, userId) => req(`/api/platform/stores/${id}/people/${userId}`, json("DELETE"));
+export const addStoreOwner = (id, body) => req(`/api/platform/stores/${id}/owners`, json("POST", body));
+export const updateStoreOwner = (id, userId, body) => req(`/api/platform/stores/${id}/owners/${userId}`, json("PATCH", body));
+export const removeStoreOwner = (id, userId) => req(`/api/platform/stores/${id}/owners/${userId}`, json("DELETE"));
+
+/* ---------------------------------------------------- TablePe website (platform) */
+
+export const getSiteSettings = () => req("/api/platform/site/settings");
+export const saveSiteSettings = (body) => req("/api/platform/site/settings", json("PUT", body));
+export const listSitePages = () => req("/api/platform/site/pages");
+export const getSitePage = (id) => req(`/api/platform/site/pages/${id}`);
+export const createSitePage = (body) => req("/api/platform/site/pages", json("POST", body));
+export const updateSitePage = (id, body) => req(`/api/platform/site/pages/${id}`, json("PUT", body));
+export const duplicateSitePage = (id) => req(`/api/platform/site/pages/${id}/duplicate`, json("POST"));
+export const deleteSitePage = (id) => req(`/api/platform/site/pages/${id}`, json("DELETE"));
+export const sitePreviewLink = (id) => req(`/api/platform/site/pages/${id}/preview-link`);
+export const listLeads = (status) => req(`/api/platform/site/leads${status ? `?status=${encodeURIComponent(status)}` : ""}`);
+export const updateLead = (id, body) => req(`/api/platform/site/leads/${id}`, json("PATCH", body));
+/** An image for the website — logo, hero, team photo. Returns { url, width, height, … }. */
+export const uploadSiteImage = (blob) =>
+  req("/api/platform/site/upload", { method: "POST", body: blob, headers: { "content-type": blob.type || "application/octet-stream" } });

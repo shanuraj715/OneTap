@@ -1,5 +1,6 @@
                                            
                                                       
+import { fx } from "./fx";
 import {
   addBtn,
   cardBase,
@@ -22,7 +23,7 @@ const dim = (item          )                => ({ opacity: item.isAvailable ? 1 
 /* 1 ─ compact row, no image */
 export function RowCompact({ item }               ) {
   return (
-    <article style={{ ...cardBase, ...dim(item), display: "flex", alignItems: "flex-start", gap: 12, padding: "14px 16px" }}>
+    <article className="ot-fx-card" style={{ ...fx("card", cardBase), ...dim(item), display: "flex", alignItems: "flex-start", gap: 12, padding: "14px 16px" }}>
       <FoodMark type={item.foodType} />
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={nameStyle}>
@@ -40,7 +41,7 @@ export function RowCompact({ item }               ) {
 /* 2 ─ thumbnail on the left */
 export function RowThumbLeft({ item }               ) {
   return (
-    <article style={{ ...cardBase, ...dim(item), display: "flex", gap: 14, padding: 12 }}>
+    <article className="ot-fx-card" style={{ ...fx("card", cardBase), ...dim(item), display: "flex", gap: 14, padding: 12 }}>
       <Photo name={item.name} src={item.images?.[0]?.url} style={{ width: 72, height: 72 }} radius={10} />
       <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", justifyContent: "center" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2 }}>
@@ -60,7 +61,7 @@ export function RowThumbLeft({ item }               ) {
 /* 3 ─ thumbnail on the right */
 export function RowThumbRight({ item }               ) {
   return (
-    <article style={{ ...cardBase, ...dim(item), display: "flex", gap: 14, padding: 12 }}>
+    <article className="ot-fx-card" style={{ ...fx("card", cardBase), ...dim(item), display: "flex", gap: 14, padding: 12 }}>
       <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", justifyContent: "center" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2 }}>
           <FoodMark type={item.foodType} size={13} />
@@ -80,7 +81,7 @@ export function RowThumbRight({ item }               ) {
 /* 4 ─ image on top, text below, add button */
 export function ImageTop({ item }               ) {
   return (
-    <article style={{ ...cardBase, ...dim(item), display: "flex", flexDirection: "column" }}>
+    <article className="ot-fx-card" style={{ ...fx("card", cardBase), ...dim(item), display: "flex", flexDirection: "column" }}>
       <Photo name={item.name} src={item.images?.[0]?.url} style={{ aspectRatio: "4 / 3", width: "100%" }} radius={0} />
       <div style={{ padding: 14, display: "flex", flexDirection: "column", gap: 6, flex: 1 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -91,7 +92,7 @@ export function ImageTop({ item }               ) {
         {item.description ? <div style={descStyle}>{item.description}</div> : null}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "auto", paddingTop: 10 }}>
           <Price item={item} />
-          <button type="button" style={addBtn} disabled={!item.isAvailable}>
+          <button type="button" className="ot-fx-btn" style={fx("btn", addBtn)} disabled={!item.isAvailable}>
             Add
           </button>
         </div>
@@ -103,7 +104,7 @@ export function ImageTop({ item }               ) {
 /* 5 ─ image on top with the price badged onto the image */
 export function ImageTopBadge({ item }               ) {
   return (
-    <article style={{ ...cardBase, ...dim(item), display: "flex", flexDirection: "column" }}>
+    <article className="ot-fx-card" style={{ ...fx("card", cardBase), ...dim(item), display: "flex", flexDirection: "column" }}>
       <div style={{ position: "relative" }}>
         <Photo name={item.name} src={item.images?.[0]?.url} style={{ aspectRatio: "3 / 2", width: "100%" }} radius={0} />
         <span
@@ -141,7 +142,7 @@ export function ImageTopBadge({ item }               ) {
 /* 6 ─ text above, image below */
 export function TextAboveImage({ item }               ) {
   return (
-    <article style={{ ...cardBase, ...dim(item), display: "flex", flexDirection: "column" }}>
+    <article className="ot-fx-card" style={{ ...fx("card", cardBase), ...dim(item), display: "flex", flexDirection: "column" }}>
       <div style={{ padding: "14px 14px 12px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
           <FoodMark type={item.foodType} size={13} />
@@ -161,7 +162,7 @@ export function TextAboveImage({ item }               ) {
 /* 7 ─ full-bleed image with the text overlaid */
 export function ImageOverlay({ item }               ) {
   return (
-    <article style={{ ...cardBase, ...dim(item), position: "relative", minHeight: 190, display: "flex" }}>
+    <article className="ot-fx-card" style={{ ...fx("card", cardBase), ...dim(item), position: "relative", minHeight: 190, display: "flex" }}>
       <Photo name={item.name} src={item.images?.[0]?.url} style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} radius={0} />
       <div
         style={{
@@ -194,7 +195,7 @@ export function ImageOverlay({ item }               ) {
 /* 8 ─ tall portrait card */
 export function Portrait({ item }               ) {
   return (
-    <article style={{ ...cardBase, ...dim(item), display: "flex", flexDirection: "column" }}>
+    <article className="ot-fx-card" style={{ ...fx("card", cardBase), ...dim(item), display: "flex", flexDirection: "column" }}>
       <Photo name={item.name} src={item.images?.[0]?.url} style={{ aspectRatio: "3 / 4", width: "100%" }} radius={0} />
       <div style={{ padding: 14, textAlign: "center" }}>
         <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 6 }}>
@@ -214,8 +215,9 @@ export function Portrait({ item }               ) {
 export function Circle({ item }               ) {
   return (
     <article
+      className="ot-fx-card"
       style={{
-        ...cardBase,
+        ...fx("card", cardBase),
         ...dim(item),
         padding: "20px 14px",
         textAlign: "center",
@@ -265,7 +267,7 @@ export function MenuLine({ item }               ) {
 /* 11 ─ wide featured card, image beside the text */
 export function FeaturedWide({ item }               ) {
   return (
-    <article style={{ ...cardBase, ...dim(item), display: "flex", minHeight: 150, gridColumn: "1 / -1" }}>
+    <article className="ot-fx-card" style={{ ...fx("card", cardBase), ...dim(item), display: "flex", minHeight: 150, gridColumn: "1 / -1" }}>
       <Photo name={item.name} src={item.images?.[0]?.url} style={{ width: "38%", minWidth: 130, alignSelf: "stretch" }} radius={0} />
       <div style={{ flex: 1, padding: 20, display: "flex", flexDirection: "column", justifyContent: "center", gap: 8 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -279,7 +281,7 @@ export function FeaturedWide({ item }               ) {
           <span style={{ ...priceStyle, fontSize: 18 }}>
             <Price item={item} />
           </span>
-          <button type="button" style={addBtn} disabled={!item.isAvailable}>
+          <button type="button" className="ot-fx-btn" style={fx("btn", addBtn)} disabled={!item.isAvailable}>
             Add to order
           </button>
         </div>

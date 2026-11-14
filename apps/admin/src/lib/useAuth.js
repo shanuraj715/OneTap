@@ -58,7 +58,14 @@ export function useUsers(enabled         , brandId          ) {
 
 function useUserMutation       (fn                                   ) {
   const qc = useQueryClient();
-  return useMutation({ mutationFn: fn, onSuccess: () => qc.invalidateQueries({ queryKey: ["users"] }) });
+  return useMutation({
+    mutationFn: fn,
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["users"] });
+      // seat usage counts against the plan's people limit
+      qc.invalidateQueries({ queryKey: ["store-plan"] });
+    },
+  });
 }
 
 export const useCreateUser = () => useUserMutation((a                                       ) => api.createUser(a.body, a.brandId));

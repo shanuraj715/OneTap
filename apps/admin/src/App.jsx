@@ -1,15 +1,24 @@
 import { useEffect, useRef, useState } from "react";
 
-import { NavLink, Route, Routes, useLocation } from "react-router-dom";
+import { Navigate, NavLink, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { AwesomeLoader } from "./components/AwesomeLoader";
 import { TopProgressBar } from "./components/TopProgressBar";
 import { ROLE_LABELS } from "@onetap/config-schema";
 import {
+  AlertTriangle,
+  ArrowLeft,
   Bell,
+  Layers,
+  Store,
   Boxes,
   Building2,
   Check,
   ChevronsUpDown,
+  ConciergeBell,
+  Globe,
+  Inbox,
+  Menu as MenuIcon,
+  X,
   CreditCard,
   ExternalLink,
   HardDrive,
@@ -33,10 +42,13 @@ import {
   Wand2,
 } from "lucide-react";
 import { useAuth, useLogout } from "./lib/useAuth";
-import { OutletSelectionProvider, useOutlets } from "./lib/useOutlet";
+import { OutletSelectionProvider, useOpenStore, useOutlets } from "./lib/useOutlet";
+import { useLeads, useStore } from "./lib/usePlatform";
+import { useStorePlan } from "./lib/useStorePlan";
+import { useMedia } from "./lib/useMedia";
 import { CreateOutletModal } from "./components/CreateOutletModal";
+import { SETTINGS_TABS, STOREFRONT_TABS, TABLES_TABS } from "./components/SubNav";
 import { Appearance } from "./routes/Appearance";
-import { Brands } from "./routes/Brands";
 import { ComponentsCatalog } from "./routes/ComponentsCatalog";
 import { Customers } from "./routes/Customers";
 import { Dashboard } from "./routes/Dashboard";
@@ -57,9 +69,32 @@ import { Storage } from "./routes/Storage";
 import { ThemeEditor } from "./routes/ThemeEditor";
 import { TypographyEditor } from "./routes/TypographyEditor";
 import { Users } from "./routes/Users";
+import { TakeOrder } from "./routes/take-order/TakeOrder";
+import { PlatformOverview } from "./routes/platform/PlatformOverview";
+import { PlatformPlans } from "./routes/platform/PlatformPlans";
+import { PlatformSettings } from "./routes/platform/PlatformSettings";
+import { PlatformStoreDetail } from "./routes/platform/PlatformStoreDetail";
+import { PlatformStores } from "./routes/platform/PlatformStores";
+import { PlatformLeads } from "./routes/platform/PlatformLeads";
+import { PageEditor } from "./routes/platform/website/PageEditor";
+import { WebsitePages } from "./routes/platform/website/WebsitePages";
+import { WebsiteSettings } from "./routes/platform/website/WebsiteSettings";
 import { Menu } from "./ui";
 
-const STOREFRONT_URL = "http://localhost:3070";
+const STOREFRONT_URL = import.meta.env.VITE_STOREFRONT_URL ?? "http://localhost:3070";
+
+/**
+ * The current outlet's page on its store's own website — dominos.com/laxmi-nagar
+ * in production. In development (or before a store has a public domain) it's
+ * the platform storefront.
+ */
+function storefrontHref(outlet) {
+  const host = outlet?.canonicalHostname || "";
+  const path = outlet?.slug ? `/${outlet.slug}` : "";
+  const isPublic = host.includes(".") && !/^(localhost|127\.|\[::1\])/.test(host) && !/\.(test|local)(:\d+)?$/.test(host);
+  if (!import.meta.env.DEV && isPublic) return `https://${host}${path}`;
+  return `${STOREFRONT_URL.replace(/\/$/, "")}${path}`;
+}
 
 const ICON = 15.5;
 
@@ -84,109 +119,85 @@ const ROUTE_META = {
   "/outlets": { title: "Outlets", icon: Building2 },
   "/dashboard-config": { title: "Configure dashboard", icon: LayoutGrid },
   "/users": { title: "Users & roles", icon: UsersIcon },
-  "/brands": { title: "Brands", icon: Building2 },
+  "/take-order": { title: "Take order", icon: ConciergeBell },
+  "/platform": { title: "Platform overview", icon: LayoutDashboard },
+  "/platform/stores": { title: "Stores", icon: Store },
+  "/platform/plans": { title: "Plans", icon: Layers },
+  "/platform/settings": { title: "Platform settings", icon: SettingsIcon },
+  "/platform/website": { title: "Website", icon: Globe },
+  "/platform/website/settings": { title: "Website settings", icon: Globe },
+  "/platform/leads": { title: "Leads", icon: Inbox },
 };
 
-/** Full navigation list showing every single option — for Super Admins. */
-const SUPER_ADMIN_NAV_GROUPS = [
+/**
+ * A sidebar entry standing in for a whole tab family (see SubNav.jsx): shown
+ * if the user can open ANY of its tabs, linking to the first one they can,
+ * and highlighted on every page in the family. The pages themselves are
+ * reached through the tab bar — never listed twice.
+ */
+const family = (label, icon, tabs) => ({ label, icon, tabs });
+
+const NAV_GROUPS = [
   {
     group: "Service",
     items: [
+      { to: "/take-order", label: "Take order", icon: <ConciergeBell size={ICON} />, permission: "order:create" },
       { to: "/", label: "Dashboard", icon: <LayoutDashboard size={ICON} />, end: true },
       { to: "/orders", label: "Orders", icon: <ReceiptText size={ICON} />, permission: "order:read" },
-      { to: "/tables", label: "Tables & QR", icon: <QrCode size={ICON} />, permission: "table:read" },
-      { to: "/table-cards", label: "Table cards", icon: <IdCard size={ICON} />, permission: "table:read" },
-      { to: "/printing", label: "Printing", icon: <Printer size={ICON} />, permission: "printer:read" },
+      family("Tables", <QrCode size={ICON} />, TABLES_TABS),
+      { to: "/printing", label: "Printing", icon: <Printer size={ICON} />, permission: "printer:read", feature: "printing" },
     ],
   },
   {
     group: "Catalogue",
-    items: [
-      { to: "/menu", label: "Menu", icon: <UtensilsCrossed size={ICON} />, permission: "menu:read" },
-      { to: "/components", label: "Components", icon: <Boxes size={ICON} /> },
-      { to: "/storage", label: "Storage", icon: <HardDrive size={ICON} />, permission: "storage-config:read" },
-    ],
+    items: [{ to: "/menu", label: "Menu", icon: <UtensilsCrossed size={ICON} />, permission: "menu:read" }],
   },
   {
     group: "Storefront",
-    items: [
-      { to: "/menu-layout", label: "Menu layout", icon: <LayoutList size={ICON} />, permission: "appearance:update" },
-      { to: "/appearance", label: "Appearance", icon: <Wand2 size={ICON} />, permission: "appearance:update" },
-      { to: "/theme", label: "Theme", icon: <Palette size={ICON} />, permission: "theme:update" },
-      { to: "/typography", label: "Typography", icon: <Type size={ICON} />, permission: "theme:update" },
-    ],
+    items: [family("Storefront", <Wand2 size={ICON} />, STOREFRONT_TABS)],
   },
   {
     group: "Business",
     items: [
-      { to: "/coupons", label: "Coupons", icon: <Tag size={ICON} />, permission: "coupon:read" },
-      { to: "/payments", label: "Payments", icon: <CreditCard size={ICON} />, permission: "payment-config:read" },
-      { to: "/notifications", label: "Notifications", icon: <Bell size={ICON} />, permission: "notification-config:read" },
+      { to: "/coupons", label: "Coupons", icon: <Tag size={ICON} />, permission: "coupon:read", feature: "coupons" },
       { to: "/customers", label: "Customers", icon: <UsersIcon size={ICON} />, permission: "customer:read" },
-      { to: "/settings", label: "Settings", icon: <SettingsIcon size={ICON} />, permission: "settings:update" },
-      { to: "/outlets", label: "Outlets", icon: <Building2 size={ICON} />, permission: "outlet:manage" },
-      { to: "/dashboard-config", label: "Configure dashboard", icon: <LayoutGrid size={ICON} />, permission: "dashboard:configure" },
-      { to: "/users", label: "Users & roles", icon: <UsersIcon size={ICON} />, permission: "user:read" },
+      family("Settings", <SettingsIcon size={ICON} />, SETTINGS_TABS),
     ],
-  },
-  {
-    group: "Platform",
-    superAdminOnly: true,
-    items: [{ to: "/brands", label: "Brands", icon: <Building2 size={ICON} /> }],
   },
 ];
 
-/** Streamlined navigation list with consolidated sections — for Owners and managers. */
-const OWNER_NAV_GROUPS = [
+/** The platform super admin's own console — managing client stores, not running one. */
+const PLATFORM_NAV_GROUPS = [
   {
-    group: "Service",
+    group: "Platform",
     items: [
-      { to: "/", label: "Dashboard", icon: <LayoutDashboard size={ICON} />, end: true },
-      { to: "/orders", label: "Orders", icon: <ReceiptText size={ICON} />, permission: "order:read" },
-      {
-        to: "/tables",
-        label: "Tables & QR",
-        icon: <QrCode size={ICON} />,
-        permission: "table:read",
-        matchPaths: ["/tables", "/table-cards"],
-      },
-      { to: "/printing", label: "Printing", icon: <Printer size={ICON} />, permission: "printer:read" },
+      { to: "/platform", label: "Overview", icon: <LayoutDashboard size={ICON} />, end: true },
+      { to: "/platform/stores", label: "Stores", icon: <Store size={ICON} /> },
+      { to: "/platform/plans", label: "Plans", icon: <Layers size={ICON} /> },
+      { to: "/platform/settings", label: "Settings", icon: <SettingsIcon size={ICON} /> },
     ],
   },
   {
-    group: "Catalogue",
+    group: "Website",
     items: [
-      { to: "/menu", label: "Menu", icon: <UtensilsCrossed size={ICON} />, permission: "menu:read" },
-      { to: "/components", label: "Components", icon: <Boxes size={ICON} /> },
-    ],
-  },
-  {
-    group: "Storefront",
-    items: [
-      {
-        to: "/menu-layout",
-        label: "Storefront",
-        icon: <Wand2 size={ICON} />,
-        permission: "appearance:update",
-        matchPaths: ["/menu-layout", "/appearance", "/theme", "/typography"],
-      },
-    ],
-  },
-  {
-    group: "Business",
-    items: [
-      { to: "/coupons", label: "Coupons", icon: <Tag size={ICON} />, permission: "coupon:read" },
-      { to: "/customers", label: "Customers", icon: <UsersIcon size={ICON} />, permission: "customer:read" },
-      {
-        to: "/settings",
-        label: "Settings",
-        icon: <SettingsIcon size={ICON} />,
-        permission: "settings:update",
-        matchPaths: ["/settings", "/outlets", "/payments", "/notifications", "/users", "/storage", "/dashboard-config"],
-      },
+      { to: "/platform/website", label: "Website", icon: <Globe size={ICON} /> },
+      { to: "/platform/leads", label: "Leads", icon: <Inbox size={ICON} />, badgeKey: "newLeads" },
     ],
   },
 ];
+
+/**
+ * Resolve a nav entry for this user: hidden when their role lacks the
+ * permission or the store's plan doesn't include the feature; a family becomes
+ * a plain link to its first tab they can open, or disappears.
+ */
+function resolveNavItem(n, can, hasFeature) {
+  const open = (x) => (!x.permission || can(x.permission)) && (!x.feature || hasFeature(x.feature));
+  if (!n.tabs) return open(n) ? n : null;
+  const allowed = n.tabs.filter(open);
+  if (!allowed.length) return null;
+  return { to: allowed[0].to, label: n.label, icon: n.icon, matchPaths: n.tabs.map((t) => t.to) };
+}
 
 export function App() {
   const { user, isLoading, can } = useAuth();
@@ -196,6 +207,9 @@ export function App() {
   }
   if (!user) {
     return <Login />;
+  }
+  if (user.blockedAt && !user.isSuperAdmin) {
+    return <Paused />;
   }
 
   return (
@@ -228,13 +242,20 @@ function Shell({ can }                                     ) {
     };
   }, [location.pathname]);
 
-  const currentMeta = ROUTE_META[location.pathname] || {
+  const currentMeta = ROUTE_META[location.pathname] || (location.pathname.startsWith("/platform/stores/") ? ROUTE_META["/platform/stores"] : null) || {
     title: location.pathname.slice(1).replace("-", " ") || "page",
     icon: UtensilsCrossed,
   };
 
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const { openStoreId, closeStore } = useOpenStore();
+  // The platform super admin works in their own console unless they've opened
+  // a store's dashboard — and any /platform page is always the console.
+  const platformMode = Boolean(user?.isSuperAdmin) && (!openStoreId || location.pathname.startsWith("/platform"));
+  const openedStore = useStore(user?.isSuperAdmin && !platformMode ? openStoreId : null).data?.store;
   const { outlet, outlets, scope, selectOutlet } = useOutlets();
+  const storePlan = useStorePlan();
   const logout = useLogout();
   const [addingOutlet, setAddingOutlet] = useState(false);
 
@@ -256,26 +277,44 @@ function Shell({ can }                                     ) {
     }
   }, [collapsed]);
 
+  // Phones get the sidebar as a slide-in menu instead of a fixed column.
+  const narrow = useMedia("(max-width: 767px)");
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  useEffect(() => setDrawerOpen(false), [location.pathname, narrow]);
+  const railCollapsed = collapsed && !narrow;
+
+  const canTakeOrders = can("order:create") && !platformMode;
+
   // Works on any page, not just Orders — the sidebar is global chrome.
   useEffect(() => {
     const onKey = (e               ) => {
       const t = e.target                      ;
-      if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.isContentEditable)) return;
+      if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.tagName === "SELECT" || t.isContentEditable)) return;
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       if (e.key === "\\") setCollapsed((c) => !c);
+      // N — new order, from anywhere in the store dashboard
+      else if ((e.key === "n" || e.key === "N") && canTakeOrders) navigate("/take-order");
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, []);
+  }, [canTakeOrders, navigate]);
 
-  const navGroups = user?.isSuperAdmin ? SUPER_ADMIN_NAV_GROUPS : OWNER_NAV_GROUPS;
-  const groups = navGroups
-    .filter((g) => !g.superAdminOnly || user?.isSuperAdmin)
+  // the platform console's "Leads" shows how many enquiries nobody has called yet
+  const newLeads = useLeads("new", platformMode).data?.counts?.new ?? 0;
+  const badges = { newLeads };
+
+  const groups = (platformMode ? PLATFORM_NAV_GROUPS : NAV_GROUPS)
     .map((g) => ({
       ...g,
-      items: g.items.filter((n) => !n.permission || can(n.permission)),
+      items: g.items.map((n) => resolveNavItem(n, can, platformMode ? () => true : storePlan.hasFeature)).filter(Boolean),
     }))
     .filter((g) => g.items.length);
+
+  const leaveStore = () => {
+    const id = openStoreId;
+    closeStore();
+    navigate(id ? `/platform/stores/${id}` : "/platform");
+  };
 
   // A brand's outlets, for the switcher. An outlet's own name conventionally
   // already includes the brand ("Gazab Momos — Laxmi Nagar"), so the label
@@ -285,30 +324,51 @@ function Shell({ can }                                     ) {
   const outletOptions = outlets.map((o) => ({
     value: o._id,
     label: o.name,
-    description: scope === "all" && o.brandName ? `${o.brandName} · ${o.slug}` : o.slug,
+    description: o.blocked
+      ? "Blocked — over plan limit"
+      : scope === "all" && o.brandName
+        ? `${o.brandName} · ${o.slug}`
+        : o.slug,
   }));
+  // The platform can always add an outlet; a store only while its plan allows.
+  const canAddOutlet = can("outlet:manage") && (user?.isSuperAdmin || storePlan.canAddOutlet);
 
   return (
-    <div style={{ ...shell, gridTemplateColumns: `${collapsed ? 64 : 224}px 1fr` }}>
-      <aside style={{ ...sidebar, padding: collapsed ? "20px 10px" : 20 }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: collapsed ? "center" : "space-between", gap: 8 }}>
-          {!collapsed ? (
+    <div style={{ ...shell, gridTemplateColumns: narrow ? "1fr" : `${railCollapsed ? 64 : 224}px 1fr` }}>
+      {narrow && drawerOpen ? <div style={drawerScrim} onClick={() => setDrawerOpen(false)} aria-hidden /> : null}
+      <aside
+        style={{
+          ...sidebar,
+          padding: railCollapsed ? "20px 10px" : 20,
+          ...(narrow ? { ...drawer, transform: drawerOpen ? "translateX(0)" : "translateX(-105%)", boxShadow: drawerOpen ? drawer.boxShadow : "none" } : {}),
+        }}
+        // closed on a phone: off-screen AND unreachable by keyboard / screen reader
+        inert={narrow && !drawerOpen}
+      >
+        <div style={{ display: "flex", alignItems: "center", justifyContent: railCollapsed ? "center" : "space-between", gap: 8 }}>
+          {!railCollapsed ? (
             <div style={brand}>
               TablePe<span style={{ color: "var(--color-text-muted)", fontWeight: 400 }}> admin</span>
             </div>
           ) : null}
-          <button
-            type="button"
-            onClick={() => setCollapsed((c) => !c)}
-            style={collapseBtn}
-            aria-label={collapsed ? "Expand the sidebar" : "Collapse the sidebar"}
-            title={"Shortcut key: \\"}
-          >
-            {collapsed ? <PanelLeftOpen size={15} /> : <PanelLeftClose size={15} />}
-          </button>
+          {narrow ? (
+            <button type="button" onClick={() => setDrawerOpen(false)} style={collapseBtn} aria-label="Close the menu">
+              <X size={15} />
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setCollapsed((c) => !c)}
+              style={collapseBtn}
+              aria-label={railCollapsed ? "Expand the sidebar" : "Collapse the sidebar"}
+              title={"Shortcut key: \\"}
+            >
+              {railCollapsed ? <PanelLeftOpen size={15} /> : <PanelLeftClose size={15} />}
+            </button>
+          )}
         </div>
 
-        {!collapsed ? (
+        {!railCollapsed && !platformMode ? (
           <Menu
             fullWidth
             trigger={({ toggle }) => (
@@ -321,9 +381,7 @@ function Shell({ can }                                     ) {
             )}
             options={[
               ...outletOptions,
-              ...(can("outlet:manage")
-                ? [{ value: "__add", label: "Add outlet", icon: <Plus size={13} /> }]
-                : []),
+              ...(canAddOutlet ? [{ value: "__add", label: "Add outlet", icon: <Plus size={13} /> }] : []),
             ]}
             selected={outlet?._id}
             align="left"
@@ -343,7 +401,7 @@ function Shell({ can }                                     ) {
         <nav style={nav}>
           {groups.map((g) => (
             <div key={g.group} style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-              {!collapsed ? <span style={navGroup}>{g.group}</span> : <span style={navRule} aria-hidden />}
+              {!railCollapsed ? <span style={navGroup}>{g.group}</span> : <span style={navRule} aria-hidden />}
               {g.items.map((n) => (
                 <NavItem
                   key={n.to}
@@ -351,27 +409,31 @@ function Shell({ can }                                     ) {
                   label={n.label}
                   icon={n.icon}
                   end={n.end}
-                  collapsed={collapsed}
+                  collapsed={railCollapsed}
                   matchPaths={n.matchPaths}
+                  badge={n.badgeKey ? badges[n.badgeKey] : undefined}
                 />
               ))}
             </div>
           ))}
         </nav>
 
-        <div style={{ marginTop: "auto", display: "flex", flexDirection: "column", gap: 10, alignItems: collapsed ? "center" : "stretch" }}>
-          <a
-            href={STOREFRONT_URL}
-            target="_blank"
-            rel="noreferrer"
-            style={{ ...storefrontLink, justifyContent: collapsed ? "center" : "flex-start" }}
-            title="View storefront"
-          >
-            <ExternalLink size={13} />
-            {!collapsed ? "View storefront" : null}
-          </a>
+        <div style={{ marginTop: "auto", display: "flex", flexDirection: "column", gap: 10, alignItems: railCollapsed ? "center" : "stretch" }}>
+          {/* One fixed storefront address — meaningless across every store, so not in the platform console. */}
+          {!platformMode ? (
+            <a
+              href={storefrontHref(outlet)}
+              target="_blank"
+              rel="noreferrer"
+              style={{ ...storefrontLink, justifyContent: railCollapsed ? "center" : "flex-start" }}
+              title="View storefront"
+            >
+              <ExternalLink size={13} />
+              {!railCollapsed ? "View storefront" : null}
+            </a>
+          ) : null}
 
-          {collapsed ? (
+          {railCollapsed ? (
             <button type="button" onClick={() => logout.mutate()} style={collapseBtn} aria-label="Sign out" title="Sign out">
               <LogOut size={14} />
             </button>
@@ -389,8 +451,23 @@ function Shell({ can }                                     ) {
         </div>
       </aside>
 
-      <main style={{ ...content, position: "relative" }}>
+      <main style={{ ...content, ...(narrow ? { padding: "0 16px 24px" } : {}), position: "relative" }}>
         <TopProgressBar active={navigating} />
+        {narrow ? (
+          <div style={mobileBar}>
+            <button type="button" onClick={() => setDrawerOpen(true)} style={mobileMenuBtn} aria-label="Open the menu">
+              <MenuIcon size={19} />
+            </button>
+            <span style={{ flex: 1, minWidth: 0, fontWeight: 700, fontSize: 15, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              {platformMode ? "Platform" : outlet?.name ?? "TablePe"}
+            </span>
+            {canTakeOrders ? (
+              <NavLink to="/take-order" style={mobileTakeOrder}>
+                <ConciergeBell size={15} /> Take order
+              </NavLink>
+            ) : null}
+          </div>
+        ) : null}
 
         {navigating ? (
           <div
@@ -414,6 +491,36 @@ function Shell({ can }                                     ) {
         ) : null}
 
         <div style={{ opacity: navigating ? 0 : 1, transition: "opacity 0.22s ease-out", minHeight: "100%" }}>
+          {(user?.isSuperAdmin && !platformMode) || (!platformMode && storePlan.plan?.grace.over) ? (
+            // The page column has no top padding (headers bring their own margin) — keep the bars off the edge.
+            <div style={{ paddingTop: 16 }}>
+              {user?.isSuperAdmin && !platformMode ? (
+                <div style={viewingBar}>
+                  <span>
+                    Viewing <strong>{openedStore?.name ?? "store"}</strong> as its owner sees it
+                  </span>
+                  <button type="button" onClick={leaveStore} style={viewingBack}>
+                    <ArrowLeft size={13} /> Back to my dashboard
+                  </button>
+                </div>
+              ) : null}
+              {!platformMode && storePlan.plan?.grace.over ? <OverLimitBanner plan={storePlan.plan} /> : null}
+            </div>
+          ) : null}
+          {platformMode ? (
+            <Routes>
+              <Route path="/platform" element={<PlatformOverview />} />
+              <Route path="/platform/stores" element={<PlatformStores />} />
+              <Route path="/platform/stores/:id" element={<PlatformStoreDetail />} />
+              <Route path="/platform/plans" element={<PlatformPlans />} />
+              <Route path="/platform/settings" element={<PlatformSettings />} />
+              <Route path="/platform/website" element={<WebsitePages />} />
+              <Route path="/platform/website/settings" element={<WebsiteSettings />} />
+              <Route path="/platform/website/pages/:id" element={<PageEditor />} />
+              <Route path="/platform/leads" element={<PlatformLeads />} />
+              <Route path="*" element={<Navigate to="/platform" replace />} />
+            </Routes>
+          ) : (
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/orders" element={<Orders />} />
@@ -435,8 +542,9 @@ function Shell({ can }                                     ) {
             <Route path="/outlets" element={<Outlets />} />
             <Route path="/dashboard-config" element={<DashboardConfig />} />
             <Route path="/users" element={<Users />} />
-            {user?.isSuperAdmin ? <Route path="/brands" element={<Brands />} /> : null}
+            <Route path="/take-order" element={<TakeOrder />} />
           </Routes>
+          )}
         </div>
       </main>
     </div>
@@ -450,6 +558,7 @@ function NavItem({
   end,
   collapsed,
   matchPaths,
+  badge,
 }) {
   const location = useLocation();
   const isMatchPathActive =
@@ -479,10 +588,29 @@ function NavItem({
         {icon}
       </span>
       {collapsed ? <span style={srOnly}>{label}</span> : label}
+      {badge ? (
+        <span style={navBadge} aria-label={`${badge} new`}>
+          {badge}
+        </span>
+      ) : null}
     </NavLink>
   );
 }
 
+const navBadge = {
+  marginLeft: "auto",
+  minWidth: 20,
+  height: 20,
+  padding: "0 6px",
+  borderRadius: 999,
+  background: "var(--tone-warning-wash)",
+  color: "var(--tone-warning)",
+  fontSize: 11.5,
+  fontWeight: 800,
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+};
 const splash                = { minHeight: "100vh", display: "grid", placeItems: "center", color: "var(--color-text-muted)" };
 // Fixed to exactly one viewport tall, and nothing here scrolls itself — the
 // sidebar and the content area each own their own internal scroll instead, so
@@ -606,4 +734,131 @@ const signOut                = {
 // No top padding here on purpose — the page header supplies its own (see
 // PageHeader / Orders' pageHead), so it stays put at the very top of this
 // scroll container instead of scrolling out from under a padding gap.
+const drawer = {
+  position: "fixed",
+  top: 0,
+  left: 0,
+  bottom: 0,
+  width: "min(290px, 86vw)",
+  zIndex: 70,
+  boxShadow: "0 0 40px rgba(0,0,0,0.22)",
+  transition: "transform var(--motion-base) var(--ease-out)",
+};
+const drawerScrim = { position: "fixed", inset: 0, zIndex: 69, background: "rgba(16, 12, 10, 0.4)" };
+const mobileBar = {
+  position: "sticky",
+  top: 0,
+  zIndex: 20,
+  display: "flex",
+  alignItems: "center",
+  gap: 10,
+  margin: "0 -16px",
+  padding: "10px 16px",
+  background: "var(--color-bg)",
+  borderBottom: "1px solid var(--color-border)",
+};
+const mobileMenuBtn = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: 40,
+  height: 40,
+  borderRadius: 12,
+  border: "1px solid var(--color-border)",
+  background: "var(--color-bg)",
+  color: "var(--color-text)",
+  cursor: "pointer",
+  flexShrink: 0,
+};
+const mobileTakeOrder = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 6,
+  minHeight: 40,
+  padding: "0 14px",
+  borderRadius: 999,
+  background: "var(--color-primary)",
+  color: "var(--color-on-primary)",
+  fontWeight: 700,
+  fontSize: 13.5,
+  textDecoration: "none",
+  flexShrink: 0,
+};
 const content                = { padding: "0 32px 28px", width: "100%", minWidth: 0, height: "100%", overflowX: "hidden", overflowY: "auto" };
+
+const fmtDay = (d) => new Date(d).toLocaleDateString([], { day: "numeric", month: "short", year: "numeric" });
+
+/** Shown on every store page while the store is over its plan's limits. */
+function OverLimitBanner({ plan }) {
+  const parts = [];
+  if (plan.max.users !== null && plan.usage.users > plan.max.users) parts.push(`${plan.usage.users} people (plan allows ${plan.max.users})`);
+  if (plan.max.outlets !== null && plan.usage.outlets > plan.max.outlets) parts.push(`${plan.usage.outlets} outlets (plan allows ${plan.max.outlets})`);
+  return (
+    <div role="status" style={overLimitBar}>
+      <AlertTriangle size={16} style={{ flexShrink: 0, marginTop: 1 }} />
+      <span>
+        Your store has {parts.join(" and ")}.{" "}
+        {plan.grace.ended
+          ? `The grace period ended on ${fmtDay(plan.grace.until)} — extra outlets or people may be blocked by TablePe.`
+          : `Everything keeps working until ${fmtDay(plan.grace.until)}. Remove the extras, or contact TablePe to upgrade your plan.`}
+      </span>
+    </div>
+  );
+}
+
+/** A person the platform has blocked (store over its people limit). */
+function Paused() {
+  const logout = useLogout();
+  return (
+    <div style={{ minHeight: "100vh", display: "grid", placeItems: "center", padding: 24, background: "var(--color-surface)" }}>
+      <div style={{ maxWidth: 400, textAlign: "center", background: "var(--color-bg)", border: "1px solid var(--color-border)", borderRadius: 14, padding: 28 }}>
+        <h1 style={{ fontSize: 20, margin: "0 0 8px" }}>Your access is paused</h1>
+        <p style={{ color: "var(--color-text-muted)", fontSize: 14, lineHeight: 1.5, margin: "0 0 18px" }}>
+          Your store is over its plan&apos;s limit for people, so your access has been paused. Please contact your store owner.
+        </p>
+        <button type="button" onClick={() => logout.mutate()} style={signOut}>
+          <LogOut size={12} /> Sign out
+        </button>
+      </div>
+    </div>
+  );
+}
+
+const viewingBar                = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: 12,
+  flexWrap: "wrap",
+  padding: "9px 14px",
+  marginBottom: 14,
+  borderRadius: 10,
+  fontSize: 13,
+  background: "var(--tone-info-wash)",
+  color: "var(--tone-info)",
+};
+const viewingBack                = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 5,
+  font: "inherit",
+  fontSize: 12.5,
+  fontWeight: 700,
+  padding: "5px 11px",
+  borderRadius: 999,
+  border: "1px solid currentColor",
+  background: "transparent",
+  color: "inherit",
+  cursor: "pointer",
+};
+const overLimitBar                = {
+  display: "flex",
+  gap: 9,
+  padding: "10px 14px",
+  marginBottom: 14,
+  borderRadius: 10,
+  fontSize: 13,
+  lineHeight: 1.5,
+  background: "var(--tone-warning-wash)",
+  color: "var(--tone-warning)",
+};

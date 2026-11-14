@@ -1,14 +1,9 @@
 import mongoose from "mongoose";
 
-                                   
-              
-                  
- 
-
-let pending                                  = null;
+let pending = null;
 
 /** Connect once. Safe to call repeatedly; returns the live connection. */
-export async function connectDb(opts                  )                           {
+export async function connectDb(opts) {
   if (mongoose.connection.readyState === 1) return mongoose;
   if (pending) return pending;
 
@@ -24,20 +19,18 @@ export async function connectDb(opts                  )                         
   return pending;
 }
 
-export async function disconnectDb()                {
+export async function disconnectDb() {
   if (mongoose.connection.readyState !== 0) await mongoose.disconnect();
 }
 
-;                                                                                   
-
-const STATE_NAMES                          = {
+const STATE_NAMES = {
   0: "disconnected",
   1: "connected",
   2: "connecting",
   3: "disconnecting",
 };
 
-export function dbState()          {
+export function dbState() {
   return STATE_NAMES[mongoose.connection.readyState] ?? "disconnected";
 }
 

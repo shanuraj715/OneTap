@@ -1,24 +1,21 @@
 import {
   checkRedeem,
   coinsEarnedFor,
-  outletConfigSchema,
                    
                       
 } from "@onetap/config-schema";
 import {
   CustomerModel,
-  OutletModel,
   WalletLedgerModel,
                 
                      
 } from "@onetap/db";
 import { logger } from "../../logger.js";
-import { HttpError } from "../../middleware/error.js";
+import { effectiveOutletConfig } from "../outlets/config.service.js";
 
+/** The wallet as it actually applies — off when the store's plan doesn't include it. */
 async function walletSettingsFor(ctx               )                          {
-  const outlet = await OutletModel.findOne({ _id: ctx.outletId }, null, { allowGlobalQuery: true }).lean();
-  if (!outlet) throw new HttpError(404, "Outlet not found");
-  return outletConfigSchema.parse(outlet.config ?? {}).wallet;
+  return (await effectiveOutletConfig(ctx)).wallet;
 }
 
 /**

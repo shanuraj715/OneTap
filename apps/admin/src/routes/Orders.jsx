@@ -29,6 +29,7 @@ import {
   Filter,
   Gauge,
   Keyboard,
+  LayoutGrid,
   MapPin,
   MoreHorizontal,
   Pencil,
@@ -53,11 +54,13 @@ import { useMenu } from "../lib/useMenu";
 import { useCapacity, useOrders, useSetOrderStatus } from "../lib/useOrders";
 import { useOrderStream } from "../lib/useOrderStream";
 import { useOutlet } from "../lib/useOutlet";
+import { useActiveSessions, useMoveSession, useTables } from "../lib/useTables";
 import { usePrinters, usePrintOrderOn } from "../lib/usePrinting";
 import { useSlaAlerts } from "../lib/useSlaAlerts";
 import { useManualStatus } from "../lib/useOrders";
 import { AwesomeLoader, Button, Card, Empty, IconChip, Menu, Modal, MultiFilter, Pill, Select, Table, Td, TextInput, Th, Toast } from "../ui";
 import { OrderEditModal } from "./orders/OrderEditModal";
+import { TableOverviewModal } from "./orders/TableOverviewModal";
 
 /** Rows-per-page, remembered per browser. */
 const PAGE_SIZE_KEY = "onetap.ordersPageSize";
@@ -70,6 +73,7 @@ const SHORTCUTS                                      = [
   { keys: ["/"], label: "Focus the search box" },
   { keys: ["R"], label: "Refresh the order list" },
   { keys: ["O"], label: "Toggle ‘Open only’" },
+  { keys: ["T"], label: "Toggle the table overview" },
   { keys: ["?"], label: "Show this shortcuts panel" },
   { keys: ["\\"], label: "Collapse or expand the sidebar (any page)" },
   { keys: ["Enter"], label: "Confirm a status change" },
@@ -147,6 +151,15 @@ function actionStyle(status             )                {
 export function Orders() {
   const { outlet } = useOutlet();
   const { can } = useAuth();
+  // Dine-in orders show their table, and can be moved to another one.
+  const tablesQ = useTables(outlet, Boolean(outlet) && can("table:read"));
+  const sessionsQ = useActiveSessions(outlet, Boolean(outlet) && can("table:read"));
+  const tableById = useMemo(() => new Map((tablesQ.data?.tables ?? []).map((t) => [t.id, t])), [tablesQ.data]);
+  const openSessionIds = useMemo(() => new Set((sessionsQ.data?.sessions ?? []).map((s) => s.id)), [sessionsQ.data]);
+  const freeTables = useMemo(
+    () => (tablesQ.data?.tables ?? []).filter((t) => t.isActive && !t.activeSessionId).sort((a, b) => a.number.localeCompare(b.number, undefined, { numeric: true })),
+    [tablesQ.data],
+  );
 
   const [search, setSearch] = useState("");
   const [statuses, setStatuses] = useState               ([]);
@@ -164,6 +177,7 @@ export function Orders() {
   const [editing, setEditing] = useState                   (null);
   const [expanded, setExpanded] = useState             (new Set());
   const [showShortcuts, setShowShortcuts] = useState(false);
+  const [showTables, setShowTables] = useState(false);
   const [confirming, setConfirming] = useState                                                                    (null);
   const [pageSize, setPageSize] = useState(loadPageSize);
   const [page, setPage] = useState(1);
@@ -226,7 +240,8 @@ export function Orders() {
 
     if (search.trim()) {
       const q = search.trim().toLowerCase();
-      const hay = `${o.orderNumber} ${o.customer?.name ?? ""} ${o.customer?.phone ?? ""}`.toLowerCase();
+      const table = o.tableId ? tableById.get(o.tableId)?.number ?? "" : "";
+      const hay = `${o.orderNumber} ${o.customer?.name ?? ""} ${o.customer?.phone ?? ""} ${table ? `table ${table} t${table}` : ""}`.toLowerCase();
       if (!hay.includes(q)) return false;
     }
     return true;
@@ -274,6 +289,8 @@ export function Orders() {
         void refetchRef.current();
       } else if (e.key === "o") {
         setOnlyOpen((v) => !v);
+      } else if (e.key === "t") {
+        setShowTables((v) => !v);
       } else if (e.key === "?") {
         setShowShortcuts(true);
       }
@@ -326,6 +343,14 @@ export function Orders() {
               ))}
             </Select>
           </label>
+          <Button
+            variant="outline"
+            onClick={() => setShowTables(true)}
+            style={{ display: "inline-flex", gap: 6, alignItems: "center" }}
+            title="Shortcut key: T"
+          >
+            <LayoutGrid size={13} /> Tables
+          </Button>
           <Button
             variant="outline"
             onClick={() => setShowShortcuts(true)}
@@ -480,6 +505,11 @@ export function Orders() {
               <OrderRow
                 key={order.id}
                 order={order}
+                outlet={outlet}
+                table={order.tableId ? tableById.get(order.tableId) ?? null : null}
+                partySeated={Boolean(order.sessionId && openSessionIds.has(order.sessionId))}
+                freeTables={freeTables}
+                canMoveTable={can("table:manage")}
                 breach={breachByOrder.get(order.id)}
                 printSummary={printSummaryFor(order.id)}
                 printers={printers.data?.printers ?? []}
@@ -537,6 +567,20 @@ export function Orders() {
         <OrderEditModal outlet={outlet} order={editing} menu={menu.data} onClose={() => setEditing(null)} />
       ) : null}
 
+      {showTables && outlet ? (
+        <TableOverviewModal
+          outlet={outlet}
+          orders={all}
+          menu={menu.data}
+          canManage={can("table:manage")}
+          onClose={() => setShowTables(false)}
+          onFilterTable={(number) => {
+            setSearch(number);
+            setShowTables(false);
+          }}
+        />
+      ) : null}
+
       {confirming ? (
         <ConfirmDialog
           order={confirming.order}
@@ -566,6 +610,11 @@ function OrderRow({
   printers,
   canUpdate,
   canPrint,
+  outlet,
+  table,
+  partySeated,
+  freeTables,
+  canMoveTable,
   showTimer,
   isNew,
   expanded,
@@ -681,6 +730,9 @@ function OrderRow({
         <span title={CHANNEL_LABEL[order.channel] ?? order.channel}>
           <Pill icon={<Icon size={11} />}>{CHANNEL_SHORT[order.channel] ?? order.channel}</Pill>
         </span>
+        {table ? (
+          <span style={{ display: "block", marginTop: 3, fontSize: 11.5, fontWeight: 700, whiteSpace: "nowrap" }}>Table {table.number}</span>
+        ) : null}
       </Td>
 
       <Td align="center">
@@ -730,7 +782,7 @@ function OrderRow({
         >
           {canUpdate && primary ? (
             <Button onClick={() => onRequestStatus(primary, false)} style={actionStyle(primary)}>
-              {ORDER_STATUS_LABELS[primary]}
+              {order.channel === "dine-in" && primary === "accepted" ? "Approve" : ORDER_STATUS_LABELS[primary]}
             </Button>
           ) : null}
 
@@ -826,8 +878,19 @@ function OrderRow({
                   value={`${order.couponCode}${order.totals.discount ? ` — ${formatINR(order.totals.discount)} off` : ""}`}
                 />
               ) : null}
-              {order.tableId ? <Fact icon={<UtensilsCrossed size={13} />} label="Table session" value="Linked to an open table" /> : null}
+              {order.tableId ? (
+                <Fact
+                  icon={<UtensilsCrossed size={13} />}
+                  label="Table"
+                  value={
+                    table
+                      ? `${table.number}${table.zone ? ` · ${table.zone}` : ""}${partySeated ? "" : " · party has left"}`
+                      : "A table that's since been removed"
+                  }
+                />
+              ) : null}
             </div>
+            {partySeated && canMoveTable ? <ChangeTable outlet={outlet} order={order} table={table} freeTables={freeTables} /> : null}
 
             {/* ------------------------------------------------------- customer */}
             {order.customer?.name || order.customer?.phone || order.customer?.email ? (
@@ -965,6 +1028,39 @@ function OrderRow({
 /* ------------------------------------------------------------ small parts */
 
 /** A section title inside the expanded row — same look for every sub-section. */
+/**
+ * Move this order's whole party — every order on their bill — to another
+ * table. Stops the row's click-to-collapse so picking a table doesn't fold it.
+ */
+function ChangeTable({ outlet, order, table, freeTables }) {
+  const move = useMoveSession(outlet);
+  const [to, setTo] = useState("");
+  return (
+    <div onClick={(e) => e.stopPropagation()} style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", margin: "10px 0 4px" }}>
+      <span style={{ fontSize: 12.5, color: "var(--color-text-muted)" }}>
+        Change table{table ? ` (from ${table.number})` : ""} — moves every order on this bill:
+      </span>
+      <Select value={to} onChange={(e) => setTo(e.target.value)} aria-label="Move to table" style={{ width: 150 }}>
+        <option value="">Pick a free table</option>
+        {freeTables.map((t) => (
+          <option key={t.id} value={t.id}>
+            Table {t.number}
+            {t.zone ? ` · ${t.zone}` : ""}
+          </option>
+        ))}
+      </Select>
+      <Button
+        variant="outline"
+        disabled={!to || move.isPending}
+        onClick={() => move.mutate({ sessionId: order.sessionId, toTableId: to }, { onSuccess: () => setTo("") })}
+      >
+        {move.isPending ? "Moving…" : "Move"}
+      </Button>
+      {move.error ? <span style={{ fontSize: 12.5, color: "var(--tone-danger)" }}>{move.error.message}</span> : null}
+    </div>
+  );
+}
+
 function SectionHead({ icon, children }                                                      ) {
   return (
     <div style={detailHead}>

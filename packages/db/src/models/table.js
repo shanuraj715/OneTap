@@ -1,31 +1,13 @@
-import mongoose, {            } from "mongoose";
+import mongoose from "mongoose";
 import {
   SESSION_STATUSES,
   TABLE_STATUSES,
-                     
-                   
 } from "@onetap/config-schema";
 import { tenantScope } from "../tenant-scope.js";
 
 const { Schema, model, models } = mongoose;
 
-                           
-              
-                  
-                   
-                 
-               
-                
-                      
-                    
-                                  
-                                                              
-                   
-                  
-                  
- 
-
-const tableSchema = new Schema          (
+const tableSchema = new Schema(
   {
     number: { type: String, required: true, trim: true },
     zone: { type: String, default: "" },
@@ -40,8 +22,7 @@ const tableSchema = new Schema          (
 tableSchema.plugin(tenantScope);
 tableSchema.index({ brandId: 1, outletId: 1, number: 1 }, { unique: true });
 
-export const TableModel                  =
-  (models.Table                               ) ?? model          ("Table", tableSchema);
+export const TableModel = models.Table ?? model("Table", tableSchema);
 
 /* ---------------------------------------------------------------- sessions */
 
@@ -49,23 +30,7 @@ export const TableModel                  =
  * One party's stay at a table. Orders attach to the session, not the table, so
  * moving a party to another table carries the whole running tab with it.
  */
-                                  
-              
-                  
-                   
-                  
-                     
-                        
-                                                                                   
-                                                                             
-                 
-                  
-                    
-                  
-                  
- 
-
-const sessionSchema = new Schema                 (
+const sessionSchema = new Schema(
   {
     tableId: { type: String, required: true, index: true },
     customerId: { type: String, required: true, index: true },
@@ -83,6 +48,5 @@ const sessionSchema = new Schema                 (
 sessionSchema.plugin(tenantScope);
 sessionSchema.index({ brandId: 1, outletId: 1, status: 1 });
 
-export const TableSessionModel                         =
-  (models.TableSession                                      ) ??
-  model                 ("TableSession", sessionSchema);
+export const TableSessionModel =
+  models.TableSession ?? model("TableSession", sessionSchema);

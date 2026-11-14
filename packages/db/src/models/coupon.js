@@ -1,36 +1,12 @@
-import mongoose, {                                   } from "mongoose";
-import { DISCOUNT_TYPES,                   } from "@onetap/config-schema";
+import mongoose from "mongoose";
+import { DISCOUNT_TYPES } from "@onetap/config-schema";
 import { tenantScope } from "../tenant-scope.js";
 
 const { Schema, model, models } = mongoose;
 
 /* ---------------------------------------------------------------- coupons */
 
-                            
-              
-                  
-                   
-                                     
-               
-                      
-                             
-                
-                      
-                        
-                    
-                     
-                         
-                         
-                            
-                     
-                  
-                                                                                 
-                          
-                  
-                  
- 
-
-const couponSchema = new Schema           (
+const couponSchema = new Schema(
   {
     code: { type: String, required: true, uppercase: true, trim: true },
     description: { type: String, default: "" },
@@ -52,10 +28,7 @@ const couponSchema = new Schema           (
 couponSchema.plugin(tenantScope);
 couponSchema.index({ brandId: 1, outletId: 1, code: 1 }, { unique: true });
 
-export const CouponModel                   =
-  (models.Coupon                                ) ?? model           ("Coupon", couponSchema);
-
-                                                         
+export const CouponModel = models.Coupon ?? model("Coupon", couponSchema);
 
 /* ------------------------------------------------------------- redemptions */
 
@@ -64,20 +37,7 @@ export const CouponModel                   =
  * usage of a coupon, and — via the unique (couponId, orderId) index — to make
  * recording a redemption idempotent if order placement is retried.
  */
-                                      
-              
-                  
-                   
-                   
-               
-                            
-                  
-                      
-                   
-                  
- 
-
-const redemptionSchema = new Schema                     (
+const redemptionSchema = new Schema(
   {
     couponId: { type: String, required: true, index: true },
     code: { type: String, required: true },
@@ -92,6 +52,5 @@ redemptionSchema.plugin(tenantScope);
 redemptionSchema.index({ couponId: 1, orderId: 1 }, { unique: true });
 redemptionSchema.index({ brandId: 1, couponId: 1, customerId: 1 });
 
-export const CouponRedemptionModel                             =
-  (models.CouponRedemption                                          ) ??
-  model                     ("CouponRedemption", redemptionSchema);
+export const CouponRedemptionModel =
+  models.CouponRedemption ?? model("CouponRedemption", redemptionSchema);

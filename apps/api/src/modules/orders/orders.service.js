@@ -3,7 +3,6 @@ import {
   checkDelivery,
   evaluateCapacity,
   NEXT_STATUSES,
-  outletConfigSchema,
   priceCart,
   PricingError,
                       
@@ -20,7 +19,6 @@ import {
   CustomerModel,
   nextSequence,
   OrderModel,
-  OutletModel,
   tenantFilter,
                 
                      
@@ -30,12 +28,13 @@ import { HttpError } from "../../middleware/error.js";
 import { broadcast } from "../../realtime/hub.js";
 import { checkCoupon, recordRedemption } from "../coupons/coupons.service.js";
 import { getMenu } from "../menu/menu.service.js";
+import { assertOutletOpen, effectiveOutletConfig } from "../outlets/config.service.js";
 import { fireOrderNotifications } from "../notify/notify.service.js";
 import { autoPrintForOrder } from "../printing/printing.service.js";
 import { earnForOrder, previewRedeem, redeemForOrder, reverseRedeemForOrder } from "../wallet/wallet.service.js";
 
 /** Shape an order for the wire the same way the REST routes do. */
-function wire(o          ) {
+export function wire(o          ) {
   return {
     id: String(o._id),
     orderNumber: o.orderNumber,
@@ -52,6 +51,7 @@ function wire(o          ) {
     note: o.note ?? null,
     customer: o.customer,
     tableId: o.tableId ?? null,
+    sessionId: o.sessionId ?? null,
     couponCode: o.couponCode ?? null,
     deliveryAddress: o.deliveryAddress ?? null,
     etaMinutes: o.etaMinutes ?? null,
@@ -85,10 +85,9 @@ function fireNotifications(ctx               , order          , status          
   });
 }
 
+/** The outlet's config as it actually applies — the owner's settings within what the store's plan unlocks. */
 export async function outletConfigFor(ctx               ) {
-  const outlet = await OutletModel.findOne({ _id: ctx.outletId }, null, { allowGlobalQuery: true }).lean();
-  if (!outlet) throw new HttpError(404, "Outlet not found");
-  return outletConfigSchema.parse(outlet.config ?? {});
+  return effectiveOutletConfig(ctx);
 }
 
 /** "In the queue" for load-management purposes — placed, accepted or preparing. */
@@ -240,9 +239,14 @@ export async function resolveDelivery(
   return result;
 }
 
-function orderNumberKey(outletId        )         {
+/** `YYYYMMDD` for "today" — the counter resets on this boundary, so anything
+ *  keyed or scoped by day must derive it from here, never recompute it. */
+function orderDay()         {
   const d = new Date();
-  const day = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}`;
+  return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}`;
+}
+
+function orderNumberKey(outletId        , day        )         {
   return `order:${outletId}:${day}`;
 }
 
@@ -265,6 +269,7 @@ export async function placeOrder(input
  )                    {
   const { ctx } = input;
   const placedBy           = input.placedBy ?? "customer";
+  await assertOutletOpen(ctx.outletId);
   const config = await outletConfigFor(ctx);
 
   const enabled                                = {
@@ -272,7 +277,12 @@ export async function placeOrder(input
     "dine-in": config.features.ordering.dineInQr,
     delivery: config.features.ordering.delivery,
   };
-  if (!enabled[input.channel]) {
+  // "Dine-in QR ordering" is about customers ordering for themselves from the
+  // table QR. Staff taking an order at a table is a different thing and always
+  // works — a restaurant can turn QR self-ordering off and still have its
+  // waiters take orders on their phones.
+  const staffAtTable = placedBy === "staff" && input.channel === "dine-in";
+  if (!staffAtTable && !enabled[input.channel]) {
     throw new HttpError(409, `${input.channel} ordering is switched off for this outlet`);
   }
 
@@ -339,12 +349,14 @@ export async function placeOrder(input
     throw new HttpError(409, priced.coinsError);
   }
 
-  const seq = await nextSequence(orderNumberKey(ctx.outletId ));
+  const day = orderDay();
+  const seq = await nextSequence(orderNumberKey(ctx.outletId , day));
 
   const order = await OrderModel.create({
     brandId: ctx.brandId,
     outletId: ctx.outletId,
     orderNumber: String(seq).padStart(4, "0"),
+    orderDay: day,
     channel: input.channel,
     placedBy,
     staffId: input.staffId,
@@ -539,6 +551,33 @@ export async function setStatusManual(
   firePrinters(ctx, updated, status);
   fireNotifications(ctx, updated, status);
   return updated;
+}
+
+/**
+ * Force-cancel every still-open order on a table session — a party walked out,
+ * or a table was claimed by mistake. Deliberately bypasses `allowStatusRewind`:
+ * that gate is about a routine manual correction to one order, not this — staff
+ * must always be able to void a table, whatever an order's current status.
+ */
+export async function cancelOrdersForSession(
+  ctx               ,
+  sessionId        ,
+  byUserId         ,
+  reason         ,
+)                {
+  const orders = await OrderModel.find(tenantFilter(ctx, { sessionId, status: { $nin: ["completed", "cancelled"] } }));
+  for (const order of orders) {
+    const from = order.status;
+    order.status = "cancelled";
+    order.statusHistory.push({ status: "cancelled", at: new Date(), by: byUserId, manual: true, from, reason: reason?.slice(0, 200) ?? "Table voided" });
+    await settleWallet(ctx, order, "cancelled");
+    await order.save();
+
+    const updated = order.toObject();
+    broadcast(ctx.outletId , { type: "order.updated", order: wire(updated) });
+    firePrinters(ctx, updated, "cancelled");
+    fireNotifications(ctx, updated, "cancelled");
+  }
 }
 
 /**

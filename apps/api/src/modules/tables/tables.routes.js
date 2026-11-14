@@ -1,12 +1,14 @@
 import { Router } from "express";
 import { z } from "zod";
 import { tableStatusSchema } from "@onetap/config-schema";
-import { env } from "../../env.js";
+import { OutletModel } from "@onetap/db";
+import { storefrontOriginFor } from "../outlets/domains.js";
 import { requireOutletContext, requireUser } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import { currentCustomer } from "../customer/customer.routes.js";
 import {
   closeSession,
+  confirmSessionPayment,
   createTable,
   deleteTable,
   getTable,
@@ -22,16 +24,21 @@ import {
   sessionTab,
   tableUrl,
   updateTable,
+  voidSession,
 } from "./tables.service.js";
 
 export const tablesRouter         = Router();
 
 /**
- * From the validated env, not `process.env` directly — reading it here is how
- * it stayed unset in production without anything noticing. `env.js` refuses to
- * start with a localhost value when NODE_ENV is production.
+ * Where this outlet's QR codes point: the store's own main domain in
+ * production (dominos.com), else the platform storefront from the validated
+ * STOREFRONT_ORIGIN — see `storefrontOriginFor`. `env.js` refuses to start
+ * with a localhost STOREFRONT_ORIGIN when NODE_ENV is production.
  */
-const STOREFRONT_ORIGIN = env.STOREFRONT_ORIGIN;
+async function originFor(ctx) {
+  const outlet = await OutletModel.findOne({ _id: ctx.outletId }, null, { allowGlobalQuery: true }).lean();
+  return storefrontOriginFor(outlet);
+}
 
 /* -------------------------------------------------------------- staff CRUD */
 
@@ -81,13 +88,14 @@ tablesRouter.delete("/:id", async (req, res) => {
  */
 tablesRouter.get("/qr-urls", async (req, res) => {
   const ctx = await requireOutletContext(req, "table:read");
-  res.json({ origin: STOREFRONT_ORIGIN, tables: await listTableQrUrls(ctx, STOREFRONT_ORIGIN) });
+  const origin = await originFor(ctx);
+  res.json({ origin, tables: await listTableQrUrls(ctx, origin) });
 });
 
 tablesRouter.get("/:id/qr", async (req, res) => {
   const ctx = await requireOutletContext(req, "table:read");
   const table = await getTable(ctx, req.params.id);
-  const url = tableUrl(STOREFRONT_ORIGIN, table);
+  const url = tableUrl(await originFor(ctx), table);
   res.json({ url, dataUrl: await qrDataUrl(url), number: table.number });
 });
 
@@ -95,7 +103,7 @@ tablesRouter.get("/:id/qr", async (req, res) => {
 tablesRouter.post("/:id/qr/rotate", async (req, res) => {
   const ctx = await requireOutletContext(req, "table:manage");
   const table = await rotateQr(ctx, req.params.id);
-  const url = tableUrl(STOREFRONT_ORIGIN, table);
+  const url = tableUrl(await originFor(ctx), table);
   res.json({ url, dataUrl: await qrDataUrl(url), number: table.number });
 });
 
@@ -117,6 +125,22 @@ tablesRouter.post("/sessions/:id/close", async (req, res) => {
   const ctx = await requireOutletContext(req, "table:manage");
   const user = requireUser(req);
   res.json({ session: await closeSession(ctx, req.params.id, String(user._id)) });
+});
+
+/** The owner has confirmed cash (or whatever was owed) changed hands — this
+ *  is what `close` above requires before it will unlock the table. */
+tablesRouter.post("/sessions/:id/confirm-payment", async (req, res) => {
+  const ctx = await requireOutletContext(req, "table:manage");
+  res.json(await confirmSessionPayment(ctx, req.params.id));
+});
+
+/** A party walked out, or a table was claimed by mistake — free it without
+ *  requiring payment. Cancels every open order on the session first. */
+tablesRouter.post("/sessions/:id/void", async (req, res) => {
+  const ctx = await requireOutletContext(req, "table:manage");
+  const user = requireUser(req);
+  const { reason } = z.object({ reason: z.string().max(200).optional() }).parse(req.body);
+  res.json({ session: await voidSession(ctx, req.params.id, String(user._id), reason) });
 });
 
 /* ------------------------------------------------------------ diner (public) */

@@ -1,3 +1,5 @@
+import { fx } from "./fx";
+
 
 const shell                = {
   borderTop: "1px solid var(--color-border)",
@@ -33,7 +35,7 @@ function Licences({ fssaiLicense, gstin }                                       
 /* 1 ─ two columns: contact left, licences right */
 export function FooterTwoColumn(p             ) {
   return (
-    <footer style={shell}>
+    <footer className="ot-fx-bar" style={fx("bar", shell)}>
       <div style={{ ...inner, display: "flex", justifyContent: "space-between", gap: 24, flexWrap: "wrap" }}>
         <div>
           <div style={brand}>{p.name}</div>
@@ -52,7 +54,7 @@ export function FooterTwoColumn(p             ) {
 /* 2 ─ everything centred */
 export function FooterCentered(p             ) {
   return (
-    <footer style={shell}>
+    <footer className="ot-fx-bar" style={fx("bar", shell)}>
       <div style={{ ...inner, textAlign: "center" }}>
         <div style={{ ...brand, fontSize: 17, marginBottom: 10 }}>{p.name}</div>
         {p.address ? <div style={muted}>{p.address}</div> : null}
@@ -76,7 +78,7 @@ export function FooterCentered(p             ) {
 /* 3 ─ three columns */
 export function FooterColumns(p             ) {
   return (
-    <footer style={shell}>
+    <footer className="ot-fx-bar" style={fx("bar", shell)}>
       <div
         style={{
           ...inner,
@@ -128,7 +130,7 @@ export function FooterMinimalBar(p             ) {
 /* 5 ─ oversized brand name above the details */
 export function FooterBrandBlock(p             ) {
   return (
-    <footer style={shell}>
+    <footer className="ot-fx-bar" style={fx("bar", shell)}>
       <div style={inner}>
         <div style={{ fontFamily: "var(--font-heading)", fontWeight: 700, fontSize: "clamp(1.8rem, 6vw, 3rem)", letterSpacing: "-0.02em", color: "var(--color-text)", lineHeight: 1 }}>
           {p.name}
@@ -170,7 +172,7 @@ export function FooterInverted(p             ) {
 /* 7 ─ hours and contact given equal weight */
 export function FooterContact(p             ) {
   return (
-    <footer style={shell}>
+    <footer className="ot-fx-bar" style={fx("bar", shell)}>
       <div style={{ ...inner, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: 24, paddingTop: 32, paddingBottom: 32 }}>
         <div>
           <div style={colTitle}>Find us</div>
@@ -201,7 +203,7 @@ export function FooterContact(p             ) {
 /* 8 ─ with a newsletter sign-up */
 export function FooterNewsletter(p             ) {
   return (
-    <footer style={shell}>
+    <footer className="ot-fx-bar" style={fx("bar", shell)}>
       <div style={{ ...inner, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))", gap: 26, paddingTop: 30, paddingBottom: 26 }}>
         <div>
           <div style={{ ...brand, fontSize: 16 }}>{p.name}</div>

@@ -128,6 +128,9 @@ export function sampleNotifyValues(outletName        )                          
                        
  
 
+/** The SMS sent with a sign-in / coin code when the store hasn't written its own. */
+export const DEFAULT_OTP_TEMPLATE = "{{code}} is your {{store}} code. Valid for 10 minutes.";
+
 export const NOTIFY_FIELDS                                                = {
   whatsapp: [
     {
@@ -197,6 +200,22 @@ export const NOTIFY_FIELDS                                                = {
       label: "API key / auth token",
       secret: true,
       info: "Your SMS gateway's API key. Stored encrypted, and substituted into the URL or body wherever you wrote {{apiKey}} — never shown again after saving.",
+    },
+    {
+      key: "otpEnabled",
+      label: "Send login & coin codes by SMS",
+      secret: false,
+      toggle: true,
+      info: "When on, the 6-digit codes customers use to sign in on your website — and that staff ask for before spending a customer's coins — are sent by SMS through this gateway. When off, sign-in codes aren't sent anywhere and staff can spend coins without a code.",
+    },
+    {
+      key: "otpTemplate",
+      label: "Code message",
+      secret: false,
+      multiline: true,
+      hint: "Use {{code}} for the code and {{store}} for your store's name",
+      info: "Indian gateways only deliver messages that match a DLT-registered template — paste your registered OTP template here, with {{code}} where the number goes.",
+      placeholder: DEFAULT_OTP_TEMPLATE,
     },
   ],
 };

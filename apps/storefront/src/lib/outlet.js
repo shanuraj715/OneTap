@@ -1,7 +1,8 @@
+import { apiServerUrl } from "@/lib/api-config";
 import { headers } from "next/headers";
 import { parseOutletConfig,                   } from "@onetap/config-schema";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3072";
+const API_BASE = apiServerUrl();
 const DEV_FALLBACK_SLUG = process.env.NEXT_PUBLIC_OUTLET_SLUG ?? "gazab-momos/laxmi-nagar";
 
                                  
@@ -28,6 +29,7 @@ export async function getOutlet()                                 {
       id: outlet._id,
       name: outlet.name,
       slug: outlet.slug,
+      blocked: Boolean(outlet.blocked),
       config: parseOutletConfig(outlet.config),
     };
   } catch {
@@ -52,6 +54,7 @@ export async function getOutletBySlug(outletSlug        )                       
       id: outlet._id,
       name: outlet.name,
       slug: outlet.slug,
+      blocked: Boolean(outlet.blocked),
       config: parseOutletConfig(outlet.config),
     };
   } catch {
@@ -82,7 +85,13 @@ export async function getOutletById(outletId        )                           
     });
     if (res.ok) {
       const { outlet } = (await res.json())                                                                            ;
-      return { id: outlet._id, name: outlet.name, slug: outlet.slug, config: parseOutletConfig(outlet.config) };
+      return {
+        id: outlet._id,
+        name: outlet.name,
+        slug: outlet.slug,
+        blocked: Boolean(outlet.blocked),
+        config: parseOutletConfig(outlet.config),
+      };
     }
   } catch {
     /* fall through */

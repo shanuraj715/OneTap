@@ -150,6 +150,11 @@
 }
 .ot-lift:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(0, 0, 0, 0.1); }
 
+/* A list row with no background of its own — ot-press's brightness filter has
+   nothing to brighten, so a menu/dropdown option needs its own hover fill. */
+.ot-option { transition: background-color var(--motion-fast) var(--ease-out); }
+.ot-option:hover:not([aria-disabled="true"]) { background: var(--color-surface); }
+
 .ot-chevron { transition: transform var(--motion-base) var(--ease-out); }
 .ot-chevron[data-open="true"] { transform: rotate(180deg); }
 

@@ -3,6 +3,7 @@ import { Pencil, Plus, Trash2 } from "lucide-react";
 import { CreateOutletModal } from "../components/CreateOutletModal";
 import { useAuth } from "../lib/useAuth";
 import { useDeleteOutlet, useOutlets } from "../lib/useOutlet";
+import { useStorePlan } from "../lib/useStorePlan";
 import { Button, Card, PageHeader, Toast } from "../ui";
 import { SettingsNav } from "../components/SubNav";
 
@@ -12,10 +13,13 @@ import { SettingsNav } from "../components/SubNav";
  * for picking one quickly, not administering them).
  */
 export function Outlets() {
-  const { can } = useAuth();
+  const { user: me, can } = useAuth();
   const { outlet, outlets, scope } = useOutlets();
   const remove = useDeleteOutlet();
   const [modal, setModal] = useState(null); // "create" | outlet object to edit | null
+  const { canAddOutlet, outletLimitReason } = useStorePlan();
+  // TablePe (the super admin) can always add — the platform console shows the store as over its limit.
+  const canAdd = me?.isSuperAdmin || canAddOutlet;
 
   if (!can("outlet:manage")) {
     return (
@@ -41,7 +45,12 @@ export function Outlets() {
         title="Outlets"
         subtitle="Every physical location this brand runs, and the web address each one answers to."
         action={
-          <Button onClick={() => setModal("create")} style={{ display: "inline-flex", gap: 7, alignItems: "center" }}>
+          <Button
+            onClick={() => setModal("create")}
+            disabled={!canAdd}
+            title={canAdd ? undefined : outletLimitReason ?? undefined}
+            style={{ display: "inline-flex", gap: 7, alignItems: "center", ...(canAdd ? {} : blockedBtn) }}
+          >
             <Plus size={15} /> Add outlet
           </Button>
         }
@@ -49,7 +58,10 @@ export function Outlets() {
 
       <SettingsNav />
 
-      <Card title={`Outlets — ${siblings.length}`}>
+      <Card
+        title={`Outlets — ${siblings.length}`}
+        subtitle={canAdd || !outletLimitReason ? undefined : `${outletLimitReason} Ask TablePe to add more.`}
+      >
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {siblings.map((o) => (
             <div key={o._id} style={row}>
@@ -57,6 +69,11 @@ export function Outlets() {
                 <div style={{ fontWeight: 600, fontSize: 14, display: "flex", alignItems: "center", gap: 8 }}>
                   {o.name}
                   {o._id === outlet?._id ? <span style={currentChip}>current</span> : null}
+                  {o.blocked ? (
+                    <span style={{ ...currentChip, background: "var(--tone-danger, #b42318)", color: "#fff" }} title="Customers see it as temporarily unavailable">
+                      Blocked — over plan limit
+                    </span>
+                  ) : null}
                 </div>
                 <div style={{ fontSize: 12.5, color: "var(--color-text-muted)", fontFamily: "ui-monospace, monospace" }}>
                   /{o.slug}
@@ -89,6 +106,8 @@ export function Outlets() {
   );
 }
 
+// The shared Button doesn't dim when disabled — make the plan block visible.
+const blockedBtn = { opacity: 0.5, cursor: "not-allowed" };
 const row = {
   display: "flex",
   alignItems: "center",

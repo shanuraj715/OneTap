@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { capacitySettingsSchema } from "./capacity.js";
 import { dashboardSettingsSchema } from "./dashboard.js";
+import { effectSchema } from "./effect.js";
 import { featureFlagsSchema } from "./features.js";
 import { shopLocationSchema } from "./geo.js";
 import { menuLayoutSchema } from "./homepage.js";
@@ -37,6 +38,8 @@ export const outletConfigSchema = z.object({
   identity: outletIdentitySchema.default({}),
   features: featureFlagsSchema.default({}),
   theme: themeSchema.default({}),
+  /** storefront surface treatment (glass, neumorph, …) — see effect.js */
+  effect: effectSchema.default({}),
   layout: layoutSchema.default({}),
   tax: taxSchema.default({}),
   typography: typographySchema.default({}),

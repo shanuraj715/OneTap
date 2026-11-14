@@ -3,6 +3,7 @@ import { z } from "zod";
 import { cartSchema, couponInputSchema, orderChannelSchema } from "@onetap/config-schema";
 import { OutletModel,                    } from "@onetap/db";
 import { requireOutletContext } from "../../middleware/auth.js";
+import { requireFeature } from "../platform/plan.service.js";
 import { HttpError } from "../../middleware/error.js";
 import { currentCustomer } from "../customer/customer.routes.js";
 import { quote } from "../orders/orders.service.js";
@@ -32,18 +33,21 @@ couponsRouter.get("/", async (req, res) => {
 
 couponsRouter.post("/", async (req, res) => {
   const ctx = await requireOutletContext(req, "coupon:manage");
+  await requireFeature(ctx.brandId, "coupons", "Coupons");
   const body = couponInputSchema.parse(req.body);
   res.status(201).json({ coupon: await createCoupon(ctx, body) });
 });
 
 couponsRouter.patch("/:id", async (req, res) => {
   const ctx = await requireOutletContext(req, "coupon:manage");
+  await requireFeature(ctx.brandId, "coupons", "Coupons");
   const body = couponInputSchema.partial().parse(req.body);
   res.json({ coupon: await updateCoupon(ctx, req.params.id, body) });
 });
 
 couponsRouter.delete("/:id", async (req, res) => {
   const ctx = await requireOutletContext(req, "coupon:manage");
+  await requireFeature(ctx.brandId, "coupons", "Coupons");
   await deleteCoupon(ctx, req.params.id);
   res.status(204).end();
 });

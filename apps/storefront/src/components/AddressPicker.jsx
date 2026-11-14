@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
                                            
 import { formatINR } from "@onetap/config-schema";
 
+import { fx } from "@onetap/ui";
 import { getApiBase } from "@/lib/clientApi";
 
                                   
@@ -167,7 +168,7 @@ export function AddressPicker({
           </button>
         </div>
       ) : (
-        <button type="button" style={shareBtn} onClick={share} disabled={loc === "locating" || loc === "unsupported"}>
+        <button type="button" className="ot-fx-chip" style={fx("chip", shareBtn)} onClick={share} disabled={loc === "locating" || loc === "unsupported"}>
           <span style={{ display: "inline-flex" }}>{loc === "locating" ? <Spinner /> : <Navigation />}</span>
           {loc === "locating" ? "Getting your location…" : "Share my location"}
         </button>
@@ -201,7 +202,8 @@ export function AddressPicker({
         Delivery address
       </label>
       <textarea
-        style={{ ...input, minHeight: 60, resize: "vertical" }}
+        className="ot-fx-input"
+        style={{ ...fx("input", input), minHeight: 60, resize: "vertical" }}
         value={address}
         onChange={(e) => {
           setAddress(e.target.value);
@@ -212,7 +214,8 @@ export function AddressPicker({
 
       <label style={label}>Landmark (optional)</label>
       <input
-        style={input}
+        className="ot-fx-input"
+        style={fx("input", input)}
         value={landmark}
         onChange={(e) => {
           setLandmark(e.target.value);

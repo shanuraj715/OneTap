@@ -1,15 +1,16 @@
 import {
+  DEFAULT_OTP_TEMPLATE,
   formatINR,
   NOTIFY_CHANNELS,
   NOTIFY_FIELDS,
   ORDER_STATUS_LABELS,
-  outletConfigSchema,
   renderTemplate,
                           
                       
                    
 } from "@onetap/config-schema";
 import {
+  BrandModel,
   brandFilter,
   NotificationCredentialModel,
   NotificationLogModel,
@@ -21,6 +22,8 @@ import {
 import { decryptSecret, encryptSecret, maskSecret } from "../../lib/crypto.js";
 import { logger } from "../../logger.js";
 import { HttpError } from "../../middleware/error.js";
+import { effectiveConfig } from "../outlets/config.service.js";
+import { storePlan } from "../platform/plan.service.js";
 import { providerFor,                        } from "./providers/index.js";
 
 /* -------------------------------------------------------------- credentials */
@@ -105,12 +108,40 @@ export async function clearNotifyCredentials(ctx               , channel        
   await NotificationCredentialModel.deleteOne(brandFilter(ctx, { channel }));
 }
 
+/* ------------------------------------------------------------- SMS codes */
+
+/**
+ * The store's sender for one-time codes (customer sign-in, and staff spending
+ * a customer's coins) — or null when the store hasn't switched "Send login &
+ * coin codes by SMS" on, or its SMS gateway isn't set up. Null is the signal
+ * every caller uses for "codes aren't configured here": sign-in falls back to
+ * the on-screen code, and staff can spend coins without one.
+ */
+export async function smsCodeSender(brandId        ) {
+  const ctx = { brandId: String(brandId) };
+  const creds = await credentialsFor(ctx, "sms");
+  const provider = providerFor("sms");
+  const ready = creds.otpEnabled === "on" && provider.requiredFields.every((k) => Boolean(creds[k]));
+  if (!ready) return null;
+
+  return {
+    async send(to        , code        ) {
+      const brand = await BrandModel.findOne({ _id: ctx.brandId }).lean();
+      const template = creds.otpTemplate?.trim() || DEFAULT_OTP_TEMPLATE;
+      const message = template.replaceAll("{{code}}", code).replaceAll("{{store}}", brand?.name ?? "");
+      const result = await provider.send(creds, { to, event: "otp", values: {}, message });
+      if (!result.ok) logger.error({ brandId: ctx.brandId, reason: result.reason }, "SMS code could not be sent");
+      return result;
+    },
+  };
+}
+
 /* ---------------------------------------------------------------- dispatch */
 
 async function outletConfigFor(ctx               ) {
   const outlet = await OutletModel.findOne({ _id: ctx.outletId }, null, { allowGlobalQuery: true }).lean();
   if (!outlet) return null;
-  return { config: outletConfigSchema.parse(outlet.config ?? {}), outletName: outlet.config?.identity?.name };
+  return { config: await effectiveConfig(outlet), outletName: outlet.config?.identity?.name };
 }
 
 async function log(
@@ -142,11 +173,12 @@ async function log(
  * whether an outbound message could be sent.
  */
 export async function fireOrderNotifications(ctx               , order          , status             )                {
+  if (!(await storePlan(ctx.brandId)).entitlements.features.includes("notifications")) return;
   const outlet = await outletConfigFor(ctx);
   if (!outlet) return;
   const { config } = outlet;
   const orderId = String(order._id);
-  const to = order.customer.phone ?? "";
+  const to = order.customer?.phone ?? "";
 
   for (const channel of NOTIFY_CHANNELS) {
     const settings = config.orderNotify[channel];

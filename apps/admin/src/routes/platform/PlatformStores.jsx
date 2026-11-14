@@ -1,0 +1,203 @@
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Plus, Store } from "lucide-react";
+import * as api from "../../lib/api";
+import { usePlans, usePlatformMutation, useStores } from "../../lib/usePlatform";
+import { Button, Card, Field, Note, PageHeader, Select, TextInput, Toast } from "../../ui";
+import { muted, planLabel, row, StatusPill, usageText } from "./shared";
+
+function slugify(s) {
+  return s
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+const EMPTY = {
+  brandName: "",
+  brandSlug: "",
+  outletName: "",
+  outletSlug: "",
+  hostnames: "",
+  ownerName: "",
+  ownerEmail: "",
+  ownerPassword: "",
+  planId: "",
+};
+
+/** Every client store on the platform, and where a new one is onboarded. */
+export function PlatformStores() {
+  const stores = useStores();
+  const plans = usePlans();
+  const create = usePlatformMutation(api.createBrand);
+  const [adding, setAdding] = useState(false);
+  const [form, setForm] = useState(EMPTY);
+  const [brandSlugTouched, setBrandSlugTouched] = useState(false);
+  const [outletSlugTouched, setOutletSlugTouched] = useState(false);
+
+  const brandSlug = brandSlugTouched ? form.brandSlug : slugify(form.brandName);
+  const outletSlug = outletSlugTouched ? form.outletSlug : slugify(form.outletName);
+  const activePlans = (plans.data?.plans ?? []).filter((p) => !p.archived);
+  const customPlan = Boolean(activePlans.find((p) => p.id === form.planId)?.custom);
+  const navigate = useNavigate();
+  const list = stores.data?.stores ?? [];
+
+  const submit = (e) => {
+    e.preventDefault();
+    create.mutate(
+      {
+        brandName: form.brandName,
+        brandSlug,
+        outletName: form.outletName,
+        outletSlug,
+        hostnames: form.hostnames.split(",").map((h) => h.trim()).filter(Boolean),
+        ownerName: form.ownerName,
+        ownerEmail: form.ownerEmail,
+        ownerPassword: form.ownerPassword,
+        planId: form.planId || null,
+      },
+      {
+        onSuccess: (result) => {
+          setForm(EMPTY);
+          setBrandSlugTouched(false);
+          setOutletSlugTouched(false);
+          setAdding(false);
+          // a custom-plan store has nothing yet — go straight to setting it up
+          const id = result?.brand?._id;
+          if (customPlan && id) navigate(`/platform/stores/${id}`);
+        },
+      },
+    );
+  };
+
+  return (
+    <>
+      <PageHeader
+        title="Stores"
+        icon={<Store size={23} />}
+        subtitle="Your clients — their plan, limits, owners and outlets."
+        action={
+          <Button onClick={() => setAdding((a) => !a)} style={{ display: "inline-flex", gap: 6, alignItems: "center" }}>
+            <Plus size={14} /> Create store
+          </Button>
+        }
+      />
+
+      {adding ? (
+        <Card title="Create a store" subtitle="The store, its first outlet and its owner's login — in one step.">
+          <form onSubmit={submit}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14 }}>
+              <Field label="Store name" info="The restaurant's name across every location it runs.">
+                <TextInput value={form.brandName} onChange={(e) => setForm({ ...form, brandName: e.target.value })} required maxLength={80} />
+              </Field>
+              <Field label="Store slug" info="A short identifier for this store, used internally.">
+                <TextInput
+                  value={brandSlug}
+                  onChange={(e) => {
+                    setBrandSlugTouched(true);
+                    setForm({ ...form, brandSlug: slugify(e.target.value) });
+                  }}
+                  required
+                  maxLength={63}
+                />
+              </Field>
+              <Field label="Plan" info="What the store has bought — its limits and unlocked features. Leave on “No plan” for an unlimited store.">
+                <Select value={form.planId} onChange={(e) => setForm({ ...form, planId: e.target.value })}>
+                  <option value="">No plan — unlimited</option>
+                  {activePlans.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name}
+                      {p.custom && !/custom/i.test(p.name) ? " (custom)" : ""}
+                    </option>
+                  ))}
+                </Select>
+              </Field>
+              <Field label="First outlet's name" info="Its first physical location — e.g. the neighbourhood or mall it's in.">
+                <TextInput value={form.outletName} onChange={(e) => setForm({ ...form, outletName: e.target.value })} required maxLength={80} />
+              </Field>
+              <Field label="Outlet URL slug" info="Becomes part of the outlet's web address, e.g. yourdomain.com/laxmi-nagar.">
+                <TextInput
+                  value={outletSlug}
+                  onChange={(e) => {
+                    setOutletSlugTouched(true);
+                    setForm({ ...form, outletSlug: slugify(e.target.value) });
+                  }}
+                  required
+                  maxLength={63}
+                />
+              </Field>
+              <Field label="Domain(s)" info="Comma-separated hostname(s) the storefront is served on, e.g. yourdomain.com. Every outlet added later shares these.">
+                <TextInput value={form.hostnames} onChange={(e) => setForm({ ...form, hostnames: e.target.value })} required placeholder="yourdomain.com" />
+              </Field>
+              <Field label="Owner name">
+                <TextInput value={form.ownerName} onChange={(e) => setForm({ ...form, ownerName: e.target.value })} required />
+              </Field>
+              <Field label="Owner email" info="Their sign-in for the store dashboard.">
+                <TextInput type="email" value={form.ownerEmail} onChange={(e) => setForm({ ...form, ownerEmail: e.target.value })} required />
+              </Field>
+              <Field label="Owner password" hint="At least 8 characters" info="Share it with them directly.">
+                <TextInput type="password" value={form.ownerPassword} onChange={(e) => setForm({ ...form, ownerPassword: e.target.value })} required minLength={8} />
+              </Field>
+            </div>
+            {customPlan ? (
+              <div style={{ margin: "14px 0" }}>
+                <Note>
+                  Custom plan: the store starts with just its owner, one outlet and nothing unlocked. After creating it you'll land on its page to set its limits and
+                  unlock its features.
+                </Note>
+              </div>
+            ) : null}
+            <Button type="submit" disabled={create.isPending}>
+              {create.isPending ? "Creating…" : customPlan ? "Create store and set it up" : "Create store"}
+            </Button>
+            {create.error ? <Toast kind="error">{create.error.message}</Toast> : null}
+          </form>
+        </Card>
+      ) : null}
+
+      <Card title={`All stores — ${list.length}`}>
+        {stores.isLoading ? (
+          <p style={muted}>Loading…</p>
+        ) : list.length === 0 ? (
+          <p style={muted}>No stores yet — create the first one.</p>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {list.map((s) => (
+              <Link key={s.id} to={`/platform/stores/${s.id}`} className="ot-press" style={{ ...row, textDecoration: "none", color: "inherit" }}>
+                <div style={{ flex: 1, minWidth: 180 }}>
+                  <div style={{ fontWeight: 600, fontSize: 14 }}>{s.name}</div>
+                  <div style={muted}>{s.ownerEmail}</div>
+                </div>
+                <div style={{ minWidth: 130 }}>
+                  <div style={{ fontSize: 12, ...muted }}>Plan</div>
+                  <div style={{ fontWeight: 600, fontSize: 13 }}>{planLabel(s.plan)}</div>
+                </div>
+                <Meter label="People" used={s.usage.users} max={s.max.users} />
+                <Meter label="Outlets" used={s.usage.outlets} max={s.max.outlets} />
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "flex-end", minWidth: 150 }}>
+                  <StatusPill store={s} />
+                  {s.blocked.outlets + s.blocked.people > 0 ? (
+                    <span style={{ ...muted, fontSize: 11.5 }}>{s.blocked.outlets + s.blocked.people} blocked</span>
+                  ) : null}
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </Card>
+    </>
+  );
+}
+
+function Meter({ label, used, max }) {
+  const over = max !== null && used > max;
+  return (
+    <div style={{ minWidth: 80 }}>
+      <div style={{ fontSize: 12, ...muted }}>{label}</div>
+      <div style={{ fontWeight: 600, fontSize: 13, color: over ? "var(--tone-danger)" : "var(--color-text)", fontVariantNumeric: "tabular-nums" }}>
+        {usageText(used, max)}
+      </div>
+    </div>
+  );
+}

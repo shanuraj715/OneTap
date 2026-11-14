@@ -15,6 +15,7 @@ import {
 } from "@onetap/config-schema";
 import { PrinterModel, tenantFilter } from "@onetap/db";
 import { requireOutletContext, requireUser } from "../../middleware/auth.js";
+import { requireFeature } from "../platform/plan.service.js";
 import { HttpError } from "../../middleware/error.js";
 import { agentToken, verifyAgentToken } from "./agent-auth.js";
 import {
@@ -81,6 +82,7 @@ printingRouter.get("/printers", async (req, res) => {
 
 printingRouter.post("/printers", async (req, res) => {
   const ctx = await requireOutletContext(req, "printer:manage");
+  await requireFeature(ctx.brandId, "printing", "Printing");
   res.status(201).json({ printer: await createPrinter(ctx, printerBody.parse(req.body)) });
 });
 
@@ -98,6 +100,7 @@ printingRouter.delete("/printers/:id", async (req, res) => {
 /** Queue a sample slip so staff can confirm the printer works before a rush. */
 printingRouter.post("/printers/:id/test", async (req, res) => {
   const ctx = await requireOutletContext(req, "print:job");
+  await requireFeature(ctx.brandId, "printing", "Printing");
   const user = requireUser(req);
   res.status(201).json({ job: await testPrint(ctx, req.params.id, String(user._id)) });
 });
@@ -210,12 +213,14 @@ printingRouter.get("/jobs/by-order", async (req, res) => {
 
 printingRouter.post("/jobs/:id/retry", async (req, res) => {
   const ctx = await requireOutletContext(req, "print:job");
+  await requireFeature(ctx.brandId, "printing", "Printing");
   const user = requireUser(req);
   res.json({ job: await retryJob(ctx, req.params.id, String(user._id)) });
 });
 
 printingRouter.post("/jobs/:id/reprint", async (req, res) => {
   const ctx = await requireOutletContext(req, "print:job");
+  await requireFeature(ctx.brandId, "printing", "Printing");
   const user = requireUser(req);
   res.status(201).json({ job: await reprintJob(ctx, req.params.id, String(user._id)) });
 });
@@ -228,6 +233,7 @@ printingRouter.post("/jobs/:id/cancel", async (req, res) => {
 /** Print an existing order on a chosen printer. */
 printingRouter.post("/orders/:orderId/print", async (req, res) => {
   const ctx = await requireOutletContext(req, "print:job");
+  await requireFeature(ctx.brandId, "printing", "Printing");
   const user = requireUser(req);
   const { printerId } = z.object({ printerId: z.string().min(1) }).parse(req.body);
   res.status(201).json({ job: await printOrder(ctx, req.params.orderId, printerId, String(user._id)) });

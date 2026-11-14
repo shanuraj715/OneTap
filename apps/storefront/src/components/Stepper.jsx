@@ -1,5 +1,7 @@
 "use client";
 
+import { fx } from "@onetap/ui";
+
 /**
  * The +/− quantity control. Shared between the item customiser (still a
  * modal) and the order page (a full page now) — a stateful control like this
@@ -8,7 +10,7 @@
  */
 export function Stepper({ value, onChange, small }) {
   const size = small ? 26 : 34;
-  const btn = {
+  const btn = fx("chip", {
     width: size,
     height: size,
     border: "1px solid var(--color-border)",
@@ -19,14 +21,14 @@ export function Stepper({ value, onChange, small }) {
     font: "inherit",
     fontSize: small ? 14 : 16,
     lineHeight: 1,
-  };
+  });
   return (
     <span style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-      <button type="button" style={btn} onClick={() => onChange(value - 1)} aria-label="One fewer">
+      <button type="button" className="ot-fx-chip" style={btn} onClick={() => onChange(value - 1)} aria-label="One fewer">
         −
       </button>
       <span style={{ minWidth: 18, textAlign: "center", fontVariantNumeric: "tabular-nums" }}>{value}</span>
-      <button type="button" style={btn} onClick={() => onChange(value + 1)} aria-label="One more">
+      <button type="button" className="ot-fx-chip" style={btn} onClick={() => onChange(value + 1)} aria-label="One more">
         +
       </button>
     </span>

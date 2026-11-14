@@ -1,12 +1,14 @@
+import { apiServerUrl } from "@/lib/api-config";
 import { getFooterVariant, getHeaderVariant } from "@onetap/ui";
 import { Ordering } from "@/components/Ordering";
+import { OutletUnavailable } from "@/components/OutletUnavailable";
 import { ThemeStyle } from "@/components/ThemeStyle";
 import { getMenu } from "@/lib/menu";
 import { getOutletById } from "@/lib/outlet";
 
 export const dynamic = "force-dynamic";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3072";
+const API_BASE = apiServerUrl();
 
                       
                    
@@ -56,6 +58,7 @@ export default async function TablePage({
       </main>
     );
   }
+  if (outlet.blocked) return <OutletUnavailable outlet={outlet} />;
 
   const menu = await getMenu(outlet.id);
   const { identity, theme, typography, features, layout } = outlet.config;
@@ -66,7 +69,7 @@ export default async function TablePage({
   if (!features.ordering.dineInQr) {
     return (
       <>
-        <ThemeStyle theme={theme} typography={typography} />
+        <ThemeStyle theme={theme} typography={typography} effect={outlet.config.effect} />
         <main style={{ maxWidth: 460, margin: "120px auto", padding: 24, textAlign: "center" }}>
           <h1 style={{ fontSize: 22, marginBottom: 8 }}>Table ordering is off right now</h1>
           <p style={{ color: "var(--color-text-muted)" }}>Please order at the counter.</p>
@@ -85,7 +88,7 @@ export default async function TablePage({
 
   return (
     <>
-      <ThemeStyle theme={theme} typography={typography} />
+      <ThemeStyle theme={theme} typography={typography} effect={outlet.config.effect} />
       <Header name={name} tagline={identity.tagline || undefined} phone={identity.phone || undefined} links={[]} />
 
       <section style={tableHeaderWrap}>

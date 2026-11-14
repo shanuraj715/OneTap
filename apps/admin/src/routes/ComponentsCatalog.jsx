@@ -21,6 +21,7 @@ import {
   AnalyticsChart,
 } from "@onetap/ui";
 import { useOutlet } from "../lib/useOutlet";
+import { StorefrontNav } from "../components/SubNav";
 
 const PRESET_THEMES = [
   { name: "Default (Gazab)", color: "#FF5200" },
@@ -150,9 +151,15 @@ export function ComponentsCatalog() {
   };
 
   return (
+    <>
+    {/* Outside the wrapper below, which recolours everything inside it to
+        the catalogue's preview colour — the tabs stay in admin colours. */}
+    <div style={{ padding: "24px 28px 0", maxWidth: 1280, margin: "0 auto" }}>
+      <StorefrontNav />
+    </div>
     <div
       style={{
-        padding: "24px 28px 80px",
+        padding: "8px 28px 80px",
         maxWidth: 1280,
         margin: "0 auto",
         "--color-primary": activeColor,
@@ -630,5 +637,6 @@ export function ComponentsCatalog() {
         </div>
       )}
     </div>
+    </>
   );
 }

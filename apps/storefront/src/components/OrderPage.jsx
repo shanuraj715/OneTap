@@ -1,8 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { formatINR, GATEWAY_LABELS } from "@onetap/config-schema";
+import { DropdownSoft, fx, ProgressSteps } from "@onetap/ui";
 import { ArrowLeft, Check, ChevronRight, Coins, MapPin, ShoppingBag, Sparkles, Tag, Utensils, Wallet, X } from "lucide-react";
 import { api, payOnline } from "@/lib/clientApi";
 import { useCapacity } from "@/lib/useCapacity";
@@ -12,6 +13,15 @@ import { useDineInSession } from "@/lib/useDineInSession";
 import { AddressPicker } from "./AddressPicker";
 import { CustomerGate } from "./CustomerGate";
 import { Stepper } from "./Stepper";
+
+/**
+ * The whole checkout journey, not just what any one screen collects. "Items
+ * selected" is already true by the time any of this can render — you only
+ * reach it with something in the cart. The last step's own label is decided
+ * per fulfilment (see `journeyStepLabel` below) since "Delivery address"
+ * would be a lie for a takeaway order.
+ */
+const JOURNEY_STEPS = ["Items selected", "Your details", "About you", "Delivery address"];
 
 /**
  * The dedicated order page — what used to be the "Your order" popup.
@@ -38,6 +48,10 @@ export function OrderPage({
 
   const [placed, setPlaced] = useState(null);
   const { sessionId, setSessionId, tab, refreshTab } = useDineInSession(dineIn, outletId, placed?.id);
+  // Which of CustomerGate's own steps it's currently showing — the `customer`
+  // prop alone can't tell us this, since a fresh signup never touches it until
+  // the whole gate succeeds. CustomerGate reports it directly.
+  const [gateStep, setGateStep] = useState("details");
 
   const [fulfilment, setFulfilment] = useState("takeaway");
   const [tableNumber, setTableNumber] = useState("");
@@ -111,6 +125,38 @@ export function OrderPage({
 
   /* --------------------------------------------------------------- gating */
 
+  // One number driving the bar across every screen this page can show — not
+  // just the ones CustomerGate itself renders. Null hides it entirely: there
+  // is no "step" to show before the cart is even known, or once the order is
+  // placed and the journey is simply over. While the gate is up, this follows
+  // `gateStep` (what CustomerGate itself reports) rather than `customer` —
+  // `customer` doesn't change until the whole gate succeeds, so a fresh
+  // signup moving from "your details" into "about you" would otherwise leave
+  // the bar frozen on step 2 for the entire rest of the gate.
+  const journeyIndex =
+    customerLoading || !hydrated || (lines.length === 0 && !placed) || placed
+      ? null
+      : !customer || !customer.profileComplete
+        ? gateStep === "profile"
+          ? 2
+          : 1
+        : 3;
+  const journeyStepLabel =
+    journeyIndex !== 3
+      ? journeyIndex !== null
+        ? JOURNEY_STEPS[journeyIndex]
+        : null
+      : // "Delivery address" is only true for a delivery order — a dine-in
+        // diner is picking a table here, and a takeaway order has neither, so
+        // the last step's own displayed name follows what's actually on screen.
+        effectiveChannel === "delivery"
+        ? "Delivery address"
+        : effectiveChannel === "dine-in"
+          ? "Table number"
+          : "Review & pay";
+  const progressLabel =
+    journeyIndex !== null ? `Step ${journeyIndex + 1} of ${JOURNEY_STEPS.length} · ${journeyStepLabel}` : null;
+
   if (customerLoading || !hydrated) {
     return <PageShell menuHref={menuHref} title="Your order" />;
   }
@@ -125,8 +171,8 @@ export function OrderPage({
 
   if (!customer || !customer.profileComplete) {
     return (
-      <PageShell menuHref={menuHref} title={customer ? "Complete your profile" : "Sign in to order"}>
-        <CustomerGate customer={customer} outletId={outletId} onSuccess={refresh} />
+      <PageShell menuHref={menuHref} title={customer ? "Complete your profile" : "Sign in to order"} progress={journeyIndex} progressLabel={progressLabel}>
+        <CustomerGate customer={customer} outletId={outletId} onSuccess={refresh} onStepChange={setGateStep} />
       </PageShell>
     );
   }
@@ -140,7 +186,7 @@ export function OrderPage({
   }
 
   return (
-    <PageShell menuHref={menuHref} title="Your order" customer={customer}>
+    <PageShell menuHref={menuHref} title="Your order" customer={customer} progress={journeyIndex} progressLabel={progressLabel}>
       <ReviewOrder
         outletId={outletId}
         outletName={outletName}
@@ -193,10 +239,10 @@ export function OrderPage({
 
 /* -------------------------------------------------------------------- shell */
 
-function PageShell({ menuHref, title, customer, children }) {
+function PageShell({ menuHref, title, customer, progress, progressLabel, children }) {
   return (
     <div style={page}>
-      <header style={topBar}>
+      <header className="ot-fx-bar" style={fx("bar", topBar)}>
         <Link href={menuHref} style={backLink} aria-label="Back to menu">
           <ArrowLeft size={19} />
         </Link>
@@ -209,6 +255,11 @@ function PageShell({ menuHref, title, customer, children }) {
           <span style={{ width: 19 }} aria-hidden />
         )}
       </header>
+      {progress !== null && progress !== undefined ? (
+        <div className="ot-fx-bar" style={fx("bar", pageProgressWrap)}>
+          <ProgressSteps steps={JOURNEY_STEPS} value={(progress / JOURNEY_STEPS.length) * 100} label={progressLabel} />
+        </div>
+      ) : null}
       <main style={main}>{children}</main>
     </div>
   );
@@ -220,7 +271,7 @@ function EmptyCart({ menuHref }) {
       <ShoppingBag size={38} style={{ color: "var(--color-text-muted)", opacity: 0.6 }} />
       <p style={{ margin: "14px 0 4px", fontWeight: 600, fontSize: 15.5 }}>Your cart is empty</p>
       <p style={{ margin: "0 0 20px", color: "var(--color-text-muted)", fontSize: 13.5 }}>Add something from the menu to get started.</p>
-      <Link href={menuHref} style={primaryLinkBtn}>
+      <Link href={menuHref} className="ot-fx-btn" style={fx("btn", primaryLinkBtn)}>
         Browse the menu
       </Link>
     </div>
@@ -269,6 +320,11 @@ function ReviewOrder({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
   const [pendingOrder, setPendingOrder] = useState(null);
+  const [tablePickerOpen, setTablePickerOpen] = useState(false);
+  // Same ref serves the dropdown's trigger button and the plain-input
+  // fallback below — whichever actually renders, `focusTablePicker` just
+  // needs one element it can scroll to and focus.
+  const tablePickerRef = useRef(null);
 
   const t = priced?.totals;
   const subtotalPaise = priced?.totals.subtotal ?? 0;
@@ -343,7 +399,19 @@ function ReviewOrder({
       onPlaced(order);
     });
 
-  const placeDisabled = !priced || deliveryBlocked || tableMissing || (isDineIn && !dineIn && !tableNumber.trim());
+  // tableMissing does NOT disable the button — clicking it in that state is
+  // now a real action (scroll to and focus the table picker) rather than
+  // nothing at all, so it stays clickable.
+  const placeDisabled = !priced || deliveryBlocked;
+
+  /** The bottom button's fallback action when a table hasn't been picked yet. */
+  const focusTablePicker = () => {
+    tablePickerRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    setTablePickerOpen(true);
+    // Give the scroll a moment to land before stealing focus, so the ring
+    // appears on something already in view rather than the page still moving.
+    window.setTimeout(() => tablePickerRef.current?.focus(), 350);
+  };
 
   return (
     <>
@@ -368,7 +436,7 @@ function ReviewOrder({
         </div>
         <label style={noteLabel}>
           <span>Note for the kitchen (optional)</span>
-          <input style={input} value={note} onChange={(e) => setNote(e.target.value)} placeholder="e.g. less spicy" maxLength={200} />
+          <input className="ot-fx-input" style={fx("input", input)} value={note} onChange={(e) => setNote(e.target.value)} placeholder="e.g. less spicy" maxLength={200} />
         </label>
       </Section>
 
@@ -379,11 +447,10 @@ function ReviewOrder({
         <Section icon={<Utensils size={16} />} title={`Table ${dineIn.tableNumber}`}>
           <p style={muted}>This joins your running tab — settle everything together when you're done.</p>
         </Section>
-      ) : showFulfilmentPicker(dineInEnabled, deliveryAvailable) ? (
+      ) : showFulfilmentPicker(deliveryAvailable) ? (
         <Section icon={<Utensils size={16} />} title="How would you like it?">
           <div style={{ display: "flex", gap: 8 }}>
             <ChoiceBtn active={fulfilment === "takeaway"} onClick={() => onFulfilment("takeaway")} emoji="🥡" label="Takeaway" />
-            {dineInEnabled ? <ChoiceBtn active={fulfilment === "dinein"} onClick={() => onFulfilment("dinein")} emoji="🍽️" label="At a table" /> : null}
             {deliveryAvailable ? <ChoiceBtn active={fulfilment === "delivery"} onClick={() => onFulfilment("delivery")} emoji="🛵" label="Delivery" /> : null}
           </div>
 
@@ -391,21 +458,31 @@ function ReviewOrder({
             <div style={{ marginTop: 14 }}>
               <p style={{ ...muted, margin: "0 0 8px" }}>Your table number — it&apos;s printed on the table.</p>
               {tables.length ? (
-                <div style={tableGrid}>
-                  {tables.map((tb) => (
-                    <button
-                      key={tb.number}
-                      type="button"
-                      disabled={tb.occupied}
-                      onClick={() => onTableNumber(tb.number)}
-                      style={{ ...tableChip, ...(tableNumber === tb.number ? tableChipActive : {}), opacity: tb.occupied ? 0.4 : 1 }}
-                    >
-                      {tb.number}
-                    </button>
-                  ))}
-                </div>
+                <DropdownSoft
+                  label="Select your table"
+                  fullWidth
+                  value={tableNumber}
+                  onChange={onTableNumber}
+                  open={tablePickerOpen}
+                  onOpenChange={setTablePickerOpen}
+                  triggerRef={tablePickerRef}
+                  options={tables.map((tb) => ({
+                    value: tb.number,
+                    label: `Table ${tb.number} - ${tb.seats} ${tb.seats === 1 ? "Person" : "People"}`,
+                    disabled: tb.occupied,
+                    tag: tb.occupied ? "Unavailable" : undefined,
+                  }))}
+                />
               ) : (
-                <input style={input} value={tableNumber} onChange={(e) => onTableNumber(e.target.value)} placeholder="e.g. 7" inputMode="numeric" />
+                <input
+                  ref={tablePickerRef}
+                  className="ot-fx-input"
+                  style={fx("input", input)}
+                  value={tableNumber}
+                  onChange={(e) => onTableNumber(e.target.value)}
+                  placeholder="e.g. 7"
+                  inputMode="numeric"
+                />
               )}
             </div>
           ) : null}
@@ -429,7 +506,8 @@ function ReviewOrder({
         ) : (
           <div style={{ display: "flex", gap: 8 }}>
             <input
-              style={{ ...input, textTransform: "uppercase" }}
+              className="ot-fx-input"
+              style={{ ...fx("input", input), textTransform: "uppercase" }}
               value={couponInput}
               onChange={(e) => {
                 setCouponInput(e.target.value);
@@ -439,7 +517,8 @@ function ReviewOrder({
             />
             <button
               type="button"
-              style={applyBtn}
+              className="ot-fx-btn"
+              style={fx("btn", applyBtn)}
               disabled={couponBusy || couponInput.trim().length < 3}
               onClick={async () => {
                 setCouponBusy(true);
@@ -470,8 +549,8 @@ function ReviewOrder({
             </AppliedPill>
           ) : (
             <div style={{ display: "flex", gap: 8 }}>
-              <input style={input} type="number" min={0} max={walletBalance} inputMode="numeric" value={coinInput} onChange={(e) => setCoinInput(e.target.value)} placeholder="0" />
-              <button type="button" style={applyBtn} disabled={!coinInput || Number(coinInput) <= 0} onClick={() => onRedeemCoins(Math.floor(Number(coinInput)))}>
+              <input className="ot-fx-input" style={fx("input", input)} type="number" min={0} max={walletBalance} inputMode="numeric" value={coinInput} onChange={(e) => setCoinInput(e.target.value)} placeholder="0" />
+              <button type="button" className="ot-fx-btn" style={fx("btn", applyBtn)} disabled={!coinInput || Number(coinInput) <= 0} onClick={() => onRedeemCoins(Math.floor(Number(coinInput)))}>
                 Apply
               </button>
             </div>
@@ -484,8 +563,25 @@ function ReviewOrder({
         <Section icon={<Sparkles size={16} />} title="Pay with">
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {gateways.map((g) => (
-              <label key={g} style={payOption}>
-                <input type="radio" name="gateway" checked={gateway === g} onChange={() => setGateway(g)} />
+              <label key={g} className="ot-fx-chip" data-active={gateway === g} style={fx("chip", payOption)}>
+                <input
+                  type="radio"
+                  name="gateway"
+                  checked={gateway === g}
+                  onChange={() => {
+                    setGateway(g);
+                    // A pending order was created with whatever gateway was
+                    // selected at the time — the server has no way to change
+                    // an order's gateway after the fact, so reusing it here
+                    // would send this new choice to checkout while quietly
+                    // billing the OLD one underneath. Forcing a fresh order
+                    // keeps the two in sync.
+                    if (pendingOrder) {
+                      setPendingOrder(null);
+                      setError(null);
+                    }
+                  }}
+                />
                 <span>{GATEWAY_LABELS[g]}</span>
               </label>
             ))}
@@ -522,12 +618,12 @@ function ReviewOrder({
       {/* Spacer so content never sits under the sticky bottom bar. */}
       <div style={{ height: 8 }} />
 
-      <div style={bottomBar}>
+      <div className="ot-fx-bar" style={fx("bar", bottomBar)}>
         <div>
           <div style={bottomBarLabel}>To pay</div>
           <div style={bottomBarPrice}>{t ? formatINR(t.grandTotal) : "…"}</div>
         </div>
-        <button type="button" style={placeBtn} disabled={busy || placeDisabled} onClick={place}>
+        <button type="button" className="ot-fx-btn" style={fx("btn", placeBtn)} disabled={busy || placeDisabled} onClick={tableMissing ? focusTablePicker : place}>
           {busy
             ? "Please wait…"
             : deliveryBlocked
@@ -548,8 +644,12 @@ function ReviewOrder({
   );
 }
 
-function showFulfilmentPicker(dineInEnabled, deliveryAvailable) {
-  return dineInEnabled || deliveryAvailable;
+function showFulfilmentPicker(deliveryAvailable) {
+  // Dine-in is never offered here — only a scanned table QR can put a diner
+  // on the dine-in path (see the `dineIn` branch above). Without it, this
+  // picker's only real choice is takeaway vs delivery; with neither, there's
+  // nothing to pick and takeaway (the default) is used silently.
+  return deliveryAvailable;
 }
 
 /* -------------------------------------------------------------------- done */
@@ -569,7 +669,7 @@ function DoneView({ order, dineIn, tab, channel, menuHref }) {
             : `${formatINR(order.totals.grandTotal)} — the kitchen has it.${order.etaMinutes ? ` Ready in about ${order.etaMinutes} minutes.` : ""}`}
       </p>
       {(dineIn || channel === "dine-in") && tab !== null ? <p style={{ ...muted, fontWeight: 700, color: "var(--color-text)" }}>Running tab: {formatINR(tab)}</p> : null}
-      <Link href={menuHref} style={primaryLinkBtn}>
+      <Link href={menuHref} className="ot-fx-btn" style={fx("btn", primaryLinkBtn)}>
         Back to menu
       </Link>
     </div>
@@ -580,7 +680,7 @@ function DoneView({ order, dineIn, tab, channel, menuHref }) {
 
 function Section({ icon, title, children }) {
   return (
-    <section style={section}>
+    <section className="ot-fx-card" style={fx("card", section)}>
       <h2 style={sectionTitle}>
         <span style={sectionIcon}>{icon}</span>
         {title}
@@ -607,7 +707,7 @@ function AppliedPill({ children, onRemove }) {
 
 function ChoiceBtn({ active, onClick, emoji, label }) {
   return (
-    <button type="button" onClick={onClick} style={{ ...choiceBtn, ...(active ? choiceBtnActive : {}) }}>
+    <button type="button" onClick={onClick} className="ot-fx-chip" data-active={active} aria-pressed={active} style={fx("chip", { ...choiceBtn, ...(active ? choiceBtnActive : {}) })}>
       <span style={{ fontSize: 18 }}>{emoji}</span>
       {label}
     </button>
@@ -625,7 +725,8 @@ function TotalRow({ label, value, strong, tone }) {
 
 /* ------------------------------------------------------------------- styles */
 
-const page = { minHeight: "100dvh", background: "var(--color-surface, var(--color-bg))" };
+// --fx-page-bg lets a visual effect clear this so its page backdrop shows through.
+const page = { minHeight: "100dvh", background: "var(--fx-page-bg, var(--color-surface, var(--color-bg)))" };
 const topBar = {
   position: "sticky",
   top: 0,
@@ -651,6 +752,13 @@ const walletChip = {
   background: "var(--tone-warning-wash, rgba(180,130,0,0.12))",
   flexShrink: 0,
 };
+const pageProgressWrap = {
+  maxWidth: 640,
+  margin: "0 auto",
+  padding: "14px 16px 12px",
+  background: "var(--color-bg)",
+  borderBottom: "1px solid var(--color-border)",
+};
 const main = { maxWidth: 640, margin: "0 auto", padding: "16px 16px 100px" };
 const section = { background: "var(--color-bg)", border: "1px solid var(--color-border)", borderRadius: 14, padding: 16, marginBottom: 12 };
 const sectionTitle = { display: "flex", alignItems: "center", gap: 8, margin: "0 0 12px", fontSize: 14, fontWeight: 700 };
@@ -668,11 +776,8 @@ const errorText = { color: "#B23B3B", fontSize: 12.5, margin: "8px 0 0" };
 const banner = { fontSize: 12.5, lineHeight: 1.5, margin: "0 0 12px", padding: "10px 13px", borderRadius: 10, background: "color-mix(in srgb, var(--tone-warning, #B27B1A) 14%, var(--color-surface))", color: "var(--color-text)" };
 const bannerWarn = {};
 const bannerError = { background: "color-mix(in srgb, #B23B3B 14%, var(--color-surface))" };
-const choiceBtn = { font: "inherit", flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 4, padding: "12px 10px", borderRadius: 12, borderWidth: 1.5, borderStyle: "solid", borderColor: "var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)", fontSize: "0.85rem", fontWeight: 600, cursor: "pointer" };
-const choiceBtnActive = { borderColor: "var(--color-primary)", background: "color-mix(in srgb, var(--color-primary) 10%, var(--color-bg))", color: "var(--color-primary)" };
-const tableGrid = { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(52px, 1fr))", gap: 7 };
-const tableChip = { font: "inherit", fontSize: "0.9rem", fontWeight: 700, padding: "11px 4px", borderRadius: 10, borderWidth: 1.5, borderStyle: "solid", borderColor: "var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)" };
-const tableChipActive = { borderColor: "var(--color-primary)", background: "var(--color-primary)", color: "var(--color-on-primary)" };
+const choiceBtn = { font: "inherit", flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 4, padding: "12px 10px", borderRadius: 12, border: "1.5px solid var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)", fontSize: "0.85rem", fontWeight: 600, cursor: "pointer" };
+const choiceBtnActive = { border: "1.5px solid var(--color-primary)", background: "color-mix(in srgb, var(--color-primary) 10%, var(--color-bg))", color: "var(--color-primary)" };
 const payOption = { display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", border: "1px solid var(--color-border)", borderRadius: 9, fontSize: 14, cursor: "pointer" };
 const totalsList = { margin: 0, display: "flex", flexDirection: "column", gap: 7 };
 const bottomBar = {

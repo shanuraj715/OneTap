@@ -96,7 +96,7 @@ export function resolveDarkTokens(theme       )              {
  * explicit toggle and on prefers-color-scheme. Emitted into the document head
  * by the storefront — this is how "apply a theme in admin" reaches every component.
  */
-export function themeCss(theme       )         {
+export function themeCss(theme       , { forceDark = false } = {})         {
   const light = themeTokensSchema.parse(theme.light ?? {});
   const dark = resolveDarkTokens(theme);
 
@@ -107,6 +107,10 @@ export function themeCss(theme       )         {
 
   const lightVars = { ...tokensToCssVars(light), ...TONES_LIGHT };
   const darkVars = { ...tokensToCssVars(dark), ...TONES_DARK };
+
+  // An effect that only works on a dark page (see EFFECT_PRESETS.forcesDark)
+  // ignores the visitor's OS preference entirely.
+  if (forceDark) return `:root {\n${block(darkVars)}\n  color-scheme: dark;\n}`;
 
   return [
     `:root {\n${block(lightVars)}\n}`,

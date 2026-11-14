@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { OrderPage } from "@/components/OrderPage";
+import { OutletUnavailable } from "@/components/OutletUnavailable";
 import { ThemeStyle } from "@/components/ThemeStyle";
 import { getMenu } from "@/lib/menu";
 import { getOutletBySlug } from "@/lib/outlet";
@@ -18,6 +19,7 @@ export default async function OutletOrderPage({ params }) {
   const { outletSlug } = await params;
   const outlet = await getOutletBySlug(outletSlug);
   if (!outlet) notFound();
+  if (outlet.blocked) return <OutletUnavailable outlet={outlet} />;
 
   const menu = await getMenu(outlet.id);
   const { identity, theme, typography, features, layout } = outlet.config;
@@ -26,7 +28,7 @@ export default async function OutletOrderPage({ params }) {
   if (!features.ordering.takeaway && !features.ordering.delivery && !features.ordering.dineInQr) {
     return (
       <>
-        <ThemeStyle theme={theme} typography={typography} />
+        <ThemeStyle theme={theme} typography={typography} effect={outlet.config.effect} />
         <main style={{ maxWidth: 460, margin: "120px auto", padding: 24, textAlign: "center" }}>
           <h1 style={{ fontSize: 22, marginBottom: 8 }}>Ordering is off right now</h1>
           <p style={{ color: "var(--color-text-muted)" }}>Please order at the counter.</p>
@@ -37,7 +39,7 @@ export default async function OutletOrderPage({ params }) {
 
   return (
     <>
-      <ThemeStyle theme={theme} typography={typography} />
+      <ThemeStyle theme={theme} typography={typography} effect={outlet.config.effect} />
       <OrderPage
         outletId={outlet.id}
         outletName={name}

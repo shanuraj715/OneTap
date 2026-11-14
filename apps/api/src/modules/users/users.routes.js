@@ -5,18 +5,13 @@ import { UserModel } from "@onetap/db";
 import { requireBrandContext, requireUser } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import { hashPassword } from "../auth/password.js";
+import { invalidateStorePlan, storePlan } from "../platform/plan.service.js";
 
 export const usersRouter         = Router();
 
-const shape = (u   
-               
-                
-               
-                    
-                     
-                                                                        
- ) => {
-  const m = u.memberships[0];
+/** A user as seen from one store — their role and access in THAT store, not their first membership. */
+const shape = (u, brandId) => {
+  const m = u.memberships.find((x) => x.brandId === brandId) ?? u.memberships[0];
   return {
     id: String(u._id),
     email: u.email,
@@ -25,14 +20,38 @@ const shape = (u
     lastLoginAt: u.lastLoginAt ?? null,
     role: m?.role ?? null,
     outletIds: m?.outletIds ?? [],
-    permissions: m ? permissionsForRole(m.role         ) : [],
+    blockedAt: m?.blockedAt ?? null,
+    permissions: m ? permissionsForRole(m.role) : [],
   };
 };
+
+const membershipIn = (user, brandId) => user.memberships.find((x) => x.brandId === brandId);
+
+/**
+ * Store owners are managed by the platform (TablePe), not from the store's
+ * own dashboard — so a store can't create, promote, edit or remove an owner.
+ */
+function assertCanManage(me, target, brandId, nextRole) {
+  if (me.isSuperAdmin) return;
+  if (nextRole === "owner") throw new HttpError(403, "Store owners are added by TablePe.");
+  if (target && membershipIn(target, brandId)?.role === "owner") {
+    throw new HttpError(403, "Store owners are managed by TablePe.");
+  }
+}
+
+/** Everyone counts toward the plan's people limit, owners included. The platform can always add. */
+async function assertSeatFree(me, brandId) {
+  if (me.isSuperAdmin) return;
+  const plan = await storePlan(brandId);
+  if (plan.max.users !== null && plan.usage.users >= plan.max.users) {
+    throw new HttpError(409, `Your plan allows ${plan.max.users} people and all are in use. Remove someone or ask TablePe to raise the limit.`);
+  }
+}
 
 usersRouter.get("/", async (req, res) => {
   const { brandId } = requireBrandContext(req, "user:read");
   const users = await UserModel.find({ "memberships.brandId": brandId }).sort({ createdAt: 1 }).lean();
-  res.json({ users: users.map(shape) });
+  res.json({ users: users.map((u) => shape(u, brandId)) });
 });
 
 const createBody = z.object({
@@ -45,11 +64,14 @@ const createBody = z.object({
 
 usersRouter.post("/", async (req, res) => {
   const { brandId } = requireBrandContext(req, "user:manage");
+  const me = requireUser(req);
   const body = createBody.parse(req.body);
+  assertCanManage(me, null, brandId, body.role);
 
   if (await UserModel.exists({ email: body.email.toLowerCase() })) {
     throw new HttpError(409, "That email is already in use");
   }
+  await assertSeatFree(me, brandId);
 
   const user = await UserModel.create({
     email: body.email.toLowerCase(),
@@ -57,7 +79,8 @@ usersRouter.post("/", async (req, res) => {
     passwordHash: await hashPassword(body.password),
     memberships: [{ brandId, role: body.role, outletIds: body.outletIds ?? [] }],
   });
-  res.status(201).json({ user: shape(user.toObject()) });
+  invalidateStorePlan(brandId);
+  res.status(201).json({ user: shape(user.toObject(), brandId) });
 });
 
 const updateBody = z.object({
@@ -74,30 +97,45 @@ usersRouter.patch("/:id", async (req, res) => {
 
   const user = await UserModel.findOne({ _id: req.params.id, "memberships.brandId": brandId });
   if (!user) throw new HttpError(404, "User not found");
+  assertCanManage(me, user, brandId, body.role);
 
   if (String(user._id) === String(me._id) && (body.role || body.isActive === false)) {
     throw new HttpError(400, "You can't change your own role or deactivate yourself");
   }
+  // Switching someone back on takes a seat again.
+  if (body.isActive === true && !user.isActive) await assertSeatFree(me, brandId);
 
   if (body.name) user.name = body.name;
   if (body.isActive !== undefined) user.isActive = body.isActive;
   if (body.password) user.passwordHash = await hashPassword(body.password);
   if (body.role) {
-    const m = user.memberships.find((x) => x.brandId === brandId);
+    const m = membershipIn(user, brandId);
     if (m) m.role = body.role;
     user.markModified("memberships");
   }
   await user.save();
+  invalidateStorePlan(brandId);
 
-  res.json({ user: shape(user.toObject()) });
+  res.json({ user: shape(user.toObject(), brandId) });
 });
 
+/**
+ * Removes this person's access to THIS store. Their account only goes away
+ * when they have no other store left — someone who also works for another
+ * brand keeps that access.
+ */
 usersRouter.delete("/:id", async (req, res) => {
   const { brandId } = requireBrandContext(req, "user:manage");
   const me = requireUser(req);
   if (String(me._id) === req.params.id) throw new HttpError(400, "You can't remove yourself");
 
-  const result = await UserModel.deleteOne({ _id: req.params.id, "memberships.brandId": brandId });
-  if (result.deletedCount === 0) throw new HttpError(404, "User not found");
+  const user = await UserModel.findOne({ _id: req.params.id, "memberships.brandId": brandId });
+  if (!user) throw new HttpError(404, "User not found");
+  assertCanManage(me, user, brandId);
+
+  user.memberships = user.memberships.filter((m) => m.brandId !== brandId);
+  if (user.memberships.length === 0 && !user.isSuperAdmin) await UserModel.deleteOne({ _id: user._id });
+  else await user.save();
+  invalidateStorePlan(brandId);
   res.status(204).end();
 });

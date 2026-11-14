@@ -1,11 +1,13 @@
+import { apiServerUrl } from "@/lib/api-config";
 import { OrderPage } from "@/components/OrderPage";
+import { OutletUnavailable } from "@/components/OutletUnavailable";
 import { ThemeStyle } from "@/components/ThemeStyle";
 import { getMenu } from "@/lib/menu";
 import { getOutletById } from "@/lib/outlet";
 
 export const dynamic = "force-dynamic";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3072";
+const API_BASE = apiServerUrl();
 
 /** Validates the signed QR before revealing anything about the restaurant — same check the table page itself makes. */
 async function resolveScan(tableId, token) {
@@ -48,6 +50,7 @@ export default async function TableOrderPage({ params, searchParams }) {
       </main>
     );
   }
+  if (outlet.blocked) return <OutletUnavailable outlet={outlet} />;
 
   const menu = await getMenu(outlet.id);
   const { identity, theme, typography, features } = outlet.config;
@@ -56,7 +59,7 @@ export default async function TableOrderPage({ params, searchParams }) {
   if (!features.ordering.dineInQr) {
     return (
       <>
-        <ThemeStyle theme={theme} typography={typography} />
+        <ThemeStyle theme={theme} typography={typography} effect={outlet.config.effect} />
         <main style={{ maxWidth: 460, margin: "120px auto", padding: 24, textAlign: "center" }}>
           <h1 style={{ fontSize: 22, marginBottom: 8 }}>Table ordering is off right now</h1>
           <p style={{ color: "var(--color-text-muted)" }}>Please order at the counter.</p>
@@ -68,7 +71,7 @@ export default async function TableOrderPage({ params, searchParams }) {
   if (scan.occupiedByOther) {
     return (
       <>
-        <ThemeStyle theme={theme} typography={typography} />
+        <ThemeStyle theme={theme} typography={typography} effect={outlet.config.effect} />
         <main style={{ maxWidth: 460, margin: "120px auto", padding: 24, textAlign: "center" }}>
           <h1 style={{ fontSize: 20, marginBottom: 8 }}>Another party is seated here</h1>
           <p style={{ color: "var(--color-text-muted)" }}>Please ask a member of staff.</p>
@@ -79,7 +82,7 @@ export default async function TableOrderPage({ params, searchParams }) {
 
   return (
     <>
-      <ThemeStyle theme={theme} typography={typography} />
+      <ThemeStyle theme={theme} typography={typography} effect={outlet.config.effect} />
       <OrderPage
         outletId={outlet.id}
         outletName={name}

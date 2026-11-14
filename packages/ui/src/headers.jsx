@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { fx } from "./fx";
 
 const shell                = {
   borderBottom: "1px solid var(--color-border)",
@@ -125,11 +126,11 @@ function Nav({ links, mobileLinks, showToggle = true, style }                   
       {showToggle && drawerLinks?.length ? (
         <button
           type="button"
-          className="ot-nav-toggle"
+          className="ot-nav-toggle ot-fx-chip"
           onClick={() => setOpen((o) => !o)}
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
-          style={navToggleBtn}
+          style={fx("chip", navToggleBtn)}
         >
           {open ? <CloseGlyph /> : <BurgerGlyph />}
         </button>
@@ -138,7 +139,7 @@ function Nav({ links, mobileLinks, showToggle = true, style }                   
       {open ? (
         <>
           <div className="ot-anim-fade" style={navBackdrop} onClick={() => setOpen(false)} aria-hidden="true" />
-          <nav className="ot-anim-slide-in" style={navDrawer} aria-label="Site menu">
+          <nav className="ot-anim-slide-in ot-fx-modal" style={fx("modal", navDrawer)} aria-label="Site menu">
             {drawerLinks.map((l) => (
               <a key={l.label} href={l.href} style={navDrawerLink} onClick={() => setOpen(false)}>
                 {l.label}
@@ -170,7 +171,7 @@ function CloseGlyph() {
 /* 1 ─ name centred, nav underneath */
 export function HeaderCentered({ name, links }             ) {
   return (
-    <header style={shell}>
+    <header className="ot-fx-bar" style={fx("bar", shell)}>
       <div className="ot-header-px" style={{ ...inner, paddingTop: 18, paddingBottom: 18, display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
         <span style={{ ...brand, fontSize: 22 }}>{name}</span>
         <Nav links={links} />
@@ -182,7 +183,7 @@ export function HeaderCentered({ name, links }             ) {
 /* 2 ─ name left, nav right, single row */
 export function HeaderLeftLogo({ name, links }             ) {
   return (
-    <header style={shell}>
+    <header className="ot-fx-bar" style={fx("bar", shell)}>
       <div className="ot-header-px" style={{ ...inner, paddingTop: 16, paddingBottom: 16, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 24 }}>
         <span style={{ ...brand, fontSize: 20 }}>{name}</span>
         <Nav links={links} />
@@ -195,13 +196,13 @@ export function HeaderLeftLogo({ name, links }             ) {
 export function HeaderSplitNav({ name, links }             ) {
   const half = Math.ceil((links?.length ?? 0) / 2);
   return (
-    <header style={shell}>
+    <header className="ot-fx-bar" style={fx("bar", shell)}>
       <div className="ot-header-px" style={{ ...inner, paddingTop: 16, paddingBottom: 16, display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center", gap: 16 }}>
         <Nav links={links?.slice(0, half)} mobileLinks={links} />
         <span style={{ ...brand, fontSize: 20, textAlign: "center" }}>{name}</span>
         <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: 16 }}>
           <Nav links={links?.slice(half)} showToggle={false} />
-          <a href="#menu" style={cta}>
+          <a href="#menu" className="ot-fx-btn" style={fx("btn", cta)}>
             Order
           </a>
         </div>
@@ -213,7 +214,7 @@ export function HeaderSplitNav({ name, links }             ) {
 /* 4 ─ minimal: name only */
 export function HeaderMinimal({ name }             ) {
   return (
-    <header style={shell}>
+    <header className="ot-fx-bar" style={fx("bar", shell)}>
       <div className="ot-header-px" style={{ ...inner, paddingTop: 14, paddingBottom: 14 }}>
         <span style={{ ...brand, fontSize: 16, letterSpacing: "0.02em", textTransform: "uppercase" }}>{name}</span>
       </div>
@@ -224,7 +225,7 @@ export function HeaderMinimal({ name }             ) {
 /* 5 ─ thin info bar above the main row */
 export function HeaderTopBar({ name, links, tagline, phone }             ) {
   return (
-    <header style={shell}>
+    <header className="ot-fx-bar" style={fx("bar", shell)}>
       <div style={{ background: "var(--color-primary)", color: "var(--color-on-primary)" }}>
         <div className="ot-header-px" style={{ ...inner, paddingTop: 7, paddingBottom: 7, display: "flex", justifyContent: "space-between", gap: 16, fontSize: 12.5 }}>
           {/* Tagline truncates first — the phone number must never wrap or break. */}
@@ -245,7 +246,7 @@ export function HeaderTopBar({ name, links, tagline, phone }             ) {
 /* 6 ─ accent band behind a centred name */
 export function HeaderBanner({ name, tagline, links }             ) {
   return (
-    <header style={shell}>
+    <header className="ot-fx-bar" style={fx("bar", shell)}>
       <div className="ot-header-px" style={{ background: "var(--color-primary)", color: "var(--color-on-primary)", textAlign: "center", paddingTop: 26, paddingBottom: 22 }}>
         <div style={{ ...brand, color: "var(--color-on-primary)", fontSize: 26 }}>{name}</div>
         {tagline ? <div style={{ fontSize: 13, opacity: 0.85, marginTop: 4 }}>{tagline}</div> : null}
@@ -260,7 +261,7 @@ export function HeaderBanner({ name, tagline, links }             ) {
 /* 7 ─ two rows: brand row, then a nav bar on the surface colour */
 export function HeaderTwoRow({ name, links, phone }             ) {
   return (
-    <header style={shell}>
+    <header className="ot-fx-bar" style={fx("bar", shell)}>
       <div className="ot-header-px" style={{ ...inner, paddingTop: 16, paddingBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <span style={{ ...brand, fontSize: 21 }}>{name}</span>
         {phone ? (
@@ -279,7 +280,7 @@ export function HeaderTwoRow({ name, links, phone }             ) {
 /* 8 ─ boxed brand block on the left */
 export function HeaderBoxed({ name, links }             ) {
   return (
-    <header style={shell}>
+    <header className="ot-fx-bar" style={fx("bar", shell)}>
       <div className="ot-header-px" style={{ ...inner, display: "flex", alignItems: "stretch", justifyContent: "space-between", gap: 24 }}>
         <span className="ot-header-px" style={{ ...brand, fontSize: 19, background: "var(--color-primary)", color: "var(--color-on-primary)", paddingTop: 20, paddingBottom: 20, display: "flex", alignItems: "center" }}>
           {name}

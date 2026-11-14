@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { formatINR, menuLayoutSchema } from "@onetap/config-schema";
-import { MenuSections, getCarouselVariant, getVariant, Photo } from "@onetap/ui";
+import { MenuSections, fx, getCarouselVariant, getVariant, Photo } from "@onetap/ui";
 import { api } from "@/lib/clientApi";
 import { useCartLines } from "@/lib/useCartLines";
 import { useDineInSession } from "@/lib/useDineInSession";
@@ -97,7 +97,7 @@ export function Ordering({
       ) : null}
 
       {count > 0 ? (
-        <Link href={orderHref} className="ot-press" style={cartBar}>
+        <Link href={orderHref} className="ot-press ot-fx-btn" style={fx("btn", cartBar)}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, whiteSpace: "nowrap" }}>
             <span style={{ fontWeight: 700 }}>
               {count} {count === 1 ? "item" : "items"}
@@ -250,7 +250,7 @@ function Customiser({ item, menu, popupCarouselVariant, onCancel, onAdd }) {
   };
 
   const currentModal = {
-    ...modal,
+    ...fx("modal", modal),
     opacity: isOpen ? 1 : 0,
     transform: isOpen ? "scale(1) translateY(0)" : "scale(0.95) translateY(12px)",
     transition: "opacity 220ms cubic-bezier(0.16, 1, 0.3, 1), transform 220ms cubic-bezier(0.16, 1, 0.3, 1)",
@@ -259,7 +259,7 @@ function Customiser({ item, menu, popupCarouselVariant, onCancel, onAdd }) {
 
   return (
     <div style={currentOverlay} onClick={handleCancel} role="presentation">
-      <div style={currentModal} onClick={(e) => e.stopPropagation()} role="dialog" aria-label={item.name}>
+      <div className="ot-fx-modal" style={currentModal} onClick={(e) => e.stopPropagation()} role="dialog" aria-label={item.name}>
         <ItemImageSection item={item} carouselVariantId={popupCarouselVariant} />
         <h3 style={{ margin: "0 0 4px", fontFamily: "var(--font-heading)", fontSize: 20 }}>{item.name}</h3>
         {item.description ? <p style={muted}>{item.description}</p> : null}
@@ -298,7 +298,8 @@ function Customiser({ item, menu, popupCarouselVariant, onCancel, onAdd }) {
           <Stepper value={quantity} onChange={setQuantity} />
           <button
             type="button"
-            style={{ ...primaryBtn, flex: 1, marginTop: 0 }}
+            className="ot-fx-btn"
+            style={{ ...fx("btn", primaryBtn), flex: 1, marginTop: 0 }}
             onClick={() => handleAdd({ itemId: item.id, variantId, modifierOptionIds: options, quantity })}
           >
             Add · {formatINR(unit * quantity)}

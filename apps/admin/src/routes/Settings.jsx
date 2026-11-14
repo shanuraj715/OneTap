@@ -19,6 +19,7 @@ import {
   Truck,
 } from "lucide-react";
 import { useOutlet, usePatchConfig } from "../lib/useOutlet";
+import { useStorePlan } from "../lib/useStorePlan";
 import { LocationField } from "./settings/LocationField";
 import { Button, Card, Checkbox, Field, InfoHint, Note, PageHeader, Select, Tabs, TextInput, Toast } from "../ui";
 import { SettingsNav } from "../components/SubNav";
@@ -67,6 +68,7 @@ const IDENTITY_FIELDS                                                           
 
 export function Settings() {
   const { outlet } = useOutlet();
+  const { hasFeature } = useStorePlan();
   const patch = usePatchConfig();
   const [tab, setTab] = useState     ("business");
   const [draft, setDraft] = useState                     (null);
@@ -557,24 +559,36 @@ export function Settings() {
         <>
           <Card title="Ways to order" subtitle="Switch a whole order path on or off." icon={<ShoppingCart size={15} />}>
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-              <Checkbox
-                checked={draft.features.ordering.takeaway}
-                onChange={(v) => setFeature("ordering", { takeaway: v })}
-                label="Takeaway from the website"
-                info="Customers order online and collect. Turning it off hides the ordering flow on the storefront but leaves the menu readable."
-              />
-              <Checkbox
-                checked={draft.features.ordering.dineInQr}
-                onChange={(v) => setFeature("ordering", { dineInQr: v })}
-                label="Dine-in QR ordering"
-                info="Diners scan the code on their table and order from their seat. Needs tables and their QR codes set up on the Tables page first."
-              />
-              <Checkbox
-                checked={draft.features.ordering.delivery}
-                onChange={(v) => setFeature("ordering", { delivery: v })}
-                label="Delivery"
-                info="Your own delivery, priced with the delivery settings under Kitchen & delivery. Aggregator orders arrive through their own integration and are not affected by this."
-              />
+              {hasFeature("takeaway") ? (
+                <Checkbox
+                  checked={draft.features.ordering.takeaway}
+                  onChange={(v) => setFeature("ordering", { takeaway: v })}
+                  label="Takeaway from the website"
+                  info="Customers order online and collect. Turning it off hides the ordering flow on the storefront but leaves the menu readable."
+                />
+              ) : (
+                <LockedFeature label="Takeaway from the website" />
+              )}
+              {hasFeature("dineInQr") ? (
+                <Checkbox
+                  checked={draft.features.ordering.dineInQr}
+                  onChange={(v) => setFeature("ordering", { dineInQr: v })}
+                  label="Dine-in QR ordering"
+                  info="Diners scan the code on their table and order from their seat. Needs tables and their QR codes set up on the Tables page first."
+                />
+              ) : (
+                <LockedFeature label="Dine-in QR ordering" />
+              )}
+              {hasFeature("delivery") ? (
+                <Checkbox
+                  checked={draft.features.ordering.delivery}
+                  onChange={(v) => setFeature("ordering", { delivery: v })}
+                  label="Delivery"
+                  info="Your own delivery, priced with the delivery settings under Kitchen & delivery. Aggregator orders arrive through their own integration and are not affected by this."
+                />
+              ) : (
+                <LockedFeature label="Delivery" />
+              )}
             </div>
           </Card>
 
@@ -607,6 +621,7 @@ export function Settings() {
 
       {tab === "wallet" ? (
         <Card title="Coin wallet" subtitle="An in-house cashback loyalty scheme — no third-party platform, no fee per redemption." icon={<Coins size={15} />}>
+          {!hasFeature("wallet") ? <LockedFeature label="The coin wallet" note="These settings are kept, but won't apply until it's added to your plan." /> : null}
           <Note icon={<Coins size={15} />}>
             A customer earns coins on what they actually pay, and can spend them against a later order. Coins are only
             credited once an order is <strong>completed</strong> — a cancelled order never pays out — and a redemption
@@ -854,3 +869,16 @@ const stickySave                = {
   boxShadow: "0 8px 26px rgba(0,0,0,0.18)",
   marginTop: 18,
 };
+
+/** In place of a switch the store's plan doesn't include. The owner's saved choice is kept for when it's unlocked. */
+function LockedFeature({ label, note }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", fontSize: 13.5, marginBottom: note ? 12 : 0 }}>
+      <span style={{ color: "var(--color-text-muted)" }}>{label}</span>
+      <span style={{ fontSize: 11, fontWeight: 700, padding: "2px 8px", borderRadius: 999, background: "var(--color-surface)", border: "1px solid var(--color-border)", color: "var(--color-text-muted)" }}>
+        Not in your plan
+      </span>
+      {note ? <span style={{ fontSize: 12.5, color: "var(--color-text-muted)" }}>{note}</span> : null}
+    </div>
+  );
+}

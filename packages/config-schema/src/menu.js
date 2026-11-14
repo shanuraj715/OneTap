@@ -71,6 +71,35 @@ export const menuSchema = z.object({
 });
                                               
 
+/**
+ * What a modifier group asks of the diner, in words — "Required · choose 1",
+ * "Choose up to 2". `null` when the group is a free-for-all.
+ */
+export function modifierRuleText(group) {
+  const min = group.required ? Math.max(1, group.minSelect) : group.minSelect;
+  const max = group.maxSelect;
+  if (min > 0 && min === max) return `Required · choose ${min}`;
+  if (min > 0) return `Choose ${min}–${max}`;
+  if (max < group.options.length) return `Choose up to ${max}`;
+  return null;
+}
+
+/**
+ * Check a selection of modifier options against each group's rules. Returns
+ * one message per group that isn't satisfied (empty when it's fine to add).
+ * `groups` are the groups attached to the item; `selected` is option ids.
+ */
+export function modifierSelectionErrors(groups, selected) {
+  const errors = [];
+  for (const g of groups) {
+    const count = g.options.filter((o) => selected.includes(o.id)).length;
+    const min = g.required ? Math.max(1, g.minSelect) : g.minSelect;
+    if (count < min) errors.push(`${g.name}: choose ${min === 1 ? "one" : `at least ${min}`}`);
+    else if (count > g.maxSelect) errors.push(`${g.name}: choose at most ${g.maxSelect}`);
+  }
+  return errors;
+}
+
 /** Lowest applicable price for an item, in paise. */
 export function itemFromPrice(item                                          )         {
   if (item.variants.length === 0) return item.basePrice;

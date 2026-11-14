@@ -1,3 +1,4 @@
+import { apiPublicUrl, apiServerUrl } from "@/lib/api-config";
 import { parseOutletConfig, menuLayoutSchema } from "@onetap/config-schema";
 import { ThemeStyle } from "@/components/ThemeStyle";
 import { getMenu } from "@/lib/menu";
@@ -5,7 +6,7 @@ import { LivePreview } from "./LivePreview";
 
 export const dynamic = "force-dynamic";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3072";
+const API_BASE = apiServerUrl();
 
 /**
  * The live menu-layout preview.
@@ -44,10 +45,10 @@ export default async function PreviewPage({ params }) {
 
   return (
     <>
-      <ThemeStyle theme={config.theme} typography={config.typography} />
+      <ThemeStyle theme={config.theme} typography={config.typography} effect={config.effect} />
       <LivePreview
         sessionId={sessionId}
-        apiBase={API_BASE}
+        apiBase={apiPublicUrl()}
         outletName={outletName}
         menu={menu}
         fallbackCardVariant={config.layout.itemCardVariant}

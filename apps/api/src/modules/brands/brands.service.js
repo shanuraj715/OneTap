@@ -1,7 +1,8 @@
 import { defaultOutletConfig, isReservedOutletSlug, slugSchema } from "@onetap/config-schema";
-import { BrandModel, OutletModel } from "@onetap/db";
+import { BrandModel, OutletModel, PlanModel } from "@onetap/db";
 import { HttpError } from "../../middleware/error.js";
 import { ensureOwner } from "../auth/auth.service.js";
+import { assertHostnamesFree, normalizeHostnames } from "../outlets/domains.js";
 
 /** Every brand on the platform — for the superadmin's brand/outlet switcher. */
 export async function listBrands() {
@@ -26,16 +27,23 @@ export async function createBrand(input) {
     throw new HttpError(400, `"${outletSlug}" is reserved and can't be used as an outlet slug`);
   }
 
+  if (input.planId) {
+    const plan = await PlanModel.findById(input.planId).lean();
+    if (!plan || plan.archived) throw new HttpError(400, "That plan doesn't exist or is archived");
+  }
+
   const brand = await BrandModel.create({
     name: input.brandName,
     slug: brandSlug,
     ownerEmail: input.ownerEmail.toLowerCase(),
+    planId: input.planId ?? null,
   });
 
   // A brand with no outlet or no owner is useless and confusing to leave
   // behind — best-effort clean up if anything after this point fails.
   try {
-    const hostnames = input.hostnames.filter(Boolean);
+    const hostnames = normalizeHostnames(input.hostnames);
+    await assertHostnamesFree(hostnames, brand._id);
     const config = defaultOutletConfig();
     config.identity.name = input.outletName;
 
@@ -57,6 +65,7 @@ export async function createBrand(input) {
 
     return { brand: brand.toObject(), outlet: outlet.toObject(), owner };
   } catch (err) {
+    await OutletModel.deleteMany({ brandId: String(brand._id) }).catch(() => {});
     await BrandModel.deleteOne({ _id: brand._id }).catch(() => {});
     throw err;
   }
