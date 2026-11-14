@@ -15,3 +15,142 @@ body {
   color: var(--color-text);
   -webkit-font-smoothing: antialiased;
 }
+
+/* ---------------------------------------------------------------------------
+   Address notices (components/AddressNotice.jsx): no restaurant at this address,
+   page not found, can't reach the restaurant. Tokens only, so they follow the
+   platform default colours.
+--------------------------------------------------------------------------- */
+.addr {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 24px 16px;
+  background: var(--color-surface);
+}
+
+.addr-card {
+  width: 100%;
+  max-width: 520px;
+  padding: 36px 32px 32px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: calc(var(--radius-card) + 4px);
+}
+
+.addr-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 18px;
+  border-radius: 50%;
+  background: var(--tone-warning-wash);
+  color: var(--tone-warning);
+}
+
+.addr-brand {
+  margin: 0 0 6px;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.addr-title {
+  margin: 0 0 14px;
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl, 1.9rem);
+  font-weight: var(--font-weight-heading);
+  letter-spacing: var(--letter-spacing-heading);
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.addr-host {
+  margin: 0 0 16px;
+  padding: 9px 12px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9rem;
+  overflow-wrap: anywhere;
+}
+
+.addr-text {
+  margin: 0 0 12px;
+  max-width: 62ch;
+  color: var(--color-text-muted);
+}
+
+.addr-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.addr-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 20px;
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-card);
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  transition: background var(--motion-fast, 120ms) var(--ease-out, ease-out), color var(--motion-fast, 120ms) var(--ease-out, ease-out);
+}
+
+.addr-btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.addr-btn-primary {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.addr-btn-primary:hover {
+  filter: brightness(0.93);
+}
+
+.addr-btn-outline {
+  background: transparent;
+  color: var(--color-primary);
+}
+
+.addr-btn-outline:hover {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.addr-help {
+  margin: 18px 0 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.addr-dev {
+  margin: 20px 0 0;
+  padding-top: 14px;
+  border-top: 1px dashed var(--color-border);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 480px) {
+  .addr-card {
+    padding: 28px 22px 24px;
+  }
+  .addr-actions {
+    flex-direction: column;
+  }
+  .addr-btn {
+    width: 100%;
+  }
+}

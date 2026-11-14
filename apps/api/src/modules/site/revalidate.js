@@ -10,7 +10,8 @@ import { logger } from "../../logger.js";
 export function notifyWebsite() {
   // tests don't ping a website unless one was explicitly pointed at
   if (env.NODE_ENV === "test" && !process.env.WEBSITE_URL) return;
-  const url = `${env.WEBSITE_URL.replace(/\/$/, "")}/api/revalidate`;
+  // the internal address when the website is on this machine; the public one otherwise
+  const url = `${(env.WEBSITE_INTERNAL_URL || env.WEBSITE_URL).replace(/\/$/, "")}/api/revalidate`;
   void fetch(url, {
     method: "POST",
     headers: { "content-type": "application/json", "x-revalidate-secret": env.WEBSITE_REVALIDATE_SECRET },

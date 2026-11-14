@@ -1,15 +1,63 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Check } from "lucide-react";
 
 /**
  * The enquiry form. Posts to this site's own /api/site/leads (passed through
  * to the API on the server), so nothing about the API's address or CORS ever
  * reaches the browser. A "Talk to us about Pro" link pre-selects the plan
- * through ?plan=. The hidden "website" field is a honeypot — people never see
- * it, bots fill it in.
+ * through ?plan= (and ?billing=yearly says which way they'd pay).
+ *
+ * Keeping bots out (the rules live in the API's site/guard.js):
+ *  - the hidden "website" field is a honeypot — people never see it, bots fill it in;
+ *  - as the form opens it fetches a one-time challenge and solves a small
+ *    proof-of-work in the background while the visitor types, so a script that
+ *    just POSTs the form has nothing to send;
+ *  - when Cloudflare Turnstile is set up on the API, its box appears too.
  */
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const MIN_FILL_MS = 3200; // the API turns away anything faster than 3s from the form opening
+const STALE_MS = 50 * 60 * 1000; // challenges last an hour; get a new one well before
+
+function zeroBits(bytes) {
+  let bits = 0;
+  for (const b of bytes) {
+    if (b === 0) bits += 8;
+    else return bits + Math.clz32(b) - 24;
+  }
+  return bits;
+}
+
+/** Find the number that makes SHA-256(token:number) start with `bits` zero bits. A second or two of work. */
+async function solve(token, bits) {
+  const enc = new TextEncoder();
+  const BATCH = 256;
+  for (let start = 0; ; start += BATCH) {
+    const hashes = await Promise.all(
+      Array.from({ length: BATCH }, (_, i) => crypto.subtle.digest("SHA-256", enc.encode(`${token}:${start + i}`))),
+    );
+    for (let i = 0; i < BATCH; i++) if (zeroBits(new Uint8Array(hashes[i])) >= bits) return String(start + i);
+  }
+}
+
+let turnstileScript;
+/** Cloudflare's widget script, loaded once and only when the API asks for it. */
+function loadTurnstile() {
+  turnstileScript ??= new Promise((resolve, reject) => {
+    const el = document.createElement("script");
+    el.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+    el.async = true;
+    el.onload = () => resolve(window.turnstile);
+    el.onerror = () => {
+      turnstileScript = undefined;
+      reject(new Error("turnstile"));
+    };
+    document.head.appendChild(el);
+  });
+  return turnstileScript;
+}
+
 const EMPTY = { name: "", phone: "", email: "", businessName: "", city: "", outlets: "", plan: "", message: "", website: "" };
 
 export function ContactForm({ plans = [] }) {
@@ -17,11 +65,57 @@ export function ContactForm({ plans = [] }) {
   const [errors, setErrors] = useState({});
   const [state, setState] = useState("idle"); // idle | sending | done | error
   const [message, setMessage] = useState("");
+  const [billing, setBilling] = useState("");
+  const [siteKey, setSiteKey] = useState("");
+  const guard = useRef({ promise: null, token: "", nonce: "", at: 0 });
+  const box = useRef(null);
+  const widget = useRef(null);
+  const turnstileToken = useRef("");
+
+  // Fetch a challenge and solve it, in the background. Resolves with what the API needs to see.
+  const prepare = useCallback(() => {
+    const g = guard.current;
+    g.promise = (async () => {
+      const res = await fetch("/api/site/challenge", { cache: "no-store" });
+      const c = await res.json();
+      if (!res.ok) throw new Error(c.error ?? "challenge");
+      g.token = c.token;
+      g.at = Date.now();
+      g.nonce = await solve(c.token, c.bits);
+      if (c.turnstileSiteKey) setSiteKey(c.turnstileSiteKey);
+      return g;
+    })();
+    g.promise.catch(() => {});
+    return g.promise;
+  }, []);
 
   useEffect(() => {
-    const plan = new URLSearchParams(window.location.search).get("plan");
+    const params = new URLSearchParams(window.location.search);
+    const plan = params.get("plan");
     if (plan) setForm((f) => ({ ...f, plan: plan.slice(0, 60) }));
-  }, []);
+    if (params.get("billing") === "yearly") setBilling("yearly");
+    prepare();
+  }, [prepare]);
+
+  // Cloudflare's "are you a person" box, when the API has it switched on
+  useEffect(() => {
+    if (!siteKey || !box.current) return undefined;
+    let cancelled = false;
+    loadTurnstile()
+      .then((turnstile) => {
+        if (cancelled || !box.current || widget.current !== null) return;
+        widget.current = turnstile.render(box.current, {
+          sitekey: siteKey,
+          callback: (t) => (turnstileToken.current = t),
+          "expired-callback": () => (turnstileToken.current = ""),
+          "error-callback": () => (turnstileToken.current = ""),
+        });
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [siteKey]);
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
@@ -37,6 +131,11 @@ export function ContactForm({ plans = [] }) {
   const submit = async (ev) => {
     ev.preventDefault();
     if (!validate()) return;
+    if (siteKey && !turnstileToken.current) {
+      setMessage("Please tick the box to show you're a person, then send again.");
+      setState("error");
+      return;
+    }
     setState("sending");
     const params = new URLSearchParams(window.location.search);
     // the page they were on before this one (see Trail), else where the browser says they came from
@@ -53,19 +152,37 @@ export function ContactForm({ plans = [] }) {
       /* no usable trail */
     }
     try {
+      // make sure there's a solved, fresh challenge — normally it finished while they were typing
+      let g = guard.current;
+      if (!g.promise || (g.at && Date.now() - g.at > STALE_MS)) await prepare();
+      try {
+        g = await guard.current.promise;
+      } catch {
+        g = await prepare();
+      }
+      const wait = MIN_FILL_MS - (Date.now() - g.at);
+      if (wait > 0) await sleep(wait);
+
       const res = await fetch("/api/site/leads", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           ...form,
+          plan: billing === "yearly" && form.plan ? `${form.plan} (yearly)`.slice(0, 60) : form.plan,
           sourcePage,
           utm,
+          challenge: { token: g.token, nonce: g.nonce },
+          turnstile: turnstileToken.current,
         }),
       });
       const body = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(body.error ?? "Something went wrong — please try again, or call us.");
       setState("done");
     } catch (err) {
+      // a challenge and a Turnstile answer each work once — get fresh ones for the next try
+      prepare();
+      turnstileToken.current = "";
+      if (widget.current !== null) window.turnstile?.reset(widget.current);
       setMessage(err.message);
       setState("error");
     }
@@ -131,6 +248,7 @@ export function ContactForm({ plans = [] }) {
         <label htmlFor="website">Leave this empty</label>
         <input id="website" name="website" tabIndex={-1} autoComplete="off" value={form.website} onChange={set("website")} />
       </div>
+      {siteKey ? <div ref={box} className="field full" /> : null}
       <div className="form-foot full">
         <small>We'll only use your details to reply to you. There's nothing to pay online.</small>
         <button className="btn btn-brand" type="submit" disabled={state === "sending"}>

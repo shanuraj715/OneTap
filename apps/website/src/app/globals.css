@@ -207,11 +207,16 @@ p { margin: 0; text-wrap: pretty; }
 .moment p { color: var(--muted); font-size: 15.5px; }
 
 /* ---------------------------------------------------------------- logos */
-.logos-row { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 40px; }
+.logos-row { display: flex; flex-wrap: wrap; align-items: center; gap: 22px 52px; }
 .logos-row.center { justify-content: center; }
 .logo-item { font-family: var(--font-display); font-weight: 800; font-size: 22px; letter-spacing: -0.02em; color: var(--ink-2); text-decoration: none; }
-.logo-item img { height: 36px; width: auto; filter: grayscale(1); opacity: 0.8; }
-.logo-item:hover img { filter: none; opacity: 1; }
+/* a logo rests slightly muted so the row sits quietly, and shows its true colours on hover or keyboard focus */
+.logo-item { display: inline-flex; align-items: center; }
+.logo-item img { height: 60px; width: auto; max-width: 190px; object-fit: contain; filter: grayscale(0.3); opacity: 0.92; transition: filter 0.2s ease, opacity 0.2s ease, transform 0.2s ease; }
+.logo-item:hover img, .logo-item:focus-visible img { filter: none; opacity: 1; transform: scale(1.06); }
+.logo-item:focus-visible { outline: 2px solid var(--brand); outline-offset: 6px; border-radius: 6px; }
+@media (max-width: 640px) { .logos-row { gap: 18px 32px; } .logo-item img { height: 46px; max-width: 150px; } }
+@media (prefers-reduced-motion: reduce) { .logo-item img { transition: none; } .logo-item:hover img, .logo-item:focus-visible img { transform: none; } }
 .logos-band { display: flex; flex-direction: column; gap: 20px; align-items: center; text-align: center; padding: 36px 0; border-block: 1px solid var(--line); }
 .logos-band p { font-size: 14px; font-weight: 600; color: var(--muted); letter-spacing: 0.02em; }
 
@@ -518,6 +523,23 @@ p { margin: 0; text-wrap: pretty; }
 
 /* ------------------------------------------------------- pricing extras */
 .plan-price .on-request { font-size: 24px; letter-spacing: -0.01em; }
+/* Monthly / Yearly: both prices are in the page; the switch's data-cycle decides which one shows */
+.billing[data-cycle="monthly"] .cy-y, .billing[data-cycle="yearly"] .cy-m { display: none; }
+.cycle-toggle { display: flex; width: fit-content; margin: 0 auto 28px; padding: 4px; gap: 4px; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; }
+.cycle-toggle button { font: inherit; font-size: 14.5px; font-weight: 650; padding: 9px 20px; border: 0; border-radius: 999px; background: transparent; color: var(--ink); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+.cycle-toggle button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.cycle-toggle button:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.cycle-save { font-size: 11.5px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: color-mix(in srgb, var(--veg) 16%, transparent); color: var(--veg); }
+.cycle-toggle button[aria-pressed="true"] .cycle-save { background: color-mix(in srgb, var(--paper) 22%, transparent); color: var(--paper); }
+.plan-price s { color: var(--muted); font-size: 18px; font-weight: 500; margin-right: 8px; text-decoration-thickness: 1.5px; }
+.plan-price .cy-y { display: inline-flex; align-items: baseline; gap: 6px; }
+.plan-price .cy-m { display: inline-flex; align-items: baseline; gap: 6px; }
+.plan-price .cy-m, .plan-price .cy-y { color: inherit; font-size: inherit; }
+.billing[data-cycle="monthly"] .plan-price .cy-y, .billing[data-cycle="yearly"] .plan-price .cy-m { display: none; }
+.plan-bill { margin: -8px 0 0; color: var(--muted); font-size: 13.5px; min-height: 20px; }
+.plan-bill strong { color: var(--veg); font-weight: 700; }
+.compare th small .cy-m, .compare th small .cy-y { display: inline; }
+.billing[data-cycle="monthly"] .compare th small .cy-y, .billing[data-cycle="yearly"] .compare th small .cy-m { display: none; }
 .included { max-width: 1040px; margin: 28px auto 0; padding: 24px 28px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); }
 .included h3 { font-size: 17px; font-weight: 700; margin-bottom: 14px; }
 .included ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px 24px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); font-size: 15px; }

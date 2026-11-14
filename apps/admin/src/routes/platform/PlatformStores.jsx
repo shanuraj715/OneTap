@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Plus, Store } from "lucide-react";
 import * as api from "../../lib/api";
-import { usePlans, usePlatformMutation, useStores } from "../../lib/usePlatform";
+import { usePlans, usePlatformMutation, usePlatformSettings, useStores } from "../../lib/usePlatform";
 import { Button, Card, Field, Note, PageHeader, Select, TextInput, Toast } from "../../ui";
 import { muted, planLabel, row, StatusPill, usageText } from "./shared";
 
@@ -20,6 +20,7 @@ const EMPTY = {
   outletName: "",
   outletSlug: "",
   hostnames: "",
+  subdomain: "",
   ownerName: "",
   ownerEmail: "",
   ownerPassword: "",
@@ -39,7 +40,13 @@ export function PlatformStores() {
   const brandSlug = brandSlugTouched ? form.brandSlug : slugify(form.brandName);
   const outletSlug = outletSlugTouched ? form.outletSlug : slugify(form.outletName);
   const activePlans = (plans.data?.plans ?? []).filter((p) => !p.archived);
-  const customPlan = Boolean(activePlans.find((p) => p.id === form.planId)?.custom);
+  const selectedPlan = activePlans.find((p) => p.id === form.planId);
+  const customPlan = Boolean(selectedPlan?.custom);
+  // a store's TablePe address (acme.<base>) comes with every plan; an own domain only with plans that include it
+  const base = usePlatformSettings().data?.settings.subdomainBase ?? "";
+  const ownAllowed = !selectedPlan || selectedPlan.entitlements.features.includes("customDomain");
+  const [subTouched, setSubTouched] = useState(false);
+  const subdomain = subTouched ? form.subdomain : base ? slugify(form.brandName) : "";
   const navigate = useNavigate();
   const list = stores.data?.stores ?? [];
 
@@ -51,7 +58,8 @@ export function PlatformStores() {
         brandSlug,
         outletName: form.outletName,
         outletSlug,
-        hostnames: form.hostnames.split(",").map((h) => h.trim()).filter(Boolean),
+        hostnames: ownAllowed ? form.hostnames.split(",").map((h) => h.trim()).filter(Boolean) : [],
+        subdomain: base && subdomain ? subdomain : undefined,
         ownerName: form.ownerName,
         ownerEmail: form.ownerEmail,
         ownerPassword: form.ownerPassword,
@@ -62,6 +70,7 @@ export function PlatformStores() {
           setForm(EMPTY);
           setBrandSlugTouched(false);
           setOutletSlugTouched(false);
+          setSubTouched(false);
           setAdding(false);
           // a custom-plan store has nothing yet — go straight to setting it up
           const id = result?.brand?._id;
@@ -127,9 +136,40 @@ export function PlatformStores() {
                   maxLength={63}
                 />
               </Field>
-              <Field label="Domain(s)" info="Comma-separated hostname(s) the storefront is served on, e.g. yourdomain.com. Every outlet added later shares these.">
-                <TextInput value={form.hostnames} onChange={(e) => setForm({ ...form, hostnames: e.target.value })} required placeholder="yourdomain.com" />
-              </Field>
+              {base ? (
+                <Field label="TablePe address" info={`A free address on ${base} — the store opens on ${subdomain || "name"}.${base}. Set up instantly, nothing to install on the server.`}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                    <TextInput
+                      value={subdomain}
+                      onChange={(e) => {
+                        setSubTouched(true);
+                        setForm({ ...form, subdomain: slugify(e.target.value) });
+                      }}
+                      maxLength={40}
+                      required={!ownAllowed || !form.hostnames.trim()}
+                      style={{ minWidth: 0, flex: 1 }}
+                    />
+                    <span style={{ ...muted, whiteSpace: "nowrap" }}>.{base}</span>
+                  </div>
+                </Field>
+              ) : null}
+              {ownAllowed ? (
+                <Field
+                  label={base ? "Own domain (optional)" : "Domain(s)"}
+                  info="Comma-separated hostname(s) the storefront is served on, e.g. yourdomain.com. Every outlet added later shares these. Needs DNS and a certificate set up on the server."
+                >
+                  <TextInput
+                    value={form.hostnames}
+                    onChange={(e) => setForm({ ...form, hostnames: e.target.value })}
+                    required={!base}
+                    placeholder="yourdomain.com"
+                  />
+                </Field>
+              ) : (
+                <Field label="Own domain" info="Not included in this plan — the store gets a TablePe address. Unlock “Own domain name” on its Features tab later if it buys one.">
+                  <TextInput value="Not included in this plan" disabled />
+                </Field>
+              )}
               <Field label="Owner name">
                 <TextInput value={form.ownerName} onChange={(e) => setForm({ ...form, ownerName: e.target.value })} required />
               </Field>

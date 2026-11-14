@@ -16,6 +16,7 @@ import { HttpError } from "../../middleware/error.js";
 import { invalidateStorePlan, storePlan } from "../platform/plan.service.js";
 import { APPEARANCE_AREAS, effectiveConfig, ownerConfig } from "./config.service.js";
 import { assertHostnamesFree, normalizeHostnames } from "./domains.js";
+import { assertStoreMayAddDomains } from "./subdomains.js";
 
 /**
  * The Outlet model is scoped by brandId only — it IS the outlet, so it has no
@@ -121,6 +122,7 @@ export async function createOutlet(ctx               , input                    
 
   let hostnames = normalizeHostnames(input.hostnames);
   await assertHostnamesFree(hostnames, ctx.brandId);
+  await assertStoreMayAddDomains(ctx.brandId, hostnames);
   if (hostnames.length === 0) {
     const sibling = await OutletModel.findOne(byBrand(ctx)).sort({ createdAt: 1 }).lean();
     hostnames = sibling?.hostnames ?? [];
@@ -173,6 +175,7 @@ export async function updateOutlet(ctx               , id        , input) {
   if (input.hostnames !== undefined) {
     const hostnames = normalizeHostnames(input.hostnames);
     await assertHostnamesFree(hostnames, ctx.brandId);
+    await assertStoreMayAddDomains(ctx.brandId, hostnames);
     outlet.hostnames = hostnames;
     outlet.canonicalHostname = hostnames[0] ?? "";
   }

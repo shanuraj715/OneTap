@@ -77,6 +77,35 @@ export async function getOutletsForHost() {
   }
 }
 
+/**
+ * Is there a store at the address this request came to?
+ *   known    — a store uses it
+ *   unknown  — the API answered and no store uses it (mistyped, or removed)
+ *   down     — we couldn't find out (API unreachable or failing) — a different message
+ */
+export async function lookupHost() {
+  const host = (await headers()).get("host") ?? "";
+  try {
+    const res = await fetch(`${API_BASE}/api/outlets/for-host?host=${encodeURIComponent(host)}`, { cache: "no-store" });
+    if (res.ok) return { state: "known", host };
+    if (res.status === 404) return { state: "unknown", host };
+  } catch {
+    /* fall through */
+  }
+  return { state: "down", host };
+}
+
+/** Where "the main site" and "contact us" lead — null when the API can't say (those buttons are then left out). */
+export async function getPlatformLinks() {
+  try {
+    const res = await fetch(`${API_BASE}/api/site/links`, { next: { revalidate: 300 } });
+    if (res.ok) return await res.json();
+  } catch {
+    /* fall through */
+  }
+  return null;
+}
+
 /** Load an outlet directly by id — used by the table-QR landing page. */
 export async function getOutletById(outletId        )                                 {
   try {

@@ -21,6 +21,11 @@ export const FEATURES = [
   { key: "wallet", label: "Coin wallet", description: "Customers earn and spend loyalty coins." },
   { key: "printing", label: "Printing", description: "Kitchen tickets and receipts on connected printers." },
   { key: "notifications", label: "WhatsApp & SMS alerts", description: "Order updates sent to customers." },
+  {
+    key: "customDomain",
+    label: "Own domain name",
+    description: "The storefront opens on the restaurant's own domain (like dominos.com). Without it, the store gets a TablePe address.",
+  },
 ];
 export const FEATURE_KEYS = FEATURES.map((f) => f.key);
 

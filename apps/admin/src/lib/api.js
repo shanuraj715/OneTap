@@ -655,6 +655,12 @@ export const listStores = () => req("/api/platform/stores");
 export const getStore = (id) => req(`/api/platform/stores/${id}`);
 export const setStorePlan = (id, body) => req(`/api/platform/stores/${id}/plan`, json("PATCH", body));
 export const setStoreDomains = (id, body) => req(`/api/platform/stores/${id}/domains`, json("PUT", body));
+export const checkSubdomain = (label, storeId) =>
+  req(`/api/platform/subdomains/check?label=${encodeURIComponent(label)}&storeId=${encodeURIComponent(storeId ?? "")}`);
+export const probeSubdomains = () => req("/api/platform/subdomains/probe");
+export const setStoreSubdomain = (id, label) => req(`/api/platform/stores/${id}/subdomain`, json("PUT", { label }));
+export const removeStoreSubdomain = (id) => req(`/api/platform/stores/${id}/subdomain`, json("DELETE"));
+export const getSubdomainStatus = (id) => req(`/api/platform/stores/${id}/subdomain/status`);
 export const setOutletBlocked = (id, outletId, blocked) =>
   req(`/api/platform/stores/${id}/outlets/${outletId}/${blocked ? "block" : "unblock"}`, json("POST"));
 export const deleteStoreOutlet = (id, outletId, confirmName) =>

@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { z } from "zod";
 import { requireBrandContext, requireSuperAdmin } from "../../middleware/auth.js";
+import { HttpError } from "../../middleware/error.js";
+import { checkLabel, hostStatus, probeBase, subdomainInfo } from "../outlets/subdomains.js";
 import { storePlan } from "./plan.service.js";
 import * as platform from "./platform.service.js";
 
@@ -68,6 +70,36 @@ const domainsBody = z.object({
 /** The domains a store's storefront answers on (dominos.com, www.dominos.com) and its main one. */
 platformRouter.put("/stores/:id/domains", async (req, res) => {
   res.json({ store: await platform.updateStoreDomains(req.params.id, domainsBody.parse(req.body)) });
+});
+
+/* -------------------------------------------------- TablePe addresses (subdomains) */
+
+/** Is this name free, and what address would it be? Live feedback while typing. */
+platformRouter.get("/subdomains/check", async (req, res) => {
+  const label = typeof req.query.label === "string" ? req.query.label : "";
+  const storeId = typeof req.query.storeId === "string" ? req.query.storeId : "";
+  res.json(await checkLabel(label, storeId));
+});
+
+/** Does the wildcard setup (DNS + certificate + nginx) work? Tries a made-up address under the base domain. */
+platformRouter.get("/subdomains/probe", async (_req, res) => {
+  res.json({ status: await probeBase() });
+});
+
+platformRouter.put("/stores/:id/subdomain", async (req, res) => {
+  const { label } = z.object({ label: z.string().min(1).max(60) }).parse(req.body);
+  res.json({ store: await platform.setSubdomain(req.params.id, label) });
+});
+
+platformRouter.delete("/stores/:id/subdomain", async (req, res) => {
+  res.json({ store: await platform.removeSubdomain(req.params.id) });
+});
+
+/** Does this store's TablePe address actually open from outside? */
+platformRouter.get("/stores/:id/subdomain/status", async (req, res) => {
+  const info = await subdomainInfo(req.params.id);
+  if (!info.host) throw new HttpError(404, "This store has no TablePe address.");
+  res.json({ status: await hostStatus(info.host) });
 });
 
 platformRouter.post("/stores/:id/outlets/:outletId/block", async (req, res) => {

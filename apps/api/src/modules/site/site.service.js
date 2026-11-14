@@ -7,6 +7,7 @@ import {
   planLimitsSchema,
   entitlementsSchema,
   planMarketingSchema,
+  planPrices,
   siteSectionSchema,
   sitePageSchema,
   siteSettingsSchema,
@@ -17,6 +18,8 @@ import { safeEqual } from "../../lib/crypto.js";
 import { logger } from "../../logger.js";
 import { HttpError } from "../../middleware/error.js";
 import { putImage } from "../storage/storage.service.js";
+import * as guard from "./guard.js";
+import { tooMany } from "./guard.js";
 import { notifyWebsite } from "./revalidate.js";
 
 /**
@@ -173,6 +176,18 @@ export async function getPublishedPage(slug) {
 const PREVIEW_MINUTES = 30;
 const previewSig = (id, exp) => createHmac("sha256", env.ENCRYPTION_KEY).update(`site-preview|${id}|${exp}`).digest("base64url");
 
+/**
+ * Where a visitor lands for "back to the main site" and "contact us" — used by
+ * the storefront's page for an address no store is using. It is this
+ * deployment's own website (WEBSITE_URL), so a dev server points at the dev
+ * site and production at the real one. The Contact page is built in and its
+ * address is locked to /contact.
+ */
+export function siteLinks() {
+  const websiteUrl = env.WEBSITE_URL.replace(/\/$/, "");
+  return { websiteUrl, contactUrl: `${websiteUrl}/contact` };
+}
+
 /** A short-lived link to a page as it is now, published or not — for "Preview" in the console. */
 export async function previewLink(id) {
   const page = await SitePageModel.exists({ _id: id });
@@ -238,45 +253,79 @@ export async function publicPricing() {
     .map((p) => ({ p, m: planMarketingSchema.parse(p.marketing ?? {}) }))
     .filter(({ m }) => m.show)
     .sort((a, b) => a.m.order - b.m.order)
-    .map(({ p, m }) => ({
-      id: String(p._id),
-      name: p.name,
-      description: p.description ?? "",
-      price: m.price,
-      period: m.period,
-      pitch: m.pitch,
-      highlight: m.highlight,
-      custom: Boolean(p.custom),
-      lines: planLines(p),
-      // for the "compare plans" table
-      compare: planCompare(p),
-    }));
+    .map(({ p, m }) => {
+      const prices = planPrices(m);
+      return {
+        id: String(p._id),
+        name: p.name,
+        description: p.description ?? "",
+        // rupees per month before GST; 0 means there's no number — `price` is then shown as written
+        monthly: prices.monthly,
+        // paying for the year up front: { total, perMonth, discount, saves }, or null when there's no discount
+        yearly: prices.yearly,
+        price: prices.monthly ? "" : m.price,
+        period: m.period,
+        pitch: m.pitch,
+        highlight: m.highlight,
+        custom: Boolean(p.custom),
+        lines: planLines(p),
+        // for the "compare plans" table
+        compare: planCompare(p),
+      };
+    });
 }
 
 /* ------------------------------------------------------------------- leads */
 
-// Kept in memory: enough to stop a bot hammering the form from one place, and
-// a number re-submitting over and over. A restart resets it, which is fine.
-const hits = new Map();
-function tooMany(key, max, windowMs) {
-  const now = Date.now();
-  const recent = (hits.get(key) ?? []).filter((t) => now - t < windowMs);
-  recent.push(now);
-  hits.set(key, recent);
-  if (hits.size > 5000) for (const [k, v] of hits) if (!v.some((t) => now - t < windowMs)) hits.delete(k);
-  return recent.length > max;
-}
+const HOUR = 60 * 60 * 1000;
+const DAY = 24 * HOUR;
+const BUSY = "We're getting a lot of enquiries right now — please try again in a little while, or call us.";
+const ALREADY = "We've already got your details — we'll be in touch soon.";
 
+/**
+ * An enquiry from the contact form. Everything that can refuse it is in
+ * guard.js (read its header for the why); the order here is cheapest first,
+ * so spam is turned away before it costs a database query.
+ */
 export async function createLead(input, { ip }) {
-  const data = leadInputSchema.parse(input);
+  if (!input || typeof input !== "object") throw new HttpError(400, "Something went wrong — please try again.");
+  const visitor = `ip:${ip}`;
+  // every attempt counts — good or bad — so a script can't hammer the form
+  if (tooMany(visitor, 12, 10 * 60 * 1000)) throw new HttpError(429, ALREADY);
   // a bot filled the hidden field — say thanks, store nothing
-  if (data.website) return { ok: true };
-  const phoneDigits = data.phone.replace(/\D/g, "");
-  if (tooMany(`ip:${ip}`, 20, 10 * 60 * 1000) || tooMany(`phone:${phoneDigits}`, 3, 60 * 60 * 1000)) {
-    throw new HttpError(429, "We've already got your details — we'll be in touch soon.");
-  }
+  if (input.website) return { ok: true };
+
+  const data = leadInputSchema.parse(input);
+  const challengeId = guard.checkChallenge(input.challenge);
+  await guard.checkTurnstile(input.turnstile, ip);
   const { website, ...lead } = data;
-  await LeadModel.create(lead);
+  if (guard.looksLikeSpam(lead)) return { ok: true };
+
+  // what has actually been stored recently — survives restarts, and caps how much can ever be written
+  const ipHash = guard.hashIp(ip);
+  const phoneKey = guard.phoneKey(lead.phone);
+  const since = (ms) => ({ createdAt: { $gt: new Date(Date.now() - ms) } });
+  const [ipHour, ipDay, phoneHour, phoneDay, siteHour, siteDay, replay] = await Promise.all([
+    LeadModel.countDocuments({ ipHash, ...since(HOUR) }),
+    LeadModel.countDocuments({ ipHash, ...since(DAY) }),
+    LeadModel.countDocuments({ phoneKey, ...since(HOUR) }),
+    LeadModel.countDocuments({ phoneKey, ...since(DAY) }),
+    LeadModel.countDocuments(since(HOUR)),
+    LeadModel.countDocuments(since(DAY)),
+    LeadModel.exists({ challengeId }),
+  ]);
+  const L = guard.LIMITS;
+  if (replay) throw new HttpError(400, "This form was already sent — reload the page to send another.");
+  if (ipHour >= L.hour.ip || ipDay >= L.day.ip || phoneHour >= L.hour.phone || phoneDay >= L.day.phone) throw new HttpError(429, ALREADY);
+  if (siteHour >= L.hour.site || siteDay >= L.day.site) throw new HttpError(429, BUSY);
+
+  try {
+    await LeadModel.create({ ...lead, ipHash, phoneKey, challengeId });
+  } catch (err) {
+    // two sends of one token racing each other: the unique index lets only one through
+    if (err?.code === 11000) throw new HttpError(400, "This form was already sent — reload the page to send another.");
+    throw err;
+  }
   return { ok: true };
 }
 

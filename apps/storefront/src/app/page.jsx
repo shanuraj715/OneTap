@@ -1,8 +1,9 @@
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import { CantReach } from "@/components/AddressNotice";
 import { OutletPicker } from "@/components/OutletPicker";
 import { OutletUnavailable } from "@/components/OutletUnavailable";
-import { getOutletsForHost } from "@/lib/outlet";
+import { getOutletsForHost, lookupHost } from "@/lib/outlet";
 
 export const dynamic = "force-dynamic";
 
@@ -23,15 +24,12 @@ export default async function RootPage() {
   // The store exists but every outlet is blocked by the platform.
   if (resolved && resolved.outlets.length === 0) return <OutletUnavailable outlet={null} />;
 
+  // No store at this address (or the API couldn't say): show a proper page, not a developer message.
+  // The page renders as a real 404 so search engines don't index addresses that lead nowhere.
   if (!resolved) {
-    return (
-      <main style={{ maxWidth: 560, margin: "120px auto", padding: 24, textAlign: "center" }}>
-        <h1>Storefront not configured</h1>
-        <p style={{ color: "var(--color-text-muted)" }}>
-          No outlet resolved for this host. Start the API and run <code>pnpm seed</code>.
-        </p>
-      </main>
-    );
+    const found = await lookupHost();
+    if (found.state === "unknown") notFound();
+    return <CantReach />;
   }
 
   if (resolved.outlets.length === 1) {

@@ -39,7 +39,7 @@ const FAQ_CORE = [
   },
   {
     q: "Can I use my own domain?",
-    a: "Yes. Your ordering site runs on your own domain, in your colours and fonts, so customers order from you — not from a marketplace.",
+    a: "On our higher plans, yes — your ordering site runs on your own domain, like yourrestaurant.com. Every plan gets its own web address on TablePe, in your colours and fonts, so customers order from you — not from a marketplace.",
   },
   {
     q: "Does it print kitchen tickets?",
@@ -143,9 +143,9 @@ const home = {
           label: "Your website",
           icon: "globe",
           heading: "Takeaway and delivery on your own website",
-          text: "Your own ordering site on your own domain, in your colours and fonts. Customers order from you — not from a marketplace that takes a cut.",
+          text: "Your own ordering site at its own web address, in your colours and fonts. Customers order from you — not from a marketplace that takes a cut.",
           points: [
-            "Your domain, your brand, your customer list",
+            "Your address, your brand, your customer list",
             "Delivery radius and fees you set",
             "Online payments settle straight to your own account",
             "Dozens of layouts and styles to choose from",
@@ -199,7 +199,7 @@ const home = {
       items: [
         { icon: "qr-code", title: "QR table ordering", text: "Guests scan the code on their table and order from their seat. The table is held for their party, and their bill keeps running until they pay." },
         { icon: "concierge-bell", title: "Take orders on any phone", text: "Waiters pick the table, add dishes with sizes, add-ons and kitchen notes, and send it to the kitchen. Returning customers are recognised by their number." },
-        { icon: "globe", title: "Your own ordering website", text: "Takeaway and delivery on your own domain, in your colours and fonts — customers order from you, not from a marketplace." },
+        { icon: "globe", title: "Your own ordering website", text: "Takeaway and delivery on your own web address, in your colours and fonts — customers order from you, not from a marketplace." },
         { icon: "printer", title: "Kitchen tickets that print themselves", text: "Accept an order and the kitchen ticket and bill print where you've set them to. No shouting across the pass." },
         { icon: "coins", title: "Coins that bring regulars back", text: "Customers earn coins on what they pay and spend them on their next visit — your loyalty programme, with no extra app." },
         { icon: "message-circle", title: "WhatsApp & SMS updates", text: "Customers hear when their order is accepted and ready, from your own WhatsApp or SMS account." },
@@ -242,7 +242,7 @@ const home = {
       anchor: "pricing",
       eyebrow: "Pricing",
       heading: "Simple plans. Set up for you.",
-      intro: "Every plan is set up by our team — menu, tables, QR cards, printers and your domain. No commission on orders.",
+      intro: "Every plan is set up by our team — menu, tables, QR cards, printers and your web address. No commission on orders.",
       note: "",
     },
     { id: id("faq"), type: "faq", eyebrow: "FAQ", heading: "Questions restaurants ask us", items: FAQ_CORE },
@@ -277,7 +277,7 @@ const pricing = {
       intro: "Every plan is set up by our team. Pick a plan and talk to us — we'll confirm what fits and get you live.",
       included: [
         "Setup by our team: menu, tables, QR cards and printers",
-        "Your own ordering website on your domain",
+        "Your own ordering website (own domain on higher plans)",
         "Unlimited menu items and orders",
         "No commission on any order",
         "Live orders screen with timers",
@@ -318,7 +318,7 @@ const about = {
       eyebrow: "About us",
       heading: "We build for the rush.",
       body:
-        "TablePe started on the floor of a busy momo shop, where orders were shouted, tickets were lost and the queue never ended. We built the tools that restaurant needed — QR ordering at the table, orders on staff phones, a kitchen screen and printed tickets — and kept going until it ran a whole chain.\n\nToday TablePe is a complete ordering platform any restaurant can run on its own brand and its own domain.",
+        "TablePe started on the floor of a busy momo shop, where orders were shouted, tickets were lost and the queue never ended. We built the tools that restaurant needed — QR ordering at the table, orders on staff phones, a kitchen screen and printed tickets — and kept going until it ran a whole chain.\n\nToday TablePe is a complete ordering platform any restaurant can run on its own brand, at its own web address.",
       imageSide: "right",
     },
     {
@@ -326,7 +326,7 @@ const about = {
       type: "text",
       heading: "What we believe",
       body:
-        "## Restaurants should own their customers\nYour customers order from your website, earn your coins and get messages from your WhatsApp — not a marketplace's.\n\n## Software should keep up with the kitchen\nEvery screen is built for speed: one tap to add a dish, one screen for every order, tickets that print themselves.\n\n## Setup is our job\nWe set every store up ourselves — menu, tables, printers, payments and domain — so you're taking orders from day one.",
+        "## Restaurants should own their customers\nYour customers order from your website, earn your coins and get messages from your WhatsApp — not a marketplace's.\n\n## Software should keep up with the kitchen\nEvery screen is built for speed: one tap to add a dish, one screen for every order, tickets that print themselves.\n\n## Setup is our job\nWe set every store up ourselves — menu, tables, printers, payments and web address — so you're taking orders from day one.",
     },
     { id: id("cta"), type: "cta", heading: "Let's set up your restaurant", text: "Tell us about your outlets and we'll take it from there.", button: { label: "Talk to us", href: "/contact" } },
   ],

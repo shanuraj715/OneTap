@@ -15,6 +15,8 @@ const apiTarget = apiServerUrl();
 const nextConfig = {
   transpilePackages: ["@onetap/ui", "@onetap/config-schema"],
   outputFileTracingRoot: workspaceRoot,
+  // local trials of store addresses open on acme.localhost:3070; the dev server should treat those as its own
+  allowedDevOrigins: ["*.localhost"],
   async rewrites() {
     return [{ source: "/api/:path*", destination: `${apiTarget}/api/:path*` }];
   },

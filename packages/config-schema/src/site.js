@@ -289,10 +289,37 @@ export const leadInputSchema = z.object({
 
 export const planMarketingSchema = z.object({
   show: bool(),
-  /** shown as written — "₹1,499", "Custom" */
+  /** the plan's price in rupees per month, before GST. 0 → there's no number to show (see `price`) */
+  monthly: z.number().int().min(0).max(1_000_000).default(0),
+  /** percent off when a store pays for the year up front. 0 → no yearly option is shown */
+  yearlyDiscount: z.number().int().min(0).max(90).default(0),
+  /** shown as written — "Custom" — only when there's no monthly price */
   price: str(30),
   period: str(20, "/month"),
   pitch: str(140),
   highlight: bool(),
   order: z.number().int().min(0).max(99).default(50),
 });
+
+/**
+ * What a plan costs on the website, from its marketing settings. A monthly
+ * price (₹, whole rupees) is the source of truth; the older free-text `price`
+ * is only read when it is a plain rupee amount ("₹1,499"), so plans set up
+ * before there was a number keep their price.
+ *
+ * The yearly price is the year's worth of months less the discount, in whole
+ * rupees; `perMonth` is what that works out to each month.
+ */
+export function planPrices(m) {
+  let monthly = m.monthly || 0;
+  if (!monthly) {
+    const plain = /^(?:₹|rs\.?|inr)?\s*([\d,]+)\s*$/i.exec(String(m.price ?? "").trim());
+    if (plain) monthly = Number(plain[1].replace(/,/g, "")) || 0;
+  }
+  const discount = monthly && m.yearlyDiscount ? m.yearlyDiscount : 0;
+  const total = discount ? Math.round((monthly * 12 * (100 - discount)) / 100) : 0;
+  return {
+    monthly,
+    yearly: discount ? { total, perMonth: Math.round(total / 12), discount, saves: monthly * 12 - total } : null,
+  };
+}

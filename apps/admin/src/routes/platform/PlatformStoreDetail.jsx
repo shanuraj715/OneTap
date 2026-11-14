@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { CARD_TEMPLATE_FAMILIES, EFFECT_IDS, EFFECT_PRESETS, FEATURES } from "@onetap/config-schema";
-import { ArrowLeft, ExternalLink, Globe, Save, Store, Trash2 } from "lucide-react";
+import { ArrowLeft, Check, ExternalLink, Globe, RefreshCw, Save, Store, Trash2, X } from "lucide-react";
 import * as api from "../../lib/api";
 import { useOpenStore } from "../../lib/useOutlet";
 import { usePlans, usePlatformMutation, useStore } from "../../lib/usePlatform";
 import { Button, Card, Field, Note, PageHeader, Pill, Select, Tabs, TextInput, Toast } from "../../ui";
-import { fmtDate, muted, planLabel, row, StatusPill, usageText } from "./shared";
+import { browserCanOpen, describeHttpError, fmtDate, muted, planLabel, row, SERVER_CHECK_FAILED, StatusPill, usageText } from "./shared";
 
 const TABS = [
   { id: "plan", label: "Plan & limits" },
@@ -119,7 +120,7 @@ export function PlatformStoreDetail() {
       {tab === "features" ? <FeaturesTab draft={draft} setDraft={setDraft} selectedPlan={selectedPlan} /> : null}
       {tab === "owners" ? <OwnersTab store={store} /> : null}
       {tab === "outlets" ? <OutletsTab store={store} /> : null}
-      {tab === "domains" ? <DomainsTab store={store} /> : null}
+      {tab === "domains" ? <DomainsTab key={JSON.stringify(store.domains) + store.canUseOwnDomain} store={store} /> : null}
       {tab === "people" ? <PeopleTab store={store} /> : null}
       {tab === "appearance" ? <AppearanceTab open={open} /> : null}
     </>
@@ -363,6 +364,7 @@ function FeaturesTab({ draft, setDraft, selectedPlan }) {
  * QR codes and "View storefront" use. A domain can belong to one store only.
  */
 function DomainsTab({ store }) {
+  const sub = store.subdomain;
   const [hostnames, setHostnames] = useState(store.domains.hostnames);
   const [primary, setPrimary] = useState(store.domains.primary);
   const [adding, setAdding] = useState("");
@@ -384,7 +386,17 @@ function DomainsTab({ store }) {
 
   return (
     <>
-      <Card title="Domains" icon={<Globe size={16} />} subtitle="Where this store's website opens. Every outlet shares these — customers pick an outlet from the path, like dominos.com/laxmi-nagar.">
+      <SubdomainCard store={store} />
+
+      <Card title="Own domain" icon={<Globe size={16} />} subtitle="Where this store's website opens. Every outlet shares these — customers pick an outlet from the path, like dominos.com/laxmi-nagar.">
+        {!store.canUseOwnDomain ? (
+          <div style={{ marginBottom: 12 }}>
+            <Note>
+              {store.plan?.name ?? "This plan"} doesn't include an own domain name, so this store uses its TablePe address. To add one, unlock “Own domain name” for this store on the{" "}
+              <strong>Features</strong> tab, or move it to a plan that has it.
+            </Note>
+          </div>
+        ) : null}
         {hostnames.length === 0 ? <p style={muted}>No domains yet — the store isn't reachable on its own address.</p> : null}
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {hostnames.map((h) => (
@@ -393,10 +405,14 @@ function DomainsTab({ store }) {
                 <input type="radio" name="primary-domain" checked={primary === h} onChange={() => setPrimary(h)} style={{ accentColor: "var(--color-primary)" }} />
                 <span style={{ fontWeight: 600, fontFamily: "ui-monospace, monospace", fontSize: 13.5 }}>{h}</span>
                 {primary === h ? <Pill tone="ok">Main</Pill> : null}
+                {h === sub.host ? <Pill>TablePe address</Pill> : null}
               </label>
-              <Button variant="outline" onClick={() => remove(h)} aria-label={`Remove ${h}`} style={{ display: "inline-flex", alignItems: "center" }}>
-                <Trash2 size={13} />
-              </Button>
+              {/* the TablePe address is created and removed in its own card above */}
+              {h === sub.host ? null : (
+                <Button variant="outline" onClick={() => remove(h)} aria-label={`Remove ${h}`} style={{ display: "inline-flex", alignItems: "center" }}>
+                  <Trash2 size={13} />
+                </Button>
+              )}
             </div>
           ))}
         </div>
@@ -407,8 +423,15 @@ function DomainsTab({ store }) {
           }}
           style={{ display: "flex", gap: 8, marginTop: 12, flexWrap: "wrap" }}
         >
-          <TextInput value={adding} onChange={(e) => setAdding(e.target.value)} placeholder="dominos.com" style={{ flex: "1 1 220px" }} aria-label="Add a domain" />
-          <Button type="submit" variant="outline" disabled={!adding.trim()}>
+          <TextInput
+            value={adding}
+            onChange={(e) => setAdding(e.target.value)}
+            placeholder="dominos.com"
+            style={{ flex: "1 1 220px" }}
+            aria-label="Add a domain"
+            disabled={!store.canUseOwnDomain}
+          />
+          <Button type="submit" variant="outline" disabled={!adding.trim() || !store.canUseOwnDomain}>
             Add domain
           </Button>
         </form>
@@ -422,7 +445,8 @@ function DomainsTab({ store }) {
         {save.isSuccess && !dirty ? <Toast kind="ok">Saved. Table QR codes now point to {primary || "the platform address"}.</Toast> : null}
       </Card>
 
-      <Card title="Connecting a new domain" subtitle="What the store (or whoever manages their domain) does, and what you do.">
+      {store.canUseOwnDomain ? (
+      <Card title="Connecting an own domain" subtitle="What the store (or whoever manages their domain) does, and what you do. A TablePe address needs none of this.">
         <ol style={{ margin: 0, paddingLeft: 18, lineHeight: 1.8, fontSize: 13.5 }}>
           <li>
             At their domain registrar, add an <strong>A record</strong> for the domain (and for <code>www</code>) pointing to your server's IP address.
@@ -439,7 +463,178 @@ function DomainsTab({ store }) {
           <li>Open the domain — the store's website appears. Reprint table QR cards if the main domain changed.</li>
         </ol>
       </Card>
+      ) : null}
     </>
+  );
+}
+
+/* ------------------------------------------------- the TablePe address card */
+
+const addressSlug = (text) =>
+  String(text ?? "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 40);
+
+const STATUS_TEXT = {
+  live: ["ok", "Live — it opens"],
+  "no-dns": ["warn", "Not found yet — the wildcard DNS record is missing or still spreading"],
+  "bad-cert": ["error", "The certificate doesn't cover it — the wildcard certificate isn't in place"],
+  "no-https": ["error", "Nothing answers on HTTPS — check nginx and the server's firewall"],
+  error: ["error", "The server answers with an error"],
+};
+
+/**
+ * The store's own address on the platform — acme.<base domain>. Creating,
+ * renaming and removing it only changes the database: the server is set up
+ * once for every store (a wildcard record, certificate and nginx block), so
+ * there is nothing to install or restart for each one.
+ */
+function SubdomainCard({ store }) {
+  const sub = store.subdomain;
+  const [label, setLabel] = useState(sub.label || addressSlug(store.name));
+  const [confirmRemove, setConfirmRemove] = useState(false);
+  const [typed, setTyped] = useState(label);
+  useEffect(() => {
+    const t = setTimeout(() => setTyped(label), 300);
+    return () => clearTimeout(t);
+  }, [label]);
+
+  const changed = label.trim().toLowerCase() !== sub.label;
+  const avail = useQuery({
+    queryKey: ["platform", "subdomain-check", typed, store.id],
+    queryFn: () => api.checkSubdomain(typed, store.id),
+    enabled: Boolean(sub.base) && typed.length >= 1 && changed,
+    staleTime: 10_000,
+  });
+  const status = useQuery({
+    queryKey: ["platform", "subdomain-status", store.id, sub.host],
+    queryFn: () => api.getSubdomainStatus(store.id),
+    enabled: Boolean(sub.host),
+    staleTime: 60_000,
+    retry: false,
+  });
+  const save = usePlatformMutation(() => api.setStoreSubdomain(store.id, label));
+  const remove = usePlatformMutation(() => api.removeStoreSubdomain(store.id));
+  const error = save.error ?? remove.error;
+  const result = status.data?.status;
+  // When the server couldn't get through to the address, ask this browser — a visitor's view of it.
+  const serverFailed = Boolean(result) && !result.local && SERVER_CHECK_FAILED.includes(result.state);
+  const fromBrowser = useQuery({
+    queryKey: ["platform", "subdomain-browser", sub.host, status.dataUpdatedAt],
+    queryFn: () => browserCanOpen(`${sub.scheme}://${sub.host}/`),
+    enabled: Boolean(sub.host) && serverFailed,
+    staleTime: 60_000,
+    retry: false,
+  });
+  const opensForVisitors = serverFailed && fromBrowser.data === true;
+  const [tone, statusText] = !result
+    ? ["neutral", "Checking…"]
+    : opensForVisitors
+      ? ["ok", "Live — it opens from your browser"]
+      : serverFailed && fromBrowser.isFetching
+        ? ["neutral", "Checking from your browser…"]
+        : result.state === "error"
+          ? ["error", describeHttpError(result.httpStatus)]
+          : (STATUS_TEXT[result.state] ?? ["warn", result.state]);
+  const typedMatches = typed.trim().toLowerCase() === label.trim().toLowerCase();
+
+  if (!sub.base) {
+    return (
+      <Card title="TablePe address" icon={<Globe size={16} />} subtitle="A free address on your own domain — acme.yourdomain.com — for stores without a domain of their own.">
+        <Note>
+          This server has no base domain for store addresses yet — see <Link to="/platform/settings">Platform settings</Link> for the one setting to add.
+        </Note>
+      </Card>
+    );
+  }
+
+  return (
+    <Card
+      title="TablePe address"
+      icon={<Globe size={16} />}
+      subtitle="Where this store opens when it has no domain of its own. Created here in a moment — nothing to set up on the server for each store."
+    >
+      {sub.host ? (
+        <div style={{ ...row, marginBottom: 14 }}>
+          <div style={{ flex: 1, minWidth: 220 }}>
+            <a href={`${sub.scheme}://${sub.host}`} target="_blank" rel="noreferrer" style={{ fontWeight: 700, fontFamily: "ui-monospace, monospace", fontSize: 14 }}>
+              {sub.host}
+            </a>
+            <div style={{ marginTop: 4 }}>
+              <Pill tone={tone}>{statusText}</Pill>
+            </div>
+            {opensForVisitors ? (
+              <p style={{ ...muted, marginTop: 6 }}>
+                The server's own check said “{STATUS_TEXT[result.state][1]}”, but visitors aren't affected: that check runs from inside the server's network, and a
+                firewall there can block a brand-new domain. This is the view that counts.
+              </p>
+            ) : null}
+          </div>
+          <Button variant="outline" onClick={() => status.refetch()} disabled={status.isFetching} style={{ display: "inline-flex", gap: 6, alignItems: "center" }}>
+            <RefreshCw size={13} /> {status.isFetching ? "Checking…" : "Check again"}
+          </Button>
+        </div>
+      ) : null}
+
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          save.mutate();
+        }}
+        style={{ display: "flex", gap: 10, alignItems: "flex-end", flexWrap: "wrap" }}
+      >
+        <Field label={sub.host ? "Change the name" : "Name"} hint="Lowercase letters, numbers and hyphens">
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <TextInput value={label} onChange={(e) => setLabel(e.target.value.toLowerCase())} maxLength={40} style={{ width: 200 }} aria-label="Address name" />
+            <span style={{ ...muted, fontFamily: "ui-monospace, monospace" }}>.{sub.base}</span>
+          </div>
+        </Field>
+        <div style={{ marginBottom: 14 }}>
+          <Button type="submit" disabled={!changed || save.isPending || !typedMatches || avail.data?.available === false}>
+            {save.isPending ? "Saving…" : sub.host ? "Change address" : "Create address"}
+          </Button>
+        </div>
+      </form>
+      {changed && typedMatches && avail.data ? (
+        <div style={{ display: "flex", gap: 6, alignItems: "center", fontSize: 13, marginTop: -4 }}>
+          {avail.data.available ? <Check size={14} color="var(--tone-ok, #1a7f37)" /> : <X size={14} color="var(--tone-error, #c0392b)" />}
+          <span style={avail.data.available ? undefined : { color: "var(--tone-error, #c0392b)" }}>
+            {avail.data.available ? `${avail.data.host} is free` : avail.data.reason}
+          </span>
+        </div>
+      ) : null}
+      {sub.host && changed ? (
+        <p style={{ ...muted, marginTop: 10 }}>
+          Table QR cards printed with <strong>{sub.host}</strong> stop working when the address changes — reprint them afterwards.
+        </p>
+      ) : null}
+
+      {sub.host ? (
+        <div style={{ marginTop: 16, display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+          {confirmRemove ? (
+            <>
+              <span style={{ fontSize: 13 }}>
+                Remove <strong>{sub.host}</strong>? It stops opening, and QR cards using it stop working.
+              </span>
+              <Button disabled={remove.isPending} onClick={() => remove.mutate(undefined, { onSuccess: () => setConfirmRemove(false) })}>
+                {remove.isPending ? "Removing…" : "Yes, remove it"}
+              </Button>
+              <Button variant="outline" onClick={() => setConfirmRemove(false)}>
+                Keep it
+              </Button>
+            </>
+          ) : (
+            <Button variant="outline" onClick={() => setConfirmRemove(true)} style={{ display: "inline-flex", gap: 6, alignItems: "center" }}>
+              <Trash2 size={13} /> Remove address
+            </Button>
+          )}
+        </div>
+      ) : null}
+      {error ? <Toast kind="error">{error.message}</Toast> : null}
+      {save.isSuccess && !save.isPending && !changed ? <Toast kind="ok">Saved. {store.domains.primary === sub.host ? "Table QR codes now point here." : ""}</Toast> : null}
+    </Card>
   );
 }
 

@@ -32,7 +32,31 @@ const schema = z.object({
    * website still refreshes on its own every few minutes.
    */
   WEBSITE_URL: z.string().default("http://localhost:3073"),
+  /**
+   * Where this server itself reaches the website for that refresh, when it is on
+   * the same machine (http://127.0.0.1:3073). Keeps the call off the public
+   * internet — a hosting firewall or a Cloudflare hiccup can't break it. Blank
+   * = use WEBSITE_URL.
+   */
+  WEBSITE_INTERNAL_URL: z.string().default(""),
   WEBSITE_REVALIDATE_SECRET: z.string().default("dev-only-website-revalidate-secret"),
+  /**
+   * Cloudflare Turnstile for the website's enquiry form — a real "are you a
+   * person" check on top of the built-in spam guard. Both blank = off. Create
+   * a widget at dash.cloudflare.com → Turnstile; the site key is public, the
+   * secret key stays here.
+   */
+  /**
+   * The domain stores' TablePe addresses live under — a store "acme" opens on
+   * acme.<this>. A server setting rather than a database one because local
+   * development and production share one database but not one domain:
+   * tablepe.in in production, localhost:3070 on a developer's machine
+   * (acme.localhost:3070 opens in a browser with no DNS at all). Empty = the
+   * platform offers no TablePe addresses.
+   */
+  STORE_SUBDOMAIN_BASE: z.string().default(""),
+  TURNSTILE_SITE_KEY: z.string().default(""),
+  TURNSTILE_SECRET_KEY: z.string().default(""),
 });
 
 const parsed = schema.safeParse(process.env);
@@ -55,6 +79,19 @@ if (isProd && /^https?:\/\/(localhost|127\.0\.0\.1|0\.0\.0\.0|\[::1\]|192\.168\.
     `Invalid environment: STOREFRONT_ORIGIN is "${env.STOREFRONT_ORIGIN}" in production.\n` +
       "Every table QR code is built from this, so they would all point at an address only the server can reach.\n" +
       "Set STOREFRONT_ORIGIN to the public storefront URL (e.g. https://food.example.com) and restart.",
+  );
+  process.exit(1);
+}
+const subdomainBase = env.STORE_SUBDOMAIN_BASE.trim().toLowerCase();
+const LOCAL_BASE = /^localhost(?::\d{2,5})?$/;
+if (subdomainBase && !LOCAL_BASE.test(subdomainBase) && !/^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z][a-z0-9-]+$/.test(subdomainBase)) {
+  console.error(`Invalid environment: STORE_SUBDOMAIN_BASE is "${env.STORE_SUBDOMAIN_BASE}", which isn't a domain. Use something like tablepe.in (no https://, no path).`);
+  process.exit(1);
+}
+if (isProd && LOCAL_BASE.test(subdomainBase)) {
+  console.error(
+    `Invalid environment: STORE_SUBDOMAIN_BASE is "${env.STORE_SUBDOMAIN_BASE}" in production.\n` +
+      "Every store's TablePe address would be built on it, and none would open. Set it to your real domain (e.g. tablepe.in) and restart.",
   );
   process.exit(1);
 }

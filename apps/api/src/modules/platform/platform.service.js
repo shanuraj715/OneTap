@@ -1,4 +1,4 @@
-import { CUSTOM_PLAN_BASE, planMarketingSchema, planOverridesSchema, planSchema } from "@onetap/config-schema";
+import { CUSTOM_PLAN_BASE, hasFeature, planMarketingSchema, planOverridesSchema, planSchema } from "@onetap/config-schema";
 import {
   BrandModel,
   MenuCategoryModel,
@@ -21,7 +21,8 @@ import { HttpError } from "../../middleware/error.js";
 import { ensureOwner } from "../auth/auth.service.js";
 import { hashPassword } from "../auth/password.js";
 import { countActiveOutlets, countActiveUsers, invalidateStorePlan, platformSettings, storePlan } from "./plan.service.js";
-import { setStoreDomains, storeDomains } from "../outlets/domains.js";
+import { configuredBase, normalizeHostnames, setStoreDomains, storeDomains } from "../outlets/domains.js";
+import { assertStoreMayAddDomains, removeStoreSubdomain, setStoreSubdomain, subdomainInfo } from "../outlets/subdomains.js";
 import { notifyWebsite } from "../site/revalidate.js";
 
 /*
@@ -93,7 +94,8 @@ export async function updatePlan(id, input) {
 
 /* ----------------------------------------------------------------- settings */
 
-export const getSettings = platformSettings;
+/** Platform-wide settings, plus the domain store addresses are built on (a server setting: STORE_SUBDOMAIN_BASE). */
+export const getSettings = async () => ({ ...(await platformSettings()), subdomainBase: configuredBase() });
 
 export async function updateSettings({ graceDays }) {
   await PlatformSettingsModel.findOneAndUpdate(
@@ -102,7 +104,7 @@ export async function updateSettings({ graceDays }) {
     { upsert: true },
   );
   invalidateStorePlan();
-  return platformSettings();
+  return getSettings();
 }
 
 /* ------------------------------------------------------------------- stores */
@@ -182,13 +184,30 @@ export async function getStore(id) {
     })),
     people: people.map((u) => shapePerson(u, String(brand._id))),
     domains: await storeDomains(String(brand._id)),
+    /** the store's TablePe address (acme.<base>), and whether its plan lets it have an own domain too */
+    subdomain: await subdomainInfo(String(brand._id)),
+    canUseOwnDomain: hasFeature(plan.entitlements, "customDomain"),
   };
 }
 
 /** Set the domains a store's storefront is served on, and its main one. */
 export async function updateStoreDomains(id, input) {
   await loadBrand(id);
+  await assertStoreMayAddDomains(id, normalizeHostnames(input.hostnames));
   await setStoreDomains(id, input);
+  return getStore(id);
+}
+
+/** Give the store a TablePe address, change it, or take it away (subdomains.js has the rules). */
+export async function setSubdomain(id, label) {
+  await loadBrand(id);
+  await setStoreSubdomain(id, label);
+  return getStore(id);
+}
+
+export async function removeSubdomain(id) {
+  await loadBrand(id);
+  await removeStoreSubdomain(id);
   return getStore(id);
 }
 

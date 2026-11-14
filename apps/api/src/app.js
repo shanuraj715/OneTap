@@ -68,6 +68,9 @@ export function createApp()          {
   // never get the chance to raise it — the body would already have been
   // rejected at 1mb.
   app.use("/api/qr-cards", express.json({ limit: "6mb" }));
+  // The public enquiry form is a few hundred characters; anything bigger is not a person. Same
+  // reason as above for sitting here: the first parser to run sets the limit.
+  app.use("/api/site/leads", express.json({ limit: "20kb" }));
 
   app.use(
     express.json({
