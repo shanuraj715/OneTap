@@ -59,9 +59,9 @@ export function MenuSections({
   return (
     <div className="ot-menu-sections" style={wrap}>
       {(layout.showCategoryNav && visibleSections.length > 1) || (layout.showFoodTypeFilter && foodTypesPresent.length > 1) ? (
-        <div className="ot-fx-bar" style={fx("bar", toolbar)}>
+        <div className="ot-fx-bar" data-fx-toolbar="" style={toolbarStyle()}>
           {layout.showFoodTypeFilter && foodTypesPresent.length > 1 ? (
-            <div style={{ display: "flex", gap: 6 }}>
+            <div style={{ display: "flex", gap: "var(--fx-toolbar-gap, 6px)" }}>
               <FilterChip active={foodFilter === null} onClick={() => setFoodFilter(null)}>
                 All
               </FilterChip>
@@ -76,7 +76,9 @@ export function MenuSections({
           )}
 
           {layout.showCategoryNav && visibleSections.length > 1 ? (
-            <nav style={{ display: "flex", gap: 6, flexWrap: "wrap", overflowX: "auto" }}>
+            /* No overflow here: the chips wrap anyway, and a scrolling box crops
+               whatever it holds at its edges — including the chips' shadows. */
+            <nav style={{ display: "flex", gap: "var(--fx-toolbar-gap, 6px)", flexWrap: "wrap" }}>
               {visibleSections.map((s) => (
                 <a key={s.id} href={`#sec-${s.id}`} className="ot-fx-chip" style={fx("chip", jumpLink)}>
                   {s.title}
@@ -242,6 +244,28 @@ const toolbar                = {
   background: "var(--color-bg)",
   borderBottom: "1px solid var(--color-border)",
 };
+/**
+ * The category / food-type strip. It's an "fx bar" like the header, but an
+ * effect can restyle just this strip through --fx-toolbar-* — the soft-shadow
+ * effects (neumorphism, clay) draw it as a light outlined strip instead of a
+ * raised slab. Every fallback is the plain look, so with no effect (or one
+ * that doesn't set these) nothing changes.
+ */
+function toolbarStyle() {
+  const bar = fx("bar", toolbar);
+  return {
+    ...bar,
+    background: `var(--fx-toolbar-bg, ${bar.background})`,
+    boxShadow: `var(--fx-toolbar-shadow, ${bar.boxShadow})`,
+    borderTop: "var(--fx-toolbar-edge, none)",
+    borderLeft: "var(--fx-toolbar-edge, none)",
+    borderRight: "var(--fx-toolbar-edge, none)",
+    borderBottom: `var(--fx-toolbar-edge, ${bar.borderBottom})`,
+    borderRadius: "var(--fx-toolbar-radius, 0px)",
+    padding: "10px var(--fx-toolbar-pad-x, 0px)",
+  };
+}
+
 const chip                = {
   font: "inherit",
   fontSize: "0.8rem",

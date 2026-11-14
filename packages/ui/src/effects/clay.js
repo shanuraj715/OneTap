@@ -29,6 +29,14 @@ export const css = (s, page) => `
     --fx-bar-border: 1px solid transparent;
     --fx-bar-shadow: 0 10px 28px var(--cl-drop), inset 0 -3px 6px var(--cl-lo);
   `)}
+  ${role(s, "bar", `
+    --fx-toolbar-bg: color-mix(in srgb, var(--color-surface) 70%, var(--color-bg));
+    --fx-toolbar-edge: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+    --fx-toolbar-shadow: none;
+    --fx-toolbar-radius: 20px;
+    --fx-toolbar-pad-x: 14px;
+    --fx-toolbar-gap: 12px;
+  `, "[data-fx-toolbar]")}
   ${role(s, "modal", `
     --fx-modal-radius: 30px;
     --fx-modal-border: 1px solid transparent;

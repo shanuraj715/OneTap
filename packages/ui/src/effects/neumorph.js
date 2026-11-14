@@ -26,6 +26,14 @@ export const css = (s) => `
     --fx-bar-border: 1px solid transparent;
     --fx-bar-shadow: 0 6px 16px -6px var(--nm-lo), 0 -6px 16px -6px var(--nm-hi);
   `)}
+  ${role(s, "bar", `
+    --fx-toolbar-bg: color-mix(in srgb, var(--color-bg) 65%, #ffffff);
+    --fx-toolbar-edge: 1px solid color-mix(in srgb, var(--nm-lo) 40%, transparent);
+    --fx-toolbar-shadow: none;
+    --fx-toolbar-radius: 18px;
+    --fx-toolbar-pad-x: 14px;
+    --fx-toolbar-gap: 12px;
+  `, "[data-fx-toolbar]")}
   ${role(s, "modal", `
     --fx-modal-bg: var(--color-bg);
     --fx-modal-border: 1px solid transparent;
@@ -45,7 +53,7 @@ export const css = (s) => `
   ${role(s, "chip", `
     --fx-chip-bg: var(--color-bg);
     --fx-chip-border: 1px solid transparent;
-    --fx-chip-shadow: 4px 4px 10px var(--nm-lo), -4px -4px 10px var(--nm-hi);
+    --fx-chip-shadow: 3px 3px 7px var(--nm-lo), -3px -3px 7px var(--nm-hi);
   `)}
   ${role(s, "chip", `
     --fx-chip-color: var(--color-primary);
