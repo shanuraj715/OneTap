@@ -32,6 +32,12 @@ siteRouter.get("/pages/:slug", async (req, res) => {
   res.json({ page: await site.getPublishedPage(req.params.slug) });
 });
 
+/** The main site and its contact page — for the storefront's "no restaurant at this address" page. */
+siteRouter.get("/links", (_req, res) => {
+  cacheFor(res, 300);
+  res.json(site.siteLinks());
+});
+
 siteRouter.get("/pricing", async (_req, res) => {
   cacheFor(res, 60);
   res.json({ plans: await site.publicPricing() });

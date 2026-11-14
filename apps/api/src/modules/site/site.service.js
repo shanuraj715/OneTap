@@ -176,6 +176,18 @@ export async function getPublishedPage(slug) {
 const PREVIEW_MINUTES = 30;
 const previewSig = (id, exp) => createHmac("sha256", env.ENCRYPTION_KEY).update(`site-preview|${id}|${exp}`).digest("base64url");
 
+/**
+ * Where a visitor lands for "back to the main site" and "contact us" — used by
+ * the storefront's page for an address no store is using. It is this
+ * deployment's own website (WEBSITE_URL), so a dev server points at the dev
+ * site and production at the real one. The Contact page is built in and its
+ * address is locked to /contact.
+ */
+export function siteLinks() {
+  const websiteUrl = env.WEBSITE_URL.replace(/\/$/, "");
+  return { websiteUrl, contactUrl: `${websiteUrl}/contact` };
+}
+
 /** A short-lived link to a page as it is now, published or not — for "Preview" in the console. */
 export async function previewLink(id) {
   const page = await SitePageModel.exists({ _id: id });
