@@ -57,6 +57,12 @@ export function KitchenTicket() {
 
 const Veg = ({ non }) => <span className={`m-veg${non ? " non" : ""}`} />;
 
+/** Dish photos (from Gazab Momos' own menu), stored with the website — small, square, lazy. */
+const Dish = ({ src, className }) => (
+  // eslint-disable-next-line @next/next/no-img-element
+  <img src={`/food/${src}.webp`} alt="" width="160" height="160" loading="lazy" decoding="async" className={className} />
+);
+
 function Phone({ children, title, sub }) {
   return (
     <div className="m-phone">
@@ -134,12 +140,12 @@ export function QrMock() {
           <span>Drinks</span>
         </div>
         {[
-          ["Steamed Veg Momos", "₹110", 2],
-          ["Chicken Tandoori Momos", "₹160", 0, true],
-          ["Masala Coke", "₹60", 1],
-        ].map(([name, price, qty, non]) => (
+          ["Steamed Veg Momos", "₹110", 2, false, "steamed"],
+          ["Tandoori Momos", "₹160", 0, false, "tandoori"],
+          ["Cold Coffee", "₹90", 1, false, "cold-coffee"],
+        ].map(([name, price, qty, non, img]) => (
           <div className="m-dish" key={name}>
-            <span className="m-thumb" />
+            <Dish src={img} className="m-thumb" />
             <span className="m-dish-text">
               <span>
                 <Veg non={non} /> {name}
@@ -158,7 +164,7 @@ export function QrMock() {
           </div>
         ))}
         <div className="m-cartbar">
-          <ShoppingBag size={13} /> 3 items · ₹280 <b>Place order →</b>
+          <ShoppingBag size={13} /> 3 items · ₹310 <b>Place order →</b>
         </div>
       </Phone>
       <span className="m-float m-float-a">
@@ -222,13 +228,13 @@ export function OnlineMock() {
       <div className="m-site-hero">Hot momos, at your door in 30 minutes.</div>
       <div className="m-cards">
         {[
-          ["Steamed Momos", "₹110", "a"],
-          ["Tandoori Momos", "₹160", "b"],
-          ["Kurkure Momos", "₹140", "c"],
-          ["Cold Coffee", "₹90", "d"],
-        ].map(([n, p, k]) => (
+          ["Steamed Momos", "₹110", "steamed"],
+          ["Tandoori Momos", "₹160", "tandoori"],
+          ["Paneer Momos", "₹150", "paneer"],
+          ["Cold Coffee", "₹90", "cold-coffee"],
+        ].map(([n, p, img]) => (
           <div className="m-card" key={n}>
-            <span className={`m-card-img m-img-${k}`} />
+            <Dish src={img} className="m-card-img" />
             <span className="m-card-text">
               <b>{n}</b>
               <span>{p}</span>
