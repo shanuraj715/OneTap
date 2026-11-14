@@ -209,6 +209,18 @@ function planLines(plan) {
   return lines;
 }
 
+/** One plan's row values for the comparison table: limits in words, and which features it has. */
+function planCompare(plan) {
+  const limits = planLimitsSchema.parse(plan.limits ?? {});
+  const ent = entitlementsSchema.parse(plan.entitlements ?? {});
+  return {
+    outlets: limits.multiOutlet ? (limits.maxOutlets === null ? "Unlimited" : `Up to ${limits.maxOutlets}`) : "1",
+    staff: limits.maxUsers === null ? "Unlimited" : `Up to ${limits.maxUsers}`,
+    styles: ent.effects.filter((e) => e !== "none").length,
+    features: ent.features,
+  };
+}
+
 /** The plans set to show on the website, in their display order. */
 export async function publicPricing() {
   const plans = await PlanModel.find({ archived: { $ne: true } }).lean();
@@ -225,6 +237,8 @@ export async function publicPricing() {
       pitch: m.pitch,
       highlight: m.highlight,
       lines: planLines(p),
+      // for the "compare plans" table
+      compare: planCompare(p),
     }));
 }
 

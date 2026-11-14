@@ -1,7 +1,9 @@
 import { Bricolage_Grotesque, Instrument_Sans } from "next/font/google";
 import { SiteFooter, SiteHeader } from "@/components/Chrome";
+import { NavProgress } from "@/components/NavProgress";
 import { Trail } from "@/components/Trail";
-import { getPages, getSettings, siteUrl } from "@/lib/site";
+import { getPage, getPages, getSettings, siteUrl } from "@/lib/site";
+import { slugifyHeading } from "@onetap/config-schema";
 import "./globals.css";
 
 // Self-hosted by Next at build time — no request to Google from the visitor's browser.
@@ -28,11 +30,18 @@ export const viewport = {
 };
 
 export default async function RootLayout({ children }) {
-  const [settings, pages] = await Promise.all([getSettings(), getPages()]);
+  const [settings, pages, home] = await Promise.all([getSettings(), getPages(), getPage("home").catch(() => null)]);
+  // the header's Product menu: the home page's product tabs, each opening its own tab
+  const product = (home?.sections ?? [])
+    .filter((s) => s.type === "productTabs")
+    .flatMap((s) => s.items)
+    .filter((t) => t.label)
+    .map((t) => ({ label: t.label, icon: t.icon, text: t.heading, href: `/#${slugifyHeading(t.label)}` }));
   return (
     <html lang="en-IN" className={`${display.variable} ${body.variable}`}>
       <body style={{ "--brand": settings.brandColor }}>
-        <SiteHeader settings={settings} pages={pages} />
+        <NavProgress />
+        <SiteHeader settings={settings} pages={pages} product={product} />
         {children}
         <SiteFooter settings={settings} pages={pages} />
         <Trail />

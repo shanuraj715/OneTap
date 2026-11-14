@@ -1,9 +1,11 @@
 import Link from "next/link";
-import { Check, Clock, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
-import { renderMarkdown } from "@onetap/config-schema";
+import { Check, Clock, Mail, MapPin, MessageCircle, Minus, Phone } from "lucide-react";
+import { FEATURES, renderMarkdown, slugifyHeading } from "@onetap/config-schema";
 import { getPricing } from "@/lib/site";
 import { ContactForm } from "./ContactForm";
 import { Icon } from "./Icon";
+import { KitchenTicket, ProductVisual } from "./Mockups";
+import { ProductTabs as ProductTabsClient } from "./ProductTabs";
 
 /**
  * One component per section type (SECTION_SCHEMAS in config-schema). All
@@ -77,6 +79,16 @@ function Hero({ s }) {
             <Btn link={s.primary} />
             <Btn link={s.secondary} variant="ghost" />
           </div>
+          {s.note ? (
+            <p className="hero-note">
+              {s.note.split("·").map((part, i) => (
+                <span key={i}>
+                  <Check size={15} aria-hidden="true" />
+                  {part.trim()}
+                </span>
+              ))}
+            </p>
+          ) : null}
           {s.stats.length ? (
             <ul className="stats">
               {s.stats.map((st, i) => (
@@ -101,50 +113,73 @@ function Hero({ s }) {
   );
 }
 
-/** The hero's picture when there's no photo: an order arriving on the pass, drawn in HTML. */
-function KitchenTicket() {
+/* --------------------------------------------------------------- product */
+
+function ProductTabsSection({ s, h1, page }) {
+  const items = s.items.filter((t) => t.label);
+  if (!items.length) return null;
+  const tabs = items.map((t) => ({ anchor: slugifyHeading(t.label) || "tab", label: t.label, icon: <Icon name={t.icon} size={17} /> }));
   return (
-    <div className="pass" aria-hidden="true">
-      <span className="chip-float chip-a">
-        <span className="dot">
-          <Icon name="qr-code" size={13} />
-        </span>
-        Scanned at Table 5
-      </span>
-      <div className="ticket">
-        <div className="ticket-head">
-          <span>KOT #0042</span>
-          <span>12:41</span>
+    <Wrap s={s} className="product">
+      <Head {...s} h1={h1} fallbackTitle={page.title} center />
+      <ProductTabsClient tabs={tabs}>
+        {items.map((t, i) => (
+          <div className="ptab-grid" key={i}>
+            <div className="ptab-copy">
+              <h3>{t.heading || t.label}</h3>
+              {t.text ? <p>{t.text}</p> : null}
+              {t.points.length ? (
+                <ul className="ticks">
+                  {t.points.filter(Boolean).map((pt, j) => (
+                    <li key={j}>
+                      <Check size={16} aria-hidden="true" />
+                      <span>{pt}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+              <Btn link={t.button} variant="ghost" />
+            </div>
+            <div className="ptab-visual">
+              {t.image.url ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={t.image.url} alt={t.image.alt || ""} loading="lazy" decoding="async" width="1200" height="900" />
+              ) : (
+                <ProductVisual kind={t.visual} />
+              )}
+            </div>
+          </div>
+        ))}
+      </ProductTabsClient>
+    </Wrap>
+  );
+}
+
+function Stats({ s, h1, page }) {
+  const items = s.items.filter((i) => i.value);
+  if (!items.length) return null;
+  const H = h1 ? "h1" : "h2";
+  return (
+    <section id={s.anchor || undefined} className="section">
+      <div className="wrap">
+        <div className="statband">
+          {s.heading || s.eyebrow ? (
+            <div className="statband-head">
+              {s.eyebrow ? <div className="eyebrow">{s.eyebrow}</div> : null}
+              {s.heading ? <H>{s.heading || page.title}</H> : null}
+            </div>
+          ) : null}
+          <ul className="statband-row">
+            {items.map((i, n) => (
+              <li key={n}>
+                <b>{i.value}</b>
+                <span>{i.label}</span>
+              </li>
+            ))}
+          </ul>
         </div>
-        <div className="ticket-table">Table 5</div>
-        <div className="ticket-meta">Ground floor · 4 guests · Rahul</div>
-        <hr />
-        <div className="ticket-line">
-          <span>2×</span>
-          <span>
-            Steamed Veg Momos
-            <small>Full · Mayo dip · extra cheese</small>
-            <small className="ticket-note">“less spicy”</small>
-          </span>
-        </div>
-        <div className="ticket-line" style={{ marginTop: 8 }}>
-          <span>1×</span>
-          <span>Masala Coke</span>
-        </div>
-        <hr />
-        <div className="ticket-head" style={{ fontWeight: 600 }}>
-          <span>3 items</span>
-          <span>₹400</span>
-        </div>
-        <span className="stamp">Sent to kitchen</span>
       </div>
-      <span className="chip-float chip-b">
-        <span className="dot">
-          <Icon name="coins" size={13} />
-        </span>
-        +40 coins for Rahul
-      </span>
-    </div>
+    </section>
   );
 }
 
@@ -175,7 +210,12 @@ function Audience({ s, h1, page }) {
       <Head {...s} h1={h1} fallbackTitle={page.title} />
       <div className="cards">
         {s.items.map((a, i) => (
-          <article className="card" key={i}>
+          <article className={`card tone-${i % 4}`} key={i}>
+            {a.image.url ? null : (
+              <span className="card-icon">
+                <Icon name={a.icon} size={22} />
+              </span>
+            )}
             {a.image.url ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={a.image.url} alt={a.image.alt || ""} loading="lazy" decoding="async" width="640" height="400" />
@@ -285,7 +325,11 @@ async function Pricing({ s, h1, page }) {
                   <b>{p.price}</b>
                   {p.period ? <span>{p.period}</span> : null}
                 </div>
-              ) : null}
+              ) : (
+                <div className="plan-price">
+                  <b className="on-request">Price on request</b>
+                </div>
+              )}
               {p.pitch || p.description ? <p className="plan-pitch">{p.pitch || p.description}</p> : null}
               <ul>
                 {p.lines.map((l, i) => (
@@ -309,8 +353,105 @@ async function Pricing({ s, h1, page }) {
           </Link>
         </div>
       )}
+      {plans.length && s.included.filter(Boolean).length ? (
+        <div className="included">
+          <h3>Every plan includes</h3>
+          <ul>
+            {s.included.filter(Boolean).map((x, i) => (
+              <li key={i}>
+                <Check size={16} aria-hidden="true" />
+                {x}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+      {plans.length > 1 && s.compare ? <CompareTable plans={plans} /> : null}
       {s.note ? <p className="pricing-note">{s.note}</p> : null}
     </Wrap>
+  );
+}
+
+/** Plans side by side, feature by feature — straight from what each plan unlocks. */
+function CompareTable({ plans }) {
+  const yes = <Check size={18} className="yes" aria-label="Included" />;
+  const no = <Minus size={18} className="no" aria-label="Not included" />;
+  return (
+    <div className="compare">
+      <h3>Compare plans</h3>
+      <div className="compare-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">
+                <span className="sr-only">Feature</span>
+              </th>
+              {plans.map((p) => (
+                <th scope="col" key={p.id} className={p.highlight ? "pop" : undefined}>
+                  {p.name}
+                  <small>{p.price ? `${p.price}${p.period}` : "Price on request"}</small>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Outlets</th>
+              {plans.map((p) => (
+                <td key={p.id}>{p.compare.outlets}</td>
+              ))}
+            </tr>
+            <tr>
+              <th scope="row">Staff logins</th>
+              {plans.map((p) => (
+                <td key={p.id}>{p.compare.staff}</td>
+              ))}
+            </tr>
+            {FEATURES.map((f) => (
+              <tr key={f.key}>
+                <th scope="row">
+                  {f.label}
+                  <small>{f.description}</small>
+                </th>
+                {plans.map((p) => (
+                  <td key={p.id}>{p.compare.features.includes(f.key) ? yes : no}</td>
+                ))}
+              </tr>
+            ))}
+            <tr>
+              <th scope="row">Storefront styles</th>
+              {plans.map((p) => (
+                <td key={p.id}>{p.compare.styles ? `${p.compare.styles} + classic` : "Classic"}</td>
+              ))}
+            </tr>
+            <tr>
+              <th scope="row">Setup by our team</th>
+              {plans.map((p) => (
+                <td key={p.id}>{yes}</td>
+              ))}
+            </tr>
+            <tr>
+              <th scope="row">Commission on orders</th>
+              {plans.map((p) => (
+                <td key={p.id}>None</td>
+              ))}
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td />
+              {plans.map((p) => (
+                <td key={p.id}>
+                  <Link className={`btn btn-sm ${p.highlight ? "btn-brand" : "btn-ghost"}`} href={`/contact?plan=${encodeURIComponent(p.name)}`}>
+                    Talk to us
+                  </Link>
+                </td>
+              ))}
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
   );
 }
 
@@ -467,6 +608,8 @@ async function Contact({ s, h1, page, settings }) {
 
 const RENDERERS = {
   hero: Hero,
+  productTabs: ProductTabsSection,
+  stats: Stats,
   features: Features,
   audience: Audience,
   useCases: UseCases,

@@ -1,3 +1,4 @@
+import { PRODUCT_VISUAL_LABELS, PRODUCT_VISUALS } from "@onetap/config-schema";
 import { Checkbox, Note } from "../../../ui";
 import { IconPicker, ImageField, LinkField, ListEditor, Row, Text } from "./fields";
 
@@ -20,6 +21,59 @@ function Header({ s, set, intro = true }) {
 }
 
 const FORMS = {
+  productTabs: ({ s, set, pages }) => (
+    <>
+      <Header s={s} set={set} />
+      <ListEditor
+        label="Tabs"
+        items={s.items}
+        onChange={(v) => set({ items: v })}
+        newItem={() => ({ label: "", icon: "zap", heading: "", text: "", points: [], visual: "dashboard", image: { url: "", alt: "" }, button: { label: "", href: "" } })}
+        max={6}
+        itemTitle={(i) => i.label}
+      >
+        {(it, up) => (
+          <>
+            <Row>
+              <Text label="Tab name" value={it.label} onChange={(v) => up({ label: v })} max={30} placeholder="QR ordering" hint="Also appears in the header's Product menu." />
+              <Text label="Heading" value={it.heading} onChange={(v) => up({ heading: v })} max={120} />
+            </Row>
+            <IconPicker value={it.icon} onChange={(v) => up({ icon: v })} />
+            <Text label="Text" value={it.text} onChange={(v) => up({ text: v })} max={400} multiline rows={3} />
+            <ListEditor label="Points (ticked list)" items={it.points.map((x) => ({ x }))} onChange={(v) => up({ points: v.map((i) => i.x) })} newItem={() => ({ x: "" })} max={6} itemTitle={(i) => i.x}>
+              {(pt, upPt) => <Text label="Point" value={pt.x} onChange={(v) => upPt({ x: v })} max={120} />}
+            </ListEditor>
+            <label style={{ display: "flex", flexDirection: "column", gap: 6, fontSize: 12.5, fontWeight: 600 }}>
+              Picture
+              <select value={it.visual} onChange={(e) => up({ visual: e.target.value })} style={{ font: "inherit", padding: "8px 10px", borderRadius: 8, border: "1px solid var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)" }}>
+                {PRODUCT_VISUALS.map((v) => (
+                  <option key={v} value={v}>
+                    {PRODUCT_VISUAL_LABELS[v]} (drawn by the website)
+                  </option>
+                ))}
+              </select>
+            </label>
+            <ImageField label="…or your own screenshot (replaces the drawn picture)" value={it.image} onChange={(v) => up({ image: v })} />
+            <LinkField label="Button (optional)" value={it.button} onChange={(v) => up({ button: v })} pages={pages} />
+          </>
+        )}
+      </ListEditor>
+    </>
+  ),
+  stats: ({ s, set }) => (
+    <>
+      <Note>Use numbers that are true for TablePe — they're presented as facts.</Note>
+      <Header s={s} set={set} intro={false} />
+      <ListEditor label="Numbers" items={s.items} onChange={(v) => set({ items: v })} newItem={() => ({ value: "", label: "" })} max={6} itemTitle={(i) => i.value}>
+        {(it, up) => (
+          <Row>
+            <Text label="Number" value={it.value} onChange={(v) => up({ value: v })} max={20} placeholder="0%" />
+            <Text label="What it means" value={it.label} onChange={(v) => up({ label: v })} max={80} placeholder="commission on any order" />
+          </Row>
+        )}
+      </ListEditor>
+    </>
+  ),
   hero: ({ s, set, pages }) => (
     <>
       <Text label="Small label above the headline" value={s.eyebrow} onChange={(v) => set({ eyebrow: v })} max={60} />
@@ -37,6 +91,14 @@ const FORMS = {
         <LinkField label="Main button" value={s.primary} onChange={(v) => set({ primary: v })} pages={pages} />
         <LinkField label="Second button" value={s.secondary} onChange={(v) => set({ secondary: v })} pages={pages} />
       </Row>
+      <Text
+        label="Reassurance line under the buttons"
+        value={s.note}
+        onChange={(v) => set({ note: v })}
+        max={140}
+        placeholder="Set up for you · No commission · No app for your guests"
+        hint="Separate points with · — each gets a tick."
+      />
       <ImageField label="Picture (optional — without one, the kitchen-ticket illustration shows)" value={s.image} onChange={(v) => set({ image: v })} />
       <ListEditor label="Numbers" items={s.stats} onChange={(v) => set({ stats: v })} newItem={() => ({ value: "", label: "" })} max={4} itemTitle={(i) => i.value}>
         {(it, up) => (
@@ -68,6 +130,7 @@ const FORMS = {
       <ListEditor label="Kinds of restaurant" items={s.items} onChange={(v) => set({ items: v })} newItem={() => ({ title: "", text: "", image: { url: "", alt: "" } })} max={8} itemTitle={(i) => i.title}>
         {(it, up) => (
           <>
+            <IconPicker value={it.icon} onChange={(v) => up({ icon: v })} />
             <Text label="Title" value={it.title} onChange={(v) => up({ title: v })} max={80} placeholder="Cafés & quick-service" />
             <Text label="Text" value={it.text} onChange={(v) => up({ text: v })} max={300} multiline rows={2} />
             <ImageField label="Picture (optional)" value={it.image} onChange={(v) => up({ image: v })} />
@@ -129,6 +192,10 @@ const FORMS = {
     <>
       <Note>The cards come from your Plans — tick "Show on the website" and set a price in Plans → Edit. Each card's button opens Contact with that plan picked.</Note>
       <Header s={s} set={set} />
+      <ListEditor label="Every plan includes" items={s.included.map((x) => ({ x }))} onChange={(v) => set({ included: v.map((i) => i.x) })} newItem={() => ({ x: "" })} max={8} itemTitle={(i) => i.x}>
+        {(it, up) => <Text label="Point" value={it.x} onChange={(v) => up({ x: v })} max={80} placeholder="No commission on any order" />}
+      </ListEditor>
+      <Checkbox checked={s.compare} onChange={(v) => set({ compare: v })} label="Show a “Compare plans” table under the cards (built from each plan's features)" />
       <Text label="Note under the cards" value={s.note} onChange={(v) => set({ note: v })} max={300} placeholder="Prices exclude GST." />
     </>
   ),

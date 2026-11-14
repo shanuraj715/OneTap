@@ -36,7 +36,39 @@ export const SITE_ICONS = [
   "utensils",
   "bike",
   "receipt",
+  "coffee",
+  "chef-hat",
+  "soup",
+  "headset",
+  "rocket",
+  "sparkles",
+  "credit-card",
+  "monitor",
+  "wallet",
+  "badge-percent",
+  "layout-dashboard",
+  "timer",
+  "gift",
+  "scan-line",
+  "shopping-bag",
+  "truck",
+  "calendar-check",
 ];
+
+/**
+ * The product pictures the website draws itself (HTML, not images — sharp at
+ * any size and nothing to download). A section can show one of these, or an
+ * uploaded screenshot instead.
+ */
+export const PRODUCT_VISUALS = ["dashboard", "qr", "staff", "online", "kitchen", "loyalty"];
+export const PRODUCT_VISUAL_LABELS = {
+  dashboard: "Live orders screen",
+  qr: "QR ordering on a phone",
+  staff: "Staff taking an order",
+  online: "Your ordering website",
+  kitchen: "Kitchen ticket",
+  loyalty: "Coins & coupons",
+};
 const iconSchema = z.enum(SITE_ICONS).default("zap");
 
 const base = { id: z.string().min(1).max(40), anchor: str(40) };
@@ -53,6 +85,34 @@ export const SECTION_SCHEMAS = {
     secondary: siteLinkSchema.default({}),
     image: siteImageSchema.default({}),
     stats: z.array(z.object({ value: str(20), label: str(60) })).max(4).default([]),
+    /** a line of reassurance under the buttons — "Set up for you · No commission · Cancel anytime" */
+    note: str(140),
+  }),
+  productTabs: z.object({
+    ...base,
+    type: z.literal("productTabs"),
+    ...header,
+    items: z
+      .array(
+        z.object({
+          label: str(30),
+          icon: iconSchema,
+          heading: str(120),
+          text: str(400),
+          points: z.array(str(120)).max(6).default([]),
+          visual: z.enum(PRODUCT_VISUALS).default("dashboard"),
+          image: siteImageSchema.default({}),
+          button: siteLinkSchema.default({}),
+        }),
+      )
+      .max(6)
+      .default([]),
+  }),
+  stats: z.object({
+    ...base,
+    type: z.literal("stats"),
+    ...header,
+    items: z.array(z.object({ value: str(20), label: str(80) })).max(6).default([]),
   }),
   features: z.object({
     ...base,
@@ -64,7 +124,7 @@ export const SECTION_SCHEMAS = {
     ...base,
     type: z.literal("audience"),
     ...header,
-    items: z.array(z.object({ title: str(80), text: str(300), image: siteImageSchema.default({}) })).max(8).default([]),
+    items: z.array(z.object({ icon: iconSchema, title: str(80), text: str(300), image: siteImageSchema.default({}) })).max(8).default([]),
   }),
   useCases: z.object({
     ...base,
@@ -90,6 +150,10 @@ export const SECTION_SCHEMAS = {
     ...header,
     /** under the cards — e.g. "Prices exclude GST. Setup is included." */
     note: str(300),
+    /** "Every plan includes" — shown under the cards */
+    included: z.array(str(80)).max(8).default([]),
+    /** a feature-by-feature table of the plans, under the cards */
+    compare: bool(false),
   }),
   faq: z.object({
     ...base,
@@ -135,7 +199,9 @@ export const siteSectionSchema = z.discriminatedUnion("type", Object.values(SECT
 
 /** What the console shows when adding a section, and the empty section it starts from. */
 export const SECTION_META = {
-  hero: { label: "Hero", description: "The big opening: headline, buttons, image and a few numbers." },
+  hero: { label: "Hero", description: "The big opening: headline, buttons, the product picture and a few numbers." },
+  productTabs: { label: "Product tabs", description: "One tab per product area — text, points and a product picture." },
+  stats: { label: "Stats band", description: "A bold band of a few big numbers." },
   features: { label: "Features", description: "Why use us — a grid of icon, title and text." },
   audience: { label: "Who it's for", description: "The kinds of restaurants you serve." },
   useCases: { label: "When to use it", description: "The moments a restaurant needs you." },

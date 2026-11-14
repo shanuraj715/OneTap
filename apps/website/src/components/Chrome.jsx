@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { Menu } from "lucide-react";
+import { ChevronDown, Menu } from "lucide-react";
 import { pathFor } from "@/lib/site";
+import { Icon } from "./Icon";
 
 /**
  * The header and footer every page shares. Server-rendered; the mobile menu
@@ -24,7 +25,36 @@ function Brand({ settings }) {
 const navPages = (pages) =>
   pages.filter((p) => p.nav?.show && p.slug !== "home").sort((a, b) => (a.nav.order ?? 50) - (b.nav.order ?? 50));
 
-export function SiteHeader({ settings, pages }) {
+/**
+ * The Product dropdown (desktop header): opens on hover, and on keyboard
+ * focus or a tap on the button — CSS only, no JavaScript. Phones get the same
+ * links inside the Menu instead.
+ */
+function ProductMenu({ items }) {
+  if (!items.length) return null;
+  return (
+    <div className="dd">
+      <button type="button" className="dd-btn" aria-haspopup="true">
+        Product <ChevronDown size={14} aria-hidden="true" />
+      </button>
+      <div className="dd-panel">
+        {items.map((it) => (
+          <Link key={it.href} href={it.href} className="dd-item">
+            <span className="dd-icon">
+              <Icon name={it.icon} size={17} />
+            </span>
+            <span>
+              <b>{it.label}</b>
+              {it.text ? <small>{it.text}</small> : null}
+            </span>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export function SiteHeader({ settings, pages, product = [] }) {
   const nav = navPages(pages);
   const contact = pages.some((p) => p.slug === "contact");
   const ctaHref = contact ? "/contact" : settings.contact.phone ? `tel:${settings.contact.phone.replace(/\s/g, "")}` : "/";
@@ -42,6 +72,7 @@ export function SiteHeader({ settings, pages }) {
         <div className="wrap">
           <Brand settings={settings} />
           <nav className="nav" aria-label="Main">
+            <ProductMenu items={product} />
             {nav.map((p) => (
               <Link key={p.slug} href={pathFor(p.slug)}>
                 {p.nav.label || p.title}
@@ -56,6 +87,13 @@ export function SiteHeader({ settings, pages }) {
               <Menu size={18} aria-hidden="true" /> Menu
             </summary>
             <div className="menu-panel">
+              {product.length ? <span className="menu-label">Product</span> : null}
+              {product.map((it) => (
+                <Link key={it.href} href={it.href} className="menu-sub">
+                  <Icon name={it.icon} size={16} /> {it.label}
+                </Link>
+              ))}
+              {product.length ? <span className="menu-label">More</span> : null}
               {nav.map((p) => (
                 <Link key={p.slug} href={pathFor(p.slug)}>
                   {p.nav.label || p.title}
