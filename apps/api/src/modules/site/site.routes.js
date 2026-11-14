@@ -3,6 +3,7 @@ import { z } from "zod";
 import { IMAGE_RULES, LEAD_STATUSES } from "@onetap/config-schema";
 import { requireSuperAdmin, requireUser } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
+import { clientIp, issueChallenge, tooMany } from "./guard.js";
 import * as site from "./site.service.js";
 
 /* ===================================================================== public */
@@ -42,9 +43,16 @@ siteRouter.get("/preview/:id", async (req, res) => {
   res.json({ page: await site.getPreviewPage(req.params.id, req.query.t) });
 });
 
+/** A fresh spam-guard challenge for the contact form to solve before it sends. Never cached. */
+siteRouter.get("/challenge", (req, res) => {
+  res.set("Cache-Control", "no-store");
+  if (tooMany(`challenge:${clientIp(req)}`, 40, 10 * 60 * 1000)) throw new HttpError(429, "Too many requests — please wait a moment.");
+  res.json(issueChallenge());
+});
+
 /** The contact form. */
 siteRouter.post("/leads", async (req, res) => {
-  res.status(201).json(await site.createLead(req.body ?? {}, { ip: req.ip }));
+  res.status(201).json(await site.createLead(req.body ?? {}, { ip: clientIp(req) }));
 });
 
 /* =================================================================== platform */

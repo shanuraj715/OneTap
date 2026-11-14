@@ -33,6 +33,14 @@ const schema = z.object({
    */
   WEBSITE_URL: z.string().default("http://localhost:3073"),
   WEBSITE_REVALIDATE_SECRET: z.string().default("dev-only-website-revalidate-secret"),
+  /**
+   * Cloudflare Turnstile for the website's enquiry form — a real "are you a
+   * person" check on top of the built-in spam guard. Both blank = off. Create
+   * a widget at dash.cloudflare.com → Turnstile; the site key is public, the
+   * secret key stays here.
+   */
+  TURNSTILE_SITE_KEY: z.string().default(""),
+  TURNSTILE_SECRET_KEY: z.string().default(""),
 });
 
 const parsed = schema.safeParse(process.env);

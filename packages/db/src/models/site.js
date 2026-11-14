@@ -52,6 +52,10 @@ const leadSchema = new Schema(
     message: { type: String, default: "" },
     sourcePage: { type: String, default: "" },
     utm: { type: Schema.Types.Mixed, default: () => ({}) },
+    /** spam guard: a non-reversible stand-in for the sender's address, their number's last 10 digits, and the one-time token they submitted with */
+    ipHash: { type: String, default: "", index: true },
+    phoneKey: { type: String, default: "", index: true },
+    challengeId: { type: String, index: { unique: true, sparse: true } },
     status: { type: String, enum: ["new", "contacted", "won", "lost"], default: "new", index: true },
     notes: {
       type: [
