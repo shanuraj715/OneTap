@@ -263,7 +263,7 @@ function Logos({ s, h1, page }) {
             {s.items.map((l, i) => {
               const body = l.logo ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={l.logo} alt={l.name} loading="lazy" decoding="async" width="140" height="36" />
+                <img src={l.logo} alt={l.name} loading="lazy" decoding="async" width="190" height="60" />
               ) : (
                 l.name
               );

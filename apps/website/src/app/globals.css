@@ -207,11 +207,16 @@ p { margin: 0; text-wrap: pretty; }
 .moment p { color: var(--muted); font-size: 15.5px; }
 
 /* ---------------------------------------------------------------- logos */
-.logos-row { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 40px; }
+.logos-row { display: flex; flex-wrap: wrap; align-items: center; gap: 22px 52px; }
 .logos-row.center { justify-content: center; }
 .logo-item { font-family: var(--font-display); font-weight: 800; font-size: 22px; letter-spacing: -0.02em; color: var(--ink-2); text-decoration: none; }
-.logo-item img { height: 36px; width: auto; filter: grayscale(1); opacity: 0.8; }
-.logo-item:hover img { filter: none; opacity: 1; }
+/* a logo rests slightly muted so the row sits quietly, and shows its true colours on hover or keyboard focus */
+.logo-item { display: inline-flex; align-items: center; }
+.logo-item img { height: 60px; width: auto; max-width: 190px; object-fit: contain; filter: grayscale(0.3); opacity: 0.92; transition: filter 0.2s ease, opacity 0.2s ease, transform 0.2s ease; }
+.logo-item:hover img, .logo-item:focus-visible img { filter: none; opacity: 1; transform: scale(1.06); }
+.logo-item:focus-visible { outline: 2px solid var(--brand); outline-offset: 6px; border-radius: 6px; }
+@media (max-width: 640px) { .logos-row { gap: 18px 32px; } .logo-item img { height: 46px; max-width: 150px; } }
+@media (prefers-reduced-motion: reduce) { .logo-item img { transition: none; } .logo-item:hover img, .logo-item:focus-visible img { transform: none; } }
 .logos-band { display: flex; flex-direction: column; gap: 20px; align-items: center; text-align: center; padding: 36px 0; border-block: 1px solid var(--line); }
 .logos-band p { font-size: 14px; font-weight: 600; color: var(--muted); letter-spacing: 0.02em; }
 
