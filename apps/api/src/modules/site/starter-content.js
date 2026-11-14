@@ -284,7 +284,7 @@ const pricing = {
         "New features as TablePe improves",
       ],
       compare: true,
-      note: "Prices shown exclude GST. Online payment gateway charges are billed by your gateway, not by us.",
+      note: "Prices shown exclude GST. Online payment and SMS/WhatsApp message charges are billed by those providers, not by us.",
     },
     { id: id("faq"), type: "faq", eyebrow: "Questions", heading: "About plans and setup", items: [FAQ_CORE[0], FAQ_CORE[1], FAQ_MORE[0], FAQ_MORE[4]] },
     { id: id("cta"), type: "cta", heading: "Not sure which plan?", text: "Tell us how many outlets and staff you have — we'll recommend one.", button: { label: "Talk to us", href: "/contact" } },
