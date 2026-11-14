@@ -1,35 +1,14 @@
-import mongoose, {            } from "mongoose";
-import { ROLES,           } from "@onetap/config-schema";
+import mongoose from "mongoose";
+import { ROLES } from "@onetap/config-schema";
 
 const { Schema, model, models } = mongoose;
-
-                             
-                  
-             
-                                          
-                      
- 
-
-                          
-              
-                
-               
-                       
-                                                          
-                        
-                            
-                    
-                     
-                  
-                  
- 
 
 /**
  * Users are NOT tenant-scoped: login looks them up by email before any tenant is
  * known. Access is granted by `memberships`, and every brand-scoped query in the
  * user service filters on those explicitly.
  */
-const userSchema = new Schema         (
+const userSchema = new Schema(
   {
     email: { type: String, required: true, unique: true, lowercase: true, trim: true, index: true },
     name: { type: String, required: true, trim: true },
@@ -37,7 +16,7 @@ const userSchema = new Schema         (
     isSuperAdmin: { type: Boolean, default: false },
     memberships: {
       type: [
-        new Schema            (
+        new Schema(
           {
             brandId: { type: String, required: true, index: true },
             role: { type: String, enum: ROLES, required: true },
@@ -56,23 +35,11 @@ const userSchema = new Schema         (
   { timestamps: true },
 );
 
-export const UserModel                 =
-  (models.User                              ) ?? model         ("User", userSchema);
+export const UserModel = models.User ?? model("User", userSchema);
 
 /* ------------------------------------------------------------------ session */
 
-                             
-              
-                                                                                 
-                    
-                 
-                  
-                     
-              
-                  
- 
-
-const sessionSchema = new Schema            (
+const sessionSchema = new Schema(
   {
     tokenHash: { type: String, required: true, unique: true, index: true },
     userId: { type: String, required: true, index: true },
@@ -86,5 +53,4 @@ const sessionSchema = new Schema            (
 // Mongo drops expired sessions on its own.
 sessionSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
-export const SessionModel                    =
-  (models.Session                                 ) ?? model            ("Session", sessionSchema);
+export const SessionModel = models.Session ?? model("Session", sessionSchema);

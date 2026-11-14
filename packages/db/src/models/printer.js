@@ -1,4 +1,4 @@
-import mongoose, {                                   } from "mongoose";
+import mongoose from "mongoose";
 import {
   ALIGNS,
   COLOR_MODES,
@@ -10,44 +10,12 @@ import {
   PRINT_STATIONS,
   PRINT_TARGETS,
   SIZES,
-                   
-                 
-                  
-                    
-                         
-                      
-                    
-                   
 } from "@onetap/config-schema";
 import { tenantScope } from "../tenant-scope.js";
 
 const { Schema, model, models } = mongoose;
 
 /* ---------------------------------------------------------------- printers */
-
-                             
-              
-                  
-                   
-               
-                        
-                        
-                      
-                         
-                            
-                                
-                        
-                     
-                 
-                    
-                      
-                    
-                        
-                           
-                           
-                  
-                  
- 
 
 const connection = new Schema(
   {
@@ -64,7 +32,7 @@ const connection = new Schema(
   { _id: false },
 );
 
-const printerSchema = new Schema            (
+const printerSchema = new Schema(
   {
     name: { type: String, required: true, trim: true },
     station: { type: String, enum: PRINT_STATIONS, required: true, index: true },
@@ -90,30 +58,9 @@ const printerSchema = new Schema            (
 printerSchema.plugin(tenantScope);
 printerSchema.index({ brandId: 1, outletId: 1, name: 1 }, { unique: true });
 
-export const PrinterModel                    =
-  (models.Printer                                 ) ?? model            ("Printer", printerSchema);
+export const PrinterModel = models.Printer ?? model("Printer", printerSchema);
 
 /* --------------------------------------------------------------- templates */
-
-                                   
-              
-                  
-                   
-               
-                        
-                         
-                       
-                  
-                       
-                        
-                                                                     
-                        
-                              
-                    
-                     
-                  
-                  
- 
 
 const blockSchema = new Schema(
   {
@@ -128,7 +75,7 @@ const blockSchema = new Schema(
   { _id: false },
 );
 
-const templateSchema = new Schema                  (
+const templateSchema = new Schema(
   {
     name: { type: String, required: true, trim: true },
     docType: { type: String, enum: PRINT_DOCS, required: true, index: true },
@@ -151,68 +98,17 @@ const templateSchema = new Schema                  (
 templateSchema.plugin(tenantScope);
 templateSchema.index({ brandId: 1, outletId: 1, docType: 1 });
 
-export const PrintTemplateModel                          =
-  (models.PrintTemplate                                       ) ??
-  model                  ("PrintTemplate", templateSchema);
+export const PrintTemplateModel =
+  models.PrintTemplate ?? model("PrintTemplate", templateSchema);
 
 /* -------------------------------------------------------------------- jobs */
 
-                               
-           
-              
-                 
-                                                                               
-              
-              
- 
-
-                              
-              
-                  
-                   
-                    
-                                                                                   
-                      
-                        
-                      
-                        
-                         
-                         
-                             
-                                                                              
-                                                                          
-            
-                 
-                 
-                                                                 
-                    
-                                   
-    
-                 
-                       
-                      
-                           
-                           
-                             
-                                                                 
-                         
-                     
-                           
-                             
-                                                                   
-                           
-                         
-                         
-                  
-                  
- 
-
-const attemptSchema = new Schema              (
+const attemptSchema = new Schema(
   { at: Date, ok: Boolean, error: String, ms: Number, by: String },
   { _id: false },
 );
 
-const jobSchema = new Schema             (
+const jobSchema = new Schema(
   {
     printerId: { type: String, required: true, index: true },
     printerName: { type: String, default: "" },
@@ -252,10 +148,4 @@ jobSchema.index({ brandId: 1, idempotencyKey: 1 }, { unique: true });
 // The dispatcher's hot path.
 jobSchema.index({ status: 1, nextAttemptAt: 1 });
 
-export const PrintJobModel                     =
-  (models.PrintJob                                  ) ?? model             ("PrintJob", jobSchema);
-
-/** Live documents — these have `.save()`, unlike the plain `*Doc` shapes. */
-                                                           
-                                                             
-                                                                       
+export const PrintJobModel = models.PrintJob ?? model("PrintJob", jobSchema);

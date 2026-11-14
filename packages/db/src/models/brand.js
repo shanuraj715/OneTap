@@ -1,21 +1,12 @@
-import mongoose, {            } from "mongoose";
+import mongoose from "mongoose";
 
 const { Schema, model, models } = mongoose;
-
-                           
-              
-               
-               
-                     
-                  
-                  
- 
 
 /**
  * A brand is the tenant root — it is NOT tenant-scoped itself. Everything below it
  * (outlets, menu, orders, ...) carries this brand's id and goes through tenant-scope.
  */
-const brandSchema = new Schema          (
+const brandSchema = new Schema(
   {
     name: { type: String, required: true, trim: true },
     slug: { type: String, required: true, unique: true, lowercase: true, trim: true },
@@ -36,5 +27,4 @@ const brandSchema = new Schema          (
   { timestamps: true },
 );
 
-export const BrandModel                  =
-  (models.Brand                               ) ?? model          ("Brand", brandSchema);
+export const BrandModel = models.Brand ?? model("Brand", brandSchema);

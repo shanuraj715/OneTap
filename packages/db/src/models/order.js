@@ -1,76 +1,16 @@
-import mongoose, {            } from "mongoose";
+import mongoose from "mongoose";
 import {
   GATEWAYS,
   ORDER_CHANNELS,
   ORDER_STATUSES,
   PAYMENT_STATUSES,
   PLACED_BY_VALUES,
-               
-                     
-                    
-                   
-                   
-                
-                  
 } from "@onetap/config-schema";
 import { tenantScope } from "../tenant-scope.js";
 
 const { Schema, model, models } = mongoose;
 
-                           
-              
-                  
-                   
-                                                             
-                      
-                        
-                                                                                   
-                     
-                                                                                                 
-                   
-                     
-                      
-                                                                                   
-                                                                   
-                      
-                      
-                            
-                                                                           
-                               
-                   
-                     
-                                                                            
-                      
-                                                                        
-                     
-                 
-                
-                
-                       
-                      
-    
-                                                   
-                      
-                
-     
-                                                                               
-                                                                               
-                                                                     
-     
-                  
-                        
-             
-                
-                     
-                     
-                       
-                    
-      
-                  
-                  
- 
-
-const orderSchema = new Schema          (
+const orderSchema = new Schema(
   {
     orderNumber: { type: String, required: true },
     // The `YYYYMMDD` the number was issued on — the counter that produces
@@ -134,29 +74,22 @@ orderSchema.plugin(tenantScope);
 orderSchema.index({ brandId: 1, outletId: 1, createdAt: -1 });
 orderSchema.index({ brandId: 1, outletId: 1, orderDay: 1, orderNumber: 1 }, { unique: true });
 
-export const OrderModel                  =
-  (models.Order                               ) ?? model          ("Order", orderSchema);
+export const OrderModel = models.Order ?? model("Order", orderSchema);
 
 /* ------------------------------------------------------------------ counters */
 
-                             
-              
-              
- 
-
-const counterSchema = new Schema            ({
+const counterSchema = new Schema({
   _id: { type: String },
   seq: { type: Number, default: 0 },
 });
 
-export const CounterModel                    =
-  (models.Counter                                 ) ?? model            ("Counter", counterSchema);
+export const CounterModel = models.Counter ?? model("Counter", counterSchema);
 
 /**
  * Atomic, gap-free sequence. Used for daily order numbers now and for GST
  * invoice numbers later, where gapless numbering is a legal requirement.
  */
-export async function nextSequence(key        )                  {
+export async function nextSequence(key) {
   const doc = await CounterModel.findOneAndUpdate(
     { _id: key },
     { $inc: { seq: 1 } },

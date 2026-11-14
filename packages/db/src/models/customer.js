@@ -29,26 +29,11 @@ const customerSchema = new Schema(
 customerSchema.index({ brandId: 1, phone: 1 });
 customerSchema.index({ brandId: 1, email: 1 });
 
-export const CustomerModel                     =
-  (models.Customer                                  ) ?? model             ("Customer", customerSchema);
+export const CustomerModel = models.Customer ?? model("Customer", customerSchema);
 
 /* ---------------------------------------------------------------------- otp */
 
-                                  
-              
-                  
-                   
-                                      
-                      
-                           
-                   
-                   
-                  
-                    
-                  
- 
-
-const otpSchema = new Schema                 (
+const otpSchema = new Schema(
   {
     brandId: { type: String, required: true, index: true },
     outletId: { type: String, required: true },
@@ -67,22 +52,11 @@ const otpSchema = new Schema                 (
 );
 otpSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
-export const OtpChallengeModel                         =
-  (models.OtpChallenge                                      ) ??
-  model                 ("OtpChallenge", otpSchema);
+export const OtpChallengeModel = models.OtpChallenge ?? model("OtpChallenge", otpSchema);
 
 /* ----------------------------------------------------------- customer session */
 
-                                     
-              
-                    
-                     
-                  
-                  
-                  
- 
-
-const customerSessionSchema = new Schema                    (
+const customerSessionSchema = new Schema(
   {
     tokenHash: { type: String, required: true, unique: true, index: true },
     customerId: { type: String, required: true },
@@ -93,6 +67,5 @@ const customerSessionSchema = new Schema                    (
 );
 customerSessionSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
-export const CustomerSessionModel                            =
-  (models.CustomerSession                                         ) ??
-  model                    ("CustomerSession", customerSessionSchema);
+export const CustomerSessionModel =
+  models.CustomerSession ?? model("CustomerSession", customerSessionSchema);

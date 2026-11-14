@@ -1,10 +1,9 @@
-import mongoose, {            } from "mongoose";
+import mongoose from "mongoose";
 import { tenantScope } from "../tenant-scope.js";
 
 const { Schema, model, models } = mongoose;
 
-export const WALLET_LEDGER_KINDS = ["earn", "redeem", "reverse"]         ;
-                                                                    
+export const WALLET_LEDGER_KINDS = ["earn", "redeem", "reverse"];
 
 /**
  * One row per coin movement — the audit trail for the loyalty wallet, and the
@@ -14,24 +13,7 @@ export const WALLET_LEDGER_KINDS = ["earn", "redeem", "reverse"]         ;
  * attempt's `create` just hits a duplicate-key error and is treated as a
  * no-op, exactly like {@link CouponRedemptionModel}.
  */
-                                  
-              
-                  
-                   
-                     
-                                                                                 
-                   
-                       
-                         
-                                                              
-                
-                                                                                  
-                       
-                 
-                  
- 
-
-const walletLedgerSchema = new Schema                 (
+const walletLedgerSchema = new Schema(
   {
     customerId: { type: String, required: true, index: true },
     orderId: { type: String },
@@ -50,6 +32,5 @@ walletLedgerSchema.index(
 );
 walletLedgerSchema.index({ brandId: 1, outletId: 1, customerId: 1, createdAt: -1 });
 
-export const WalletLedgerModel                         =
-  (models.WalletLedger                                      ) ??
-  model                 ("WalletLedger", walletLedgerSchema);
+export const WalletLedgerModel =
+  models.WalletLedger ?? model("WalletLedger", walletLedgerSchema);

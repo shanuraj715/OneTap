@@ -1,25 +1,10 @@
-import mongoose, {            } from "mongoose";
-import { defaultOutletConfig,                   } from "@onetap/config-schema";
+import mongoose from "mongoose";
+import { defaultOutletConfig } from "@onetap/config-schema";
 import { tenantScope } from "../tenant-scope.js";
 
 const { Schema, model, models } = mongoose;
 
-                            
-              
-                  
-                    
-               
-               
-                                                                              
-                      
-                                                          
-                            
-                       
-                  
-                  
- 
-
-const outletSchema = new Schema           (
+const outletSchema = new Schema(
   {
     name: { type: String, required: true, trim: true },
     slug: { type: String, required: true, lowercase: true, trim: true },
@@ -39,5 +24,4 @@ outletSchema.plugin(tenantScope);
 outletSchema.index({ brandId: 1, slug: 1 }, { unique: true });
 outletSchema.index({ hostnames: 1 });
 
-export const OutletModel                   =
-  (models.Outlet                                ) ?? model           ("Outlet", outletSchema);
+export const OutletModel = models.Outlet ?? model("Outlet", outletSchema);

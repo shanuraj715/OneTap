@@ -1,12 +1,5 @@
-                                                                
-
-                                
-                  
-                    
- 
-
 /** Query operations that must be tenant-scoped. */
-const GUARDED_OPS                            = [
+const GUARDED_OPS = [
   "countDocuments",
   "deleteMany",
   "deleteOne",
@@ -31,15 +24,15 @@ const GUARDED_OPS                            = [
  *
  * Scope every query with {@link tenantFilter}.
  */
-export function tenantScope(schema        )       {
+export function tenantScope(schema) {
   schema.add({
     brandId: { type: String, required: true, index: true },
     outletId: { type: String, required: false, index: true },
   });
 
-  schema.pre(GUARDED_OPS, function guard(         ) {
-    const options = (this.getOptions?.() ?? {})                           ;
-    const filter = (this.getFilter?.() ?? this.getQuery?.() ?? {})                           ;
+  schema.pre(GUARDED_OPS, function guard() {
+    const options = this.getOptions?.() ?? {};
+    const filter = this.getFilter?.() ?? this.getQuery?.() ?? {};
     const scoped = filter.brandId != null || options.tenantScoped === true;
 
     if (!scoped && options.allowGlobalQuery !== true) {
@@ -51,7 +44,7 @@ export function tenantScope(schema        )       {
     }
   });
 
-  schema.pre("save", function guardSave(         ) {
+  schema.pre("save", function guardSave() {
     if (!this.brandId) {
       throw new Error(
         `[tenant-scope] Cannot save "${this.constructor?.modelName ?? "document"}" without brandId.`,
@@ -59,7 +52,7 @@ export function tenantScope(schema        )       {
     }
   });
 
-  schema.pre("insertMany", function guardInsertMany(           next                       , docs       ) {
+  schema.pre("insertMany", function guardInsertMany(next, docs) {
     if (!Array.isArray(docs) || docs.some((d) => !d || !d.brandId)) {
       next(new Error("[tenant-scope] insertMany requires brandId on every document."));
       return;
@@ -73,10 +66,7 @@ export function tenantScope(schema        )       {
  *
  *   OutletModel.find(tenantFilter(ctx, { slug: "laxmi-nagar" }))
  */
-export function tenantFilter(
-  ctx               ,
-  extra                          = {},
-)                          {
+export function tenantFilter(ctx, extra = {}) {
   return {
     ...extra,
     brandId: ctx.brandId,
@@ -91,9 +81,6 @@ export function tenantFilter(
  * models is saved with no `outletId` at all (still schema-legal — see
  * `tenantScope` above), so this always finds that one shared row.
  */
-export function brandFilter(
-  ctx               ,
-  extra                          = {},
-)                          {
+export function brandFilter(ctx, extra = {}) {
   return { ...extra, brandId: ctx.brandId };
 }
