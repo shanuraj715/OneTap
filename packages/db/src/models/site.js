@@ -1,0 +1,70 @@
+import mongoose from "mongoose";
+
+const { Schema, model, models } = mongoose;
+
+/**
+ * The TablePe marketing website. Platform-level (not tenant-scoped): it's
+ * TablePe's own site, managed by the platform super admin. Section contents
+ * are validated by `sitePageSchema` / `siteSettingsSchema` (config-schema) in
+ * the service, so the stored shapes are Mixed here.
+ */
+
+const sitePageSchema = new Schema(
+  {
+    /** "home" is served at "/" */
+    slug: { type: String, required: true, unique: true, lowercase: true, trim: true },
+    title: { type: String, required: true, trim: true },
+    status: { type: String, enum: ["draft", "published"], default: "draft", index: true },
+    seo: { type: Schema.Types.Mixed, default: () => ({}) },
+    nav: { type: Schema.Types.Mixed, default: () => ({}) },
+    footerGroup: { type: String, default: "" },
+    sections: { type: [Schema.Types.Mixed], default: [] },
+    /** built-in pages (home, contact, privacy, terms) can be edited but not deleted */
+    system: { type: Boolean, default: false },
+    publishedAt: { type: Date, default: null },
+    updatedBy: { type: String, default: null },
+  },
+  { timestamps: true },
+);
+
+export const SitePageModel = models.SitePage ?? model("SitePage", sitePageSchema);
+
+const siteSettingsSchema = new Schema(
+  {
+    key: { type: String, required: true, unique: true, default: "site" },
+    data: { type: Schema.Types.Mixed, default: () => ({}) },
+  },
+  { timestamps: true },
+);
+
+export const SiteSettingsModel = models.SiteSettings ?? model("SiteSettings", siteSettingsSchema);
+
+/** An enquiry from the website's contact form. */
+const leadSchema = new Schema(
+  {
+    name: { type: String, required: true, trim: true },
+    phone: { type: String, required: true, trim: true },
+    email: { type: String, default: "" },
+    businessName: { type: String, default: "" },
+    city: { type: String, default: "" },
+    outlets: { type: String, default: "" },
+    plan: { type: String, default: "" },
+    message: { type: String, default: "" },
+    sourcePage: { type: String, default: "" },
+    utm: { type: Schema.Types.Mixed, default: () => ({}) },
+    status: { type: String, enum: ["new", "contacted", "won", "lost"], default: "new", index: true },
+    notes: {
+      type: [
+        new Schema(
+          { text: { type: String, required: true }, at: { type: Date, default: () => new Date() }, by: { type: String, default: "" } },
+          { _id: false },
+        ),
+      ],
+      default: [],
+    },
+  },
+  { timestamps: true },
+);
+leadSchema.index({ createdAt: -1 });
+
+export const LeadModel = models.Lead ?? model("Lead", leadSchema);

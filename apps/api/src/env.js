@@ -25,6 +25,14 @@ const schema = z.object({
    * of going through this schema. Hence both the entry and the check below.
    */
   STOREFRONT_ORIGIN: z.string().url().default("http://localhost:3070"),
+  /**
+   * The TablePe marketing website (apps/website). After any change to its
+   * pages, settings or public plans, the API asks it to refresh right away;
+   * the shared secret proves the request came from here. Without it, the
+   * website still refreshes on its own every few minutes.
+   */
+  WEBSITE_URL: z.string().default("http://localhost:3073"),
+  WEBSITE_REVALIDATE_SECRET: z.string().default("dev-only-website-revalidate-secret"),
 });
 
 const parsed = schema.safeParse(process.env);

@@ -13,6 +13,7 @@ const NEW_PLAN = {
   description: "",
   limits: { maxUsers: 5, multiOutlet: false, maxOutlets: 1 },
   entitlements: { features: [...FEATURE_KEYS], effects: [...EFFECTS], qrCardFamilies: [...QR_CARD_FAMILY_IDS] },
+  marketing: { show: false, price: "", period: "/month", pitch: "", highlight: false, order: 50 },
 };
 
 /** The plans stores can be put on — limits and what each one unlocks. */
@@ -51,6 +52,15 @@ export function PlatformPlans() {
                 <strong>{p.limits.multiOutlet ? p.limits.maxOutlets ?? "Unlimited" : 1}</strong> outlet{p.limits.multiOutlet && p.limits.maxOutlets !== 1 ? "s" : ""}
                 {!p.limits.multiOutlet ? " (multi-outlet off)" : ""}
               </div>
+              {p.marketing?.show ? (
+                <div style={{ fontSize: 12.5 }}>
+                  On the website: <strong>{p.marketing.price || "no price"}</strong>
+                  {p.marketing.price ? p.marketing.period : ""}
+                  {p.marketing.highlight ? " · most popular" : ""}
+                </div>
+              ) : (
+                <div style={muted}>Not on the website</div>
+              )}
               <div style={muted}>
                 {p.entitlements.features.length}/{FEATURES.length} features · {p.entitlements.effects.filter((e) => e !== "none").length}/{EFFECTS.length} effects ·{" "}
                 {p.entitlements.qrCardFamilies.length}/{CARD_TEMPLATE_FAMILIES.length} card styles
@@ -87,12 +97,13 @@ function Note() {
 }
 
 function PlanModal({ plan, onClose }) {
-  const [draft, setDraft] = useState(() => structuredClone(plan));
+  const [draft, setDraft] = useState(() => ({ ...structuredClone(plan), marketing: { ...NEW_PLAN.marketing, ...(plan.marketing ?? {}) } }));
   const save = usePlatformMutation(() => {
-    const body = { name: draft.name, description: draft.description, limits: draft.limits, entitlements: draft.entitlements };
+    const body = { name: draft.name, description: draft.description, limits: draft.limits, entitlements: draft.entitlements, marketing: draft.marketing };
     return draft.id ? api.updatePlan(draft.id, body) : api.createPlan(body);
   });
   const setLimit = (k, v) => setDraft({ ...draft, limits: { ...draft.limits, [k]: v } });
+  const setMarketing = (patch) => setDraft({ ...draft, marketing: { ...draft.marketing, ...patch } });
   const toggle = (k, item) => {
     const list = draft.entitlements[k];
     setDraft({ ...draft, entitlements: { ...draft.entitlements, [k]: list.includes(item) ? list.filter((x) => x !== item) : [...list, item] } });
@@ -148,6 +159,31 @@ function PlanModal({ plan, onClose }) {
               <Checkbox key={f.id} checked={draft.entitlements.qrCardFamilies.includes(f.id)} onChange={() => toggle("qrCardFamilies", f.id)} label={f.label} />
             ))}
           </Grid>
+        </Section>
+
+        <Section title="On the website" hint="The Pricing page's card for this plan. Buying is never online — its button opens Contact.">
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <Checkbox checked={draft.marketing.show} onChange={(v) => setMarketing({ show: v })} label="Show this plan on the website's Pricing" />
+            {draft.marketing.show ? (
+              <>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 110px", gap: 12 }}>
+                  <Field label="Price" hint={"As written — \"₹1,499\" or \"Custom\""}>
+                    <TextInput value={draft.marketing.price} onChange={(e) => setMarketing({ price: e.target.value })} maxLength={30} placeholder="₹1,499" />
+                  </Field>
+                  <Field label="Per">
+                    <TextInput value={draft.marketing.period} onChange={(e) => setMarketing({ period: e.target.value })} maxLength={20} placeholder="/month" />
+                  </Field>
+                  <Field label="Order">
+                    <TextInput type="number" min={0} max={99} value={draft.marketing.order} onChange={(e) => setMarketing({ order: Math.max(0, Math.min(99, Number(e.target.value) || 0)) })} />
+                  </Field>
+                </div>
+                <Field label="One-line pitch">
+                  <TextInput value={draft.marketing.pitch} onChange={(e) => setMarketing({ pitch: e.target.value })} maxLength={140} placeholder="For a single café or quick-service counter." />
+                </Field>
+                <Checkbox checked={draft.marketing.highlight} onChange={(v) => setMarketing({ highlight: v })} label='Mark as "Most popular"' />
+              </>
+            ) : null}
+          </div>
         </Section>
 
         {save.error ? <Toast kind="error">{save.error.message}</Toast> : null}

@@ -3,6 +3,7 @@ export * from "./tenant-scope.js";
 export { BrandModel,               } from "./models/brand.js";
 export { OutletModel,                } from "./models/outlet.js";
 export { PlanModel, PlatformSettingsModel } from "./models/plan.js";
+export { LeadModel, SitePageModel, SiteSettingsModel } from "./models/site.js";
 export {
   UserModel,
                

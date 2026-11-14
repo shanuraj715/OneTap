@@ -20,6 +20,7 @@ import { healthRouter } from "./modules/health/health.routes.js";
 import { menuRouter } from "./modules/menu/menu.routes.js";
 import { notifyRouter } from "./modules/notify/notify.routes.js";
 import { ordersRouter } from "./modules/orders/orders.routes.js";
+import { platformSiteRouter, siteRouter } from "./modules/site/site.routes.js";
 import { staffOrdersRouter } from "./modules/orders/staff-orders.routes.js";
 import { outletsRouter } from "./modules/outlets/outlets.routes.js";
 import { paymentsRouter } from "./modules/payments/payments.routes.js";
@@ -86,6 +87,9 @@ export function createApp()          {
   app.use("/health", healthRouter);
   app.use("/api/auth", authRouter);
   app.use("/api/brands", brandsRouter);
+  // the TablePe website: public content + the super admin's management of it
+  app.use("/api/site", siteRouter);
+  app.use("/api/platform/site", platformSiteRouter);
   app.use("/api/platform", platformRouter);
   app.use("/api/store", storeRouter);
   app.use("/api/users", usersRouter);

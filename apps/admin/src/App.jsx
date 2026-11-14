@@ -15,6 +15,8 @@ import {
   Check,
   ChevronsUpDown,
   ConciergeBell,
+  Globe,
+  Inbox,
   Menu as MenuIcon,
   X,
   CreditCard,
@@ -41,7 +43,7 @@ import {
 } from "lucide-react";
 import { useAuth, useLogout } from "./lib/useAuth";
 import { OutletSelectionProvider, useOpenStore, useOutlets } from "./lib/useOutlet";
-import { useStore } from "./lib/usePlatform";
+import { useLeads, useStore } from "./lib/usePlatform";
 import { useStorePlan } from "./lib/useStorePlan";
 import { useMedia } from "./lib/useMedia";
 import { CreateOutletModal } from "./components/CreateOutletModal";
@@ -73,6 +75,10 @@ import { PlatformPlans } from "./routes/platform/PlatformPlans";
 import { PlatformSettings } from "./routes/platform/PlatformSettings";
 import { PlatformStoreDetail } from "./routes/platform/PlatformStoreDetail";
 import { PlatformStores } from "./routes/platform/PlatformStores";
+import { PlatformLeads } from "./routes/platform/PlatformLeads";
+import { PageEditor } from "./routes/platform/website/PageEditor";
+import { WebsitePages } from "./routes/platform/website/WebsitePages";
+import { WebsiteSettings } from "./routes/platform/website/WebsiteSettings";
 import { Menu } from "./ui";
 
 const STOREFRONT_URL = import.meta.env.VITE_STOREFRONT_URL ?? "http://localhost:3070";
@@ -118,6 +124,9 @@ const ROUTE_META = {
   "/platform/stores": { title: "Stores", icon: Store },
   "/platform/plans": { title: "Plans", icon: Layers },
   "/platform/settings": { title: "Platform settings", icon: SettingsIcon },
+  "/platform/website": { title: "Website", icon: Globe },
+  "/platform/website/settings": { title: "Website settings", icon: Globe },
+  "/platform/leads": { title: "Leads", icon: Inbox },
 };
 
 /**
@@ -166,6 +175,13 @@ const PLATFORM_NAV_GROUPS = [
       { to: "/platform/stores", label: "Stores", icon: <Store size={ICON} /> },
       { to: "/platform/plans", label: "Plans", icon: <Layers size={ICON} /> },
       { to: "/platform/settings", label: "Settings", icon: <SettingsIcon size={ICON} /> },
+    ],
+  },
+  {
+    group: "Website",
+    items: [
+      { to: "/platform/website", label: "Website", icon: <Globe size={ICON} /> },
+      { to: "/platform/leads", label: "Leads", icon: <Inbox size={ICON} />, badgeKey: "newLeads" },
     ],
   },
 ];
@@ -283,6 +299,10 @@ function Shell({ can }                                     ) {
     return () => window.removeEventListener("keydown", onKey);
   }, [canTakeOrders, navigate]);
 
+  // the platform console's "Leads" shows how many enquiries nobody has called yet
+  const newLeads = useLeads("new", platformMode).data?.counts?.new ?? 0;
+  const badges = { newLeads };
+
   const groups = (platformMode ? PLATFORM_NAV_GROUPS : NAV_GROUPS)
     .map((g) => ({
       ...g,
@@ -391,6 +411,7 @@ function Shell({ can }                                     ) {
                   end={n.end}
                   collapsed={railCollapsed}
                   matchPaths={n.matchPaths}
+                  badge={n.badgeKey ? badges[n.badgeKey] : undefined}
                 />
               ))}
             </div>
@@ -493,6 +514,10 @@ function Shell({ can }                                     ) {
               <Route path="/platform/stores/:id" element={<PlatformStoreDetail />} />
               <Route path="/platform/plans" element={<PlatformPlans />} />
               <Route path="/platform/settings" element={<PlatformSettings />} />
+              <Route path="/platform/website" element={<WebsitePages />} />
+              <Route path="/platform/website/settings" element={<WebsiteSettings />} />
+              <Route path="/platform/website/pages/:id" element={<PageEditor />} />
+              <Route path="/platform/leads" element={<PlatformLeads />} />
               <Route path="*" element={<Navigate to="/platform" replace />} />
             </Routes>
           ) : (
@@ -533,6 +558,7 @@ function NavItem({
   end,
   collapsed,
   matchPaths,
+  badge,
 }) {
   const location = useLocation();
   const isMatchPathActive =
@@ -562,10 +588,29 @@ function NavItem({
         {icon}
       </span>
       {collapsed ? <span style={srOnly}>{label}</span> : label}
+      {badge ? (
+        <span style={navBadge} aria-label={`${badge} new`}>
+          {badge}
+        </span>
+      ) : null}
     </NavLink>
   );
 }
 
+const navBadge = {
+  marginLeft: "auto",
+  minWidth: 20,
+  height: 20,
+  padding: "0 6px",
+  borderRadius: 999,
+  background: "var(--tone-warning-wash)",
+  color: "var(--tone-warning)",
+  fontSize: 11.5,
+  fontWeight: 800,
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+};
 const splash                = { minHeight: "100vh", display: "grid", placeItems: "center", color: "var(--color-text-muted)" };
 // Fixed to exactly one viewport tall, and nothing here scrolls itself — the
 // sidebar and the content area each own their own internal scroll instead, so

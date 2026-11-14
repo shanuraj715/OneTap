@@ -8,6 +8,13 @@ export const useStores = () => useQuery({ queryKey: ["platform", "stores"], quer
 export const useStore = (id) => useQuery({ queryKey: ["platform", "store", id], queryFn: () => api.getStore(id), enabled: Boolean(id) });
 export const usePlatformSettings = () => useQuery({ queryKey: ["platform", "settings"], queryFn: api.getPlatformSettings });
 
+/** The TablePe website and its enquiries. */
+export const useSitePages = () => useQuery({ queryKey: ["platform", "site", "pages"], queryFn: api.listSitePages });
+export const useSitePage = (id) => useQuery({ queryKey: ["platform", "site", "page", id], queryFn: () => api.getSitePage(id), enabled: Boolean(id) });
+export const useSiteSettings = () => useQuery({ queryKey: ["platform", "site", "settings"], queryFn: api.getSiteSettings });
+export const useLeads = (status, enabled = true) =>
+  useQuery({ queryKey: ["platform", "leads", status ?? "all"], queryFn: () => api.listLeads(status), refetchInterval: 60_000, enabled });
+
 /** Any platform write can change what a store shows anywhere — refresh all platform data and store plans. */
 export function usePlatformMutation(fn) {
   const qc = useQueryClient();

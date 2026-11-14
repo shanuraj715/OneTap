@@ -665,3 +665,20 @@ export const deleteStorePerson = (id, userId) => req(`/api/platform/stores/${id}
 export const addStoreOwner = (id, body) => req(`/api/platform/stores/${id}/owners`, json("POST", body));
 export const updateStoreOwner = (id, userId, body) => req(`/api/platform/stores/${id}/owners/${userId}`, json("PATCH", body));
 export const removeStoreOwner = (id, userId) => req(`/api/platform/stores/${id}/owners/${userId}`, json("DELETE"));
+
+/* ---------------------------------------------------- TablePe website (platform) */
+
+export const getSiteSettings = () => req("/api/platform/site/settings");
+export const saveSiteSettings = (body) => req("/api/platform/site/settings", json("PUT", body));
+export const listSitePages = () => req("/api/platform/site/pages");
+export const getSitePage = (id) => req(`/api/platform/site/pages/${id}`);
+export const createSitePage = (body) => req("/api/platform/site/pages", json("POST", body));
+export const updateSitePage = (id, body) => req(`/api/platform/site/pages/${id}`, json("PUT", body));
+export const duplicateSitePage = (id) => req(`/api/platform/site/pages/${id}/duplicate`, json("POST"));
+export const deleteSitePage = (id) => req(`/api/platform/site/pages/${id}`, json("DELETE"));
+export const sitePreviewLink = (id) => req(`/api/platform/site/pages/${id}/preview-link`);
+export const listLeads = (status) => req(`/api/platform/site/leads${status ? `?status=${encodeURIComponent(status)}` : ""}`);
+export const updateLead = (id, body) => req(`/api/platform/site/leads/${id}`, json("PATCH", body));
+/** An image for the website — logo, hero, team photo. Returns { url, width, height, … }. */
+export const uploadSiteImage = (blob) =>
+  req("/api/platform/site/upload", { method: "POST", body: blob, headers: { "content-type": blob.type || "application/octet-stream" } });

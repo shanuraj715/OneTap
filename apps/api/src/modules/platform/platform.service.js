@@ -1,4 +1,4 @@
-import { planOverridesSchema, planSchema } from "@onetap/config-schema";
+import { planMarketingSchema, planOverridesSchema, planSchema } from "@onetap/config-schema";
 import {
   BrandModel,
   MenuCategoryModel,
@@ -22,6 +22,7 @@ import { ensureOwner } from "../auth/auth.service.js";
 import { hashPassword } from "../auth/password.js";
 import { invalidateStorePlan, platformSettings, storePlan } from "./plan.service.js";
 import { setStoreDomains, storeDomains } from "../outlets/domains.js";
+import { notifyWebsite } from "../site/revalidate.js";
 
 /*
  * The platform console's back end — everything here is for the platform super
@@ -34,6 +35,7 @@ import { setStoreDomains, storeDomains } from "../outlets/domains.js";
 const shapePlan = (p, storeCount = 0) => ({
   id: String(p._id),
   ...planSchema.parse({ name: p.name, description: p.description, limits: p.limits, entitlements: p.entitlements }),
+  marketing: planMarketingSchema.parse(p.marketing ?? {}),
   archived: Boolean(p.archived),
   storeCount,
 });
@@ -49,7 +51,8 @@ export async function listPlans() {
 
 export async function createPlan(input) {
   const data = planSchema.parse(input);
-  const plan = await PlanModel.create(data);
+  const plan = await PlanModel.create({ ...data, marketing: planMarketingSchema.parse(input.marketing ?? {}) });
+  notifyWebsite();
   return shapePlan(plan.toObject());
 }
 
@@ -63,12 +66,18 @@ export async function updatePlan(id, input) {
     entitlements: input.entitlements ?? plan.entitlements,
   });
   Object.assign(plan, data);
+  if (input.marketing !== undefined) {
+    plan.marketing = planMarketingSchema.parse(input.marketing);
+    plan.markModified("marketing");
+  }
   if (input.archived !== undefined) plan.archived = Boolean(input.archived);
   plan.markModified("limits");
   plan.markModified("entitlements");
   await plan.save();
-  // Every store on this plan may have just gained or lost something.
+  // Every store on this plan may have just gained or lost something — and
+  // the website's Pricing may show it.
   invalidateStorePlan();
+  notifyWebsite();
   return shapePlan(plan.toObject());
 }
 
