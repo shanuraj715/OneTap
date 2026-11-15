@@ -49,7 +49,7 @@ async function assertSeatFree(me, brandId) {
 }
 
 usersRouter.get("/", async (req, res) => {
-  const { brandId } = requireBrandContext(req, "user:read");
+  const { brandId } = await requireBrandContext(req, "user:read");
   const users = await UserModel.find({ "memberships.brandId": brandId }).sort({ createdAt: 1 }).lean();
   res.json({ users: users.map((u) => shape(u, brandId)) });
 });
@@ -63,7 +63,7 @@ const createBody = z.object({
 });
 
 usersRouter.post("/", async (req, res) => {
-  const { brandId } = requireBrandContext(req, "user:manage");
+  const { brandId } = await requireBrandContext(req, "user:manage");
   const me = requireUser(req);
   const body = createBody.parse(req.body);
   assertCanManage(me, null, brandId, body.role);
@@ -91,7 +91,7 @@ const updateBody = z.object({
 });
 
 usersRouter.patch("/:id", async (req, res) => {
-  const { brandId } = requireBrandContext(req, "user:manage");
+  const { brandId } = await requireBrandContext(req, "user:manage");
   const me = requireUser(req);
   const body = updateBody.parse(req.body);
 
@@ -125,7 +125,7 @@ usersRouter.patch("/:id", async (req, res) => {
  * brand keeps that access.
  */
 usersRouter.delete("/:id", async (req, res) => {
-  const { brandId } = requireBrandContext(req, "user:manage");
+  const { brandId } = await requireBrandContext(req, "user:manage");
   const me = requireUser(req);
   if (String(me._id) === req.params.id) throw new HttpError(400, "You can't remove yourself");
 

@@ -48,7 +48,7 @@ outletsRouter.get("/", async (req, res) => {
     res.json({ outlets: await listAllOutlets(), scope: "all" });
     return;
   }
-  const { brandId } = requireBrandContext(req, "outlet:read");
+  const { brandId } = await requireBrandContext(req, "outlet:read");
   res.json({ outlets: await listOutlets({ brandId }) });
 });
 
@@ -60,7 +60,7 @@ const createOutletBody = z.object({
 
 /** A new outlet for the caller's brand (or, for a super admin, whichever brand they've selected). */
 outletsRouter.post("/", async (req, res) => {
-  const ctx = requireBrandContext(req, "outlet:manage");
+  const ctx = await requireBrandContext(req, "outlet:manage");
   const body = createOutletBody.parse(req.body);
   // Domains are the platform's to set; a store's new outlet shares its existing ones.
   if (!req.user?.isSuperAdmin) delete body.hostnames;
@@ -115,6 +115,9 @@ const AREA_PERMISSIONS                             = {
   tax: "settings:update",
   // The menu layout is a storefront-appearance concern.
   menuLayout: "appearance:update",
+  // the message bar above the header and the promo carousel: storefront content, like the menu layout
+  announcement: "appearance:update",
+  carousel: "appearance:update",
   // Rates and rules, not the credentials that actually send anything.
   wallet: "settings:update",
   orderNotify: "notification-config:manage",

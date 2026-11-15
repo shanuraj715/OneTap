@@ -10,6 +10,8 @@ export * from "./tax.js";
 export * from "./payments.js";
 export * from "./geo.js";
 export * from "./homepage.js";
+export * from "./storefront.js";
+export * from "./store-pages.js";
 export * from "./outlet-config.js";
 export * from "./merge.js";
 export * from "./menu.js";

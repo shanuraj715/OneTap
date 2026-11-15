@@ -14,6 +14,8 @@ export const navLinkSchema = z.object({
 });
 
 export const layoutSchema = z.object({
+  /** the message bar above the header — its own component, so any header can sit under any bar */
+  announcementVariant: z.string().default("announcement.solid"),
   headerVariant: z.string().default("header.centered"),
   /** admin-added header links, shown after the built-in ones — see {@link navLinkSchema} */
   navLinks: z.array(navLinkSchema).max(8).default([]),

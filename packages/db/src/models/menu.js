@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { tenantScope } from "../tenant-scope.js";
+import { writeEvents } from "../write-events.js";
 
 const { Schema, model, models } = mongoose;
 
@@ -14,6 +15,7 @@ const categorySchema = new Schema(
   { timestamps: true },
 );
 categorySchema.plugin(tenantScope);
+categorySchema.plugin(writeEvents, { model: "MenuCategory", brandFrom: "brandId", outletFrom: "outletId" });
 categorySchema.index({ brandId: 1, outletId: 1, sortOrder: 1 });
 
 export const MenuCategoryModel =
@@ -44,6 +46,7 @@ const modifierGroupSchema = new Schema(
   { timestamps: true },
 );
 modifierGroupSchema.plugin(tenantScope);
+modifierGroupSchema.plugin(writeEvents, { model: "ModifierGroup", brandFrom: "brandId", outletFrom: "outletId" });
 modifierGroupSchema.index({ brandId: 1, outletId: 1 });
 
 export const ModifierGroupModel =
@@ -94,6 +97,7 @@ const itemSchema = new Schema(
   { timestamps: true },
 );
 itemSchema.plugin(tenantScope);
+itemSchema.plugin(writeEvents, { model: "MenuItem", brandFrom: "brandId", outletFrom: "outletId" });
 itemSchema.index({ brandId: 1, outletId: 1, categoryId: 1, sortOrder: 1 });
 
 export const MenuItemModel = models.MenuItem ?? model("MenuItem", itemSchema);

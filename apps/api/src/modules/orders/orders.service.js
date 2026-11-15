@@ -27,8 +27,10 @@ import { logger } from "../../logger.js";
 import { HttpError } from "../../middleware/error.js";
 import { broadcast } from "../../realtime/hub.js";
 import { checkCoupon, recordRedemption } from "../coupons/coupons.service.js";
+import { cache } from "../cache/cache.js";
 import { getMenu } from "../menu/menu.service.js";
 import { assertOutletOpen, effectiveOutletConfig } from "../outlets/config.service.js";
+import { publicOutletById } from "../outlets/outlet-cache.js";
 import { fireOrderNotifications } from "../notify/notify.service.js";
 import { autoPrintForOrder } from "../printing/printing.service.js";
 import { earnForOrder, previewRedeem, redeemForOrder, reverseRedeemForOrder } from "../wallet/wallet.service.js";
@@ -100,15 +102,22 @@ export const QUEUE_STATUSES                = ["placed", "accepted", "preparing"]
  * badge) and to gate delivery at placement time — always the SAME numbers,
  * so a customer is never shown "delivery is fine" and then refused it.
  */
-export async function getCapacityStatus(ctx               )                          {
-  const config = await outletConfigFor(ctx);
+export async function getCapacityStatus(ctx               , { cached = false } = {}                          ) {
+  // `cached` is for the page that only DISPLAYS the level (it asks every 20 seconds while open):
+  // the config comes from the cache and the counts are reused for 10 seconds. Placing an order
+  // always checks the live numbers.
+  const config = cached ? ((await publicOutletById(ctx.outletId))?.config ?? (await outletConfigFor(ctx))) : await outletConfigFor(ctx);
   if (!config.capacity.enabled) {
     return evaluateCapacity({ active: 0, activeDelivery: 0 }, config.capacity);
   }
-  const [active, activeDelivery] = await Promise.all([
-    OrderModel.countDocuments(tenantFilter(ctx, { status: { $in: QUEUE_STATUSES } })),
-    OrderModel.countDocuments(tenantFilter(ctx, { status: { $in: QUEUE_STATUSES }, channel: "delivery" })),
-  ]);
+  const count = () =>
+    Promise.all([
+      OrderModel.countDocuments(tenantFilter(ctx, { status: { $in: QUEUE_STATUSES } })),
+      OrderModel.countDocuments(tenantFilter(ctx, { status: { $in: QUEUE_STATUSES }, channel: "delivery" })),
+    ]);
+  const [active, activeDelivery] = cached
+    ? await cache.wrap(`cap:${ctx.outletId}`, count, { maxAgeMs: 10_000, tags: [`brand:${ctx.brandId}`, "ns:cap"] })
+    : await count();
   return evaluateCapacity({ active, activeDelivery }, config.capacity);
 }
 
@@ -131,7 +140,8 @@ export async function getCapacityStatus(ctx               )                     
  * discount.
  */
 export async function quote(ctx               , cart      , opts               = {})                       {
-  const [menu, config] = await Promise.all([getMenu(ctx), outletConfigFor(ctx)]);
+  // what the customer pays comes from the database, never from the cache
+  const [menu, config] = await Promise.all([getMenu(ctx, { fresh: true }), outletConfigFor(ctx)]);
 
   let bareSubtotal                = null;
   const subtotalOf = ()         => {

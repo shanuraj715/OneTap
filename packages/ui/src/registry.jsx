@@ -1,6 +1,8 @@
                                                       
                                                       
                                              
+import { LEGACY_VARIANT_IDS } from "@onetap/config-schema";
+import * as announcements from "./announcements";
 import * as cards from "./cards";
                                              
 import * as footers from "./footers";
@@ -89,10 +91,10 @@ const LIST = [
   { title: "Beverages", meta: "3 items" },
 ];
 const SLIDES = [
-  { title: "Veg Steamed Momos", subtitle: "Bestseller · from ₹60" },
-  { title: "Kurkure Momos", subtitle: "Crisp outside, juicy inside" },
-  { title: "Tandoori Momos", subtitle: "Char-grilled, smoky" },
-  { title: "Sweet Lassi", subtitle: "Thick and cold" },
+  { id: "s1", title: "Veg Steamed Momos", subtitle: "Bestseller · from ₹60", ctaLabel: "Order now", href: "#menu" },
+  { id: "s2", title: "Kurkure Momos", subtitle: "Crisp outside, juicy inside", ctaLabel: "See the menu", href: "#menu" },
+  { id: "s3", title: "Tandoori Momos", subtitle: "Char-grilled, smoky" },
+  { id: "s4", title: "Sweet Lassi", subtitle: "Thick and cold" },
 ];
 const OPTIONS = ["Most popular", "Price: low to high", "Price: high to low", "Newest"];
 
@@ -103,10 +105,31 @@ export const headerVariants                             = [
   v("header.left-logo", "H2", "Left logo", "Name left, nav right, one row", headers.HeaderLeftLogo),
   v("header.split-nav", "H3", "Split nav", "Nav either side of a centred name, with an Order button", headers.HeaderSplitNav),
   v("header.minimal", "H4", "Minimal", "Name only, small caps", headers.HeaderMinimal),
-  v("header.top-bar", "H5", "Top bar", "Accent info bar above the main row", headers.HeaderTopBar),
   v("header.banner", "H6", "Banner", "Full accent band behind a centred name", headers.HeaderBanner),
   v("header.two-row", "H7", "Two row", "Brand row above a separate nav bar", headers.HeaderTwoRow),
   v("header.boxed", "H8", "Boxed brand", "Brand in a solid block on the left", headers.HeaderBoxed),
+  v("header.stacked", "H9", "Stacked", "Logo or name centred over a ruled, spaced-out nav", headers.HeaderStacked),
+  v("header.pill-nav", "H10", "Pill nav", "Links in a rounded capsule beside the name", headers.HeaderPillNav),
+  v("header.floating", "H11", "Floating card", "A rounded card with a shadow, hovering over the page", headers.HeaderFloating),
+  v("header.dark", "H12", "Dark bar", "Reversed out, with an Order button", headers.HeaderDark),
+  v("header.underline", "H13", "Underline links", "Links that underline on hover, phone at the end", headers.HeaderUnderline),
+  v("header.burger", "H14", "Burger only", "The menu button at every width, plus Order", headers.HeaderBurger),
+  v("header.tagline", "H15", "Name + tagline", "Two-line brand, nav and Order to the right", headers.HeaderTagline),
+  v("header.call-order", "H16", "Call & order", "Brand, nav in the middle, phone and Order button", headers.HeaderCallOrder),
+];
+
+/* ---------------------------------------------------------- announcement bars */
+
+/** The message bar above the header — its own family, so any header can sit under any bar. */
+export const announcementVariants = [
+  v("announcement.solid", "ANN01", "Solid", "Brand colour, centred; messages take turns", announcements.AnnouncementSolid),
+  v("announcement.soft", "ANN02", "Soft", "A light tint of the brand colour", announcements.AnnouncementSoft),
+  v("announcement.split", "ANN03", "Split info", "Message on the left, phone number on the right", announcements.AnnouncementSplit),
+  v("announcement.marquee", "ANN04", "Ticker", "Messages scroll past, side by side", announcements.AnnouncementMarquee),
+  v("announcement.rotator", "ANN05", "Rotator", "One message at a time, with arrows and a count", announcements.AnnouncementRotator),
+  v("announcement.pill", "ANN06", "Floating pill", "A rounded pill in the middle of a plain strip", announcements.AnnouncementPill),
+  v("announcement.dark", "ANN07", "Dark strip", "Near-black, link in the brand colour", announcements.AnnouncementDark),
+  v("announcement.button", "ANN08", "With button", "The message with its link as a real button", announcements.AnnouncementButton),
 ];
 
 /* ------------------------------------------------------------------ footers */
@@ -165,7 +188,7 @@ export function gridPropsFor(variant, columns) {
     return { style: { display: "flex", flexDirection: "column", gap: variant.id === "card.menu-line" ? 0 : 12 } };
   }
   return {
-    style: { display: "grid", gridTemplateColumns: `repeat(auto-fill, minmax(${variant.minWidth}px, 1fr))`, gap: 12 },
+    style: { display: "grid", gridTemplateColumns: `repeat(auto-fill, minmax(min(${variant.minWidth}px, 100%), 1fr))`, gap: 12 },
   };
 }
 
@@ -287,6 +310,12 @@ export const carouselVariants = [
   v("carousel.quotes", "CRS05", "Quotes", "Text-only rotator", carousels.CarouselQuotes),
   v("carousel.hero", "CRS06", "Hero", "Full-bleed with a counter", carousels.CarouselHero),
   v("carousel.stack", "CRS07", "Stack", "Stacked cards, tap to advance", carousels.CarouselStack),
+  v("carousel.banner", "CRS08", "Banner", "Wide slides that glide sideways, text and button on the left", carousels.CarouselBanner),
+  v("carousel.fade", "CRS09", "Crossfade", "Slides melt into each other, text bottom-left", carousels.CarouselFade),
+  v("carousel.cards", "CRS10", "Cards", "Several cards at a time, snapping as you swipe", carousels.CarouselCards),
+  v("carousel.split", "CRS11", "Split", "Picture on one side, words on the other", carousels.CarouselSplit),
+  v("carousel.story", "CRS12", "Story bars", "Segments fill as each slide plays; tap to move", carousels.CarouselStory),
+  v("carousel.kenburns", "CRS13", "Slow zoom", "Crossfade while the picture drifts closer", carousels.CarouselKenBurns),
 ];
 
 export const dropdownVariants = [
@@ -379,6 +408,7 @@ export const analyticsChartVariants = [
 
 const headerProps = (ctx                )              => ({
   name: ctx.outletName,
+  logoUrl: ctx.logoUrl || undefined,
   tagline: ctx.tagline,
   phone: ctx.phone,
   links: [
@@ -396,7 +426,21 @@ const footerProps = (ctx                )              => ({
   gstin: ctx.gstin,
 });
 
+/** What an announcement bar's preview shows: this outlet's tagline and phone, and a second message so rotating styles have something to do. */
+const announcementPreview = (ctx                ) => [
+  { id: "p1", text: ctx.tagline || "Fresh, hot and made to order", linkLabel: "Order now", linkHref: "#menu" },
+  { id: "p2", text: "Free delivery on orders above ₹499", linkLabel: "", linkHref: "" },
+];
+
 export const VARIANT_SLOTS                = [
+  {
+    key: "announcementVariant",
+    label: "Announcement bars",
+    description: "The message bar above the header — its own component, so any header can sit under any bar",
+    flush: true,
+    variants: announcementVariants,
+    preview: ({ Component: C }, ctx) => <C messages={announcementPreview(ctx)} phone={ctx.phone} dismissible={false} />,
+  },
   {
     key: "headerVariant",
     label: "Headers",
@@ -416,7 +460,7 @@ export const VARIANT_SLOTS                = [
       const style =
         m.layout === "list"
           ? { display: "flex", flexDirection: "column"         , gap: m.id === "card.menu-line" ? 0 : 12 }
-          : { display: "grid", gridTemplateColumns: `repeat(auto-fill, minmax(${m.minWidth}px, 1fr))`, gap: 12 };
+          : { display: "grid", gridTemplateColumns: `repeat(auto-fill, minmax(min(${m.minWidth}px, 100%), 1fr))`, gap: 12 };
       return (
         <div style={style}>
           {ctx.items.map((item) => (
@@ -543,7 +587,7 @@ export const VARIANT_SLOTS                = [
     description: "Rotating galleries and highlights",
     variants: carouselVariants,
     preview: ({ Component: C }) => (
-      <div style={{ maxWidth: 460 }}>
+      <div style={{ maxWidth: 520 }}>
         <C items={SLIDES} />
       </div>
     ),
@@ -653,7 +697,7 @@ export const allVariants                = VARIANT_SLOTS.flatMap((s) => s.variant
  */
 function pick                                        (list     , ref                    )    {
   if (!ref) return list[0] ;
-  const needle = ref.toLowerCase();
+  const needle = (LEGACY_VARIANT_IDS[ref] ?? ref).toLowerCase();
   return (
     list.find((x) => x.id.toLowerCase() === needle) ??
     list.find((x) => x.code.toLowerCase() === needle) ??
@@ -662,6 +706,7 @@ function pick                                        (list     , ref            
   );
 }
 
+export const getAnnouncementVariant = (ref         ) => pick(announcementVariants, ref);
 export const getHeaderVariant = (ref         ) => pick(headerVariants, ref);
 export const getFooterVariant = (ref         ) => pick(footerVariants, ref);
 export const getItemCardVariant = (ref         ) => pick(itemCardVariants, ref);

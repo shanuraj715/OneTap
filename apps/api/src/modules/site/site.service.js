@@ -16,6 +16,7 @@ import { LeadModel, PlanModel, SitePageModel, SiteSettingsModel } from "@onetap/
 import { env } from "../../env.js";
 import { safeEqual } from "../../lib/crypto.js";
 import { logger } from "../../logger.js";
+import { cache } from "../cache/cache.js";
 import { HttpError } from "../../middleware/error.js";
 import { putImage } from "../storage/storage.service.js";
 import * as guard from "./guard.js";
@@ -31,9 +32,10 @@ import { notifyWebsite } from "./revalidate.js";
 
 /* ---------------------------------------------------------------- settings */
 
-export async function getSiteSettings() {
-  const doc = await SiteSettingsModel.findOne({ key: "site" }).lean();
-  return siteSettingsSchema.parse(doc?.data ?? {});
+/** The website's settings. Public reads come from the cache; the console's own form passes `fresh` so it always edits what is really saved. */
+export async function getSiteSettings({ fresh = false } = {}) {
+  const load = async () => siteSettingsSchema.parse((await SiteSettingsModel.findOne({ key: "site" }).lean())?.data ?? {});
+  return fresh ? load() : cache.wrap("site:settings", load, { tags: ["ns:site"] });
 }
 
 export async function saveSiteSettings(input) {
@@ -156,18 +158,34 @@ export async function deletePage(id) {
 /* ------------------------------------------------------------ public reads */
 
 /** Published pages, for the website's menus and sitemap. */
-export async function listPublishedPages() {
-  const docs = await SitePageModel.find({ status: "published" }).sort({ "nav.order": 1, createdAt: 1 }).lean();
-  return docs.map((d) => {
-    const p = shapePage(d);
-    return { slug: p.slug, title: p.title, nav: p.nav, footerGroup: p.footerGroup, noindex: p.seo.noindex, updatedAt: p.updatedAt };
-  });
+export function listPublishedPages() {
+  return cache.wrap(
+    "site:pages",
+    async () => {
+      const docs = await SitePageModel.find({ status: "published" }).sort({ "nav.order": 1, createdAt: 1 }).lean();
+      return docs.map((d) => {
+        const p = shapePage(d);
+        return { slug: p.slug, title: p.title, nav: p.nav, footerGroup: p.footerGroup, noindex: p.seo.noindex, updatedAt: p.updatedAt };
+      });
+    },
+    { tags: ["ns:site"] },
+  );
 }
 
 export async function getPublishedPage(slug) {
-  const doc = await SitePageModel.findOne({ slug: String(slug).toLowerCase(), status: "published" }).lean();
-  if (!doc) throw new HttpError(404, "Page not found");
-  const { id, status, system, ...page } = shapePage(doc);
+  const key = String(slug).toLowerCase();
+  // a page that doesn't exist is remembered briefly too, so a crawler guessing addresses can't make one query per guess
+  const page = await cache.wrap(
+    `site:page:${key.slice(0, 120)}`,
+    async () => {
+      const doc = await SitePageModel.findOne({ slug: key, status: "published" }).lean();
+      if (!doc) return null;
+      const { id, status, system, ...rest } = shapePage(doc);
+      return rest;
+    },
+    { tags: ["ns:site"] },
+  );
+  if (!page) throw new HttpError(404, "Page not found");
   return page;
 }
 
@@ -247,7 +265,11 @@ function planCompare(plan) {
 }
 
 /** The plans set to show on the website, in their display order. */
-export async function publicPricing() {
+export function publicPricing() {
+  return cache.wrap("site:pricing", loadPublicPricing, { tags: ["ns:site"] });
+}
+
+async function loadPublicPricing() {
   const plans = await PlanModel.find({ archived: { $ne: true } }).lean();
   return plans
     .map((p) => ({ p, m: planMarketingSchema.parse(p.marketing ?? {}) }))

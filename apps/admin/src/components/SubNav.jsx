@@ -4,10 +4,11 @@ import {
   Boxes,
   Building2,
   CreditCard,
-  HardDrive,
+  FileText,
   IdCard,
   LayoutGrid,
   LayoutList,
+  Megaphone,
   Palette,
   QrCode,
   Store,
@@ -68,7 +69,6 @@ export const SETTINGS_TABS = [
   { to: "/payments", label: "Payments", icon: <CreditCard size={ICON_SIZE} />, permission: "payment-config:read" },
   { to: "/notifications", label: "Notifications", icon: <Bell size={ICON_SIZE} />, permission: "notification-config:read", feature: "notifications" },
   { to: "/users", label: "Users & roles", icon: <UsersIcon size={ICON_SIZE} />, permission: "user:read" },
-  { to: "/storage", label: "Storage", icon: <HardDrive size={ICON_SIZE} />, permission: "storage-config:read" },
   { to: "/dashboard-config", label: "Configure dashboard", icon: <LayoutGrid size={ICON_SIZE} />, permission: "dashboard:configure" },
 ];
 
@@ -77,6 +77,8 @@ export const STOREFRONT_TABS = [
   { to: "/appearance", label: "Appearance", icon: <Wand2 size={ICON_SIZE} />, permission: "appearance:update" },
   { to: "/theme", label: "Theme", icon: <Palette size={ICON_SIZE} />, permission: "theme:update" },
   { to: "/typography", label: "Typography", icon: <Type size={ICON_SIZE} />, permission: "theme:update" },
+  { to: "/banners", label: "Banners", icon: <Megaphone size={ICON_SIZE} />, permission: "appearance:update" },
+  { to: "/pages", label: "Pages", icon: <FileText size={ICON_SIZE} />, permission: "page:manage" },
   { to: "/components", label: "Components", icon: <Boxes size={ICON_SIZE} /> },
 ];
 

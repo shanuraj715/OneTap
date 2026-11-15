@@ -3,6 +3,7 @@ import { Check, Globe, Settings as SettingsIcon, X } from "lucide-react";
 import * as api from "../../lib/api";
 import { usePlatformMutation, usePlatformSettings } from "../../lib/usePlatform";
 import { Button, Card, Field, Note, PageHeader, TextInput, Toast } from "../../ui";
+import { CacheSettingsCard } from "./CachePanels";
 import { browserCanOpen, describeHttpError, muted, row, SERVER_CHECK_FAILED } from "./shared";
 
 /** Platform-wide settings. */
@@ -48,6 +49,8 @@ export function PlatformSettings() {
         {save.error ? <Toast kind="error">{save.error.message}</Toast> : null}
         {save.isSuccess && !save.isPending ? <Toast kind="ok">Saved.</Toast> : null}
       </Card>
+
+      <CacheSettingsCard />
 
       <Card
         title="Store addresses"

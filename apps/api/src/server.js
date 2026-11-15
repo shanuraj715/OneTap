@@ -2,6 +2,8 @@ import { connectDb } from "@onetap/db";
 import { createApp } from "./app.js";
 import { env } from "./env.js";
 import { logger } from "./logger.js";
+import { startCacheSweeper } from "./modules/cache/cache.js";
+import { startServerMonitor } from "./modules/sysmon/monitor.js";
 import { dispatchDue } from "./modules/printing/printing.service.js";
 import { attachRealtime } from "./realtime/hub.js";
 import { attachPreview } from "./realtime/preview.js";
@@ -30,6 +32,8 @@ function startPrintDispatcher()       {
 
 function main()       {
   const app = createApp();
+  startCacheSweeper();
+  startServerMonitor();
 
   const server = app.listen(env.API_PORT);
 

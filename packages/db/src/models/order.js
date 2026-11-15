@@ -72,6 +72,8 @@ const orderSchema = new Schema(
 
 orderSchema.plugin(tenantScope);
 orderSchema.index({ brandId: 1, outletId: 1, createdAt: -1 });
+// platform-wide reads over a date range (the console dashboard's revenue charts)
+orderSchema.index({ createdAt: -1 });
 orderSchema.index({ brandId: 1, outletId: 1, orderDay: 1, orderNumber: 1 }, { unique: true });
 
 export const OrderModel = models.Order ?? model("Order", orderSchema);

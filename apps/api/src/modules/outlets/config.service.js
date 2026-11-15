@@ -12,7 +12,7 @@ export const APPEARANCE_AREAS = ["theme", "typography", "effect", "layout"];
 
 const pick = (obj, keys) => Object.fromEntries(keys.filter((k) => obj?.[k] !== undefined).map((k) => [k, obj[k]]));
 
-async function brandPlan(brandId) {
+export async function brandPlan(brandId) {
   try {
     return await storePlan(brandId);
   } catch {
@@ -22,12 +22,22 @@ async function brandPlan(brandId) {
   }
 }
 
-/** Defaults filled in, plus the brand's shared look — the OWNER's settings, as the admin edits them. */
-export async function ownerConfig(outlet) {
+/** `ownerConfig` for a store plan that has already been fetched. */
+export function ownerConfigWith(outlet, plan) {
   const config = outletConfigSchema.parse(outlet.config ?? {});
-  const plan = await brandPlan(outlet.brandId);
   if (!plan?.appearance) return config;
   return outletConfigSchema.parse({ ...config, ...pick(plan.appearance, APPEARANCE_AREAS) });
+}
+
+/** `effectiveConfig` for a store plan that has already been fetched. */
+export function effectiveConfigWith(outlet, plan) {
+  const config = ownerConfigWith(outlet, plan);
+  return plan ? applyEntitlements(config, plan.entitlements) : config;
+}
+
+/** Defaults filled in, plus the brand's shared look — the OWNER's settings, as the admin edits them. */
+export async function ownerConfig(outlet) {
+  return ownerConfigWith(outlet, await brandPlan(outlet.brandId));
 }
 
 /**
@@ -36,9 +46,7 @@ export async function ownerConfig(outlet) {
  * path act on. The stored config is never changed by this.
  */
 export async function effectiveConfig(outlet) {
-  const config = await ownerConfig(outlet);
-  const plan = await brandPlan(outlet.brandId);
-  return plan ? applyEntitlements(config, plan.entitlements) : config;
+  return effectiveConfigWith(outlet, await brandPlan(outlet.brandId));
 }
 
 /** `effectiveConfig` for the outlet in a request context. */
@@ -50,9 +58,10 @@ export async function effectiveOutletConfig(ctx) {
 
 export const OUTLET_UNAVAILABLE = "This outlet is temporarily unavailable.";
 
-/** Customers can't order from, or sit down at, a blocked outlet. */
+/** Customers can't order from, or sit down at, a blocked outlet — or at any outlet of a store the platform has switched off. */
 export async function assertOutletOpen(outletId) {
-  const outlet = await OutletModel.findOne({ _id: outletId }, null, { allowGlobalQuery: true }).select("blocked").lean();
+  const outlet = await OutletModel.findOne({ _id: outletId }, null, { allowGlobalQuery: true }).select("blocked brandId").lean();
   if (!outlet) throw new HttpError(404, "Outlet not found");
   if (outlet.blocked) throw new HttpError(423, OUTLET_UNAVAILABLE);
+  if ((await brandPlan(outlet.brandId))?.disabled) throw new HttpError(423, OUTLET_UNAVAILABLE);
 }

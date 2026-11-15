@@ -71,7 +71,7 @@ platformSiteRouter.use((req, _res, next) => {
 });
 
 platformSiteRouter.get("/settings", async (_req, res) => {
-  res.json({ settings: await site.getSiteSettings() });
+  res.json({ settings: await site.getSiteSettings({ fresh: true }) });
 });
 
 platformSiteRouter.put("/settings", async (req, res) => {

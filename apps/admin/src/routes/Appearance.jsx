@@ -27,6 +27,7 @@ export function Appearance() {
     const items = (withPhotos.length >= 3 ? withPhotos : available).slice(0, 3);
     return {
       outletName: id.name || outlet?.name || "Your restaurant",
+      logoUrl: id.logoUrl || "",
       tagline: id.tagline || "Freshly made, every day",
       phone: id.phone || "+91 98765 43210",
       address: id.address || "Shop 12, Main Market",

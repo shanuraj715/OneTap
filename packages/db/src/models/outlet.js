@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { defaultOutletConfig } from "@onetap/config-schema";
 import { tenantScope } from "../tenant-scope.js";
+import { writeEvents } from "../write-events.js";
 
 const { Schema, model, models } = mongoose;
 
@@ -23,5 +24,7 @@ const outletSchema = new Schema(
 outletSchema.plugin(tenantScope);
 outletSchema.index({ brandId: 1, slug: 1 }, { unique: true });
 outletSchema.index({ hostnames: 1 });
+// the API copies outlets (their config, addresses, blocked state) — tell it when any change
+outletSchema.plugin(writeEvents, { model: "Outlet", brandFrom: "brandId", outletFrom: "_id" });
 
 export const OutletModel = models.Outlet ?? model("Outlet", outletSchema);

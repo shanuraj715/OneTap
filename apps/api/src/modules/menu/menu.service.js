@@ -7,6 +7,7 @@ import {
   tenantFilter,
 } from "@onetap/db";
 import { HttpError } from "../../middleware/error.js";
+import { cache } from "../cache/cache.js";
 import { removeObject } from "../storage/storage.service.js";
 
 /*
@@ -56,18 +57,30 @@ const toGroup = (d                     )                => ({
 
 /* --------------------------------------------------------------------- read */
 
-export async function getMenu(ctx               )                {
-  const [categories, items, modifierGroups] = await Promise.all([
-    MenuCategoryModel.find(tenantFilter(ctx)).sort({ sortOrder: 1, name: 1 }).lean(),
-    MenuItemModel.find(tenantFilter(ctx)).sort({ sortOrder: 1, name: 1 }).lean(),
-    ModifierGroupModel.find(tenantFilter(ctx)).sort({ name: 1 }).lean(),
-  ]);
+/**
+ * An outlet's whole menu. Page views are served from the cache (dropped the
+ * moment any menu item, category or modifier group of the outlet changes).
+ * Anything that decides what a customer PAYS — placing or editing an order —
+ * must pass `fresh: true` and read the prices straight from the database.
+ */
+export async function getMenu(ctx               , { fresh = false } = {}) {
+  const load = async () => {
+    const [categories, items, modifierGroups] = await Promise.all([
+      MenuCategoryModel.find(tenantFilter(ctx)).sort({ sortOrder: 1, name: 1 }).lean(),
+      MenuItemModel.find(tenantFilter(ctx)).sort({ sortOrder: 1, name: 1 }).lean(),
+      ModifierGroupModel.find(tenantFilter(ctx)).sort({ name: 1 }).lean(),
+    ]);
 
-  return {
-    categories: categories.map(toCategory),
-    items: items.map(toItem),
-    modifierGroups: modifierGroups.map(toGroup),
+    return {
+      categories: categories.map(toCategory),
+      items: items.map(toItem),
+      modifierGroups: modifierGroups.map(toGroup),
+    };
   };
+  if (fresh) return load();
+  return cache.wrap(`menu:${ctx.brandId}:${ctx.outletId}`, load, {
+    tags: [`brand:${ctx.brandId}`, `menu:${ctx.outletId}`, "ns:menu"],
+  });
 }
 
 /* --------------------------------------------------------------- categories */

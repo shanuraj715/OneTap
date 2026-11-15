@@ -1,3 +1,4 @@
+import { Ban } from "lucide-react";
 import { Pill } from "../../ui";
 
 export const fmtDate = (d) =>
@@ -5,6 +6,16 @@ export const fmtDate = (d) =>
 
 /** "3 / 5", or "3 / ∞" when unlimited. */
 export const usageText = (used, max) => `${used} / ${max ?? "∞"}`;
+
+/** Shown wherever a store that TablePe has switched off is listed. Renders nothing for a store that is running. */
+export function DisabledPill({ store, withDate = false }) {
+  if (!store.disabled) return null;
+  return (
+    <Pill tone="error" icon={<Ban size={11} aria-hidden="true" />}>
+      Disabled{withDate && store.disabled.at ? ` ${fmtDate(store.disabled.at)}` : ""}
+    </Pill>
+  );
+}
 
 /** A store's state at a glance: fine, in its grace period, or over limit with grace ended. */
 export function StatusPill({ store }) {

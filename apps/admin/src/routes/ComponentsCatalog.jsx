@@ -37,7 +37,7 @@ const CATEGORIES = [
   { id: "all", label: "All Components", icon: Boxes },
   { id: "pickers", label: "Pickers & Inputs", icon: Calendar, slots: ["datePickerVariant", "buttonVariant", "chipVariant", "dropdownVariant"] },
   { id: "analytics", label: "Analytics & Data", icon: Layers, slots: ["statCardVariant", "analyticsChartVariant", "progressVariant", "listGroupVariant"] },
-  { id: "storefront", label: "Storefront & Cards", icon: UtensilsCrossed, slots: ["itemCardVariant", "contentCardVariant", "carouselVariant", "popupCarouselVariant", "headerVariant", "footerVariant"] },
+  { id: "storefront", label: "Storefront & Cards", icon: UtensilsCrossed, slots: ["itemCardVariant", "contentCardVariant", "carouselVariant", "popupCarouselVariant", "announcementVariant", "headerVariant", "footerVariant"] },
   { id: "feedback", label: "Feedback & Status", icon: Sparkles, slots: ["badgeVariant", "alertVariant", "toastVariant"] },
   { id: "overlays", label: "Overlays & Dialogs", icon: SlidersHorizontal, slots: ["modalVariant", "popoverVariant", "accordionVariant", "faqVariant"] },
 ];
@@ -97,6 +97,7 @@ export function ComponentsCatalog() {
     const name = outlet?.config?.identity?.name || outlet?.name || "Gazab Momos";
     return {
       outletName: name,
+      logoUrl: outlet?.config?.identity?.logoUrl || "",
       tagline: outlet?.config?.identity?.tagline || "Authentic taste & delicious bites",
       phone: outlet?.config?.identity?.phone || "+91 98765 43210",
       address: outlet?.config?.identity?.address || "Shop 12, Main Market, Delhi",

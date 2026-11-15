@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { formatINR, GATEWAY_LABELS } from "@onetap/config-schema";
+import { formatINR, GATEWAY_LABELS, ORDER_TYPE_STORAGE_KEY } from "@onetap/config-schema";
 import { DropdownSoft, fx, ProgressSteps } from "@onetap/ui";
 import { ArrowLeft, Check, ChevronRight, Coins, MapPin, ShoppingBag, Sparkles, Tag, Utensils, Wallet, X } from "lucide-react";
 import { api, payOnline } from "@/lib/clientApi";
@@ -54,6 +54,17 @@ export function OrderPage({
   const [gateStep, setGateStep] = useState("details");
 
   const [fulfilment, setFulfilment] = useState("takeaway");
+  // Set by the visitor on this page — from then on their choice here wins over the one remembered from the menu page.
+  const choseHere = useRef(false);
+  const chooseFulfilment = (value) => {
+    choseHere.current = true;
+    setFulfilment(value);
+    try {
+      if (value === "takeaway" || value === "delivery") window.localStorage.setItem(ORDER_TYPE_STORAGE_KEY, value);
+    } catch {
+      /* not remembered */
+    }
+  };
   const [tableNumber, setTableNumber] = useState("");
   const [tables, setTables] = useState([]);
   const [appliedCoupon, setAppliedCoupon] = useState(null);
@@ -70,6 +81,16 @@ export function OrderPage({
   useEffect(() => {
     if (fulfilment === "delivery" && !deliveryAvailable) setFulfilment("takeaway");
   }, [fulfilment, deliveryAvailable]);
+
+  // They picked Delivery on the menu page: start here on Delivery too, once we know it can be offered.
+  useEffect(() => {
+    if (choseHere.current || dineIn || !deliveryAvailable) return;
+    try {
+      if (window.localStorage.getItem(ORDER_TYPE_STORAGE_KEY) === "delivery") setFulfilment("delivery");
+    } catch {
+      /* private window */
+    }
+  }, [deliveryAvailable, dineIn]);
 
   useEffect(() => {
     if (fulfilment !== "dinein" || dineIn || tables.length) return;
@@ -200,7 +221,7 @@ export function OrderPage({
         deliveryAvailable={deliveryAvailable}
         capacity={capacity}
         fulfilment={fulfilment}
-        onFulfilment={setFulfilment}
+        onFulfilment={chooseFulfilment}
         tableNumber={tableNumber}
         onTableNumber={setTableNumber}
         tables={tables}
@@ -655,21 +676,49 @@ function showFulfilmentPicker(deliveryAvailable) {
 /* -------------------------------------------------------------------- done */
 
 function DoneView({ order, dineIn, tab, channel, menuHref }) {
+  const isDineIn = Boolean(dineIn) || channel === "dine-in";
+  const isDelivery = channel === "delivery";
+  const gateway = order.payment?.gateway;
+  const paidOnline = Boolean(gateway) && gateway !== "cod" && order.payment?.status && order.payment.status !== "pending";
+
+  const lead = isDineIn
+    ? `Sent to the kitchen${dineIn ? ` for Table ${dineIn.tableNumber}` : ""}.`
+    : isDelivery
+      ? "It's on its way to you."
+      : "The kitchen has it.";
+
+  // What the customer wants to know, one fact per line — not packed into one sentence.
+  const rows = [
+    ["Order type", isDineIn ? (dineIn ? `Dine-in · Table ${dineIn.tableNumber}` : "Dine-in") : isDelivery ? "Delivery" : "Takeaway"],
+    !isDineIn && order.etaMinutes ? [isDelivery ? "Arrives in" : "Ready in", `about ${order.etaMinutes} minutes`] : null,
+    ["Total", formatINR(order.totals.grandTotal)],
+    !isDineIn && gateway ? ["Payment", paidOnline ? "Paid online" : (GATEWAY_LABELS[gateway] ?? "")] : null,
+  ].filter(Boolean);
+
   return (
     <div style={doneWrap} className="ot-anim-pop">
-      <div style={doneCheck}>
-        <Check size={30} strokeWidth={3} />
+      <div style={doneCheck} aria-hidden="true">
+        <Check size={34} strokeWidth={3} />
       </div>
-      <h2 style={{ margin: "16px 0 4px", fontFamily: "var(--font-heading)", fontSize: 20 }}>Order #{order.orderNumber} placed</h2>
-      <p style={muted}>
-        {dineIn || channel === "dine-in"
-          ? `Sent to the kitchen${dineIn ? ` for Table ${dineIn.tableNumber}` : ""}.`
-          : channel === "delivery"
-            ? `${formatINR(order.totals.grandTotal)} — on its way.${order.etaMinutes ? ` About ${order.etaMinutes} minutes.` : ""}`
-            : `${formatINR(order.totals.grandTotal)} — the kitchen has it.${order.etaMinutes ? ` Ready in about ${order.etaMinutes} minutes.` : ""}`}
-      </p>
-      {(dineIn || channel === "dine-in") && tab !== null ? <p style={{ ...muted, fontWeight: 700, color: "var(--color-text)" }}>Running tab: {formatINR(tab)}</p> : null}
-      <Link href={menuHref} className="ot-fx-btn" style={fx("btn", primaryLinkBtn)}>
+      <h2 style={doneTitle}>Order #{order.orderNumber} placed</h2>
+      <p style={doneLead}>{lead}</p>
+
+      <dl className="ot-fx-card" style={fx("card", doneSummary)}>
+        {rows.map(([label, value], i) => (
+          <div key={label} style={{ ...doneRow, ...(i > 0 ? doneRowRule : null) }}>
+            <dt style={doneLabel}>{label}</dt>
+            <dd style={doneValue}>{value}</dd>
+          </div>
+        ))}
+      </dl>
+
+      {isDineIn && tab !== null ? (
+        <p style={doneTab}>
+          Running tab <strong style={{ fontVariantNumeric: "tabular-nums" }}>{formatINR(tab)}</strong>
+        </p>
+      ) : null}
+
+      <Link href={menuHref} className="ot-fx-btn" style={fx("btn", doneButton)}>
         Back to menu
       </Link>
     </div>
@@ -800,5 +849,23 @@ const bottomBarPrice = { fontSize: 19, fontWeight: 800, fontVariantNumeric: "tab
 const placeBtn = { display: "inline-flex", alignItems: "center", gap: 6, font: "inherit", fontWeight: 700, fontSize: 15, padding: "13px 22px", borderRadius: 12, background: "var(--color-primary)", color: "var(--color-on-primary)", border: "none", cursor: "pointer" };
 const emptyWrap = { display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", padding: "80px 20px" };
 const primaryLinkBtn = { display: "inline-block", font: "inherit", fontWeight: 700, fontSize: 14.5, padding: "12px 22px", borderRadius: 12, background: "var(--color-primary)", color: "var(--color-on-primary)", textDecoration: "none" };
-const doneWrap = { display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", padding: "60px 20px" };
-const doneCheck = { width: 60, height: 60, borderRadius: "50%", display: "grid", placeItems: "center", background: "var(--tone-success-wash)", color: "var(--tone-success)" };
+const doneWrap = { display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", padding: "48px 4px 32px" };
+const doneCheck = {
+  width: 72,
+  height: 72,
+  borderRadius: "50%",
+  display: "grid",
+  placeItems: "center",
+  background: "var(--tone-success-wash)",
+  color: "var(--tone-success)",
+  boxShadow: "0 0 0 10px color-mix(in srgb, var(--tone-success) 10%, transparent)",
+};
+const doneTitle = { margin: "30px 0 0", fontFamily: "var(--font-heading)", fontSize: "clamp(1.45rem, 5.5vw, 1.8rem)", lineHeight: 1.2, textWrap: "balance" };
+const doneLead = { margin: "10px 0 0", fontSize: 16, lineHeight: 1.5, color: "var(--color-text-muted)" };
+const doneSummary = { width: "100%", maxWidth: 380, margin: "28px 0 0", padding: "4px 18px", background: "var(--color-bg)", border: "1px solid var(--color-border)", borderRadius: 14, textAlign: "left" };
+const doneRow = { display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 16, padding: "13px 0" };
+const doneRowRule = { borderTop: "1px solid var(--color-border)" };
+const doneLabel = { fontSize: 13.5, color: "var(--color-text-muted)" };
+const doneValue = { margin: 0, fontSize: 15, fontWeight: 700, textAlign: "right", fontVariantNumeric: "tabular-nums" };
+const doneTab = { margin: "18px 0 0", fontSize: 14.5, color: "var(--color-text-muted)" };
+const doneButton = { display: "inline-block", marginTop: 32, minWidth: 220, textAlign: "center", font: "inherit", fontWeight: 700, fontSize: 15.5, padding: "14px 28px", borderRadius: 12, background: "var(--color-primary)", color: "var(--color-on-primary)", textDecoration: "none" };

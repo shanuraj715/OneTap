@@ -23,6 +23,35 @@ const colTitle                = {
   marginBottom: 8,
 };
 
+/**
+ * The store's own pages (About us, Contact…) as links, inside whichever footer style is chosen. `links` is
+ * `[{ label, href }]`; nothing renders without any. `column` stacks them (for a footer that has a column for it),
+ * `inverted` is for the dark footer.
+ */
+function PageLinksRow({ links, align = "left", column = false, inverted = false, style }) {
+  if (!links?.length) return null;
+  return (
+    <nav
+      aria-label="Pages"
+      style={{
+        display: "flex",
+        flexDirection: column ? "column" : "row",
+        flexWrap: "wrap",
+        gap: column ? 6 : "6px 18px",
+        justifyContent: align === "center" ? "center" : align === "right" ? "flex-end" : "flex-start",
+        marginTop: column ? 0 : 12,
+        ...style,
+      }}
+    >
+      {links.map((l) => (
+        <a key={`${l.href}-${l.label}`} href={l.href} style={{ fontSize: 13, fontWeight: 600, color: inverted ? "var(--color-bg)" : "var(--color-text)", opacity: inverted ? 0.85 : 1, textDecoration: "none" }}>
+          {l.label}
+        </a>
+      ))}
+    </nav>
+  );
+}
+
 function Licences({ fssaiLicense, gstin }                                             )            {
   return (
     <>
@@ -41,6 +70,7 @@ export function FooterTwoColumn(p             ) {
           <div style={brand}>{p.name}</div>
           {p.address ? <div style={muted}>{p.address}</div> : null}
           {p.phone ? <div style={muted}>{p.phone}</div> : null}
+          <PageLinksRow links={p.links} />
         </div>
         <div style={{ textAlign: "right" }}>
           <Licences fssaiLicense={p.fssaiLicense} gstin={p.gstin} />
@@ -59,6 +89,7 @@ export function FooterCentered(p             ) {
         <div style={{ ...brand, fontSize: 17, marginBottom: 10 }}>{p.name}</div>
         {p.address ? <div style={muted}>{p.address}</div> : null}
         {p.phone ? <div style={muted}>{p.phone}</div> : null}
+        <PageLinksRow links={p.links} align="center" />
         <div
           style={{
             margin: "16px auto 0",
@@ -102,6 +133,12 @@ export function FooterColumns(p             ) {
           <div style={colTitle}>Contact</div>
           {p.phone ? <div style={muted}>{p.phone}</div> : null}
         </div>
+        {p.links?.length ? (
+          <div>
+            <div style={colTitle}>Pages</div>
+            <PageLinksRow links={p.links} column />
+          </div>
+        ) : null}
         <div>
           <div style={colTitle}>Legal</div>
           <Licences fssaiLicense={p.fssaiLicense} gstin={p.gstin} />
@@ -121,6 +158,7 @@ export function FooterMinimalBar(p             ) {
     <footer style={{ ...shell, marginTop: 48 }}>
       <div style={{ ...inner, padding: "16px 24px", display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
         <span style={muted}>{bits}</span>
+        <PageLinksRow links={p.links} style={{ marginTop: 0 }} />
         <span style={muted}>Powered by TablePe</span>
       </div>
     </footer>
@@ -139,6 +177,7 @@ export function FooterBrandBlock(p             ) {
           <div>
             {p.address ? <div style={muted}>{p.address}</div> : null}
             {p.phone ? <div style={muted}>{p.phone}</div> : null}
+            <PageLinksRow links={p.links} />
           </div>
           <div style={{ textAlign: "right" }}>
             <Licences fssaiLicense={p.fssaiLicense} gstin={p.gstin} />
@@ -158,6 +197,7 @@ export function FooterInverted(p             ) {
           <div style={{ ...brand, color: "var(--color-bg)" }}>{p.name}</div>
           {p.address ? <div style={{ ...muted, color: "var(--color-bg)", opacity: 0.7 }}>{p.address}</div> : null}
           {p.phone ? <div style={{ ...muted, color: "var(--color-bg)", opacity: 0.7 }}>{p.phone}</div> : null}
+          <PageLinksRow links={p.links} inverted />
         </div>
         <div style={{ textAlign: "right", opacity: 0.7 }}>
           {p.fssaiLicense ? <div style={{ ...muted, color: "var(--color-bg)" }}>FSSAI Lic. No. {p.fssaiLicense}</div> : null}
@@ -186,6 +226,12 @@ export function FooterContact(p             ) {
           <div style={colTitle}>Call</div>
           {p.phone ? <div style={muted}>{p.phone}</div> : null}
         </div>
+        {p.links?.length ? (
+          <div>
+            <div style={colTitle}>Pages</div>
+            <PageLinksRow links={p.links} column />
+          </div>
+        ) : null}
         <div>
           <div style={colTitle}>Licences</div>
           <Licences fssaiLicense={p.fssaiLicense} gstin={p.gstin} />
@@ -209,6 +255,7 @@ export function FooterNewsletter(p             ) {
           <div style={{ ...brand, fontSize: 16 }}>{p.name}</div>
           {p.address ? <div style={muted}>{p.address}</div> : null}
           {p.phone ? <div style={muted}>{p.phone}</div> : null}
+          <PageLinksRow links={p.links} />
         </div>
         <div>
           <div style={colTitle}>Offers by email</div>

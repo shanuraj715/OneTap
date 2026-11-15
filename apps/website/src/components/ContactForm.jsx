@@ -92,7 +92,9 @@ export function ContactForm({ plans = [] }) {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const plan = params.get("plan");
-    if (plan) setForm((f) => ({ ...f, plan: plan.slice(0, 60) }));
+    // only a plan that really exists can be pre-selected; anything else in the address is ignored
+    const known = plan ? plans.find((p) => p.toLowerCase() === plan.trim().toLowerCase()) : null;
+    if (known) setForm((f) => ({ ...f, plan: known }));
     if (params.get("billing") === "yearly") setBilling("yearly");
     prepare();
   }, [prepare]);
@@ -237,7 +239,6 @@ export function ContactForm({ plans = [] }) {
                 {p}
               </option>
             ))}
-            {form.plan && !plans.includes(form.plan) ? <option value={form.plan}>{form.plan}</option> : null}
           </select>
         </Field>
       ) : null}

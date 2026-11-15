@@ -1,7 +1,8 @@
 import { Router } from "express";
 import { z } from "zod";
 import { cartSchema, gatewaySchema, orderChannelSchema, orderStatusSchema } from "@onetap/config-schema";
-import { OrderModel, OutletModel,                    } from "@onetap/db";
+import { OrderModel } from "@onetap/db";
+import { outletBrand } from "../outlets/outlet-cache.js";
 import { requireOutletContext, requireUser } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import { currentCustomer } from "../customer/customer.routes.js";
@@ -20,9 +21,9 @@ export const ordersRouter         = Router();
 
 /** Public context — a storefront visitor pricing a cart for a given outlet. */
 async function publicContext(outletId        )                         {
-  const outlet = await OutletModel.findOne({ _id: outletId }, null, { allowGlobalQuery: true }).lean();
-  if (!outlet) throw new HttpError(404, "Outlet not found");
-  return { brandId: outlet.brandId, outletId: String(outlet._id) };
+  const ref = await outletBrand(outletId);
+  if (!ref) throw new HttpError(404, "Outlet not found");
+  return { brandId: ref.brandId, outletId: ref.outletId };
 }
 
 /* -------------------------------------------------------------------- quote */
@@ -59,7 +60,7 @@ ordersRouter.get("/capacity", async (req, res) => {
   const outletId = typeof req.query.outletId === "string" ? req.query.outletId : "";
   if (!outletId) throw new HttpError(400, "outletId is required");
   const ctx = await publicContext(outletId);
-  res.json(await getCapacityStatus(ctx));
+  res.json(await getCapacityStatus(ctx, { cached: true }));
 });
 
 /* -------------------------------------------------------------------- place */

@@ -7,7 +7,6 @@ import {
   OrderModel,
   OutletModel,
   PlanModel,
-  PlatformSettingsModel,
   PrinterModel,
   PrintJobModel,
   PrintTemplateModel,
@@ -18,6 +17,9 @@ import {
   UserModel,
 } from "@onetap/db";
 import { HttpError } from "../../middleware/error.js";
+import { dropStoreTeam } from "../../realtime/hub.js";
+import { expireStore } from "../cache/cache.js";
+import { savePlatformConfig } from "../cache/platform-config.js";
 import { ensureOwner } from "../auth/auth.service.js";
 import { hashPassword } from "../auth/password.js";
 import { countActiveOutlets, countActiveUsers, invalidateStorePlan, platformSettings, storePlan } from "./plan.service.js";
@@ -98,11 +100,8 @@ export async function updatePlan(id, input) {
 export const getSettings = async () => ({ ...(await platformSettings()), subdomainBase: configuredBase() });
 
 export async function updateSettings({ graceDays }) {
-  await PlatformSettingsModel.findOneAndUpdate(
-    { key: "platform" },
-    { $set: { graceDays }, $setOnInsert: { key: "platform" } },
-    { upsert: true },
-  );
+  // saved through the settings snapshot, so every reader of it (plan checks, the cache) sees the change at once
+  await savePlatformConfig({ graceDays });
   invalidateStorePlan();
   return getSettings();
 }
@@ -114,6 +113,9 @@ function statusOf(plan) {
   if (!plan.grace.over) return "ok";
   return plan.grace.ended ? "over-limit" : "grace";
 }
+
+/** `{ at, message }` while the platform has the store switched off, otherwise null. (Separate from `status`, which is about plan limits.) */
+const shapeDisabled = (brand) => (brand.disabled ? { at: brand.disabled.at, message: brand.disabled.message ?? "" } : null);
 
 async function storeSummary(brand) {
   const id = String(brand._id);
@@ -133,6 +135,8 @@ async function storeSummary(brand) {
     max: plan.max,
     grace: plan.grace,
     status: statusOf(plan),
+    /** switched off by the platform (late payment, say) — see setStoreDisabled */
+    disabled: shapeDisabled(brand),
     blocked: { outlets: blockedOutlets, people: blockedPeople },
   };
 }
@@ -251,6 +255,63 @@ export async function setStorePlan(id, { planId, overrides }) {
   await brand.save();
   invalidateStorePlan(id);
   return getStore(id);
+}
+
+/* ------------------------------------------------ switching a whole store off */
+
+const OBJECT_ID = /^[0-9a-f]{24}$/i;
+
+/** Orders a kitchen would still be working on: not finished, not cancelled, and not an online order still waiting for its payment. */
+const IN_PROGRESS = {
+  status: { $in: ["placed", "accepted", "preparing", "ready"] },
+  $or: [{ "payment.gateway": "cod" }, { "payment.status": { $ne: "pending" } }],
+};
+
+async function loadStoreById(id) {
+  if (!OBJECT_ID.test(String(id))) throw new HttpError(404, "Store not found");
+  const brand = await BrandModel.findById(id);
+  if (!brand) throw new HttpError(404, "Store not found");
+  return brand;
+}
+
+/**
+ * Switch a whole store off — or back on. For a store that hasn't paid: customers see "temporarily
+ * unavailable" and can't order, and the store's team can't use the dashboard (they see `message`
+ * instead). NOTHING is deleted; turning the store back on restores everything exactly as it was.
+ *
+ * Disabling a store that is already disabled only updates the message (and keeps the original date).
+ * Both directions are safe to repeat.
+ */
+export async function setStoreDisabled(id, disabled, { message, byUserId } = {}) {
+  const brand = await loadStoreById(id);
+  if (disabled) {
+    brand.disabled = {
+      at: brand.disabled?.at ?? new Date(),
+      by: brand.disabled?.by ?? byUserId,
+      message: String(message ?? "").trim().slice(0, 500),
+    };
+  } else {
+    brand.disabled = null;
+  }
+  await brand.save(); // a write to the store: this process drops everything cached about it at once
+  invalidateStorePlan(id);
+  // …and the other API processes sharing this database hear about it within ~30 seconds
+  await expireStore(id);
+  // its team stops receiving live orders right now, not whenever they next reconnect
+  if (disabled) dropStoreTeam(String(brand._id));
+  return getStore(id);
+}
+
+/** What switching a store off affects right now — shown in the confirmation. */
+export async function disableSummary(id) {
+  const brand = await loadStoreById(id);
+  const brandId = String(brand._id);
+  const [outlets, people, ordersInProgress] = await Promise.all([
+    OutletModel.countDocuments({ brandId, blocked: null }),
+    UserModel.countDocuments({ isActive: true, memberships: { $elemMatch: { brandId, blockedAt: null } } }),
+    OrderModel.countDocuments({ brandId, ...IN_PROGRESS }),
+  ]);
+  return { store: { id: brandId, name: brand.name }, disabled: shapeDisabled(brand), counts: { outlets, people, ordersInProgress } };
 }
 
 /* ------------------------------------------------------------- outlets */

@@ -6,6 +6,8 @@ import { pinoHttp } from "pino-http";
 import { corsOrigins, env } from "./env.js";
 import { logger } from "./logger.js";
 import { localUploadsPath } from "./modules/storage/providers/index.js";
+import { installCacheInvalidation } from "./modules/cache/invalidation.js";
+import { requestStats } from "./modules/sysmon/request-stats.js";
 import { authenticate } from "./middleware/auth.js";
 import { errorHandler, notFound } from "./middleware/error.js";
 import { authRouter } from "./modules/auth/auth.routes.js";
@@ -23,6 +25,7 @@ import { ordersRouter } from "./modules/orders/orders.routes.js";
 import { platformSiteRouter, siteRouter } from "./modules/site/site.routes.js";
 import { staffOrdersRouter } from "./modules/orders/staff-orders.routes.js";
 import { outletsRouter } from "./modules/outlets/outlets.routes.js";
+import { pagesRouter } from "./modules/pages/pages.routes.js";
 import { paymentsRouter } from "./modules/payments/payments.routes.js";
 import { previewRouter } from "./modules/preview/preview.routes.js";
 import { printingRouter } from "./modules/printing/printing.routes.js";
@@ -32,6 +35,9 @@ import { tablesRouter } from "./modules/tables/tables.routes.js";
 import { usersRouter } from "./modules/users/users.routes.js";
 
 export function createApp()          {
+  // cached data is thrown away the moment the data behind it is written (see modules/cache)
+  installCacheInvalidation();
+
   const app = express();
 
   app.disable("x-powered-by");
@@ -83,6 +89,8 @@ export function createApp()          {
   );
   app.use(cookieParser());
   app.use(pinoHttp({ logger }));
+  // counts requests, failures and speed for the Server page
+  app.use(requestStats);
 
   // Attaches req.user when a valid session cookie is present; routes enforce.
   app.use(authenticate);
@@ -105,6 +113,8 @@ export function createApp()          {
   app.use("/api/coupons", couponsRouter);
   app.use("/api/delivery", deliveryRouter);
   app.use("/api/payments", paymentsRouter);
+  // a store's own storefront pages: public reads for visitors, management for its team
+  app.use("/api/pages", pagesRouter);
   app.use("/api/tables", tablesRouter);
   app.use("/api/qr-cards", qrCardsRouter);
   app.use("/api/printing", printingRouter);

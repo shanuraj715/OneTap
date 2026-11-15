@@ -41,11 +41,16 @@ const API_BASE = import.meta.env.VITE_API_URL ?? "http://localhost:3072";
  
 
 export class ApiError extends Error {
-  constructor(status, message) {
+  constructor(status, message, details) {
     super(message);
     this.status = status;
+    /** extra facts the API sent with the error, such as `{ code: "store_disabled" }` */
+    this.details = details;
   }
 }
+
+/** True when the API turned someone away because TablePe has switched their whole store off. */
+export const isStoreDisabledError = (error) => error instanceof ApiError && error.status === 403 && error.details?.code === "store_disabled";
 
 ;                                                       
                                    
@@ -66,7 +71,7 @@ async function req   (path        , init          = {})             {
 
   if (!res.ok) {
     const body = (await res.json().catch(() => ({})))                      ;
-    throw new ApiError(res.status, body.error ?? `API responded ${res.status}`);
+    throw new ApiError(res.status, body.error ?? `API responded ${res.status}`, body.details);
   }
   if (res.status === 204) return undefined     ;
   return res.json()              ;
@@ -144,22 +149,18 @@ export const createPreviewSession = (o        , layout        ) =>
 
 /* ------------------------------------------------------------------ storage */
 
-export const getStorageConfig = (o        ) =>
-  req                ("/api/storage/config", { outletId: o._id });
+// Where images are kept (this server's disk or an S3-compatible bucket) is the PLATFORM's setting — see the console's Storage page.
+export const getPlatformStorage = () => req("/api/platform/storage");
 
 /** payload: { provider?, values?, processing? } */
-export const saveStorageConfig = (o        , payload        ) =>
-  req                ("/api/storage/config", {
-    method: "PUT",
-    body: JSON.stringify(payload),
-    outletId: o._id,
-  });
+export const savePlatformStorage = (payload) => req("/api/platform/storage", json("PUT", payload));
 
-export const resetStorageConfig = (o        ) =>
-  req                ("/api/storage/config", { method: "DELETE", outletId: o._id });
+export const resetPlatformStorage = () => req("/api/platform/storage", json("DELETE"));
 
-export const testStorageConfig = (o        ) =>
-  req                ("/api/storage/config/test", { method: "POST", body: "{}", outletId: o._id });
+export const testPlatformStorage = () => req("/api/platform/storage/test", json("POST"));
+
+/** Use one store's own (older) storage settings as the platform's. */
+export const adoptStoreStorage = (brandId) => req(`/api/platform/storage/adopt/${brandId}`, json("POST"));
 
 /**
  * Upload one image of any format. The API compresses + re-encodes it and
@@ -179,6 +180,18 @@ export const deleteStorageObject = (o        , key        ) =>
     body: JSON.stringify({ key }),
     outletId: o._id,
   });
+
+/* ------------------------------------------------------------- storefront pages */
+
+// A store's own pages (About us, Contact…) — one set per outlet.
+export const listStorePages = (o) => req("/api/pages", { outletId: o._id });
+export const getStorePage = (o, id) => req(`/api/pages/${id}`, { outletId: o._id });
+export const createStorePage = (o, body) => req("/api/pages", { method: "POST", body: JSON.stringify(body), outletId: o._id });
+export const updateStorePage = (o, id, body) => req(`/api/pages/${id}`, { method: "PATCH", body: JSON.stringify(body), outletId: o._id });
+export const deleteStorePage = (o, id) => req(`/api/pages/${id}`, { method: "DELETE", outletId: o._id });
+export const reorderStorePages = (o, ids) => req("/api/pages/order", { method: "PUT", body: JSON.stringify({ ids }), outletId: o._id });
+/** Creates the ready-made pages the outlet doesn't have yet, as drafts. */
+export const createStarterPages = (o) => req("/api/pages/starter", { method: "POST", body: "{}", outletId: o._id });
 
 /* ---------------------------------------------------------------------- menu */
 
@@ -645,7 +658,38 @@ export const getStorePlan = (brandId) => req("/api/store/plan", { brandId });
 
 const json = (method, body) => ({ method, body: JSON.stringify(body ?? {}) });
 
-export const platformOverview = () => req("/api/platform/overview");
+/** The dashboard's numbers. `fresh` recomputes them instead of using the server's cached copy. */
+export const getDashboard = (fresh = false) => req(`/api/platform/dashboard${fresh ? "?fresh=1" : ""}`);
+/** Sign-in history, newest first: filter = all | success | failed | platform | stores. */
+export const getLoginLogs = ({ filter = "all", cursor, limit = 20 } = {}) =>
+  req(`/api/platform/login-logs?filter=${filter}&limit=${limit}${cursor ? `&cursor=${cursor}` : ""}`);
+
+/* the server this API runs on */
+export const getServer = () => req("/api/platform/server");
+export const getServerHealth = () => req("/api/platform/server/health");
+export const getServerHistory = (minutes = 30) => req(`/api/platform/server/history?minutes=${minutes}`);
+export const getServerProcesses = () => req("/api/platform/server/processes");
+export const getFolderScan = () => req("/api/platform/server/folders");
+export const startFolderScan = () => req("/api/platform/server/folders/scan", json("POST"));
+
+/* cache controls */
+export const getCacheOverview = () => req("/api/platform/cache");
+export const setCacheTtl = (ttlSeconds) => req("/api/platform/cache/settings", json("PUT", { ttlSeconds }));
+/** { scope: "all" } or { scope: "store", storeId } */
+export const expireCache = (body) => req("/api/platform/cache/expire", json("POST", body));
+export const getStoreCache = (id) => req(`/api/platform/stores/${id}/cache`);
+/** Everything cached right now: what, for which store, how old, how big. Looking never changes the cache. */
+export const getCacheEntries = () => req("/api/platform/cache/entries");
+/** One cached item with its data (secret-looking fields hidden). `key` is the cache key, e.g. "menu:<store>:<outlet>". */
+export const getCacheEntry = (key) => req(`/api/platform/cache/entry?key=${encodeURIComponent(key)}`);
+
+/* deleting a store */
+export const getDisableSummary = (id) => req(`/api/platform/stores/${id}/disable-summary`);
+/** Switch a whole store off (a late payment, say) — nothing is deleted. Calling it again just changes the message. */
+export const disableStore = (id, message) => req(`/api/platform/stores/${id}/disable`, json("POST", { message }));
+export const enableStore = (id) => req(`/api/platform/stores/${id}/enable`, json("POST"));
+export const getDeletionSummary = (id) => req(`/api/platform/stores/${id}/deletion-summary`);
+export const deleteStore = (id, confirmName) => req(`/api/platform/stores/${id}`, json("DELETE", { confirmName }));
 export const listPlans = () => req("/api/platform/plans");
 export const createPlan = (body) => req("/api/platform/plans", json("POST", body));
 export const updatePlan = (id, body) => req(`/api/platform/plans/${id}`, json("PATCH", body));

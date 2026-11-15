@@ -2,12 +2,14 @@ import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { CARD_TEMPLATE_FAMILIES, EFFECT_IDS, EFFECT_PRESETS, FEATURES } from "@onetap/config-schema";
-import { ArrowLeft, Check, ExternalLink, Globe, RefreshCw, Save, Store, Trash2, X } from "lucide-react";
+import { ArrowLeft, Ban, Check, ExternalLink, Globe, RefreshCw, Save, Store, Trash2, X } from "lucide-react";
 import * as api from "../../lib/api";
 import { useOpenStore } from "../../lib/useOutlet";
 import { usePlans, usePlatformMutation, useStore } from "../../lib/usePlatform";
 import { Button, Card, Field, Note, PageHeader, Pill, Select, Tabs, TextInput, Toast } from "../../ui";
-import { browserCanOpen, describeHttpError, fmtDate, muted, planLabel, row, SERVER_CHECK_FAILED, StatusPill, usageText } from "./shared";
+import { StoreCacheCard } from "./CachePanels";
+import { StoreActionsMenu, StoreDialogs } from "./StoreActions";
+import { browserCanOpen, describeHttpError, DisabledPill, fmtDate, muted, planLabel, row, SERVER_CHECK_FAILED, StatusPill, usageText } from "./shared";
 
 const TABS = [
   { id: "plan", label: "Plan & limits" },
@@ -17,6 +19,7 @@ const TABS = [
   { id: "domains", label: "Domains" },
   { id: "people", label: "People" },
   { id: "appearance", label: "Appearance" },
+  { id: "cache", label: "Cache" },
 ];
 
 const EFFECT_ITEMS = EFFECT_IDS.filter((id) => id !== "none").map((id) => ({ key: id, label: EFFECT_PRESETS[id].label }));
@@ -33,6 +36,8 @@ export function PlatformStoreDetail() {
   const plans = usePlans();
   const store = q.data?.store;
   const [tab, setTab] = useState("plan");
+  // the "⋮" menu and the banner below open these: disable / enable / change the message / delete
+  const [dialog, setDialog] = useState(null);
 
   // The plan + overrides are edited as one draft, saved together.
   const [draft, setDraft] = useState(null);
@@ -80,7 +85,7 @@ export function PlatformStoreDetail() {
         icon={<Store size={23} />}
         subtitle={`${planLabel(store.plan)} · created ${fmtDate(store.createdAt)}`}
         action={
-          <span style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <span style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
             <Link to="/platform/stores" style={{ textDecoration: "none" }}>
               <Button variant="outline" style={{ display: "inline-flex", gap: 6, alignItems: "center" }}>
                 <ArrowLeft size={14} /> All stores
@@ -89,11 +94,32 @@ export function PlatformStoreDetail() {
             <Button onClick={() => open("/")} style={{ display: "inline-flex", gap: 6, alignItems: "center" }}>
               <ExternalLink size={14} /> Open store dashboard
             </Button>
+            {/* disable / enable / delete — the dashboard and details are already one click away on this page */}
+            <StoreActionsMenu store={store} exclude={["open", "details"]} onChoose={(kind) => setDialog({ kind, store })} />
           </span>
         }
       />
 
+      {store.disabled ? (
+        <div role="status" style={disabledBar}>
+          <Ban size={18} style={{ flexShrink: 0, marginTop: 1 }} aria-hidden="true" />
+          <div style={{ flex: 1, minWidth: 220 }}>
+            <strong>Disabled since {fmtDate(store.disabled.at)}.</strong> Customers see “temporarily unavailable” and can&apos;t order, and the team can&apos;t use the dashboard. Nothing is deleted.
+            <div style={{ marginTop: 5, whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>
+              {store.disabled.message ? <>The team sees: “{store.disabled.message}”</> : "The team sees a standard notice — you haven't left a message."}
+            </div>
+          </div>
+          <span style={{ display: "flex", gap: 8, flexWrap: "wrap", flexShrink: 0 }}>
+            <Button variant="outline" onClick={() => setDialog({ kind: "message", store })}>
+              Change message
+            </Button>
+            <Button onClick={() => setDialog({ kind: "enable", store })}>Enable store</Button>
+          </span>
+        </div>
+      ) : null}
+
       <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", marginBottom: 14 }}>
+        <DisabledPill store={store} />
         <StatusPill store={store} />
         <Pill>People {usageText(store.usage.users, store.max.users)}</Pill>
         <Pill>Outlets {usageText(store.usage.outlets, store.max.outlets)}</Pill>
@@ -123,6 +149,9 @@ export function PlatformStoreDetail() {
       {tab === "domains" ? <DomainsTab key={JSON.stringify(store.domains) + store.canUseOwnDomain} store={store} /> : null}
       {tab === "people" ? <PeopleTab store={store} /> : null}
       {tab === "appearance" ? <AppearanceTab open={open} /> : null}
+      {tab === "cache" ? <StoreCacheCard store={store} /> : null}
+
+      <StoreDialogs dialog={dialog} setDialog={setDialog} />
     </>
   );
 }
@@ -852,4 +881,17 @@ const saveBar = {
   background: "var(--tone-info-wash)",
   color: "var(--tone-info)",
   fontSize: 13,
+};
+const disabledBar = {
+  display: "flex",
+  alignItems: "flex-start",
+  gap: 10,
+  flexWrap: "wrap",
+  padding: "12px 14px",
+  marginBottom: 14,
+  borderRadius: 10,
+  fontSize: 13,
+  lineHeight: 1.55,
+  background: "var(--tone-danger-wash)",
+  color: "var(--tone-danger)",
 };
