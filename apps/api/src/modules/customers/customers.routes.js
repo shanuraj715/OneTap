@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { currentAge } from "@onetap/config-schema";
 import { CustomerModel } from "@onetap/db";
 import { requireOutletContext } from "../../middleware/auth.js";
 import { ledgerFor } from "../wallet/wallet.service.js";
@@ -30,7 +31,7 @@ customersRouter.get("/", async (req, res) => {
       email: c.email ?? null,
       phone: c.phone ?? null,
       gender: c.gender ?? null,
-      age: c.age ?? null,
+      age: currentAge(c),
       orderCount: c.orderCount,
       walletBalance: c.walletBalance ?? 0,
       lastOrderAt: c.lastOrderAt ?? null,

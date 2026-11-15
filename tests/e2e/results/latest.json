@@ -7,8 +7,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:26:22.084Z",
-    "durationMs": 14137,
+    "at": "2026-11-15T20:44:09.787Z",
+    "durationMs": 13312,
     "steps": [
       {
         "n": 1,
@@ -89,7 +89,7 @@
           {
             "label": "the code request is accepted (the test stores accept any phone)",
             "ok": true,
-            "detail": "HTTP 200 {\"channel\":\"sms\",\"devCode\":\"552235\"}",
+            "detail": "HTTP 200 {\"channel\":\"sms\",\"devCode\":\"796586\"}",
             "kind": "expect"
           },
           {
@@ -112,8 +112,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:26:59.201Z",
-    "durationMs": 32927,
+    "at": "2026-11-15T20:44:46.524Z",
+    "durationMs": 32545,
     "steps": [
       {
         "n": 1,
@@ -289,7 +289,7 @@
           {
             "label": "the new customer was saved with the details they gave",
             "ok": true,
-            "detail": "{\"id\":\"6afa15851aea7eeb29681eb5\",\"name\":\"Rohan Mehta\",\"email\":\"rohan.mehta@example.com\",\"phone\":\"9811122233\",\"gender\":\"male\",\"age\":31,\"orderCount\":1,\"walletBalance\":0,\"lastOrderAt\":\"2026-11-15T20:26:50.161Z\",\"createdAt\":\"2026-11-15T20:26:45.470Z\"}",
+            "detail": "{\"id\":\"6afa19b0b4ad197535a71195\",\"name\":\"Rohan Mehta\",\"email\":\"rohan.mehta@example.com\",\"phone\":\"9811122233\",\"gender\":\"male\",\"age\":31,\"orderCount\":1,\"walletBalance\":0,\"lastOrderAt\":\"2026-11-15T20:44:37.579Z\",\"createdAt\":\"2026-11-15T20:44:32.903Z\"}",
             "kind": "expect"
           },
           {
@@ -313,7 +313,7 @@
           {
             "label": "the row shows the customer, phone, type, item count, total and 'Placed'",
             "ok": true,
-            "detail": " #0001 01:56 AM Rohan Mehta 9811122233 TA 8 ₹1,030 Placed 0m Accepted",
+            "detail": " #0001 02:14 AM Rohan Mehta 9811122233 TA 8 ₹1,030 Placed 0m Accepted",
             "kind": "expect"
           }
         ]
@@ -496,12 +496,12 @@
     "id": "t02-whatsapp-api",
     "title": "WhatsApp chat — API rules and the careful-pace sending worker",
     "status": "pass",
-    "pass": 133,
+    "pass": 118,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:27:11.148Z",
-    "durationMs": 11926,
+    "at": "2026-11-15T20:44:58.831Z",
+    "durationMs": 12287,
     "steps": [
       {
         "n": 1,
@@ -708,7 +708,7 @@
           {
             "label": "an attachment uploads",
             "ok": true,
-            "detail": "http://localhost:3098/uploads/6afa1595a119a3c5f28a",
+            "detail": "http://localhost:3098/uploads/6afa19c00c9826af56b8",
             "kind": "expect"
           },
           {
@@ -732,7 +732,7 @@
           {
             "label": "it's quiet hours now (10 pm–9 am): first contacts wait for the morning",
             "ok": true,
-            "detail": "2026-11-16T03:38:02.346Z",
+            "detail": "2026-11-16T03:36:49.618Z",
             "kind": "expect"
           },
           {
@@ -756,7 +756,7 @@
           {
             "label": "the next first contact must wait 2–4 minutes",
             "ok": true,
-            "detail": "240 s",
+            "detail": "132 s",
             "kind": "expect"
           },
           {
@@ -780,7 +780,7 @@
           {
             "label": "15 first contacts a day per number: the rest wait for tomorrow",
             "ok": true,
-            "detail": "2026-11-16T18:31:09.618Z",
+            "detail": "2026-11-16T18:31:56.657Z",
             "kind": "expect"
           },
           {
@@ -906,13 +906,13 @@
           {
             "label": "preview: 3 people (duplicates merged), 1 opted out",
             "ok": true,
-            "detail": "{\"recipients\":3,\"optedOut\":1,\"running\":0,\"firstContact\":3,\"numbersOnline\":[{\"id\":\"6afa1596a119a3c5f28a2fdb\",\"label\":\"Counter phone\"},{\"id\":\"6afa1596a119a3c5f28a2fe2\",\"label\":\"Delivery phone\"}],\"estimatedDays\":1}",
+            "detail": "{\"recipients\":3,\"optedOut\":1,\"running\":0,\"firstContact\":3,\"numbersOnline\":[{\"id\":\"6afa19c10c9826af56b87403\",\"label\":\"Counter phone\"},{\"id\":\"6afa19c10c9826af56b8740a\",\"label\":\"Delivery phone\"}],\"estimatedDays\":1}",
             "kind": "expect"
           },
           {
             "label": "a broadcast queues one message per person",
             "ok": true,
-            "detail": "{\"id\":\"6afa159ea119a3c5f28a3159\",\"text\":\"Diwali: 20% off this weekend!\\n\\nReply STOP to stop offers.\",\"media\":null,\"createdAt\":\"2026-11-15T20:27:10.815Z\",\"status\":\"sending\",\"total\":3,\"skipped\":1,\"waiting\":3,\"sent\":0,\"read\":0,\"failed\":0}",
+            "detail": "{\"id\":\"6afa19ca0c9826af56b87592\",\"text\":\"Diwali: 20% off this weekend!\\n\\nReply STOP to stop offers.\",\"media\":null,\"createdAt\":\"2026-11-15T20:44:58.268Z\",\"status\":\"sending\",\"total\":3,\"skipped\":1,\"waiting\":3,\"sent\":0,\"read\":0,\"failed\":0}",
             "kind": "expect"
           },
           {
@@ -1270,102 +1270,6 @@
             "kind": "expect"
           }
         ]
-      },
-      {
-        "n": 11,
-        "title": "WhatsApp chat taken away from a store — its numbers are unlinked and nothing stays connected",
-        "checks": [
-          {
-            "label": "the worker closes (and logs out) the connection of a store whose plan lacks WhatsApp chat",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "…the number shows as unlinked, with the reason",
-            "ok": true,
-            "detail": "WhatsApp chat isn't in this store's plan any more, so the number was unlinked. Link it again once chat is back.",
-            "kind": "expect"
-          },
-          {
-            "label": "…and what was waiting to go out is failed, not left to leak out later",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "a store that has WhatsApp chat is left alone",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "the platform locks WhatsApp chat for one store",
-            "ok": true,
-            "detail": "200",
-            "kind": "expect"
-          },
-          {
-            "label": "…its number is unlinked AT ONCE (no waiting for the worker)",
-            "ok": true,
-            "detail": "logged_out wantsLogout=true",
-            "kind": "expect"
-          },
-          {
-            "label": "…and its waiting messages are failed at once",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "…then the worker closes the connection and logs the phone out",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "…and the card keeps the reason",
-            "ok": true,
-            "detail": "WhatsApp chat isn't in this store's plan any more, so the number was unlinked. Link it again once chat is back.",
-            "kind": "expect"
-          },
-          {
-            "label": "a store on a plan that has WhatsApp chat keeps its number",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "the platform takes WhatsApp chat out of that plan",
-            "ok": true,
-            "detail": "200",
-            "kind": "expect"
-          },
-          {
-            "label": "…every store on it is unlinked AT ONCE",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "…and its connection is closed",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "the stored messages are kept",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "the number stays unlinked when the feature returns — it must be linked again with a new scan",
-            "ok": true,
-            "detail": "logged_out",
-            "kind": "expect"
-          }
-        ]
       }
     ],
     "findings": [],
@@ -1379,8 +1283,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:27:35.038Z",
-    "durationMs": 19714,
+    "at": "2026-11-15T20:59:13.591Z",
+    "durationMs": 19881,
     "steps": [
       {
         "n": 1,
@@ -1515,7 +1419,7 @@
           {
             "label": "a paced broadcast message says when it will go",
             "ok": true,
-            "detail": "BROADCAST | Diwali special: 20% off this weekend! | Reply STOP to stop offers. | sends at 3:57 pm · | 1:27 am",
+            "detail": "BROADCAST | Diwali special: 20% off this weekend! | Reply STOP to stop offers. | sends at 4:28 pm · | 1:58 am",
             "kind": "expect"
           },
           {
@@ -1688,8 +1592,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:27:55.714Z",
-    "durationMs": 16513,
+    "at": "2026-11-15T20:45:43.210Z",
+    "durationMs": 16264,
     "steps": [
       {
         "n": 1,
@@ -1847,8 +1751,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:28:13.259Z",
-    "durationMs": 13376,
+    "at": "2026-11-15T20:46:00.666Z",
+    "durationMs": 13283,
     "steps": [
       {
         "n": 0,
@@ -1940,8 +1844,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:28:51.587Z",
-    "durationMs": 38310,
+    "at": "2026-11-15T20:46:39.309Z",
+    "durationMs": 38627,
     "steps": [
       {
         "n": 1,
@@ -2046,7 +1950,7 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "0,0,0,2,59,333,805,1152,1240,1249,1249,1249,1249,1249",
+            "detail": "0,0,0,1,57,261,799,1150,1240,1249,1249,1249,1249,1249",
             "kind": "expect"
           },
           {
@@ -2112,7 +2016,7 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "508,508,508,509,580,831,1373,1607,1639,1639,1639,1639,1639,1639",
+            "detail": "508,508,508,509,582,837,1379,1589,1639,1639,1639,1639,1639,1639",
             "kind": "expect"
           },
           {
@@ -2141,8 +2045,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:28:54.625Z",
-    "durationMs": 3021,
+    "at": "2026-11-15T20:46:42.453Z",
+    "durationMs": 3128,
     "steps": [
       {
         "n": 1,
@@ -2210,8 +2114,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:32:07.921Z",
-    "durationMs": 189116,
+    "at": "2026-11-15T20:49:55.448Z",
+    "durationMs": 188810,
     "steps": [
       {
         "n": 1,
@@ -2226,13 +2130,13 @@
           {
             "label": "Basic shows 3 people · 1 outlet",
             "ok": true,
-            "detail": "Lifecycle Basic One outlet — takeaway and dine-in QR 0 stores 3 people · 1 outlet (multi-outlet off) Not on the website 2/11 features · 6/6 ",
+            "detail": "Lifecycle Basic One outlet — takeaway and dine-in QR 0 stores 3 people · 1 outlet (multi-outlet off) Not on the website 2/12 features · 6/6 ",
             "kind": "expect"
           },
           {
             "label": "Pro shows 10 people · 3 outlets",
             "ok": true,
-            "detail": "Lifecycle Pro Up to 3 outlets, everything unlocked 0 stores 10 people · 3 outlets Not on the website 11/11 features · 6/6 effects · 9/9 card",
+            "detail": "Lifecycle Pro Up to 3 outlets, everything unlocked 0 stores 10 people · 3 outlets Not on the website 12/12 features · 6/6 effects · 9/9 card",
             "kind": "expect"
           },
           {
@@ -2542,8 +2446,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:32:41.080Z",
-    "durationMs": 33135,
+    "at": "2026-11-15T20:50:28.625Z",
+    "durationMs": 33151,
     "steps": [
       {
         "n": 1,
@@ -2797,8 +2701,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:34:32.882Z",
-    "durationMs": 111780,
+    "at": "2026-11-15T20:52:20.513Z",
+    "durationMs": 111863,
     "steps": [
       {
         "n": 1,
@@ -3070,8 +2974,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:34:44.858Z",
-    "durationMs": 11950,
+    "at": "2026-11-15T20:52:33.265Z",
+    "durationMs": 12720,
     "steps": [
       {
         "n": 1,
@@ -3187,8 +3091,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:35:06.689Z",
-    "durationMs": 21811,
+    "at": "2026-11-15T20:52:55.163Z",
+    "durationMs": 21872,
     "steps": [
       {
         "n": 1,
@@ -3338,6 +3242,909 @@
     "findings": [],
     "problems": []
   },
+  "t13-marketing": {
+    "id": "t13-marketing",
+    "title": "Marketing — channels, audience filters (last visit, items, age, gender, order type, area), imports, lists, sending and the sidebar",
+    "status": "pass",
+    "pass": 70,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-15T21:00:46.026Z",
+    "durationMs": 88268,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The sidebar: running the store above a divider, everything else below it",
+        "checks": [
+          {
+            "label": "first group 'Store & orders': Take order, Dashboard, Orders, Menu, Tables, Printing",
+            "ok": true,
+            "detail": "{\"group\":\"Store & orders\",\"divider\":false,\"items\":[\"Take order\",\"Dashboard\",\"Orders\",\"Menu\",\"Tables\",\"Printing\"]}",
+            "kind": "expect"
+          },
+          {
+            "label": "a divider comes before the second group",
+            "ok": true,
+            "detail": "[[\"Store & orders\",false],[\"Customers & growth\",true],[\"Setup\",false]]",
+            "kind": "expect"
+          },
+          {
+            "label": "second group 'Customers & growth': Customers, Marketing, WhatsApp, Coupons",
+            "ok": true,
+            "detail": "{\"group\":\"Customers & growth\",\"divider\":true,\"items\":[\"Customers\",\"Marketing\",\"WhatsApp\",\"Coupons\"]}",
+            "kind": "expect"
+          },
+          {
+            "label": "third group 'Setup': Storefront and Settings",
+            "ok": true,
+            "detail": "{\"group\":\"Setup\",\"divider\":false,\"items\":[\"Storefront\",\"Settings\"]}",
+            "kind": "expect"
+          },
+          {
+            "label": "Marketing or WhatsApp is mixed in with the store-and-orders group",
+            "ok": true,
+            "detail": "Take order, Dashboard, Orders, Menu, Tables, Printing",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Marketing: which ways of reaching customers are ready?",
+        "checks": [
+          {
+            "label": "linked WhatsApp is Ready and can be chosen",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "SMS can be chosen before it is set up",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the WhatsApp Business API can be chosen before it is set up",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "SMS and the Business API say why, with a way to set them up",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Who gets it — with no filters",
+        "checks": [
+          {
+            "label": "My customers, no filters: 6 people have a phone number",
+            "ok": true,
+            "detail": "6",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the page says who was left out: 1 said STOP, 1 has no phone number",
+            "ok": true,
+            "detail": "Left out: 1 said STOP, 1 customer without a phone number.",
+            "kind": "expect"
+          },
+          {
+            "label": "the person who said STOP is in the example list",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the customer with no phone number is in the example list",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Filter: hasn't ordered for …",
+        "checks": [
+          {
+            "label": "not ordered for 2 months → Ravi and Karan",
+            "ok": true,
+            "detail": "Karan Singh, Ravi Kumar",
+            "kind": "expect"
+          },
+          {
+            "label": "Dev (signed up, never ordered) is counted as a lapsed customer",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "…with 'also people who never ordered' → Dev joins",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "not ordered for 30 days → Karan, Ravi and Sana",
+            "ok": true,
+            "detail": "Karan Singh, Ravi Kumar, Sana Khan",
+            "kind": "expect"
+          },
+          {
+            "label": "4 weeks is understood the same way",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "looking at the Second outlet only → Karan and Sana (Ravi never ordered there)",
+            "ok": true,
+            "detail": "Karan Singh, Sana Khan",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Filter: ordered these items",
+        "checks": [
+          {
+            "label": "ordered Paneer Steamed or Paneer Gravy momos → Ravi and Priya",
+            "ok": true,
+            "detail": "Priya Nair, Ravi Kumar",
+            "kind": "expect"
+          },
+          {
+            "label": "…at least 5 in total → Ravi only",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…ALL of them, at least 4 of each → nobody (Ravi had only 3 gravy)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…ALL of them, at least 2 of each → Ravi",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…only orders from the last month → Priya",
+            "ok": true,
+            "detail": "Priya Nair",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Filter: age today (it grows each year)",
+        "checks": [
+          {
+            "label": "age 30 → Ravi (he said 24 in 2020)",
+            "ok": true,
+            "detail": "Ravi Kumar",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the example row shows his age as 30",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "age 21 → Sana (she said 19 in 2024)",
+            "ok": true,
+            "detail": "Sana Khan",
+            "kind": "expect"
+          },
+          {
+            "label": "someone who said 19 in 2024 is still counted as 19",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "ages 21 to 30 → Sana, Meena and Ravi",
+            "ok": true,
+            "detail": "Meena Iyer, Ravi Kumar, Sana Khan",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "Filter: gender, and filters working together",
+        "checks": [
+          {
+            "label": "women → Meena, Priya and Sana (Mail Only has no phone)",
+            "ok": true,
+            "detail": "Meena Iyer, Priya Nair, Sana Khan",
+            "kind": "expect"
+          },
+          {
+            "label": "women AND not ordered for 30 days → Sana",
+            "ok": true,
+            "detail": "Sana Khan",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "Filter: more takeaways, and area",
+        "checks": [
+          {
+            "label": "3 or more takeaway orders → Ravi and Sana",
+            "ok": true,
+            "detail": "Ravi Kumar, Sana Khan",
+            "kind": "expect"
+          },
+          {
+            "label": "4 or more → Sana",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "2 or more deliveries → Meena",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "delivered to an address in 'Laxmi Nagar' → Meena",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an area nobody was delivered to → nobody",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "within 2 km of the Main outlet → Meena",
+            "ok": true,
+            "detail": "Meena Iyer",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 9,
+        "title": "Other groups: WhatsApp contacts and pasted numbers",
+        "checks": [
+          {
+            "label": "people who messaged on WhatsApp → Chat Only Chandni (a contact who isn't a customer)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Stop Sam (who said STOP) is among the WhatsApp contacts",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "pasted numbers → 2 people (a repeat merged, one line unusable)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the page says 2 usable, 1 can't be used, 1 repeated",
+            "ok": true,
+            "detail": "2 usable · 1 can't be used · 1 repeated Not used: “call me 123” 2 pe",
+            "kind": "expect"
+          },
+          {
+            "label": "men from the customer list + 2 typed numbers = 3 (Ravi is in both, counted once)",
+            "ok": true,
+            "detail": "Karan Singh, Ravi Kumar",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 10,
+        "title": "Contact lists: create one, grow it, use it, delete one",
+        "checks": [
+          {
+            "label": "the list is saved with 2 people",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it is listed with its count",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "viewing it shows Zed and the other number",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "adding more puts the new one in and skips the repeat",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the deleted list is still listed",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the saved list works as an audience: 3 people",
+            "ok": true,
+            "detail": "Zed",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 11,
+        "title": "Guard rails: nothing can be sent without a channel, a message and people",
+        "checks": [
+          {
+            "label": "'Review and send' is possible with nobody in the audience, no channel and no message",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 12,
+        "title": "Set up SMS in Notifications, then it becomes available",
+        "checks": [
+          {
+            "label": "SMS now shows as Ready and can be chosen",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the Business API still isn't set up",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 13,
+        "title": "Send an SMS campaign to customers who haven't ordered for 2 months",
+        "checks": [
+          {
+            "label": "the audience is Ravi and Karan",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Review and send' works before a message is written",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "a preview shows the message with a sample name",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the confirmation says who and over what",
+            "ok": true,
+            "detail": "Send to 2 people?\n\nOver SMS.\n\nHi Asha, we miss you at Mart Main! Show this SMS for 20% off.\n\nMessages go out one after a",
+            "kind": "expect"
+          },
+          {
+            "label": "the page says the campaign is on its way",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Campaigns: it finishes with 2 sent, 0 waiting, 0 failed",
+            "ok": true,
+            "detail": "Win-back SMS SMS · 16 Nov, 2:30 am · 2 people 2 sent · 0 waiting · 0 failed Done",
+            "kind": "expect"
+          },
+          {
+            "label": "the SMS gateway was asked to send to exactly Ravi's and Karan's numbers",
+            "ok": true,
+            "detail": "9000000001, 9000000003",
+            "kind": "expect"
+          },
+          {
+            "label": "the gateway was asked to message anyone else (Stop Sam, Dev, Meena, Sana, Priya…)",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "someone got the same message twice",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "each text starts with that person's own name and has the store's name",
+            "ok": true,
+            "detail": "Hi Karan Singh, we miss you at Marketing Mart! Show this SMS for 20% off.",
+            "kind": "expect"
+          },
+          {
+            "label": "the gateway key from Notifications was used",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 14,
+        "title": "Send over linked WhatsApp, then cancel it before it goes out",
+        "checks": [
+          {
+            "label": "women → 3 people",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the page tells her about the STOP line that is added",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the confirmation explains the slow, careful pace for new contacts",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it is queued: 3 waiting, still Sending (the sending worker is off here)",
+            "ok": true,
+            "detail": "Ladies offer WhatsApp (linked numbers) · 16 Nov, 2:30 am · 3 people 0 sent · 3 waiting · 0 failed Sending Cancel",
+            "kind": "expect"
+          },
+          {
+            "label": "cancelling stops it: Cancelled, nothing waiting",
+            "ok": true,
+            "detail": "Ladies offer WhatsApp (linked numbers) · 16 Nov, 2:30 am · 3 people 0 sent · 0 waiting · 0 failed Cancelled",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 15,
+        "title": "The Customers page shows ages as they are today",
+        "checks": [
+          {
+            "label": "Ravi (24 in 2020) shows 30",
+            "ok": true,
+            "detail": " Ravi Kumar — 9000000001 Male 30 3 0 18 Aug, 2:29 am",
+            "kind": "expect"
+          },
+          {
+            "label": "Sana (19 in 2024) shows 21",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser logged JavaScript errors",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t14-marketing-plan": {
+    "id": "t14-marketing-plan",
+    "title": "Marketing is a plan feature — Basic doesn't have it, Pro does, and it can be unlocked or locked for one store",
+    "status": "pass",
+    "pass": 16,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-15T20:55:36.013Z",
+    "durationMs": 64053,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Platform console → Plans: one plan without Marketing, one with it",
+        "checks": [
+          {
+            "label": "both plans are listed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the plan form has a 'Marketing' switch, ticked for the Pro-style plan",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Two stores on the plan WITHOUT Marketing",
+        "checks": [
+          {
+            "label": "both stores exist",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "The owner of the Basic-style store: no Marketing",
+        "checks": [
+          {
+            "label": "Marketing is in the sidebar of a store whose plan lacks it",
+            "ok": true,
+            "detail": "[{\"group\":\"Store & orders\",\"divider\":false,\"items\":[\"Take order\",\"Dashboard\",\"Orders\",\"Menu\",\"Tables\"]},{\"group\":\"Customers & growth\",\"divider\":true,\"items\":[\"Customers\",\"Coupons\"]},{\"group\":\"Setup\",\"divider\":false,\"items\":[\"Storefront\",\"Settings\"]}]",
+            "kind": "never"
+          },
+          {
+            "label": "opening /marketing/new says 'Marketing isn't in your plan'",
+            "ok": true,
+            "detail": "Marketing Send an offer or an announcement to your customers. Marketing isn't in your plan Ask TablePe to add it to your",
+            "kind": "expect"
+          },
+          {
+            "label": "the page still offers the sending screens",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "The platform unlocks Marketing for THIS store only",
+        "checks": [
+          {
+            "label": "the owner now has Marketing in the sidebar",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the real Marketing screen opens",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the OTHER store on the same plan got Marketing too",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Back to 'from plan', then the store moves to the plan that includes Marketing",
+        "checks": [
+          {
+            "label": "Marketing stays after the unlock is removed (the plan still lacks it)",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "on the plan that includes Marketing the owner has it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Locking Marketing for one store beats its plan",
+        "checks": [
+          {
+            "label": "the owner still has Marketing after the platform locked it for the store",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "opening it says it isn't in the plan",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "back to 'from plan' (a plan that includes it) → the owner has Marketing again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "Other Pro stores are untouched",
+        "checks": [
+          {
+            "label": "Marketing Mart (Pro) still has Marketing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser logged JavaScript errors",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t15-login-protection": {
+    "id": "t15-login-protection",
+    "title": "Sign-in protection — wrong guesses block the network, blocks grow longer, a blocked network sees no login form, the platform can unblock",
+    "status": "pass",
+    "pass": 28,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-15T20:56:14.880Z",
+    "durationMs": 34684,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The attacker guesses wrong passwords on the dashboard login",
+        "checks": [
+          {
+            "label": "a fresh address sees the normal sign-in form",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "1st wrong password: 'Incorrect email or password' and 2 attempts left",
+            "ok": true,
+            "detail": "2 attempts left before sign-in is paused for a while",
+            "kind": "expect"
+          },
+          {
+            "label": "2nd wrong password: 1 attempt left",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "3rd wrong password: the form is replaced by 'Sign-in is paused' with a countdown",
+            "ok": true,
+            "detail": "6 s left",
+            "kind": "expect"
+          },
+          {
+            "label": "the sign-in form is still shown to the blocked address",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "A blocked address can't get back to the form by reloading, or sign in with the right password",
+        "checks": [
+          {
+            "label": "after a reload the blocked address sees the sign-in form",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "…the notice and countdown are still there",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "going straight to a dashboard page gets the attacker a sign-in form",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Someone at a different address signs in normally at the same time",
+        "checks": [
+          {
+            "label": "another address still sees the normal form",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the owner signs in with the right password",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "When the block ends the form comes back by itself, and the next block is longer",
+        "checks": [
+          {
+            "label": "the form comes back once the countdown reaches zero",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the second block is longer than the first (6 s → 12 s)",
+            "ok": true,
+            "detail": "6 → 12",
+            "kind": "expect"
+          },
+          {
+            "label": "the second block is the same length as the first",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "The platform console lists the blocked address and can unblock it",
+        "checks": [
+          {
+            "label": "Security lists the address as Blocked, for Dashboards, blocked twice",
+            "ok": true,
+            "detail": "203.0.113.50 Dashboards Blocked · 10 seconds left 0 2 16 Nov, 2:25:54 am Unblock",
+            "kind": "expect"
+          },
+          {
+            "label": "…and explains the rules (3 wrong tries, longer each time)",
+            "ok": true,
+            "detail": "After 3 wrong passwords or codes within 60 seconds, that network is blocked for 6 seconds.",
+            "kind": "expect"
+          },
+          {
+            "label": "the address is still listed as blocked after Unblock",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the unblocked address sees the sign-in form again at once",
+            "ok": true,
+            "detail": "TablePe admin Sign in to manage your restaurant. Email Password Sign in",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "On the storefront: wrong customer codes block that network, and only that network",
+        "checks": [
+          {
+            "label": "wrong code 1: 'That code isn't right'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "wrong code 2: 'That code isn't right'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the 3rd wrong code swaps the sign-in form for 'Sign-in is paused'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the code boxes are still shown to the blocked address",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "after a reload the blocked address can type another code",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "another customer's address still gets the normal sign-in form",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "another customer's address is shown the paused notice",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "Dashboard and customer blocks are separate, and the platform can lift the customer block too",
+        "checks": [
+          {
+            "label": "Security lists the storefront block as 'Customer codes'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the dashboard login of that address was blocked by the customer-code guesses",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "'Unblock everyone' clears the list",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser logged JavaScript errors",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
   "t16-whatsapp-plan-gating": {
     "id": "t16-whatsapp-plan-gating",
     "title": "WhatsApp chat off (plan or per-store lock) — numbers unlinked at once, no WhatsApp requests, every WhatsApp address is a 404",
@@ -3346,8 +4153,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:35:46.912Z",
-    "durationMs": 36036,
+    "at": "2026-11-15T21:01:26.615Z",
+    "durationMs": 35410,
     "steps": [
       {
         "n": 1,
@@ -3380,13 +4187,13 @@
           {
             "label": "the browser's only websocket is the live order feed (/realtime) — WhatsApp chat doesn't open one",
             "ok": true,
-            "detail": "ws://localhost:3097/realtime?outletId=6afa177d6ef3abb832940f81",
+            "detail": "ws://localhost:3097/realtime?outletId=6afa1d812198a41f01a6f2fd",
             "kind": "expect"
           },
           {
             "label": "a websocket for WhatsApp is opened by the browser",
             "ok": true,
-            "detail": "ws://localhost:3097/realtime?outletId=6afa177d6ef3abb832940f81",
+            "detail": "ws://localhost:3097/realtime?outletId=6afa1d812198a41f01a6f2fd",
             "kind": "never"
           }
         ]

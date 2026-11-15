@@ -139,7 +139,7 @@ const wasUp = bench.isUp(bench.PORTS.api) && bench.isUp(bench.PORTS.admin) && be
 console.log(`\n▶ ${selected.length} test(s), ${mode}${flag("rebuild") ? ", rebuilding the apps first" : ""}\n`);
 const ok = flag("rebuild") ? await bench.rebuild() : await bench.up();
 if (!ok) { console.log("The bench could not start — see tests/e2e/.bench/logs/"); process.exit(2); }
-let pristine = !wasUp || flag("rebuild"); // fake data nobody has touched yet in this session
+let pristine = !wasUp; // fake data nobody has touched yet in this session (a bench that was already running may have been used)
 
 const { openWatch } = await import("./bench/watch.mjs");
 const summary = [];

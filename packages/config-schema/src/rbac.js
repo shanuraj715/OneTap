@@ -62,6 +62,9 @@ export const PERMISSIONS = [
   "notification-config:manage",
   "notification-log:read",
   "dashboard:configure",
+  // Marketing: see campaigns and contact lists / send a message to customers. Owner-only by default (not in any other role).
+  "marketing:read",
+  "marketing:send",
 ]         ;
                                                       
 

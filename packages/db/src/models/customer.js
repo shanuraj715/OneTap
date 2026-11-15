@@ -20,12 +20,18 @@ const customerSchema = new Schema(
     name: { type: String, trim: true },
     gender: { type: String, enum: CUSTOMER_GENDERS, default: null },
     age: { type: Number, min: 1, max: 120, default: null },
+    /** the calendar year `age` was recorded in — what lets the age grow year by year (see currentAge) */
+    ageYear: { type: Number, default: null },
     orderCount: { type: Number, default: 0 },
     lastOrderAt: Date,
     walletBalance: { type: Number, default: 0 },
   },
   { timestamps: true },
 );
+// whenever an age is set or changed, remember the year — every place that sets one goes through save()
+customerSchema.pre("save", function stampAgeYear() {
+  if (this.age && (this.isNew || this.isModified("age") || !this.ageYear)) this.ageYear = new Date().getFullYear();
+});
 customerSchema.index({ brandId: 1, phone: 1 });
 customerSchema.index({ brandId: 1, email: 1 });
 

@@ -106,9 +106,9 @@ export async function createPlan(d, { name, description = "", custom = false, pe
     await tick(d, "Multi-outlet", multiOutlet, form);
     if (multiOutlet && outlets) await fill(d, "Outlets", outlets, form);
     const all = features === "all";
-    const wanted = all ? ["Takeaway ordering", "Dine-in QR ordering", "Delivery", "Online payments", "Coupons", "Coin wallet", "Printing", "WhatsApp & SMS alerts", "WhatsApp chat", "Own favicon", "Own domain name"] : features;
+    const wanted = all ? ["Takeaway ordering", "Dine-in QR ordering", "Delivery", "Online payments", "Coupons", "Coin wallet", "Printing", "WhatsApp & SMS alerts", "WhatsApp chat", "Marketing", "Own favicon", "Own domain name"] : features;
     // the form starts with features ticked: set EVERY feature box to exactly what this plan should have
-    const every = ["Takeaway ordering", "Dine-in QR ordering", "Delivery", "Online payments", "Coupons", "Coin wallet", "Printing", "WhatsApp & SMS alerts", "WhatsApp chat", "Own favicon", "Own domain name"];
+    const every = ["Takeaway ordering", "Dine-in QR ordering", "Delivery", "Online payments", "Coupons", "Coin wallet", "Printing", "WhatsApp & SMS alerts", "WhatsApp chat", "Marketing", "Own favicon", "Own domain name"];
     for (const f of every) await tick(d, f, wanted.includes(f), form);
   }
   await d.click(d.page.getByRole("button", { name: "Save plan" }), { after: 900 });
@@ -411,6 +411,62 @@ export async function setPlanFeature(d, planName, featureCaption, on) {
   await tick(d, featureCaption, on, form);
   await d.click(d.page.getByRole("button", { name: "Save plan" }), { after: 1000 });
 }
+/* ------------------------------------------------------------------------ marketing */
+export const openMarketing = (d, tab = "new") => d.goto(`${BENCH.admin}/marketing/${tab}`, 500);
+
+/** the "N people will get this" number, once the live count has stopped updating */
+export async function audienceCount(d) {
+  await sleep(850); // the count is asked for ~0.45 s after the last change
+  let last = null;
+  let stable = 0;
+  for (let i = 0; i < 40; i++) {
+    const t = await d.page.getByTestId("audience-count").innerText().catch(() => "");
+    const busy = (await d.page.getByText("updating…").count()) > 0;
+    if (!busy && t && t === last) { if (++stable >= 2) return Number(t.replace(/\D/g, "")); } else stable = 0;
+    last = t;
+    await sleep(350);
+  }
+  throw new Error("The audience count never settled");
+}
+/** the names in the preview table, sorted */
+export async function audienceNames(d) {
+  const cells = await d.page.locator("tbody tr td:first-child").allInnerTexts();
+  return cells.map((c) => c.trim()).filter((c) => c && c !== "—").sort();
+}
+
+/** Notifications → SMS → fill the gateway → Save the connection */
+export async function configureSms(d, { requestUrl, apiKey, method = "GET" }) {
+  await d.goto(`${BENCH.admin}/notifications`, 500);
+  await d.click(d.page.getByRole("tab", { name: "SMS" }), { after: 400 });
+  await fill(d, "HTTP method", method);
+  await fill(d, "Request URL", requestUrl);
+  await fill(d, "API key / auth token", apiKey);
+  await d.click(d.page.getByRole("button", { name: "Save", exact: true }).first(), { after: 1000 });
+}
+
+/** the sidebar as a person reads it: groups in order, whether a divider comes before each, and its items */
+export async function sidebarGroups(d) {
+  return d.page.locator("aside nav > div").evaluateAll((groups) =>
+    groups.map((g) => ({
+      group: g.querySelector("span")?.textContent?.trim() ?? "",
+      divider: Boolean(g.querySelector("hr[role=separator]")),
+      items: [...g.querySelectorAll("a")].map((a) => a.textContent.trim()),
+    })),
+  );
+}
+
+/** a box found by its aria-label (not a captioned field): click, select all, type over */
+export async function fillBox(d, ariaLabel, value) {
+  const el = d.page.getByLabel(ariaLabel).first();
+  await el.waitFor({ state: "visible", timeout: 15000 });
+  await d.click(el, { after: 100 });
+  await d.page.keyboard.press("ControlOrMeta+a");
+  if (process.env.HEADLESS === "1") await d.page.keyboard.insertText(String(value));
+  else await d.page.keyboard.type(String(value), { delay: 15 });
+  await d.pause(120);
+}
+/** who is in the audience once the live count has settled */
+export async function whoGetsIt(d) { await audienceCount(d); return audienceNames(d); }
 
 /**
  * Platform → store → Features tab → one feature's choice for THIS store ("From plan", "Unlocked for this store",

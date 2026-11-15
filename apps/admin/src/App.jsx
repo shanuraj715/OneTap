@@ -31,6 +31,8 @@ import {
   LayoutList,
   LogOut,
   Megaphone,
+  ShieldCheck,
+  Send,
   Palette,
   Plus,
   Printer,
@@ -52,6 +54,9 @@ import { useLeads, useStore } from "./lib/usePlatform";
 import { useWaMe } from "./lib/useWhatsApp";
 import { WhatsAppChats } from "./routes/whatsapp/WhatsAppChats";
 import { WhatsAppNumbers } from "./routes/whatsapp/WhatsAppNumbers";
+import { Campaigns } from "./routes/marketing/Campaigns";
+import { Lists } from "./routes/marketing/Lists";
+import { NewCampaign } from "./routes/marketing/NewCampaign";
 import { WaGate } from "./routes/whatsapp/WaGate";
 import { WhatsAppBroadcast } from "./routes/whatsapp/WhatsAppBroadcast";
 import { WhatsAppAccess } from "./routes/whatsapp/WhatsAppAccess";
@@ -88,6 +93,7 @@ import { TakeOrder } from "./routes/take-order/TakeOrder";
 import { PlatformDashboard } from "./routes/platform/PlatformDashboard";
 import { PlatformCache } from "./routes/platform/PlatformCache";
 import { PlatformStorage } from "./routes/platform/PlatformStorage";
+import { PlatformSecurity } from "./routes/platform/PlatformSecurity";
 import { PlatformServer } from "./routes/platform/PlatformServer";
 import { PlatformPlans } from "./routes/platform/PlatformPlans";
 import { PlatformSettings } from "./routes/platform/PlatformSettings";
@@ -110,6 +116,9 @@ const ROUTE_META = {
   "/whatsapp/broadcast": { title: "WhatsApp broadcast", icon: MessageCircle },
   "/whatsapp/access": { title: "WhatsApp access", icon: MessageCircle },
   "/whatsapp/cleanup": { title: "WhatsApp clean up", icon: MessageCircle },
+  "/marketing/new": { title: "Marketing", icon: Send },
+  "/marketing/campaigns": { title: "Campaigns", icon: Send },
+  "/marketing/lists": { title: "Contact lists", icon: Send },
   "/menu": { title: "Menu", icon: UtensilsCrossed },
   "/components": { title: "Components", icon: Boxes },
   "/menu-layout": { title: "Menu layout", icon: LayoutList },
@@ -134,6 +143,7 @@ const ROUTE_META = {
   "/platform/stores": { title: "Stores", icon: Store },
   "/platform/plans": { title: "Plans", icon: Layers },
   "/platform/server": { title: "Server", icon: ServerIcon },
+  "/platform/security": { title: "Security", icon: ShieldCheck },
   "/platform/cache": { title: "Cache", icon: Database },
   "/platform/storage": { title: "Storage", icon: HardDrive },
   "/platform/settings": { title: "Platform settings", icon: SettingsIcon },
@@ -151,33 +161,33 @@ const ROUTE_META = {
 const family = (label, icon, tabs) => ({ label, icon, tabs });
 
 const NAV_GROUPS = [
+  // Running the store and its orders, day to day
   {
-    group: "Service",
+    group: "Store & orders",
     items: [
       { to: "/take-order", label: "Take order", icon: <ConciergeBell size={ICON} />, permission: "order:create" },
       { to: "/", label: "Dashboard", icon: <LayoutDashboard size={ICON} />, end: true },
       { to: "/orders", label: "Orders", icon: <ReceiptText size={ICON} />, permission: "order:read" },
-      // shown to whoever the owner gave chat access (see WhatsApp → Access), when the plan includes it
-      { to: "/whatsapp/chats", label: "WhatsApp", icon: <MessageCircle size={ICON} />, feature: "whatsappChat", whatsapp: true, badgeKey: "waUnread", matchPaths: ["/whatsapp"] },
+      { to: "/menu", label: "Menu", icon: <UtensilsCrossed size={ICON} />, permission: "menu:read" },
       family("Tables", <QrCode size={ICON} />, TABLES_TABS),
       { to: "/printing", label: "Printing", icon: <Printer size={ICON} />, permission: "printer:read", feature: "printing" },
     ],
   },
+  // ── a divider, then everything else ──
   {
-    group: "Catalogue",
-    items: [{ to: "/menu", label: "Menu", icon: <UtensilsCrossed size={ICON} />, permission: "menu:read" }],
-  },
-  {
-    group: "Storefront",
-    items: [family("Storefront", <Wand2 size={ICON} />, STOREFRONT_TABS)],
-  },
-  {
-    group: "Business",
+    group: "Customers & growth",
+    divider: true,
     items: [
-      { to: "/coupons", label: "Coupons", icon: <Tag size={ICON} />, permission: "coupon:read", feature: "coupons" },
       { to: "/customers", label: "Customers", icon: <UsersIcon size={ICON} />, permission: "customer:read" },
-      family("Settings", <SettingsIcon size={ICON} />, SETTINGS_TABS),
+      { to: "/marketing/new", label: "Marketing", icon: <Send size={ICON} />, permission: "marketing:read", feature: "marketing", matchPaths: ["/marketing"] },
+      // shown to whoever the owner gave chat access (see WhatsApp → Access), when the plan includes it
+      { to: "/whatsapp/chats", label: "WhatsApp", icon: <MessageCircle size={ICON} />, feature: "whatsappChat", whatsapp: true, badgeKey: "waUnread", matchPaths: ["/whatsapp"] },
+      { to: "/coupons", label: "Coupons", icon: <Tag size={ICON} />, permission: "coupon:read", feature: "coupons" },
     ],
+  },
+  {
+    group: "Setup",
+    items: [family("Storefront", <Wand2 size={ICON} />, STOREFRONT_TABS), family("Settings", <SettingsIcon size={ICON} />, SETTINGS_TABS)],
   },
 ];
 
@@ -190,6 +200,7 @@ const PLATFORM_NAV_GROUPS = [
       { to: "/platform/stores", label: "Stores", icon: <Store size={ICON} /> },
       { to: "/platform/plans", label: "Plans", icon: <Layers size={ICON} /> },
       { to: "/platform/server", label: "Server", icon: <ServerIcon size={ICON} /> },
+      { to: "/platform/security", label: "Security", icon: <ShieldCheck size={ICON} /> },
       { to: "/platform/cache", label: "Cache", icon: <Database size={ICON} /> },
       { to: "/platform/storage", label: "Storage", icon: <HardDrive size={ICON} /> },
       { to: "/platform/settings", label: "Settings", icon: <SettingsIcon size={ICON} /> },
@@ -426,6 +437,7 @@ function Shell({ can }                                     ) {
         <nav style={nav}>
           {groups.map((g) => (
             <div key={g.group} style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+              {g.divider ? <hr role="separator" aria-label="More options" style={navDivider} /> : null}
               {!railCollapsed ? <span style={navGroup}>{g.group}</span> : <span style={navRule} aria-hidden />}
               {g.items.map((n) => (
                 <NavItem
@@ -545,6 +557,7 @@ function Shell({ can }                                     ) {
               <Route path="/platform/stores/:id" element={<PlatformStoreDetail />} />
               <Route path="/platform/plans" element={<PlatformPlans />} />
               <Route path="/platform/server" element={<PlatformServer />} />
+              <Route path="/platform/security" element={<PlatformSecurity />} />
               <Route path="/platform/cache" element={<PlatformCache />} />
               <Route path="/platform/storage" element={<PlatformStorage />} />
               <Route path="/platform/settings" element={<PlatformSettings />} />
@@ -584,6 +597,10 @@ function Shell({ can }                                     ) {
             <Route path="/whatsapp/chats/:chatId" element={<WaGate need="read"><WhatsAppChats /></WaGate>} />
             <Route path="/whatsapp/numbers" element={<WaGate need="manage"><WhatsAppNumbers /></WaGate>} />
             <Route path="/whatsapp/broadcast" element={<WaGate need="manage"><WhatsAppBroadcast /></WaGate>} />
+            <Route path="/marketing" element={<Navigate to="/marketing/new" replace />} />
+            <Route path="/marketing/new" element={<NewCampaign />} />
+            <Route path="/marketing/campaigns" element={<Campaigns />} />
+            <Route path="/marketing/lists" element={<Lists />} />
             <Route path="/whatsapp/access" element={<WaGate need="manage"><WhatsAppAccess /></WaGate>} />
             <Route path="/whatsapp/cleanup" element={<WaGate need="manage"><WhatsAppCleanup /></WaGate>} />
             {/* an old bookmark (the Storage page moved to the platform console) lands on the dashboard, not a blank screen */}
@@ -703,6 +720,8 @@ const navGroup                = {
   color: "var(--color-text-muted)",
   padding: "0 12px 2px",
 };
+/** the line between "running the store" and everything else — heavier than the small rule between groups */
+const navDivider = { border: 0, borderTop: "2px solid var(--color-border)", margin: "6px 4px 14px", width: "auto" };
 const navRule                = {
   display: "block",
   height: 1,

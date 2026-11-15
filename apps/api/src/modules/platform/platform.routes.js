@@ -1,3 +1,4 @@
+import { clearAllBlocks, clearBlock, GUARD_SETTINGS, guardOn, listBlocks } from "../security/login-guard.js";
 import { Router } from "express";
 import { z } from "zod";
 import { imageProcessingSchema, storageProviderSchema } from "@onetap/config-schema";
@@ -58,6 +59,21 @@ platformRouter.patch("/plans/:id", async (req, res) => {
 });
 
 /* ---------------------------------------------------------------- settings */
+
+/* ---------------------------------------------------------------- security */
+
+/** Network addresses that are blocked from signing in, or being watched after failed attempts. */
+platformRouter.get("/security/blocks", async (_req, res) => {
+  res.json({ blocks: await listBlocks(), settings: GUARD_SETTINGS, enabled: guardOn });
+});
+platformRouter.delete("/security/blocks/:id", async (req, res) => {
+  await clearBlock(req.params.id);
+  res.status(204).end();
+});
+platformRouter.delete("/security/blocks", async (_req, res) => {
+  await clearAllBlocks();
+  res.status(204).end();
+});
 
 platformRouter.get("/settings", async (_req, res) => {
   res.json({ settings: await platform.getSettings() });

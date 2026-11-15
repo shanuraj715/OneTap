@@ -1,6 +1,6 @@
 # T16 — WhatsApp chat off (plan or per-store lock) — numbers unlinked at once, no WhatsApp requests, every WhatsApp address is a 404
 
-**Area:** whatsapp · **Last result:** ✅ PASSED (37 passed, 0 failed · 2026-11-16 02:05 · headless · 36.0 s)
+**Area:** whatsapp · **Last result:** ✅ PASSED (37 passed, 0 failed · 2026-11-16 02:31 · headless · 35.4 s)
 
 **Run it alone:** `node run.mjs --only t16` (add `--visible` to watch it) · starts from fresh fake data
 
@@ -47,7 +47,7 @@ _Nothing failed._
 - the Numbers page lists the linked numbers (Counter phone, Number 2, Number 3, New phone)
 - Counter phone and Number 3 are connected — _Counter phone Connected +91 90000 00001 · Acme Momos · today: 4/15 new co_
 - the dashboard talks to /api/whatsapp while it is on — _4 requests_
-- the browser's only websocket is the live order feed (/realtime) — WhatsApp chat doesn't open one — _ws://localhost:3097/realtime?outletId=6afa177d6ef3abb832940f81_
+- the browser's only websocket is the live order feed (/realtime) — WhatsApp chat doesn't open one — _ws://localhost:3097/realtime?outletId=6afa1d812198a41f01a6f2fd_
 - did not happen: a websocket for WhatsApp is opened by the browser
 
 **Step 3 — The owner: no WhatsApp anywhere, and every WhatsApp address is a 404**
@@ -94,6 +94,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-16 02:31 | pass | 37 | 0 | headless | 35.4 s |
 | 2026-11-16 02:05 | pass | 37 | 0 | headless | 36.0 s |
 | 2026-11-16 01:54 | pass | 37 | 0 | headless | 36.2 s |
 | 2026-11-16 01:53 | fail | 33 | 4 | headless | 35.2 s |
