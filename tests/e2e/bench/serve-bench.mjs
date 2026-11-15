@@ -37,6 +37,12 @@ Object.assign(process.env, {
   PUBLIC_API_URL: "http://localhost:3097",
   STOREFRONT_ORIGIN: "http://localhost:3170",
   LOG_LEVEL: "warn",
+  // brute-force guard, with block times of seconds instead of minutes so a test can watch a block end and the next one be longer
+  LOGIN_MAX_FAILURES: "3",
+  LOGIN_FAILURE_WINDOW_SECONDS: "60",
+  LOGIN_BLOCK_STEPS_SECONDS: "6,12,24",
+  LOGIN_STRIKE_FORGET_SECONDS: "600",
+  LOGIN_FLOOD_PER_MINUTE: "120",
 });
 const db = await import(`${REPO}/packages/db/src/index.js`);
 await db.connectDb({ uri: mongod.getUri(), dbName: "bench" });

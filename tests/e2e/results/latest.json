@@ -7,8 +7,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T19:22:07.655Z",
-    "durationMs": 14164,
+    "at": "2026-11-15T20:44:09.787Z",
+    "durationMs": 13312,
     "steps": [
       {
         "n": 1,
@@ -89,7 +89,7 @@
           {
             "label": "the code request is accepted (the test stores accept any phone)",
             "ok": true,
-            "detail": "HTTP 200 {\"channel\":\"sms\",\"devCode\":\"952984\"}",
+            "detail": "HTTP 200 {\"channel\":\"sms\",\"devCode\":\"796586\"}",
             "kind": "expect"
           },
           {
@@ -112,8 +112,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T19:22:44.712Z",
-    "durationMs": 32871,
+    "at": "2026-11-15T20:44:46.524Z",
+    "durationMs": 32545,
     "steps": [
       {
         "n": 1,
@@ -289,7 +289,7 @@
           {
             "label": "the new customer was saved with the details they gave",
             "ok": true,
-            "detail": "{\"id\":\"6afa0676a2aa221de706c05e\",\"name\":\"Rohan Mehta\",\"email\":\"rohan.mehta@example.com\",\"phone\":\"9811122233\",\"gender\":\"male\",\"age\":31,\"orderCount\":1,\"walletBalance\":0,\"lastOrderAt\":\"2026-11-15T19:22:35.656Z\",\"createdAt\":\"2026-11-15T19:22:30.978Z\"}",
+            "detail": "{\"id\":\"6afa19b0b4ad197535a71195\",\"name\":\"Rohan Mehta\",\"email\":\"rohan.mehta@example.com\",\"phone\":\"9811122233\",\"gender\":\"male\",\"age\":31,\"orderCount\":1,\"walletBalance\":0,\"lastOrderAt\":\"2026-11-15T20:44:37.579Z\",\"createdAt\":\"2026-11-15T20:44:32.903Z\"}",
             "kind": "expect"
           },
           {
@@ -313,7 +313,7 @@
           {
             "label": "the row shows the customer, phone, type, item count, total and 'Placed'",
             "ok": true,
-            "detail": " #0001 12:52 AM Rohan Mehta 9811122233 TA 8 ₹1,030 Placed 0m Accepted",
+            "detail": " #0001 02:14 AM Rohan Mehta 9811122233 TA 8 ₹1,030 Placed 0m Accepted",
             "kind": "expect"
           }
         ]
@@ -500,8 +500,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T19:22:57.833Z",
-    "durationMs": 13101,
+    "at": "2026-11-15T20:44:58.831Z",
+    "durationMs": 12287,
     "steps": [
       {
         "n": 1,
@@ -708,7 +708,7 @@
           {
             "label": "an attachment uploads",
             "ok": true,
-            "detail": "http://localhost:3098/uploads/6afa0687cd69d19c8a60",
+            "detail": "http://localhost:3098/uploads/6afa19c00c9826af56b8",
             "kind": "expect"
           },
           {
@@ -732,7 +732,7 @@
           {
             "label": "it's quiet hours now (10 pm–9 am): first contacts wait for the morning",
             "ok": true,
-            "detail": "2026-11-16T03:39:48.043Z",
+            "detail": "2026-11-16T03:36:49.618Z",
             "kind": "expect"
           },
           {
@@ -756,7 +756,7 @@
           {
             "label": "the next first contact must wait 2–4 minutes",
             "ok": true,
-            "detail": "130 s",
+            "detail": "132 s",
             "kind": "expect"
           },
           {
@@ -780,7 +780,7 @@
           {
             "label": "15 first contacts a day per number: the rest wait for tomorrow",
             "ok": true,
-            "detail": "2026-11-16T18:31:54.910Z",
+            "detail": "2026-11-16T18:31:56.657Z",
             "kind": "expect"
           },
           {
@@ -906,13 +906,13 @@
           {
             "label": "preview: 3 people (duplicates merged), 1 opted out",
             "ok": true,
-            "detail": "{\"recipients\":3,\"optedOut\":1,\"running\":0,\"firstContact\":3,\"numbersOnline\":[{\"id\":\"6afa0687cd69d19c8a60d5db\",\"label\":\"Counter phone\"},{\"id\":\"6afa0687cd69d19c8a60d5e2\",\"label\":\"Delivery phone\"}],\"estimatedDays\":1}",
+            "detail": "{\"recipients\":3,\"optedOut\":1,\"running\":0,\"firstContact\":3,\"numbersOnline\":[{\"id\":\"6afa19c10c9826af56b87403\",\"label\":\"Counter phone\"},{\"id\":\"6afa19c10c9826af56b8740a\",\"label\":\"Delivery phone\"}],\"estimatedDays\":1}",
             "kind": "expect"
           },
           {
             "label": "a broadcast queues one message per person",
             "ok": true,
-            "detail": "{\"id\":\"6afa0691cd69d19c8a60d75e\",\"text\":\"Diwali: 20% off this weekend!\\n\\nReply STOP to stop offers.\",\"media\":null,\"createdAt\":\"2026-11-15T19:22:57.585Z\",\"status\":\"sending\",\"total\":3,\"skipped\":1,\"waiting\":3,\"sent\":0,\"read\":0,\"failed\":0}",
+            "detail": "{\"id\":\"6afa19ca0c9826af56b87592\",\"text\":\"Diwali: 20% off this weekend!\\n\\nReply STOP to stop offers.\",\"media\":null,\"createdAt\":\"2026-11-15T20:44:58.268Z\",\"status\":\"sending\",\"total\":3,\"skipped\":1,\"waiting\":3,\"sent\":0,\"read\":0,\"failed\":0}",
             "kind": "expect"
           },
           {
@@ -1283,8 +1283,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T19:23:21.825Z",
-    "durationMs": 19814,
+    "at": "2026-11-15T20:45:22.775Z",
+    "durationMs": 19760,
     "steps": [
       {
         "n": 1,
@@ -1419,7 +1419,7 @@
           {
             "label": "a paced broadcast message says when it will go",
             "ok": true,
-            "detail": "BROADCAST | Diwali special: 20% off this weekend! | Reply STOP to stop offers. | sends at 2:53 pm · | 12:23 am",
+            "detail": "BROADCAST | Diwali special: 20% off this weekend! | Reply STOP to stop offers. | sends at 4:15 pm · | 1:45 am",
             "kind": "expect"
           },
           {
@@ -1592,8 +1592,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T19:23:42.410Z",
-    "durationMs": 16416,
+    "at": "2026-11-15T20:45:43.210Z",
+    "durationMs": 16264,
     "steps": [
       {
         "n": 1,
@@ -1751,8 +1751,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T19:24:00.217Z",
-    "durationMs": 13633,
+    "at": "2026-11-15T20:46:00.666Z",
+    "durationMs": 13283,
     "steps": [
       {
         "n": 0,
@@ -1844,8 +1844,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T19:24:37.664Z",
-    "durationMs": 37432,
+    "at": "2026-11-15T20:46:39.309Z",
+    "durationMs": 38627,
     "steps": [
       {
         "n": 1,
@@ -1950,7 +1950,7 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "0,0,0,1,59,267,807,1153,1240,1249,1249,1249,1249,1249",
+            "detail": "0,0,0,1,57,261,799,1150,1240,1249,1249,1249,1249,1249",
             "kind": "expect"
           },
           {
@@ -2016,7 +2016,7 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "508,508,508,511,577,904,1366,1605,1639,1639,1639,1639,1639,1639",
+            "detail": "508,508,508,509,582,837,1379,1589,1639,1639,1639,1639,1639,1639",
             "kind": "expect"
           },
           {
@@ -2045,8 +2045,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T19:24:40.619Z",
-    "durationMs": 2938,
+    "at": "2026-11-15T20:46:42.453Z",
+    "durationMs": 3128,
     "steps": [
       {
         "n": 1,
@@ -2114,8 +2114,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T19:27:54.988Z",
-    "durationMs": 190176,
+    "at": "2026-11-15T20:49:55.448Z",
+    "durationMs": 188810,
     "steps": [
       {
         "n": 1,
@@ -2130,13 +2130,13 @@
           {
             "label": "Basic shows 3 people · 1 outlet",
             "ok": true,
-            "detail": "Lifecycle Basic One outlet — takeaway and dine-in QR 0 stores 3 people · 1 outlet (multi-outlet off) Not on the website 2/11 features · 6/6 ",
+            "detail": "Lifecycle Basic One outlet — takeaway and dine-in QR 0 stores 3 people · 1 outlet (multi-outlet off) Not on the website 2/12 features · 6/6 ",
             "kind": "expect"
           },
           {
             "label": "Pro shows 10 people · 3 outlets",
             "ok": true,
-            "detail": "Lifecycle Pro Up to 3 outlets, everything unlocked 0 stores 10 people · 3 outlets Not on the website 11/11 features · 6/6 effects · 9/9 card",
+            "detail": "Lifecycle Pro Up to 3 outlets, everything unlocked 0 stores 10 people · 3 outlets Not on the website 12/12 features · 6/6 effects · 9/9 card",
             "kind": "expect"
           },
           {
@@ -2446,8 +2446,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T19:28:27.968Z",
-    "durationMs": 32954,
+    "at": "2026-11-15T20:50:28.625Z",
+    "durationMs": 33151,
     "steps": [
       {
         "n": 1,
@@ -2701,8 +2701,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T19:30:19.718Z",
-    "durationMs": 111730,
+    "at": "2026-11-15T20:52:20.513Z",
+    "durationMs": 111863,
     "steps": [
       {
         "n": 1,
@@ -2974,8 +2974,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T19:30:31.828Z",
-    "durationMs": 12080,
+    "at": "2026-11-15T20:52:33.265Z",
+    "durationMs": 12720,
     "steps": [
       {
         "n": 1,
@@ -3091,8 +3091,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T19:30:53.480Z",
-    "durationMs": 21629,
+    "at": "2026-11-15T20:52:55.163Z",
+    "durationMs": 21872,
     "steps": [
       {
         "n": 1,
@@ -3250,8 +3250,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T19:32:25.986Z",
-    "durationMs": 88321,
+    "at": "2026-11-15T20:54:27.778Z",
+    "durationMs": 88431,
     "steps": [
       {
         "n": 1,
@@ -3668,7 +3668,7 @@
           {
             "label": "Campaigns: it finishes with 2 sent, 0 waiting, 0 failed",
             "ok": true,
-            "detail": "Win-back SMS SMS · 16 Nov, 1:02 am · 2 people 2 sent · 0 waiting · 0 failed Done",
+            "detail": "Win-back SMS SMS · 16 Nov, 2:24 am · 2 people 2 sent · 0 waiting · 0 failed Done",
             "kind": "expect"
           },
           {
@@ -3728,13 +3728,13 @@
           {
             "label": "it is queued: 3 waiting, still Sending (the sending worker is off here)",
             "ok": true,
-            "detail": "Ladies offer WhatsApp (linked numbers) · 16 Nov, 1:02 am · 3 people 0 sent · 3 waiting · 0 failed Sending Cancel",
+            "detail": "Ladies offer WhatsApp (linked numbers) · 16 Nov, 2:24 am · 3 people 0 sent · 3 waiting · 0 failed Sending Cancel",
             "kind": "expect"
           },
           {
             "label": "cancelling stops it: Cancelled, nothing waiting",
             "ok": true,
-            "detail": "Ladies offer WhatsApp (linked numbers) · 16 Nov, 1:02 am · 3 people 0 sent · 0 waiting · 0 failed Cancelled",
+            "detail": "Ladies offer WhatsApp (linked numbers) · 16 Nov, 2:24 am · 3 people 0 sent · 0 waiting · 0 failed Cancelled",
             "kind": "expect"
           }
         ]
@@ -3746,7 +3746,7 @@
           {
             "label": "Ravi (24 in 2020) shows 30",
             "ok": true,
-            "detail": " Ravi Kumar — 9000000001 Male 30 3 0 18 Aug, 1:00 am",
+            "detail": " Ravi Kumar — 9000000001 Male 30 3 0 18 Aug, 2:22 am",
             "kind": "expect"
           },
           {
@@ -3775,8 +3775,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T19:57:11.648Z",
-    "durationMs": 64492,
+    "at": "2026-11-15T20:55:36.013Z",
+    "durationMs": 64053,
     "steps": [
       {
         "n": 1,
@@ -3904,6 +3904,231 @@
         "checks": [
           {
             "label": "Marketing Mart (Pro) still has Marketing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser logged JavaScript errors",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t15-login-protection": {
+    "id": "t15-login-protection",
+    "title": "Sign-in protection — wrong guesses block the network, blocks grow longer, a blocked network sees no login form, the platform can unblock",
+    "status": "pass",
+    "pass": 28,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-15T20:56:14.880Z",
+    "durationMs": 34684,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The attacker guesses wrong passwords on the dashboard login",
+        "checks": [
+          {
+            "label": "a fresh address sees the normal sign-in form",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "1st wrong password: 'Incorrect email or password' and 2 attempts left",
+            "ok": true,
+            "detail": "2 attempts left before sign-in is paused for a while",
+            "kind": "expect"
+          },
+          {
+            "label": "2nd wrong password: 1 attempt left",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "3rd wrong password: the form is replaced by 'Sign-in is paused' with a countdown",
+            "ok": true,
+            "detail": "6 s left",
+            "kind": "expect"
+          },
+          {
+            "label": "the sign-in form is still shown to the blocked address",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "A blocked address can't get back to the form by reloading, or sign in with the right password",
+        "checks": [
+          {
+            "label": "after a reload the blocked address sees the sign-in form",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "…the notice and countdown are still there",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "going straight to a dashboard page gets the attacker a sign-in form",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Someone at a different address signs in normally at the same time",
+        "checks": [
+          {
+            "label": "another address still sees the normal form",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the owner signs in with the right password",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "When the block ends the form comes back by itself, and the next block is longer",
+        "checks": [
+          {
+            "label": "the form comes back once the countdown reaches zero",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the second block is longer than the first (6 s → 12 s)",
+            "ok": true,
+            "detail": "6 → 12",
+            "kind": "expect"
+          },
+          {
+            "label": "the second block is the same length as the first",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "The platform console lists the blocked address and can unblock it",
+        "checks": [
+          {
+            "label": "Security lists the address as Blocked, for Dashboards, blocked twice",
+            "ok": true,
+            "detail": "203.0.113.50 Dashboards Blocked · 10 seconds left 0 2 16 Nov, 2:25:54 am Unblock",
+            "kind": "expect"
+          },
+          {
+            "label": "…and explains the rules (3 wrong tries, longer each time)",
+            "ok": true,
+            "detail": "After 3 wrong passwords or codes within 60 seconds, that network is blocked for 6 seconds.",
+            "kind": "expect"
+          },
+          {
+            "label": "the address is still listed as blocked after Unblock",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the unblocked address sees the sign-in form again at once",
+            "ok": true,
+            "detail": "TablePe admin Sign in to manage your restaurant. Email Password Sign in",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "On the storefront: wrong customer codes block that network, and only that network",
+        "checks": [
+          {
+            "label": "wrong code 1: 'That code isn't right'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "wrong code 2: 'That code isn't right'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the 3rd wrong code swaps the sign-in form for 'Sign-in is paused'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the code boxes are still shown to the blocked address",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "after a reload the blocked address can type another code",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "another customer's address still gets the normal sign-in form",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "another customer's address is shown the paused notice",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "Dashboard and customer blocks are separate, and the platform can lift the customer block too",
+        "checks": [
+          {
+            "label": "Security lists the storefront block as 'Customer codes'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the dashboard login of that address was blocked by the customer-code guesses",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "'Unblock everyone' clears the list",
             "ok": true,
             "detail": "",
             "kind": "expect"

@@ -1,6 +1,6 @@
 # T04 — WhatsApp management — colours, chat stats and sharing out, clean-up by date, delete a message
 
-**Area:** whatsapp · **Last result:** ✅ PASSED (20 passed, 0 failed · 2026-11-16 00:53 · headless · 16.4 s)
+**Area:** whatsapp · **Last result:** ✅ PASSED (20 passed, 0 failed · 2026-11-16 02:15 · headless · 16.3 s)
 
 **Run it alone:** `node run.mjs --only t04` (add `--visible` to watch it) · starts from fresh fake data
 
@@ -72,6 +72,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-16 02:15 | pass | 20 | 0 | headless | 16.3 s |
+| 2026-11-16 01:39 | pass | 20 | 0 | headless | 16.2 s |
 | 2026-11-16 00:53 | pass | 20 | 0 | headless | 16.4 s |
 | 2026-11-15 21:13 | pass | 20 | 0 | headless | 16.2 s |
 

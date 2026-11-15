@@ -84,6 +84,9 @@ export const login = (email        , password        ) =>
 
 export const logout = () => req      ("/api/auth/logout", { method: "POST" });
 
+/** Is this network blocked from signing in right now? (asked before the form is drawn) */
+export const loginGuard = () => req("/api/auth/guard");
+
 export const me = () => req                       ("/api/auth/me");
 
 /* --------------------------------------------------------------------- users */
@@ -771,6 +774,10 @@ export const waCancelBroadcast = (o, id) => wa(o, `/broadcasts/${id}/cancel`, wa
 export const waGetAccess = (o) => wa(o, "/access");
 export const waSetAccess = (o, access) => wa(o, "/access", waJson("PUT", { access }));
 
+/* ----------------------------------------------------------------- security */
+export const getSecurityBlocks = () => req("/api/platform/security/blocks");
+export const unblockAddress = (id) => req(`/api/platform/security/blocks/${id}`, { method: "DELETE" });
+export const unblockAllAddresses = () => req("/api/platform/security/blocks", { method: "DELETE" });
 /* --------------------------------------------------------------- marketing */
 const mk = (o, path, init = {}) => req(`/api/marketing${path}`, { ...init, outletId: o._id });
 const mkJson = (method, body) => ({ method, body: JSON.stringify(body ?? {}) });

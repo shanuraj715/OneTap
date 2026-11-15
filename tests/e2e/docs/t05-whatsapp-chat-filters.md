@@ -1,6 +1,6 @@
 # T05 — WhatsApp chat list — 'via' chips and filters (All, Unread, Needs reply, New, No offers, by number)
 
-**Area:** whatsapp · **Last result:** ✅ PASSED (12 passed, 0 failed · 2026-11-16 00:54 · headless · 13.6 s)
+**Area:** whatsapp · **Last result:** ✅ PASSED (12 passed, 0 failed · 2026-11-16 02:16 · headless · 13.3 s)
 
 **Run it alone:** `node run.mjs --only t05` (add `--visible` to watch it) · starts from fresh fake data
 
@@ -51,6 +51,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-16 02:16 | pass | 12 | 0 | headless | 13.3 s |
+| 2026-11-16 01:40 | pass | 12 | 0 | headless | 13.3 s |
 | 2026-11-16 00:54 | pass | 12 | 0 | headless | 13.6 s |
 | 2026-11-15 21:13 | pass | 12 | 0 | headless | 13.6 s |
 
