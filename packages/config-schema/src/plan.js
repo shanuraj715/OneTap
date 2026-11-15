@@ -21,6 +21,7 @@ export const FEATURES = [
   { key: "wallet", label: "Coin wallet", description: "Customers earn and spend loyalty coins." },
   { key: "printing", label: "Printing", description: "Kitchen tickets and receipts on connected printers." },
   { key: "notifications", label: "WhatsApp & SMS alerts", description: "Order updates sent to customers." },
+  { key: "favicon", label: "Own favicon", description: "The store's own icon in the browser tab, on every outlet's pages." },
   {
     key: "customDomain",
     label: "Own domain name",
@@ -157,5 +158,6 @@ export function applyEntitlements(config, entitlements) {
     wallet: { ...config.wallet, enabled: config.wallet.enabled && has("wallet") },
     payments: { ...config.payments, enabled: gateways.length ? gateways : ["cod"] },
     effect: effectAllowed(entitlements, config.effect.style) ? config.effect : { ...config.effect, style: "none" },
+    branding: has("favicon") ? config.branding : { ...config.branding, faviconUrl: "" },
   };
 }

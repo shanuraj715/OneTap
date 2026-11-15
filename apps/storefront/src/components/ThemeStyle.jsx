@@ -10,13 +10,17 @@ import { loadEffectCss } from "@onetap/ui/effects";
  * a first visit (better FCP/LCP), nothing to flash in after paint. Only the
  * active effect's CSS is loaded — the other effects never leave the server.
  */
-export async function ThemeStyle({ theme, typography, effect }) {
+export async function ThemeStyle({ theme, typography, effect, branding }) {
   const fonts = googleFontsUrl(typography);
   const style = effect?.style ?? "none";
   const effectCss = await loadEffectCss(style);
 
+  // the store's own browser-tab icon (blank when the plan doesn't include it — see applyEntitlements)
+  const favicon = branding?.faviconUrl;
+
   return (
     <>
+      {favicon ? <link rel="icon" href={favicon} /> : null}
       {fonts ? (
         <>
           <link rel="preconnect" href="https://fonts.googleapis.com" />

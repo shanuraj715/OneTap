@@ -137,6 +137,8 @@ export function Settings() {
           features: draft.features,
           wallet: draft.wallet,
           capacity: draft.capacity,
+          // the favicon is one for the whole store — sent only when the plan includes it
+          ...(hasFeature("favicon") ? { branding: draft.branding } : {}),
         },
       },
       { onSuccess: () => setDirty(false) },
@@ -192,6 +194,30 @@ export function Settings() {
                 <InfoHint title="Logo" text="Shown beside your name in the storefront header (in the header styles that have room for it). A square or wide picture on a plain background works best. Remember to press Save changes." />
               </div>
               <ImageField outlet={outlet} kind="logos" label="Logo" shape="square" value={draft.identity.logoUrl ?? ""} onChange={(url) => setIdentity("logoUrl", url)} />
+            </div>
+            <div style={{ marginTop: 18, paddingTop: 16, borderTop: "1px solid var(--color-border)" }}>
+              <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
+                Favicon
+                <InfoHint title="Favicon" text="The small icon in the browser tab and in bookmarks. It is ONE icon for the whole store — every outlet's pages use it. A square picture (at least 64 × 64) with a simple shape works best. Remember to press Save changes." />
+              </div>
+              {hasFeature("favicon") ? (
+                <>
+                  <ImageField
+                    outlet={outlet}
+                    kind="logos"
+                    label="Favicon"
+                    shape="square"
+                    value={draft.branding?.faviconUrl ?? ""}
+                    onChange={(url) => {
+                      setDraft({ ...draft, branding: { ...draft.branding, faviconUrl: url } });
+                      setDirty(true);
+                    }}
+                  />
+                  <p style={{ margin: "6px 0 0", fontSize: 12.5, color: "var(--color-text-muted)" }}>Same for every outlet of this store.</p>
+                </>
+              ) : (
+                <LockedFeature label="Your own favicon" note="Visitors see the browser's default icon until it's added to your plan." />
+              )}
             </div>
           </Card>
 

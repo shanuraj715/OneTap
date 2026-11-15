@@ -59,7 +59,7 @@ export default async function TableOrderPage({ params, searchParams }) {
   if (!features.ordering.dineInQr) {
     return (
       <>
-        <ThemeStyle theme={theme} typography={typography} effect={outlet.config.effect} />
+        <ThemeStyle theme={theme} typography={typography} effect={outlet.config.effect} branding={outlet.config.branding} />
         <main style={{ maxWidth: 460, margin: "120px auto", padding: 24, textAlign: "center" }}>
           <h1 style={{ fontSize: 22, marginBottom: 8 }}>Table ordering is off right now</h1>
           <p style={{ color: "var(--color-text-muted)" }}>Please order at the counter.</p>
@@ -71,7 +71,7 @@ export default async function TableOrderPage({ params, searchParams }) {
   if (scan.occupiedByOther) {
     return (
       <>
-        <ThemeStyle theme={theme} typography={typography} effect={outlet.config.effect} />
+        <ThemeStyle theme={theme} typography={typography} effect={outlet.config.effect} branding={outlet.config.branding} />
         <main style={{ maxWidth: 460, margin: "120px auto", padding: 24, textAlign: "center" }}>
           <h1 style={{ fontSize: 20, marginBottom: 8 }}>Another party is seated here</h1>
           <p style={{ color: "var(--color-text-muted)" }}>Please ask a member of staff.</p>
@@ -82,7 +82,7 @@ export default async function TableOrderPage({ params, searchParams }) {
 
   return (
     <>
-      <ThemeStyle theme={theme} typography={typography} effect={outlet.config.effect} />
+      <ThemeStyle theme={theme} typography={typography} effect={outlet.config.effect} branding={outlet.config.branding} />
       <OrderPage
         outletId={outlet.id}
         outletName={name}

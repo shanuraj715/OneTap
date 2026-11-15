@@ -41,7 +41,7 @@ export default async function StorePage({ params }) {
   const { theme, typography, layout } = outlet.config;
   return (
     <>
-      <ThemeStyle theme={theme} typography={typography} effect={outlet.config.effect} />
+      <ThemeStyle theme={theme} typography={typography} effect={outlet.config.effect} branding={outlet.config.branding} />
       <StoreTop outlet={outlet} outletSlug={outletSlug} pages={pages} />
       <main>
         <h1 style={title}>{page.title}</h1>

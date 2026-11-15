@@ -8,7 +8,7 @@ import { storePlan } from "../platform/plan.service.js";
  * outlet of a store looks the same. Stored once on `Brand.appearance`; an
  * outlet's own copy of these areas is only used until the brand has one.
  */
-export const APPEARANCE_AREAS = ["theme", "typography", "effect", "layout"];
+export const APPEARANCE_AREAS = ["theme", "typography", "effect", "layout", "branding"];
 
 const pick = (obj, keys) => Object.fromEntries(keys.filter((k) => obj?.[k] !== undefined).map((k) => [k, obj[k]]));
 

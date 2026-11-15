@@ -43,6 +43,8 @@ const outletConfigObject = z.object({
   theme: themeSchema.default({}),
   /** storefront surface treatment (glass, neumorph, …) — see effect.js */
   effect: effectSchema.default({}),
+  /** the browser-tab icon — one for the whole store (shared like the look; see APPEARANCE_AREAS), plan feature "favicon" */
+  branding: z.object({ faviconUrl: z.string().max(600).default("") }).default({}),
   layout: layoutSchema.default({}),
   tax: taxSchema.default({}),
   typography: typographySchema.default({}),

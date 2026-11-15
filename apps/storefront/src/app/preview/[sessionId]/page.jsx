@@ -45,7 +45,7 @@ export default async function PreviewPage({ params }) {
 
   return (
     <>
-      <ThemeStyle theme={config.theme} typography={config.typography} effect={config.effect} />
+      <ThemeStyle theme={config.theme} typography={config.typography} effect={config.effect} branding={config.branding} />
       <LivePreview
         sessionId={sessionId}
         apiBase={apiPublicUrl()}

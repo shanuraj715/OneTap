@@ -107,6 +107,8 @@ const AREA_PERMISSIONS                             = {
   typography: "theme:update",
   effect: "theme:update",
   layout: "appearance:update",
+  // the favicon — one for the whole store
+  branding: "appearance:update",
   identity: "settings:update",
   // Opening hours, missed-order alerts, prep times and order handling all live
   // under settings — a content editor must not be able to switch off the alerts.

@@ -331,3 +331,11 @@
   .ot-lift:hover,
   .ot-press:active:not(:disabled) { transform: none !important; }
 }
+
+/* Menu categories: chips on desktop; on phones and tablets a "Categories" button that opens a sheet. */
+.ot-cat-button { display: none !important; }
+@media (max-width: 1023px) {
+  .ot-cat-chips { display: none !important; }
+  .ot-cat-button { display: inline-flex !important; }
+}
+.ot-cat-sheet { animation: ot-fade var(--motion-fast) var(--ease-out) both; }
