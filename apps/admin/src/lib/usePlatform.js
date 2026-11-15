@@ -2,6 +2,7 @@ import { keepPreviousData, useInfiniteQuery, useMutation, useQuery, useQueryClie
 import * as api from "./api";
 
 /** Data for the platform console (super admin only). */
+export const useSecurityBlocks = () => useQuery({ queryKey: ["platform", "security"], queryFn: api.getSecurityBlocks, refetchInterval: 5000 });
 export const usePlans = () => useQuery({ queryKey: ["platform", "plans"], queryFn: api.listPlans });
 export const useStores = () => useQuery({ queryKey: ["platform", "stores"], queryFn: api.listStores });
 export const useStore = (id) => useQuery({ queryKey: ["platform", "store", id], queryFn: () => api.getStore(id), enabled: Boolean(id) });

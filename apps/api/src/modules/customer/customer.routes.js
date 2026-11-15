@@ -4,6 +4,7 @@ import { customerAgeSchema, customerEmailSchema, customerGenderSchema, customerN
 import { OutletModel } from "@onetap/db";
 import { isProd } from "../../env.js";
 import { HttpError } from "../../middleware/error.js";
+import { assertNotBlocked, blockInfo, failed, floodLimiter } from "../security/login-guard.js";
 import { completeProfile, customerFromToken, endCustomerSession, requestOtp, verifyOtp } from "./customer.service.js";
 
 export const CUSTOMER_COOKIE = "onetap_customer";
@@ -45,7 +46,19 @@ const requestBody = z.object({
   destination: z.string().min(3),
 });
 
-customerRouter.post("/otp/request", async (req, res) => {
+/**
+ * Brute-force protection for the 6-digit code: sign-in requests are rate limited per address, and an address that
+ * keeps guessing wrong codes is blocked for longer each time (modules/security/login-guard.js).
+ */
+const otpFlood = floodLimiter("otp");
+
+/** The sign-in form asks this first, so a blocked address is shown a notice instead of the form. */
+customerRouter.get("/guard", async (req, res) => {
+  res.json(await blockInfo(req, "customer"));
+});
+
+customerRouter.post("/otp/request", otpFlood, async (req, res) => {
+  await assertNotBlocked(req, "customer");
   const body = requestBody.parse(req.body);
   const outlet = await outletOf(body.outletId);
   const result = await requestOtp({
@@ -74,19 +87,27 @@ const verifyBody = z.object({
   email: customerEmailSchema.optional(),
 });
 
-customerRouter.post("/otp/verify", async (req, res) => {
+customerRouter.post("/otp/verify", otpFlood, async (req, res) => {
   const body = verifyBody.parse(req.body);
+  await assertNotBlocked(req, "customer");
   const outlet = await outletOf(body.outletId);
 
-  const result = await verifyOtp({
-    brandId: outlet.brandId,
-    destination: body.destination,
-    code: body.code,
-    name: body.name,
-    gender: body.gender,
-    age: body.age,
-    email: body.email,
-  });
+  let result;
+  try {
+    result = await verifyOtp({
+      brandId: outlet.brandId,
+      destination: body.destination,
+      code: body.code,
+      name: body.name,
+      gender: body.gender,
+      age: body.age,
+      email: body.email,
+    });
+  } catch (e) {
+    // only a wrong / used-up code is a guess; "enter your name" and the like are not
+    if (e instanceof HttpError && /^(That code|Too many attempts)/.test(e.message)) await failed(req, "customer", e);
+    throw e;
+  }
 
   res.cookie(CUSTOMER_COOKIE, result.token, {
     httpOnly: true,

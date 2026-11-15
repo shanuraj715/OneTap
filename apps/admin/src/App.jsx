@@ -31,6 +31,7 @@ import {
   LayoutList,
   LogOut,
   Megaphone,
+  ShieldCheck,
   Palette,
   Plus,
   Printer,
@@ -87,6 +88,7 @@ import { TakeOrder } from "./routes/take-order/TakeOrder";
 import { PlatformDashboard } from "./routes/platform/PlatformDashboard";
 import { PlatformCache } from "./routes/platform/PlatformCache";
 import { PlatformStorage } from "./routes/platform/PlatformStorage";
+import { PlatformSecurity } from "./routes/platform/PlatformSecurity";
 import { PlatformServer } from "./routes/platform/PlatformServer";
 import { PlatformPlans } from "./routes/platform/PlatformPlans";
 import { PlatformSettings } from "./routes/platform/PlatformSettings";
@@ -133,6 +135,7 @@ const ROUTE_META = {
   "/platform/stores": { title: "Stores", icon: Store },
   "/platform/plans": { title: "Plans", icon: Layers },
   "/platform/server": { title: "Server", icon: ServerIcon },
+  "/platform/security": { title: "Security", icon: ShieldCheck },
   "/platform/cache": { title: "Cache", icon: Database },
   "/platform/storage": { title: "Storage", icon: HardDrive },
   "/platform/settings": { title: "Platform settings", icon: SettingsIcon },
@@ -189,6 +192,7 @@ const PLATFORM_NAV_GROUPS = [
       { to: "/platform/stores", label: "Stores", icon: <Store size={ICON} /> },
       { to: "/platform/plans", label: "Plans", icon: <Layers size={ICON} /> },
       { to: "/platform/server", label: "Server", icon: <ServerIcon size={ICON} /> },
+      { to: "/platform/security", label: "Security", icon: <ShieldCheck size={ICON} /> },
       { to: "/platform/cache", label: "Cache", icon: <Database size={ICON} /> },
       { to: "/platform/storage", label: "Storage", icon: <HardDrive size={ICON} /> },
       { to: "/platform/settings", label: "Settings", icon: <SettingsIcon size={ICON} /> },
@@ -544,6 +548,7 @@ function Shell({ can }                                     ) {
               <Route path="/platform/stores/:id" element={<PlatformStoreDetail />} />
               <Route path="/platform/plans" element={<PlatformPlans />} />
               <Route path="/platform/server" element={<PlatformServer />} />
+              <Route path="/platform/security" element={<PlatformSecurity />} />
               <Route path="/platform/cache" element={<PlatformCache />} />
               <Route path="/platform/storage" element={<PlatformStorage />} />
               <Route path="/platform/settings" element={<PlatformSettings />} />

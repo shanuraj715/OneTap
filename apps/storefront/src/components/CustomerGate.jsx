@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { CUSTOMER_AGE_MAX, CUSTOMER_AGE_MIN, CUSTOMER_GENDER_LABELS, CUSTOMER_GENDERS } from "@onetap/config-schema";
 import { fx } from "@onetap/ui";
-import { Calendar, Check, ChevronLeft, Loader2, LogIn, Mail, Phone, ShieldCheck, User } from "lucide-react";
+import { Calendar, Check, ChevronLeft, Loader2, LogIn, Mail, Phone, ShieldAlert, ShieldCheck, User } from "lucide-react";
 import { api, apiPatch } from "@/lib/clientApi";
 
 const DRAFT_KEY = "onetap.customerDraft";
@@ -101,13 +101,28 @@ export function CustomerGate({ customer, outletId, onSuccess, onStepChange }) {
   const verifiedIdentity = activeCustomer?.phone ?? activeCustomer?.email ?? null;
   const verifiedIsPhone = Boolean(activeCustomer?.phone);
 
+  // too many wrong codes from this network: the form is replaced by a notice until the block ends
+  const [blockedUntil, setBlockedUntil] = useState(null);
+  useEffect(() => {
+    let off = false;
+    api("/api/customer/guard")
+      .then((g) => {
+        if (!off && g.blocked) setBlockedUntil(g.blockedUntil);
+      })
+      .catch(() => {});
+    return () => {
+      off = true;
+    };
+  }, []);
+
   const run = async (fn) => {
     setBusy(true);
     setError(null);
     try {
       await fn();
     } catch (e) {
-      setError(e.message);
+      if (e.details?.code === "ip_blocked") setBlockedUntil(e.details.blockedUntil);
+      else setError(e.message);
     } finally {
       setBusy(false);
     }
@@ -186,6 +201,16 @@ export function CustomerGate({ customer, outletId, onSuccess, onStepChange }) {
   const submit = isCompletion ? completeProfile : sent ? verify : requestCode;
   const submitDisabled =
     busy || (isCompletion ? !profileValid : sent ? code.length !== 6 : !detailsValid);
+
+  if (blockedUntil) {
+    return (
+      <div style={shell}>
+        <div style={card} className="ot-anim-pop ot-fx-card">
+          <BlockedNotice until={blockedUntil} onDone={() => setBlockedUntil(null)} />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={shell}>
@@ -642,3 +667,28 @@ const errorBox = {
 };
 const devHint = { fontSize: 12, color: "var(--color-text-muted)", margin: "8px 0 0" };
 const trustNote = { margin: "18px 0 0", fontSize: 11.5, color: "var(--color-text-muted)", textAlign: "center", lineHeight: 1.5 };
+
+/** Shown instead of the sign-in form while this network is blocked for too many wrong codes. */
+function BlockedNotice({ until, onDone }) {
+  const [left, setLeft] = useState(() => Math.max(0, Math.ceil((new Date(until).getTime() - Date.now()) / 1000)));
+  useEffect(() => {
+    const tick = () => {
+      const s = Math.max(0, Math.ceil((new Date(until).getTime() - Date.now()) / 1000));
+      setLeft(s);
+      if (s <= 0) onDone();
+    };
+    tick();
+    const t = setInterval(tick, 250);
+    return () => clearInterval(t);
+  }, [until, onDone]);
+  return (
+    <div role="alert" aria-live="polite" style={{ textAlign: "center" }} data-blocked="true" data-retry-seconds={left}>
+      <ShieldAlert size={34} color="#b42318" />
+      <h1 style={title}>Sign-in is paused</h1>
+      <p style={subtitle}>Too many wrong codes from this network. For safety, signing in is paused here for a little while.</p>
+      <div style={{ fontSize: 30, fontWeight: 700, fontVariantNumeric: "tabular-nums" }} data-testid="blocked-countdown">
+        {Math.floor(left / 60)}:{String(left % 60).padStart(2, "0")}
+      </div>
+    </div>
+  );
+}

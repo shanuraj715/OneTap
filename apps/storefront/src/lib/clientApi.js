@@ -37,8 +37,16 @@ export async function api(path, body) {
     body: body ? JSON.stringify(body) : undefined,
   });
   const json = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(json.error ?? `Something went wrong (${res.status})`);
+  if (!res.ok) throw apiError(json, res.status);
   return json;
+}
+
+/** An Error that also carries what the API said beyond the message — `details.code === "ip_blocked"` and when it ends. */
+function apiError(json, status) {
+  const e = new Error(json.error ?? `Something went wrong (${status})`);
+  e.status = status;
+  e.details = json.details;
+  return e;
 }
 
 /** Same as `api`, but for PATCH — used by the profile-completion step. */
@@ -51,7 +59,7 @@ export async function apiPatch(path, body) {
     body: JSON.stringify(body),
   });
   const json = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(json.error ?? `Something went wrong (${res.status})`);
+  if (!res.ok) throw apiError(json, res.status);
   return json;
 }
 

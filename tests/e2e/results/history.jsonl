@@ -61,3 +61,22 @@
 {"id":"t10-plan-downgrade","status":"pass","pass":37,"fail":0,"mode":"headless","at":"2026-11-15T18:02:49.883Z","durationMs":111230}
 {"id":"t11-outlet-delete","status":"pass","pass":13,"fail":0,"mode":"headless","at":"2026-11-15T18:03:01.944Z","durationMs":12035}
 {"id":"t12-store-delete","status":"pass","pass":19,"fail":0,"mode":"headless","at":"2026-11-15T18:03:23.393Z","durationMs":21427}
+{"id":"t15-login-protection","status":"error","pass":19,"fail":5,"mode":"headless","at":"2026-11-15T20:04:22.672Z","durationMs":59849,"error":"locator.waitFor: Timeout 15000ms exceeded. Call log:   - waiting for locator('tr[data-ip=\"203.0.113.50\"]').filter({ hasText: 'Customer codes' }) to be visible"}
+{"id":"t15-login-protection","status":"fail","pass":26,"fail":2,"mode":"headless","at":"2026-11-15T20:05:21.873Z","durationMs":39923}
+{"id":"t15-login-protection","status":"fail","pass":27,"fail":1,"mode":"headless","at":"2026-11-15T20:06:19.617Z","durationMs":39319}
+{"id":"t15-login-protection","status":"error","pass":24,"fail":0,"mode":"headless","at":"2026-11-15T20:07:16.422Z","durationMs":46549,"error":"locator.waitFor: Timeout 15000ms exceeded. Call log:   - waiting for locator('tr[data-ip=\"203.0.113.50\"]').filter({ hasText: 'Customer codes' }) to be visible"}
+{"id":"t15-login-protection","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-15T20:07:59.606Z","durationMs":33677}
+{"id":"t00-bench-smoke","status":"pass","pass":11,"fail":0,"mode":"headless","at":"2026-11-15T20:08:19.453Z","durationMs":13117}
+{"id":"t01-takeaway-order","status":"pass","pass":45,"fail":0,"mode":"headless","at":"2026-11-15T20:08:56.283Z","durationMs":32658}
+{"id":"t02-whatsapp-api","status":"pass","pass":118,"fail":0,"mode":"headless","at":"2026-11-15T20:09:10.580Z","durationMs":14280}
+{"id":"t03-whatsapp-dashboard","status":"pass","pass":44,"fail":0,"mode":"headless","at":"2026-11-15T20:09:34.343Z","durationMs":19585}
+{"id":"t04-whatsapp-manage","status":"pass","pass":20,"fail":0,"mode":"headless","at":"2026-11-15T20:09:54.720Z","durationMs":16213}
+{"id":"t05-whatsapp-chat-filters","status":"pass","pass":12,"fail":0,"mode":"headless","at":"2026-11-15T20:10:12.190Z","durationMs":13301}
+{"id":"t06-storefront-header-categories","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-15T20:10:49.352Z","durationMs":37146}
+{"id":"t07-favicon-plan-rules","status":"pass","pass":8,"fail":0,"mode":"headless","at":"2026-11-15T20:10:52.294Z","durationMs":2923}
+{"id":"t08-plans-outlets-settings","status":"pass","pass":42,"fail":0,"mode":"headless","at":"2026-11-15T20:14:04.166Z","durationMs":187692}
+{"id":"t09-store-subdomain","status":"pass","pass":36,"fail":0,"mode":"headless","at":"2026-11-15T20:14:36.990Z","durationMs":32800}
+{"id":"t10-plan-downgrade","status":"pass","pass":37,"fail":0,"mode":"headless","at":"2026-11-15T20:16:28.618Z","durationMs":111607}
+{"id":"t11-outlet-delete","status":"pass","pass":13,"fail":0,"mode":"headless","at":"2026-11-15T20:16:40.678Z","durationMs":12038}
+{"id":"t12-store-delete","status":"pass","pass":19,"fail":0,"mode":"headless","at":"2026-11-15T20:17:02.535Z","durationMs":21833}
+{"id":"t15-login-protection","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-15T20:17:41.063Z","durationMs":34338}

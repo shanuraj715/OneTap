@@ -45,6 +45,19 @@ const schema = z.object({
    * WhatsApp throws a number off when two copies connect with the same session.
    */
   WHATSAPP_WORKER: z.enum(["on", "off"]).default("off"),
+  /**
+   * Brute-force protection on every sign-in (dashboard + customer codes). A network address that fails
+   * LOGIN_MAX_FAILURES times within LOGIN_FAILURE_WINDOW_SECONDS is blocked for the first of LOGIN_BLOCK_STEPS_SECONDS;
+   * each further block moves one step up the list (and stays on the last), and the climb is forgotten after
+   * LOGIN_STRIKE_FORGET_SECONDS without another block. LOGIN_FLOOD_PER_MINUTE caps sign-in requests of ANY kind.
+   * "off" disables the whole thing (useful on a laptop where everyone is 127.0.0.1).
+   */
+  LOGIN_GUARD: z.enum(["on", "off"]).default("on"),
+  LOGIN_MAX_FAILURES: z.coerce.number().int().min(1).default(5),
+  LOGIN_FAILURE_WINDOW_SECONDS: z.coerce.number().int().min(1).default(900),
+  LOGIN_BLOCK_STEPS_SECONDS: z.string().default("300,900,3600,21600,86400"),
+  LOGIN_STRIKE_FORGET_SECONDS: z.coerce.number().int().min(1).default(86400),
+  LOGIN_FLOOD_PER_MINUTE: z.coerce.number().int().min(1).default(30),
   WEBSITE_REVALIDATE_SECRET: z.string().default("dev-only-website-revalidate-secret"),
   /**
    * Cloudflare Turnstile for the website's enquiry form — a real "are you a

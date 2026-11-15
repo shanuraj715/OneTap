@@ -7,8 +7,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T15:41:25.000Z",
-    "durationMs": 16791,
+    "at": "2026-11-15T20:08:19.453Z",
+    "durationMs": 13117,
     "steps": [
       {
         "n": 1,
@@ -89,7 +89,7 @@
           {
             "label": "the code request is accepted (the test stores accept any phone)",
             "ok": true,
-            "detail": "HTTP 200 {\"channel\":\"sms\",\"devCode\":\"212819\"}",
+            "detail": "HTTP 200 {\"channel\":\"sms\",\"devCode\":\"940844\"}",
             "kind": "expect"
           },
           {
@@ -112,8 +112,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T15:46:14.404Z",
-    "durationMs": 58433,
+    "at": "2026-11-15T20:08:56.283Z",
+    "durationMs": 32658,
     "steps": [
       {
         "n": 1,
@@ -289,7 +289,7 @@
           {
             "label": "the new customer was saved with the details they gave",
             "ok": true,
-            "detail": "{\"id\":\"6af9d3af8253931d71f06a04\",\"name\":\"Rohan Mehta\",\"email\":\"rohan.mehta@example.com\",\"phone\":\"9811122233\",\"gender\":\"male\",\"age\":31,\"orderCount\":1,\"walletBalance\":0,\"lastOrderAt\":\"2026-11-15T15:45:59.059Z\",\"createdAt\":\"2026-11-15T15:45:51.038Z\"}",
+            "detail": "{\"id\":\"6afa114a2828386e4c7915ef\",\"name\":\"Rohan Mehta\",\"email\":\"rohan.mehta@example.com\",\"phone\":\"9811122233\",\"gender\":\"male\",\"age\":31,\"orderCount\":1,\"walletBalance\":0,\"lastOrderAt\":\"2026-11-15T20:08:47.322Z\",\"createdAt\":\"2026-11-15T20:08:42.684Z\"}",
             "kind": "expect"
           },
           {
@@ -313,7 +313,7 @@
           {
             "label": "the row shows the customer, phone, type, item count, total and 'Placed'",
             "ok": true,
-            "detail": " #0001 09:15 PM Rohan Mehta 9811122233 TA 8 ₹1,030 Placed 0m Accepted",
+            "detail": " #0001 01:38 AM Rohan Mehta 9811122233 TA 8 ₹1,030 Placed 0m Accepted",
             "kind": "expect"
           }
         ]
@@ -496,12 +496,12 @@
     "id": "t02-whatsapp-api",
     "title": "WhatsApp chat — API rules and the careful-pace sending worker",
     "status": "pass",
-    "pass": 117,
+    "pass": 118,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T15:42:39.794Z",
-    "durationMs": 12306,
+    "at": "2026-11-15T20:09:10.580Z",
+    "durationMs": 14280,
     "steps": [
       {
         "n": 1,
@@ -708,7 +708,7 @@
           {
             "label": "an attachment uploads",
             "ok": true,
-            "detail": "http://localhost:3098/uploads/6af9d2e6c6342992e761",
+            "detail": "http://localhost:3098/uploads/6afa115ae8830218777d",
             "kind": "expect"
           },
           {
@@ -730,6 +730,12 @@
         "title": "the worker sends — at a careful pace",
         "checks": [
           {
+            "label": "it's quiet hours now (10 pm–9 am): first contacts wait for the morning",
+            "ok": true,
+            "detail": "2026-11-16T03:35:59.377Z",
+            "kind": "expect"
+          },
+          {
             "label": "one message goes out, to the right number",
             "ok": true,
             "detail": "919876543210@s.whatsapp.net",
@@ -750,7 +756,7 @@
           {
             "label": "the next first contact must wait 2–4 minutes",
             "ok": true,
-            "detail": "206 s",
+            "detail": "130 s",
             "kind": "expect"
           },
           {
@@ -774,7 +780,7 @@
           {
             "label": "15 first contacts a day per number: the rest wait for tomorrow",
             "ok": true,
-            "detail": "2026-11-16T03:35:36.736Z",
+            "detail": "2026-11-16T18:31:07.159Z",
             "kind": "expect"
           },
           {
@@ -900,13 +906,13 @@
           {
             "label": "preview: 3 people (duplicates merged), 1 opted out",
             "ok": true,
-            "detail": "{\"recipients\":3,\"optedOut\":1,\"running\":0,\"firstContact\":3,\"numbersOnline\":[{\"id\":\"6af9d2e6c6342992e761208c\",\"label\":\"Counter phone\"},{\"id\":\"6af9d2e6c6342992e7612095\",\"label\":\"Delivery phone\"}],\"estimatedDays\":1}",
+            "detail": "{\"recipients\":3,\"optedOut\":1,\"running\":0,\"firstContact\":3,\"numbersOnline\":[{\"id\":\"6afa115be8830218777d770a\",\"label\":\"Counter phone\"},{\"id\":\"6afa115be8830218777d7711\",\"label\":\"Delivery phone\"}],\"estimatedDays\":1}",
             "kind": "expect"
           },
           {
             "label": "a broadcast queues one message per person",
             "ok": true,
-            "detail": "{\"id\":\"6af9d2efc6342992e7612206\",\"text\":\"Diwali: 20% off this weekend!\\n\\nReply STOP to stop offers.\",\"media\":null,\"createdAt\":\"2026-11-15T15:42:39.373Z\",\"status\":\"sending\",\"total\":3,\"skipped\":1,\"waiting\":3,\"sent\":0,\"read\":0,\"failed\":0}",
+            "detail": "{\"id\":\"6afa1166e8830218777d7888\",\"text\":\"Diwali: 20% off this weekend!\\n\\nReply STOP to stop offers.\",\"media\":null,\"createdAt\":\"2026-11-15T20:09:10.203Z\",\"status\":\"sending\",\"total\":3,\"skipped\":1,\"waiting\":3,\"sent\":0,\"read\":0,\"failed\":0}",
             "kind": "expect"
           },
           {
@@ -1277,8 +1283,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T15:43:03.391Z",
-    "durationMs": 19416,
+    "at": "2026-11-15T20:09:34.343Z",
+    "durationMs": 19585,
     "steps": [
       {
         "n": 1,
@@ -1413,7 +1419,7 @@
           {
             "label": "a paced broadcast message says when it will go",
             "ok": true,
-            "detail": "BROADCAST | Diwali special: 20% off this weekend! | Reply STOP to stop offers. | sends tomorrow 11:12 am · | 8:42 pm",
+            "detail": "BROADCAST | Diwali special: 20% off this weekend! | Reply STOP to stop offers. | sends at 3:39 pm · | 1:09 am",
             "kind": "expect"
           },
           {
@@ -1586,8 +1592,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T15:43:23.791Z",
-    "durationMs": 16227,
+    "at": "2026-11-15T20:09:54.720Z",
+    "durationMs": 16213,
     "steps": [
       {
         "n": 1,
@@ -1716,7 +1722,7 @@
           {
             "label": "older than 30 days: 2 messages in 1 chat",
             "ok": true,
-            "detail": "2 messages from before Oct 17, 2026, in 1 chat.",
+            "detail": "2 messages from before Oct 18, 2026, in 1 chat.",
             "kind": "expect"
           },
           {
@@ -1745,8 +1751,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T15:43:41.519Z",
-    "durationMs": 13560,
+    "at": "2026-11-15T20:10:12.190Z",
+    "durationMs": 13301,
     "steps": [
       {
         "n": 0,
@@ -1838,8 +1844,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T15:44:19.090Z",
-    "durationMs": 37555,
+    "at": "2026-11-15T20:10:49.352Z",
+    "durationMs": 37146,
     "steps": [
       {
         "n": 1,
@@ -1944,7 +1950,7 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "0,0,0,1,57,261,799,1150,1240,1249,1249,1249,1249,1249",
+            "detail": "0,0,0,1,41,272,814,1121,1241,1249,1249,1249,1249,1249",
             "kind": "expect"
           },
           {
@@ -2010,7 +2016,7 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "508,508,508,511,579,912,1434,1607,1639,1639,1639,1639,1639,1639",
+            "detail": "508,508,508,509,581,917,1376,1608,1639,1639,1639,1639,1639,1639",
             "kind": "expect"
           },
           {
@@ -2039,8 +2045,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T15:44:22.269Z",
-    "durationMs": 3161,
+    "at": "2026-11-15T20:10:52.294Z",
+    "durationMs": 2923,
     "steps": [
       {
         "n": 1,
@@ -2108,8 +2114,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T18:00:26.054Z",
-    "durationMs": 191076,
+    "at": "2026-11-15T20:14:04.166Z",
+    "durationMs": 187692,
     "steps": [
       {
         "n": 1,
@@ -2440,8 +2446,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T18:00:58.633Z",
-    "durationMs": 32547,
+    "at": "2026-11-15T20:14:36.990Z",
+    "durationMs": 32800,
     "steps": [
       {
         "n": 1,
@@ -2695,8 +2701,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T18:02:49.883Z",
-    "durationMs": 111230,
+    "at": "2026-11-15T20:16:28.618Z",
+    "durationMs": 111607,
     "steps": [
       {
         "n": 1,
@@ -2729,13 +2735,13 @@
           {
             "label": "the platform page now shows Basic with 3 outlets against a limit of 1",
             "ok": true,
-            "detail": "Over its limits since Nov 15, 2026. Everything keeps working until Nov 22, 2026; aft",
+            "detail": "Over its limits since Nov 16, 2026. Everything keeps working until Nov 23, 2026; aft",
             "kind": "expect"
           },
           {
             "label": "…and says the store is over its limits, with the 7-day grace deadline",
             "ok": true,
-            "detail": "Over its limits since Nov 15, 2026. Everything keeps working until Nov 22, 2026; after that you'll be asked to choose what to block.",
+            "detail": "Over its limits since Nov 16, 2026. Everything keeps working until Nov 23, 2026; after that you'll be asked to choose what to block.",
             "kind": "expect"
           },
           {
@@ -2753,7 +2759,7 @@
           {
             "label": "the owner's dashboard shows 'Your store has 3 outlets (plan allows 1)' and 'Everything keeps working until …'",
             "ok": true,
-            "detail": "Your store has 3 outlets (plan allows 1). Everything keeps working until Nov 22, 2026. Remove the extras, or contact TablePe to upgrade your plan. Dashboard Central Revenue t",
+            "detail": "Your store has 3 outlets (plan allows 1). Everything keeps working until Nov 23, 2026. Remove the extras, or contact TablePe to upgrade your plan. Dashboard Central Revenue t",
             "kind": "expect"
           },
           {
@@ -2849,7 +2855,7 @@
           {
             "label": "the platform page says the grace period has ended",
             "ok": true,
-            "detail": "This store went over its limits on Nov 15, 2026 and its 0-day grace period ended on Nov 15, 2026. Choose what to block on the Outlets and People tabs — or raise its limits.",
+            "detail": "This store went over its limits on Nov 16, 2026 and its 0-day grace period ended on Nov 16, 2026. Choose what to block on the Outlets and People tabs — or raise its limits.",
             "kind": "expect"
           },
           {
@@ -2968,8 +2974,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T18:03:01.944Z",
-    "durationMs": 12035,
+    "at": "2026-11-15T20:16:40.678Z",
+    "durationMs": 12038,
     "steps": [
       {
         "n": 1,
@@ -3085,8 +3091,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T18:03:23.393Z",
-    "durationMs": 21427,
+    "at": "2026-11-15T20:17:02.535Z",
+    "durationMs": 21833,
     "steps": [
       {
         "n": 1,
@@ -3222,6 +3228,231 @@
             "label": "Pro Direct Co still opens",
             "ok": true,
             "detail": "HTTP 200",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser logged JavaScript errors",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t15-login-protection": {
+    "id": "t15-login-protection",
+    "title": "Sign-in protection — wrong guesses block the network, blocks grow longer, a blocked network sees no login form, the platform can unblock",
+    "status": "pass",
+    "pass": 28,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-15T20:17:41.063Z",
+    "durationMs": 34338,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The attacker guesses wrong passwords on the dashboard login",
+        "checks": [
+          {
+            "label": "a fresh address sees the normal sign-in form",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "1st wrong password: 'Incorrect email or password' and 2 attempts left",
+            "ok": true,
+            "detail": "2 attempts left before sign-in is paused for a while",
+            "kind": "expect"
+          },
+          {
+            "label": "2nd wrong password: 1 attempt left",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "3rd wrong password: the form is replaced by 'Sign-in is paused' with a countdown",
+            "ok": true,
+            "detail": "6 s left",
+            "kind": "expect"
+          },
+          {
+            "label": "the sign-in form is still shown to the blocked address",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "A blocked address can't get back to the form by reloading, or sign in with the right password",
+        "checks": [
+          {
+            "label": "after a reload the blocked address sees the sign-in form",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "…the notice and countdown are still there",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "going straight to a dashboard page gets the attacker a sign-in form",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Someone at a different address signs in normally at the same time",
+        "checks": [
+          {
+            "label": "another address still sees the normal form",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the owner signs in with the right password",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "When the block ends the form comes back by itself, and the next block is longer",
+        "checks": [
+          {
+            "label": "the form comes back once the countdown reaches zero",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the second block is longer than the first (6 s → 12 s)",
+            "ok": true,
+            "detail": "6 → 12",
+            "kind": "expect"
+          },
+          {
+            "label": "the second block is the same length as the first",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "The platform console lists the blocked address and can unblock it",
+        "checks": [
+          {
+            "label": "Security lists the address as Blocked, for Dashboards, blocked twice",
+            "ok": true,
+            "detail": "203.0.113.50 Dashboards Blocked · 10 seconds left 0 2 16 Nov, 1:47:21 am Unblock",
+            "kind": "expect"
+          },
+          {
+            "label": "…and explains the rules (3 wrong tries, longer each time)",
+            "ok": true,
+            "detail": "After 3 wrong passwords or codes within 60 seconds, that network is blocked for 6 seconds.",
+            "kind": "expect"
+          },
+          {
+            "label": "the address is still listed as blocked after Unblock",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the unblocked address sees the sign-in form again at once",
+            "ok": true,
+            "detail": "TablePe admin Sign in to manage your restaurant. Email Password Sign in",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "On the storefront: wrong customer codes block that network, and only that network",
+        "checks": [
+          {
+            "label": "wrong code 1: 'That code isn't right'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "wrong code 2: 'That code isn't right'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the 3rd wrong code swaps the sign-in form for 'Sign-in is paused'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the code boxes are still shown to the blocked address",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "after a reload the blocked address can type another code",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "another customer's address still gets the normal sign-in form",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "another customer's address is shown the paused notice",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "Dashboard and customer blocks are separate, and the platform can lift the customer block too",
+        "checks": [
+          {
+            "label": "Security lists the storefront block as 'Customer codes'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the dashboard login of that address was blocked by the customer-code guesses",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "'Unblock everyone' clears the list",
+            "ok": true,
+            "detail": "",
             "kind": "expect"
           },
           {
