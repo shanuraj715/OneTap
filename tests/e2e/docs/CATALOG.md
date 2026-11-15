@@ -1,6 +1,6 @@
 # TablePe end-to-end tests — catalog
 
-**14 tests** · 14 passing · 0 failing/error · 0 not run yet
+**15 tests** · 15 passing · 0 failing/error · 0 not run yet
 
 | Test | Area | Result | Checks | Last run |
 |---|---|---|---|---|
@@ -18,6 +18,7 @@
 | [t11-outlet-delete](t11-outlet-delete.md) — Delete an outlet from the dashboard — protection for outlets with orders, then the deleted outlet on the subdomain | domains | ✅ PASSED | 13/13 | 2026-11-16 01:00 |
 | [t12-store-delete](t12-store-delete.md) — Delete the store — typed-name confirmation, then the subdomain, the owner and the other stores | domains | ✅ PASSED | 19/19 | 2026-11-16 01:00 |
 | [t13-marketing](t13-marketing.md) — Marketing — channels, audience filters (last visit, items, age, gender, order type, area), imports, lists, sending and the sidebar | marketing | ✅ PASSED | 70/70 | 2026-11-16 01:02 |
+| [t14-marketing-plan](t14-marketing-plan.md) — Marketing is a plan feature — Basic doesn't have it, Pro does, and it can be unlocked or locked for one store | plans | ✅ PASSED | 16/16 | 2026-11-16 01:27 |
 
 ## Open findings (noticed during tests, not yet fixed)
 

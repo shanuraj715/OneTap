@@ -5,10 +5,18 @@ import * as api from "../../lib/api";
 import { useAuth } from "../../lib/useAuth";
 import { useMkAction, useMkList, useMkLists } from "../../lib/useMarketing";
 import { Button, Card, Empty, Field, TextInput, Toast } from "../../ui";
-import { MarketingHeader } from "./MarketingNav";
+import { MarketingGate, MarketingHeader } from "./MarketingNav";
 
 /** Saved contact lists: numbers you imported (a CSV from an event, a WhatsApp group export…) kept for next time. */
 export function Lists() {
+  return (
+    <MarketingGate>
+      <ListsPage />
+    </MarketingGate>
+  );
+}
+
+function ListsPage() {
   const { can } = useAuth();
   const canSend = can("marketing:send");
   const lists = useMkLists();

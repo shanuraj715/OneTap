@@ -3766,5 +3766,158 @@
     ],
     "findings": [],
     "problems": []
+  },
+  "t14-marketing-plan": {
+    "id": "t14-marketing-plan",
+    "title": "Marketing is a plan feature — Basic doesn't have it, Pro does, and it can be unlocked or locked for one store",
+    "status": "pass",
+    "pass": 16,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-15T19:57:11.648Z",
+    "durationMs": 64492,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Platform console → Plans: one plan without Marketing, one with it",
+        "checks": [
+          {
+            "label": "both plans are listed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the plan form has a 'Marketing' switch, ticked for the Pro-style plan",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Two stores on the plan WITHOUT Marketing",
+        "checks": [
+          {
+            "label": "both stores exist",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "The owner of the Basic-style store: no Marketing",
+        "checks": [
+          {
+            "label": "Marketing is in the sidebar of a store whose plan lacks it",
+            "ok": true,
+            "detail": "[{\"group\":\"Store & orders\",\"divider\":false,\"items\":[\"Take order\",\"Dashboard\",\"Orders\",\"Menu\",\"Tables\"]},{\"group\":\"Customers & growth\",\"divider\":true,\"items\":[\"Customers\",\"Coupons\"]},{\"group\":\"Setup\",\"divider\":false,\"items\":[\"Storefront\",\"Settings\"]}]",
+            "kind": "never"
+          },
+          {
+            "label": "opening /marketing/new says 'Marketing isn't in your plan'",
+            "ok": true,
+            "detail": "Marketing Send an offer or an announcement to your customers. Marketing isn't in your plan Ask TablePe to add it to your",
+            "kind": "expect"
+          },
+          {
+            "label": "the page still offers the sending screens",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "The platform unlocks Marketing for THIS store only",
+        "checks": [
+          {
+            "label": "the owner now has Marketing in the sidebar",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the real Marketing screen opens",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the OTHER store on the same plan got Marketing too",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Back to 'from plan', then the store moves to the plan that includes Marketing",
+        "checks": [
+          {
+            "label": "Marketing stays after the unlock is removed (the plan still lacks it)",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "on the plan that includes Marketing the owner has it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Locking Marketing for one store beats its plan",
+        "checks": [
+          {
+            "label": "the owner still has Marketing after the platform locked it for the store",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "opening it says it isn't in the plan",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "back to 'from plan' (a plan that includes it) → the owner has Marketing again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "Other Pro stores are untouched",
+        "checks": [
+          {
+            "label": "Marketing Mart (Pro) still has Marketing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser logged JavaScript errors",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
   }
 }

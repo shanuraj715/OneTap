@@ -63,10 +63,10 @@ async function sendOne(m, cache) {
   const ctx = { brandId: m.brandId };
   if (!cache.brand.has(m.brandId)) {
     const plan = await storePlan(m.brandId);
-    cache.brand.set(m.brandId, { ok: plan.entitlements.features.includes("notifications") && !plan.disabled, sms: null, whatsapp: null });
+    cache.brand.set(m.brandId, { ok: plan.entitlements.features.includes("notifications") && plan.entitlements.features.includes("marketing") && !plan.disabled, sms: null, whatsapp: null });
   }
   const brand = cache.brand.get(m.brandId);
-  if (!brand.ok) return { ok: false, reason: "Not allowed: the store's plan doesn't include SMS / WhatsApp sending (or the store is switched off)." };
+  if (!brand.ok) return { ok: false, reason: "Not allowed: the store's plan doesn't include Marketing and SMS / WhatsApp sending (or the store is switched off)." };
 
   const channelKey = m.channel === "sms" ? "sms" : "whatsapp";
   if (!brand[channelKey]) brand[channelKey] = await credentialsFor(ctx, channelKey);

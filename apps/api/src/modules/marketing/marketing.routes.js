@@ -2,17 +2,21 @@ import { Router } from "express";
 import { z } from "zod";
 import { marketingAudienceSchema, parseContacts } from "@onetap/config-schema";
 import { requireOutletContext } from "../../middleware/auth.js";
+import { requireFeature } from "../platform/plan.service.js";
 import { filterOptions, previewAudience } from "./audience.js";
 import * as marketing from "./marketing.service.js";
 
 /**
  * Marketing for the store dashboard: reach customers over linked WhatsApp, SMS or the WhatsApp Business API.
  * Owner-only by default (marketing:read to look, marketing:send to send); the platform's super admin can look.
+ * Needs the "Marketing" plan feature.
  */
 export const marketingRouter = Router();
 
 async function ctxFor(req, permission) {
   const ctx = await requireOutletContext(req, permission);
+  // the store's plan (or a per-store unlock) must include Marketing — checked on every call, so a downgrade takes effect at once
+  await requireFeature(ctx.brandId, "marketing", "Marketing");
   return { ctx: { brandId: ctx.brandId, outletId: ctx.outletId }, userId: String(req.user._id ?? req.user.id) };
 }
 

@@ -8,10 +8,18 @@ import { useMkAction, useMkCampaigns } from "../../lib/useMarketing";
 import { useOutlet } from "../../lib/useOutlet";
 import { useQuery } from "@tanstack/react-query";
 import { Button, Card, Empty, Pill } from "../../ui";
-import { MarketingHeader } from "./MarketingNav";
+import { MarketingGate, MarketingHeader } from "./MarketingNav";
 
 /** Every campaign sent, newest first, with how it is going. */
 export function Campaigns() {
+  return (
+    <MarketingGate>
+      <CampaignsPage />
+    </MarketingGate>
+  );
+}
+
+function CampaignsPage() {
   const q = useMkCampaigns();
   const { can } = useAuth();
   const cancel = useMkAction((o, id) => api.mkCancelCampaign(o, id));

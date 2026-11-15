@@ -175,7 +175,7 @@ const NAV_GROUPS = [
     divider: true,
     items: [
       { to: "/customers", label: "Customers", icon: <UsersIcon size={ICON} />, permission: "customer:read" },
-      { to: "/marketing/new", label: "Marketing", icon: <Send size={ICON} />, permission: "marketing:read", matchPaths: ["/marketing"] },
+      { to: "/marketing/new", label: "Marketing", icon: <Send size={ICON} />, permission: "marketing:read", feature: "marketing", matchPaths: ["/marketing"] },
       // shown to whoever the owner gave chat access (see WhatsApp → Access), when the plan includes it
       { to: "/whatsapp/chats", label: "WhatsApp", icon: <MessageCircle size={ICON} />, feature: "whatsappChat", whatsapp: true, badgeKey: "waUnread", matchPaths: ["/whatsapp"] },
       { to: "/coupons", label: "Coupons", icon: <Tag size={ICON} />, permission: "coupon:read", feature: "coupons" },

@@ -8,7 +8,7 @@ import { useMkAction, useMkChannels, useMkLists, useMkOptions, useMkPreview, use
 import { useOutlet } from "../../lib/useOutlet";
 import { Button, Card, Checkbox, Field, Modal, Note, Pill, Select, Table, Td, TextInput, Th, Toast } from "../../ui";
 import { emptyFilters, FilterBuilder, filtersOn, toFilters } from "./FilterBuilder";
-import { MarketingHeader } from "./MarketingNav";
+import { MarketingGate, MarketingHeader } from "./MarketingNav";
 import { useQuery } from "@tanstack/react-query";
 
 const SOURCE_LABELS = { customers: "Customer", whatsapp: "WhatsApp", lists: "List", numbers: "Typed in" };
@@ -18,6 +18,14 @@ const fmtDate = (iso) => (iso ? new Date(iso).toLocaleDateString("en-IN", { day:
  * Write one message and send it to the right people over the right channel — in four plain steps.
  */
 export function NewCampaign() {
+  return (
+    <MarketingGate>
+      <NewCampaignPage />
+    </MarketingGate>
+  );
+}
+
+function NewCampaignPage() {
   const { outlet } = useOutlet();
   const { can } = useAuth();
   const canSend = can("marketing:send");

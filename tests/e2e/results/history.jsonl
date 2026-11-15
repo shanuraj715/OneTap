@@ -79,3 +79,4 @@
 {"id":"t11-outlet-delete","status":"pass","pass":13,"fail":0,"mode":"headless","at":"2026-11-15T19:30:31.828Z","durationMs":12080}
 {"id":"t12-store-delete","status":"pass","pass":19,"fail":0,"mode":"headless","at":"2026-11-15T19:30:53.480Z","durationMs":21629}
 {"id":"t13-marketing","status":"pass","pass":70,"fail":0,"mode":"headless","at":"2026-11-15T19:32:25.986Z","durationMs":88321}
+{"id":"t14-marketing-plan","status":"pass","pass":16,"fail":0,"mode":"headless","at":"2026-11-15T19:57:11.648Z","durationMs":64492}

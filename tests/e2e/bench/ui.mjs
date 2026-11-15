@@ -106,9 +106,9 @@ export async function createPlan(d, { name, description = "", custom = false, pe
     await tick(d, "Multi-outlet", multiOutlet, form);
     if (multiOutlet && outlets) await fill(d, "Outlets", outlets, form);
     const all = features === "all";
-    const wanted = all ? ["Takeaway ordering", "Dine-in QR ordering", "Delivery", "Online payments", "Coupons", "Coin wallet", "Printing", "WhatsApp & SMS alerts", "WhatsApp chat", "Own favicon", "Own domain name"] : features;
+    const wanted = all ? ["Takeaway ordering", "Dine-in QR ordering", "Delivery", "Online payments", "Coupons", "Coin wallet", "Printing", "WhatsApp & SMS alerts", "WhatsApp chat", "Marketing", "Own favicon", "Own domain name"] : features;
     // the form starts with features ticked: set EVERY feature box to exactly what this plan should have
-    const every = ["Takeaway ordering", "Dine-in QR ordering", "Delivery", "Online payments", "Coupons", "Coin wallet", "Printing", "WhatsApp & SMS alerts", "WhatsApp chat", "Own favicon", "Own domain name"];
+    const every = ["Takeaway ordering", "Dine-in QR ordering", "Delivery", "Online payments", "Coupons", "Coin wallet", "Printing", "WhatsApp & SMS alerts", "WhatsApp chat", "Marketing", "Own favicon", "Own domain name"];
     for (const f of every) await tick(d, f, wanted.includes(f), form);
   }
   await d.click(d.page.getByRole("button", { name: "Save plan" }), { after: 900 });
@@ -458,3 +458,21 @@ export async function fillBox(d, ariaLabel, value) {
 }
 /** who is in the audience once the live count has settled */
 export async function whoGetsIt(d) { await audienceCount(d); return audienceNames(d); }
+
+/**
+ * Platform → store → Features tab → one feature's choice for THIS store ("From plan", "Unlocked for this store",
+ * "Locked for this store") → Save.
+ */
+export async function setStoreFeature(d, storeName, featureLabel, choice) {
+  await openStore(d, storeName, "Features");
+  const row = d.page.getByText(featureLabel, { exact: true }).first().locator("xpath=ancestor::div[.//select][1]");
+  await row.waitFor({ timeout: 10000 });
+  const select = row.locator("select");
+  const options = await select.locator("option").allInnerTexts();
+  const want = options.find((o) => o.trim().startsWith(choice));
+  if (!want) throw new Error(`"${featureLabel}" has no choice "${choice}" (has: ${options.join(" | ")})`);
+  await d.choose(select, { label: want });
+  const save = d.page.getByRole("button", { name: /^Save/ }).first();
+  await save.waitFor({ state: "visible", timeout: 10000 });
+  await d.click(save, { after: 1000 });
+}
