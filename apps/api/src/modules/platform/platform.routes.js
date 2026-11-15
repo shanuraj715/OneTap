@@ -1,8 +1,16 @@
 import { Router } from "express";
 import { z } from "zod";
+import { imageProcessingSchema, storageProviderSchema } from "@onetap/config-schema";
 import { requireBrandContext, requireSuperAdmin } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import { checkLabel, hostStatus, probeBase, subdomainInfo } from "../outlets/subdomains.js";
+import * as storage from "../storage/storage.service.js";
+import * as cacheAdmin from "./cache.service.js";
+import * as cacheInspect from "./cache-inspect.service.js";
+import { dashboard } from "./dashboard.service.js";
+import { listLoginLogs, LOGIN_FILTERS } from "./login-logs.service.js";
+import { sysmonRouter } from "../sysmon/sysmon.routes.js";
+import * as storeDelete from "./store-delete.service.js";
 import { storePlan } from "./plan.service.js";
 import * as platform from "./platform.service.js";
 
@@ -16,6 +24,23 @@ platformRouter.use((req, _res, next) => {
 
 platformRouter.get("/overview", async (_req, res) => {
   res.json(await platform.overview());
+});
+
+/** The dashboard's numbers and charts. `?fresh=1` recomputes instead of using the cached copy. */
+platformRouter.get("/dashboard", async (req, res) => {
+  res.json(await dashboard({ fresh: req.query.fresh === "1" }));
+});
+
+/** Who signed in to the dashboards, and who tried and failed. ?filter=all|success|failed|platform|stores&cursor=<id>&limit=25 */
+platformRouter.get("/login-logs", async (req, res) => {
+  const query = z
+    .object({
+      filter: z.enum(Object.keys(LOGIN_FILTERS)).default("all"),
+      cursor: z.string().optional(),
+      limit: z.coerce.number().int().min(1).max(100).default(25),
+    })
+    .parse(req.query);
+  res.json(await listLoginLogs(query));
 });
 
 /* ------------------------------------------------------------------- plans */
@@ -43,6 +68,91 @@ platformRouter.put("/settings", async (req, res) => {
   res.json({ settings: await platform.updateSettings(body) });
 });
 
+/* ----------------------------------------------------------------- storage */
+
+/**
+ * Where every store's images are kept — this server's disk, or an S3-compatible bucket — and how they are
+ * compressed. One setting for the whole platform; store owners never see it. Secrets are encrypted and never
+ * sent back.
+ */
+platformRouter.get("/storage", async (_req, res) => {
+  res.json(await storage.getStorageConfig());
+});
+
+const storageBody = z.object({
+  provider: storageProviderSchema.optional(),
+  values: z.record(z.string(), z.string().nullable()).optional(),
+  processing: imageProcessingSchema.partial().optional(),
+});
+
+platformRouter.put("/storage", async (req, res) => {
+  const body = storageBody.parse(req.body);
+  if (!body.provider && !body.processing) throw new HttpError(400, "Nothing to save");
+  await storage.saveStorageConfig(body, String(requireSuperAdmin(req)._id));
+  res.json(await storage.getStorageConfig());
+});
+
+/** Back to this server's disk (compression settings are kept). */
+platformRouter.delete("/storage", async (req, res) => {
+  await storage.resetStorageConfig(String(requireSuperAdmin(req)._id));
+  res.json(await storage.getStorageConfig());
+});
+
+platformRouter.post("/storage/test", async (_req, res) => {
+  try {
+    res.json(await storage.testStorageConfig());
+  } catch (err) {
+    // A bad key or an unreachable bucket is the point of this endpoint — report it, don't 500.
+    throw new HttpError(400, err instanceof Error ? err.message : "Storage test failed");
+  }
+});
+
+/** Use one store's own (older) storage settings as the platform's. The secret stays encrypted. */
+platformRouter.post("/storage/adopt/:brandId", async (req, res) => {
+  await storage.adoptStoreStorage(req.params.brandId, String(requireSuperAdmin(req)._id));
+  res.json(await storage.getStorageConfig());
+});
+
+/* ------------------------------------------------------------------ server */
+
+/** CPU, memory, disk, network, processes and a 0–10 health score for the machine this API runs on. */
+platformRouter.use("/server", sysmonRouter);
+
+/* ------------------------------------------------------------------- cache */
+
+platformRouter.get("/cache", async (_req, res) => {
+  res.json({ cache: await cacheAdmin.cacheOverview() });
+});
+
+platformRouter.put("/cache/settings", async (req, res) => {
+  const body = z.object({ ttlSeconds: z.number().int().min(0).max(86_400) }).parse(req.body);
+  res.json({ cache: await cacheAdmin.setCacheTtl(body.ttlSeconds) });
+});
+
+/** Expire everything, or just one store's cache: { scope: "all" } or { scope: "store", storeId }. */
+platformRouter.post("/cache/expire", async (req, res) => {
+  const body = z
+    .discriminatedUnion("scope", [z.object({ scope: z.literal("all") }), z.object({ scope: z.literal("store"), storeId: z.string().min(1) })])
+    .parse(req.body);
+  const result = await cacheAdmin.expireCache(body);
+  res.json({ result, cache: await cacheAdmin.cacheOverview() });
+});
+
+platformRouter.get("/stores/:id/cache", async (req, res) => {
+  res.json({ cache: await cacheAdmin.storeCache(req.params.id) });
+});
+
+/** Everything cached right now (no data, just what/for whom/how old). Looking never changes the cache. */
+platformRouter.get("/cache/entries", async (_req, res) => {
+  res.json(await cacheInspect.listEntries());
+});
+
+/** One cached item with its data — `?key=menu:<store>:<outlet>`. Secret-looking fields are hidden. */
+platformRouter.get("/cache/entry", async (req, res) => {
+  const { key } = z.object({ key: z.string().min(1).max(400) }).parse(req.query);
+  res.json({ entry: await cacheInspect.getEntry(key) });
+});
+
 /* ------------------------------------------------------------------ stores */
 
 platformRouter.get("/stores", async (_req, res) => {
@@ -51,6 +161,39 @@ platformRouter.get("/stores", async (_req, res) => {
 
 platformRouter.get("/stores/:id", async (req, res) => {
   res.json({ store: await platform.getStore(req.params.id) });
+});
+
+/** What deleting this store would remove — shown in the confirmation. */
+platformRouter.get("/stores/:id/deletion-summary", async (req, res) => {
+  res.json(await storeDelete.deletionSummary(req.params.id));
+});
+
+/** Delete a store and everything it owns. The body must carry the store's exact name. */
+platformRouter.delete("/stores/:id", async (req, res) => {
+  const body = z.object({ confirmName: z.string() }).parse(req.body ?? {});
+  const user = requireSuperAdmin(req);
+  res.json(await storeDelete.deleteStore(req.params.id, { confirmName: body.confirmName, by: user.email }));
+});
+
+/** What switching this store off affects right now (people, outlets, orders in progress) — shown in the confirmation. */
+platformRouter.get("/stores/:id/disable-summary", async (req, res) => {
+  res.json(await platform.disableSummary(req.params.id));
+});
+
+/**
+ * Switch the whole store off — for a late or missing payment. Customers can't order and the store's team can't
+ * use the dashboard, but NOTHING is deleted. The optional message is what the team sees. Disabling a store
+ * that is already disabled only updates the message.
+ */
+platformRouter.post("/stores/:id/disable", async (req, res) => {
+  const { message } = z.object({ message: z.string().max(500, "Keep the message under 500 characters").optional() }).parse(req.body ?? {});
+  const user = requireSuperAdmin(req);
+  res.json({ store: await platform.setStoreDisabled(req.params.id, true, { message, byUserId: String(user._id) }) });
+});
+
+/** Turn a disabled store back on, exactly as it was. */
+platformRouter.post("/stores/:id/enable", async (req, res) => {
+  res.json({ store: await platform.setStoreDisabled(req.params.id, false) });
 });
 
 const planBody = z.object({
@@ -163,7 +306,7 @@ platformRouter.delete("/stores/:id/owners/:userId", async (req, res) => {
 export const storeRouter = Router();
 
 storeRouter.get("/plan", async (req, res) => {
-  const { brandId } = requireBrandContext(req);
+  const { brandId } = await requireBrandContext(req);
   const { appearance: _appearance, ...plan } = await storePlan(brandId);
   res.json({ plan });
 });

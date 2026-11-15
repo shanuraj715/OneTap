@@ -4,6 +4,7 @@ import { OutletModel,              } from "@onetap/db";
 import { logger } from "../logger.js";
 import { SESSION_COOKIE } from "../middleware/auth.js";
 import { userFromToken } from "../modules/auth/auth.service.js";
+import { storePlan } from "../modules/platform/plan.service.js";
 
 /* --------------------------------------------------------------- messages */
 
@@ -66,6 +67,9 @@ async function authorize(
     user.isSuperAdmin || user.memberships.some((m) => m.brandId === outlet.brandId);
   if (!allowed) return null;
 
+  // A store the platform has switched off gets no live feed either (the platform's own super admin still does).
+  if (!user.isSuperAdmin && (await storePlan(outlet.brandId)).disabled) return null;
+
   return { user, brandId: outlet.brandId, outletId: String(outlet._id) };
 }
 
@@ -91,6 +95,7 @@ export function attachRealtime(server        )       {
           const client         = {
             socket: ws,
             userId: String(auth.user._id),
+            isSuperAdmin: Boolean(auth.user.isSuperAdmin),
             brandId: auth.brandId,
             outletId: auth.outletId,
             isAlive: true,
@@ -154,6 +159,26 @@ export function broadcast(outletId        , event             )       {
   for (const client of clients) {
     if (client.outletId === outletId) send(client, event);
   }
+}
+
+/**
+ * Cut off the live connections of a store's team — used when the platform switches the store off, so they stop
+ * receiving its orders at once instead of whenever they next reconnect (and a reconnect is refused, see
+ * `authorize`). The platform's own super admin, watching the store from the console, keeps theirs.
+ */
+export function dropStoreTeam(brandId) {
+  let dropped = 0;
+  for (const client of clients) {
+    if (client.brandId !== brandId || client.isSuperAdmin) continue;
+    clients.delete(client);
+    try {
+      client.socket.close(4403, "store disabled");
+    } catch {
+      client.socket.terminate();
+    }
+    dropped++;
+  }
+  return dropped;
 }
 
 export function connectionCount(outletId         )         {

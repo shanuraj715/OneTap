@@ -14,9 +14,10 @@ import {
 } from "@onetap/db";
 import { HttpError } from "../../middleware/error.js";
 import { invalidateStorePlan, storePlan } from "../platform/plan.service.js";
-import { APPEARANCE_AREAS, effectiveConfig, ownerConfig } from "./config.service.js";
+import { APPEARANCE_AREAS, ownerConfig } from "./config.service.js";
 import { assertHostnamesFree, normalizeHostnames } from "./domains.js";
 import { assertStoreMayAddDomains } from "./subdomains.js";
+import { brandIdForHost, brandIdForSlug, publicOutletById, storefrontBundle } from "./outlet-cache.js";
 
 /**
  * The Outlet model is scoped by brandId only — it IS the outlet, so it has no
@@ -37,11 +38,6 @@ async function forOwner(outlet) {
   return { ...outlet, config: await ownerConfig(outlet) };
 }
 
-/** For customers: what actually applies, after the store's plan. */
-async function forPublic(outlet) {
-  return { ...outlet, config: await effectiveConfig(outlet) };
-}
-
 /** Outlets for one brand — tenant-scoped. */
 export async function listOutlets(ctx               ) {
   const outlets = await OutletModel.find(byBrand(ctx)).sort({ createdAt: 1 }).lean();
@@ -57,40 +53,16 @@ export async function listAllOutlets() {
 }
 
 /**
- * Every open outlet for one brand — public, unauthenticated (powers the
- * storefront's outlet picker). A blocked outlet isn't offered to customers.
- */
-export async function listOutletsForBrand(brandId        ) {
-  const outlets = await OutletModel.find({ brandId, blocked: null }, null, { allowGlobalQuery: true }).sort({ createdAt: 1 }).lean();
-  return Promise.all(outlets.map(forPublic));
-}
-
-/**
  * The brand this hostname belongs to, and every outlet under it. Powers the
  * storefront root page's "no outlet in the URL yet" resolution: a
  * single-outlet brand redirects straight through with no picker shown; more
- * than one shows a picker built from this list.
+ * than one shows a picker built from this list. Served from the cache.
  */
 export async function resolveBrandForHost(host        ) {
-  const anchor = await OutletModel.findOne({ hostnames: host }, null, { allowGlobalQuery: true }).lean();
-  if (!anchor) return null;
-
-  const brand = await BrandModel.findOne({ _id: anchor.brandId }).lean();
-  if (!brand) return null;
-
-  const outlets = await listOutletsForBrand(anchor.brandId);
-  return {
-    brand: { id: String(brand._id), name: brand.name, slug: brand.slug },
-    outlets: outlets.map((o) => ({
-      id: String(o._id),
-      slug: o.slug,
-      name: o.config.identity.name || o.name,
-      address: o.config.identity.address || "",
-      // null until the owner drops the map pin — lets the picker fall back to
-      // the manual list for any outlet distance can't be computed for.
-      location: o.config.identity.location?.point ?? null,
-    })),
-  };
+  const found = await brandIdForHost(host);
+  if (!found) return null;
+  const bundle = await storefrontBundle(found.brandId);
+  return bundle?.forHost ?? null;
 }
 
 /**
@@ -215,54 +187,43 @@ export async function deleteOutlet(ctx               , id        ) {
 /**
  * Resolve the outlet for a public storefront request — by hostname, or by
  * "brandSlug/outletSlug" for local dev. Cross-tenant lookup by nature.
+ * Served from the cache (see outlet-cache.js).
  */
 export async function resolveOutlet(opts   
                 
                 
               
  )                            {
-  if (opts.id) {
-    const byId = await OutletModel.findOne({ _id: opts.id }, null, { allowGlobalQuery: true }).lean();
-    return byId ? forPublic(byId) : null;
-  }
+  if (opts.id) return publicOutletById(opts.id);
 
   // Multi-outlet: every outlet in a brand shares the same domain, so a plain
-  // host lookup alone can't tell them apart. Resolve an "anchor" outlet by
-  // host first (any outlet in the brand has the same hostnames), then find
-  // the specific sibling by slug. Guarded to a bare (no "/") slug so this
-  // can never collide with the "brandSlug/outletSlug" dev-fallback shape
+  // host lookup alone can't tell them apart. Resolve the brand by host first,
+  // then find the specific sibling by slug. Guarded to a bare (no "/") slug so
+  // this can never collide with the "brandSlug/outletSlug" dev-fallback shape
   // below, which always has a slash.
   if (opts.host && opts.slug && !opts.slug.includes("/")) {
-    const anchor = await OutletModel.findOne({ hostnames: opts.host }, null, { allowGlobalQuery: true }).lean();
-    if (anchor) {
-      const sibling = await OutletModel.findOne(
-        { brandId: anchor.brandId, slug: opts.slug },
-        null,
-        { allowGlobalQuery: true },
-      ).lean();
-      return sibling ? forPublic(sibling) : null;
+    const found = await brandIdForHost(opts.host);
+    if (found) {
+      const bundle = await storefrontBundle(found.brandId);
+      return bundle?.outlets.find((o) => o.slug === opts.slug) ?? null;
     }
   }
 
   if (opts.host) {
-    const byHost = await OutletModel.findOne(
-      { hostnames: opts.host },
-      null,
-      { allowGlobalQuery: true },
-    ).lean();
-    if (byHost) return forPublic(byHost);
+    const found = await brandIdForHost(opts.host);
+    if (found) {
+      const bundle = await storefrontBundle(found.brandId);
+      const byHost = bundle?.outlets.find((o) => o.hostnames?.includes(opts.host)) ?? bundle?.outlets[0];
+      if (byHost) return byHost;
+    }
   }
 
   if (opts.slug?.includes("/")) {
     const [brandSlug, outletSlug] = opts.slug.split("/");
-    const brand = await BrandModel.findOne({ slug: brandSlug }).lean();
-    if (!brand) return null;
-    const bySlug = await OutletModel.findOne(
-      { brandId: String(brand._id), slug: outletSlug },
-      null,
-      { allowGlobalQuery: true },
-    ).lean();
-    return bySlug ? forPublic(bySlug) : null;
+    const brandId = await brandIdForSlug(brandSlug);
+    if (!brandId) return null;
+    const bundle = await storefrontBundle(brandId);
+    return bundle?.outlets.find((o) => o.slug === outletSlug) ?? null;
   }
 
   return null;

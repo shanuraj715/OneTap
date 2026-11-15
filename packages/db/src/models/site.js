@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+import { writeEvents } from "../write-events.js";
+
 const { Schema, model, models } = mongoose;
 
 /**
@@ -27,6 +29,7 @@ const sitePageSchema = new Schema(
   { timestamps: true },
 );
 
+sitePageSchema.plugin(writeEvents, { model: "SitePage" });
 export const SitePageModel = models.SitePage ?? model("SitePage", sitePageSchema);
 
 const siteSettingsSchema = new Schema(
@@ -37,6 +40,7 @@ const siteSettingsSchema = new Schema(
   { timestamps: true },
 );
 
+siteSettingsSchema.plugin(writeEvents, { model: "SiteSettings" });
 export const SiteSettingsModel = models.SiteSettings ?? model("SiteSettings", siteSettingsSchema);
 
 /** An enquiry from the website's contact form. */

@@ -1,64 +1,24 @@
 import { Router, raw } from "express";
 import { z } from "zod";
-import { IMAGE_RULES, imageProcessingSchema, storageProviderSchema } from "@onetap/config-schema";
-import { requireOutletContext, requireUser } from "../../middleware/auth.js";
+import { IMAGE_RULES } from "@onetap/config-schema";
+import { requireOutletContext } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
-import {
-  getStorageConfig,
-  putImage,
-  removeObject,
-  resetStorageConfig,
-  saveStorageConfig,
-  testStorageConfig,
-} from "./storage.service.js";
+import { putImage, removeObject } from "./storage.service.js";
 
 export const storageRouter = Router();
 
-/* ------------------------------------------------------------ admin config */
-
-storageRouter.get("/config", async (req, res) => {
-  const ctx = await requireOutletContext(req, "storage-config:read");
-  res.json(await getStorageConfig(ctx));
-});
-
-const saveBody = z.object({
-  provider: storageProviderSchema.optional(),
-  values: z.record(z.string(), z.string().nullable()).optional(),
-  processing: imageProcessingSchema.partial().optional(),
-});
-
-storageRouter.put("/config", async (req, res) => {
-  const ctx = await requireOutletContext(req, "storage-config:manage");
-  const user = requireUser(req);
-  const body = saveBody.parse(req.body);
-  if (!body.provider && !body.processing) throw new HttpError(400, "Nothing to save");
-  await saveStorageConfig(ctx, body, String(user._id));
-  res.json(await getStorageConfig(ctx));
-});
-
-storageRouter.delete("/config", async (req, res) => {
-  const ctx = await requireOutletContext(req, "storage-config:manage");
-  await resetStorageConfig(ctx);
-  res.json(await getStorageConfig(ctx));
-});
-
-storageRouter.post("/config/test", async (req, res) => {
-  const ctx = await requireOutletContext(req, "storage-config:manage");
-  try {
-    res.json(await testStorageConfig(ctx));
-  } catch (err) {
-    // A bad key or an unreachable bucket is the point of this endpoint — report it,
-    // don't 500.
-    throw new HttpError(400, err instanceof Error ? err.message : "Storage test failed");
-  }
-});
+/*
+ * Choosing WHERE images are kept (this server's disk, or an S3-compatible bucket) is the platform's job, not a
+ * store owner's: it lives in the platform console — see the `/storage` routes in platform.routes.js. A store
+ * only uploads and removes its own pictures here.
+ */
 
 /* ------------------------------------------------------------------ uploads */
 
 /**
  * Raw image bytes in the body — any format the server can decode (JPEG, PNG,
  * WebP, AVIF, HEIC/HEIF, GIF, TIFF). The API compresses and re-encodes it per
- * the outlet's settings, so nothing about the format or size needs to be
+ * the platform's settings, so nothing about the format or size needs to be
  * negotiated with the client.
  */
 storageRouter.post(

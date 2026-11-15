@@ -1,7 +1,8 @@
 import { Router,              } from "express";
 import { z } from "zod";
 import { gatewaySchema } from "@onetap/config-schema";
-import { OrderModel, OutletModel,                    } from "@onetap/db";
+import { OrderModel } from "@onetap/db";
+import { outletBrand } from "../outlets/outlet-cache.js";
 import { requireOutletContext, requireUser } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import { currentCustomer } from "../customer/customer.routes.js";
@@ -18,9 +19,9 @@ import {
 export const paymentsRouter         = Router();
 
 async function publicContext(outletId        )                         {
-  const outlet = await OutletModel.findOne({ _id: outletId }, null, { allowGlobalQuery: true }).lean();
-  if (!outlet) throw new HttpError(404, "Outlet not found");
-  return { brandId: outlet.brandId, outletId: String(outlet._id) };
+  const ref = await outletBrand(outletId);
+  if (!ref) throw new HttpError(404, "Outlet not found");
+  return { brandId: ref.brandId, outletId: ref.outletId };
 }
 
 /** The diner may only touch payments for their own order. */

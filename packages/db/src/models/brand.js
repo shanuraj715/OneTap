@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+import { writeEvents } from "../write-events.js";
+
 const { Schema, model, models } = mongoose;
 
 /**
@@ -23,8 +25,29 @@ const brandSchema = new Schema(
     appearance: { type: Schema.Types.Mixed, default: null },
     /** when usage first went over a plan limit; cleared once back within it */
     overLimitSince: { type: Date, default: null },
+    /**
+     * Set by the platform when it switches the WHOLE store off — a late or missing payment, say. Customers see
+     * "temporarily unavailable" and can't order; the store's team can't use the dashboard and sees `message`
+     * instead. Nothing is deleted, and clearing this (null) turns everything back on exactly as it was.
+     */
+    disabled: {
+      type: new Schema(
+        {
+          at: { type: Date, required: true },
+          /** the platform user who did it */
+          by: { type: String },
+          /** what the store's team is told (optional, plain text) */
+          message: { type: String, default: "", maxlength: 500 },
+        },
+        { _id: false },
+      ),
+      default: null,
+    },
   },
   { timestamps: true },
 );
+
+// the API copies a store's name, look and plan — tell it when any of that changes (the over-limit stamp is bookkeeping, not a change)
+brandSchema.plugin(writeEvents, { model: "Brand", brandFrom: "_id", ignore: ["overLimitSince"] });
 
 export const BrandModel = models.Brand ?? model("Brand", brandSchema);

@@ -1,10 +1,10 @@
 import { apiServerUrl } from "@/lib/api-config";
-import { getFooterVariant, getHeaderVariant } from "@onetap/ui";
+import { StoreBottom, StoreTop } from "@/components/Chrome";
 import { Ordering } from "@/components/Ordering";
 import { OutletUnavailable } from "@/components/OutletUnavailable";
 import { ThemeStyle } from "@/components/ThemeStyle";
 import { getMenu } from "@/lib/menu";
-import { getOutletById } from "@/lib/outlet";
+import { getOutletById, getPageLinks } from "@/lib/outlet";
 
 export const dynamic = "force-dynamic";
 
@@ -60,11 +60,8 @@ export default async function TablePage({
   }
   if (outlet.blocked) return <OutletUnavailable outlet={outlet} />;
 
-  const menu = await getMenu(outlet.id);
+  const [menu, pages] = await Promise.all([getMenu(outlet.id), getPageLinks(outlet.id)]);
   const { identity, theme, typography, features, layout } = outlet.config;
-  const name = identity.name || outlet.name;
-  const Header = getHeaderVariant(layout.headerVariant).Component;
-  const Footer = getFooterVariant(layout.footerVariant).Component;
 
   if (!features.ordering.dineInQr) {
     return (
@@ -89,7 +86,13 @@ export default async function TablePage({
   return (
     <>
       <ThemeStyle theme={theme} typography={typography} effect={outlet.config.effect} />
-      <Header name={name} tagline={identity.tagline || undefined} phone={identity.phone || undefined} links={[]} />
+      {/* a table's header stays quiet (no menu / order-type links) — just the store's own pages, when it has set some to show */}
+      <StoreTop
+        outlet={outlet}
+        outletSlug={outlet.slug}
+        pages={pages}
+        links={pages.filter((p) => p.showInHeader).map((p) => ({ label: p.title, href: `/${outlet.slug}/${p.slug}` }))}
+      />
 
       <section style={tableHeaderWrap}>
         <h1 style={tableHeading}>Table {scan.table.number}</h1>
@@ -141,13 +144,7 @@ export default async function TablePage({
         />
       )}
 
-      <Footer
-        name={name}
-        address={identity.address || undefined}
-        phone={identity.phone || undefined}
-        fssaiLicense={identity.fssaiLicense || undefined}
-        gstin={identity.gstin || undefined}
-      />
+      <StoreBottom outlet={outlet} outletSlug={outlet.slug} pages={pages} />
     </>
   );
 }

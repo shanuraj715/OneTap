@@ -408,7 +408,7 @@ function ItemForm({
         <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 3 }}>Photos</div>
         <div style={{ fontSize: 12, color: "var(--color-text-muted)", marginBottom: 10, lineHeight: 1.5 }}>
           Up to {IMAGE_RULES.maxPerItem}. The first is the cover shown on menu cards. Any format (JPEG, PNG, WebP,
-          AVIF, HEIC…) — compressed automatically. Backend &amp; size settings under Storage.
+          AVIF, HEIC…) — compressed automatically. TablePe sets where photos are kept and how small they are made.
         </div>
         <ItemPhotos outlet={outlet} images={images} originalKeys={item?.images ?? []} onChange={setImages} />
       </div>

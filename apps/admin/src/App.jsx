@@ -14,6 +14,7 @@ import {
   Building2,
   Check,
   ChevronsUpDown,
+  Database,
   ConciergeBell,
   Globe,
   Inbox,
@@ -21,6 +22,7 @@ import {
   X,
   CreditCard,
   ExternalLink,
+  FileText,
   HardDrive,
   PanelLeftClose,
   PanelLeftOpen,
@@ -28,6 +30,7 @@ import {
   LayoutGrid,
   LayoutList,
   LogOut,
+  Megaphone,
   Palette,
   Plus,
   Printer,
@@ -40,6 +43,7 @@ import {
   UtensilsCrossed,
   Users as UsersIcon,
   Wand2,
+  Server as ServerIcon,
 } from "lucide-react";
 import { useAuth, useLogout } from "./lib/useAuth";
 import { OutletSelectionProvider, useOpenStore, useOutlets } from "./lib/useOutlet";
@@ -49,6 +53,7 @@ import { useMedia } from "./lib/useMedia";
 import { CreateOutletModal } from "./components/CreateOutletModal";
 import { SETTINGS_TABS, STOREFRONT_TABS, TABLES_TABS } from "./components/SubNav";
 import { Appearance } from "./routes/Appearance";
+import { Banners } from "./routes/Banners";
 import { ComponentsCatalog } from "./routes/ComponentsCatalog";
 import { Customers } from "./routes/Customers";
 import { Dashboard } from "./routes/Dashboard";
@@ -65,12 +70,17 @@ import { Printing } from "./routes/Printing";
 import { TableCards } from "./routes/cards/TableCards";
 import { Tables } from "./routes/Tables";
 import { Settings } from "./routes/Settings";
-import { Storage } from "./routes/Storage";
+import { StorePageEditor } from "./routes/StorePageEditor";
+import { StorePages } from "./routes/StorePages";
+import { StoreDisabled } from "./routes/StoreDisabled";
 import { ThemeEditor } from "./routes/ThemeEditor";
 import { TypographyEditor } from "./routes/TypographyEditor";
 import { Users } from "./routes/Users";
 import { TakeOrder } from "./routes/take-order/TakeOrder";
-import { PlatformOverview } from "./routes/platform/PlatformOverview";
+import { PlatformDashboard } from "./routes/platform/PlatformDashboard";
+import { PlatformCache } from "./routes/platform/PlatformCache";
+import { PlatformStorage } from "./routes/platform/PlatformStorage";
+import { PlatformServer } from "./routes/platform/PlatformServer";
 import { PlatformPlans } from "./routes/platform/PlatformPlans";
 import { PlatformSettings } from "./routes/platform/PlatformSettings";
 import { PlatformStoreDetail } from "./routes/platform/PlatformStoreDetail";
@@ -79,22 +89,8 @@ import { PlatformLeads } from "./routes/platform/PlatformLeads";
 import { PageEditor } from "./routes/platform/website/PageEditor";
 import { WebsitePages } from "./routes/platform/website/WebsitePages";
 import { WebsiteSettings } from "./routes/platform/website/WebsiteSettings";
+import { storefrontHref } from "./lib/storefront";
 import { Menu } from "./ui";
-
-const STOREFRONT_URL = import.meta.env.VITE_STOREFRONT_URL ?? "http://localhost:3070";
-
-/**
- * The current outlet's page on its store's own website — dominos.com/laxmi-nagar
- * in production. In development (or before a store has a public domain) it's
- * the platform storefront.
- */
-function storefrontHref(outlet) {
-  const host = outlet?.canonicalHostname || "";
-  const path = outlet?.slug ? `/${outlet.slug}` : "";
-  const isPublic = host.includes(".") && !/^(localhost|127\.|\[::1\])/.test(host) && !/\.(test|local)(:\d+)?$/.test(host);
-  if (!import.meta.env.DEV && isPublic) return `https://${host}${path}`;
-  return `${STOREFRONT_URL.replace(/\/$/, "")}${path}`;
-}
 
 const ICON = 15.5;
 
@@ -103,7 +99,6 @@ const ROUTE_META = {
   "/orders": { title: "Orders", icon: ReceiptText },
   "/menu": { title: "Menu", icon: UtensilsCrossed },
   "/components": { title: "Components", icon: Boxes },
-  "/storage": { title: "Storage", icon: HardDrive },
   "/menu-layout": { title: "Menu layout", icon: LayoutList },
   "/coupons": { title: "Coupons", icon: Tag },
   "/tables": { title: "Tables & QR", icon: QrCode },
@@ -113,6 +108,8 @@ const ROUTE_META = {
   "/notifications": { title: "Notifications", icon: Bell },
   "/customers": { title: "Customers", icon: UsersIcon },
   "/appearance": { title: "Appearance", icon: Wand2 },
+  "/banners": { title: "Banners", icon: Megaphone },
+  "/pages": { title: "Pages", icon: FileText },
   "/theme": { title: "Theme", icon: Palette },
   "/typography": { title: "Typography", icon: Type },
   "/settings": { title: "Settings", icon: SettingsIcon },
@@ -120,9 +117,12 @@ const ROUTE_META = {
   "/dashboard-config": { title: "Configure dashboard", icon: LayoutGrid },
   "/users": { title: "Users & roles", icon: UsersIcon },
   "/take-order": { title: "Take order", icon: ConciergeBell },
-  "/platform": { title: "Platform overview", icon: LayoutDashboard },
+  "/platform": { title: "Dashboard", icon: LayoutDashboard },
   "/platform/stores": { title: "Stores", icon: Store },
   "/platform/plans": { title: "Plans", icon: Layers },
+  "/platform/server": { title: "Server", icon: ServerIcon },
+  "/platform/cache": { title: "Cache", icon: Database },
+  "/platform/storage": { title: "Storage", icon: HardDrive },
   "/platform/settings": { title: "Platform settings", icon: SettingsIcon },
   "/platform/website": { title: "Website", icon: Globe },
   "/platform/website/settings": { title: "Website settings", icon: Globe },
@@ -171,9 +171,12 @@ const PLATFORM_NAV_GROUPS = [
   {
     group: "Platform",
     items: [
-      { to: "/platform", label: "Overview", icon: <LayoutDashboard size={ICON} />, end: true },
+      { to: "/platform", label: "Dashboard", icon: <LayoutDashboard size={ICON} />, end: true },
       { to: "/platform/stores", label: "Stores", icon: <Store size={ICON} /> },
       { to: "/platform/plans", label: "Plans", icon: <Layers size={ICON} /> },
+      { to: "/platform/server", label: "Server", icon: <ServerIcon size={ICON} /> },
+      { to: "/platform/cache", label: "Cache", icon: <Database size={ICON} /> },
+      { to: "/platform/storage", label: "Storage", icon: <HardDrive size={ICON} /> },
       { to: "/platform/settings", label: "Settings", icon: <SettingsIcon size={ICON} /> },
     ],
   },
@@ -207,6 +210,10 @@ export function App() {
   }
   if (!user) {
     return <Login />;
+  }
+  // TablePe has switched the whole store off (a late payment, say): say so, instead of a screen full of errors
+  if (user.storeDisabled && !user.isSuperAdmin) {
+    return <StoreDisabled user={user} />;
   }
   if (user.blockedAt && !user.isSuperAdmin) {
     return <Paused />;
@@ -242,7 +249,7 @@ function Shell({ can }                                     ) {
     };
   }, [location.pathname]);
 
-  const currentMeta = ROUTE_META[location.pathname] || (location.pathname.startsWith("/platform/stores/") ? ROUTE_META["/platform/stores"] : null) || {
+  const currentMeta = ROUTE_META[location.pathname] || (location.pathname.startsWith("/platform/stores/") ? ROUTE_META["/platform/stores"] : null) || (location.pathname.startsWith("/pages/") ? ROUTE_META["/pages"] : null) || {
     title: location.pathname.slice(1).replace("-", " ") || "page",
     icon: UtensilsCrossed,
   };
@@ -498,6 +505,12 @@ function Shell({ can }                                     ) {
                 <div style={viewingBar}>
                   <span>
                     Viewing <strong>{openedStore?.name ?? "store"}</strong> as its owner sees it
+                    {openedStore?.disabled ? (
+                      <>
+                        {" "}
+                        — <strong>this store is disabled</strong>: its team can&apos;t get in, only you can
+                      </>
+                    ) : null}
                   </span>
                   <button type="button" onClick={leaveStore} style={viewingBack}>
                     <ArrowLeft size={13} /> Back to my dashboard
@@ -509,10 +522,13 @@ function Shell({ can }                                     ) {
           ) : null}
           {platformMode ? (
             <Routes>
-              <Route path="/platform" element={<PlatformOverview />} />
+              <Route path="/platform" element={<PlatformDashboard />} />
               <Route path="/platform/stores" element={<PlatformStores />} />
               <Route path="/platform/stores/:id" element={<PlatformStoreDetail />} />
               <Route path="/platform/plans" element={<PlatformPlans />} />
+              <Route path="/platform/server" element={<PlatformServer />} />
+              <Route path="/platform/cache" element={<PlatformCache />} />
+              <Route path="/platform/storage" element={<PlatformStorage />} />
               <Route path="/platform/settings" element={<PlatformSettings />} />
               <Route path="/platform/website" element={<WebsitePages />} />
               <Route path="/platform/website/settings" element={<WebsiteSettings />} />
@@ -526,7 +542,6 @@ function Shell({ can }                                     ) {
             <Route path="/orders" element={<Orders />} />
             <Route path="/menu" element={<MenuEditor />} />
             <Route path="/components" element={<ComponentsCatalog />} />
-            <Route path="/storage" element={<Storage />} />
             <Route path="/menu-layout" element={<MenuLayout />} />
             <Route path="/coupons" element={<Coupons />} />
             <Route path="/tables" element={<Tables />} />
@@ -536,6 +551,9 @@ function Shell({ can }                                     ) {
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/customers" element={<Customers />} />
             <Route path="/appearance" element={<Appearance />} />
+            <Route path="/banners" element={<Banners />} />
+            <Route path="/pages" element={<StorePages />} />
+            <Route path="/pages/:id" element={<StorePageEditor />} />
             <Route path="/theme" element={<ThemeEditor />} />
             <Route path="/typography" element={<TypographyEditor />} />
             <Route path="/settings" element={<Settings />} />
@@ -543,6 +561,8 @@ function Shell({ can }                                     ) {
             <Route path="/dashboard-config" element={<DashboardConfig />} />
             <Route path="/users" element={<Users />} />
             <Route path="/take-order" element={<TakeOrder />} />
+            {/* an old bookmark (the Storage page moved to the platform console) lands on the dashboard, not a blank screen */}
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
           )}
         </div>

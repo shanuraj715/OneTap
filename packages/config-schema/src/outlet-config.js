@@ -9,6 +9,7 @@ import { layoutSchema } from "./layout.js";
 import { operationsSchema } from "./operations.js";
 import { orderNotifySettingsSchema } from "./order-notify.js";
 import { paymentSettingsSchema } from "./payments.js";
+import { announcementSchema, carouselSchema } from "./storefront.js";
 import { taxSchema } from "./tax.js";
 import { themeSchema } from "./theme.js";
 import { typographySchema } from "./typography.js";
@@ -18,6 +19,8 @@ export const outletIdentitySchema = z.object({
   name: z.string().default("TablePe Restaurant"),
   tagline: z.string().default(""),
   logoAssetId: z.string().nullable().default(null),
+  /** the restaurant's logo — the address of an uploaded picture; shown by headers that have room for one */
+  logoUrl: z.string().max(600).default(""),
   /** 14-digit FSSAI licence number — shown in the storefront footer */
   fssaiLicense: z.string().default(""),
   gstin: z.string().default(""),
@@ -33,7 +36,7 @@ export const outletIdentitySchema = z.object({
  * The whole per-outlet configuration blob. Versioned: when this shape changes,
  * a migration walks every outlet's config document forward.
  */
-export const outletConfigSchema = z.object({
+const outletConfigObject = z.object({
   version: z.literal(1).default(1),
   identity: outletIdentitySchema.default({}),
   features: featureFlagsSchema.default({}),
@@ -56,7 +59,45 @@ export const outletConfigSchema = z.object({
   capacity: capacitySettingsSchema.default({}),
   /** which dashboard widgets are on, and who sees each one — see dashboard.ts */
   dashboard: dashboardSettingsSchema.default({}),
+  /** the message bar above the header (its style is `layout.announcementVariant`) — see storefront.js */
+  announcement: announcementSchema.default({}),
+  /** the promo carousel under the header (its style is `layout.carouselVariant`) — see storefront.js */
+  carousel: carouselSchema.default({}),
 });
+
+/**
+ * Look choices that no longer exist, and what replaced them. The header used to be able to carry its own
+ * message bar ("header.top-bar"); that bar is now a component of its own, so a store that chose it gets the
+ * plain header that has the same main row, plus the bar — with the same tagline and phone it showed before.
+ */
+export const LEGACY_VARIANT_IDS = { "header.top-bar": "header.left-logo" };
+
+function upgradeLegacy(config) {
+  if (config.layout.headerVariant !== "header.top-bar") return config;
+  const { identity, announcement, layout } = config;
+  // only fill the bar in when the owner hasn't set one up themselves
+  const untouched = !announcement.enabled && announcement.messages.length === 0;
+  return {
+    ...config,
+    layout: {
+      ...layout,
+      headerVariant: LEGACY_VARIANT_IDS["header.top-bar"],
+      announcementVariant: layout.announcementVariant === "announcement.solid" ? "announcement.split" : layout.announcementVariant,
+    },
+    announcement: untouched
+      ? {
+          ...announcement,
+          enabled: true,
+          // the old top bar had no ✕ — keep it that way until the owner chooses otherwise
+          dismissible: false,
+          showPhone: Boolean(identity.phone),
+          messages: [{ id: "from-top-bar", text: identity.tagline || "Fresh, hot and made to order", linkLabel: "", linkHref: "" }],
+        }
+      : announcement,
+  };
+}
+
+export const outletConfigSchema = outletConfigObject.transform(upgradeLegacy);
                                                               
 
 /** A fully-defaulted config for a brand-new outlet. */

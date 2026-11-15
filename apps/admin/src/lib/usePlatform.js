@@ -1,12 +1,52 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as api from "./api";
 
 /** Data for the platform console (super admin only). */
-export const usePlatformOverview = () => useQuery({ queryKey: ["platform", "overview"], queryFn: api.platformOverview });
 export const usePlans = () => useQuery({ queryKey: ["platform", "plans"], queryFn: api.listPlans });
 export const useStores = () => useQuery({ queryKey: ["platform", "stores"], queryFn: api.listStores });
 export const useStore = (id) => useQuery({ queryKey: ["platform", "store", id], queryFn: () => api.getStore(id), enabled: Boolean(id) });
 export const usePlatformSettings = () => useQuery({ queryKey: ["platform", "settings"], queryFn: api.getPlatformSettings });
+
+/** The dashboard. While it reloads the previous numbers stay on screen (dimmed), so the page never jumps. */
+export const useDashboard = () =>
+  useQuery({ queryKey: ["platform", "dashboard"], queryFn: () => api.getDashboard(false), staleTime: 60_000, placeholderData: keepPreviousData });
+
+/** Sign-in history, a page at a time. */
+export const useLoginLogs = (filter) =>
+  useInfiniteQuery({
+    queryKey: ["platform", "login-logs", filter],
+    queryFn: ({ pageParam }) => api.getLoginLogs({ filter, cursor: pageParam }),
+    initialPageParam: undefined,
+    getNextPageParam: (last) => last.nextCursor ?? undefined,
+    staleTime: 15_000,
+  });
+
+/**
+ * Live server figures. They poll on their own (and stop when the browser tab is hidden), so they live
+ * under their own key rather than "platform" — a save elsewhere in the console shouldn't refetch them.
+ */
+export const useServer = (live = true) =>
+  useQuery({ queryKey: ["server", "now"], queryFn: api.getServer, refetchInterval: live ? 4000 : false, placeholderData: keepPreviousData, retry: 1 });
+export const useServerHistory = (live = true) =>
+  useQuery({ queryKey: ["server", "history"], queryFn: () => api.getServerHistory(30), refetchInterval: live ? 10_000 : false, placeholderData: keepPreviousData });
+export const useServerProcesses = (live = true) =>
+  useQuery({ queryKey: ["server", "processes"], queryFn: api.getServerProcesses, refetchInterval: live ? 8000 : false, placeholderData: keepPreviousData });
+export const useServerHealth = () =>
+  useQuery({ queryKey: ["server", "health"], queryFn: api.getServerHealth, refetchInterval: 20_000, staleTime: 10_000, retry: 1 });
+export const useFolderScan = () =>
+  useQuery({ queryKey: ["server", "folders"], queryFn: api.getFolderScan, refetchInterval: (q) => (q.state.data?.state === "running" ? 1500 : false) });
+
+export const useCacheOverview = () => useQuery({ queryKey: ["platform", "cache"], queryFn: api.getCacheOverview, refetchInterval: 15_000 });
+/** Every cached item. Polls while `live`; lives under "platform" so expiring something refreshes it. */
+export const useCacheEntries = (live = true) =>
+  useQuery({ queryKey: ["platform", "cache-entries"], queryFn: api.getCacheEntries, refetchInterval: live ? 10_000 : false, placeholderData: keepPreviousData });
+/** One cached item's data. Not polled: it is a snapshot you can refresh. A 404 means it is no longer cached. */
+export const useCacheEntry = (key) =>
+  useQuery({ queryKey: ["platform", "cache-entry", key], queryFn: () => api.getCacheEntry(key), enabled: Boolean(key), retry: false, gcTime: 0 });
+export const useStoreCache = (id) => useQuery({ queryKey: ["platform", "store-cache", id], queryFn: () => api.getStoreCache(id), enabled: Boolean(id), refetchInterval: 15_000 });
+
+/** Where every store's images are kept (the platform's one setting) — and which stores still have older settings of their own. */
+export const usePlatformStorage = () => useQuery({ queryKey: ["platform", "storage"], queryFn: api.getPlatformStorage });
 
 /** The TablePe website and its enquiries. */
 export const useSitePages = () => useQuery({ queryKey: ["platform", "site", "pages"], queryFn: api.listSitePages });

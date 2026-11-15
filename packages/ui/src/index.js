@@ -4,6 +4,7 @@ export { fx, fxClass, FX_ROLES } from "./fx";
 export { Hero,                } from "./Hero";
 export { MenuList } from "./MenuList";
 export { MenuSections } from "./MenuSections";
+export { PageBlocks } from "./PageBlocks";
 export { ProgressSteps } from "./variants/progress";
 export { DropdownSoft } from "./variants/dropdowns";
 
@@ -20,6 +21,7 @@ export {
   VARIANT_SLOTS,
   slotByKey,
   allVariants,
+  announcementVariants,
   headerVariants,
   footerVariants,
   itemCardVariants,
@@ -41,6 +43,7 @@ export {
   datePickerVariants,
   statCardVariants,
   analyticsChartVariants,
+  getAnnouncementVariant,
   getHeaderVariant,
   getFooterVariant,
   getItemCardVariant,

@@ -1,42 +1,6 @@
 import { useCallback, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as api from "./api";
 import { prepareImage } from "./prepareImage";
-
-/* ---------------------------------------------------------------- config */
-
-// Storage config is brand-level (shared by every outlet in the brand — see
-// storage.service.js's brandFilter), so the cache is keyed by brandId, not
-// outletId: switching between two sibling outlets shouldn't refetch or
-// flicker, since the server would return the identical document either way.
-export function useStorageConfig(outlet) {
-  return useQuery({
-    queryKey: ["storage-config", outlet?.brandId],
-    queryFn: () => api.getStorageConfig(outlet),
-    enabled: Boolean(outlet),
-  });
-}
-
-export function useSaveStorageConfig(outlet) {
-  const qc = useQueryClient();
-  return useMutation({
-    // payload: { provider?, values?, processing? }
-    mutationFn: (payload) => api.saveStorageConfig(outlet, payload),
-    onSuccess: (data) => qc.setQueryData(["storage-config", outlet?.brandId], data),
-  });
-}
-
-export function useResetStorageConfig(outlet) {
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: () => api.resetStorageConfig(outlet),
-    onSuccess: (data) => qc.setQueryData(["storage-config", outlet?.brandId], data),
-  });
-}
-
-export function useTestStorageConfig(outlet) {
-  return useMutation({ mutationFn: () => api.testStorageConfig(outlet) });
-}
 
 /* ---------------------------------------------------------------- uploads */
 

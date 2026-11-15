@@ -4,7 +4,8 @@ import { Plus, Store } from "lucide-react";
 import * as api from "../../lib/api";
 import { usePlans, usePlatformMutation, usePlatformSettings, useStores } from "../../lib/usePlatform";
 import { Button, Card, Field, Note, PageHeader, Select, TextInput, Toast } from "../../ui";
-import { muted, planLabel, row, StatusPill, usageText } from "./shared";
+import { DisabledPill, muted, planLabel, row, StatusPill, usageText } from "./shared";
+import { StoreActionsMenu, StoreDialogs } from "./StoreActions";
 
 function slugify(s) {
   return s
@@ -49,6 +50,8 @@ export function PlatformStores() {
   const subdomain = subTouched ? form.subdomain : base ? slugify(form.brandName) : "";
   const navigate = useNavigate();
   const list = stores.data?.stores ?? [];
+  // the "⋮" menu on a store opens one of these dialogs — kept here, not in the row, so it survives the row disappearing (a deleted store)
+  const [dialog, setDialog] = useState(null);
 
   const submit = (e) => {
     e.preventDefault();
@@ -204,28 +207,38 @@ export function PlatformStores() {
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {list.map((s) => (
-              <Link key={s.id} to={`/platform/stores/${s.id}`} className="ot-press" style={{ ...row, textDecoration: "none", color: "inherit" }}>
-                <div style={{ flex: 1, minWidth: 180 }}>
-                  <div style={{ fontWeight: 600, fontSize: 14 }}>{s.name}</div>
-                  <div style={muted}>{s.ownerEmail}</div>
+              // The row is a link to the store; the "⋮" button sits over its right-hand padding, beside the link
+              // rather than inside it (a button inside a link is invalid, and would open the store as well).
+              <div key={s.id} style={{ position: "relative" }}>
+                <Link to={`/platform/stores/${s.id}`} className="ot-press" style={{ ...row, paddingRight: 58, textDecoration: "none", color: "inherit" }}>
+                  <div style={{ flex: 1, minWidth: 180 }}>
+                    <div style={{ fontWeight: 600, fontSize: 14 }}>{s.name}</div>
+                    <div style={muted}>{s.ownerEmail}</div>
+                  </div>
+                  <div style={{ minWidth: 130 }}>
+                    <div style={{ fontSize: 12, ...muted }}>Plan</div>
+                    <div style={{ fontWeight: 600, fontSize: 13 }}>{planLabel(s.plan)}</div>
+                  </div>
+                  <Meter label="People" used={s.usage.users} max={s.max.users} />
+                  <Meter label="Outlets" used={s.usage.outlets} max={s.max.outlets} />
+                  {/* a fixed width, so a longer pill ("Disabled Nov 15, 2026") doesn't push this row's columns out of line with the others */}
+                  <div style={{ display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "flex-end", width: 176, flexShrink: 0 }}>
+                    {s.disabled ? <DisabledPill store={s} withDate /> : <StatusPill store={s} />}
+                    {s.blocked.outlets + s.blocked.people > 0 ? (
+                      <span style={{ ...muted, fontSize: 11.5 }}>{s.blocked.outlets + s.blocked.people} blocked</span>
+                    ) : null}
+                  </div>
+                </Link>
+                <div style={{ position: "absolute", right: 12, top: 11 }}>
+                  <StoreActionsMenu store={s} onChoose={(kind) => setDialog({ kind, store: s })} />
                 </div>
-                <div style={{ minWidth: 130 }}>
-                  <div style={{ fontSize: 12, ...muted }}>Plan</div>
-                  <div style={{ fontWeight: 600, fontSize: 13 }}>{planLabel(s.plan)}</div>
-                </div>
-                <Meter label="People" used={s.usage.users} max={s.max.users} />
-                <Meter label="Outlets" used={s.usage.outlets} max={s.max.outlets} />
-                <div style={{ display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "flex-end", minWidth: 150 }}>
-                  <StatusPill store={s} />
-                  {s.blocked.outlets + s.blocked.people > 0 ? (
-                    <span style={{ ...muted, fontSize: 11.5 }}>{s.blocked.outlets + s.blocked.people} blocked</span>
-                  ) : null}
-                </div>
-              </Link>
+              </div>
             ))}
           </div>
         )}
       </Card>
+
+      <StoreDialogs dialog={dialog} setDialog={setDialog} />
     </>
   );
 }

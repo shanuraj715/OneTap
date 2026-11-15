@@ -2,6 +2,7 @@
 import { permissionsForRole,                            } from "@onetap/config-schema";
 import { OutletModel,                                                   } from "@onetap/db";
 import { userFromToken } from "../modules/auth/auth.service.js";
+import { assertStoreEnabled } from "../modules/platform/plan.service.js";
 import { HttpError } from "./error.js";
 
 export const SESSION_COOKIE = "onetap_session";
@@ -72,6 +73,8 @@ export async function requireOutletContext(
     if (membership.outletIds.length > 0 && !membership.outletIds.includes(outletId)) {
       throw new HttpError(403, "You don't have access to this outlet");
     }
+    // A store the platform has switched off turns its whole team away.
+    await assertStoreEnabled(outlet.brandId);
     // The platform super admin still gets in — that's how a blocked outlet is
     // inspected, unblocked or deleted.
     if (outlet.blocked) throw new HttpError(403, "This outlet is blocked — your store is over its plan's outlet limit.");
@@ -90,7 +93,7 @@ export async function requireOutletContext(
 }
 
 /** Brand-level context, for things that aren't outlet-specific (users, billing). */
-export function requireBrandContext(req         , permission             )                      {
+export async function requireBrandContext(req         , permission             )                      {
   const user = requireUser(req);
   const brandId = req.header("x-onetap-brand") ?? user.memberships[0]?.brandId;
   if (!brandId) throw new HttpError(400, "No brand selected");
@@ -98,6 +101,8 @@ export function requireBrandContext(req         , permission             )      
   const membership = membershipFor(user, brandId);
   if (!user.isSuperAdmin && !membership) throw new HttpError(403, "You don't have access to this brand");
   if (!user.isSuperAdmin && membership.blockedAt) throw new HttpError(403, PAUSED);
+  // A store the platform has switched off turns its whole team away (the super admin still gets in).
+  if (!user.isSuperAdmin) await assertStoreEnabled(brandId);
 
   if (permission) {
     const role = effectiveRole(user, membership);

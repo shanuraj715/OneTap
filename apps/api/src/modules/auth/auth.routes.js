@@ -2,7 +2,7 @@ import { Router } from "express";
 import { z } from "zod";
 import { isProd } from "../../env.js";
 import { requireUser, SESSION_COOKIE } from "../../middleware/auth.js";
-import { login, logout, toSessionUser } from "./auth.service.js";
+import { describeSessionUser, login, logout } from "./auth.service.js";
 
 export const authRouter         = Router();
 
@@ -34,7 +34,7 @@ authRouter.post("/logout", async (req, res) => {
   res.status(204).end();
 });
 
-authRouter.get("/me", (req, res) => {
+authRouter.get("/me", async (req, res) => {
   const user = requireUser(req);
-  res.json({ user: toSessionUser(user) });
+  res.json({ user: await describeSessionUser(user) });
 });

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
                                                       
                                                                           
 import {
@@ -22,6 +23,7 @@ import { useOutlet, usePatchConfig } from "../lib/useOutlet";
 import { useStorePlan } from "../lib/useStorePlan";
 import { LocationField } from "./settings/LocationField";
 import { Button, Card, Checkbox, Field, InfoHint, Note, PageHeader, Select, Tabs, TextInput, Toast } from "../ui";
+import { ImageField } from "../components/ImageField";
 import { SettingsNav } from "../components/SubNav";
 
                                                                                                                     
@@ -183,6 +185,13 @@ export function Settings() {
                   <TextInput value={String(draft.identity[f.key] ?? "")} onChange={(e) => setIdentity(f.key, e.target.value)} />
                 </Field>
               ))}
+            </div>
+            <div style={{ marginTop: 18, paddingTop: 16, borderTop: "1px solid var(--color-border)" }}>
+              <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 8, display: "flex", alignItems: "center", gap: 6 }}>
+                Logo
+                <InfoHint title="Logo" text="Shown beside your name in the storefront header (in the header styles that have room for it). A square or wide picture on a plain background works best. Remember to press Save changes." />
+              </div>
+              <ImageField outlet={outlet} kind="logos" label="Logo" shape="square" value={draft.identity.logoUrl ?? ""} onChange={(url) => setIdentity("logoUrl", url)} />
             </div>
           </Card>
 
@@ -584,7 +593,7 @@ export function Settings() {
                   checked={draft.features.ordering.delivery}
                   onChange={(v) => setFeature("ordering", { delivery: v })}
                   label="Delivery"
-                  info="Your own delivery, priced with the delivery settings under Kitchen & delivery. Aggregator orders arrive through their own integration and are not affected by this."
+                  info="Your own delivery, priced with the delivery settings under Kitchen & delivery. Delivery orders are always paid online, so customers are only offered it while an online payment method is switched on under Payments. Aggregator orders arrive through their own integration and are not affected by this."
                 />
               ) : (
                 <LockedFeature label="Delivery" />
@@ -600,12 +609,13 @@ export function Settings() {
                 label="Back-to-top button"
                 info="A floating button that returns a customer to the top of a long menu. Worth having on a menu with more than a couple of screens of items."
               />
-              <Checkbox
-                checked={draft.features.ui.announcementBar}
-                onChange={(v) => setFeature("ui", { announcementBar: v })}
-                label="Announcement bar"
-                info="A strip across the top of the storefront for a message everyone should see — a festival special, or a day you're closed."
-              />
+              <p style={{ margin: 0, fontSize: 13, color: "var(--color-text-muted)", lineHeight: 1.5 }}>
+                The <strong>message bar</strong> above the header and the <strong>promo carousel</strong> have their own page now:{" "}
+                <Link to="/banners" style={{ color: "var(--color-primary)" }}>
+                  Storefront → Banners
+                </Link>
+                .
+              </p>
               <Checkbox
                 checked={draft.features.reservations.enabled}
                 onChange={(v) => setFeature("reservations", { enabled: v })}

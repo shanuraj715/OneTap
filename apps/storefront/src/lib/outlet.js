@@ -127,3 +127,25 @@ export async function getOutletById(outletId        )                           
   }
   return null;
 }
+
+/** An outlet's published pages as links — title, address, where each is linked (no page bodies). Empty when none or the API can't say. */
+export async function getPageLinks(outletId) {
+  try {
+    const res = await fetch(`${API_BASE}/api/pages/public?outletId=${encodeURIComponent(outletId)}`, { cache: "no-store" });
+    if (!res.ok) return [];
+    return (await res.json()).pages ?? [];
+  } catch {
+    return [];
+  }
+}
+
+/** One published page of an outlet, with its blocks — or null when there is no such page (or it is a draft). */
+export async function getStorePage(outletId, slug) {
+  try {
+    const res = await fetch(`${API_BASE}/api/pages/public/${encodeURIComponent(slug)}?outletId=${encodeURIComponent(outletId)}`, { cache: "no-store" });
+    if (!res.ok) return null;
+    return (await res.json()).page ?? null;
+  } catch {
+    return null;
+  }
+}

@@ -1,10 +1,12 @@
 export * from "./connection.js";
 export * from "./tenant-scope.js";
+export { emitModelWrite, onModelWrite, writeEvents } from "./write-events.js";
 export { BrandModel } from "./models/brand.js";
 export { OutletModel } from "./models/outlet.js";
 export { PlanModel, PlatformSettingsModel } from "./models/plan.js";
 export { LeadModel, SitePageModel, SiteSettingsModel } from "./models/site.js";
 export { UserModel, SessionModel } from "./models/user.js";
+export { LoginLogModel } from "./models/audit.js";
 export { OrderModel, CounterModel, nextSequence } from "./models/order.js";
 export { CustomerModel, OtpChallengeModel, CustomerSessionModel } from "./models/customer.js";
 export { TableModel, TableSessionModel } from "./models/table.js";
@@ -14,5 +16,6 @@ export { MenuCategoryModel, MenuItemModel, ModifierGroupModel } from "./models/m
 export { CouponModel, CouponRedemptionModel } from "./models/coupon.js";
 export { WalletLedgerModel } from "./models/wallet.js";
 export { NotificationCredentialModel, NotificationLogModel } from "./models/notify.js";
-export { StorageConfigModel } from "./models/storage.js";
+export { PlatformStorageModel, StorageConfigModel } from "./models/storage.js";
+export { StorePageModel } from "./models/store-page.js";
 export { QrCardDesignModel } from "./models/qr-card.js";

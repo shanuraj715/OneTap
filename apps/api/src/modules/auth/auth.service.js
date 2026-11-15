@@ -6,6 +6,8 @@ import {
 } from "@onetap/config-schema";
 import { SessionModel, UserModel,              } from "@onetap/db";
 import { HttpError } from "../../middleware/error.js";
+import { storePlan } from "../platform/plan.service.js";
+import { recordLogin } from "./login-log.js";
 import { hashPassword, verifyPassword } from "./password.js";
 
 const SESSION_DAYS = 14;
@@ -19,13 +21,24 @@ const hashToken = (token        ) => createHash("sha256").update(token).digest("
 
 export async function login(email        , password        , meta           ) {
   const user = await UserModel.findOne({ email: email.toLowerCase().trim() });
-  // Same message either way — don't leak which emails exist.
-  if (!user || !user.isActive || !(await verifyPassword(password, user.passwordHash))) {
+  const note = (success, reason, who = user) => recordLogin({ email, user: who, success, reason, ip: meta.ip, userAgent: meta.userAgent });
+  // Same message either way — don't leak which emails exist. (The sign-in log below does say which, for the platform owner only.)
+  if (!user) {
+    note(false, "unknown_account", null);
+    throw new HttpError(401, "Incorrect email or password");
+  }
+  if (!user.isActive) {
+    note(false, "inactive");
+    throw new HttpError(401, "Incorrect email or password");
+  }
+  if (!(await verifyPassword(password, user.passwordHash))) {
+    note(false, "wrong_password");
     throw new HttpError(401, "Incorrect email or password");
   }
   // Blocked by the platform in every store they belong to (over a plan's
   // people limit) — the password was right, so say why instead of "incorrect".
   if (!user.isSuperAdmin && user.memberships.length > 0 && user.memberships.every((m) => m.blockedAt)) {
+    note(false, "paused");
     throw new HttpError(403, "Your access is paused. Please contact your store owner.");
   }
 
@@ -41,8 +54,9 @@ export async function login(email        , password        , meta           ) {
 
   user.lastLoginAt = new Date();
   await user.save();
+  note(true, "");
 
-  return { token, expiresAt, user: toSessionUser(user) };
+  return { token, expiresAt, user: await describeSessionUser(user) };
 }
 
 export async function logout(token                    )                {
@@ -74,6 +88,24 @@ export function toSessionUser(user         )              {
     blockedAt: membership?.blockedAt ?? null,
     permissions: role ? permissionsForRole(role) : [],
   };
+}
+
+/**
+ * `toSessionUser`, plus — for a store's team — whether TablePe has switched their store off. The admin shows
+ * that notice instead of the dashboard, so people learn why nothing works rather than meeting a wall of
+ * errors. A team member can still sign in to a disabled store for exactly that reason. The platform's own
+ * super admin is never affected.
+ */
+export async function describeSessionUser(user) {
+  const session = toSessionUser(user);
+  if (user.isSuperAdmin || !session.brandId) return { ...session, storeDisabled: null };
+  try {
+    const { disabled, brand } = await storePlan(session.brandId);
+    return { ...session, storeDisabled: disabled ? { at: disabled.at, message: disabled.message, storeName: brand.name } : null };
+  } catch {
+    // a store that can't be read (it was deleted a moment ago, say) isn't "switched off" — it just isn't there
+    return { ...session, storeDisabled: null };
+  }
 }
 
 /**

@@ -3,6 +3,7 @@ import { z } from "zod";
 import { tableStatusSchema } from "@onetap/config-schema";
 import { OutletModel } from "@onetap/db";
 import { storefrontOriginFor } from "../outlets/domains.js";
+import { outletBrand } from "../outlets/outlet-cache.js";
 import { requireOutletContext, requireUser } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import { currentCustomer } from "../customer/customer.routes.js";
@@ -183,11 +184,11 @@ tablesRouter.get("/public", async (req, res) => {
   const outletId = typeof req.query.outletId === "string" ? req.query.outletId : "";
   if (!outletId) throw new HttpError(400, "outletId is required");
 
-  const { OutletModel, TableModel } = await import("@onetap/db");
-  const outlet = await OutletModel.findOne({ _id: outletId }, null, { allowGlobalQuery: true }).lean();
-  if (!outlet) throw new HttpError(404, "Outlet not found");
+  const { TableModel } = await import("@onetap/db");
+  const ref = await outletBrand(outletId);
+  if (!ref) throw new HttpError(404, "Outlet not found");
 
-  const tables = await TableModel.find({ brandId: outlet.brandId, outletId, isActive: true })
+  const tables = await TableModel.find({ brandId: ref.brandId, outletId: ref.outletId, isActive: true })
     .sort({ number: 1 })
     .lean();
 
@@ -219,12 +220,12 @@ tablesRouter.post("/claim", async (req, res) => {
   const customer = await currentCustomer(req);
   if (!customer) throw new HttpError(401, "Verify your mobile or email before choosing a table");
 
-  const { OutletModel, TableModel } = await import("@onetap/db");
-  const outlet = await OutletModel.findOne({ _id: outletId }, null, { allowGlobalQuery: true }).lean();
-  if (!outlet) throw new HttpError(404, "Outlet not found");
-  if (customer.brandId !== outlet.brandId) throw new HttpError(403, "Verify again for this restaurant");
+  const { TableModel } = await import("@onetap/db");
+  const ref = await outletBrand(outletId);
+  if (!ref) throw new HttpError(404, "Outlet not found");
+  if (customer.brandId !== ref.brandId) throw new HttpError(403, "Verify again for this restaurant");
 
-  const ctx = { brandId: outlet.brandId, outletId };
+  const ctx = { brandId: ref.brandId, outletId: ref.outletId };
   const table = await TableModel.findOne({ ...ctx, number: tableNumber.trim(), isActive: true });
   if (!table) throw new HttpError(404, `There's no table ${tableNumber} here. Check the number on your table.`);
 

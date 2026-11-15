@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
 import { checkDelivery } from "@onetap/config-schema";
-import { OutletModel } from "@onetap/db";
+import { outletBrand } from "../outlets/outlet-cache.js";
 import { HttpError } from "../../middleware/error.js";
 import { outletConfigFor } from "../orders/orders.service.js";
 
@@ -25,10 +25,10 @@ const checkBody = z.object({
 deliveryRouter.post("/check", async (req, res) => {
   const body = checkBody.parse(req.body);
 
-  const outlet = await OutletModel.findOne({ _id: body.outletId }, null, { allowGlobalQuery: true }).lean();
-  if (!outlet) throw new HttpError(404, "Outlet not found");
+  const ref = await outletBrand(body.outletId);
+  if (!ref) throw new HttpError(404, "Outlet not found");
 
-  const config = await outletConfigFor({ brandId: outlet.brandId, outletId: String(outlet._id) });
+  const config = await outletConfigFor({ brandId: ref.brandId, outletId: ref.outletId });
 
   if (!config.features.ordering.delivery) {
     res.json({ serviceable: false, reason: "This outlet doesn't offer delivery.", distanceKm: 0, fee: 0, etaMinutes: 0, radiusKm: 0 });
@@ -60,10 +60,10 @@ deliveryRouter.get("/origin", async (req, res) => {
   const outletId = typeof req.query.outletId === "string" ? req.query.outletId : "";
   if (!outletId) throw new HttpError(400, "outletId is required");
 
-  const outlet = await OutletModel.findOne({ _id: outletId }, null, { allowGlobalQuery: true }).lean();
-  if (!outlet) throw new HttpError(404, "Outlet not found");
+  const ref = await outletBrand(outletId);
+  if (!ref) throw new HttpError(404, "Outlet not found");
 
-  const config = await outletConfigFor({ brandId: outlet.brandId, outletId: String(outlet._id) });
+  const config = await outletConfigFor({ brandId: ref.brandId, outletId: ref.outletId });
   res.json({
     point: config.identity.location.point,
     formattedAddress: config.identity.location.formattedAddress,

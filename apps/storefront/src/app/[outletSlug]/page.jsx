@@ -1,10 +1,12 @@
 import { notFound } from "next/navigation";
-import { getFooterVariant, getHeaderVariant, Hero, MenuSections } from "@onetap/ui";
+import { getVariant, Hero, MenuSections } from "@onetap/ui";
+import { StoreBottom, StoreTop } from "@/components/Chrome";
 import { Ordering } from "@/components/Ordering";
+import { OrderBar } from "@/components/OrderBar";
 import { OutletUnavailable } from "@/components/OutletUnavailable";
 import { ThemeStyle } from "@/components/ThemeStyle";
 import { getMenu } from "@/lib/menu";
-import { getOutletBySlug } from "@/lib/outlet";
+import { getOutletBySlug, getOutletsForHost, getPageLinks } from "@/lib/outlet";
 
 export const dynamic = "force-dynamic";
 
@@ -17,8 +19,8 @@ export default async function OutletHomePage({ params }) {
   if (!outlet) notFound();
   if (outlet.blocked) return <OutletUnavailable outlet={outlet} />;
 
-  const menu = await getMenu(outlet.id);
-  const { identity, theme, typography, features, layout, menuLayout } = outlet.config;
+  const [menu, pages, store] = await Promise.all([getMenu(outlet.id), getPageLinks(outlet.id), getOutletsForHost()]);
+  const { identity, theme, typography, features, layout, menuLayout, carousel } = outlet.config;
   // Fall back to the single card style if the menu layout hasn't been touched.
   const resolvedMenuLayout =
     menuLayout.mode === "auto" && menuLayout.sections.length === 0
@@ -29,25 +31,17 @@ export default async function OutletHomePage({ params }) {
     features.ordering.takeaway || features.ordering.delivery || features.ordering.dineInQr;
   const name = identity.name || outlet.name;
 
-  // Variants come from config — swapping one in admin changes the look, no code change.
-  const Header = getHeaderVariant(layout.headerVariant).Component;
-  const Footer = getFooterVariant(layout.footerVariant).Component;
+  // The promo carousel — its style comes from Appearance, its slides from Banners; a slide needs a picture or a title to show.
+  const slides = carousel.enabled ? carousel.slides.filter((s) => s.imageUrl || s.title) : [];
+  const Carousel = getVariant("carouselVariant", layout.carouselVariant).Component;
 
   return (
     <>
       <ThemeStyle theme={theme} typography={typography} effect={outlet.config.effect} />
-      <Header
-        name={name}
-        tagline={identity.tagline || undefined}
-        phone={identity.phone || undefined}
-        links={[
-          { label: "Menu", href: "#menu" },
-          ...(features.ordering.dineInQr ? [{ label: "Order at table", href: "#" }] : []),
-          ...(features.reservations.enabled ? [{ label: "Book a table", href: "#" }] : []),
-          // Admin-added, from Appearance → Header navigation links.
-          ...layout.navLinks,
-        ]}
-      />
+      <StoreTop outlet={outlet} outletSlug={outletSlug} pages={pages} onHome />
+
+      {/* Takeaway or Delivery, and which outlet — only where there is something to choose */}
+      {features.ordering.takeaway || features.ordering.delivery ? <OrderBar current={{ id: outlet.id, slug: outlet.slug }} outlets={store?.outlets ?? []} /> : null}
 
       <Hero
         title={name}
@@ -55,6 +49,19 @@ export default async function OutletHomePage({ params }) {
         ctaLabel={features.ordering.takeaway ? "Order takeaway" : undefined}
         ctaHref={features.ordering.takeaway ? "#menu" : undefined}
       />
+
+      {slides.length > 0 ? (
+        <section aria-label="Offers and news" style={{ maxWidth: 1080, margin: "0 auto", padding: "0 18px 18px", boxSizing: "border-box" }}>
+          <Carousel
+            items={slides.map((s) => ({ id: s.id, imageUrl: s.imageUrl || undefined, title: s.title, subtitle: s.subtitle, ctaLabel: s.ctaLabel, href: s.ctaHref }))}
+            autoplay={carousel.autoplay}
+            interval={carousel.intervalSeconds * 1000}
+            showArrows={carousel.showArrows}
+            showDots={carousel.showDots}
+            height={carousel.height}
+          />
+        </section>
+      ) : null}
 
       <div id="menu" style={{ scrollMarginTop: 24 }}>
         {menu.items.length > 0 ? (
@@ -75,13 +82,7 @@ export default async function OutletHomePage({ params }) {
         )}
       </div>
 
-      <Footer
-        name={name}
-        address={identity.address || undefined}
-        phone={identity.phone || undefined}
-        fssaiLicense={identity.fssaiLicense || undefined}
-        gstin={identity.gstin || undefined}
-      />
+      <StoreBottom outlet={outlet} outletSlug={outletSlug} pages={pages} />
     </>
   );
 }

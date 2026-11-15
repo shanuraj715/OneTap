@@ -32,3 +32,27 @@ storageConfigSchema.index({ brandId: 1, outletId: 1 }, { unique: true });
 
 export const StorageConfigModel =
   models.StorageConfig ?? model("StorageConfig", storageConfigSchema);
+
+/**
+ * The platform's ONE image-storage configuration — what every store's photos use. Only the platform's super
+ * admin can see or change it (the console's Storage page); store owners never do. Each store's files still sit
+ * under their own `<brandId>/` folder, so one bucket serves everyone without mixing them up.
+ *
+ * Same shape as a store's own document above (which exists only for stores set up before this moved to the
+ * platform: it is honoured until this one is first saved, so nothing breaks during the move). Not tenant-scoped:
+ * it belongs to no store. A single document, found by `key`.
+ */
+const platformStorageSchema = new Schema(
+  {
+    key: { type: String, default: "platform", unique: true },
+    provider: { type: String, enum: STORAGE_PROVIDERS, default: "local" },
+    publicFields: { type: Schema.Types.Mixed, default: {} },
+    encryptedFields: { type: Schema.Types.Mixed, default: {} },
+    processing: { type: Schema.Types.Mixed, default: {} },
+    updatedBy: String,
+  },
+  { timestamps: true },
+);
+
+export const PlatformStorageModel =
+  models.PlatformStorage ?? model("PlatformStorage", platformStorageSchema);
