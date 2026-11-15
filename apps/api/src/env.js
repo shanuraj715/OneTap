@@ -45,6 +45,8 @@ const schema = z.object({
    * WhatsApp throws a number off when two copies connect with the same session.
    */
   WHATSAPP_WORKER: z.enum(["on", "off"]).default("off"),
+  /** the ONE process that sends queued SMS / WhatsApp Business API marketing messages (same rule as WHATSAPP_WORKER) */
+  MARKETING_WORKER: z.enum(["on", "off"]).default("off"),
   WEBSITE_REVALIDATE_SECRET: z.string().default("dev-only-website-revalidate-secret"),
   /**
    * Cloudflare Turnstile for the website's enquiry form — a real "are you a

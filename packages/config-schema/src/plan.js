@@ -26,6 +26,11 @@ export const FEATURES = [
     label: "WhatsApp chat",
     description: "Link the store's own WhatsApp numbers to chat with customers, send order updates and offers from the dashboard.",
   },
+  {
+    key: "marketing",
+    label: "Marketing",
+    description: "Send offers and announcements to customers, chosen by filters, over the channels the store has set up (linked WhatsApp, SMS, WhatsApp Business API).",
+  },
   { key: "favicon", label: "Own favicon", description: "The store's own icon in the browser tab, on every outlet's pages." },
   {
     key: "customDomain",

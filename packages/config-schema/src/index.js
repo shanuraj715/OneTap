@@ -23,6 +23,7 @@ export * from "./printing.js";
 export * from "./rbac.js";
 export * from "./wallet.js";
 export * from "./order-notify.js";
+export * from "./marketing.js";
 export * from "./whatsapp.js";
 export * from "./capacity.js";
 export * from "./dashboard.js";

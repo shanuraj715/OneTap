@@ -1,6 +1,6 @@
 # T04 — WhatsApp management — colours, chat stats and sharing out, clean-up by date, delete a message
 
-**Area:** whatsapp · **Last result:** ✅ PASSED (20 passed, 0 failed · 2026-11-15 21:13 · headless · 16.2 s)
+**Area:** whatsapp · **Last result:** ✅ PASSED (20 passed, 0 failed · 2026-11-16 00:53 · headless · 16.4 s)
 
 **Run it alone:** `node run.mjs --only t04` (add `--visible` to watch it) · starts from fresh fake data
 
@@ -64,7 +64,7 @@ _Nothing failed._
 
 **Step 4 — clean up**
 
-- older than 30 days: 2 messages in 1 chat — _2 messages from before Oct 17, 2026, in 1 chat._
+- older than 30 days: 2 messages in 1 chat — _2 messages from before Oct 18, 2026, in 1 chat._
 - Enter in the confirm box removes them
 - …and nothing that old is left
 
@@ -72,6 +72,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-16 00:53 | pass | 20 | 0 | headless | 16.4 s |
 | 2026-11-15 21:13 | pass | 20 | 0 | headless | 16.2 s |
 
 ---
