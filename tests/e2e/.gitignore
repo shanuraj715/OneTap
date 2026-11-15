@@ -1,0 +1,5 @@
+node_modules/
+# the throwaway bench: builds, logs, fake uploads, screenshots (all re-creatable)
+.bench/
+results/shots/
+results/runs/
