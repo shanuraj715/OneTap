@@ -44,10 +44,17 @@ import {
   Users as UsersIcon,
   Wand2,
   Server as ServerIcon,
+  MessageCircle,
 } from "lucide-react";
 import { useAuth, useLogout } from "./lib/useAuth";
 import { OutletSelectionProvider, useOpenStore, useOutlets } from "./lib/useOutlet";
 import { useLeads, useStore } from "./lib/usePlatform";
+import { useWaMe } from "./lib/useWhatsApp";
+import { WhatsAppChats } from "./routes/whatsapp/WhatsAppChats";
+import { WhatsAppNumbers } from "./routes/whatsapp/WhatsAppNumbers";
+import { WhatsAppBroadcast } from "./routes/whatsapp/WhatsAppBroadcast";
+import { WhatsAppAccess } from "./routes/whatsapp/WhatsAppAccess";
+import { WhatsAppCleanup } from "./routes/whatsapp/WhatsAppCleanup";
 import { useStorePlan } from "./lib/useStorePlan";
 import { useMedia } from "./lib/useMedia";
 import { CreateOutletModal } from "./components/CreateOutletModal";
@@ -97,6 +104,11 @@ const ICON = 15.5;
 const ROUTE_META = {
   "/": { title: "Dashboard", icon: LayoutDashboard },
   "/orders": { title: "Orders", icon: ReceiptText },
+  "/whatsapp/chats": { title: "WhatsApp", icon: MessageCircle },
+  "/whatsapp/numbers": { title: "WhatsApp numbers", icon: MessageCircle },
+  "/whatsapp/broadcast": { title: "WhatsApp broadcast", icon: MessageCircle },
+  "/whatsapp/access": { title: "WhatsApp access", icon: MessageCircle },
+  "/whatsapp/cleanup": { title: "WhatsApp clean up", icon: MessageCircle },
   "/menu": { title: "Menu", icon: UtensilsCrossed },
   "/components": { title: "Components", icon: Boxes },
   "/menu-layout": { title: "Menu layout", icon: LayoutList },
@@ -144,6 +156,8 @@ const NAV_GROUPS = [
       { to: "/take-order", label: "Take order", icon: <ConciergeBell size={ICON} />, permission: "order:create" },
       { to: "/", label: "Dashboard", icon: <LayoutDashboard size={ICON} />, end: true },
       { to: "/orders", label: "Orders", icon: <ReceiptText size={ICON} />, permission: "order:read" },
+      // shown to whoever the owner gave chat access (see WhatsApp → Access), when the plan includes it
+      { to: "/whatsapp/chats", label: "WhatsApp", icon: <MessageCircle size={ICON} />, feature: "whatsappChat", whatsapp: true, badgeKey: "waUnread", matchPaths: ["/whatsapp"] },
       family("Tables", <QrCode size={ICON} />, TABLES_TABS),
       { to: "/printing", label: "Printing", icon: <Printer size={ICON} />, permission: "printer:read", feature: "printing" },
     ],
@@ -194,8 +208,8 @@ const PLATFORM_NAV_GROUPS = [
  * permission or the store's plan doesn't include the feature; a family becomes
  * a plain link to its first tab they can open, or disappears.
  */
-function resolveNavItem(n, can, hasFeature) {
-  const open = (x) => (!x.permission || can(x.permission)) && (!x.feature || hasFeature(x.feature));
+function resolveNavItem(n, can, hasFeature, waLevel = "none") {
+  const open = (x) => (!x.permission || can(x.permission)) && (!x.feature || hasFeature(x.feature)) && (!x.whatsapp || waLevel !== "none");
   if (!n.tabs) return open(n) ? n : null;
   const allowed = n.tabs.filter(open);
   if (!allowed.length) return null;
@@ -308,12 +322,15 @@ function Shell({ can }                                     ) {
 
   // the platform console's "Leads" shows how many enquiries nobody has called yet
   const newLeads = useLeads("new", platformMode).data?.counts?.new ?? 0;
-  const badges = { newLeads };
+  // WhatsApp: the signed-in person's chat access, and how many chats have unread messages
+  const waMe = useWaMe();
+  const waLevel = platformMode ? "none" : (waMe.data?.level ?? "none");
+  const badges = { newLeads, waUnread: waMe.data?.unreadChats ?? 0 };
 
   const groups = (platformMode ? PLATFORM_NAV_GROUPS : NAV_GROUPS)
     .map((g) => ({
       ...g,
-      items: g.items.map((n) => resolveNavItem(n, can, platformMode ? () => true : storePlan.hasFeature)).filter(Boolean),
+      items: g.items.map((n) => resolveNavItem(n, can, platformMode ? () => true : storePlan.hasFeature, waLevel)).filter(Boolean),
     }))
     .filter((g) => g.items.length);
 
@@ -561,6 +578,13 @@ function Shell({ can }                                     ) {
             <Route path="/dashboard-config" element={<DashboardConfig />} />
             <Route path="/users" element={<Users />} />
             <Route path="/take-order" element={<TakeOrder />} />
+            <Route path="/whatsapp" element={<Navigate to="/whatsapp/chats" replace />} />
+            <Route path="/whatsapp/chats" element={<WhatsAppChats />} />
+            <Route path="/whatsapp/chats/:chatId" element={<WhatsAppChats />} />
+            <Route path="/whatsapp/numbers" element={<WhatsAppNumbers />} />
+            <Route path="/whatsapp/broadcast" element={<WhatsAppBroadcast />} />
+            <Route path="/whatsapp/access" element={<WhatsAppAccess />} />
+            <Route path="/whatsapp/cleanup" element={<WhatsAppCleanup />} />
             {/* an old bookmark (the Storage page moved to the platform console) lands on the dashboard, not a blank screen */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

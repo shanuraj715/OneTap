@@ -732,3 +732,41 @@ export const updateLead = (id, body) => req(`/api/platform/site/leads/${id}`, js
 /** An image for the website — logo, hero, team photo. Returns { url, width, height, … }. */
 export const uploadSiteImage = (blob) =>
   req("/api/platform/site/upload", { method: "POST", body: blob, headers: { "content-type": blob.type || "application/octet-stream" } });
+
+/* ------------------------------------------------------------------ whatsapp */
+// Chat with customers over the store's own linked WhatsApp numbers. `o` is the current outlet (the API works out the store).
+const wa = (o, path, init = {}) => req(`/api/whatsapp${path}`, { ...init, outletId: o._id });
+const waJson = (method, body) => ({ method, body: JSON.stringify(body ?? {}) });
+export const waMe = (o) => wa(o, "/me");
+export const waAccounts = (o) => wa(o, "/accounts");
+export const waAccount = (o, id) => wa(o, `/accounts/${id}`);
+export const waCreateAccount = (o, label, color) => wa(o, "/accounts", waJson("POST", { label, ...(color ? { color } : {}) }));
+export const waRenameAccount = (o, id, label) => wa(o, `/accounts/${id}`, waJson("PATCH", { label }));
+export const waUpdateAccount = (o, id, body) => wa(o, `/accounts/${id}`, waJson("PATCH", body));
+export const waStats = (o) => wa(o, "/stats");
+export const waDistributePreview = (o, body) => wa(o, "/distribute/preview", waJson("POST", body));
+export const waDistribute = (o, body) => wa(o, "/distribute", waJson("POST", body));
+export const waCleanupPreview = (o, body) => wa(o, "/cleanup/preview", waJson("POST", body));
+export const waCleanup = (o, body) => wa(o, "/cleanup", waJson("POST", body));
+export const waRelinkAccount = (o, id) => wa(o, `/accounts/${id}/relink`, waJson("POST"));
+export const waUnlinkAccount = (o, id) => wa(o, `/accounts/${id}/unlink`, waJson("POST"));
+export const waRemoveAccount = (o, id) => wa(o, `/accounts/${id}`, { method: "DELETE" });
+export const waChats = (o, { q = "", view = "all", account = "" } = {}) =>
+  wa(o, `/chats?q=${encodeURIComponent(q)}&view=${encodeURIComponent(view)}&account=${encodeURIComponent(account)}`);
+export const waChat = (o, id) => wa(o, `/chats/${id}`);
+export const waStartChat = (o, body) => wa(o, "/chats", waJson("POST", body));
+export const waUpdateChat = (o, id, body) => wa(o, `/chats/${id}`, waJson("PATCH", body));
+export const waDeleteChat = (o, id) => wa(o, `/chats/${id}`, { method: "DELETE" });
+export const waClearChat = (o, id) => wa(o, `/chats/${id}/clear`, waJson("POST"));
+export const waMarkRead = (o, id) => wa(o, `/chats/${id}/read`, waJson("POST"));
+export const waMessages = (o, id) => wa(o, `/chats/${id}/messages`);
+export const waSend = (o, id, body) => wa(o, `/chats/${id}/messages`, waJson("POST", body));
+export const waRetry = (o, chatId, id) => wa(o, `/chats/${chatId}/messages/${id}/retry`, waJson("POST"));
+export const waDeleteMessage = (o, chatId, id, everyone = false) => wa(o, `/chats/${chatId}/messages/${id}${everyone ? "?everyone=1" : ""}`, { method: "DELETE" });
+export const waUpload = (o, file) =>
+  wa(o, `/media?name=${encodeURIComponent(file.name || "file")}`, { method: "POST", body: file, headers: { "content-type": file.type || "application/octet-stream" } });
+export const waBroadcasts = (o) => wa(o, "/broadcasts");
+export const waCreateBroadcast = (o, body) => wa(o, "/broadcasts", waJson("POST", body));
+export const waCancelBroadcast = (o, id) => wa(o, `/broadcasts/${id}/cancel`, waJson("POST"));
+export const waGetAccess = (o) => wa(o, "/access");
+export const waSetAccess = (o, access) => wa(o, "/access", waJson("PUT", { access }));

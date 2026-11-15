@@ -21,6 +21,11 @@ export const FEATURES = [
   { key: "wallet", label: "Coin wallet", description: "Customers earn and spend loyalty coins." },
   { key: "printing", label: "Printing", description: "Kitchen tickets and receipts on connected printers." },
   { key: "notifications", label: "WhatsApp & SMS alerts", description: "Order updates sent to customers." },
+  {
+    key: "whatsappChat",
+    label: "WhatsApp chat",
+    description: "Link the store's own WhatsApp numbers to chat with customers, send order updates and offers from the dashboard.",
+  },
   { key: "favicon", label: "Own favicon", description: "The store's own icon in the browser tab, on every outlet's pages." },
   {
     key: "customDomain",

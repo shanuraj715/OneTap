@@ -83,6 +83,15 @@ export const orderNotifySettingsSchema = z.object({
       templates: templateMap(smsEventTemplateSchema),
     })
     .default({}),
+  /** free-text updates sent from the store's own linked WhatsApp numbers (see whatsapp.js) — no Meta templates */
+  linked: z
+    .object({
+      enabled: z.boolean().default(false),
+      events: z.array(z.enum(ORDER_STATUSES)).default([]),
+      /** per status; an empty body uses WA_ORDER_DEFAULT_BODY */
+      templates: templateMap(z.object({ body: z.string().max(1000).default("") })),
+    })
+    .default({}),
 });
                                                                             
 
