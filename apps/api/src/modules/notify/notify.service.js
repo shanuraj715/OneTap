@@ -24,6 +24,7 @@ import { logger } from "../../logger.js";
 import { HttpError } from "../../middleware/error.js";
 import { effectiveConfig } from "../outlets/config.service.js";
 import { storePlan } from "../platform/plan.service.js";
+import { queueOrderUpdate } from "../whatsapp/whatsapp.service.js";
 import { providerFor,                        } from "./providers/index.js";
 
 /* -------------------------------------------------------------- credentials */
@@ -173,10 +174,12 @@ async function log(
  * whether an outbound message could be sent.
  */
 export async function fireOrderNotifications(ctx               , order          , status             )                {
-  if (!(await storePlan(ctx.brandId)).entitlements.features.includes("notifications")) return;
   const outlet = await outletConfigFor(ctx);
   if (!outlet) return;
   const { config } = outlet;
+  // from the store's own linked WhatsApp numbers (plan feature "whatsappChat"; queued, never throws)
+  await queueOrderUpdate(ctx, order, status, config);
+  if (!(await storePlan(ctx.brandId)).entitlements.features.includes("notifications")) return;
   const orderId = String(order._id);
   const to = order.customer?.phone ?? "";
 

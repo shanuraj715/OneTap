@@ -18,4 +18,5 @@ export { WalletLedgerModel } from "./models/wallet.js";
 export { NotificationCredentialModel, NotificationLogModel } from "./models/notify.js";
 export { PlatformStorageModel, StorageConfigModel } from "./models/storage.js";
 export { StorePageModel } from "./models/store-page.js";
+export { WaAccountModel, WaAuthKeyModel, WaCampaignModel, WaChatModel, WaMessageModel } from "./models/whatsapp.js";
 export { QrCardDesignModel } from "./models/qr-card.js";

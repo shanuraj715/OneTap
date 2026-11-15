@@ -23,6 +23,8 @@ const brandSchema = new Schema(
      * their own stored values, exactly as before.
      */
     appearance: { type: Schema.Types.Mixed, default: null },
+    /** WhatsApp chat settings for the whole store: { access: { manager: "none"|"read"|"send", … } } */
+    whatsapp: { type: Schema.Types.Mixed, default: null },
     /** when usage first went over a plan limit; cleared once back within it */
     overLimitSince: { type: Date, default: null },
     /**

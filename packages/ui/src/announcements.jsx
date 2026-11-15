@@ -129,6 +129,29 @@ function useTurns(messages, rotateSeconds) {
   return { ...slides, index: safe, current: messages[safe] };
 }
 
+/**
+ * Every message laid on top of each other in one grid cell, only the current one visible. The bar is then always as
+ * tall as its TALLEST message (one with a button, one that wraps onto two lines), so it never changes height as the
+ * messages take turns and the page below never jumps. Hidden messages are out of the tab order and the reading order.
+ */
+function Turns({ messages, index, render, enter = "ot-anim-fade", style, itemStyle }) {
+  if (!messages.length) return null;
+  return (
+    <span style={{ display: "inline-grid", gridTemplateColumns: "minmax(0, 1fr)", minWidth: 0, maxWidth: "100%", ...style }}>
+      {messages.map((m, k) => (
+        <span
+          key={m.id ?? k}
+          aria-hidden={k === index ? undefined : true}
+          className={k === index ? enter : undefined}
+          style={{ gridArea: "1 / 1", alignSelf: "center", minWidth: 0, visibility: k === index ? "visible" : "hidden", ...itemStyle }}
+        >
+          {render(m)}
+        </span>
+      ))}
+    </span>
+  );
+}
+
 const dot = (active) => ({
   width: 6,
   height: 6,
@@ -161,9 +184,7 @@ export function AnnouncementSolid({ messages = [], dismissible = true, rotateSec
   return (
     <Bar messages={messages} dismissible={dismissible} style={{ background: "var(--color-primary)", color: "var(--color-on-primary)" }}>
       <div className="ot-header-px" style={{ ...rowPad(dismissible), display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", flexWrap: "wrap", gap: "2px 0" }} {...t.bind}>
-        <span key={t.index} className="ot-anim-fade">
-          {t.current ? <Message m={t.current} /> : null}
-        </span>
+        <Turns messages={messages} index={t.index} render={(m) => <Message m={m} />} />
         <Dots count={messages.length} index={t.index} onPick={t.setIndex} />
       </div>
     </Bar>
@@ -180,9 +201,7 @@ export function AnnouncementSoft({ messages = [], dismissible = true, rotateSeco
       style={{ background: "color-mix(in srgb, var(--color-primary) 11%, var(--color-bg))", color: "var(--color-text)", borderBottom: "1px solid color-mix(in srgb, var(--color-primary) 22%, var(--color-border))" }}
     >
       <div className="ot-header-px" style={{ ...rowPad(dismissible), display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", flexWrap: "wrap" }} {...t.bind}>
-        <span key={t.index} className="ot-anim-fade">
-          {t.current ? <Message m={t.current} link={{ color: "var(--color-primary)" }} /> : null}
-        </span>
+        <Turns messages={messages} index={t.index} render={(m) => <Message m={m} link={{ color: "var(--color-primary)" }} />} />
         <Dots count={messages.length} index={t.index} onPick={t.setIndex} />
       </div>
     </Bar>
@@ -196,9 +215,13 @@ export function AnnouncementSplit({ messages = [], phone, dismissible = true, ro
     <Bar messages={messages} dismissible={dismissible} style={{ background: "var(--color-primary)", color: "var(--color-on-primary)", fontSize: 12.5 }}>
       <div className="ot-header-px" style={{ ...rowPad(dismissible), paddingTop: 7, paddingBottom: 7, display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16 }} {...t.bind}>
         {/* the message gives way first — the phone number must never wrap or break */}
-        <span key={t.index} className="ot-anim-fade" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", minWidth: 0 }}>
-          {t.current ? <Message m={t.current} /> : null}
-        </span>
+        <Turns
+          messages={messages}
+          index={t.index}
+          style={{ flex: "0 1 auto" }}
+          itemStyle={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+          render={(m) => <Message m={m} />}
+        />
         {phone ? (
           <a href={`tel:${String(phone).replace(/[^+\d]/g, "")}`} style={{ whiteSpace: "nowrap", flexShrink: 0, color: "inherit", textDecoration: "none", fontWeight: 600 }}>
             {phone}
@@ -253,9 +276,7 @@ export function AnnouncementRotator({ messages = [], dismissible = true, rotateS
             ‹
           </button>
         ) : null}
-        <span key={t.index} className="ot-anim-rise" style={{ textAlign: "center", minWidth: 0 }}>
-          {t.current ? <Message m={t.current} link={{ color: "var(--color-primary)" }} /> : null}
-        </span>
+        <Turns messages={messages} index={t.index} enter="ot-anim-rise" itemStyle={{ textAlign: "center" }} render={(m) => <Message m={m} link={{ color: "var(--color-primary)" }} />} />
         {messages.length > 1 ? (
           <>
             <button type="button" onClick={t.next} aria-label="Next message" style={arrow}>
@@ -291,9 +312,7 @@ export function AnnouncementPill({ messages = [], dismissible = true, rotateSeco
           }}
         >
           <span aria-hidden="true" style={{ width: 7, height: 7, borderRadius: 999, background: "currentColor", flexShrink: 0 }} />
-          <span key={t.index} className="ot-anim-fade" style={{ minWidth: 0, textAlign: "center" }}>
-            {t.current ? <Message m={t.current} /> : null}
-          </span>
+          <Turns messages={messages} index={t.index} itemStyle={{ textAlign: "center" }} render={(m) => <Message m={m} />} />
           <Dots count={messages.length} index={t.index} onPick={t.setIndex} />
         </span>
       </div>
@@ -307,9 +326,7 @@ export function AnnouncementDark({ messages = [], dismissible = true, rotateSeco
   return (
     <Bar messages={messages} dismissible={dismissible} style={{ background: "var(--color-text)", color: "var(--color-bg)" }}>
       <div className="ot-header-px" style={{ ...rowPad(dismissible), display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", flexWrap: "wrap" }} {...t.bind}>
-        <span key={t.index} className="ot-anim-fade">
-          {t.current ? <Message m={t.current} link={{ color: "color-mix(in srgb, var(--color-primary) 55%, var(--color-bg))" }} /> : null}
-        </span>
+        <Turns messages={messages} index={t.index} render={(m) => <Message m={m} link={{ color: "color-mix(in srgb, var(--color-primary) 55%, var(--color-bg))" }} />} />
         <Dots count={messages.length} index={t.index} onPick={t.setIndex} />
       </div>
     </Bar>
@@ -319,33 +336,39 @@ export function AnnouncementDark({ messages = [], dismissible = true, rotateSeco
 /** 08 — the message with its link as a real button beside it. */
 export function AnnouncementButton({ messages = [], dismissible = true, rotateSeconds = 5 }) {
   const t = useTurns(messages, rotateSeconds);
-  const m = t.current;
-  const href = m ? safeHref(m.linkHref) : null;
   return (
     <Bar messages={messages} dismissible={dismissible} style={{ background: "var(--color-primary)", color: "var(--color-on-primary)" }}>
       <div className="ot-header-px" style={{ ...rowPad(dismissible), paddingTop: 7, paddingBottom: 7, display: "flex", alignItems: "center", justifyContent: "center", gap: "6px 14px", flexWrap: "wrap", textAlign: "center" }} {...t.bind}>
-        <span key={t.index} className="ot-anim-fade" style={{ fontWeight: 600 }}>
-          {m?.text}
-        </span>
-        {href ? (
-          <a
-            href={href}
-            style={{
-              fontSize: 12,
-              fontWeight: 700,
-              padding: "4px 14px",
-              borderRadius: 999,
-              border: "1.5px solid currentColor",
-              color: "inherit",
-              textDecoration: "none",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {m.linkLabel || "Learn more"}
-          </a>
-        ) : null}
+        <Turns messages={messages} index={t.index} render={(m) => <ButtonMessage m={m} />} />
         <Dots count={messages.length} index={t.index} onPick={t.setIndex} />
       </div>
     </Bar>
+  );
+}
+
+/** One message of the "with button" style: its text, and its link as a button when it has one. */
+function ButtonMessage({ m }) {
+  const href = safeHref(m.linkHref);
+  return (
+    <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "6px 14px", flexWrap: "wrap" }}>
+      <span style={{ fontWeight: 600 }}>{m.text}</span>
+      {href ? (
+        <a
+          href={href}
+          style={{
+            fontSize: 12,
+            fontWeight: 700,
+            padding: "4px 14px",
+            borderRadius: 999,
+            border: "1.5px solid currentColor",
+            color: "inherit",
+            textDecoration: "none",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {m.linkLabel || "Learn more"}
+        </a>
+      ) : null}
+    </span>
   );
 }

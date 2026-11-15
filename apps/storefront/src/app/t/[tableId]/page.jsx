@@ -66,7 +66,7 @@ export default async function TablePage({
   if (!features.ordering.dineInQr) {
     return (
       <>
-        <ThemeStyle theme={theme} typography={typography} effect={outlet.config.effect} />
+        <ThemeStyle theme={theme} typography={typography} effect={outlet.config.effect} branding={outlet.config.branding} />
         <main style={{ maxWidth: 460, margin: "120px auto", padding: 24, textAlign: "center" }}>
           <h1 style={{ fontSize: 22, marginBottom: 8 }}>Table ordering is off right now</h1>
           <p style={{ color: "var(--color-text-muted)" }}>Please order at the counter.</p>
@@ -85,7 +85,7 @@ export default async function TablePage({
 
   return (
     <>
-      <ThemeStyle theme={theme} typography={typography} effect={outlet.config.effect} />
+      <ThemeStyle theme={theme} typography={typography} effect={outlet.config.effect} branding={outlet.config.branding} />
       {/* a table's header stays quiet (no menu / order-type links) — just the store's own pages, when it has set some to show */}
       <StoreTop
         outlet={outlet}

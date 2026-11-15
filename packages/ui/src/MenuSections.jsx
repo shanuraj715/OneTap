@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
                                            
 import {
   resolveMenuSections,
@@ -36,6 +36,15 @@ export function MenuSections({
   const [foodFilter, setFoodFilter] = useState                 (null);
   // Which collapsible sections the diner has expanded, by section id.
   const [expanded, setExpanded] = useState({});
+  // phones and tablets: the categories open in a sheet instead of a wall of chips
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const toolbarRef = useRef(null);
+
+  /** Go to a category: a short pause (the sheet closes, the tap registers), then an eased glide that stops just below the sticky bar. */
+  const goTo = (id) => {
+    setSheetOpen(false);
+    window.setTimeout(() => glideTo(document.getElementById(`sec-${id}`), toolbarRef.current), 500);
+  };
 
   const sections = useMemo(() => resolveMenuSections(menu, layout), [menu, layout]);
 
@@ -59,7 +68,7 @@ export function MenuSections({
   return (
     <div className="ot-menu-sections" style={wrap}>
       {(layout.showCategoryNav && visibleSections.length > 1) || (layout.showFoodTypeFilter && foodTypesPresent.length > 1) ? (
-        <div className="ot-fx-bar" data-fx-toolbar="" style={toolbarStyle()}>
+        <div ref={toolbarRef} className="ot-fx-bar" data-fx-toolbar="" style={toolbarStyle()}>
           {layout.showFoodTypeFilter && foodTypesPresent.length > 1 ? (
             <div style={{ display: "flex", gap: "var(--fx-toolbar-gap, 6px)" }}>
               <FilterChip active={foodFilter === null} onClick={() => setFoodFilter(null)}>
@@ -78,16 +87,37 @@ export function MenuSections({
           {layout.showCategoryNav && visibleSections.length > 1 ? (
             /* No overflow here: the chips wrap anyway, and a scrolling box crops
                whatever it holds at its edges — including the chips' shadows. */
-            <nav style={{ display: "flex", gap: "var(--fx-toolbar-gap, 6px)", flexWrap: "wrap" }}>
-              {visibleSections.map((s) => (
-                <a key={s.id} href={`#sec-${s.id}`} className="ot-fx-chip" style={fx("chip", jumpLink)}>
-                  {s.title}
-                </a>
-              ))}
-            </nav>
+            <>
+              {/* desktop: every category as a chip */}
+              <nav className="ot-cat-chips" aria-label="Menu categories" style={{ display: "flex", gap: "var(--fx-toolbar-gap, 6px)", flexWrap: "wrap" }}>
+                {visibleSections.map((s) => (
+                  <a
+                    key={s.id}
+                    href={`#sec-${s.id}`}
+                    className="ot-fx-chip"
+                    style={fx("chip", jumpLink)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      goTo(s.id);
+                    }}
+                  >
+                    {s.title}
+                  </a>
+                ))}
+              </nav>
+              {/* phones and tablets: one button, the list opens in a sheet */}
+              <button type="button" className="ot-cat-button ot-press ot-fx-chip" aria-haspopup="dialog" aria-expanded={sheetOpen} onClick={() => setSheetOpen(true)} style={fx("chip", categoriesBtn)}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
+                  <path d="M4 6h16M7 12h10M10 18h4" />
+                </svg>
+                Categories
+              </button>
+            </>
           ) : null}
         </div>
       ) : null}
+
+      {sheetOpen ? <CategorySheet sections={visibleSections} onPick={goTo} onClose={() => setSheetOpen(false)} /> : null}
 
       {visibleSections.map((section) => {
         const variant = getItemCardVariant(section.cardVariant);
@@ -210,6 +240,65 @@ export function MenuSections({
   );
 }
 
+/** Eased scroll to a section, ending just below the sticky category bar. Reduced motion: straight there. */
+function glideTo(el, bar) {
+  if (!el) return;
+  const offset = (bar?.getBoundingClientRect().height ?? 0) + 12;
+  const target = Math.max(0, el.getBoundingClientRect().top + window.scrollY - offset);
+  const start = window.scrollY;
+  const distance = target - start;
+  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches || Math.abs(distance) < 2) {
+    window.scrollTo(0, target);
+    return;
+  }
+  // longer trips take a little longer, within limits
+  const duration = Math.min(900, Math.max(380, Math.abs(distance) * 0.45));
+  const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  const t0 = performance.now();
+  const step = (now) => {
+    const t = Math.min(1, (now - t0) / duration);
+    window.scrollTo(0, start + distance * ease(t));
+    if (t < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+/** The category list as a sheet from the bottom of the screen (phones and tablets). */
+function CategorySheet({ sections, onPick, onClose }) {
+  const first = useRef(null);
+  useEffect(() => {
+    const onKey = (e) => e.key === "Escape" && onClose();
+    document.addEventListener("keydown", onKey);
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    first.current?.focus();
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = overflow;
+    };
+  }, [onClose]);
+  return (
+    <div className="ot-cat-sheet" role="presentation" onClick={onClose} style={sheetBackdrop}>
+      <div role="dialog" aria-modal="true" aria-label="Menu categories" className="ot-anim-sheet ot-fx-modal" onClick={(e) => e.stopPropagation()} style={fx("modal", sheetPanel)}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "4px 4px 10px" }}>
+          <strong style={{ fontSize: 16 }}>Categories</strong>
+          <button type="button" aria-label="Close" onClick={onClose} style={sheetClose}>
+            ✕
+          </button>
+        </div>
+        <div style={{ overflowY: "auto", display: "flex", flexDirection: "column", gap: 2 }}>
+          {sections.map((s, i) => (
+            <button key={s.id} ref={i === 0 ? first : undefined} type="button" onClick={() => onPick(s.id)} style={sheetItem}>
+              <span>{s.title}</span>
+              <span style={{ fontSize: 13, color: "var(--color-text-muted)", fontVariantNumeric: "tabular-nums" }}>{s.items.length}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function FilterChip({ active, onClick, children }                                                                     ) {
   return (
     <button
@@ -284,6 +373,51 @@ const jumpLink                = {
   borderRadius: 999,
   border: "1px solid var(--color-border)",
   whiteSpace: "nowrap",
+};
+const categoriesBtn = {
+  font: "inherit",
+  fontSize: "0.85rem",
+  fontWeight: 600,
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 7,
+  padding: "7px 14px",
+  borderRadius: 999,
+  border: "1px solid var(--color-border)",
+  background: "var(--color-bg)",
+  color: "var(--color-text)",
+  cursor: "pointer",
+};
+const sheetBackdrop = { position: "fixed", inset: 0, zIndex: 60, background: "rgba(0,0,0,0.42)", display: "flex", alignItems: "flex-end", justifyContent: "center" };
+const sheetPanel = {
+  width: "100%",
+  maxWidth: 560,
+  maxHeight: "72vh",
+  display: "flex",
+  flexDirection: "column",
+  padding: "14px 14px calc(14px + env(safe-area-inset-bottom))",
+  borderRadius: "18px 18px 0 0",
+  background: "var(--color-bg)",
+  color: "var(--color-text)",
+  boxShadow: "0 -8px 30px rgba(0,0,0,0.18)",
+};
+const sheetClose = { width: 34, height: 34, borderRadius: 999, border: "1px solid var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)", cursor: "pointer", fontSize: 14 };
+const sheetItem = {
+  font: "inherit",
+  fontSize: 15,
+  fontWeight: 600,
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  gap: 12,
+  minHeight: 48,
+  padding: "10px 12px",
+  border: 0,
+  borderRadius: 10,
+  background: "transparent",
+  color: "var(--color-text)",
+  textAlign: "left",
+  cursor: "pointer",
 };
 const heading                = {
   fontFamily: "var(--font-heading)",

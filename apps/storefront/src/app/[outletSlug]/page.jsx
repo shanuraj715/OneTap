@@ -37,7 +37,7 @@ export default async function OutletHomePage({ params }) {
 
   return (
     <>
-      <ThemeStyle theme={theme} typography={typography} effect={outlet.config.effect} />
+      <ThemeStyle theme={theme} typography={typography} effect={outlet.config.effect} branding={outlet.config.branding} />
       <StoreTop outlet={outlet} outletSlug={outletSlug} pages={pages} onHome />
 
       {/* Takeaway or Delivery, and which outlet — only where there is something to choose */}

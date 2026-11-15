@@ -39,6 +39,12 @@ const schema = z.object({
    * = use WEBSITE_URL.
    */
   WEBSITE_INTERNAL_URL: z.string().default(""),
+  /**
+   * "on" in exactly ONE running API: that process holds the linked WhatsApp numbers' connections and sends the
+   * queued messages. Every other copy (local dev, a second server) sharing the same database must leave it off —
+   * WhatsApp throws a number off when two copies connect with the same session.
+   */
+  WHATSAPP_WORKER: z.enum(["on", "off"]).default("off"),
   WEBSITE_REVALIDATE_SECRET: z.string().default("dev-only-website-revalidate-secret"),
   /**
    * Cloudflare Turnstile for the website's enquiry form — a real "are you a

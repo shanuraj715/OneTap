@@ -2,6 +2,7 @@ import {
   deepMerge,
   effectAllowed,
   defaultOutletConfig,
+  hasFeature,
   isReservedOutletSlug,
   outletConfigSchema,
   slugSchema,
@@ -261,6 +262,9 @@ export async function updateOutletConfig(
     const style = appearancePatch.effect?.style;
     if (style && !effectAllowed(plan.entitlements, style)) {
       throw new HttpError(403, "That effect isn't included in your plan.");
+    }
+    if (appearancePatch.branding?.faviconUrl && !hasFeature(plan.entitlements, "favicon")) {
+      throw new HttpError(403, "A favicon isn't included in your plan.");
     }
     const brand = await BrandModel.findOne({ _id: ctx.brandId });
     const ownLook = outletConfigSchema.parse(outlet.config ?? {});

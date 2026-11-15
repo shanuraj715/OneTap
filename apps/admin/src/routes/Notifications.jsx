@@ -6,13 +6,18 @@ import {
   ORDER_STATUSES,
   renderTemplate,
   sampleNotifyValues,
+  WA_ORDER_DEFAULT_BODY,
+  WA_PACING,
                           
                    
                     
                         
                              
 } from "@onetap/config-schema";
-import { AlertTriangle, Bell, CheckCircle2, Filter, MessageCircle, MessagesSquare, ScrollText, XCircle } from "lucide-react";
+import { AlertTriangle, Bell, CheckCircle2, Filter, MessageCircle, MessagesSquare, ScrollText, Smartphone, XCircle } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useStorePlan } from "../lib/useStorePlan";
+import { useWaMe } from "../lib/useWhatsApp";
                                                       
 import { useAuth } from "../lib/useAuth";
 import { useNotificationLogs, useClearNotifyConfig, useNotifyConfig, useSaveNotifyConfig } from "../lib/useNotify";
@@ -27,6 +32,8 @@ export function Notifications() {
   const { can } = useAuth();
   const canRead = can("notification-config:read");
   const [tab, setTab] = useState     ("whatsapp");
+  const { hasFeature } = useStorePlan();
+  const linkedOn = hasFeature("whatsappChat");
 
   if (!canRead) {
     return (
@@ -61,12 +68,14 @@ export function Notifications() {
         value={tab}
         onChange={setTab}
         tabs={[
+          ...(linkedOn ? [{ id: "linked", label: "Your WhatsApp numbers", icon: <Smartphone size={14} /> }] : []),
           { id: "whatsapp", label: "WhatsApp", icon: <MessageCircle size={14} /> },
           { id: "sms", label: "SMS", icon: <MessagesSquare size={14} /> },
           { id: "logs", label: "Logs", icon: <ScrollText size={14} /> },
         ]}
       />
 
+      {tab === "linked" && linkedOn ? <LinkedSettings /> : null}
       {tab === "whatsapp" ? <ChannelSettings channel="whatsapp" /> : null}
       {tab === "sms" ? <ChannelSettings channel="sms" /> : null}
       {tab === "logs" ? <LogsTab /> : null}
@@ -179,6 +188,108 @@ function ChannelSettings({ channel }                                 ) {
                 disabled={!canManage}
               />
             ))}
+          </div>
+        </Card>
+      ) : null}
+    </>
+  );
+}
+
+/* ------------------------------------------------- from the linked numbers */
+
+/**
+ * Order updates sent from the store's own linked WhatsApp numbers (WhatsApp → Numbers) — free text, no Meta
+ * templates or per-message charges. They go into the same paced queue as chats.
+ */
+function LinkedSettings() {
+  const { outlet } = useOutlet();
+  const { can } = useAuth();
+  const canManage = can("notification-config:manage");
+  const patch = usePatchConfig();
+  const me = useWaMe();
+  const [draft, setDraft] = useState(null);
+  const [dirty, setDirty] = useState(false);
+  useEffect(() => {
+    setDraft(outlet.config.orderNotify.linked ?? { enabled: false, events: [], templates: {} });
+    setDirty(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [outlet?._id]);
+  if (!draft) return null;
+  const change = (next) => {
+    setDraft(next);
+    setDirty(true);
+  };
+  const toggle = (s) => change({ ...draft, events: draft.events.includes(s) ? draft.events.filter((x) => x !== s) : [...draft.events, s] });
+  const linked = (me.data?.accounts ?? []).filter((a) => a.status === "connected" || a.status === "disconnected");
+  const sample = sampleNotifyValues(outlet.config.identity.name);
+
+  return (
+    <>
+      <Card title="Order updates from your own WhatsApp numbers" subtitle="Free — sent from the numbers linked in WhatsApp → Numbers, like a message you'd type yourself.">
+        {linked.length === 0 ? (
+          <Note icon={<AlertTriangle size={15} />}>
+            No WhatsApp number is linked yet, so nothing can go out. {me.data?.level === "manage" ? <Link to="/whatsapp/numbers">Link one in WhatsApp → Numbers</Link> : "The store owner can link one."}
+          </Note>
+        ) : null}
+        <Checkbox
+          checked={draft.enabled}
+          onChange={(v) => change({ ...draft, enabled: v })}
+          label="Send order updates from our WhatsApp numbers"
+          info="Goes from the number the customer last chatted with, or the least busy online number for someone new. Someone who never chatted with you gets updates spaced out, a limited number a day — see below."
+        />
+        {draft.enabled ? (
+          <>
+            <div style={{ marginTop: 14, marginBottom: 4, fontSize: 12.5, fontWeight: 600, color: "var(--color-text-muted)" }}>Send an update when the order becomes:</div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 6 }}>
+              {ORDER_STATUSES.map((s) => (
+                <label key={s} style={{ ...eventChip, ...(draft.events.includes(s) ? eventChipActive : {}) }}>
+                  <input type="checkbox" checked={draft.events.includes(s)} onChange={() => toggle(s)} style={{ display: "none" }} />
+                  {ORDER_STATUS_LABELS[s]}
+                </label>
+              ))}
+            </div>
+            <p style={{ ...hint, margin: "8px 0 0" }}>
+              To keep the numbers safe, updates to a customer who has never chatted with you go out {WA_PACING.order.minGapSec}–{WA_PACING.order.maxGapSec} seconds apart, at most{" "}
+              {WA_PACING.order.perDay} such customers a day per number; customers you already chat with get them straight away.
+            </p>
+          </>
+        ) : null}
+        {canManage ? (
+          <div style={{ display: "flex", gap: 10, alignItems: "center", marginTop: 14 }}>
+            <Button
+              onClick={() => patch.mutate({ outlet, patch: { orderNotify: { ...outlet.config.orderNotify, linked: draft } } }, { onSuccess: () => setDirty(false) })}
+              disabled={!dirty || patch.isPending}
+            >
+              {patch.isPending ? "Saving…" : "Save"}
+            </Button>
+            {dirty ? <span style={hint}>Unsaved changes</span> : null}
+          </div>
+        ) : null}
+        {patch.error ? <Toast kind="error">{patch.error.message}</Toast> : null}
+      </Card>
+
+      {draft.enabled && draft.events.length > 0 ? (
+        <Card title="What each update says" subtitle="Leave a box empty to use the standard wording. You can use {{customerName}}, {{orderNumber}}, {{statusLabel}}, {{amount}} and {{outletName}}.">
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            {draft.events.map((s) => {
+              const body = draft.templates?.[s]?.body ?? "";
+              return (
+                <div key={s}>
+                  <div style={{ fontWeight: 650, fontSize: 13.5, marginBottom: 6 }}>{ORDER_STATUS_LABELS[s]}</div>
+                  <textarea
+                    value={body}
+                    disabled={!canManage}
+                    onChange={(e) => change({ ...draft, templates: { ...draft.templates, [s]: { body: e.target.value } } })}
+                    rows={3}
+                    maxLength={1000}
+                    placeholder={WA_ORDER_DEFAULT_BODY}
+                    aria-label={`Message when the order is ${ORDER_STATUS_LABELS[s]}`}
+                    style={{ width: "100%", boxSizing: "border-box", font: "inherit", fontSize: 13.5, padding: "8px 10px", borderRadius: 8, border: "1px solid var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)", resize: "vertical" }}
+                  />
+                  <div style={{ ...hint, marginTop: 4 }}>Preview: {renderTemplate(body.trim() || WA_ORDER_DEFAULT_BODY, { ...sample, statusLabel: ORDER_STATUS_LABELS[s] })}</div>
+                </div>
+              );
+            })}
           </div>
         </Card>
       ) : null}

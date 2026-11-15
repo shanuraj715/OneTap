@@ -304,6 +304,38 @@ export async function putImage(ctx, { body, kind = "menu-items" }) {
   };
 }
 
+/**
+ * Store a file exactly as it came (chat photos, videos, documents — no re-encoding), under the store's own folder.
+ * `ext` is taken from the file name or the type; the key never contains anything the caller chose verbatim.
+ */
+export async function putFile(ctx, { body, contentType, kind = "files", ext = "bin", maxBytes }) {
+  if (!body?.length) throw new HttpError(400, "Empty upload");
+  if (maxBytes && body.length > maxBytes) throw new HttpError(413, `File is too large (max ${Math.round(maxBytes / 1024 / 1024)} MB).`);
+  const cfg = await resolveStorage(ctx);
+  assertUsable(cfg);
+  const safeKind = /^[a-z0-9-]+$/.test(kind) ? kind : "files";
+  const safeExt = /^[a-z0-9]{1,8}$/i.test(ext) ? ext.toLowerCase() : "bin";
+  const key = `${ctx.brandId}/${ctx.outletId ?? "store"}/${safeKind}/${randomUUID()}.${safeExt}`;
+  const { url } = await providerFor(cfg.provider).put(cfg, { key, body, contentType: contentType || "application/octet-stream" });
+  return { url, key, size: body.length };
+}
+
+/**
+ * Read a stored file back (the WhatsApp worker sending a chat attachment). On this server's disk it is read
+ * directly; elsewhere it is fetched from its public address.
+ */
+export async function readFile(ctx, { key, url }) {
+  const cfg = await resolveStorage(ctx);
+  if (cfg.provider === "local" && key && !key.includes("..")) {
+    const { readFile: read } = await import("node:fs/promises");
+    const { join } = await import("node:path");
+    return read(join(cfg.uploadsRoot, key));
+  }
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`couldn't fetch the file (${r.status})`);
+  return Buffer.from(await r.arrayBuffer());
+}
+
 /** Best-effort delete — a missing file or a provider that has since changed must not 500. */
 export async function removeObject(ctx, key) {
   if (!key) return;

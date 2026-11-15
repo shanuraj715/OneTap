@@ -14,7 +14,7 @@ export function OutletUnavailable({ outlet }) {
   const name = config?.identity.name || outlet?.name || "This restaurant";
   return (
     <>
-      {config ? <ThemeStyle theme={config.theme} typography={config.typography} effect={config.effect} /> : null}
+      {config ? <ThemeStyle theme={config.theme} typography={config.typography} effect={config.effect} branding={config.branding} /> : null}
       <main style={{ maxWidth: 460, margin: "120px auto", padding: 24, textAlign: "center" }}>
         <h1 style={{ fontSize: 22, marginBottom: 8, fontFamily: "var(--font-heading)" }}>{name}</h1>
         <p style={{ color: "var(--color-text-muted)", margin: 0 }}>

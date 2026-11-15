@@ -10,3 +10,7 @@ allowBuilds:
   "unrs-resolver": true
   "@tailwindcss/oxide": true
   "mongodb-memory-server": true
+  # only a Node-version check (the server runs Node 22) — not needed
+  "@whiskeysockets/baileys": false
+  # a notice about its optional command-line tools — not needed
+  protobufjs: false
