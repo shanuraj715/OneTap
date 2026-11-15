@@ -1,0 +1,63 @@
+{"id":"t00-bench-smoke","status":"pass","pass":11,"fail":0,"mode":"headless","at":"2026-11-15T15:41:25.000Z","durationMs":16791}
+{"id":"t01-takeaway-order","status":"fail","pass":43,"fail":1,"mode":"headless","at":"2026-11-15T15:42:27.467Z","durationMs":58281}
+{"id":"t02-whatsapp-api","status":"pass","pass":117,"fail":0,"mode":"headless","at":"2026-11-15T15:42:39.794Z","durationMs":12306}
+{"id":"t03-whatsapp-dashboard","status":"pass","pass":44,"fail":0,"mode":"headless","at":"2026-11-15T15:43:03.391Z","durationMs":19416}
+{"id":"t04-whatsapp-manage","status":"pass","pass":20,"fail":0,"mode":"headless","at":"2026-11-15T15:43:23.791Z","durationMs":16227}
+{"id":"t05-whatsapp-chat-filters","status":"pass","pass":12,"fail":0,"mode":"headless","at":"2026-11-15T15:43:41.519Z","durationMs":13560}
+{"id":"t06-storefront-header-categories","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-15T15:44:19.090Z","durationMs":37555}
+{"id":"t07-favicon-plan-rules","status":"pass","pass":8,"fail":0,"mode":"headless","at":"2026-11-15T15:44:22.269Z","durationMs":3161}
+{"id":"t01-takeaway-order","status":"pass","pass":45,"fail":0,"mode":"headless","at":"2026-11-15T15:46:14.404Z","durationMs":58433}
+{"id":"t08-plans-outlets-settings","status":"error","pass":0,"fail":0,"mode":"headless","at":"2026-11-15T15:59:58.358Z","durationMs":735,"error":"Cannot find module '/Users/shanu.raj/Raj/packages/config-schema/src/index.js' imported from /Users/shanu.raj/Raj/Gazab Momos/tests/e2e/tests/_world.mjs"}
+{"id":"t08-plans-outlets-settings","status":"fail","pass":64,"fail":1,"mode":"headless","at":"2026-11-15T16:00:43.226Z","durationMs":33525}
+{"id":"t08-plans-outlets-settings","status":"pass","pass":67,"fail":0,"mode":"headless","at":"2026-11-15T16:02:05.205Z","durationMs":33527}
+{"id":"t09-store-subdomain","status":"pass","pass":39,"fail":0,"mode":"headless","at":"2026-11-15T16:02:06.893Z","durationMs":1659}
+{"id":"t08-plans-outlets-settings","status":"pass","pass":67,"fail":0,"mode":"headless","at":"2026-11-15T16:03:53.772Z","durationMs":33558}
+{"id":"t09-store-subdomain","status":"pass","pass":39,"fail":0,"mode":"headless","at":"2026-11-15T16:03:55.367Z","durationMs":1566}
+{"id":"t10-plan-downgrade","status":"fail","pass":32,"fail":14,"mode":"headless","at":"2026-11-15T16:05:01.621Z","durationMs":66237}
+{"id":"t08-plans-outlets-settings","status":"pass","pass":67,"fail":0,"mode":"headless","at":"2026-11-15T16:05:58.875Z","durationMs":33537}
+{"id":"t09-store-subdomain","status":"pass","pass":39,"fail":0,"mode":"headless","at":"2026-11-15T16:06:00.563Z","durationMs":1659}
+{"id":"t10-plan-downgrade","status":"pass","pass":46,"fail":0,"mode":"headless","at":"2026-11-15T16:07:11.725Z","durationMs":71146}
+{"id":"t08-plans-outlets-settings","status":"pass","pass":68,"fail":0,"mode":"headless","at":"2026-11-15T16:08:59.572Z","durationMs":33588}
+{"id":"t09-store-subdomain","status":"pass","pass":39,"fail":0,"mode":"headless","at":"2026-11-15T16:09:01.469Z","durationMs":1863}
+{"id":"t10-plan-downgrade","status":"pass","pass":46,"fail":0,"mode":"headless","at":"2026-11-15T16:10:07.996Z","durationMs":66509}
+{"id":"t11-outlet-delete","status":"pass","pass":20,"fail":0,"mode":"headless","at":"2026-11-15T16:10:09.506Z","durationMs":1493}
+{"id":"t12-store-delete","status":"pass","pass":27,"fail":0,"mode":"headless","at":"2026-11-15T16:10:10.898Z","durationMs":1375}
+{"id":"t08-plans-outlets-settings","status":"pass","pass":68,"fail":0,"mode":"headless","at":"2026-11-15T16:11:00.423Z","durationMs":33391}
+{"id":"t09-store-subdomain","status":"pass","pass":39,"fail":0,"mode":"headless","at":"2026-11-15T16:11:02.070Z","durationMs":1619}
+{"id":"t10-plan-downgrade","status":"pass","pass":46,"fail":0,"mode":"headless","at":"2026-11-15T16:12:08.195Z","durationMs":66109}
+{"id":"t11-outlet-delete","status":"pass","pass":20,"fail":0,"mode":"headless","at":"2026-11-15T16:12:09.491Z","durationMs":1279}
+{"id":"t12-store-delete","status":"pass","pass":27,"fail":0,"mode":"headless","at":"2026-11-15T16:12:10.852Z","durationMs":1346}
+{"id":"t08-plans-outlets-settings","status":"pass","pass":68,"fail":0,"mode":"visible","at":"2026-11-15T16:15:38.431Z","durationMs":54538}
+{"id":"t09-store-subdomain","status":"fail","pass":38,"fail":1,"mode":"visible","at":"2026-11-15T16:16:02.307Z","durationMs":23740}
+{"id":"t10-plan-downgrade","status":"error","pass":23,"fail":0,"mode":"visible","at":"2026-11-15T16:16:59.560Z","durationMs":57146,"error":"page.goto: Target page, context or browser has been closed"}
+{"id":"t11-outlet-delete","status":"error","pass":9,"fail":0,"mode":"visible","at":"2026-11-15T16:17:12.737Z","durationMs":13117,"error":"locator.innerText: Target page, context or browser has been closed"}
+{"id":"t12-store-delete","status":"error","pass":5,"fail":0,"mode":"visible","at":"2026-11-15T16:17:17.131Z","durationMs":4393,"error":"page.goto: Target page, context or browser has been closed"}
+{"id":"t08-plans-outlets-settings","status":"error","pass":21,"fail":2,"mode":"headless","at":"2026-11-15T16:49:47.205Z","durationMs":439310,"error":"locator.waitFor: Timeout 20000ms exceeded. Call log:   - waiting for getByText(/Pay with|Delivery address|Where should we deliver/).first() to be visible"}
+{"id":"t08-plans-outlets-settings","status":"fail","pass":37,"fail":4,"mode":"headless","at":"2026-11-15T17:00:13.234Z","durationMs":482568}
+{"id":"t08-plans-outlets-settings","status":"pass","pass":41,"fail":0,"mode":"headless","at":"2026-11-15T17:09:41.666Z","durationMs":485163}
+{"id":"t08-plans-outlets-settings","status":"pass","pass":41,"fail":0,"mode":"headless","at":"2026-11-15T17:13:06.037Z","durationMs":189153}
+{"id":"t08-plans-outlets-settings","status":"pass","pass":41,"fail":0,"mode":"headless","at":"2026-11-15T17:17:44.985Z","durationMs":186174}
+{"id":"t09-store-subdomain","status":"fail","pass":32,"fail":4,"mode":"headless","at":"2026-11-15T17:18:17.594Z","durationMs":32579}
+{"id":"t10-plan-downgrade","status":"error","pass":11,"fail":0,"mode":"headless","at":"2026-11-15T17:19:02.868Z","durationMs":45251,"error":"locator.isChecked: Timeout 30000ms exceeded. Call log:   - waiting for getByRole('checkbox', { name: /^\\s*Delivery/ }).first()"}
+{"id":"t11-outlet-delete","status":"error","pass":0,"fail":0,"mode":"headless","at":"2026-11-15T17:19:22.068Z","durationMs":19178,"error":"locator.waitFor: Timeout 15000ms exceeded. Call log:   - waiting for getByText('Third', { exact: true }).first().locator('xpath=ancestor::*[.//button[normalize-space()=\\'Block\\' or normalize-space()=\\'Unblock\\']][1]').getByRole('button', { name: 'Unblock', exact: true }).first() to be visible"}
+{"id":"t12-store-delete","status":"pass","pass":19,"fail":0,"mode":"headless","at":"2026-11-15T17:19:44.079Z","durationMs":21992}
+{"id":"t08-plans-outlets-settings","status":"pass","pass":42,"fail":0,"mode":"headless","at":"2026-11-15T17:23:52.272Z","durationMs":188446}
+{"id":"t09-store-subdomain","status":"pass","pass":36,"fail":0,"mode":"headless","at":"2026-11-15T17:24:25.050Z","durationMs":32748}
+{"id":"t10-plan-downgrade","status":"error","pass":26,"fail":0,"mode":"headless","at":"2026-11-15T17:26:25.295Z","durationMs":120224,"error":"locator.waitFor: Timeout 15000ms exceeded. Call log:   - waiting for getByText('Third', { exact: true }).first().locator('xpath=ancestor::*[.//button[normalize-space()=\\'Block\\' or normalize-space()=\\'Unblock\\']][1]').getByRole('button', { name: 'Block', exact: true }).first() to be visible"}
+{"id":"t11-outlet-delete","status":"error","pass":0,"fail":0,"mode":"headless","at":"2026-11-15T17:26:44.481Z","durationMs":19168,"error":"locator.waitFor: Timeout 15000ms exceeded. Call log:   - waiting for getByText('Third', { exact: true }).first().locator('xpath=ancestor::*[.//button[normalize-space()=\\'Block\\' or normalize-space()=\\'Unblock\\']][1]').getByRole('button', { name: 'Unblock', exact: true }).first() to be visible"}
+{"id":"t12-store-delete","status":"pass","pass":19,"fail":0,"mode":"headless","at":"2026-11-15T17:27:05.950Z","durationMs":21452}
+{"id":"t08-plans-outlets-settings","status":"pass","pass":42,"fail":0,"mode":"headless","at":"2026-11-15T17:30:40.213Z","durationMs":188037}
+{"id":"t09-store-subdomain","status":"pass","pass":36,"fail":0,"mode":"headless","at":"2026-11-15T17:31:12.857Z","durationMs":32621}
+{"id":"t10-plan-downgrade","status":"pass","pass":37,"fail":0,"mode":"headless","at":"2026-11-15T17:33:04.290Z","durationMs":111412}
+{"id":"t11-outlet-delete","status":"pass","pass":13,"fail":0,"mode":"headless","at":"2026-11-15T17:33:16.841Z","durationMs":12527}
+{"id":"t12-store-delete","status":"pass","pass":19,"fail":0,"mode":"headless","at":"2026-11-15T17:33:38.581Z","durationMs":21719}
+{"id":"t08-plans-outlets-settings","status":"fail","pass":41,"fail":1,"mode":"visible","at":"2026-11-15T17:48:43.376Z","durationMs":884097}
+{"id":"t09-store-subdomain","status":"fail","pass":35,"fail":1,"mode":"visible","at":"2026-11-15T17:50:26.345Z","durationMs":102815}
+{"id":"t10-plan-downgrade","status":"pass","pass":37,"fail":0,"mode":"visible","at":"2026-11-15T17:54:46.946Z","durationMs":260477}
+{"id":"t11-outlet-delete","status":"pass","pass":13,"fail":0,"mode":"visible","at":"2026-11-15T17:55:28.617Z","durationMs":41533}
+{"id":"t12-store-delete","status":"pass","pass":19,"fail":0,"mode":"visible","at":"2026-11-15T17:56:42.364Z","durationMs":73623}
+{"id":"t08-plans-outlets-settings","status":"pass","pass":42,"fail":0,"mode":"headless","at":"2026-11-15T18:00:26.054Z","durationMs":191076}
+{"id":"t09-store-subdomain","status":"pass","pass":36,"fail":0,"mode":"headless","at":"2026-11-15T18:00:58.633Z","durationMs":32547}
+{"id":"t10-plan-downgrade","status":"pass","pass":37,"fail":0,"mode":"headless","at":"2026-11-15T18:02:49.883Z","durationMs":111230}
+{"id":"t11-outlet-delete","status":"pass","pass":13,"fail":0,"mode":"headless","at":"2026-11-15T18:03:01.944Z","durationMs":12035}
+{"id":"t12-store-delete","status":"pass","pass":19,"fail":0,"mode":"headless","at":"2026-11-15T18:03:23.393Z","durationMs":21427}

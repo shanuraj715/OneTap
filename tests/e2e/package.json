@@ -1,0 +1,20 @@
+{
+  "name": "@onetap/e2e",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "End-to-end tests for TablePe: a throwaway bench (in-memory database + fake stores) driven in a real Chrome window. Standalone — not part of the pnpm workspace, so it never ships with the apps.",
+  "scripts": {
+    "bench:up": "node bench/bench.mjs up",
+    "bench:down": "node bench/bench.mjs down",
+    "bench:reset": "node bench/bench.mjs reset",
+    "bench:rebuild": "node bench/bench.mjs rebuild",
+    "bench:status": "node bench/bench.mjs status",
+    "test": "node run.mjs",
+    "test:visible": "node run.mjs --visible",
+    "docs": "node run.mjs --docs-only"
+  },
+  "devDependencies": {
+    "playwright": "1.63.0"
+  }
+}

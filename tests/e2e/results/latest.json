@@ -1,0 +1,3239 @@
+{
+  "t00-bench-smoke": {
+    "id": "t00-bench-smoke",
+    "title": "Bench smoke test — API, dashboard and storefronts are alive with the fake stores",
+    "status": "pass",
+    "pass": 11,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-15T15:41:25.000Z",
+    "durationMs": 16791,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Ask the API if it is healthy",
+        "checks": [
+          {
+            "label": "API health endpoint answers",
+            "ok": true,
+            "detail": "HTTP 200",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Open the storefronts by their addresses",
+        "checks": [
+          {
+            "label": "Acme Momos — Main outlet opens",
+            "ok": true,
+            "detail": "HTTP 200",
+            "kind": "expect"
+          },
+          {
+            "label": "Acme Momos — Second outlet opens",
+            "ok": true,
+            "detail": "HTTP 200",
+            "kind": "expect"
+          },
+          {
+            "label": "Beta Bites — Only outlet opens",
+            "ok": true,
+            "detail": "HTTP 200",
+            "kind": "expect"
+          },
+          {
+            "label": "an address nobody owns renders a store",
+            "ok": true,
+            "detail": "HTTP 404",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Sign in to the dashboard with each seeded login",
+        "checks": [
+          {
+            "label": "super login reaches the dashboard",
+            "ok": true,
+            "detail": "super@sandbox.test",
+            "kind": "expect"
+          },
+          {
+            "label": "owner login reaches the dashboard",
+            "ok": true,
+            "detail": "o@acme.test",
+            "kind": "expect"
+          },
+          {
+            "label": "betaOwner login reaches the dashboard",
+            "ok": true,
+            "detail": "o@beta.test",
+            "kind": "expect"
+          },
+          {
+            "label": "a wrong password signs someone in",
+            "ok": true,
+            "detail": "http://localhost:3171/",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Ask for a customer sign-in code with an arbitrary phone number",
+        "checks": [
+          {
+            "label": "the code request is accepted (the test stores accept any phone)",
+            "ok": true,
+            "detail": "HTTP 200 {\"channel\":\"sms\",\"devCode\":\"212819\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser logged JavaScript errors",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t01-takeaway-order": {
+    "id": "t01-takeaway-order",
+    "title": "Takeaway order of at least ₹999 — customer places it, staff take it all the way to Completed",
+    "status": "pass",
+    "pass": 45,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-15T15:46:14.404Z",
+    "durationMs": 58433,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Setting the scene: at the restaurant counter the staff dashboard is open on the Orders screen",
+        "checks": [
+          {
+            "label": "Orders screen shows the live connection",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no orders yet",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "A customer opens the restaurant's website",
+        "checks": [
+          {
+            "label": "the storefront opens with the restaurant's offer bar",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "They choose how they want their food: Takeaway",
+        "checks": [
+          {
+            "label": "Takeaway is selected",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "They browse the menu and pick items — the goal is an order of at least ₹999",
+        "checks": [
+          {
+            "label": "the cart holds 8 items",
+            "ok": true,
+            "detail": "8 items · ₹1,030 View cart →",
+            "kind": "expect"
+          },
+          {
+            "label": "the cart total is at least ₹999",
+            "ok": true,
+            "detail": "₹1030",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "They open the cart to check out",
+        "checks": []
+      },
+      {
+        "n": 6,
+        "title": "A new customer signs up: name and mobile number, then the 6-digit code",
+        "checks": [
+          {
+            "label": "a brand-new customer is asked for the extra details (gender, age)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "Signed in — the checkout page shows the order, the way to get it, and the total",
+        "checks": [
+          {
+            "label": "checkout lists everything the customer picked",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "checkout is on Takeaway",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "checkout asks for a delivery address on a takeaway order",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "Payment: they will pay in cash at the counter when they collect",
+        "checks": [
+          {
+            "label": "'Cash / pay at counter' is selected",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the amount to pay is at least ₹999 and equals the cart",
+            "ok": true,
+            "detail": "₹1030 (cart bar said ₹1030)",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 9,
+        "title": "They place the order",
+        "checks": [
+          {
+            "label": "confirmation says the kitchen has it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "confirmation says Takeaway and cash at the counter",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "confirmation shows the same total",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "confirmation quotes a ready time",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the server has exactly this one order for the store",
+            "ok": true,
+            "detail": "1 order(s)",
+            "kind": "expect"
+          },
+          {
+            "label": "the order is already marked paid at placement",
+            "ok": true,
+            "detail": "payment: {\"gateway\":\"cod\",\"status\":\"pending\"}",
+            "kind": "never"
+          },
+          {
+            "label": "the takeaway order carries a delivery fee",
+            "ok": true,
+            "detail": "{\"subtotal\":103000,\"discount\":0,\"deliveryFee\":0,\"coinsRedeemed\":0,\"coinsDiscount\":0,\"coinsEarned\":0,\"taxable\":98095,\"cgst\":2453,\"sgst\":2452,\"taxAmount\":4905,\"serviceCharge\":0,\"roundOff\":0,\"grandTotal\":103000}",
+            "kind": "never"
+          },
+          {
+            "label": "the takeaway order carries a delivery address",
+            "ok": true,
+            "detail": "null",
+            "kind": "never"
+          },
+          {
+            "label": "the new customer was saved with the details they gave",
+            "ok": true,
+            "detail": "{\"id\":\"6af9d3af8253931d71f06a04\",\"name\":\"Rohan Mehta\",\"email\":\"rohan.mehta@example.com\",\"phone\":\"9811122233\",\"gender\":\"male\",\"age\":31,\"orderCount\":1,\"walletBalance\":0,\"lastOrderAt\":\"2026-11-15T15:45:59.059Z\",\"createdAt\":\"2026-11-15T15:45:51.038Z\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "coins are credited before the order is completed",
+            "ok": true,
+            "detail": "wallet: 0",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 10,
+        "title": "At the counter: the new order has arrived on the dashboard — nobody refreshed the page",
+        "checks": [
+          {
+            "label": "the order appeared on the dashboard by itself, instantly (live connection)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the row shows the customer, phone, type, item count, total and 'Placed'",
+            "ok": true,
+            "detail": " #0001 09:15 PM Rohan Mehta 9811122233 TA 8 ₹1,030 Placed 0m Accepted",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 11,
+        "title": "The staff open the order to see everything in it",
+        "checks": [
+          {
+            "label": "details show the customer's name, phone and email",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "details show Takeaway, placed by Customer, cash at counter, payment pending",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "details list the exact items and sizes",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 12,
+        "title": "The staff confirm the order: “Accepted”",
+        "checks": [
+          {
+            "label": "asks to confirm: \"Mark order #0001 as Accepted?\"",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "status is now Accepted",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 13,
+        "title": "The kitchen starts cooking: “Preparing”",
+        "checks": [
+          {
+            "label": "asks to confirm: \"Mark order #0001 as Preparing?\"",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "status is now Preparing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 14,
+        "title": "The food is packed: “Ready” for pick-up",
+        "checks": [
+          {
+            "label": "asks to confirm: \"Mark order #0001 as Ready?\"",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "status is now Ready",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 15,
+        "title": "The staff mark it “Completed” — completing also records the cash as received",
+        "checks": [
+          {
+            "label": "asks to confirm: \"Mark order #0001 as Completed?\"",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "status is now Completed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "payment is now recorded as paid (cash collected)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "status history lists every step: Placed, Accepted, Preparing, Ready, Completed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 16,
+        "title": "The customer leaves with the food — the order is done and stays in the list for the records",
+        "checks": [
+          {
+            "label": "the customer earned loyalty coins only now, at completion (₹1,030 → 103 coins)",
+            "ok": true,
+            "detail": "103 coins",
+            "kind": "expect"
+          },
+          {
+            "label": "the Dashboard home shows Revenue today ₹1,030, 1 order today",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 17,
+        "title": "Privacy: the owner of a DIFFERENT store (Beta Bites) tries to reach this order",
+        "checks": [
+          {
+            "label": "Beta's owner lists Acme's orders",
+            "ok": true,
+            "detail": "HTTP 403",
+            "kind": "never"
+          },
+          {
+            "label": "Beta's own order list shows Acme's order",
+            "ok": true,
+            "detail": "0 order(s) in Beta's list",
+            "kind": "never"
+          },
+          {
+            "label": "(control) Acme's own owner can still read the order by its id",
+            "ok": true,
+            "detail": "HTTP 200",
+            "kind": "expect"
+          },
+          {
+            "label": "Beta's owner reads Acme's order by its id",
+            "ok": true,
+            "detail": "HTTP 401",
+            "kind": "never"
+          },
+          {
+            "label": "Beta's owner changes the status of Acme's order",
+            "ok": true,
+            "detail": "HTTP 403",
+            "kind": "never"
+          },
+          {
+            "label": "the browser logged JavaScript errors during the flow",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      }
+    ],
+    "findings": [
+      "The customer has NO order-tracking page: their confirmation screen never moves past “Order #… placed”, even when the order is Ready. Progress only reaches them through WhatsApp/SMS alerts, which are off by default. (GET /api/orders/:id already lets a signed-in customer read their own order, so a tracking page is feasible.)"
+    ],
+    "problems": []
+  },
+  "t02-whatsapp-api": {
+    "id": "t02-whatsapp-api",
+    "title": "WhatsApp chat — API rules and the careful-pace sending worker",
+    "status": "pass",
+    "pass": 117,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-15T15:42:39.794Z",
+    "durationMs": 12306,
+    "steps": [
+      {
+        "n": 1,
+        "title": "who can use it",
+        "checks": [
+          {
+            "label": "the owner can do everything",
+            "ok": true,
+            "detail": "manage",
+            "kind": "expect"
+          },
+          {
+            "label": "a manager can't, until the owner allows it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…nor a cashier",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the owner gives managers 'read and reply' and cashiers 'read'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the manager now reads and replies",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the cashier now only reads",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "only the owner changes who has access",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "only the owner links numbers",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the platform super admin can read",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a store whose plan lacks it is told so",
+            "ok": true,
+            "detail": "WhatsApp chat isn't included in your plan.",
+            "kind": "expect"
+          },
+          {
+            "label": "another store's owner can't read this store's chats",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "linking numbers",
+        "checks": [
+          {
+            "label": "linking a number starts as 'waiting for the scan'",
+            "ok": true,
+            "detail": "pending",
+            "kind": "expect"
+          },
+          {
+            "label": "a number needs a name",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "both show as online, with their names",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a number can be renamed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a linked number must be unlinked before it's removed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "people who aren't the owner never see a link QR",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "chats and sending",
+        "checks": [
+          {
+            "label": "a number that can't be a phone is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a 10-digit number becomes an Indian one",
+            "ok": true,
+            "detail": "919876543210",
+            "kind": "expect"
+          },
+          {
+            "label": "the same number written differently opens the same chat",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a read-only role can't send",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an empty message is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a first message to a new number is queued as a first contact (paced)",
+            "ok": true,
+            "detail": "queued cold",
+            "kind": "expect"
+          },
+          {
+            "label": "the chat is given a number automatically",
+            "ok": true,
+            "detail": "Counter phone",
+            "kind": "expect"
+          },
+          {
+            "label": "…and a follow-up before anything was actually sent is still a first contact",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "its number offline → 409 that names the numbers that ARE online",
+            "ok": true,
+            "detail": "Counter phone isn't connected right now.",
+            "kind": "expect"
+          },
+          {
+            "label": "sending again from the other number works",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and that number becomes the chat's number from now on",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(earlier queued messages stay with the number they were written on)",
+            "ok": true,
+            "detail": "2",
+            "kind": "expect"
+          },
+          {
+            "label": "moving a chat to another number takes its waiting messages along",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "with no number online, a brand-new chat can't start",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an attachment uploads",
+            "ok": true,
+            "detail": "http://localhost:3098/uploads/6af9d2e6c6342992e761",
+            "kind": "expect"
+          },
+          {
+            "label": "a photo with a caption is queued",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a read-only role can't upload",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "the worker sends — at a careful pace",
+        "checks": [
+          {
+            "label": "one message goes out, to the right number",
+            "ok": true,
+            "detail": "919876543210@s.whatsapp.net",
+            "kind": "expect"
+          },
+          {
+            "label": "…after showing 'typing…'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and is marked sent, with WhatsApp's id saved first",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the next first contact must wait 2–4 minutes",
+            "ok": true,
+            "detail": "206 s",
+            "kind": "expect"
+          },
+          {
+            "label": "so the next queued first-contact message does NOT go out yet",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a reply to someone who wrote to us is a running conversation",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and goes out straight away, ahead of the waiting first contacts",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "15 first contacts a day per number: the rest wait for tomorrow",
+            "ok": true,
+            "detail": "2026-11-16T03:35:36.736Z",
+            "kind": "expect"
+          },
+          {
+            "label": "a number that isn't on WhatsApp is never messaged",
+            "ok": true,
+            "detail": "This number isn't on WhatsApp.",
+            "kind": "expect"
+          },
+          {
+            "label": "a failed message can be tried again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a photo goes out as a photo, with its caption, read back from storage",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "incoming messages",
+        "checks": [
+          {
+            "label": "a customer's message opens a chat on the number they wrote to, unread, with their WhatsApp name",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the same message delivered twice is kept once",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a message addressed by WhatsApp's private id is matched to the real phone number",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "group chats are ignored",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a reply typed on the phone itself shows in the dashboard too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "WhatsApp's echo of our own message isn't recorded twice",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "old history the phone hands over when linking isn't replayed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'STOP' opts them out of offers",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the unread filter finds them",
+            "ok": true,
+            "detail": "[1,2]",
+            "kind": "expect"
+          },
+          {
+            "label": "the super admin reading doesn't clear the store's unread badge",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…but can read the messages",
+            "ok": true,
+            "detail": "3",
+            "kind": "expect"
+          },
+          {
+            "label": "the store's own team reading does",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "search by name",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "search by number",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "broadcasts",
+        "checks": [
+          {
+            "label": "only the owner sends broadcasts",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "preview: 3 people (duplicates merged), 1 opted out",
+            "ok": true,
+            "detail": "{\"recipients\":3,\"optedOut\":1,\"running\":0,\"firstContact\":3,\"numbersOnline\":[{\"id\":\"6af9d2e6c6342992e761208c\",\"label\":\"Counter phone\"},{\"id\":\"6af9d2e6c6342992e7612095\",\"label\":\"Delivery phone\"}],\"estimatedDays\":1}",
+            "kind": "expect"
+          },
+          {
+            "label": "a broadcast queues one message per person",
+            "ok": true,
+            "detail": "{\"id\":\"6af9d2efc6342992e7612206\",\"text\":\"Diwali: 20% off this weekend!\\n\\nReply STOP to stop offers.\",\"media\":null,\"createdAt\":\"2026-11-15T15:42:39.373Z\",\"status\":\"sending\",\"total\":3,\"skipped\":1,\"waiting\":3,\"sent\":0,\"read\":0,\"failed\":0}",
+            "kind": "expect"
+          },
+          {
+            "label": "every one says how to stop offers",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the opted-out customer gets nothing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "someone with a chat gets it from that chat's number",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "new people are spread across the online numbers",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "nobody here has written to us, so all are paced as first contacts",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "cancelling removes what hadn't gone yet",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "order updates",
+        "checks": [
+          {
+            "label": "accepted → the default message, paced as an order update",
+            "ok": true,
+            "detail": "Hi Meera, your order #0042 at Acme Momos is Accepted. Total ₹350.",
+            "kind": "expect"
+          },
+          {
+            "label": "ready → the store's own wording",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a status that isn't switched on sends nothing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "switched off sends nothing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the setting saves with the outlet's notification settings",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an order's status change (the real notification path) queues the WhatsApp update",
+            "ok": true,
+            "detail": "Hi Dev, your order #0043 at Main is Ready. Total ₹120.",
+            "kind": "expect"
+          },
+          {
+            "label": "…only for the statuses the outlet switched on",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the dashboard gets the number of chats with unread messages (for the menu badge)",
+            "ok": true,
+            "detail": "1",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "clear and delete",
+        "checks": [
+          {
+            "label": "clear empties the chat but keeps it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a single message can be deleted",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a read-only role can't delete chats",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "delete removes the chat",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "unlink asks the worker to log the number out",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 9,
+        "title": "colours, stats, sharing chats out, cleanup, delete for everyone",
+        "checks": [
+          {
+            "label": "every number gets its own colour",
+            "ok": true,
+            "detail": "#2E7D32 #1565C0 #C62828 #6A1B9A",
+            "kind": "expect"
+          },
+          {
+            "label": "the owner can pick a colour",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…a real colour only",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and only the owner",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "stats: chats per number",
+            "ok": true,
+            "detail": "Counter phone=60, Delivery phone=40, Number 3=0, Number 4=0",
+            "kind": "expect"
+          },
+          {
+            "label": "…how many of them wrote to us, and unread",
+            "ok": true,
+            "detail": "40 replied, 1 unread",
+            "kind": "expect"
+          },
+          {
+            "label": "stats are the owner's",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "preview: share evenly → 25 each, 50 chats move",
+            "ok": true,
+            "detail": "Counter phone 60→25, Delivery phone 40→25, Number 3 0→25, Number 4 0→25",
+            "kind": "expect"
+          },
+          {
+            "label": "a preview changes nothing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…or empty numbers 1 and 2 into 3 and 4, 50 / 50",
+            "ok": true,
+            "detail": "Counter phone 60→0, Delivery phone 40→0, Number 3 0→50, Number 4 0→50",
+            "kind": "expect"
+          },
+          {
+            "label": "only linked numbers can take chats",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "sharing out: every number now has 25 chats",
+            "ok": true,
+            "detail": "25,25,25,25",
+            "kind": "expect"
+          },
+          {
+            "label": "people who never wrote move first (all 34 of them moved), active conversations stay put as far as possible",
+            "ok": true,
+            "detail": "34 of the 50 moved never wrote",
+            "kind": "expect"
+          },
+          {
+            "label": "running it again moves nothing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a message waiting to go out moves with its chat",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a moved chat remembers which number the customer was talking to",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…so the new number's first message to them is paced as a first contact (ban safety)",
+            "ok": true,
+            "detail": "cold",
+            "kind": "expect"
+          },
+          {
+            "label": "a chat that stayed on its number carries on at normal speed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the chat list carries each chat's number colour",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "if the customer writes to the old number, the chat follows them back to it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "cleanup preview: 2 messages older than 30 days, in 1 chat (a message still waiting is never removed)",
+            "ok": true,
+            "detail": "{\"scope\":\"messages\",\"messages\":2,\"chats\":1}",
+            "kind": "expect"
+          },
+          {
+            "label": "a date in the future is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "cleanup is the owner's",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "old messages removed, the waiting one and the chat kept",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "whole chats quiet since a date, for one number",
+            "ok": true,
+            "detail": "24 chats",
+            "kind": "expect"
+          },
+          {
+            "label": "…removed, other numbers' chats untouched",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "only our own recent sent messages offer 'delete for everyone'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a customer's message can't be deleted for everyone",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "nor one older than 48 hours",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "deleting for everyone is handed to the worker",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the worker asks WhatsApp to delete it for everyone",
+            "ok": true,
+            "detail": "{\"delete\":{\"remoteJid\":\"919810000061@s.whatsapp.net\",\"fromMe\":true,\"id\":\"WAID-1\"}}",
+            "kind": "expect"
+          },
+          {
+            "label": "…and it shows as deleted",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "when the customer deletes theirs for everyone, it shows as deleted here too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'delete for me' removes it from the dashboard only",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 10,
+        "title": "a real link QR from WhatsApp's servers (nothing is linked)",
+        "checks": [
+          {
+            "label": "a session's keys are stored encrypted",
+            "ok": true,
+            "detail": "creds,pre-key-1",
+            "kind": "expect"
+          },
+          {
+            "label": "…and read back intact (what lets a number stay linked after a restart)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t03-whatsapp-dashboard": {
+    "id": "t03-whatsapp-dashboard",
+    "title": "WhatsApp in the dashboard — chat window, numbers, broadcast, access and phone layout",
+    "status": "pass",
+    "pass": 44,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-15T15:43:03.391Z",
+    "durationMs": 19416,
+    "steps": [
+      {
+        "n": 1,
+        "title": "owner — chats",
+        "checks": [
+          {
+            "label": "WhatsApp is in the sidebar for the owner",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…with a badge for the chat that has unread messages",
+            "ok": true,
+            "detail": "WhatsApp",
+            "kind": "expect"
+          },
+          {
+            "label": "owner sees the Chats tab",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "owner sees the Numbers tab",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "owner sees the Broadcast tab",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "owner sees the Access tab",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no 'nothing connected' warning while a number is online",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a document shows with its name",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a photo shows in the chat",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "read messages show the read ticks",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "opening the chat clears its unread badge",
+            "ok": true,
+            "detail": "WhatsApp",
+            "kind": "expect"
+          },
+          {
+            "label": "the box empties after sending",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a sent message appears at once, waiting for the worker (clock tick)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an attachment shows before sending, with its name",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the photo goes into the chat with its caption",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an order update is labelled as one",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an opted-out customer is marked",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "its number is offline → the owner is asked",
+            "ok": true,
+            "detail": "Number 2 isn't connected right now.",
+            "kind": "expect"
+          },
+          {
+            "label": "…offering the number that IS online",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the message goes, and the chat now uses Counter phone",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a failed message says why, with 'Try again'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a paced broadcast message says when it will go",
+            "ok": true,
+            "detail": "BROADCAST | Diwali special: 20% off this weekend! | Reply STOP to stop offers. | sends tomorrow 11:12 am · | 8:42 pm",
+            "kind": "expect"
+          },
+          {
+            "label": "the composer warns about the slow pace for a number that never wrote",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a new chat opens, ready to write",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "clear empties the chat but keeps it in the list",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "delete removes it from the list",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "search narrows the list",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "owner — numbers, broadcast, access",
+        "checks": [
+          {
+            "label": "each number shows whether it's connected",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and how much of today's allowance it has used",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the link QR is drawn, with the steps on the phone",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "naming a new number goes straight to its QR",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the broadcast says who gets it and who is skipped",
+            "ok": true,
+            "detail": "5 customers will get it (1 said STOP and are skipped).",
+            "kind": "expect"
+          },
+          {
+            "label": "…and roughly how long first contacts will take",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the broadcast appears with its progress",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "access shows what each role may do",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "access saves",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "order updates setting",
+        "checks": [
+          {
+            "label": "order updates: pick statuses, see the wording",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "manager (read and reply) and cashier (read only)",
+        "checks": [
+          {
+            "label": "a manager doesn't get Numbers / Broadcast / Access",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…but can start chats",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a cashier can read but there's no reply box",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and no 'new chat'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "phone",
+        "checks": [
+          {
+            "label": "on a phone the chat fills the screen, with a way back",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no sideways scroll on a phone",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the customer's number stays on one line",
+            "ok": true,
+            "detail": "15px",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t04-whatsapp-manage": {
+    "id": "t04-whatsapp-manage",
+    "title": "WhatsApp management — colours, chat stats and sharing out, clean-up by date, delete a message",
+    "status": "pass",
+    "pass": 20,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-15T15:43:23.791Z",
+    "durationMs": 16227,
+    "steps": [
+      {
+        "n": 1,
+        "title": "colours",
+        "checks": [
+          {
+            "label": "the chip is filled with its number's colour",
+            "ok": true,
+            "detail": "rgb(46, 125, 50)",
+            "kind": "expect"
+          },
+          {
+            "label": "the colour picker previews the chip",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a new colour shows on every chat of that number",
+            "ok": true,
+            "detail": "rgb(106, 27, 154)",
+            "kind": "expect"
+          },
+          {
+            "label": "…with readable (white) text on the dark purple",
+            "ok": true,
+            "detail": "rgb(255, 255, 255)",
+            "kind": "expect"
+          },
+          {
+            "label": "the chat header's number chip wears the colour too",
+            "ok": true,
+            "detail": "rgb(106, 27, 154)",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "delete a message",
+        "checks": [
+          {
+            "label": "a recent message of ours offers 'Delete for everyone' and 'Delete for me'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the box says what Enter and Esc do",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Esc closes it and nothing is deleted",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Enter deletes it for everyone (handed to WhatsApp)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a customer's message can only be deleted here, and the box says why",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Enter on 'Cancel' cancels (it doesn't delete)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Delete for me' removes it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "stats and sharing out",
+        "checks": [
+          {
+            "label": "stats: chats per number",
+            "ok": true,
+            "detail": "Counter phone\t | 3 | \t1\t0\t3\t2\t1\t1",
+            "kind": "expect"
+          },
+          {
+            "label": "the box previews how many chats move",
+            "ok": true,
+            "detail": "Move 1 chat",
+            "kind": "expect"
+          },
+          {
+            "label": "giving away numbers 1 and 2 moves all 4 of their chats into Number 3",
+            "ok": true,
+            "detail": "Move 4 chats",
+            "kind": "expect"
+          },
+          {
+            "label": "sharing out moves them (1)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and Number 3 now has chats",
+            "ok": true,
+            "detail": "Number\tChats\tWrote to us\tUnread\tSent\tReceived\tWaiting\tFailed Counter phone\t 2 \t1\t0\t3\t2\t0\t1 Number 2 · offline \t 1 \t1\t0\t1\t1\t0\t0 New phone\t 0 \t0\t0\t0\t0\t0\t0 Number",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "clean up",
+        "checks": [
+          {
+            "label": "older than 30 days: 2 messages in 1 chat",
+            "ok": true,
+            "detail": "2 messages from before Oct 17, 2026, in 1 chat.",
+            "kind": "expect"
+          },
+          {
+            "label": "Enter in the confirm box removes them",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and nothing that old is left",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t05-whatsapp-chat-filters": {
+    "id": "t05-whatsapp-chat-filters",
+    "title": "WhatsApp chat list — 'via' chips and filters (All, Unread, Needs reply, New, No offers, by number)",
+    "status": "pass",
+    "pass": 12,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-15T15:43:41.519Z",
+    "durationMs": 13560,
+    "steps": [
+      {
+        "n": 0,
+        "title": "Setup",
+        "checks": [
+          {
+            "label": "each chat shows 'via <number>' as a chip",
+            "ok": true,
+            "detail": "via Counter phone",
+            "kind": "expect"
+          },
+          {
+            "label": "…saying when that number is offline",
+            "ok": true,
+            "detail": "via Number 2",
+            "kind": "expect"
+          },
+          {
+            "label": "…drawn as a rounded chip",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "All: every chat",
+            "ok": true,
+            "detail": "Riya Sharma, Meera, +91 98444 44444, Kabir",
+            "kind": "expect"
+          },
+          {
+            "label": "Unread",
+            "ok": true,
+            "detail": "Riya Sharma",
+            "kind": "expect"
+          },
+          {
+            "label": "Needs reply: the customer wrote last",
+            "ok": true,
+            "detail": "Riya Sharma",
+            "kind": "expect"
+          },
+          {
+            "label": "New: never wrote to us",
+            "ok": true,
+            "detail": "Meera, +91 98444 44444",
+            "kind": "expect"
+          },
+          {
+            "label": "No offers: said STOP",
+            "ok": true,
+            "detail": "Kabir",
+            "kind": "expect"
+          },
+          {
+            "label": "filter by number",
+            "ok": true,
+            "detail": "Kabir",
+            "kind": "expect"
+          },
+          {
+            "label": "filters combine, and an empty result says so",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Clear filters' resets everything",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: the filter row scrolls inside itself, the page doesn't",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t06-storefront-header-categories": {
+    "id": "t06-storefront-header-categories",
+    "title": "Storefront — favicon, steady message bar, Categories sheet on phone/tablet, delayed smooth scroll",
+    "status": "pass",
+    "pass": 28,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-15T15:44:19.090Z",
+    "durationMs": 37555,
+    "steps": [
+      {
+        "n": 1,
+        "title": "desktop 1280px",
+        "checks": [
+          {
+            "label": "the store's favicon is in the page head",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and on the other outlet's page too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "message bar keeps one height as messages change",
+            "ok": true,
+            "detail": "35",
+            "kind": "expect"
+          },
+          {
+            "label": "only one message is visible at a time",
+            "ok": true,
+            "detail": "[\"Fresh momos, steamed\"]",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: chips, no Categories button",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "nothing moves for the first moment after a click",
+            "ok": true,
+            "detail": "0",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: 'Kurkure Momos' lands just below the sticky bar",
+            "ok": true,
+            "detail": "{\"top\":65,\"bar\":53}",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: no sideways scroll",
+            "ok": true,
+            "detail": "0",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "tablet 820px",
+        "checks": [
+          {
+            "label": "message bar keeps one height as messages change",
+            "ok": true,
+            "detail": "35",
+            "kind": "expect"
+          },
+          {
+            "label": "only one message is visible at a time",
+            "ok": true,
+            "detail": "[\"Fresh momos, steamed\"]",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet: one Categories button instead of the chips",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet: the filter bar stays short",
+            "ok": true,
+            "detail": "59px",
+            "kind": "expect"
+          },
+          {
+            "label": "the sheet lists every category (+ close)",
+            "ok": true,
+            "detail": "6",
+            "kind": "expect"
+          },
+          {
+            "label": "picking one closes the sheet",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and waits before scrolling",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it glides there (several in-between positions)",
+            "ok": true,
+            "detail": "0,0,0,1,57,261,799,1150,1240,1249,1249,1249,1249,1249",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet: 'Kurkure Momos' lands just below the sticky bar",
+            "ok": true,
+            "detail": "{\"top\":71,\"bar\":59}",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet: no sideways scroll",
+            "ok": true,
+            "detail": "0",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "phone 390px",
+        "checks": [
+          {
+            "label": "message bar keeps one height as messages change",
+            "ok": true,
+            "detail": "35",
+            "kind": "expect"
+          },
+          {
+            "label": "only one message is visible at a time",
+            "ok": true,
+            "detail": "[\"Fresh momos, steamed\"]",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: one Categories button instead of the chips",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: the filter bar stays short",
+            "ok": true,
+            "detail": "59px",
+            "kind": "expect"
+          },
+          {
+            "label": "the sheet lists every category (+ close)",
+            "ok": true,
+            "detail": "6",
+            "kind": "expect"
+          },
+          {
+            "label": "picking one closes the sheet",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and waits before scrolling",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it glides there (several in-between positions)",
+            "ok": true,
+            "detail": "508,508,508,511,579,912,1434,1607,1639,1639,1639,1639,1639,1639",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: 'Kurkure Momos' lands just below the sticky bar",
+            "ok": true,
+            "detail": "{\"top\":71,\"bar\":59}",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: no sideways scroll",
+            "ok": true,
+            "detail": "0",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t07-favicon-plan-rules": {
+    "id": "t07-favicon-plan-rules",
+    "title": "Favicon — one per store, only when the plan (or a per-store override) includes it",
+    "status": "pass",
+    "pass": 8,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-15T15:44:22.269Z",
+    "durationMs": 3161,
+    "steps": [
+      {
+        "n": 1,
+        "title": "favicon",
+        "checks": [
+          {
+            "label": "a store whose plan includes it can set a favicon",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "the public config carries it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and a NEW outlet of the same store has it too — one favicon for the whole store",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "removing it on any outlet removes it for the store",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a plan without the feature can't set one",
+            "ok": true,
+            "detail": "403 A favicon isn't included in your plan.",
+            "kind": "expect"
+          },
+          {
+            "label": "…and even if one is stored, visitors don't get it while the plan lacks the feature",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "switching the feature on for that ONE store (override) shows it",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "other appearance saves still work",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t08-plans-outlets-settings": {
+    "id": "t08-plans-outlets-settings",
+    "title": "Plans & outlets — Basic → Pro upgrade, outlets 1-3 with menus, all outlet settings, delivery distance, load management",
+    "status": "pass",
+    "pass": 42,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-15T18:00:26.054Z",
+    "durationMs": 191076,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Platform console → Plans: create Basic, Pro and Custom",
+        "checks": [
+          {
+            "label": "all three plans are listed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Basic shows 3 people · 1 outlet",
+            "ok": true,
+            "detail": "Lifecycle Basic One outlet — takeaway and dine-in QR 0 stores 3 people · 1 outlet (multi-outlet off) Not on the website 2/11 features · 6/6 ",
+            "kind": "expect"
+          },
+          {
+            "label": "Pro shows 10 people · 3 outlets",
+            "ok": true,
+            "detail": "Lifecycle Pro Up to 3 outlets, everything unlocked 0 stores 10 people · 3 outlets Not on the website 11/11 features · 6/6 effects · 9/9 card",
+            "kind": "expect"
+          },
+          {
+            "label": "Custom is marked as a custom plan",
+            "ok": true,
+            "detail": "Lifecycle Custom Set by hand for each store Custom 0 stores Nothing included — you set each store's limits and features on its page Not on t",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Platform console → Stores: create a store on each plan",
+        "checks": [
+          {
+            "label": "all three stores are listed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "each store shows its own plan",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "As the Basic store's owner: try to add a second outlet, a coupon, and switch delivery on",
+        "checks": [
+          {
+            "label": "a Basic store's owner can add a second outlet",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the 'Add outlet' button is greyed out and says why",
+            "ok": true,
+            "detail": "Multiple outlets aren't included in your plan.",
+            "kind": "expect"
+          },
+          {
+            "label": "a Basic store creates a coupon",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "…and is told coupons aren't in the plan",
+            "ok": true,
+            "detail": " New coupon 10% off Code Description Type Flat amount off Percentage off Percent off Max discount (₹) Minimum order (₹) Valid period From Until Usage limits Total uses Uses per customer First-time customers only Order types Takeaway Dine-in Delivery Coupon is active Coupons isn't included in your plan.",
+            "kind": "expect"
+          },
+          {
+            "label": "Settings → Features shows Delivery as 'Not in your plan' (there is no switch to turn on)",
+            "ok": true,
+            "detail": "Ways to order Switch a whole order path on or off. Takeaway from the website Dine-in QR ordering Delivery Not in your plan Storefront extras Back-to-top button The message b",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "The platform upgrades the store from Basic to Pro",
+        "checks": [
+          {
+            "label": "the store page now shows the Pro plan and 1 of 3 outlets",
+            "ok": true,
+            "detail": "Within plan People 1 / 10 Outlets 1 / 3 Plan & limits Features Owners Outlets Domains Peopl",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "The owner adds outlets 2 and 3 — and a 4th is refused",
+        "checks": [
+          {
+            "label": "outlet 2 created",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "outlet 3 created",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a 4th outlet is created on a plan limited to 3",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the 'Add outlet' button is greyed out: 'Your plan allows 3 outlets.'",
+            "ok": true,
+            "detail": "Your plan allows 3 outlets.",
+            "kind": "expect"
+          },
+          {
+            "label": "the Outlets page lists Central, Second and Third",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "on Pro the coupon that Basic refused now works",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Add a category and menu items to every outlet",
+        "checks": [
+          {
+            "label": "Central: the menu lists Veg Burger and Chicken Burger",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Second: the menu lists Margherita Pizza and Farmhouse Pizza",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Third: the menu lists Paneer Roll and Egg Roll",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "Configure each outlet in Settings: identity, location, hours, alerts, order handling, delivery, receipts, features, wallet, load management",
+        "checks": []
+      },
+      {
+        "n": 8,
+        "title": "Reload Settings for each outlet: every value must be exactly as saved, and independent of the others",
+        "checks": [
+          {
+            "label": "Central: all 58 settings across 10 tabs read back exactly as saved",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Second: all 58 settings across 10 tabs read back exactly as saved",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Third: all 58 settings across 10 tabs read back exactly as saved",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 9,
+        "title": "Delivery distance on the storefront: inside and outside each outlet's radius (using the browser's location)",
+        "checks": [
+          {
+            "label": "Central, 1.2 km away (radius 3 km): 'We deliver here' with the ₹20 fee",
+            "ok": true,
+            "detail": "We deliver here 1.2 km away · ₹20 delivery · about 20 min Coupon Apply Tota",
+            "kind": "expect"
+          },
+          {
+            "label": "Central offers delivery 5 km away (radius 3 km)",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "…and the customer is told it is too far",
+            "ok": true,
+            "detail": "Location shared We'll use this to check the delivery distance Update Delivery address Landmark (optional) Delivery not available at this address That address is about 5 km awa",
+            "kind": "expect"
+          },
+          {
+            "label": "Third, 5 km away (radius 8 km): 'We deliver here' with Third's own ₹40 fee — every outlet uses its own radius and fee",
+            "ok": true,
+            "detail": "We deliver here 5 km away · ₹40 delivery · about 62 min Coupon Apply Total ",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 10,
+        "title": "Load management on Second (busy at 2 orders, stop at 4): the customer's checkout and the dashboard",
+        "checks": [
+          {
+            "label": "2 orders in the queue: checkout shows Second's own 'busy' message",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "4 orders: checkout shows Second's own 'not taking orders' message",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a customer can still choose Delivery while load management has it stopped",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "Central (busy only at 5 orders) shows no load message",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the dashboard's Orders screen lists the four orders",
+            "ok": true,
+            "detail": "0001, 0002, 0003, 0004",
+            "kind": "expect"
+          },
+          {
+            "label": "all four orders are cancelled in the dashboard",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "after the orders are cancelled the load messages are gone again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 11,
+        "title": "The Pro store and the Custom store get what their plans give them",
+        "checks": [
+          {
+            "label": "Pro store: Pro plan, up to 3 outlets and 10 people",
+            "ok": true,
+            "detail": "Within plan People 1 / 10 Outlets 1 / 3 Plan & limits Features Owners O",
+            "kind": "expect"
+          },
+          {
+            "label": "Custom store starts with nothing: 1 outlet, 1 person",
+            "ok": true,
+            "detail": "Within plan People 1 / 1 Outlets 1 / 1 Plan & limits Features Owners Ou",
+            "kind": "expect"
+          },
+          {
+            "label": "the platform sets the Custom store to 2 outlets by hand",
+            "ok": true,
+            "detail": "Within plan People 1 / 1 Outlets 1 / 2 Plan & limits Features Owners Ou",
+            "kind": "expect"
+          },
+          {
+            "label": "Custom store: a 2nd outlet can be added",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a Custom store limited to 2 outlets gets a 3rd",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "…the button says why",
+            "ok": true,
+            "detail": "Your plan allows 2 outlets.",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser logged JavaScript errors",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t09-store-subdomain": {
+    "id": "t09-store-subdomain",
+    "title": "Store subdomain — remove, create lifecycle.<base>, open every outlet on it, unknown addresses, rename",
+    "status": "pass",
+    "pass": 36,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-15T18:00:58.633Z",
+    "durationMs": 32547,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Before: the store has an address — then the platform removes it",
+        "checks": [
+          {
+            "label": "the store opens on its address",
+            "ok": true,
+            "detail": "HTTP 200",
+            "kind": "expect"
+          },
+          {
+            "label": "the store still opens after its address was removed",
+            "ok": true,
+            "detail": "HTTP 404",
+            "kind": "never"
+          },
+          {
+            "label": "…the customer sees 'We couldn't find a restaurant here'",
+            "ok": true,
+            "detail": "TABLEPE We couldn’t find a restaurant here lifecycle.localhost:3170 This address isn’t linked to any",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "In the Domains tab: which names may the store have?",
+        "checks": [
+          {
+            "label": "\"www\" (a reserved name) is offered as free",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "…and the form says why for \"www\"",
+            "ok": true,
+            "detail": "kept for TablePe",
+            "kind": "expect"
+          },
+          {
+            "label": "\"admin\" (a reserved name) is offered as free",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "…and the form says why for \"admin\"",
+            "ok": true,
+            "detail": "kept for TablePe",
+            "kind": "expect"
+          },
+          {
+            "label": "\"ab\" (too short) is offered as free",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "…and the form says why for \"ab\"",
+            "ok": true,
+            "detail": "at least 3 characters",
+            "kind": "expect"
+          },
+          {
+            "label": "\"Bad_Name\" (bad characters) is offered as free",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "…and the form says why for \"Bad_Name\"",
+            "ok": true,
+            "detail": "Lowercase letters, numbers and hyphens",
+            "kind": "expect"
+          },
+          {
+            "label": "\"beta\" (used by another store) is offered as free",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "…and the form says why for \"beta\"",
+            "ok": true,
+            "detail": "already used by another store",
+            "kind": "expect"
+          },
+          {
+            "label": "\"lifecycle\" shows as free: lifecycle.localhost:3170 is free",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Create the address, then a customer opens the store on it",
+        "checks": [
+          {
+            "label": "the platform creates lifecycle.localhost:3170",
+            "ok": true,
+            "detail": "localhost:3170 Live — it opens Check again Change the ",
+            "kind": "expect"
+          },
+          {
+            "label": "the address itself opens and lists every outlet to choose from",
+            "ok": true,
+            "detail": "HTTP 200",
+            "kind": "expect"
+          },
+          {
+            "label": "/central opens and shows Lifecycle Central",
+            "ok": true,
+            "detail": "HTTP 200",
+            "kind": "expect"
+          },
+          {
+            "label": "/central shows its own menu (Veg Burger, Chicken Burger)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/central shows another outlet's menu items",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "/second opens and shows Lifecycle Second",
+            "ok": true,
+            "detail": "HTTP 200",
+            "kind": "expect"
+          },
+          {
+            "label": "/second shows its own menu (Margherita Pizza, Farmhouse Pizza)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/second shows another outlet's menu items",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "/third opens and shows Lifecycle Third",
+            "ok": true,
+            "detail": "HTTP 200",
+            "kind": "expect"
+          },
+          {
+            "label": "/third shows its own menu (Paneer Roll, Egg Roll)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/third shows another outlet's menu items",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "an outlet that doesn't exist shows a menu",
+            "ok": true,
+            "detail": "HTTP 404",
+            "kind": "never"
+          },
+          {
+            "label": "…it says it couldn't find that page",
+            "ok": true,
+            "detail": "We couldn’t find that page The link may be old or have a typing mistake. Go to the menu",
+            "kind": "expect"
+          },
+          {
+            "label": "another store's outlet (Beta's /only) opens on this store's address",
+            "ok": true,
+            "detail": "HTTP 404",
+            "kind": "never"
+          },
+          {
+            "label": "a subdomain nobody owns shows a store",
+            "ok": true,
+            "detail": "HTTP 404",
+            "kind": "never"
+          },
+          {
+            "label": "…it says it couldn't find a restaurant there",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Rename the address: the new one works, the old one stops",
+        "checks": [
+          {
+            "label": "renamed to lifecycle-two",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the new address opens the outlet",
+            "ok": true,
+            "detail": "HTTP 200",
+            "kind": "expect"
+          },
+          {
+            "label": "the old address still opens the store",
+            "ok": true,
+            "detail": "HTTP 404",
+            "kind": "never"
+          },
+          {
+            "label": "set back to lifecycle.localhost:3170 for the next tests",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and it opens again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser logged JavaScript errors",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t10-plan-downgrade": {
+    "id": "t10-plan-downgrade",
+    "title": "Plan downgrade Pro → Basic — what stops, what keeps working, grace period, after the grace period, a manually disabled outlet",
+    "status": "pass",
+    "pass": 37,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-15T18:02:49.883Z",
+    "durationMs": 111230,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Before: the store is on Pro and customers can choose Delivery",
+        "checks": [
+          {
+            "label": "the platform shows Pro with 3 of 3 outlets and no grace period",
+            "ok": true,
+            "detail": "Within plan People 1 / 10 Outlets 3 / 3 Plan & limits Features Owners O",
+            "kind": "expect"
+          },
+          {
+            "label": "customers are offered Delivery at Central",
+            "ok": true,
+            "detail": "Takeaway Delivery",
+            "kind": "expect"
+          },
+          {
+            "label": "the grace period is set to 7 days",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "The platform moves the store from Pro down to Basic",
+        "checks": [
+          {
+            "label": "the platform page now shows Basic with 3 outlets against a limit of 1",
+            "ok": true,
+            "detail": "Over its limits since Nov 15, 2026. Everything keeps working until Nov 22, 2026; aft",
+            "kind": "expect"
+          },
+          {
+            "label": "…and says the store is over its limits, with the 7-day grace deadline",
+            "ok": true,
+            "detail": "Over its limits since Nov 15, 2026. Everything keeps working until Nov 22, 2026; after that you'll be asked to choose what to block.",
+            "kind": "expect"
+          },
+          {
+            "label": "the downgrade blocked an outlet by itself",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "During grace: what the owner sees and what is locked",
+        "checks": [
+          {
+            "label": "the owner's dashboard shows 'Your store has 3 outlets (plan allows 1)' and 'Everything keeps working until …'",
+            "ok": true,
+            "detail": "Your store has 3 outlets (plan allows 1). Everything keeps working until Nov 22, 2026. Remove the extras, or contact TablePe to upgrade your plan. Dashboard Central Revenue t",
+            "kind": "expect"
+          },
+          {
+            "label": "an outlet can be added while over the limit",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "'Add outlet' is greyed out",
+            "ok": true,
+            "detail": "Multiple outlets aren't included in your plan.",
+            "kind": "expect"
+          },
+          {
+            "label": "a coupon is created on Basic",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "…with the plan message",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Settings → Features shows Delivery as 'Not in your plan' (no switch to turn on)",
+            "ok": true,
+            "detail": "Ways to order Switch a whole order path on or off. Takeaway from the website Dine-in QR ordering Delivery Not in your plan Storefront extras Back-to-top button The message bar above the header and the promo carous",
+            "kind": "expect"
+          },
+          {
+            "label": "the Features tab still offers a Delivery switch",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "Settings → Coin wallet says it isn't in the plan",
+            "ok": true,
+            "detail": "Coin wallet Load management Coin wallet An in-house cashback loyalty scheme — no third-party platform, no fee per redemption. The coin wallet Not in your plan These settin",
+            "kind": "expect"
+          },
+          {
+            "label": "the owner can still edit and save settings",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "During grace: the customer's side",
+        "checks": [
+          {
+            "label": "outlet \"central\" still opens",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "outlet \"second\" still opens",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "outlet \"third\" still opens",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "customers are still offered Delivery",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "a customer can still place a takeaway order at outlet 2",
+            "ok": true,
+            "detail": "order #0005",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "After the grace period (set to 0 days): is anything blocked automatically?",
+        "checks": [
+          {
+            "label": "the platform page says the grace period has ended",
+            "ok": true,
+            "detail": "This store went over its limits on Nov 15, 2026 and its 0-day grace period ended on Nov 15, 2026. Choose what to block on the Outlets and People tabs — or raise its limits.",
+            "kind": "expect"
+          },
+          {
+            "label": "the owner's dashboard says 'The grace period ended on …'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an outlet was blocked automatically when the grace period ended",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "customers can still open outlet 2",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and still order",
+            "ok": true,
+            "detail": "order #0006",
+            "kind": "expect"
+          },
+          {
+            "label": "an outlet can be added after the grace period",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "The platform disables outlet 3 by hand — what a customer sees",
+        "checks": [
+          {
+            "label": "the Outlets tab shows Third as blocked",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "customers see 'This outlet is temporarily unavailable'",
+            "ok": true,
+            "detail": "Lifecycle Third This outlet is temporarily unavailable. Please check back soon.",
+            "kind": "expect"
+          },
+          {
+            "label": "the disabled outlet still shows its menu",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the disabled outlet still offers 'Add' buttons to order",
+            "ok": true,
+            "detail": "0 buttons",
+            "kind": "never"
+          },
+          {
+            "label": "outlet \"central\" is affected by outlet 3 being disabled",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "outlet \"second\" is affected by outlet 3 being disabled",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the store's address still opens",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the disabled outlet no longer counts toward the limit: 2 outlets in use",
+            "ok": true,
+            "detail": "Over limit People 1 / 3 Outlets 2 / 1 1 outlet, 0 people blocked Plan & limits Featu",
+            "kind": "expect"
+          },
+          {
+            "label": "enabling it again brings the menu back",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "outlet 3 is left disabled for the next tests",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser logged JavaScript errors",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t11-outlet-delete": {
+    "id": "t11-outlet-delete",
+    "title": "Delete an outlet from the dashboard — protection for outlets with orders, then the deleted outlet on the subdomain",
+    "status": "pass",
+    "pass": 13,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-15T18:03:01.944Z",
+    "durationMs": 12035,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The platform enables outlet 3 again (the store paid up), so the owner can manage it",
+        "checks": [
+          {
+            "label": "outlet 3 opens on the subdomain before deletion, with its menu",
+            "ok": true,
+            "detail": "HTTP 200",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "The owner tries to delete outlet 2, which has orders",
+        "checks": [
+          {
+            "label": "an outlet with order history is deleted",
+            "ok": true,
+            "detail": "re dashboard Outlets — 3 Multiple outlets aren't included in your plan. Ask TablePe to add more. Central CURRENT /central Second /second Third /third This outlet has order history and can't be deleted",
+            "kind": "never"
+          },
+          {
+            "label": "…the owner is told it has order history and can't be deleted",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "outlet 2 still opens on the subdomain",
+            "ok": true,
+            "detail": "HTTP 200",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "The owner deletes outlet 3 (no orders) from the dashboard",
+        "checks": [
+          {
+            "label": "the Outlets page no longer lists Third",
+            "ok": true,
+            "detail": "Outlets — 2 Multiple outlets aren't included in your plan. Ask TablePe to add more. Central CURRENT /central Second /second",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Check the deleted outlet on the store's subdomain",
+        "checks": [
+          {
+            "label": "/third is now a 404",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…saying it couldn't find that page",
+            "ok": true,
+            "detail": "We couldn’t find that page The link may be old or have a typing mistake. Go to the menu",
+            "kind": "expect"
+          },
+          {
+            "label": "the deleted outlet still shows its menu",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the address still opens and lists outlets 1 and 2",
+            "ok": true,
+            "detail": "HTTP 200",
+            "kind": "expect"
+          },
+          {
+            "label": "the address root still lists the deleted outlet",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "outlet \"central\" is affected by the deletion",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "outlet \"second\" is affected by the deletion",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the browser logged JavaScript errors",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t12-store-delete": {
+    "id": "t12-store-delete",
+    "title": "Delete the store — typed-name confirmation, then the subdomain, the owner and the other stores",
+    "status": "pass",
+    "pass": 19,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-15T18:03:23.393Z",
+    "durationMs": 21427,
+    "steps": [
+      {
+        "n": 1,
+        "title": "A wrong confirmation name must not delete anything",
+        "checks": [
+          {
+            "label": "the delete button works with \"lifecycle foods\" typed",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the delete button works with \"Lifecycle\" typed",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the store still opens on its subdomain",
+            "ok": true,
+            "detail": "HTTP 200",
+            "kind": "expect"
+          },
+          {
+            "label": "…and is still listed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Delete the store with its exact name",
+        "checks": [
+          {
+            "label": "the delete button is enabled only for the exact name, and the store is deleted",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the deleted store is still in the Stores list",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the other stores are still listed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Check the subdomain after the store is gone",
+        "checks": [
+          {
+            "label": "the address root is a 404",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…saying it couldn't find a restaurant here",
+            "ok": true,
+            "detail": "TABLEPE We couldn’t find a restaurant here lifecycle.localhost:3170 This address isn’t linked to any",
+            "kind": "expect"
+          },
+          {
+            "label": "the address still shows the store or its outlets",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "/central still opens on the deleted store's address",
+            "ok": true,
+            "detail": "HTTP 404",
+            "kind": "never"
+          },
+          {
+            "label": "/second still opens on the deleted store's address",
+            "ok": true,
+            "detail": "HTTP 404",
+            "kind": "never"
+          },
+          {
+            "label": "/third still opens on the deleted store's address",
+            "ok": true,
+            "detail": "HTTP 404",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "The owner and the address name",
+        "checks": [
+          {
+            "label": "the deleted store's owner can still sign in",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "\"lifecycle\" is available for another store again (lifecycle.localhost:3170 is free)",
+            "ok": true,
+            "detail": "localhost:3170 Live — it opens Check again C",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Every other store is untouched",
+        "checks": [
+          {
+            "label": "Acme Momos still opens",
+            "ok": true,
+            "detail": "HTTP 200",
+            "kind": "expect"
+          },
+          {
+            "label": "Beta Bites still opens",
+            "ok": true,
+            "detail": "HTTP 200",
+            "kind": "expect"
+          },
+          {
+            "label": "Pro Direct Co still opens",
+            "ok": true,
+            "detail": "HTTP 200",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser logged JavaScript errors",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  }
+}

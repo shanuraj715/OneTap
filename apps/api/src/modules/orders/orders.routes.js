@@ -263,9 +263,18 @@ ordersRouter.get("/:id", async (req, res) => {
   if (!outletId) throw new HttpError(400, "outletId is required");
   const ctx = await publicContext(outletId);
 
+  // A signed-in dashboard user sees the order only if they belong to THIS outlet's store (and may read orders).
+  // Being signed in somewhere else buys nothing — the outlet id comes from the caller, so it must be checked against
+  // the session. Anyone who isn't staff here falls through to the customer rules below (their own order only).
   if (req.user) {
-    res.json({ order: shape(await getOrder(ctx, req.params.id), true) });
-    return;
+    const staff = await requireOutletContext(req, "order:read").catch((e) => {
+      if (e instanceof HttpError && [403, 404].includes(e.status)) return null;
+      throw e;
+    });
+    if (staff) {
+      res.json({ order: shape(await getOrder(staff, req.params.id), true) });
+      return;
+    }
   }
 
   const customer = await currentCustomer(req);
