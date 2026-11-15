@@ -446,5 +446,64 @@ if (REAL_QR) {
 await call("DELETE", `/api/whatsapp/accounts/${qrAcc}`, { cookie: owner });
 if (REAL_QR) { await sleep(2500); ok(worker.__test.sockets.size === 0, "removing the number closes its connection"); }
 
+
+say("11. WhatsApp chat taken away from a store — its numbers are unlinked and nothing stays connected");
+{
+  const brandB = String(b.brand?._id ?? b.brand?.id ?? b.brandId);
+  worker.__test.sockets.clear();
+  await raw("waaccounts").deleteMany({});
+  const mkAcc = async (brandId, label, phone) => String((await raw("waaccounts").insertOne({ brandId, label, phone, status: "connected", seenAt: new Date(), linkedAt: new Date(), wantsLogout: false, qr: "", lastError: "", createdAt: new Date(), updatedAt: new Date() })).insertedId);
+  const closed = [];
+  const live = (id, brandId, phone) => worker.__test.sockets.set(id, { sock: { ...fakeSock(phone), logout: async () => { closed.push(id); } }, brandId, connected: true, busy: false });
+  const queue = (brandId, accountId) => raw("wamessages").insertOne({ brandId, chatId: "c1", accountId, direction: "out", type: "text", text: "hello", status: "queued", source: "chat", pace: "warm", sendAfter: new Date(), createdAt: new Date(), updatedAt: new Date() });
+  const acc = (id) => raw("waaccounts").findOne({ _id: oid(id) });
+  const msgOf = (id) => raw("wamessages").findOne({ accountId: id });
+
+  // 1. a store that never had it (plan without "WhatsApp chat") but has a connected number: the worker won't hold the connection
+  const bId = await mkAcc(brandB, "B phone", "919000000021");
+  live(bId, brandB, "919000000021");
+  await queue(brandB, bId);
+  const aId = await mkAcc(brandA, "A phone", "919000000020");
+  live(aId, brandA, "919000000020");
+  await queue(brandA, aId);
+  await worker.__test.tick();
+  ok(closed.includes(bId) && !worker.__test.sockets.has(bId), "the worker closes (and logs out) the connection of a store whose plan lacks WhatsApp chat");
+  const accB = await acc(bId);
+  ok(accB.status === "logged_out" && accB.wantsLogout === false && String(accB.lastError).startsWith("WhatsApp chat"), "…the number shows as unlinked, with the reason", accB.lastError);
+  ok((await msgOf(bId)).status === "failed", "…and what was waiting to go out is failed, not left to leak out later");
+  ok(!closed.includes(aId) && worker.__test.sockets.has(aId) && (await acc(aId)).status === "connected" && (await msgOf(aId)).status === "queued", "a store that has WhatsApp chat is left alone");
+
+  // 2. the platform locks it for ONE store: unlinked at once, before the worker's next pass
+  r = await call("PATCH", `/api/platform/stores/${brandA}/plan`, { cookie: su, body: { overrides: { entitlements: { features: { lock: ["whatsappChat"] } } } } });
+  ok(r.status === 200, "the platform locks WhatsApp chat for one store", String(r.status));
+  const lockedA = await acc(aId);
+  ok(lockedA.status === "logged_out" && lockedA.wantsLogout === true, "…its number is unlinked AT ONCE (no waiting for the worker)", `${lockedA.status} wantsLogout=${lockedA.wantsLogout}`);
+  ok((await msgOf(aId)).status === "failed", "…and its waiting messages are failed at once");
+  await worker.__test.tick();
+  ok(closed.includes(aId) && !worker.__test.sockets.has(aId), "…then the worker closes the connection and logs the phone out");
+  const doneA = await acc(aId);
+  ok(doneA.wantsLogout === false && String(doneA.lastError).startsWith("WhatsApp chat"), "…and the card keeps the reason", doneA.lastError);
+
+  // 3. the platform edits a PLAN: every store on it is unlinked at once
+  const chatPlan = (await must(call("POST", "/api/platform/plans", { cookie: su, body: { name: "Chat plan", entitlements: { features: schema.FEATURE_KEYS } } }), "chat plan")).json.plan;
+  const c = (await must(call("POST", "/api/brands", { cookie: su, body: { brandName: "Cee", brandSlug: "cee", outletName: "Only", outletSlug: "only", hostnames: ["cee.test"], ownerEmail: "o@cee.test", ownerName: "C", ownerPassword: "Owner123!", planId: String(chatPlan._id ?? chatPlan.id) } }), "store C")).json;
+  const brandC = String(c.brand?._id ?? c.brand?.id ?? c.brandId);
+  const cId = await mkAcc(brandC, "C phone", "919000000022");
+  live(cId, brandC, "919000000022");
+  await worker.__test.tick();
+  ok((await acc(cId)).status === "connected" && worker.__test.sockets.has(cId), "a store on a plan that has WhatsApp chat keeps its number");
+  r = await call("PATCH", `/api/platform/plans/${chatPlan._id ?? chatPlan.id}`, { cookie: su, body: { entitlements: { features: schema.FEATURE_KEYS.filter((k) => k !== "whatsappChat") } } });
+  ok(r.status === 200, "the platform takes WhatsApp chat out of that plan", String(r.status));
+  ok((await acc(cId)).status === "logged_out", "…every store on it is unlinked AT ONCE");
+  await worker.__test.tick();
+  ok(closed.includes(cId) && !worker.__test.sockets.has(cId), "…and its connection is closed");
+
+  // 4. nothing is deleted: chats and messages stay for when it comes back
+  r = await call("PATCH", `/api/platform/stores/${brandA}/plan`, { cookie: su, body: { overrides: {} } });
+  ok(r.status === 200 && (await raw("wamessages").countDocuments({ brandId: brandA })) >= 1, "the stored messages are kept");
+  const back = await acc(aId);
+  ok(back.status === "logged_out", "the number stays unlinked when the feature returns — it must be linked again with a new scan", back.status);
+}
+
 console.log(`\nTOTAL ${pass} passed, ${fail} failed`);
 process.exit(0);

@@ -402,6 +402,15 @@ export async function deleteOutletRow(d, outletName) {
   return text(d);
 }
 
+/** Plans → Edit one plan → tick / untick a feature → Save plan. */
+export async function setPlanFeature(d, planName, featureCaption, on) {
+  await openPlatform(d, "/plans");
+  const card = d.page.locator("section").filter({ has: d.page.getByText(planName, { exact: true }) });
+  await d.click(card.getByRole("button", { name: "Edit" }).first(), { after: 700 });
+  const form = d.page.locator("form, [role=dialog]").filter({ has: d.page.getByRole("button", { name: "Save plan" }) }).last();
+  await tick(d, featureCaption, on, form);
+  await d.click(d.page.getByRole("button", { name: "Save plan" }), { after: 1000 });
+}
 /* ------------------------------------------------------------------------ marketing */
 export const openMarketing = (d, tab = "new") => d.goto(`${BENCH.admin}/marketing/${tab}`, 500);
 

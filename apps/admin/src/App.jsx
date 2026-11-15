@@ -57,6 +57,7 @@ import { WhatsAppNumbers } from "./routes/whatsapp/WhatsAppNumbers";
 import { Campaigns } from "./routes/marketing/Campaigns";
 import { Lists } from "./routes/marketing/Lists";
 import { NewCampaign } from "./routes/marketing/NewCampaign";
+import { WaGate } from "./routes/whatsapp/WaGate";
 import { WhatsAppBroadcast } from "./routes/whatsapp/WhatsAppBroadcast";
 import { WhatsAppAccess } from "./routes/whatsapp/WhatsAppAccess";
 import { WhatsAppCleanup } from "./routes/whatsapp/WhatsAppCleanup";
@@ -592,16 +593,16 @@ function Shell({ can }                                     ) {
             <Route path="/users" element={<Users />} />
             <Route path="/take-order" element={<TakeOrder />} />
             <Route path="/whatsapp" element={<Navigate to="/whatsapp/chats" replace />} />
-            <Route path="/whatsapp/chats" element={<WhatsAppChats />} />
-            <Route path="/whatsapp/chats/:chatId" element={<WhatsAppChats />} />
-            <Route path="/whatsapp/numbers" element={<WhatsAppNumbers />} />
-            <Route path="/whatsapp/broadcast" element={<WhatsAppBroadcast />} />
+            <Route path="/whatsapp/chats" element={<WaGate need="read"><WhatsAppChats /></WaGate>} />
+            <Route path="/whatsapp/chats/:chatId" element={<WaGate need="read"><WhatsAppChats /></WaGate>} />
+            <Route path="/whatsapp/numbers" element={<WaGate need="manage"><WhatsAppNumbers /></WaGate>} />
+            <Route path="/whatsapp/broadcast" element={<WaGate need="manage"><WhatsAppBroadcast /></WaGate>} />
             <Route path="/marketing" element={<Navigate to="/marketing/new" replace />} />
             <Route path="/marketing/new" element={<NewCampaign />} />
             <Route path="/marketing/campaigns" element={<Campaigns />} />
             <Route path="/marketing/lists" element={<Lists />} />
-            <Route path="/whatsapp/access" element={<WhatsAppAccess />} />
-            <Route path="/whatsapp/cleanup" element={<WhatsAppCleanup />} />
+            <Route path="/whatsapp/access" element={<WaGate need="manage"><WhatsAppAccess /></WaGate>} />
+            <Route path="/whatsapp/cleanup" element={<WaGate need="manage"><WhatsAppCleanup /></WaGate>} />
             {/* an old bookmark (the Storage page moved to the platform console) lands on the dashboard, not a blank screen */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

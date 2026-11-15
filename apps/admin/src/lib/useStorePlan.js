@@ -20,6 +20,8 @@ export function useStorePlan() {
   const plan = query.data?.plan ?? null;
   return {
     plan,
+    /** the plan hasn't arrived yet */
+    loading: query.isLoading,
     hasFeature: (key) => !plan || plan.entitlements.features.includes(key),
     effectAllowed: (style) => !plan || style === "none" || plan.entitlements.effects.includes(style),
     qrFamilyAllowed: (family) => !plan || plan.entitlements.qrCardFamilies.includes(family),

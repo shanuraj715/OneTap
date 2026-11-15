@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as api from "./api";
 import { useOutlet } from "./useOutlet";
+import { useStorePlan } from "./useStorePlan";
 
 /**
  * WhatsApp chat data. Everything is polled (the worker that holds the connections may be another process): the
@@ -8,10 +9,14 @@ import { useOutlet } from "./useOutlet";
  */
 export function useWaMe() {
   const { outlet } = useOutlet();
+  // a store whose plan doesn't include WhatsApp chat never asks (every answer would be a refusal) — and we only
+  // start once the plan is known, so nothing is requested "just in case" while it loads
+  const { plan } = useStorePlan();
+  const entitled = Boolean(plan?.entitlements.features.includes("whatsappChat"));
   return useQuery({
     queryKey: ["wa-me", outlet?._id],
     queryFn: () => api.waMe(outlet),
-    enabled: Boolean(outlet),
+    enabled: Boolean(outlet) && entitled,
     retry: false,
     refetchInterval: 30_000,
     staleTime: 10_000,

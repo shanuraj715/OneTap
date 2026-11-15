@@ -1283,8 +1283,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:45:22.775Z",
-    "durationMs": 19760,
+    "at": "2026-11-15T20:59:13.591Z",
+    "durationMs": 19881,
     "steps": [
       {
         "n": 1,
@@ -1419,7 +1419,7 @@
           {
             "label": "a paced broadcast message says when it will go",
             "ok": true,
-            "detail": "BROADCAST | Diwali special: 20% off this weekend! | Reply STOP to stop offers. | sends at 4:15 pm · | 1:45 am",
+            "detail": "BROADCAST | Diwali special: 20% off this weekend! | Reply STOP to stop offers. | sends at 4:28 pm · | 1:58 am",
             "kind": "expect"
           },
           {
@@ -3250,8 +3250,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:54:27.778Z",
-    "durationMs": 88431,
+    "at": "2026-11-15T21:00:46.026Z",
+    "durationMs": 88268,
     "steps": [
       {
         "n": 1,
@@ -3668,7 +3668,7 @@
           {
             "label": "Campaigns: it finishes with 2 sent, 0 waiting, 0 failed",
             "ok": true,
-            "detail": "Win-back SMS SMS · 16 Nov, 2:24 am · 2 people 2 sent · 0 waiting · 0 failed Done",
+            "detail": "Win-back SMS SMS · 16 Nov, 2:30 am · 2 people 2 sent · 0 waiting · 0 failed Done",
             "kind": "expect"
           },
           {
@@ -3728,13 +3728,13 @@
           {
             "label": "it is queued: 3 waiting, still Sending (the sending worker is off here)",
             "ok": true,
-            "detail": "Ladies offer WhatsApp (linked numbers) · 16 Nov, 2:24 am · 3 people 0 sent · 3 waiting · 0 failed Sending Cancel",
+            "detail": "Ladies offer WhatsApp (linked numbers) · 16 Nov, 2:30 am · 3 people 0 sent · 3 waiting · 0 failed Sending Cancel",
             "kind": "expect"
           },
           {
             "label": "cancelling stops it: Cancelled, nothing waiting",
             "ok": true,
-            "detail": "Ladies offer WhatsApp (linked numbers) · 16 Nov, 2:24 am · 3 people 0 sent · 0 waiting · 0 failed Cancelled",
+            "detail": "Ladies offer WhatsApp (linked numbers) · 16 Nov, 2:30 am · 3 people 0 sent · 0 waiting · 0 failed Cancelled",
             "kind": "expect"
           }
         ]
@@ -3746,7 +3746,7 @@
           {
             "label": "Ravi (24 in 2020) shows 30",
             "ok": true,
-            "detail": " Ravi Kumar — 9000000001 Male 30 3 0 18 Aug, 2:22 am",
+            "detail": " Ravi Kumar — 9000000001 Male 30 3 0 18 Aug, 2:29 am",
             "kind": "expect"
           },
           {
@@ -4129,6 +4129,272 @@
           },
           {
             "label": "'Unblock everyone' clears the list",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser logged JavaScript errors",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t16-whatsapp-plan-gating": {
+    "id": "t16-whatsapp-plan-gating",
+    "title": "WhatsApp chat off (plan or per-store lock) — numbers unlinked at once, no WhatsApp requests, every WhatsApp address is a 404",
+    "status": "pass",
+    "pass": 37,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-15T21:01:26.615Z",
+    "durationMs": 35410,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Baseline: WhatsApp chat is on for the Pro plan",
+        "checks": [
+          {
+            "label": "WhatsApp is in the sidebar",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the Numbers page lists the linked numbers (Counter phone, Number 2, Number 3, New phone)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Counter phone and Number 3 are connected",
+            "ok": true,
+            "detail": "Counter phone Connected +91 90000 00001 · Acme Momos · today: 4/15 new co",
+            "kind": "expect"
+          },
+          {
+            "label": "the dashboard talks to /api/whatsapp while it is on",
+            "ok": true,
+            "detail": "4 requests",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser's only websocket is the live order feed (/realtime) — WhatsApp chat doesn't open one",
+            "ok": true,
+            "detail": "ws://localhost:3097/realtime?outletId=6afa1d812198a41f01a6f2fd",
+            "kind": "expect"
+          },
+          {
+            "label": "a websocket for WhatsApp is opened by the browser",
+            "ok": true,
+            "detail": "ws://localhost:3097/realtime?outletId=6afa1d812198a41f01a6f2fd",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "The platform takes WhatsApp chat out of the Pro plan",
+        "checks": []
+      },
+      {
+        "n": 3,
+        "title": "The owner: no WhatsApp anywhere, and every WhatsApp address is a 404",
+        "checks": [
+          {
+            "label": "WhatsApp is gone from the sidebar",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/whatsapp → 404 in the middle of the page",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the sidebar is still there (/whatsapp)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and no chat screen shows (/whatsapp)",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "/whatsapp/chats → 404 in the middle of the page",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the sidebar is still there (/whatsapp/chats)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and no chat screen shows (/whatsapp/chats)",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "/whatsapp/numbers → 404 in the middle of the page",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the sidebar is still there (/whatsapp/numbers)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and no chat screen shows (/whatsapp/numbers)",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "/whatsapp/broadcast → 404 in the middle of the page",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the sidebar is still there (/whatsapp/broadcast)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and no chat screen shows (/whatsapp/broadcast)",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "/whatsapp/access → 404 in the middle of the page",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the sidebar is still there (/whatsapp/access)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and no chat screen shows (/whatsapp/access)",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "/whatsapp/cleanup → 404 in the middle of the page",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the sidebar is still there (/whatsapp/cleanup)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and no chat screen shows (/whatsapp/cleanup)",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the browser sent any request to /api/whatsapp while the feature was off",
+            "ok": true,
+            "detail": "0 requests: ",
+            "kind": "never"
+          },
+          {
+            "label": "a websocket for WhatsApp is open",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "WhatsApp chat comes back: every number was unlinked, the chats are still there",
+        "checks": [
+          {
+            "label": "WhatsApp is back in the sidebar",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "every number says 'Unlinked'",
+            "ok": true,
+            "detail": "4 of 4",
+            "kind": "expect"
+          },
+          {
+            "label": "a number still says Connected",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the reason is shown on the cards",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "each can be linked again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the old chats are still listed (nothing was deleted)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Locking WhatsApp chat for just this store beats its plan",
+        "checks": [
+          {
+            "label": "WhatsApp is not in the sidebar of a store it is locked for",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "its chat address is a 404",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "back to 'from plan' (the plan has it) → WhatsApp is back",
             "ok": true,
             "detail": "",
             "kind": "expect"

@@ -16,6 +16,7 @@ import {
   tenantFilter,
   UserModel,
 } from "@onetap/db";
+import { logger } from "../../logger.js";
 import { HttpError } from "../../middleware/error.js";
 import { dropStoreTeam } from "../../realtime/hub.js";
 import { expireStore } from "../cache/cache.js";
@@ -26,6 +27,7 @@ import { countActiveOutlets, countActiveUsers, invalidateStorePlan, platformSett
 import { configuredBase, normalizeHostnames, setStoreDomains, storeDomains } from "../outlets/domains.js";
 import { assertStoreMayAddDomains, removeStoreSubdomain, setStoreSubdomain, subdomainInfo } from "../outlets/subdomains.js";
 import { notifyWebsite } from "../site/revalidate.js";
+import { enforceWhatsAppPlan } from "../whatsapp/whatsapp.service.js";
 
 /*
  * The platform console's back end — everything here is for the platform super
@@ -91,6 +93,10 @@ export async function updatePlan(id, input) {
   // the website's Pricing may show it.
   invalidateStorePlan();
   notifyWebsite();
+  // if the plan just lost WhatsApp chat, every store on it loses its linked numbers right now
+  for (const b of await BrandModel.find({ planId: String(plan._id) }).select("_id").lean()) {
+    await enforceWhatsAppPlan(b._id).catch((e) => logger.error({ err: e, brandId: String(b._id) }, "could not unlink WhatsApp numbers after a plan change"));
+  }
   return shapePlan(plan.toObject());
 }
 
@@ -254,6 +260,8 @@ export async function setStorePlan(id, { planId, overrides }) {
   await fillCustomLimits(brand);
   await brand.save();
   invalidateStorePlan(id);
+  // lost WhatsApp chat (new plan, or a lock on this store)? its linked numbers are unlinked right now
+  await enforceWhatsAppPlan(id).catch((e) => logger.error({ err: e, brandId: id }, "could not unlink WhatsApp numbers after a plan change"));
   return getStore(id);
 }
 

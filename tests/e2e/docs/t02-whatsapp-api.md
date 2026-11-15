@@ -6,7 +6,7 @@
 
 ## What this test does
 
-Runs suites/wa-api.mjs: its own in-memory API with the WhatsApp worker switched on and WhatsApp's connection replaced by a stand-in. Covers who can use chat, linking numbers, chats and sending, the pacing rules, incoming messages, broadcasts, order updates, clear/delete, colours, stats, sharing chats between numbers, clean-up by age, and deleting a message for everyone.
+Runs suites/wa-api.mjs: its own in-memory API with the WhatsApp worker switched on and WhatsApp's connection replaced by a stand-in. Covers who can use chat, linking numbers, chats and sending, the pacing rules, incoming messages, broadcasts, order updates, clear/delete, colours, stats, sharing chats between numbers, clean-up by age, deleting a message for everyone, and what happens when a store loses WhatsApp chat (numbers unlinked at once, connections closed, waiting messages failed).
 
 ## Steps
 
@@ -31,6 +31,7 @@ Runs suites/wa-api.mjs: its own in-memory API with the WhatsApp worker switched 
 - Order-status updates go out from the linked numbers when switched on.
 - Chats / messages can be cleared by age or date; deleting a message can also delete it for everyone on WhatsApp.
 - A session's keys are stored encrypted and read back intact.
+- When a store loses WhatsApp chat (its plan lacks it, a lock for the store, or the plan is edited) every one of its numbers is unlinked at once, the worker closes the connections, and waiting messages are failed; stored chats are kept.
 
 ## What must NOT happen
 
@@ -39,6 +40,7 @@ Runs suites/wa-api.mjs: its own in-memory API with the WhatsApp worker switched 
 - An opted-out customer must NOT receive broadcasts.
 - One store's chats / numbers must NOT be visible to another store.
 - Stored session keys must NOT be readable as plain text.
+- A store without WhatsApp chat must NOT keep any connection to WhatsApp open.
 
 ## Result of the last run
 
@@ -201,6 +203,7 @@ _Nothing failed._
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
 | 2026-11-16 02:14 | pass | 118 | 0 | headless | 12.3 s |
+| 2026-11-16 01:57 | pass | 133 | 0 | headless | 11.9 s |
 | 2026-11-16 01:39 | pass | 118 | 0 | headless | 14.3 s |
 | 2026-11-16 00:52 | pass | 118 | 0 | headless | 13.1 s |
 | 2026-11-15 21:12 | pass | 117 | 0 | headless | 12.3 s |
