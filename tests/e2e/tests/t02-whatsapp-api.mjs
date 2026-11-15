@@ -7,7 +7,7 @@ export const meta = {
   area: "whatsapp",
   browser: false,
   fresh: false,
-  summary: "Runs suites/wa-api.mjs: its own in-memory API with the WhatsApp worker switched on and WhatsApp's connection replaced by a stand-in. Covers who can use chat, linking numbers, chats and sending, the pacing rules, incoming messages, broadcasts, order updates, clear/delete, colours, stats, sharing chats between numbers, clean-up by age, and deleting a message for everyone.",
+  summary: "Runs suites/wa-api.mjs: its own in-memory API with the WhatsApp worker switched on and WhatsApp's connection replaced by a stand-in. Covers who can use chat, linking numbers, chats and sending, the pacing rules, incoming messages, broadcasts, order updates, clear/delete, colours, stats, sharing chats between numbers, clean-up by age, deleting a message for everyone, and what happens when a store loses WhatsApp chat (numbers unlinked at once, connections closed, waiting messages failed).",
   expect: [
     "By default only the owner can use WhatsApp chat; the owner can hand access to other roles (read / send); super admin can see chats.",
     "Numbers link by QR, can be given an alias and colour, and a chat keeps going out through the number it started on.",
@@ -17,6 +17,7 @@ export const meta = {
     "Order-status updates go out from the linked numbers when switched on.",
     "Chats / messages can be cleared by age or date; deleting a message can also delete it for everyone on WhatsApp.",
     "A session's keys are stored encrypted and read back intact.",
+    "When a store loses WhatsApp chat (its plan lacks it, a lock for the store, or the plan is edited) every one of its numbers is unlinked at once, the worker closes the connections, and waiting messages are failed; stored chats are kept.",
   ],
   expectNot: [
     "A role without access must NOT read or send chats.",
@@ -24,6 +25,7 @@ export const meta = {
     "An opted-out customer must NOT receive broadcasts.",
     "One store's chats / numbers must NOT be visible to another store.",
     "Stored session keys must NOT be readable as plain text.",
+    "A store without WhatsApp chat must NOT keep any connection to WhatsApp open.",
   ],
 };
 

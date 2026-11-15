@@ -20,7 +20,9 @@ import { WaAccountModel, WaChatModel, WaMessageModel } from "@onetap/db";
 import { env } from "../../env.js";
 import { logger } from "../../logger.js";
 import { putFile, readFile, removeObject } from "../storage/storage.service.js";
+import { storePlan } from "../platform/plan.service.js";
 import { clearAuthState, useMongoAuthState } from "./auth-state.js";
+import { revokeStore, WA_SWITCHED_OFF } from "./whatsapp.service.js";
 
 /**
  * The WhatsApp worker: holds the connection of every linked number, sends the queued messages at a safe pace,
@@ -65,10 +67,29 @@ async function tick() {
   try {
     const accounts = await WaAccountModel.find({ $or: [{ status: { $in: ["pending", "connected", "disconnected"] } }, { wantsLogout: true }] }, null, all).lean();
     const wanted = new Set();
+    // a store whose plan (or per-store lock) no longer includes WhatsApp chat must hold no connection at all —
+    // checked here too, so a number can never come back online after a restart, whatever changed the plan
+    const entitled = new Map();
+    const allowed = async (brandId) => {
+      if (!entitled.has(brandId)) {
+        const plan = await storePlan(brandId).catch(() => null);
+        entitled.set(brandId, plan ? plan.entitlements.features.includes("whatsappChat") : true);
+      }
+      return entitled.get(brandId);
+    };
+    const revoked = new Set();
     for (const a of accounts) {
       const id = String(a._id);
       if (a.wantsLogout) {
         await logout(a);
+        continue;
+      }
+      if (!(await allowed(a.brandId))) {
+        if (!revoked.has(a.brandId)) {
+          revoked.add(a.brandId);
+          await revokeStore(a.brandId);
+        }
+        await logout({ ...a, lastError: WA_SWITCHED_OFF });
         continue;
       }
       wanted.add(id);
@@ -187,7 +208,8 @@ async function logout(account) {
     }
   }
   await clearAuthState({ brandId: account.brandId, accountId: id });
-  await setAccount(id, { status: "logged_out", wantsLogout: false, qr: "", lastError: "" });
+  // an owner unlinking a number leaves no message; a store that lost WhatsApp chat keeps the reason on the card
+  await setAccount(id, { status: "logged_out", wantsLogout: false, qr: "", lastError: String(account.lastError ?? "").startsWith("WhatsApp chat") ? account.lastError : "" });
 }
 
 /* ------------------------------------------------------------------ incoming */
@@ -433,4 +455,4 @@ async function deliver(entry, acc, msg) {
 }
 
 /** For tests only: drive the send loop and the inbound recorder with a stand-in connection. */
-export const __test = { sockets, sendNext, record, revokeNext };
+export const __test = { sockets, sendNext, record, revokeNext, tick };

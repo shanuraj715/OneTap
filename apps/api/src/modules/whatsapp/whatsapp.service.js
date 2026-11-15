@@ -142,6 +142,36 @@ export async function unlinkAccount(ctx, id) {
   return getAccount(ctx, id);
 }
 
+/** What a number says after the store lost WhatsApp chat (shown on its card). Starts with "WhatsApp chat" — the worker keeps it. */
+export const WA_SWITCHED_OFF = "WhatsApp chat isn't in this store's plan any more, so the number was unlinked. Link it again once chat is back.";
+
+/**
+ * The store no longer has WhatsApp chat: unlink EVERY one of its numbers at once and fail whatever was waiting to go
+ * out. The dashboard shows them as "Unlinked" straight away; the worker (which holds the live connection to WhatsApp,
+ * maybe in another process) sees `wantsLogout`, closes the connection, and logs the number out on the phone too.
+ * The chats and messages already stored are kept — nothing is deleted.
+ */
+export async function revokeStore(brandId) {
+  const live = ["pending", "connected", "disconnected"];
+  const numbers = await WaAccountModel.updateMany(
+    { brandId: String(brandId), $or: [{ status: { $in: live } }, { wantsLogout: true }] },
+    { $set: { status: "logged_out", wantsLogout: true, qr: "", lastError: WA_SWITCHED_OFF } },
+  );
+  const messages = await WaMessageModel.updateMany(
+    { brandId: String(brandId), status: { $in: ["queued", "sending"] } },
+    { $set: { status: "failed", error: "WhatsApp chat was switched off for this store." } },
+  );
+  return { numbers: numbers.modifiedCount, messages: messages.modifiedCount };
+}
+
+/** Call whenever a store's plan or unlocks change: if it no longer has WhatsApp chat, its numbers are unlinked right now. */
+export async function enforceWhatsAppPlan(brandId) {
+  const plan = await storePlan(String(brandId));
+  if (plan.entitlements.features.includes("whatsappChat")) return false;
+  const r = await revokeStore(brandId);
+  return r.numbers + r.messages > 0;
+}
+
 export async function removeAccount(ctx, id) {
   const a = await accountOf(ctx, id);
   if (["connected", "disconnected"].includes(a.status) && !a.wantsLogout) throw new HttpError(409, "Unlink the number first.");

@@ -1,6 +1,6 @@
 # T06 — Storefront — favicon, steady message bar, Categories sheet on phone/tablet, delayed smooth scroll
 
-**Area:** storefront · **Last result:** ✅ PASSED (28 passed, 0 failed · 2026-11-15 21:14 · headless · 37.6 s)
+**Area:** storefront · **Last result:** ✅ PASSED (28 passed, 0 failed · 2026-11-16 01:58 · headless · 38.3 s)
 
 **Run it alone:** `node run.mjs --only t06` (add `--visible` to watch it)
 
@@ -56,7 +56,7 @@ _Nothing failed._
 - the sheet lists every category (+ close) — _6_
 - picking one closes the sheet
 - …and waits before scrolling
-- it glides there (several in-between positions) — _0,0,0,1,57,261,799,1150,1240,1249,1249,1249,1249,1249_
+- it glides there (several in-between positions) — _0,0,0,2,59,333,805,1152,1240,1249,1249,1249,1249,1249_
 - tablet: 'Kurkure Momos' lands just below the sticky bar — _{"top":71,"bar":59}_
 - tablet: no sideways scroll — _0_
 
@@ -69,7 +69,7 @@ _Nothing failed._
 - the sheet lists every category (+ close) — _6_
 - picking one closes the sheet
 - …and waits before scrolling
-- it glides there (several in-between positions) — _508,508,508,511,579,912,1434,1607,1639,1639,1639,1639,1639,1639_
+- it glides there (several in-between positions) — _508,508,508,509,580,831,1373,1607,1639,1639,1639,1639,1639,1639_
 - phone: 'Kurkure Momos' lands just below the sticky bar — _{"top":71,"bar":59}_
 - phone: no sideways scroll — _0_
 
@@ -77,6 +77,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-16 01:58 | pass | 28 | 0 | headless | 38.3 s |
 | 2026-11-15 21:14 | pass | 28 | 0 | headless | 37.6 s |
 
 ---

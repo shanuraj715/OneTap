@@ -7,8 +7,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T15:41:25.000Z",
-    "durationMs": 16791,
+    "at": "2026-11-15T20:26:22.084Z",
+    "durationMs": 14137,
     "steps": [
       {
         "n": 1,
@@ -89,7 +89,7 @@
           {
             "label": "the code request is accepted (the test stores accept any phone)",
             "ok": true,
-            "detail": "HTTP 200 {\"channel\":\"sms\",\"devCode\":\"212819\"}",
+            "detail": "HTTP 200 {\"channel\":\"sms\",\"devCode\":\"552235\"}",
             "kind": "expect"
           },
           {
@@ -112,8 +112,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T15:46:14.404Z",
-    "durationMs": 58433,
+    "at": "2026-11-15T20:26:59.201Z",
+    "durationMs": 32927,
     "steps": [
       {
         "n": 1,
@@ -289,7 +289,7 @@
           {
             "label": "the new customer was saved with the details they gave",
             "ok": true,
-            "detail": "{\"id\":\"6af9d3af8253931d71f06a04\",\"name\":\"Rohan Mehta\",\"email\":\"rohan.mehta@example.com\",\"phone\":\"9811122233\",\"gender\":\"male\",\"age\":31,\"orderCount\":1,\"walletBalance\":0,\"lastOrderAt\":\"2026-11-15T15:45:59.059Z\",\"createdAt\":\"2026-11-15T15:45:51.038Z\"}",
+            "detail": "{\"id\":\"6afa15851aea7eeb29681eb5\",\"name\":\"Rohan Mehta\",\"email\":\"rohan.mehta@example.com\",\"phone\":\"9811122233\",\"gender\":\"male\",\"age\":31,\"orderCount\":1,\"walletBalance\":0,\"lastOrderAt\":\"2026-11-15T20:26:50.161Z\",\"createdAt\":\"2026-11-15T20:26:45.470Z\"}",
             "kind": "expect"
           },
           {
@@ -313,7 +313,7 @@
           {
             "label": "the row shows the customer, phone, type, item count, total and 'Placed'",
             "ok": true,
-            "detail": " #0001 09:15 PM Rohan Mehta 9811122233 TA 8 ₹1,030 Placed 0m Accepted",
+            "detail": " #0001 01:56 AM Rohan Mehta 9811122233 TA 8 ₹1,030 Placed 0m Accepted",
             "kind": "expect"
           }
         ]
@@ -496,12 +496,12 @@
     "id": "t02-whatsapp-api",
     "title": "WhatsApp chat — API rules and the careful-pace sending worker",
     "status": "pass",
-    "pass": 117,
+    "pass": 133,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T15:42:39.794Z",
-    "durationMs": 12306,
+    "at": "2026-11-15T20:27:11.148Z",
+    "durationMs": 11926,
     "steps": [
       {
         "n": 1,
@@ -708,7 +708,7 @@
           {
             "label": "an attachment uploads",
             "ok": true,
-            "detail": "http://localhost:3098/uploads/6af9d2e6c6342992e761",
+            "detail": "http://localhost:3098/uploads/6afa1595a119a3c5f28a",
             "kind": "expect"
           },
           {
@@ -730,6 +730,12 @@
         "title": "the worker sends — at a careful pace",
         "checks": [
           {
+            "label": "it's quiet hours now (10 pm–9 am): first contacts wait for the morning",
+            "ok": true,
+            "detail": "2026-11-16T03:38:02.346Z",
+            "kind": "expect"
+          },
+          {
             "label": "one message goes out, to the right number",
             "ok": true,
             "detail": "919876543210@s.whatsapp.net",
@@ -750,7 +756,7 @@
           {
             "label": "the next first contact must wait 2–4 minutes",
             "ok": true,
-            "detail": "206 s",
+            "detail": "240 s",
             "kind": "expect"
           },
           {
@@ -774,7 +780,7 @@
           {
             "label": "15 first contacts a day per number: the rest wait for tomorrow",
             "ok": true,
-            "detail": "2026-11-16T03:35:36.736Z",
+            "detail": "2026-11-16T18:31:09.618Z",
             "kind": "expect"
           },
           {
@@ -900,13 +906,13 @@
           {
             "label": "preview: 3 people (duplicates merged), 1 opted out",
             "ok": true,
-            "detail": "{\"recipients\":3,\"optedOut\":1,\"running\":0,\"firstContact\":3,\"numbersOnline\":[{\"id\":\"6af9d2e6c6342992e761208c\",\"label\":\"Counter phone\"},{\"id\":\"6af9d2e6c6342992e7612095\",\"label\":\"Delivery phone\"}],\"estimatedDays\":1}",
+            "detail": "{\"recipients\":3,\"optedOut\":1,\"running\":0,\"firstContact\":3,\"numbersOnline\":[{\"id\":\"6afa1596a119a3c5f28a2fdb\",\"label\":\"Counter phone\"},{\"id\":\"6afa1596a119a3c5f28a2fe2\",\"label\":\"Delivery phone\"}],\"estimatedDays\":1}",
             "kind": "expect"
           },
           {
             "label": "a broadcast queues one message per person",
             "ok": true,
-            "detail": "{\"id\":\"6af9d2efc6342992e7612206\",\"text\":\"Diwali: 20% off this weekend!\\n\\nReply STOP to stop offers.\",\"media\":null,\"createdAt\":\"2026-11-15T15:42:39.373Z\",\"status\":\"sending\",\"total\":3,\"skipped\":1,\"waiting\":3,\"sent\":0,\"read\":0,\"failed\":0}",
+            "detail": "{\"id\":\"6afa159ea119a3c5f28a3159\",\"text\":\"Diwali: 20% off this weekend!\\n\\nReply STOP to stop offers.\",\"media\":null,\"createdAt\":\"2026-11-15T20:27:10.815Z\",\"status\":\"sending\",\"total\":3,\"skipped\":1,\"waiting\":3,\"sent\":0,\"read\":0,\"failed\":0}",
             "kind": "expect"
           },
           {
@@ -1264,6 +1270,102 @@
             "kind": "expect"
           }
         ]
+      },
+      {
+        "n": 11,
+        "title": "WhatsApp chat taken away from a store — its numbers are unlinked and nothing stays connected",
+        "checks": [
+          {
+            "label": "the worker closes (and logs out) the connection of a store whose plan lacks WhatsApp chat",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…the number shows as unlinked, with the reason",
+            "ok": true,
+            "detail": "WhatsApp chat isn't in this store's plan any more, so the number was unlinked. Link it again once chat is back.",
+            "kind": "expect"
+          },
+          {
+            "label": "…and what was waiting to go out is failed, not left to leak out later",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a store that has WhatsApp chat is left alone",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the platform locks WhatsApp chat for one store",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "…its number is unlinked AT ONCE (no waiting for the worker)",
+            "ok": true,
+            "detail": "logged_out wantsLogout=true",
+            "kind": "expect"
+          },
+          {
+            "label": "…and its waiting messages are failed at once",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…then the worker closes the connection and logs the phone out",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the card keeps the reason",
+            "ok": true,
+            "detail": "WhatsApp chat isn't in this store's plan any more, so the number was unlinked. Link it again once chat is back.",
+            "kind": "expect"
+          },
+          {
+            "label": "a store on a plan that has WhatsApp chat keeps its number",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the platform takes WhatsApp chat out of that plan",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "…every store on it is unlinked AT ONCE",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and its connection is closed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the stored messages are kept",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the number stays unlinked when the feature returns — it must be linked again with a new scan",
+            "ok": true,
+            "detail": "logged_out",
+            "kind": "expect"
+          }
+        ]
       }
     ],
     "findings": [],
@@ -1277,8 +1379,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T15:43:03.391Z",
-    "durationMs": 19416,
+    "at": "2026-11-15T20:27:35.038Z",
+    "durationMs": 19714,
     "steps": [
       {
         "n": 1,
@@ -1413,7 +1515,7 @@
           {
             "label": "a paced broadcast message says when it will go",
             "ok": true,
-            "detail": "BROADCAST | Diwali special: 20% off this weekend! | Reply STOP to stop offers. | sends tomorrow 11:12 am · | 8:42 pm",
+            "detail": "BROADCAST | Diwali special: 20% off this weekend! | Reply STOP to stop offers. | sends at 3:57 pm · | 1:27 am",
             "kind": "expect"
           },
           {
@@ -1586,8 +1688,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T15:43:23.791Z",
-    "durationMs": 16227,
+    "at": "2026-11-15T20:27:55.714Z",
+    "durationMs": 16513,
     "steps": [
       {
         "n": 1,
@@ -1716,7 +1818,7 @@
           {
             "label": "older than 30 days: 2 messages in 1 chat",
             "ok": true,
-            "detail": "2 messages from before Oct 17, 2026, in 1 chat.",
+            "detail": "2 messages from before Oct 18, 2026, in 1 chat.",
             "kind": "expect"
           },
           {
@@ -1745,8 +1847,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T15:43:41.519Z",
-    "durationMs": 13560,
+    "at": "2026-11-15T20:28:13.259Z",
+    "durationMs": 13376,
     "steps": [
       {
         "n": 0,
@@ -1838,8 +1940,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T15:44:19.090Z",
-    "durationMs": 37555,
+    "at": "2026-11-15T20:28:51.587Z",
+    "durationMs": 38310,
     "steps": [
       {
         "n": 1,
@@ -1944,7 +2046,7 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "0,0,0,1,57,261,799,1150,1240,1249,1249,1249,1249,1249",
+            "detail": "0,0,0,2,59,333,805,1152,1240,1249,1249,1249,1249,1249",
             "kind": "expect"
           },
           {
@@ -2010,7 +2112,7 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "508,508,508,511,579,912,1434,1607,1639,1639,1639,1639,1639,1639",
+            "detail": "508,508,508,509,580,831,1373,1607,1639,1639,1639,1639,1639,1639",
             "kind": "expect"
           },
           {
@@ -2039,8 +2141,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T15:44:22.269Z",
-    "durationMs": 3161,
+    "at": "2026-11-15T20:28:54.625Z",
+    "durationMs": 3021,
     "steps": [
       {
         "n": 1,
@@ -2108,8 +2210,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T18:00:26.054Z",
-    "durationMs": 191076,
+    "at": "2026-11-15T20:32:07.921Z",
+    "durationMs": 189116,
     "steps": [
       {
         "n": 1,
@@ -2440,8 +2542,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T18:00:58.633Z",
-    "durationMs": 32547,
+    "at": "2026-11-15T20:32:41.080Z",
+    "durationMs": 33135,
     "steps": [
       {
         "n": 1,
@@ -2695,8 +2797,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T18:02:49.883Z",
-    "durationMs": 111230,
+    "at": "2026-11-15T20:34:32.882Z",
+    "durationMs": 111780,
     "steps": [
       {
         "n": 1,
@@ -2729,13 +2831,13 @@
           {
             "label": "the platform page now shows Basic with 3 outlets against a limit of 1",
             "ok": true,
-            "detail": "Over its limits since Nov 15, 2026. Everything keeps working until Nov 22, 2026; aft",
+            "detail": "Over its limits since Nov 16, 2026. Everything keeps working until Nov 23, 2026; aft",
             "kind": "expect"
           },
           {
             "label": "…and says the store is over its limits, with the 7-day grace deadline",
             "ok": true,
-            "detail": "Over its limits since Nov 15, 2026. Everything keeps working until Nov 22, 2026; after that you'll be asked to choose what to block.",
+            "detail": "Over its limits since Nov 16, 2026. Everything keeps working until Nov 23, 2026; after that you'll be asked to choose what to block.",
             "kind": "expect"
           },
           {
@@ -2753,7 +2855,7 @@
           {
             "label": "the owner's dashboard shows 'Your store has 3 outlets (plan allows 1)' and 'Everything keeps working until …'",
             "ok": true,
-            "detail": "Your store has 3 outlets (plan allows 1). Everything keeps working until Nov 22, 2026. Remove the extras, or contact TablePe to upgrade your plan. Dashboard Central Revenue t",
+            "detail": "Your store has 3 outlets (plan allows 1). Everything keeps working until Nov 23, 2026. Remove the extras, or contact TablePe to upgrade your plan. Dashboard Central Revenue t",
             "kind": "expect"
           },
           {
@@ -2849,7 +2951,7 @@
           {
             "label": "the platform page says the grace period has ended",
             "ok": true,
-            "detail": "This store went over its limits on Nov 15, 2026 and its 0-day grace period ended on Nov 15, 2026. Choose what to block on the Outlets and People tabs — or raise its limits.",
+            "detail": "This store went over its limits on Nov 16, 2026 and its 0-day grace period ended on Nov 16, 2026. Choose what to block on the Outlets and People tabs — or raise its limits.",
             "kind": "expect"
           },
           {
@@ -2968,8 +3070,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T18:03:01.944Z",
-    "durationMs": 12035,
+    "at": "2026-11-15T20:34:44.858Z",
+    "durationMs": 11950,
     "steps": [
       {
         "n": 1,
@@ -3085,8 +3187,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T18:03:23.393Z",
-    "durationMs": 21427,
+    "at": "2026-11-15T20:35:06.689Z",
+    "durationMs": 21811,
     "steps": [
       {
         "n": 1,
@@ -3222,6 +3324,272 @@
             "label": "Pro Direct Co still opens",
             "ok": true,
             "detail": "HTTP 200",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser logged JavaScript errors",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t16-whatsapp-plan-gating": {
+    "id": "t16-whatsapp-plan-gating",
+    "title": "WhatsApp chat off (plan or per-store lock) — numbers unlinked at once, no WhatsApp requests, every WhatsApp address is a 404",
+    "status": "pass",
+    "pass": 37,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-15T20:35:46.912Z",
+    "durationMs": 36036,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Baseline: WhatsApp chat is on for the Pro plan",
+        "checks": [
+          {
+            "label": "WhatsApp is in the sidebar",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the Numbers page lists the linked numbers (Counter phone, Number 2, Number 3, New phone)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Counter phone and Number 3 are connected",
+            "ok": true,
+            "detail": "Counter phone Connected +91 90000 00001 · Acme Momos · today: 4/15 new co",
+            "kind": "expect"
+          },
+          {
+            "label": "the dashboard talks to /api/whatsapp while it is on",
+            "ok": true,
+            "detail": "4 requests",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser's only websocket is the live order feed (/realtime) — WhatsApp chat doesn't open one",
+            "ok": true,
+            "detail": "ws://localhost:3097/realtime?outletId=6afa177d6ef3abb832940f81",
+            "kind": "expect"
+          },
+          {
+            "label": "a websocket for WhatsApp is opened by the browser",
+            "ok": true,
+            "detail": "ws://localhost:3097/realtime?outletId=6afa177d6ef3abb832940f81",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "The platform takes WhatsApp chat out of the Pro plan",
+        "checks": []
+      },
+      {
+        "n": 3,
+        "title": "The owner: no WhatsApp anywhere, and every WhatsApp address is a 404",
+        "checks": [
+          {
+            "label": "WhatsApp is gone from the sidebar",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/whatsapp → 404 in the middle of the page",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the sidebar is still there (/whatsapp)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and no chat screen shows (/whatsapp)",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "/whatsapp/chats → 404 in the middle of the page",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the sidebar is still there (/whatsapp/chats)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and no chat screen shows (/whatsapp/chats)",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "/whatsapp/numbers → 404 in the middle of the page",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the sidebar is still there (/whatsapp/numbers)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and no chat screen shows (/whatsapp/numbers)",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "/whatsapp/broadcast → 404 in the middle of the page",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the sidebar is still there (/whatsapp/broadcast)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and no chat screen shows (/whatsapp/broadcast)",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "/whatsapp/access → 404 in the middle of the page",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the sidebar is still there (/whatsapp/access)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and no chat screen shows (/whatsapp/access)",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "/whatsapp/cleanup → 404 in the middle of the page",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the sidebar is still there (/whatsapp/cleanup)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and no chat screen shows (/whatsapp/cleanup)",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the browser sent any request to /api/whatsapp while the feature was off",
+            "ok": true,
+            "detail": "0 requests: ",
+            "kind": "never"
+          },
+          {
+            "label": "a websocket for WhatsApp is open",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "WhatsApp chat comes back: every number was unlinked, the chats are still there",
+        "checks": [
+          {
+            "label": "WhatsApp is back in the sidebar",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "every number says 'Unlinked'",
+            "ok": true,
+            "detail": "4 of 4",
+            "kind": "expect"
+          },
+          {
+            "label": "a number still says Connected",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the reason is shown on the cards",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "each can be linked again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the old chats are still listed (nothing was deleted)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Locking WhatsApp chat for just this store beats its plan",
+        "checks": [
+          {
+            "label": "WhatsApp is not in the sidebar of a store it is locked for",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "its chat address is a 404",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "back to 'from plan' (the plan has it) → WhatsApp is back",
+            "ok": true,
+            "detail": "",
             "kind": "expect"
           },
           {

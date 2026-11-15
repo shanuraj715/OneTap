@@ -1,12 +1,12 @@
 # T02 — WhatsApp chat — API rules and the careful-pace sending worker
 
-**Area:** whatsapp · **Last result:** ✅ PASSED (117 passed, 0 failed · 2026-11-15 21:12 · headless · 12.3 s)
+**Area:** whatsapp · **Last result:** ✅ PASSED (133 passed, 0 failed · 2026-11-16 01:57 · headless · 11.9 s)
 
 **Run it alone:** `node run.mjs --only t02` (add `--visible` to watch it)
 
 ## What this test does
 
-Runs suites/wa-api.mjs: its own in-memory API with the WhatsApp worker switched on and WhatsApp's connection replaced by a stand-in. Covers who can use chat, linking numbers, chats and sending, the pacing rules, incoming messages, broadcasts, order updates, clear/delete, colours, stats, sharing chats between numbers, clean-up by age, and deleting a message for everyone.
+Runs suites/wa-api.mjs: its own in-memory API with the WhatsApp worker switched on and WhatsApp's connection replaced by a stand-in. Covers who can use chat, linking numbers, chats and sending, the pacing rules, incoming messages, broadcasts, order updates, clear/delete, colours, stats, sharing chats between numbers, clean-up by age, deleting a message for everyone, and what happens when a store loses WhatsApp chat (numbers unlinked at once, connections closed, waiting messages failed).
 
 ## Steps
 
@@ -20,6 +20,7 @@ Runs suites/wa-api.mjs: its own in-memory API with the WhatsApp worker switched 
 8. clear and delete
 9. colours, stats, sharing chats out, cleanup, delete for everyone
 10. a real link QR from WhatsApp's servers (nothing is linked)
+11. WhatsApp chat taken away from a store — its numbers are unlinked and nothing stays connected
 
 ## What to expect (these must happen)
 
@@ -31,6 +32,7 @@ Runs suites/wa-api.mjs: its own in-memory API with the WhatsApp worker switched 
 - Order-status updates go out from the linked numbers when switched on.
 - Chats / messages can be cleared by age or date; deleting a message can also delete it for everyone on WhatsApp.
 - A session's keys are stored encrypted and read back intact.
+- When a store loses WhatsApp chat (its plan lacks it, a lock for the store, or the plan is edited) every one of its numbers is unlinked at once, the worker closes the connections, and waiting messages are failed; stored chats are kept.
 
 ## What must NOT happen
 
@@ -39,6 +41,7 @@ Runs suites/wa-api.mjs: its own in-memory API with the WhatsApp worker switched 
 - An opted-out customer must NOT receive broadcasts.
 - One store's chats / numbers must NOT be visible to another store.
 - Stored session keys must NOT be readable as plain text.
+- A store without WhatsApp chat must NOT keep any connection to WhatsApp open.
 
 ## Result of the last run
 
@@ -46,7 +49,7 @@ Runs suites/wa-api.mjs: its own in-memory API with the WhatsApp worker switched 
 
 _Nothing failed._
 
-### ✅ Passed (117)
+### ✅ Passed (133)
 
 **Step 1 — who can use it**
 
@@ -87,20 +90,21 @@ _Nothing failed._
 - (earlier queued messages stay with the number they were written on) — _2_
 - moving a chat to another number takes its waiting messages along
 - with no number online, a brand-new chat can't start
-- an attachment uploads — _http://localhost:3098/uploads/6af9d2e6c6342992e761_
+- an attachment uploads — _http://localhost:3098/uploads/6afa1595a119a3c5f28a_
 - a photo with a caption is queued
 - a read-only role can't upload
 
 **Step 4 — the worker sends — at a careful pace**
 
+- it's quiet hours now (10 pm–9 am): first contacts wait for the morning — _2026-11-16T03:38:02.346Z_
 - one message goes out, to the right number — _919876543210@s.whatsapp.net_
 - …after showing 'typing…'
 - …and is marked sent, with WhatsApp's id saved first
-- the next first contact must wait 2–4 minutes — _206 s_
+- the next first contact must wait 2–4 minutes — _240 s_
 - so the next queued first-contact message does NOT go out yet
 - a reply to someone who wrote to us is a running conversation
 - …and goes out straight away, ahead of the waiting first contacts
-- 15 first contacts a day per number: the rest wait for tomorrow — _2026-11-16T03:35:36.736Z_
+- 15 first contacts a day per number: the rest wait for tomorrow — _2026-11-16T18:31:09.618Z_
 - a number that isn't on WhatsApp is never messaged — _This number isn't on WhatsApp._
 - a failed message can be tried again
 - a photo goes out as a photo, with its caption, read back from storage
@@ -195,10 +199,29 @@ _Nothing failed._
 - a session's keys are stored encrypted — _creds,pre-key-1_
 - …and read back intact (what lets a number stay linked after a restart)
 
+**Step 11 — WhatsApp chat taken away from a store — its numbers are unlinked and nothing stays connected**
+
+- the worker closes (and logs out) the connection of a store whose plan lacks WhatsApp chat
+- …the number shows as unlinked, with the reason
+- …and what was waiting to go out is failed, not left to leak out later
+- a store that has WhatsApp chat is left alone
+- the platform locks WhatsApp chat for one store — _200_
+- …its number is unlinked AT ONCE (no waiting for the worker) — _logged_out wantsLogout=true_
+- …and its waiting messages are failed at once
+- …then the worker closes the connection and logs the phone out
+- …and the card keeps the reason
+- a store on a plan that has WhatsApp chat keeps its number
+- the platform takes WhatsApp chat out of that plan — _200_
+- …every store on it is unlinked AT ONCE
+- …and its connection is closed
+- the stored messages are kept
+- the number stays unlinked when the feature returns — it must be linked again with a new scan — _logged_out_
+
 ## History (latest 10 runs)
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-16 01:57 | pass | 133 | 0 | headless | 11.9 s |
 | 2026-11-15 21:12 | pass | 117 | 0 | headless | 12.3 s |
 
 ---

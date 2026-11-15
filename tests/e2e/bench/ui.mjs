@@ -401,3 +401,31 @@ export async function deleteOutletRow(d, outletName) {
   await d.click(row.locator("button[title='Delete']"), { after: 1200 });
   return text(d);
 }
+
+/** Plans → Edit one plan → tick / untick a feature → Save plan. */
+export async function setPlanFeature(d, planName, featureCaption, on) {
+  await openPlatform(d, "/plans");
+  const card = d.page.locator("section").filter({ has: d.page.getByText(planName, { exact: true }) });
+  await d.click(card.getByRole("button", { name: "Edit" }).first(), { after: 700 });
+  const form = d.page.locator("form, [role=dialog]").filter({ has: d.page.getByRole("button", { name: "Save plan" }) }).last();
+  await tick(d, featureCaption, on, form);
+  await d.click(d.page.getByRole("button", { name: "Save plan" }), { after: 1000 });
+}
+
+/**
+ * Platform → store → Features tab → one feature's choice for THIS store ("From plan", "Unlocked for this store",
+ * "Locked for this store") → Save.
+ */
+export async function setStoreFeature(d, storeName, featureLabel, choice) {
+  await openStore(d, storeName, "Features");
+  const row = d.page.getByText(featureLabel, { exact: true }).first().locator("xpath=ancestor::div[.//select][1]");
+  await row.waitFor({ timeout: 10000 });
+  const select = row.locator("select");
+  const options = await select.locator("option").allInnerTexts();
+  const want = options.find((o) => o.trim().startsWith(choice));
+  if (!want) throw new Error(`"${featureLabel}" has no choice "${choice}" (has: ${options.join(" | ")})`);
+  await d.choose(select, { label: want });
+  const save = d.page.getByRole("button", { name: /^Save/ }).first();
+  await save.waitFor({ state: "visible", timeout: 10000 });
+  await d.click(save, { after: 1000 });
+}

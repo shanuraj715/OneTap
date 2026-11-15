@@ -1,6 +1,6 @@
 # T11 — Delete an outlet from the dashboard — protection for outlets with orders, then the deleted outlet on the subdomain
 
-**Area:** domains · **Last result:** ✅ PASSED (13 passed, 0 failed · 2026-11-15 23:33 · headless · 12.0 s)
+**Area:** domains · **Last result:** ✅ PASSED (13 passed, 0 failed · 2026-11-16 02:04 · headless · 11.9 s)
 
 **Run it alone:** `node run.mjs --only t11` (add `--visible` to watch it)
 
@@ -65,6 +65,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-16 02:04 | pass | 13 | 0 | headless | 11.9 s |
 | 2026-11-15 23:33 | pass | 13 | 0 | headless | 12.0 s |
 | 2026-11-15 23:25 | pass | 13 | 0 | visible | 41.5 s |
 | 2026-11-15 23:03 | pass | 13 | 0 | headless | 12.5 s |
