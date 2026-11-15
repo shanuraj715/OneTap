@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
-import { customerAgeSchema, customerEmailSchema, customerGenderSchema, customerNameSchema, isProfileComplete } from "@onetap/config-schema";
+import { currentAge, customerAgeSchema, customerEmailSchema, customerGenderSchema, customerNameSchema, isProfileComplete } from "@onetap/config-schema";
 import { OutletModel } from "@onetap/db";
 import { isProd } from "../../env.js";
 import { HttpError } from "../../middleware/error.js";
@@ -31,7 +31,7 @@ function shapeCustomer(customer) {
     phone: customer.phone ?? null,
     email: customer.email ?? null,
     gender: customer.gender ?? null,
-    age: customer.age ?? null,
+    age: currentAge(customer),
     walletBalance: customer.walletBalance ?? 0,
     // A session from before this feature (or backfilled for someone else) can
     // be logged in and still lack gender/age — this is what tells the

@@ -1,6 +1,6 @@
 # T03 — WhatsApp in the dashboard — chat window, numbers, broadcast, access and phone layout
 
-**Area:** whatsapp · **Last result:** ✅ PASSED (44 passed, 0 failed · 2026-11-16 01:39 · headless · 19.6 s)
+**Area:** whatsapp · **Last result:** ✅ PASSED (44 passed, 0 failed · 2026-11-16 02:15 · headless · 19.8 s)
 
 **Run it alone:** `node run.mjs --only t03` (add `--visible` to watch it) · starts from fresh fake data
 
@@ -105,7 +105,9 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-16 02:15 | pass | 44 | 0 | headless | 19.8 s |
 | 2026-11-16 01:39 | pass | 44 | 0 | headless | 19.6 s |
+| 2026-11-16 00:53 | pass | 44 | 0 | headless | 19.8 s |
 | 2026-11-15 21:13 | pass | 44 | 0 | headless | 19.4 s |
 
 ---

@@ -7,6 +7,7 @@ import { startServerMonitor } from "./modules/sysmon/monitor.js";
 import { dispatchDue } from "./modules/printing/printing.service.js";
 import { attachRealtime } from "./realtime/hub.js";
 import { attachPreview } from "./realtime/preview.js";
+import { startMarketingWorker } from "./modules/marketing/worker.js";
 import { startWhatsAppWorker } from "./modules/whatsapp/worker.js";
 
 const DISPATCH_INTERVAL_MS = 5_000;
@@ -37,6 +38,8 @@ function main()       {
   startServerMonitor();
   // only where WHATSAPP_WORKER=on — see env.js
   startWhatsAppWorker();
+  // only where MARKETING_WORKER=on — see env.js
+  startMarketingWorker();
 
   const server = app.listen(env.API_PORT);
 

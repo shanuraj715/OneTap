@@ -7,8 +7,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:08:19.453Z",
-    "durationMs": 13117,
+    "at": "2026-11-15T20:44:09.787Z",
+    "durationMs": 13312,
     "steps": [
       {
         "n": 1,
@@ -89,7 +89,7 @@
           {
             "label": "the code request is accepted (the test stores accept any phone)",
             "ok": true,
-            "detail": "HTTP 200 {\"channel\":\"sms\",\"devCode\":\"940844\"}",
+            "detail": "HTTP 200 {\"channel\":\"sms\",\"devCode\":\"796586\"}",
             "kind": "expect"
           },
           {
@@ -112,8 +112,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:08:56.283Z",
-    "durationMs": 32658,
+    "at": "2026-11-15T20:44:46.524Z",
+    "durationMs": 32545,
     "steps": [
       {
         "n": 1,
@@ -289,7 +289,7 @@
           {
             "label": "the new customer was saved with the details they gave",
             "ok": true,
-            "detail": "{\"id\":\"6afa114a2828386e4c7915ef\",\"name\":\"Rohan Mehta\",\"email\":\"rohan.mehta@example.com\",\"phone\":\"9811122233\",\"gender\":\"male\",\"age\":31,\"orderCount\":1,\"walletBalance\":0,\"lastOrderAt\":\"2026-11-15T20:08:47.322Z\",\"createdAt\":\"2026-11-15T20:08:42.684Z\"}",
+            "detail": "{\"id\":\"6afa19b0b4ad197535a71195\",\"name\":\"Rohan Mehta\",\"email\":\"rohan.mehta@example.com\",\"phone\":\"9811122233\",\"gender\":\"male\",\"age\":31,\"orderCount\":1,\"walletBalance\":0,\"lastOrderAt\":\"2026-11-15T20:44:37.579Z\",\"createdAt\":\"2026-11-15T20:44:32.903Z\"}",
             "kind": "expect"
           },
           {
@@ -313,7 +313,7 @@
           {
             "label": "the row shows the customer, phone, type, item count, total and 'Placed'",
             "ok": true,
-            "detail": " #0001 01:38 AM Rohan Mehta 9811122233 TA 8 ₹1,030 Placed 0m Accepted",
+            "detail": " #0001 02:14 AM Rohan Mehta 9811122233 TA 8 ₹1,030 Placed 0m Accepted",
             "kind": "expect"
           }
         ]
@@ -500,8 +500,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:09:10.580Z",
-    "durationMs": 14280,
+    "at": "2026-11-15T20:44:58.831Z",
+    "durationMs": 12287,
     "steps": [
       {
         "n": 1,
@@ -708,7 +708,7 @@
           {
             "label": "an attachment uploads",
             "ok": true,
-            "detail": "http://localhost:3098/uploads/6afa115ae8830218777d",
+            "detail": "http://localhost:3098/uploads/6afa19c00c9826af56b8",
             "kind": "expect"
           },
           {
@@ -732,7 +732,7 @@
           {
             "label": "it's quiet hours now (10 pm–9 am): first contacts wait for the morning",
             "ok": true,
-            "detail": "2026-11-16T03:35:59.377Z",
+            "detail": "2026-11-16T03:36:49.618Z",
             "kind": "expect"
           },
           {
@@ -756,7 +756,7 @@
           {
             "label": "the next first contact must wait 2–4 minutes",
             "ok": true,
-            "detail": "130 s",
+            "detail": "132 s",
             "kind": "expect"
           },
           {
@@ -780,7 +780,7 @@
           {
             "label": "15 first contacts a day per number: the rest wait for tomorrow",
             "ok": true,
-            "detail": "2026-11-16T18:31:07.159Z",
+            "detail": "2026-11-16T18:31:56.657Z",
             "kind": "expect"
           },
           {
@@ -906,13 +906,13 @@
           {
             "label": "preview: 3 people (duplicates merged), 1 opted out",
             "ok": true,
-            "detail": "{\"recipients\":3,\"optedOut\":1,\"running\":0,\"firstContact\":3,\"numbersOnline\":[{\"id\":\"6afa115be8830218777d770a\",\"label\":\"Counter phone\"},{\"id\":\"6afa115be8830218777d7711\",\"label\":\"Delivery phone\"}],\"estimatedDays\":1}",
+            "detail": "{\"recipients\":3,\"optedOut\":1,\"running\":0,\"firstContact\":3,\"numbersOnline\":[{\"id\":\"6afa19c10c9826af56b87403\",\"label\":\"Counter phone\"},{\"id\":\"6afa19c10c9826af56b8740a\",\"label\":\"Delivery phone\"}],\"estimatedDays\":1}",
             "kind": "expect"
           },
           {
             "label": "a broadcast queues one message per person",
             "ok": true,
-            "detail": "{\"id\":\"6afa1166e8830218777d7888\",\"text\":\"Diwali: 20% off this weekend!\\n\\nReply STOP to stop offers.\",\"media\":null,\"createdAt\":\"2026-11-15T20:09:10.203Z\",\"status\":\"sending\",\"total\":3,\"skipped\":1,\"waiting\":3,\"sent\":0,\"read\":0,\"failed\":0}",
+            "detail": "{\"id\":\"6afa19ca0c9826af56b87592\",\"text\":\"Diwali: 20% off this weekend!\\n\\nReply STOP to stop offers.\",\"media\":null,\"createdAt\":\"2026-11-15T20:44:58.268Z\",\"status\":\"sending\",\"total\":3,\"skipped\":1,\"waiting\":3,\"sent\":0,\"read\":0,\"failed\":0}",
             "kind": "expect"
           },
           {
@@ -1283,8 +1283,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:09:34.343Z",
-    "durationMs": 19585,
+    "at": "2026-11-15T20:45:22.775Z",
+    "durationMs": 19760,
     "steps": [
       {
         "n": 1,
@@ -1419,7 +1419,7 @@
           {
             "label": "a paced broadcast message says when it will go",
             "ok": true,
-            "detail": "BROADCAST | Diwali special: 20% off this weekend! | Reply STOP to stop offers. | sends at 3:39 pm · | 1:09 am",
+            "detail": "BROADCAST | Diwali special: 20% off this weekend! | Reply STOP to stop offers. | sends at 4:15 pm · | 1:45 am",
             "kind": "expect"
           },
           {
@@ -1592,8 +1592,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:09:54.720Z",
-    "durationMs": 16213,
+    "at": "2026-11-15T20:45:43.210Z",
+    "durationMs": 16264,
     "steps": [
       {
         "n": 1,
@@ -1751,8 +1751,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:10:12.190Z",
-    "durationMs": 13301,
+    "at": "2026-11-15T20:46:00.666Z",
+    "durationMs": 13283,
     "steps": [
       {
         "n": 0,
@@ -1844,8 +1844,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:10:49.352Z",
-    "durationMs": 37146,
+    "at": "2026-11-15T20:46:39.309Z",
+    "durationMs": 38627,
     "steps": [
       {
         "n": 1,
@@ -1950,7 +1950,7 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "0,0,0,1,41,272,814,1121,1241,1249,1249,1249,1249,1249",
+            "detail": "0,0,0,1,57,261,799,1150,1240,1249,1249,1249,1249,1249",
             "kind": "expect"
           },
           {
@@ -2016,7 +2016,7 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "508,508,508,509,581,917,1376,1608,1639,1639,1639,1639,1639,1639",
+            "detail": "508,508,508,509,582,837,1379,1589,1639,1639,1639,1639,1639,1639",
             "kind": "expect"
           },
           {
@@ -2045,8 +2045,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:10:52.294Z",
-    "durationMs": 2923,
+    "at": "2026-11-15T20:46:42.453Z",
+    "durationMs": 3128,
     "steps": [
       {
         "n": 1,
@@ -2114,8 +2114,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:14:04.166Z",
-    "durationMs": 187692,
+    "at": "2026-11-15T20:49:55.448Z",
+    "durationMs": 188810,
     "steps": [
       {
         "n": 1,
@@ -2130,13 +2130,13 @@
           {
             "label": "Basic shows 3 people · 1 outlet",
             "ok": true,
-            "detail": "Lifecycle Basic One outlet — takeaway and dine-in QR 0 stores 3 people · 1 outlet (multi-outlet off) Not on the website 2/11 features · 6/6 ",
+            "detail": "Lifecycle Basic One outlet — takeaway and dine-in QR 0 stores 3 people · 1 outlet (multi-outlet off) Not on the website 2/12 features · 6/6 ",
             "kind": "expect"
           },
           {
             "label": "Pro shows 10 people · 3 outlets",
             "ok": true,
-            "detail": "Lifecycle Pro Up to 3 outlets, everything unlocked 0 stores 10 people · 3 outlets Not on the website 11/11 features · 6/6 effects · 9/9 card",
+            "detail": "Lifecycle Pro Up to 3 outlets, everything unlocked 0 stores 10 people · 3 outlets Not on the website 12/12 features · 6/6 effects · 9/9 card",
             "kind": "expect"
           },
           {
@@ -2446,8 +2446,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:14:36.990Z",
-    "durationMs": 32800,
+    "at": "2026-11-15T20:50:28.625Z",
+    "durationMs": 33151,
     "steps": [
       {
         "n": 1,
@@ -2701,8 +2701,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:16:28.618Z",
-    "durationMs": 111607,
+    "at": "2026-11-15T20:52:20.513Z",
+    "durationMs": 111863,
     "steps": [
       {
         "n": 1,
@@ -2974,8 +2974,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:16:40.678Z",
-    "durationMs": 12038,
+    "at": "2026-11-15T20:52:33.265Z",
+    "durationMs": 12720,
     "steps": [
       {
         "n": 1,
@@ -3091,8 +3091,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:17:02.535Z",
-    "durationMs": 21833,
+    "at": "2026-11-15T20:52:55.163Z",
+    "durationMs": 21872,
     "steps": [
       {
         "n": 1,
@@ -3242,6 +3242,684 @@
     "findings": [],
     "problems": []
   },
+  "t13-marketing": {
+    "id": "t13-marketing",
+    "title": "Marketing — channels, audience filters (last visit, items, age, gender, order type, area), imports, lists, sending and the sidebar",
+    "status": "pass",
+    "pass": 70,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-15T20:54:27.778Z",
+    "durationMs": 88431,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The sidebar: running the store above a divider, everything else below it",
+        "checks": [
+          {
+            "label": "first group 'Store & orders': Take order, Dashboard, Orders, Menu, Tables, Printing",
+            "ok": true,
+            "detail": "{\"group\":\"Store & orders\",\"divider\":false,\"items\":[\"Take order\",\"Dashboard\",\"Orders\",\"Menu\",\"Tables\",\"Printing\"]}",
+            "kind": "expect"
+          },
+          {
+            "label": "a divider comes before the second group",
+            "ok": true,
+            "detail": "[[\"Store & orders\",false],[\"Customers & growth\",true],[\"Setup\",false]]",
+            "kind": "expect"
+          },
+          {
+            "label": "second group 'Customers & growth': Customers, Marketing, WhatsApp, Coupons",
+            "ok": true,
+            "detail": "{\"group\":\"Customers & growth\",\"divider\":true,\"items\":[\"Customers\",\"Marketing\",\"WhatsApp\",\"Coupons\"]}",
+            "kind": "expect"
+          },
+          {
+            "label": "third group 'Setup': Storefront and Settings",
+            "ok": true,
+            "detail": "{\"group\":\"Setup\",\"divider\":false,\"items\":[\"Storefront\",\"Settings\"]}",
+            "kind": "expect"
+          },
+          {
+            "label": "Marketing or WhatsApp is mixed in with the store-and-orders group",
+            "ok": true,
+            "detail": "Take order, Dashboard, Orders, Menu, Tables, Printing",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Marketing: which ways of reaching customers are ready?",
+        "checks": [
+          {
+            "label": "linked WhatsApp is Ready and can be chosen",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "SMS can be chosen before it is set up",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the WhatsApp Business API can be chosen before it is set up",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "SMS and the Business API say why, with a way to set them up",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Who gets it — with no filters",
+        "checks": [
+          {
+            "label": "My customers, no filters: 6 people have a phone number",
+            "ok": true,
+            "detail": "6",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the page says who was left out: 1 said STOP, 1 has no phone number",
+            "ok": true,
+            "detail": "Left out: 1 said STOP, 1 customer without a phone number.",
+            "kind": "expect"
+          },
+          {
+            "label": "the person who said STOP is in the example list",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the customer with no phone number is in the example list",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Filter: hasn't ordered for …",
+        "checks": [
+          {
+            "label": "not ordered for 2 months → Ravi and Karan",
+            "ok": true,
+            "detail": "Karan Singh, Ravi Kumar",
+            "kind": "expect"
+          },
+          {
+            "label": "Dev (signed up, never ordered) is counted as a lapsed customer",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "…with 'also people who never ordered' → Dev joins",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "not ordered for 30 days → Karan, Ravi and Sana",
+            "ok": true,
+            "detail": "Karan Singh, Ravi Kumar, Sana Khan",
+            "kind": "expect"
+          },
+          {
+            "label": "4 weeks is understood the same way",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "looking at the Second outlet only → Karan and Sana (Ravi never ordered there)",
+            "ok": true,
+            "detail": "Karan Singh, Sana Khan",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Filter: ordered these items",
+        "checks": [
+          {
+            "label": "ordered Paneer Steamed or Paneer Gravy momos → Ravi and Priya",
+            "ok": true,
+            "detail": "Priya Nair, Ravi Kumar",
+            "kind": "expect"
+          },
+          {
+            "label": "…at least 5 in total → Ravi only",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…ALL of them, at least 4 of each → nobody (Ravi had only 3 gravy)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…ALL of them, at least 2 of each → Ravi",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…only orders from the last month → Priya",
+            "ok": true,
+            "detail": "Priya Nair",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Filter: age today (it grows each year)",
+        "checks": [
+          {
+            "label": "age 30 → Ravi (he said 24 in 2020)",
+            "ok": true,
+            "detail": "Ravi Kumar",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the example row shows his age as 30",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "age 21 → Sana (she said 19 in 2024)",
+            "ok": true,
+            "detail": "Sana Khan",
+            "kind": "expect"
+          },
+          {
+            "label": "someone who said 19 in 2024 is still counted as 19",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "ages 21 to 30 → Sana, Meena and Ravi",
+            "ok": true,
+            "detail": "Meena Iyer, Ravi Kumar, Sana Khan",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "Filter: gender, and filters working together",
+        "checks": [
+          {
+            "label": "women → Meena, Priya and Sana (Mail Only has no phone)",
+            "ok": true,
+            "detail": "Meena Iyer, Priya Nair, Sana Khan",
+            "kind": "expect"
+          },
+          {
+            "label": "women AND not ordered for 30 days → Sana",
+            "ok": true,
+            "detail": "Sana Khan",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "Filter: more takeaways, and area",
+        "checks": [
+          {
+            "label": "3 or more takeaway orders → Ravi and Sana",
+            "ok": true,
+            "detail": "Ravi Kumar, Sana Khan",
+            "kind": "expect"
+          },
+          {
+            "label": "4 or more → Sana",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "2 or more deliveries → Meena",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "delivered to an address in 'Laxmi Nagar' → Meena",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an area nobody was delivered to → nobody",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "within 2 km of the Main outlet → Meena",
+            "ok": true,
+            "detail": "Meena Iyer",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 9,
+        "title": "Other groups: WhatsApp contacts and pasted numbers",
+        "checks": [
+          {
+            "label": "people who messaged on WhatsApp → Chat Only Chandni (a contact who isn't a customer)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Stop Sam (who said STOP) is among the WhatsApp contacts",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "pasted numbers → 2 people (a repeat merged, one line unusable)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the page says 2 usable, 1 can't be used, 1 repeated",
+            "ok": true,
+            "detail": "2 usable · 1 can't be used · 1 repeated Not used: “call me 123” 2 pe",
+            "kind": "expect"
+          },
+          {
+            "label": "men from the customer list + 2 typed numbers = 3 (Ravi is in both, counted once)",
+            "ok": true,
+            "detail": "Karan Singh, Ravi Kumar",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 10,
+        "title": "Contact lists: create one, grow it, use it, delete one",
+        "checks": [
+          {
+            "label": "the list is saved with 2 people",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it is listed with its count",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "viewing it shows Zed and the other number",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "adding more puts the new one in and skips the repeat",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the deleted list is still listed",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the saved list works as an audience: 3 people",
+            "ok": true,
+            "detail": "Zed",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 11,
+        "title": "Guard rails: nothing can be sent without a channel, a message and people",
+        "checks": [
+          {
+            "label": "'Review and send' is possible with nobody in the audience, no channel and no message",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 12,
+        "title": "Set up SMS in Notifications, then it becomes available",
+        "checks": [
+          {
+            "label": "SMS now shows as Ready and can be chosen",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the Business API still isn't set up",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 13,
+        "title": "Send an SMS campaign to customers who haven't ordered for 2 months",
+        "checks": [
+          {
+            "label": "the audience is Ravi and Karan",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Review and send' works before a message is written",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "a preview shows the message with a sample name",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the confirmation says who and over what",
+            "ok": true,
+            "detail": "Send to 2 people?\n\nOver SMS.\n\nHi Asha, we miss you at Mart Main! Show this SMS for 20% off.\n\nMessages go out one after a",
+            "kind": "expect"
+          },
+          {
+            "label": "the page says the campaign is on its way",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Campaigns: it finishes with 2 sent, 0 waiting, 0 failed",
+            "ok": true,
+            "detail": "Win-back SMS SMS · 16 Nov, 2:24 am · 2 people 2 sent · 0 waiting · 0 failed Done",
+            "kind": "expect"
+          },
+          {
+            "label": "the SMS gateway was asked to send to exactly Ravi's and Karan's numbers",
+            "ok": true,
+            "detail": "9000000001, 9000000003",
+            "kind": "expect"
+          },
+          {
+            "label": "the gateway was asked to message anyone else (Stop Sam, Dev, Meena, Sana, Priya…)",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "someone got the same message twice",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "each text starts with that person's own name and has the store's name",
+            "ok": true,
+            "detail": "Hi Karan Singh, we miss you at Marketing Mart! Show this SMS for 20% off.",
+            "kind": "expect"
+          },
+          {
+            "label": "the gateway key from Notifications was used",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 14,
+        "title": "Send over linked WhatsApp, then cancel it before it goes out",
+        "checks": [
+          {
+            "label": "women → 3 people",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the page tells her about the STOP line that is added",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the confirmation explains the slow, careful pace for new contacts",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it is queued: 3 waiting, still Sending (the sending worker is off here)",
+            "ok": true,
+            "detail": "Ladies offer WhatsApp (linked numbers) · 16 Nov, 2:24 am · 3 people 0 sent · 3 waiting · 0 failed Sending Cancel",
+            "kind": "expect"
+          },
+          {
+            "label": "cancelling stops it: Cancelled, nothing waiting",
+            "ok": true,
+            "detail": "Ladies offer WhatsApp (linked numbers) · 16 Nov, 2:24 am · 3 people 0 sent · 0 waiting · 0 failed Cancelled",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 15,
+        "title": "The Customers page shows ages as they are today",
+        "checks": [
+          {
+            "label": "Ravi (24 in 2020) shows 30",
+            "ok": true,
+            "detail": " Ravi Kumar — 9000000001 Male 30 3 0 18 Aug, 2:22 am",
+            "kind": "expect"
+          },
+          {
+            "label": "Sana (19 in 2024) shows 21",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser logged JavaScript errors",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t14-marketing-plan": {
+    "id": "t14-marketing-plan",
+    "title": "Marketing is a plan feature — Basic doesn't have it, Pro does, and it can be unlocked or locked for one store",
+    "status": "pass",
+    "pass": 16,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-15T20:55:36.013Z",
+    "durationMs": 64053,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Platform console → Plans: one plan without Marketing, one with it",
+        "checks": [
+          {
+            "label": "both plans are listed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the plan form has a 'Marketing' switch, ticked for the Pro-style plan",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Two stores on the plan WITHOUT Marketing",
+        "checks": [
+          {
+            "label": "both stores exist",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "The owner of the Basic-style store: no Marketing",
+        "checks": [
+          {
+            "label": "Marketing is in the sidebar of a store whose plan lacks it",
+            "ok": true,
+            "detail": "[{\"group\":\"Store & orders\",\"divider\":false,\"items\":[\"Take order\",\"Dashboard\",\"Orders\",\"Menu\",\"Tables\"]},{\"group\":\"Customers & growth\",\"divider\":true,\"items\":[\"Customers\",\"Coupons\"]},{\"group\":\"Setup\",\"divider\":false,\"items\":[\"Storefront\",\"Settings\"]}]",
+            "kind": "never"
+          },
+          {
+            "label": "opening /marketing/new says 'Marketing isn't in your plan'",
+            "ok": true,
+            "detail": "Marketing Send an offer or an announcement to your customers. Marketing isn't in your plan Ask TablePe to add it to your",
+            "kind": "expect"
+          },
+          {
+            "label": "the page still offers the sending screens",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "The platform unlocks Marketing for THIS store only",
+        "checks": [
+          {
+            "label": "the owner now has Marketing in the sidebar",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the real Marketing screen opens",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the OTHER store on the same plan got Marketing too",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Back to 'from plan', then the store moves to the plan that includes Marketing",
+        "checks": [
+          {
+            "label": "Marketing stays after the unlock is removed (the plan still lacks it)",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "on the plan that includes Marketing the owner has it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Locking Marketing for one store beats its plan",
+        "checks": [
+          {
+            "label": "the owner still has Marketing after the platform locked it for the store",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "opening it says it isn't in the plan",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "back to 'from plan' (a plan that includes it) → the owner has Marketing again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "Other Pro stores are untouched",
+        "checks": [
+          {
+            "label": "Marketing Mart (Pro) still has Marketing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser logged JavaScript errors",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
   "t15-login-protection": {
     "id": "t15-login-protection",
     "title": "Sign-in protection — wrong guesses block the network, blocks grow longer, a blocked network sees no login form, the platform can unblock",
@@ -3250,8 +3928,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:17:41.063Z",
-    "durationMs": 34338,
+    "at": "2026-11-15T20:56:14.880Z",
+    "durationMs": 34684,
     "steps": [
       {
         "n": 1,
@@ -3362,7 +4040,7 @@
           {
             "label": "Security lists the address as Blocked, for Dashboards, blocked twice",
             "ok": true,
-            "detail": "203.0.113.50 Dashboards Blocked · 10 seconds left 0 2 16 Nov, 1:47:21 am Unblock",
+            "detail": "203.0.113.50 Dashboards Blocked · 10 seconds left 0 2 16 Nov, 2:25:54 am Unblock",
             "kind": "expect"
           },
           {

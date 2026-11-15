@@ -26,6 +26,7 @@ import { platformSiteRouter, siteRouter } from "./modules/site/site.routes.js";
 import { staffOrdersRouter } from "./modules/orders/staff-orders.routes.js";
 import { outletsRouter } from "./modules/outlets/outlets.routes.js";
 import { pagesRouter } from "./modules/pages/pages.routes.js";
+import { marketingRouter } from "./modules/marketing/marketing.routes.js";
 import { whatsappRouter } from "./modules/whatsapp/whatsapp.routes.js";
 import { paymentsRouter } from "./modules/payments/payments.routes.js";
 import { previewRouter } from "./modules/preview/preview.routes.js";
@@ -117,6 +118,7 @@ export function createApp()          {
   // a store's own storefront pages: public reads for visitors, management for its team
   app.use("/api/pages", pagesRouter);
   app.use("/api/whatsapp", whatsappRouter);
+  app.use("/api/marketing", marketingRouter);
   app.use("/api/tables", tablesRouter);
   app.use("/api/qr-cards", qrCardsRouter);
   app.use("/api/printing", printingRouter);

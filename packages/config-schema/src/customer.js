@@ -24,6 +24,19 @@ export const CUSTOMER_GENDER_LABELS = {
 export const CUSTOMER_AGE_MIN = 13;
 export const CUSTOMER_AGE_MAX = 100;
 
+/**
+ * A customer's age TODAY. We only know the age they gave and the year they gave it, so it grows by one each
+ * calendar year: 24 when they signed up in 2020 → 30 in 2026. (`ageYear` is the year the age was recorded;
+ * customers from before it existed fall back to the year their account was created.)
+ */
+export function currentAge(customer, now = new Date()) {
+  const age = Number(customer?.age);
+  if (!age) return null;
+  const year = now.getFullYear();
+  const recorded = Number(customer?.ageYear) || (customer?.createdAt ? new Date(customer.createdAt).getFullYear() : year);
+  return Math.min(120, age + Math.max(0, year - recorded));
+}
+
 export const customerNameSchema = z.string().trim().min(1).max(80);
 export const customerAgeSchema = z.number().int().min(CUSTOMER_AGE_MIN).max(CUSTOMER_AGE_MAX);
 export const customerEmailSchema = z.string().trim().email().max(120);

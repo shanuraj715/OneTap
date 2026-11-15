@@ -13,6 +13,7 @@ import {
   waLevelAtLeast,
   waMediaTypeOf,
   planWaDistribution,
+  renderMarketing,
   WA_NUMBER_COLORS,
   WA_REVOKE_HOURS,
 } from "@onetap/config-schema";
@@ -423,14 +424,20 @@ export async function broadcastPreview(ctx) {
  * gets it from that chat's number (it waits for that number if it's offline); everyone else is spread across the
  * numbers that are online. First contacts are paced (WA_PACING.cold), so a big list takes days.
  */
-export async function createBroadcast(ctx, { text, media }, userId) {
-  const { list, optedOut } = await audience(ctx);
+export async function createBroadcast(ctx, { text, media, recipients, storeName = "" }, userId) {
+  // Marketing hands over the exact people (already narrowed by its filters, opted-out numbers already left out);
+  // without them this is the original "everyone who has ordered" broadcast.
+  const { list, optedOut } = recipients
+    ? { list: recipients.map((r) => [r.phone, { _id: r.customerId, name: r.name }]), optedOut: 0 }
+    : await audience(ctx);
   if (!list.length) throw new HttpError(400, "There's nobody to send it to yet — customers appear here once they've ordered with a phone number.");
   const online = (await WaAccountModel.find({ brandId: ctx.brandId, status: "connected" }).lean()).filter(isOnline);
   const anyAccount = await WaAccountModel.exists({ brandId: ctx.brandId, status: { $in: ["connected", "disconnected"] } });
   if (!online.length && !anyAccount) throw new HttpError(409, "No WhatsApp number is linked. Link one in WhatsApp → Numbers.", { code: "no_number" });
 
   const body = `${text.trim()}\n\n${WA_OPT_OUT_FOOTER}`;
+  // {{customerName}} / {{storeName}} become each person's own words (only when the sender asked for it)
+  const bodyFor = (customer) => (recipients ? `${renderMarketing(text.trim(), { customerName: customer.name || "there", storeName })}\n\n${WA_OPT_OUT_FOOTER}` : body);
   const campaign = await WaCampaignModel.create({ brandId: ctx.brandId, text: body, media, total: list.length, skipped: optedOut, createdBy: userId });
   const campaignId = String(campaign._id);
   let rr = 0;
@@ -438,7 +445,7 @@ export async function createBroadcast(ctx, { text, media }, userId) {
   for (const [phone, customer] of list) {
     const chat = await WaChatModel.findOneAndUpdate(
       { brandId: ctx.brandId, phone },
-      { $setOnInsert: { brandId: ctx.brandId, phone, name: (customer.name ?? "").slice(0, 80), customerId: String(customer._id) } },
+      { $setOnInsert: { brandId: ctx.brandId, phone, name: (customer.name ?? "").slice(0, 80), ...(customer._id ? { customerId: String(customer._id) } : {}) } },
       { upsert: true, new: true },
     ).lean();
     let accountId = chat.accountId;
@@ -453,7 +460,7 @@ export async function createBroadcast(ctx, { text, media }, userId) {
       accountId,
       direction: "out",
       type: media ? waMediaTypeOf(media.mime) : "text",
-      text: body,
+      text: bodyFor(customer),
       media,
       status: "queued",
       source: "broadcast",

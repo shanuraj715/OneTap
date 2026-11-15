@@ -1,6 +1,6 @@
 # T15 — Sign-in protection — wrong guesses block the network, blocks grow longer, a blocked network sees no login form, the platform can unblock
 
-**Area:** security · **Last result:** ✅ PASSED (28 passed, 0 failed · 2026-11-16 01:47 · headless · 34.3 s)
+**Area:** security · **Last result:** ✅ PASSED (28 passed, 0 failed · 2026-11-16 02:26 · headless · 34.7 s)
 
 **Run it alone:** `node run.mjs --only t15` (add `--visible` to watch it) · starts from fresh fake data
 
@@ -71,7 +71,7 @@ _Nothing failed._
 
 **Step 5 — The platform console lists the blocked address and can unblock it**
 
-- Security lists the address as Blocked, for Dashboards, blocked twice — _203.0.113.50 Dashboards Blocked · 10 seconds left 0 2 16 Nov, 1:47:21 am Unblock_
+- Security lists the address as Blocked, for Dashboards, blocked twice — _203.0.113.50 Dashboards Blocked · 10 seconds left 0 2 16 Nov, 2:25:54 am Unblock_
 - …and explains the rules (3 wrong tries, longer each time)
 - did not happen: the address is still listed as blocked after Unblock
 - the unblocked address sees the sign-in form again at once — _TablePe admin Sign in to manage your restaurant. Email Password Sign in_
@@ -97,6 +97,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-16 02:26 | pass | 28 | 0 | headless | 34.7 s |
 | 2026-11-16 01:47 | pass | 28 | 0 | headless | 34.3 s |
 | 2026-11-16 01:37 | pass | 28 | 0 | headless | 33.7 s |
 | 2026-11-16 01:37 | error | 24 | 0 | headless | 46.5 s |

@@ -58,6 +58,8 @@ const schema = z.object({
   LOGIN_BLOCK_STEPS_SECONDS: z.string().default("300,900,3600,21600,86400"),
   LOGIN_STRIKE_FORGET_SECONDS: z.coerce.number().int().min(1).default(86400),
   LOGIN_FLOOD_PER_MINUTE: z.coerce.number().int().min(1).default(30),
+  /** the ONE process that sends queued SMS / WhatsApp Business API marketing messages (same rule as WHATSAPP_WORKER) */
+  MARKETING_WORKER: z.enum(["on", "off"]).default("off"),
   WEBSITE_REVALIDATE_SECRET: z.string().default("dev-only-website-revalidate-secret"),
   /**
    * Cloudflare Turnstile for the website's enquiry form — a real "are you a
