@@ -1,6 +1,6 @@
 # T12 — Delete the store — typed-name confirmation, then the subdomain, the owner and the other stores
 
-**Area:** domains · **Last result:** ✅ PASSED (19 passed, 0 failed · 2026-11-15 23:33 · headless · 21.4 s)
+**Area:** domains · **Last result:** ✅ PASSED (19 passed, 0 failed · 2026-11-16 01:00 · headless · 21.6 s)
 
 **Run it alone:** `node run.mjs --only t12` (add `--visible` to watch it)
 
@@ -79,6 +79,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-16 01:00 | pass | 19 | 0 | headless | 21.6 s |
 | 2026-11-15 23:33 | pass | 19 | 0 | headless | 21.4 s |
 | 2026-11-15 23:26 | pass | 19 | 0 | visible | 1 min 14 s |
 | 2026-11-15 23:03 | pass | 19 | 0 | headless | 21.7 s |

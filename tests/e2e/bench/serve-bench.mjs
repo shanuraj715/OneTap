@@ -31,6 +31,7 @@ Object.assign(process.env, {
   MONGODB_URI: mongod.getUri(),
   MONGODB_DB: "bench",
   WHATSAPP_WORKER: "off",
+  MARKETING_WORKER: "on", // the bench is throwaway, so it may send (to the fake SMS gateway a test starts)
   STORE_SUBDOMAIN_BASE: "localhost:3170", // store addresses like  acme.localhost:3170  (Chrome opens *.localhost with no DNS)
   CORS_ORIGINS: "http://localhost:3171,http://127.0.0.1:3171",
   PUBLIC_API_URL: "http://localhost:3097",
@@ -45,6 +46,8 @@ await new Promise((r) => server.once("listening", r));
 // the live order feed (/realtime) and the live menu preview, attached the way the real server.js does
 (await import(`${API}/src/realtime/hub.js`)).attachRealtime(server);
 (await import(`${API}/src/realtime/preview.js`)).attachPreview(server);
+// the marketing sender (SMS / WhatsApp Business API) — on here because the bench is throwaway
+(await import(`${API}/src/modules/marketing/worker.js`)).startMarketingWorker();
 const { ensureSuperAdmin } = await import(`${API}/src/modules/auth/auth.service.js`);
 await ensureSuperAdmin({ email: "super@sandbox.test", name: "Platform Admin", password: "Super123!" });
 const { FEATURE_KEYS } = await import(`${REPO}/packages/config-schema/src/index.js`);
@@ -237,8 +240,66 @@ await addChat("919855555555", "Meera", counter, [
 await raw("customers").insertMany(["9833333333", "9844444444", "9855555555", "9866666666", "9877777777"].map((p, i) => ({ brandId: brandA, phone: p, name: `Customer ${i + 2}`, createdAt: new Date(), updatedAt: new Date() })));
 await raw("wachats").updateOne({ phone: "919833333333" }, { $set: { optedOut: true } });
 
+/* ----------------------------------------------- Marketing Mart (marketing tests) */
+// A third store with customers who differ in age, gender, last visit, items, order types and area — so every
+// marketing filter has someone who matches and someone who doesn't. Kept apart from Acme so the other tests'
+// customer counts don't change.
+const M = await call("POST", "/api/brands", { cookie: su, body: { brandName: "Marketing Mart", brandSlug: "mart", outletName: "Mart Main", outletSlug: "main", hostnames: ["mart.localhost:3170"], ownerEmail: "o@mart.test", ownerName: "Mart Owner", ownerPassword: "Owner123!", planId: idOf(pro) } });
+const brandM = idOf(M.brand) !== "undefined" ? idOf(M.brand) : String(M.brandId);
+const mainM = idOf(M.outlet) !== "undefined" ? idOf(M.outlet) : String(M.outletId);
+const ownerM = await login("o@mart.test", "Owner123!");
+const secondM = idOf((await call("POST", "/api/outlets", { cookie: ownerM, body: { name: "Mart Second", slug: "second" } })).outlet);
+await raw("outlets").updateMany({ brandId: brandM }, { $set: { hostnames: ["mart.localhost:3170"], canonicalHostname: "mart.localhost:3170" } });
+const MM = [["Momos", [["Paneer Steamed Momos", "veg", null, [], true, 9000], ["Paneer Gravy Momos", "veg", null, [], true, 11000], ["Veg Steamed Momos", "veg", null, [], true, 8000], ["Chicken Momos", "non-veg", null, [], true, 10000]]], ["Drinks", [["Cold Coffee", "veg", null, [], true, 7000]]]];
+await seedMenu(mainM, ownerM, MM);
+await seedMenu(secondM, ownerM, MM);
+await cfg(mainM, ownerM, { identity: { name: "Marketing Mart — Main", location: { point: { lat: 28.6304, lng: 77.2773 }, formattedAddress: "Laxmi Nagar, Delhi" } } });
+await cfg(secondM, ownerM, { identity: { name: "Marketing Mart — Second", location: { point: { lat: 28.5707, lng: 77.3219 }, formattedAddress: "Sector 18, Noida" } } });
+// one linked WhatsApp number (the worker is off, so it is faked online)
+const martWa = (await call("POST", "/api/whatsapp/accounts", { cookie: ownerM, outlet: mainM, body: { label: "Mart phone" } })).account.id;
+await raw("waaccounts").updateOne({ _id: oid(martWa) }, { $set: { status: "connected", phone: "919000000099", pushName: "Marketing Mart", seenAt: new Date(), linkedAt: new Date() } });
+setInterval(() => void raw("waaccounts").updateOne({ _id: oid(martWa) }, { $set: { seenAt: new Date() } }), 20_000);
+
+const daysAgo = (n) => new Date(Date.now() - n * 86_400_000);
+const yr = new Date().getFullYear();
+const dayKey = (d) => d.toISOString().slice(0, 10).replace(/-/g, "");
+let orderSeq = 100;
+const mk = async (c) => (await raw("customers").insertOne({ brandId: brandM, orderCount: 0, walletBalance: 0, createdAt: daysAgo(400), updatedAt: new Date(), ...c })).insertedId;
+const order = async (cid, who, outlet, channel, lines, n, extra = {}) => {
+  const at = daysAgo(n);
+  await raw("orders").insertOne({
+    brandId: brandM, outletId: outlet, orderNumber: String(++orderSeq), orderDay: dayKey(at), channel, placedBy: "customer", status: "completed",
+    customer: { customerId: String(cid), name: who.name, phone: who.phone },
+    lines: lines.map(([name, quantity]) => ({ itemId: "x", name, quantity, unitPrice: 9000, lineTotal: 9000 * quantity })),
+    totals: { grandTotal: 20000 }, payment: { gateway: "cod", status: "paid" }, statusHistory: [], createdAt: at, updatedAt: at, ...extra,
+  });
+  await raw("customers").updateOne({ _id: cid }, { $inc: { orderCount: 1 }, $max: { lastOrderAt: at } });
+};
+const ravi = { name: "Ravi Kumar", phone: "9000000001" };
+const raviId = await mk({ ...ravi, gender: "male", age: 24, ageYear: 2020 }); // 24 in 2020 → 30 in 2026
+for (const n of [150, 120, 90]) await order(raviId, ravi, mainM, "takeaway", [["Paneer Steamed Momos", 2], ["Paneer Gravy Momos", 1]], n);
+const meena = { name: "Meena Iyer", phone: "9000000002" };
+const meenaId = await mk({ ...meena, gender: "female", age: 28, ageYear: yr });
+for (const n of [12, 5]) await order(meenaId, meena, mainM, "delivery", [["Veg Steamed Momos", 2]], n, { deliveryAddress: { text: "Flat 4, Laxmi Nagar, Delhi", lat: 28.6304, lng: 77.2773, distanceKm: 0.5 } });
+const karan = { name: "Karan Singh", phone: "9000000003" };
+const karanId = await mk({ ...karan, gender: "male", age: 41, ageYear: yr });
+await order(karanId, karan, secondM, "dine-in", [["Cold Coffee", 1]], 70);
+const sana = { name: "Sana Khan", phone: "9000000004" };
+const sanaId = await mk({ ...sana, gender: "female", age: 19, ageYear: 2024 }); // 19 in 2024
+for (const n of [100, 80, 60, 45]) await order(sanaId, sana, secondM, "takeaway", [["Chicken Momos", 3]], n, { deliveryAddress: undefined });
+await mk({ name: "Dev Patel", phone: "9000000005", gender: "other" }); // signed up, never ordered, no age
+const priya = { name: "Priya Nair", phone: "9000000006" };
+const priyaId = await mk({ ...priya, gender: "female", age: 33, ageYear: yr });
+for (const n of [30, 10]) await order(priyaId, priya, mainM, "takeaway", [["Paneer Steamed Momos", 1]], n);
+const sam = { name: "Stop Sam", phone: "9000000007" };
+const samId = await mk({ ...sam, gender: "male", age: 30, ageYear: yr });
+await order(samId, sam, mainM, "takeaway", [["Cold Coffee", 1]], 20);
+await raw("wachats").insertOne({ brandId: brandM, phone: "919000000007", name: "Stop Sam", accountId: martWa, optedOut: true, unread: 0, createdAt: daysAgo(10), updatedAt: new Date() });
+await raw("wachats").insertOne({ brandId: brandM, phone: "919000000008", name: "Chat Only Chandni", accountId: martWa, unread: 0, createdAt: daysAgo(3), updatedAt: new Date(), lastMessageAt: daysAgo(3) }); // messaged on WhatsApp, not a customer
+await mk({ name: "Mail Only", email: "mail.only@example.com", gender: "female", age: 27, ageYear: yr }); // no phone → can't be messaged
+
 /* ------------------------------------------------------------------ done */
-const ids = { brandA, main, second, brandB, only, planStarter: idOf(starter), planPro: idOf(pro) };
+const ids = { brandA, main, second, brandB, only, brandM, mainM, secondM, planStarter: idOf(starter), planPro: idOf(pro) };
 writeFileSync(`${HERE}ids.json`, JSON.stringify(ids, null, 2));
 console.log("READY", JSON.stringify(ids));
 setInterval(() => {}, 1 << 30);

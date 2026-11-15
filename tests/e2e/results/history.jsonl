@@ -61,3 +61,21 @@
 {"id":"t10-plan-downgrade","status":"pass","pass":37,"fail":0,"mode":"headless","at":"2026-11-15T18:02:49.883Z","durationMs":111230}
 {"id":"t11-outlet-delete","status":"pass","pass":13,"fail":0,"mode":"headless","at":"2026-11-15T18:03:01.944Z","durationMs":12035}
 {"id":"t12-store-delete","status":"pass","pass":19,"fail":0,"mode":"headless","at":"2026-11-15T18:03:23.393Z","durationMs":21427}
+{"id":"t13-marketing","status":"error","pass":37,"fail":2,"mode":"headless","at":"2026-11-15T19:16:30.442Z","durationMs":72329,"error":"locator.waitFor: Timeout 15000ms exceeded. Call log:   - waiting for locator('label').filter({ has: locator('span').filter({ hasText: /^\\s*Phone numbers/ }) }).locator('input, select, textarea').first() to be visible"}
+{"id":"t13-marketing","status":"error","pass":51,"fail":2,"mode":"headless","at":"2026-11-15T19:18:03.944Z","durationMs":76126,"error":"locator.fill: Error: Input of type \"checkbox\" cannot be filled Call log:   - waiting for getByLabel('Message').first()"}
+{"id":"t13-marketing","status":"error","pass":41,"fail":4,"mode":"headless","at":"2026-11-15T19:19:51.064Z","durationMs":80688,"error":"locator.waitFor: Timeout 15000ms exceeded. Call log:   - waiting for getByLabel('Add more numbers').first() to be visible"}
+{"id":"t13-marketing","status":"pass","pass":70,"fail":0,"mode":"headless","at":"2026-11-15T19:21:31.636Z","durationMs":89698}
+{"id":"t00-bench-smoke","status":"pass","pass":11,"fail":0,"mode":"headless","at":"2026-11-15T19:22:07.655Z","durationMs":14164}
+{"id":"t01-takeaway-order","status":"pass","pass":45,"fail":0,"mode":"headless","at":"2026-11-15T19:22:44.712Z","durationMs":32871}
+{"id":"t02-whatsapp-api","status":"pass","pass":118,"fail":0,"mode":"headless","at":"2026-11-15T19:22:57.833Z","durationMs":13101}
+{"id":"t03-whatsapp-dashboard","status":"pass","pass":44,"fail":0,"mode":"headless","at":"2026-11-15T19:23:21.825Z","durationMs":19814}
+{"id":"t04-whatsapp-manage","status":"pass","pass":20,"fail":0,"mode":"headless","at":"2026-11-15T19:23:42.410Z","durationMs":16416}
+{"id":"t05-whatsapp-chat-filters","status":"pass","pass":12,"fail":0,"mode":"headless","at":"2026-11-15T19:24:00.217Z","durationMs":13633}
+{"id":"t06-storefront-header-categories","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-15T19:24:37.664Z","durationMs":37432}
+{"id":"t07-favicon-plan-rules","status":"pass","pass":8,"fail":0,"mode":"headless","at":"2026-11-15T19:24:40.619Z","durationMs":2938}
+{"id":"t08-plans-outlets-settings","status":"pass","pass":42,"fail":0,"mode":"headless","at":"2026-11-15T19:27:54.988Z","durationMs":190176}
+{"id":"t09-store-subdomain","status":"pass","pass":36,"fail":0,"mode":"headless","at":"2026-11-15T19:28:27.968Z","durationMs":32954}
+{"id":"t10-plan-downgrade","status":"pass","pass":37,"fail":0,"mode":"headless","at":"2026-11-15T19:30:19.718Z","durationMs":111730}
+{"id":"t11-outlet-delete","status":"pass","pass":13,"fail":0,"mode":"headless","at":"2026-11-15T19:30:31.828Z","durationMs":12080}
+{"id":"t12-store-delete","status":"pass","pass":19,"fail":0,"mode":"headless","at":"2026-11-15T19:30:53.480Z","durationMs":21629}
+{"id":"t13-marketing","status":"pass","pass":70,"fail":0,"mode":"headless","at":"2026-11-15T19:32:25.986Z","durationMs":88321}

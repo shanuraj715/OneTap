@@ -1,6 +1,6 @@
 # T02 — WhatsApp chat — API rules and the careful-pace sending worker
 
-**Area:** whatsapp · **Last result:** ✅ PASSED (117 passed, 0 failed · 2026-11-15 21:12 · headless · 12.3 s)
+**Area:** whatsapp · **Last result:** ✅ PASSED (118 passed, 0 failed · 2026-11-16 00:52 · headless · 13.1 s)
 
 **Run it alone:** `node run.mjs --only t02` (add `--visible` to watch it)
 
@@ -46,7 +46,7 @@ Runs suites/wa-api.mjs: its own in-memory API with the WhatsApp worker switched 
 
 _Nothing failed._
 
-### ✅ Passed (117)
+### ✅ Passed (118)
 
 **Step 1 — who can use it**
 
@@ -87,20 +87,21 @@ _Nothing failed._
 - (earlier queued messages stay with the number they were written on) — _2_
 - moving a chat to another number takes its waiting messages along
 - with no number online, a brand-new chat can't start
-- an attachment uploads — _http://localhost:3098/uploads/6af9d2e6c6342992e761_
+- an attachment uploads — _http://localhost:3098/uploads/6afa0687cd69d19c8a60_
 - a photo with a caption is queued
 - a read-only role can't upload
 
 **Step 4 — the worker sends — at a careful pace**
 
+- it's quiet hours now (10 pm–9 am): first contacts wait for the morning — _2026-11-16T03:39:48.043Z_
 - one message goes out, to the right number — _919876543210@s.whatsapp.net_
 - …after showing 'typing…'
 - …and is marked sent, with WhatsApp's id saved first
-- the next first contact must wait 2–4 minutes — _206 s_
+- the next first contact must wait 2–4 minutes — _130 s_
 - so the next queued first-contact message does NOT go out yet
 - a reply to someone who wrote to us is a running conversation
 - …and goes out straight away, ahead of the waiting first contacts
-- 15 first contacts a day per number: the rest wait for tomorrow — _2026-11-16T03:35:36.736Z_
+- 15 first contacts a day per number: the rest wait for tomorrow — _2026-11-16T18:31:54.910Z_
 - a number that isn't on WhatsApp is never messaged — _This number isn't on WhatsApp._
 - a failed message can be tried again
 - a photo goes out as a photo, with its caption, read back from storage
@@ -199,6 +200,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-16 00:52 | pass | 118 | 0 | headless | 13.1 s |
 | 2026-11-15 21:12 | pass | 117 | 0 | headless | 12.3 s |
 
 ---

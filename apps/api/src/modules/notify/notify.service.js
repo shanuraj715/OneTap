@@ -29,7 +29,7 @@ import { providerFor,                        } from "./providers/index.js";
 
 /* -------------------------------------------------------------- credentials */
 
-async function credentialsFor(ctx               , channel                    )                             {
+export async function credentialsFor(ctx               , channel                    )                             {
   const doc = await NotificationCredentialModel.findOne(brandFilter(ctx, { channel })).lean();
   if (!doc) return {};
 

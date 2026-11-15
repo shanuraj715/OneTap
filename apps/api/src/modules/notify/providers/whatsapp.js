@@ -28,6 +28,8 @@ export const whatsappProvider                 = {
     const apiVersion = creds.apiVersion || "v20.0";
     const url = `https://graph.facebook.com/${apiVersion}/${creds.phoneNumberId}/messages`;
 
+    // an order alert fills the five fixed order variables; a marketing message brings its own list of words
+    const words = input.whatsapp.params ?? NOTIFY_VARIABLES.map((key) => input.values[key]);
     const body = {
       messaging_product: "whatsapp",
       to: normalizePhone(input.to),
@@ -35,12 +37,8 @@ export const whatsappProvider                 = {
       template: {
         name: input.whatsapp.templateName,
         language: { code: input.whatsapp.languageCode || "en" },
-        components: [
-          {
-            type: "body",
-            parameters: NOTIFY_VARIABLES.map((key) => ({ type: "text", text: input.values[key] })),
-          },
-        ],
+        // a template with no placeholders must not carry an (empty) body component — Meta rejects it
+        ...(words.length ? { components: [{ type: "body", parameters: words.map((text) => ({ type: "text", text: String(text) })) }] } : {}),
       },
     };
 
