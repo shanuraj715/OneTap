@@ -182,6 +182,7 @@ function SessionRow({
         </>
       ) : null}
       {move.error ? <Toast kind="error">{(move.error         ).message}</Toast> : null}
+      {close.error ? <Toast kind="error">{(close.error         ).message}</Toast> : null}
     </div>
   );
 }

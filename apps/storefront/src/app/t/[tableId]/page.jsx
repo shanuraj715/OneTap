@@ -4,6 +4,7 @@ import { Ordering } from "@/components/Ordering";
 import { OutletUnavailable } from "@/components/OutletUnavailable";
 import { ThemeStyle } from "@/components/ThemeStyle";
 import { getMenu } from "@/lib/menu";
+import { visitorHeaders } from "@/lib/visitor";
 import { getOutletById, getPageLinks } from "@/lib/outlet";
 
 export const dynamic = "force-dynamic";
@@ -21,6 +22,7 @@ async function resolveScan(tableId        , token        )                      
   try {
     const res = await fetch(`${API_BASE}/api/tables/scan/${tableId}?k=${encodeURIComponent(token)}`, {
       cache: "no-store",
+      headers: await visitorHeaders(), // who is looking — a diner already seated here must not be told another party is
     });
     const body = await res.json().catch(() => ({}));
     if (!res.ok) return { error: (body                      ).error ?? "That table code isn't valid" };
