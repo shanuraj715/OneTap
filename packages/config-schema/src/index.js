@@ -24,6 +24,8 @@ export * from "./rbac.js";
 export * from "./wallet.js";
 export * from "./order-notify.js";
 export * from "./analytics.js";
+export * from "./onboarding.js";
+export * from "./pricing.js";
 export * from "./marketing.js";
 export * from "./whatsapp.js";
 export * from "./capacity.js";

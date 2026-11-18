@@ -120,3 +120,24 @@ export function checkDelivery(
     etaMinutes,
   };
 }
+
+/**
+ * Pull a latitude/longitude out of whatever a person pastes: a plain "lat, lng", a `google.com/maps/@lat,lng`, a `?q=lat,lng`,
+ * or the `!3dlat!4dlng` fragment of a place link. Returns `null` when there are no coordinates in it (a short
+ * `maps.app.goo.gl` link has none — it has to be opened first).
+ */
+export function parseMapsPoint(raw) {
+  const s = String(raw ?? "").trim();
+  const inRange = (lat, lng) => (Number.isFinite(lat) && Number.isFinite(lng) && Math.abs(lat) <= 90 && Math.abs(lng) <= 180 ? { lat, lng } : null);
+
+  const at = /@(-?\d+\.\d+),(-?\d+\.\d+)/.exec(s);
+  if (at) return inRange(parseFloat(at[1]), parseFloat(at[2]));
+  const q = /[?&](?:q|ll|center|destination)=(-?\d+\.\d+),\s*(-?\d+\.\d+)/.exec(s);
+  if (q) return inRange(parseFloat(q[1]), parseFloat(q[2]));
+  const d = /!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/.exec(s);
+  if (d) return inRange(parseFloat(d[1]), parseFloat(d[2]));
+  const plain = /^(-?\d{1,3}(?:\.\d+)?)\s*,\s*(-?\d{1,3}(?:\.\d+)?)$/.exec(s);
+  if (plain) return inRange(parseFloat(plain[1]), parseFloat(plain[2]));
+  return null;
+}
+

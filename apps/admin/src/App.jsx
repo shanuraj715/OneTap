@@ -48,6 +48,7 @@ import {
   Wand2,
   Server as ServerIcon,
   MessageCircle,
+  ClipboardList,
 } from "lucide-react";
 import { useAuth, useLogout } from "./lib/useAuth";
 import { OutletSelectionProvider, useOpenStore, useOutlets } from "./lib/useOutlet";
@@ -109,6 +110,9 @@ import { PlatformSettings } from "./routes/platform/PlatformSettings";
 import { PlatformStoreDetail } from "./routes/platform/PlatformStoreDetail";
 import { PlatformStores } from "./routes/platform/PlatformStores";
 import { PlatformLeads } from "./routes/platform/PlatformLeads";
+import { OnboardingForm } from "./routes/platform/onboarding/OnboardingForm";
+import { OnboardingList } from "./routes/platform/onboarding/OnboardingList";
+import { PricingPage } from "./routes/platform/onboarding/PricingPage";
 import { PageEditor } from "./routes/platform/website/PageEditor";
 import { WebsitePages } from "./routes/platform/website/WebsitePages";
 import { WebsiteSettings } from "./routes/platform/website/WebsiteSettings";
@@ -158,6 +162,8 @@ const ROUTE_META = {
   "/take-order": { title: "Take order", icon: ConciergeBell },
   "/platform": { title: "Dashboard", icon: LayoutDashboard },
   "/platform/stores": { title: "Stores", icon: Store },
+  "/platform/onboarding": { title: "Onboarding", icon: ClipboardList },
+  "/platform/onboarding/pricing": { title: "Price list", icon: ClipboardList },
   "/platform/plans": { title: "Plans", icon: Layers },
   "/platform/server": { title: "Server", icon: ServerIcon },
   "/platform/security": { title: "Security", icon: ShieldCheck },
@@ -216,6 +222,7 @@ const PLATFORM_NAV_GROUPS = [
     items: [
       { to: "/platform", label: "Dashboard", icon: <LayoutDashboard size={ICON} />, end: true },
       { to: "/platform/stores", label: "Stores", icon: <Store size={ICON} /> },
+      { to: "/platform/onboarding", label: "Onboarding", icon: <ClipboardList size={ICON} /> },
       { to: "/platform/plans", label: "Plans", icon: <Layers size={ICON} /> },
       { to: "/platform/server", label: "Server", icon: <ServerIcon size={ICON} /> },
       { to: "/platform/security", label: "Security", icon: <ShieldCheck size={ICON} /> },
@@ -293,7 +300,7 @@ function Shell({ can }                                     ) {
     };
   }, [location.pathname]);
 
-  const currentMeta = ROUTE_META[location.pathname] || (location.pathname.startsWith("/platform/stores/") ? ROUTE_META["/platform/stores"] : null) || (location.pathname.startsWith("/pages/") ? ROUTE_META["/pages"] : null) || {
+  const currentMeta = ROUTE_META[location.pathname] || (location.pathname.startsWith("/platform/stores/") ? ROUTE_META["/platform/stores"] : null) || (location.pathname.startsWith("/platform/onboarding/") ? ROUTE_META["/platform/onboarding"] : null) || (location.pathname.startsWith("/pages/") ? ROUTE_META["/pages"] : null) || {
     title: location.pathname.slice(1).replace("-", " ") || "page",
     icon: UtensilsCrossed,
   };
@@ -573,6 +580,9 @@ function Shell({ can }                                     ) {
               <Route path="/platform" element={<PlatformDashboard />} />
               <Route path="/platform/stores" element={<PlatformStores />} />
               <Route path="/platform/stores/:id" element={<PlatformStoreDetail />} />
+              <Route path="/platform/onboarding" element={<OnboardingList />} />
+              <Route path="/platform/onboarding/pricing" element={<PricingPage />} />
+              <Route path="/platform/onboarding/:id" element={<OnboardingForm />} />
               <Route path="/platform/plans" element={<PlatformPlans />} />
               <Route path="/platform/server" element={<PlatformServer />} />
               <Route path="/platform/security" element={<PlatformSecurity />} />

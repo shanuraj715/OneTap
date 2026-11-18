@@ -815,3 +815,27 @@ export async function anExport(o, body) {
   const name = /filename="?([^"]+)"?/.exec(res.headers.get("content-disposition") ?? "")?.[1] ?? "tablepe-report";
   return { blob: await res.blob(), filename: name };
 }
+
+/* --------------------------------------------------------------- client onboarding */
+// The requirement forms a TablePe representative fills with a new client, and publishing one as a store (platform console).
+export const listOnboarding = (status) => req(`/api/platform/onboarding${status ? `?status=${encodeURIComponent(status)}` : ""}`);
+export const getOnboarding = (id) => req(`/api/platform/onboarding/${id}`);
+export const createOnboarding = (data) => req("/api/platform/onboarding", json("POST", { data }));
+export const saveOnboarding = (id, data) => req(`/api/platform/onboarding/${id}`, json("PUT", { data }));
+export const deleteOnboarding = (id) => req(`/api/platform/onboarding/${id}`, { method: "DELETE" });
+export const checkOnboarding = (id) => req(`/api/platform/onboarding/${id}/check`);
+export const publishOnboarding = (id, ownerPassword) => req(`/api/platform/onboarding/${id}/publish`, json("POST", { ownerPassword }));
+/** The price list the onboarding estimate uses. */
+export const getOnboardingPricing = () => req("/api/platform/onboarding/pricing");
+export const saveOnboardingPricing = (pricing) => req("/api/platform/onboarding/pricing", { method: "PUT", body: JSON.stringify(pricing) });
+export const resolveMapLink = (link) => req("/api/platform/onboarding/resolve-map", json("POST", { link }));
+/** The form as a PDF: `{ blob, filename }`. */
+export async function onboardingPdf(id) {
+  const res = await fetch(`${API_BASE}/api/platform/onboarding/${id}/pdf`, { credentials: "include" });
+  if (!res.ok) {
+    const j = await res.json().catch(() => ({}));
+    throw new ApiError(res.status, j.error ?? `The PDF could not be made (${res.status})`, j.details);
+  }
+  const name = /filename="?([^"]+)"?/.exec(res.headers.get("content-disposition") ?? "")?.[1] ?? "onboarding.pdf";
+  return { blob: await res.blob(), filename: name };
+}
