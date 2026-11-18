@@ -134,3 +134,26 @@
 {"id":"t03-whatsapp-dashboard","status":"pass","pass":44,"fail":0,"mode":"headless","at":"2026-11-15T20:59:13.591Z","durationMs":19881}
 {"id":"t13-marketing","status":"pass","pass":70,"fail":0,"mode":"headless","at":"2026-11-15T21:00:46.026Z","durationMs":88268}
 {"id":"t16-whatsapp-plan-gating","status":"pass","pass":37,"fail":0,"mode":"headless","at":"2026-11-15T21:01:26.615Z","durationMs":35410}
+{"id":"t17-analytics","status":"error","pass":16,"fail":0,"mode":"headless","at":"2026-11-15T21:28:51.596Z","durationMs":21802,"error":"locator.waitFor: Timeout 15000ms exceeded. Call log:   - waiting for getByRole('button', { name: 'Next month' }).first() to be visible"}
+{"id":"t17-analytics","status":"error","pass":29,"fail":0,"mode":"headless","at":"2026-11-15T21:29:33.258Z","durationMs":26529,"error":"locator.waitFor: Timeout 15000ms exceeded. Call log:   - waiting for locator('[data-lapsed]') to be visible"}
+{"id":"t17-analytics","status":"error","pass":73,"fail":3,"mode":"headless","at":"2026-11-15T21:30:43.498Z","durationMs":58682,"error":"locator.waitFor: Timeout 10000ms exceeded. Call log:   - waiting for locator('[data-not-found]') to be visible"}
+{"id":"t17-analytics","status":"fail","pass":92,"fail":1,"mode":"headless","at":"2026-11-15T21:32:54.349Z","durationMs":69835}
+{"id":"t17-analytics","status":"pass","pass":93,"fail":0,"mode":"headless","at":"2026-11-15T21:34:14.526Z","durationMs":70082}
+{"id":"t00-bench-smoke","status":"pass","pass":11,"fail":0,"mode":"headless","at":"2026-11-15T21:34:33.360Z","durationMs":13705}
+{"id":"t01-takeaway-order","status":"pass","pass":45,"fail":0,"mode":"headless","at":"2026-11-15T21:35:10.427Z","durationMs":32899}
+{"id":"t02-whatsapp-api","status":"pass","pass":133,"fail":0,"mode":"headless","at":"2026-11-15T21:35:24.230Z","durationMs":13784}
+{"id":"t03-whatsapp-dashboard","status":"pass","pass":44,"fail":0,"mode":"headless","at":"2026-11-15T21:35:49.163Z","durationMs":19757}
+{"id":"t04-whatsapp-manage","status":"pass","pass":20,"fail":0,"mode":"headless","at":"2026-11-15T21:36:09.826Z","durationMs":16497}
+{"id":"t05-whatsapp-chat-filters","status":"pass","pass":12,"fail":0,"mode":"headless","at":"2026-11-15T21:36:27.398Z","durationMs":13409}
+{"id":"t06-storefront-header-categories","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-15T21:37:04.943Z","durationMs":37530}
+{"id":"t07-favicon-plan-rules","status":"pass","pass":8,"fail":0,"mode":"headless","at":"2026-11-15T21:37:08.654Z","durationMs":3696}
+{"id":"t08-plans-outlets-settings","status":"pass","pass":42,"fail":0,"mode":"headless","at":"2026-11-15T21:40:23.904Z","durationMs":191067}
+{"id":"t09-store-subdomain","status":"pass","pass":36,"fail":0,"mode":"headless","at":"2026-11-15T21:40:57.138Z","durationMs":33209}
+{"id":"t10-plan-downgrade","status":"pass","pass":37,"fail":0,"mode":"headless","at":"2026-11-15T21:42:49.298Z","durationMs":112142}
+{"id":"t11-outlet-delete","status":"pass","pass":13,"fail":0,"mode":"headless","at":"2026-11-15T21:43:01.498Z","durationMs":12166}
+{"id":"t12-store-delete","status":"pass","pass":19,"fail":0,"mode":"headless","at":"2026-11-15T21:43:23.397Z","durationMs":21874}
+{"id":"t13-marketing","status":"pass","pass":70,"fail":0,"mode":"headless","at":"2026-11-15T21:44:57.630Z","durationMs":90051}
+{"id":"t14-marketing-plan","status":"pass","pass":16,"fail":0,"mode":"headless","at":"2026-11-15T21:46:07.527Z","durationMs":65720}
+{"id":"t15-login-protection","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-15T21:46:46.834Z","durationMs":35123}
+{"id":"t16-whatsapp-plan-gating","status":"pass","pass":37,"fail":0,"mode":"headless","at":"2026-11-15T21:47:27.210Z","durationMs":36189}
+{"id":"t17-analytics","status":"pass","pass":93,"fail":0,"mode":"headless","at":"2026-11-15T21:48:43.516Z","durationMs":71131}

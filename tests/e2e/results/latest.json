@@ -7,8 +7,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:44:09.787Z",
-    "durationMs": 13312,
+    "at": "2026-11-15T21:34:33.360Z",
+    "durationMs": 13705,
     "steps": [
       {
         "n": 1,
@@ -89,7 +89,7 @@
           {
             "label": "the code request is accepted (the test stores accept any phone)",
             "ok": true,
-            "detail": "HTTP 200 {\"channel\":\"sms\",\"devCode\":\"796586\"}",
+            "detail": "HTTP 200 {\"channel\":\"sms\",\"devCode\":\"887665\"}",
             "kind": "expect"
           },
           {
@@ -112,8 +112,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:44:46.524Z",
-    "durationMs": 32545,
+    "at": "2026-11-15T21:35:10.427Z",
+    "durationMs": 32899,
     "steps": [
       {
         "n": 1,
@@ -289,7 +289,7 @@
           {
             "label": "the new customer was saved with the details they gave",
             "ok": true,
-            "detail": "{\"id\":\"6afa19b0b4ad197535a71195\",\"name\":\"Rohan Mehta\",\"email\":\"rohan.mehta@example.com\",\"phone\":\"9811122233\",\"gender\":\"male\",\"age\":31,\"orderCount\":1,\"walletBalance\":0,\"lastOrderAt\":\"2026-11-15T20:44:37.579Z\",\"createdAt\":\"2026-11-15T20:44:32.903Z\"}",
+            "detail": "{\"id\":\"6afa2580e73cdf94cb8550ad\",\"name\":\"Rohan Mehta\",\"email\":\"rohan.mehta@example.com\",\"phone\":\"9811122233\",\"gender\":\"male\",\"age\":31,\"orderCount\":1,\"walletBalance\":0,\"lastOrderAt\":\"2026-11-15T21:35:01.348Z\",\"createdAt\":\"2026-11-15T21:34:56.651Z\"}",
             "kind": "expect"
           },
           {
@@ -313,7 +313,7 @@
           {
             "label": "the row shows the customer, phone, type, item count, total and 'Placed'",
             "ok": true,
-            "detail": " #0001 02:14 AM Rohan Mehta 9811122233 TA 8 ₹1,030 Placed 0m Accepted",
+            "detail": " #0001 03:05 AM Rohan Mehta 9811122233 TA 8 ₹1,030 Placed 0m Accepted",
             "kind": "expect"
           }
         ]
@@ -496,12 +496,12 @@
     "id": "t02-whatsapp-api",
     "title": "WhatsApp chat — API rules and the careful-pace sending worker",
     "status": "pass",
-    "pass": 118,
+    "pass": 133,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:44:58.831Z",
-    "durationMs": 12287,
+    "at": "2026-11-15T21:35:24.230Z",
+    "durationMs": 13784,
     "steps": [
       {
         "n": 1,
@@ -708,7 +708,7 @@
           {
             "label": "an attachment uploads",
             "ok": true,
-            "detail": "http://localhost:3098/uploads/6afa19c00c9826af56b8",
+            "detail": "http://localhost:3098/uploads/6afa2591dcaedadbc347",
             "kind": "expect"
           },
           {
@@ -732,7 +732,7 @@
           {
             "label": "it's quiet hours now (10 pm–9 am): first contacts wait for the morning",
             "ok": true,
-            "detail": "2026-11-16T03:36:49.618Z",
+            "detail": "2026-11-16T03:33:13.811Z",
             "kind": "expect"
           },
           {
@@ -756,7 +756,7 @@
           {
             "label": "the next first contact must wait 2–4 minutes",
             "ok": true,
-            "detail": "132 s",
+            "detail": "223 s",
             "kind": "expect"
           },
           {
@@ -780,7 +780,7 @@
           {
             "label": "15 first contacts a day per number: the rest wait for tomorrow",
             "ok": true,
-            "detail": "2026-11-16T18:31:56.657Z",
+            "detail": "2026-11-16T18:31:21.484Z",
             "kind": "expect"
           },
           {
@@ -906,13 +906,13 @@
           {
             "label": "preview: 3 people (duplicates merged), 1 opted out",
             "ok": true,
-            "detail": "{\"recipients\":3,\"optedOut\":1,\"running\":0,\"firstContact\":3,\"numbersOnline\":[{\"id\":\"6afa19c10c9826af56b87403\",\"label\":\"Counter phone\"},{\"id\":\"6afa19c10c9826af56b8740a\",\"label\":\"Delivery phone\"}],\"estimatedDays\":1}",
+            "detail": "{\"recipients\":3,\"optedOut\":1,\"running\":0,\"firstContact\":3,\"numbersOnline\":[{\"id\":\"6afa2591dcaedadbc3474a2d\",\"label\":\"Counter phone\"},{\"id\":\"6afa2591dcaedadbc3474a35\",\"label\":\"Delivery phone\"}],\"estimatedDays\":1}",
             "kind": "expect"
           },
           {
             "label": "a broadcast queues one message per person",
             "ok": true,
-            "detail": "{\"id\":\"6afa19ca0c9826af56b87592\",\"text\":\"Diwali: 20% off this weekend!\\n\\nReply STOP to stop offers.\",\"media\":null,\"createdAt\":\"2026-11-15T20:44:58.268Z\",\"status\":\"sending\",\"total\":3,\"skipped\":1,\"waiting\":3,\"sent\":0,\"read\":0,\"failed\":0}",
+            "detail": "{\"id\":\"6afa259bdcaedadbc3474bb9\",\"text\":\"Diwali: 20% off this weekend!\\n\\nReply STOP to stop offers.\",\"media\":null,\"createdAt\":\"2026-11-15T21:35:23.691Z\",\"status\":\"sending\",\"total\":3,\"skipped\":1,\"waiting\":3,\"sent\":0,\"read\":0,\"failed\":0}",
             "kind": "expect"
           },
           {
@@ -1270,6 +1270,102 @@
             "kind": "expect"
           }
         ]
+      },
+      {
+        "n": 11,
+        "title": "WhatsApp chat taken away from a store — its numbers are unlinked and nothing stays connected",
+        "checks": [
+          {
+            "label": "the worker closes (and logs out) the connection of a store whose plan lacks WhatsApp chat",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…the number shows as unlinked, with the reason",
+            "ok": true,
+            "detail": "WhatsApp chat isn't in this store's plan any more, so the number was unlinked. Link it again once chat is back.",
+            "kind": "expect"
+          },
+          {
+            "label": "…and what was waiting to go out is failed, not left to leak out later",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a store that has WhatsApp chat is left alone",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the platform locks WhatsApp chat for one store",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "…its number is unlinked AT ONCE (no waiting for the worker)",
+            "ok": true,
+            "detail": "logged_out wantsLogout=true",
+            "kind": "expect"
+          },
+          {
+            "label": "…and its waiting messages are failed at once",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…then the worker closes the connection and logs the phone out",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the card keeps the reason",
+            "ok": true,
+            "detail": "WhatsApp chat isn't in this store's plan any more, so the number was unlinked. Link it again once chat is back.",
+            "kind": "expect"
+          },
+          {
+            "label": "a store on a plan that has WhatsApp chat keeps its number",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the platform takes WhatsApp chat out of that plan",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "…every store on it is unlinked AT ONCE",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and its connection is closed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the stored messages are kept",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the number stays unlinked when the feature returns — it must be linked again with a new scan",
+            "ok": true,
+            "detail": "logged_out",
+            "kind": "expect"
+          }
+        ]
       }
     ],
     "findings": [],
@@ -1283,8 +1379,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:59:13.591Z",
-    "durationMs": 19881,
+    "at": "2026-11-15T21:35:49.163Z",
+    "durationMs": 19757,
     "steps": [
       {
         "n": 1,
@@ -1419,7 +1515,7 @@
           {
             "label": "a paced broadcast message says when it will go",
             "ok": true,
-            "detail": "BROADCAST | Diwali special: 20% off this weekend! | Reply STOP to stop offers. | sends at 4:28 pm · | 1:58 am",
+            "detail": "BROADCAST | Diwali special: 20% off this weekend! | Reply STOP to stop offers. | sends at 5:05 pm · | 2:35 am",
             "kind": "expect"
           },
           {
@@ -1592,8 +1688,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:45:43.210Z",
-    "durationMs": 16264,
+    "at": "2026-11-15T21:36:09.826Z",
+    "durationMs": 16497,
     "steps": [
       {
         "n": 1,
@@ -1751,8 +1847,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:46:00.666Z",
-    "durationMs": 13283,
+    "at": "2026-11-15T21:36:27.398Z",
+    "durationMs": 13409,
     "steps": [
       {
         "n": 0,
@@ -1844,8 +1940,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:46:39.309Z",
-    "durationMs": 38627,
+    "at": "2026-11-15T21:37:04.943Z",
+    "durationMs": 37530,
     "steps": [
       {
         "n": 1,
@@ -1950,7 +2046,7 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "0,0,0,1,57,261,799,1150,1240,1249,1249,1249,1249,1249",
+            "detail": "0,0,0,1,59,267,807,1153,1240,1249,1249,1249,1249,1249",
             "kind": "expect"
           },
           {
@@ -2016,7 +2112,7 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "508,508,508,509,582,837,1379,1589,1639,1639,1639,1639,1639,1639",
+            "detail": "508,508,508,509,581,833,1375,1608,1639,1639,1639,1639,1639,1639",
             "kind": "expect"
           },
           {
@@ -2045,8 +2141,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:46:42.453Z",
-    "durationMs": 3128,
+    "at": "2026-11-15T21:37:08.654Z",
+    "durationMs": 3696,
     "steps": [
       {
         "n": 1,
@@ -2114,8 +2210,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:49:55.448Z",
-    "durationMs": 188810,
+    "at": "2026-11-15T21:40:23.904Z",
+    "durationMs": 191067,
     "steps": [
       {
         "n": 1,
@@ -2130,13 +2226,13 @@
           {
             "label": "Basic shows 3 people · 1 outlet",
             "ok": true,
-            "detail": "Lifecycle Basic One outlet — takeaway and dine-in QR 0 stores 3 people · 1 outlet (multi-outlet off) Not on the website 2/12 features · 6/6 ",
+            "detail": "Lifecycle Basic One outlet — takeaway and dine-in QR 0 stores 3 people · 1 outlet (multi-outlet off) Not on the website 3/13 features · 6/6 ",
             "kind": "expect"
           },
           {
             "label": "Pro shows 10 people · 3 outlets",
             "ok": true,
-            "detail": "Lifecycle Pro Up to 3 outlets, everything unlocked 0 stores 10 people · 3 outlets Not on the website 12/12 features · 6/6 effects · 9/9 card",
+            "detail": "Lifecycle Pro Up to 3 outlets, everything unlocked 0 stores 10 people · 3 outlets Not on the website 13/13 features · 6/6 effects · 9/9 card",
             "kind": "expect"
           },
           {
@@ -2446,8 +2542,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:50:28.625Z",
-    "durationMs": 33151,
+    "at": "2026-11-15T21:40:57.138Z",
+    "durationMs": 33209,
     "steps": [
       {
         "n": 1,
@@ -2701,8 +2797,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:52:20.513Z",
-    "durationMs": 111863,
+    "at": "2026-11-15T21:42:49.298Z",
+    "durationMs": 112142,
     "steps": [
       {
         "n": 1,
@@ -2974,8 +3070,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:52:33.265Z",
-    "durationMs": 12720,
+    "at": "2026-11-15T21:43:01.498Z",
+    "durationMs": 12166,
     "steps": [
       {
         "n": 1,
@@ -3091,8 +3187,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:52:55.163Z",
-    "durationMs": 21872,
+    "at": "2026-11-15T21:43:23.397Z",
+    "durationMs": 21874,
     "steps": [
       {
         "n": 1,
@@ -3250,8 +3346,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T21:00:46.026Z",
-    "durationMs": 88268,
+    "at": "2026-11-15T21:44:57.630Z",
+    "durationMs": 90051,
     "steps": [
       {
         "n": 1,
@@ -3272,7 +3368,7 @@
           {
             "label": "second group 'Customers & growth': Customers, Marketing, WhatsApp, Coupons",
             "ok": true,
-            "detail": "{\"group\":\"Customers & growth\",\"divider\":true,\"items\":[\"Customers\",\"Marketing\",\"WhatsApp\",\"Coupons\"]}",
+            "detail": "{\"group\":\"Customers & growth\",\"divider\":true,\"items\":[\"Analytics\",\"Customers\",\"Marketing\",\"WhatsApp\",\"Coupons\"]}",
             "kind": "expect"
           },
           {
@@ -3668,7 +3764,7 @@
           {
             "label": "Campaigns: it finishes with 2 sent, 0 waiting, 0 failed",
             "ok": true,
-            "detail": "Win-back SMS SMS · 16 Nov, 2:30 am · 2 people 2 sent · 0 waiting · 0 failed Done",
+            "detail": "Win-back SMS SMS · 16 Nov, 3:14 am · 2 people 2 sent · 0 waiting · 0 failed Done",
             "kind": "expect"
           },
           {
@@ -3728,13 +3824,13 @@
           {
             "label": "it is queued: 3 waiting, still Sending (the sending worker is off here)",
             "ok": true,
-            "detail": "Ladies offer WhatsApp (linked numbers) · 16 Nov, 2:30 am · 3 people 0 sent · 3 waiting · 0 failed Sending Cancel",
+            "detail": "Ladies offer WhatsApp (linked numbers) · 16 Nov, 3:14 am · 3 people 0 sent · 3 waiting · 0 failed Sending Cancel",
             "kind": "expect"
           },
           {
             "label": "cancelling stops it: Cancelled, nothing waiting",
             "ok": true,
-            "detail": "Ladies offer WhatsApp (linked numbers) · 16 Nov, 2:30 am · 3 people 0 sent · 0 waiting · 0 failed Cancelled",
+            "detail": "Ladies offer WhatsApp (linked numbers) · 16 Nov, 3:14 am · 3 people 0 sent · 0 waiting · 0 failed Cancelled",
             "kind": "expect"
           }
         ]
@@ -3746,7 +3842,7 @@
           {
             "label": "Ravi (24 in 2020) shows 30",
             "ok": true,
-            "detail": " Ravi Kumar — 9000000001 Male 30 3 0 18 Aug, 2:29 am",
+            "detail": " Ravi Kumar — 9000000001 Male 30 3 0 18 Aug, 3:13 am",
             "kind": "expect"
           },
           {
@@ -3775,8 +3871,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:55:36.013Z",
-    "durationMs": 64053,
+    "at": "2026-11-15T21:46:07.527Z",
+    "durationMs": 65720,
     "steps": [
       {
         "n": 1,
@@ -3815,7 +3911,7 @@
           {
             "label": "Marketing is in the sidebar of a store whose plan lacks it",
             "ok": true,
-            "detail": "[{\"group\":\"Store & orders\",\"divider\":false,\"items\":[\"Take order\",\"Dashboard\",\"Orders\",\"Menu\",\"Tables\"]},{\"group\":\"Customers & growth\",\"divider\":true,\"items\":[\"Customers\",\"Coupons\"]},{\"group\":\"Setup\",\"divider\":false,\"items\":[\"Storefront\",\"Settings\"]}]",
+            "detail": "[{\"group\":\"Store & orders\",\"divider\":false,\"items\":[\"Take order\",\"Dashboard\",\"Orders\",\"Menu\",\"Tables\"]},{\"group\":\"Customers & growth\",\"divider\":true,\"items\":[\"Analytics\",\"Customers\",\"Coupons\"]},{\"group\":\"Setup\",\"divider\":false,\"items\":[\"Storefront\",\"Settings\"]}]",
             "kind": "never"
           },
           {
@@ -3928,8 +4024,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T20:56:14.880Z",
-    "durationMs": 34684,
+    "at": "2026-11-15T21:46:46.834Z",
+    "durationMs": 35123,
     "steps": [
       {
         "n": 1,
@@ -4040,7 +4136,7 @@
           {
             "label": "Security lists the address as Blocked, for Dashboards, blocked twice",
             "ok": true,
-            "detail": "203.0.113.50 Dashboards Blocked · 10 seconds left 0 2 16 Nov, 2:25:54 am Unblock",
+            "detail": "203.0.113.50 Dashboards Blocked · 9 seconds left 0 2 16 Nov, 3:16:26 am Unblock",
             "kind": "expect"
           },
           {
@@ -4153,8 +4249,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T21:01:26.615Z",
-    "durationMs": 35410,
+    "at": "2026-11-15T21:47:27.210Z",
+    "durationMs": 36189,
     "steps": [
       {
         "n": 1,
@@ -4187,13 +4283,13 @@
           {
             "label": "the browser's only websocket is the live order feed (/realtime) — WhatsApp chat doesn't open one",
             "ok": true,
-            "detail": "ws://localhost:3097/realtime?outletId=6afa1d812198a41f01a6f2fd",
+            "detail": "ws://localhost:3097/realtime?outletId=6afa2849c42af620732b9735",
             "kind": "expect"
           },
           {
             "label": "a websocket for WhatsApp is opened by the browser",
             "ok": true,
-            "detail": "ws://localhost:3097/realtime?outletId=6afa1d812198a41f01a6f2fd",
+            "detail": "ws://localhost:3097/realtime?outletId=6afa2849c42af620732b9735",
             "kind": "never"
           }
         ]
@@ -4395,6 +4491,675 @@
           },
           {
             "label": "back to 'from plan' (the plan has it) → WhatsApp is back",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser logged JavaScript errors",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t17-analytics": {
+    "id": "t17-analytics",
+    "title": "Analytics — sales, per-outlet graphs, compare outlets, best sellers + what to prepare, profit & loss, weekly/monthly/yearly exports, plan and role access",
+    "status": "pass",
+    "pass": 93,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-15T21:48:43.516Z",
+    "durationMs": 71131,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The owner of Marketing Mart finds Analytics in the sidebar",
+        "checks": [
+          {
+            "label": "Analytics is the first item of 'Customers & growth'",
+            "ok": true,
+            "detail": "[[\"Store & orders\",[\"Take order\",\"Dashboard\",\"Orders\",\"Menu\",\"Tables\",\"Printing\"]],[\"Customers & growth\",[\"Analytics\",\"Customers\",\"Marketing\",\"WhatsApp\",\"Coupons\"]],[\"Setup\",[\"Storefront\",\"Settings\"]]]",
+            "kind": "expect"
+          },
+          {
+            "label": "the tabs are Overview, Sales, Items & stock, Customers, Compare outlets, Operations, Profit & loss, Reports",
+            "ok": true,
+            "detail": "Take order | Dashboard | Orders | Menu | Tables | Printing | Analytics | Customers | Marketing | WhatsApp | Coupons | Storefront | Settings | View storefront | Overview | Sales | Items & stock | Customers | Compare outlets | Operations | Profit & loss | Reports",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Overview: the last 30 days match the totals worked out from the stored orders",
+        "checks": [
+          {
+            "label": "the figures equal the worked-out totals (Sales ₹52,427, Net sales ₹49,969, Orders 286, Items sold 561, Cancelled 32, Discounts given ₹503, Average order ₹183)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Sales says how it moved against the 30 days before (-3.9%)",
+            "ok": true,
+            "detail": "Sales ₹52,427 −3.9% vs the period before incl. GST",
+            "kind": "expect"
+          },
+          {
+            "label": "the range shown is the last 30 days",
+            "ok": true,
+            "detail": "18 Oct 2026 – 16 Nov 2026 · 30 days",
+            "kind": "expect"
+          },
+          {
+            "label": "cancelled orders are counted as sales (orders + cancelled would be 318)",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the day-by-day table has 30 days that add up to 286 orders",
+            "ok": true,
+            "detail": "30 rows, 286 orders",
+            "kind": "expect"
+          },
+          {
+            "label": "the hour-by-hour table adds up to 286 orders",
+            "ok": true,
+            "detail": "11 hours",
+            "kind": "expect"
+          },
+          {
+            "label": "the 'Busiest times' heat map and the order-type and payment charts are there",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Choosing an outlet, a shorter period or custom dates changes every figure",
+        "checks": [
+          {
+            "label": "the Outlet box offers the whole store and each outlet",
+            "ok": true,
+            "detail": "Whole store | Marketing Mart — Main | Marketing Mart — Second",
+            "kind": "expect"
+          },
+          {
+            "label": "Marketing Mart — Main alone: ₹33,137 and 178 orders",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Marketing Mart — Second alone: ₹19,290 and 108 orders",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "one outlet's page still shows the other outlet's sales or the whole store's",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "Last 7 days: ₹11,476, 62 orders",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Custom dates…' shows two date pickers (From, To) that start from the range just used",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "picking an earlier start date in the calendar widens the figures",
+            "ok": true,
+            "detail": "458 orders from 2026-10-01",
+            "kind": "expect"
+          },
+          {
+            "label": "custom dates 2026-11-10 to 2026-11-16, picked in the calendar, give the same ₹11,476 as 'Last 7 days'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Today (no orders yet in the sample) shows ₹0 and 0 orders, not an error",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Sales: one line per outlet, and the order types add up",
+        "checks": [
+          {
+            "label": "the chart has a line for each outlet (their names are in the legend)",
+            "ok": true,
+            "detail": "Sales by outlet Each day — one line per outlet Table Marketing Mart — Main Marketing Mart — Second ₹0 ₹500 ₹1,000 ₹1,500 ₹2,000 19 Oct 23 Oct 27 Oct 31 Oct 4 No",
+            "kind": "expect"
+          },
+          {
+            "label": "the order-types table adds up to 286 orders",
+            "ok": true,
+            "detail": "286",
+            "kind": "expect"
+          },
+          {
+            "label": "takeaway ₹20508, delivery ₹18612, dine-in ₹13307 (store totals)",
+            "ok": true,
+            "detail": "{\"t\":20508,\"d\":18612,\"i\":13307}",
+            "kind": "expect"
+          },
+          {
+            "label": "Marketing Mart — Main's rows add up to 178 orders",
+            "ok": true,
+            "detail": "178",
+            "kind": "expect"
+          },
+          {
+            "label": "the best and quietest weekday are named",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Items & stock: best sellers, and how much to prepare",
+        "checks": [
+          {
+            "label": "the best sellers run Paneer Steamed Momos 141, Cold Coffee 137, Chicken Momos 134",
+            "ok": true,
+            "detail": "Best sellers By quantity sold in this period — with the change against the period before Paneer Steamed Momos 141 sold · ₹12,690 −4.1% Cold Coffee 137 sold · ₹9,610 −4.2% Chicken Momos 134 sold · ₹13,400 −6.3% Veg Steamed Momos 83 sold · ₹6,680 0% Paneer Gravy",
+            "kind": "expect"
+          },
+          {
+            "label": "'Every item' lists each item with its quantity (Paneer Steamed Momos = 141)",
+            "ok": true,
+            "detail": "[[\"1\",\"Paneer Steamed Momos\",\"141\",\"₹12,690\",\"4.7\",\"25.1%\",\"−4.1%\"],[\"2\",\"Cold Coffee\",\"137\",\"₹9,610\",\"4.6\",\"24.4%\",\"−4.2%\"]]",
+            "kind": "expect"
+          },
+          {
+            "label": "the prep list is for tomorrow, Tuesday",
+            "ok": true,
+            "detail": "Tomorrow (Tuesday): prepare about",
+            "kind": "expect"
+          },
+          {
+            "label": "tomorrow's list matches the worked-out numbers (Paneer Steamed Momos 3, Paneer Gravy Momos 2, Veg Steamed Momos 2, Chicken Momos 2, Cold Coffee 3)",
+            "ok": true,
+            "detail": "[[\"Paneer Steamed Momos\",\"3\",\"2\",\"2\"],[\"Cold Coffee\",\"3\",\"2.2\",\"3\"],[\"Chicken Momos\",\"2\",\"1\",\"2\"],[\"Veg Steamed Momos\",\"2\",\"1\",\"1\"],[\"Paneer Gravy Momos\",\"2\",\"1\",\"1\"]]",
+            "kind": "expect"
+          },
+          {
+            "label": "every item's seven weekday numbers match the worked-out suggestions (average of the last 6 weeks + 15%, rounded up)",
+            "ok": true,
+            "detail": "[[\"Paneer Steamed Momos\",\"3\",\"3\",\"4\",\"5\",\"5\",\"6\",\"6\"],[\"Cold Coffee\",\"3\",\"3\",\"3\",\"4\",\"5\",\"6\",\"5\"]]",
+            "kind": "expect"
+          },
+          {
+            "label": "a bigger safety margin gives a bigger number (Paneer Steamed Momos on Saturday: 6 → 9)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Customers: who has drifted away, and 'Message them' opens Marketing",
+        "checks": [
+          {
+            "label": "the 30-, 60- and 90-day groups are listed",
+            "ok": true,
+            "detail": "3 customers haven't ordered for over 30 days Message them 2 customers haven't ordered for over 60 days Message them 1 customer hasn't ordered for over 90 days Message them",
+            "kind": "expect"
+          },
+          {
+            "label": "Marketing opens with \"hasn't ordered for 30 days\" already chosen: the same 3 people",
+            "ok": true,
+            "detail": "3 vs 3",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "Compare outlets: side by side for the same dates",
+        "checks": [
+          {
+            "label": "Sales: Marketing Mart — Main ₹33,137, Marketing Mart — Second ₹19,290",
+            "ok": true,
+            "detail": "[\"Sales\",\"₹33,137\",\"₹19,290 −42% vs Marketing Mart — Main\"]",
+            "kind": "expect"
+          },
+          {
+            "label": "Orders: 178 and 108",
+            "ok": true,
+            "detail": "[\"Orders\",\"178\",\"108 −39% vs Marketing Mart — Main\"]",
+            "kind": "expect"
+          },
+          {
+            "label": "the second outlet's sales are compared with the first (-42%)",
+            "ok": true,
+            "detail": "₹19,290 −42% vs Marketing Mart — Main",
+            "kind": "expect"
+          },
+          {
+            "label": "each outlet has its own best sellers",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "there is a day-by-day line for each outlet",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "for 2026-11-10 to 2026-11-16, picked in the calendar, the two outlets add up to the store's ₹11,476",
+            "ok": true,
+            "detail": "11476",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "Operations: cancellations and discounts",
+        "checks": [
+          {
+            "label": "32 orders were cancelled, 10.1% of 318",
+            "ok": true,
+            "detail": "Cancelled orders 32 10.1% of 318 orders",
+            "kind": "expect"
+          },
+          {
+            "label": "coupon discounts are ₹503",
+            "ok": true,
+            "detail": "Discounts in total Coupons and coin discounts together Coupon discounts ₹503 Coin discounts ₹0 Orders with a coupon 31 of 286 Coupon discounts as a share of sales before discount 1.0%",
+            "kind": "expect"
+          },
+          {
+            "label": "kitchen speed and the coupon table are shown",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 9,
+        "title": "Profit & loss: type the monthly bills once, get the profit",
+        "checks": [
+          {
+            "label": "the 'Shared by every outlet' list adds up to ₹2,500 a month",
+            "ok": true,
+            "detail": "₹2,500",
+            "kind": "expect"
+          },
+          {
+            "label": "net profit = 49969 net sales − 35% food − 22500 a month × 0.985 months = ₹10319",
+            "ok": true,
+            "detail": "saw 10319",
+            "kind": "expect"
+          },
+          {
+            "label": "it is called a profit (not a loss)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the table lists every bill by name with its share for these days",
+            "ok": true,
+            "detail": "Where the money goes Every expense for these days (monthly amounts shared out by the day) Net sales (without GST) ₹49,969 Food cost (35%) − ₹17,489 Gross profit ₹32,480 Marketing & ads − ₹2,462 Rent —",
+            "kind": "expect"
+          },
+          {
+            "label": "profit by outlet: Marketing Mart — Main ≈ ₹6177, Marketing Mart — Second ≈ ₹4142 (own bills + a share of the shared ones by sales)",
+            "ok": true,
+            "detail": "[[\"Marketing Mart — Main\",\"₹31,597\",\"₹11,059\",\"₹14,361\",\"₹6,177\",\"19.5%\"],[\"Marketing Mart — Second\",\"₹18,372\",\"₹6,430\",\"₹7,800\",\"₹4,142\",\"22.5%\"]]",
+            "kind": "expect"
+          },
+          {
+            "label": "a bill added by hand counts (₹1,000 a month more)",
+            "ok": true,
+            "detail": "saw 9334",
+            "kind": "expect"
+          },
+          {
+            "label": "the removed bill still counts in the profit",
+            "ok": true,
+            "detail": "saw 10319",
+            "kind": "never"
+          },
+          {
+            "label": "food cost 30% instead of 35% raises the profit to match",
+            "ok": true,
+            "detail": "saw 12817",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 10,
+        "title": "The bills are remembered; 'Save to my store' keeps a copy for other devices",
+        "checks": [
+          {
+            "label": "after a reload the rent typed for the first outlet is still there",
+            "ok": true,
+            "detail": "5000",
+            "kind": "expect"
+          },
+          {
+            "label": "…and so is the profit",
+            "ok": true,
+            "detail": "saw 10319",
+            "kind": "expect"
+          },
+          {
+            "label": "'Save to my store' says it was saved",
+            "ok": true,
+            "detail": "Saved to your store — any device you sign in on will have these numbers.",
+            "kind": "expect"
+          },
+          {
+            "label": "with the browser's memory wiped (a new device) the saved bills load by themselves",
+            "ok": true,
+            "detail": "Loaded the numbers saved to your store.",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the profit is the same again",
+            "ok": true,
+            "detail": "saw 10319",
+            "kind": "expect"
+          },
+          {
+            "label": "changing a bill changes the profit",
+            "ok": true,
+            "detail": "saw 5395",
+            "kind": "expect"
+          },
+          {
+            "label": "'Use the version saved to my store' puts the saved bill back",
+            "ok": true,
+            "detail": "saw 10319",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 11,
+        "title": "Reports: this week / last week / this month / last month / this year / last year",
+        "checks": [
+          {
+            "label": "each weekly, monthly and yearly choice covers exactly the right dates",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 12,
+        "title": "Reports: Excel — a sheet per section with the right totals",
+        "checks": [
+          {
+            "label": "the file is named like a report and ends .xlsx",
+            "ok": true,
+            "detail": "tablepe-marketing-mart-2026-10-18_to_2026-11-16.xlsx",
+            "kind": "expect"
+          },
+          {
+            "label": "there is a sheet for each chosen section",
+            "ok": true,
+            "detail": "Summary | Sales by day | Order types | Payment methods | Items sold | GST | Outlets compared | Top customers | Profit & loss",
+            "kind": "expect"
+          },
+          {
+            "label": "a section that was not chosen (Sales by hour, Every order) is in the file",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "Summary: sales 52427, net 49969.05, GST 2457.95, orders 286, cancelled 32",
+            "ok": true,
+            "detail": "[[\"Measure\",\"This period\",\"Previous period\"],[\"Sales (incl. GST)\",52427,54541],[\"Net sales (excl. GST)\",49969.05,51963.36],[\"GST collected\",2457.95,2577.64],[\"Orders\",286,298]]",
+            "kind": "expect"
+          },
+          {
+            "label": "'Sales by day' has 30 days adding up to ₹52427",
+            "ok": true,
+            "detail": "30 rows",
+            "kind": "expect"
+          },
+          {
+            "label": "the GST sheet's days add up to ₹2457.95 GST, and its Total row says ₹2457.95 too",
+            "ok": true,
+            "detail": "29 days, total row [\"Total\",286,49169.05,1228.34,1229.61,2457.95,0,52427]",
+            "kind": "expect"
+          },
+          {
+            "label": "the Profit & loss sheet uses the bills typed earlier: net profit ≈ ₹10319",
+            "ok": true,
+            "detail": "sheet says 10318.59",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 13,
+        "title": "Reports: one outlet as CSV, and PDF and JSON",
+        "checks": [
+          {
+            "label": "the CSV has a header and one row per day, with the BOM Excel needs",
+            "ok": true,
+            "detail": "Day,Orders,Sales (incl. GST),Net sales",
+            "kind": "expect"
+          },
+          {
+            "label": "Marketing Mart — Main's CSV adds up to ₹33137 and 178 orders (not the whole store's)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the outlet's CSV contains the whole store's sales",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the weekly PDF is a real PDF file",
+            "ok": true,
+            "detail": "4919 bytes",
+            "kind": "expect"
+          },
+          {
+            "label": "the yearly JSON says 2026-01-01 to 2026-12-31 for the whole store",
+            "ok": true,
+            "detail": "[{\"from\":\"2026-01-01\",\"to\":\"2026-12-31\"},\"Whole store\"]",
+            "kind": "expect"
+          },
+          {
+            "label": "…and its summary holds at least the last 30 days' sales (the whole year includes them)",
+            "ok": true,
+            "detail": "125855",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 14,
+        "title": "GST and the daily cash close agree",
+        "checks": [
+          {
+            "label": "the GST total row: 286 orders, taxable ₹49,169, CGST ₹1,228, SGST ₹1,230, GST ₹2,458",
+            "ok": true,
+            "detail": "Total 286 ₹49,169 ₹1,228 ₹1,230 ₹2,458 ₹52,427",
+            "kind": "expect"
+          },
+          {
+            "label": "the cash close for 2026-11-15, picked in the calendar, equals that day's invoice total in the GST table (₹2325)",
+            "ok": true,
+            "detail": "₹2,325 vs 2325",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 15,
+        "title": "Who can see what: manager, accountant, cashier",
+        "checks": [
+          {
+            "label": "the manager has Analytics in the sidebar",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…with Overview, Sales, Items & stock, Customers, Compare outlets and Operations",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the manager is offered Profit & loss or Reports",
+            "ok": true,
+            "detail": "Take order | Dashboard | Orders | Menu | Tables | Printing | Analytics | Customers | Coupons | Storefront | Settings | View storefront | Overview | Sales | Items & stock | Customers | Compare outlets | Operations",
+            "kind": "never"
+          },
+          {
+            "label": "…and sees the same sales (₹52,427)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/analytics/profit is a 404 for the manager",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the manager sees the profit screen",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "/analytics/reports is a 404 for the manager",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the manager sees the reports screen",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the accountant has every tab, including Profit & loss and Reports",
+            "ok": true,
+            "detail": "Dashboard | Orders | Menu | Printing | Analytics | Customers | Coupons | Storefront | View storefront | Overview | Sales | Items & stock | Customers | Compare outlets | Operations | Profit & loss | Reports",
+            "kind": "expect"
+          },
+          {
+            "label": "…and can download (the Download button and the GST table are there)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the cashier has Analytics in the sidebar",
+            "ok": true,
+            "detail": "Take order, Dashboard, Orders, Menu, Tables, Printing, Coupons, Storefront",
+            "kind": "never"
+          },
+          {
+            "label": "/analytics/overview is a 404 for the cashier",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 16,
+        "title": "Plans: a store without Analytics sees a notice; the platform can unlock or lock it for one store",
+        "checks": [
+          {
+            "label": "a store on the Starter plan has Analytics in its sidebar",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "opening the address says 'Analytics isn't in your plan'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the Starter store sees sales figures",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the plan form has an 'Analytics & reports' switch, ticked on Pro",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "unlocked for Beta Bites: Analytics appears in its sidebar",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and its (empty) Overview opens, with no plan notice",
+            "ok": true,
+            "detail": "₹0",
+            "kind": "expect"
+          },
+          {
+            "label": "Marketing Mart keeps Analytics after the platform locked it for the store",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "its address now says 'Analytics isn't in your plan'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "back to 'from plan' (Pro has it): Analytics is back",
             "ok": true,
             "detail": "",
             "kind": "expect"

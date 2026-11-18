@@ -1,6 +1,6 @@
 # T07 — Favicon — one per store, only when the plan (or a per-store override) includes it
 
-**Area:** plans · **Last result:** ✅ PASSED (8 passed, 0 failed · 2026-11-16 02:16 · headless · 3.1 s)
+**Area:** plans · **Last result:** ✅ PASSED (8 passed, 0 failed · 2026-11-16 03:07 · headless · 3.7 s)
 
 **Run it alone:** `node run.mjs --only t07` (add `--visible` to watch it)
 
@@ -47,6 +47,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-16 03:07 | pass | 8 | 0 | headless | 3.7 s |
 | 2026-11-16 02:16 | pass | 8 | 0 | headless | 3.1 s |
 | 2026-11-16 01:58 | pass | 8 | 0 | headless | 3.0 s |
 | 2026-11-16 01:40 | pass | 8 | 0 | headless | 2.9 s |

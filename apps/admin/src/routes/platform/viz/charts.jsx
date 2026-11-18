@@ -279,12 +279,12 @@ const hangingPath = (x, y, w, h, r = 4) => {
  * Columns along a time axis. data: [{ key, label, value, tip?: string[], partial?: bool }].
  * The value is labelled on the latest column and the tallest; the axis carries the rest.
  */
-export function ColumnChart({ data, height = 250, format, labelFormat, tickFormat, name, summary }) {
+export function ColumnChart({ data, height = 250, format, labelFormat, tickFormat, name, summary, whole = false }) {
   const { wrap, tip, show, hide } = useTip();
   const width = useWidth(wrap);
   const [on, setOn] = useState(null);
   const max = Math.max(0, ...data.map((d) => d.value));
-  const { max: top, ticks } = niceTicks(max);
+  const { max: top, ticks } = niceTicks(max, 4, whole);
   const tickText = tickFormat ?? format;
   const m = { top: 24, right: 8, bottom: 26, left: 14 + Math.max(...ticks.map((t) => String(tickText(t)).length)) * 6.6 };
   const plotW = width - m.left - m.right;

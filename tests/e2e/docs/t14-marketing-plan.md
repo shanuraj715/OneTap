@@ -1,6 +1,6 @@
 # T14 — Marketing is a plan feature — Basic doesn't have it, Pro does, and it can be unlocked or locked for one store
 
-**Area:** plans · **Last result:** ✅ PASSED (16 passed, 0 failed · 2026-11-16 02:25 · headless · 1 min 4 s)
+**Area:** plans · **Last result:** ✅ PASSED (16 passed, 0 failed · 2026-11-16 03:16 · headless · 1 min 6 s)
 
 **Run it alone:** `node run.mjs --only t14` (add `--visible` to watch it) · starts from fresh fake data
 
@@ -82,6 +82,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-16 03:16 | pass | 16 | 0 | headless | 1 min 6 s |
 | 2026-11-16 02:25 | pass | 16 | 0 | headless | 1 min 4 s |
 | 2026-11-16 01:27 | pass | 16 | 0 | headless | 1 min 4 s |
 

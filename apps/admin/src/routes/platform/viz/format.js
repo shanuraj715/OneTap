@@ -38,13 +38,13 @@ export function axisCount(max) {
   return (v) => (v === 0 ? "0" : short.format(v));
 }
 
-/** Round axis ticks: { max, ticks } with `target` or so steps, on 1 / 2 / 2.5 / 5 × 10ⁿ. */
-export function niceTicks(maxValue, target = 4) {
+/** Round axis ticks: { max, ticks } with `target` or so steps, on 1 / 2 / 2.5 / 5 × 10ⁿ. `whole` keeps every tick a whole number (a count of orders is never 2.5). */
+export function niceTicks(maxValue, target = 4, whole = false) {
   if (!(maxValue > 0)) return { max: 1, ticks: [0, 1] };
-  const rough = maxValue / target;
+  const rough = whole ? Math.max(1, maxValue / target) : maxValue / target;
   const power = 10 ** Math.floor(Math.log10(rough));
   const f = rough / power;
-  const step = (f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10) * power;
+  const step = (f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 && !whole ? 2.5 : f <= 5 ? 5 : 10) * power;
   const top = Math.ceil(maxValue / step - 1e-9) * step;
   const ticks = [];
   for (let v = 0; v <= top + step / 2; v += step) ticks.push(Math.round(v * 1e6) / 1e6);

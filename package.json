@@ -9,6 +9,7 @@
   },
   "scripts": {
     "dev": "turbo run dev",
+    "dev:all": "turbo run dev --ui=stream",
     "dev:api": "pnpm --filter @onetap/api dev",
     "dev:storefront": "pnpm --filter @onetap/storefront dev",
     "dev:admin": "pnpm --filter @onetap/admin dev",

@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { MARKETING_CHANNEL_LABELS, MARKETING_MAX_RECIPIENTS, MARKETING_VARIABLES, WA_PACING } from "@onetap/config-schema";
 import { AlertTriangle, CheckCircle2, Plus, Send, Upload, X } from "lucide-react";
 import * as api from "../../lib/api";
@@ -33,7 +33,13 @@ function NewCampaignPage() {
   const lists = useMkLists();
   const [channel, setChannel] = useState("");
   const [customersOn, setCustomersOn] = useState(true);
-  const [filters, setFilters] = useState(emptyFilters());
+  // "Message them" in Analytics → Customers arrives with ?lapsed=60: that filter is already on
+  const [params] = useSearchParams();
+  const lapsed = Number(params.get("lapsed")) || 0;
+  const [filters, setFilters] = useState(() => {
+    const f = emptyFilters();
+    return lapsed ? { ...f, lastOrder: { ...f.lastOrder, on: true, value: lapsed, unit: "days" } } : f;
+  });
   const [waChats, setWaChats] = useState(false);
   const [listIds, setListIds] = useState([]);
   const [numbersOn, setNumbersOn] = useState(false);
