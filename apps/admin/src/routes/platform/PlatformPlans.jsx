@@ -145,9 +145,10 @@ function PlanModal({ plan, onClose }) {
         }}
         style={{ padding: 22, overflowY: "auto" }}
       >
-        <h3 style={{ margin: "0 0 16px", fontFamily: "var(--font-heading)" }}>{draft.id ? `Edit ${plan.name}` : "New plan"}</h3>
+        <h3 style={{ margin: "0 0 4px", fontFamily: "var(--font-heading)", fontSize: 19 }}>{draft.id ? `Edit ${plan.name}` : "New plan"}</h3>
+        <p style={{ ...muted, margin: "0 0 16px", fontSize: 13 }}>What a store on this plan can have: its limits, its features and what the website shows for it.</p>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: 14 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: 14, alignItems: "start" }}>
           <Field label="Name">
             <TextInput value={draft.name} onChange={(e) => setDraft({ ...draft, name: e.target.value })} required maxLength={60} />
           </Field>
@@ -187,7 +188,7 @@ function PlanModal({ plan, onClose }) {
             <Checkbox checked={draft.marketing.show} onChange={(v) => setMarketing({ show: v })} label="Show this plan on the website's Pricing" />
             {draft.marketing.show ? (
               <>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 110px", gap: 12 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 110px", gap: 14, alignItems: "start" }}>
                   <Field label="Monthly price (₹)" hint="Before GST. Empty = no number shown">
                     <TextInput
                       type="number"
@@ -238,7 +239,7 @@ function PlanModal({ plan, onClose }) {
         </Section>
 
         {save.error ? <Toast kind="error">{save.error.message}</Toast> : null}
-        <div style={{ display: "flex", justifyContent: "flex-end", gap: 8, marginTop: 18 }}>
+        <div style={{ display: "flex", justifyContent: "flex-end", gap: 8, marginTop: 20, padding: "14px 22px", position: "sticky", bottom: -22, margin: "20px -22px -22px", background: "var(--color-bg)", borderTop: "1px solid var(--color-border)" }}>
           <Button variant="outline" type="button" onClick={onClose}>
             Cancel
           </Button>
@@ -256,9 +257,10 @@ function PlanContents({ draft, setLimit, toggle }) {
   return (
     <>
       <Section title="Limits">
-        <div style={{ display: "flex", gap: 18, flexWrap: "wrap", alignItems: "flex-end" }}>
+        {/* one limit under another, all starting at the left edge — a number, and "Unlimited" beside it */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 14, alignItems: "flex-start" }}>
           <LimitInput label="People (owners included)" value={draft.limits.maxUsers} onChange={(v) => setLimit("maxUsers", v)} />
-          <Checkbox checked={draft.limits.multiOutlet} onChange={(v) => setLimit("multiOutlet", v)} label="Multi-outlet" />
+          <Checkbox checked={draft.limits.multiOutlet} onChange={(v) => setLimit("multiOutlet", v)} label="Multi-outlet" info="Off: a store on this plan can have one outlet only. On: it can have several, up to the number below." />
           {draft.limits.multiOutlet ? <LimitInput label="Outlets" value={draft.limits.maxOutlets} onChange={(v) => setLimit("maxOutlets", v)} /> : null}
         </div>
       </Section>
@@ -293,15 +295,15 @@ function PlanContents({ draft, setLimit, toggle }) {
 /** A number, or "Unlimited" (null). */
 function LimitInput({ label, value, onChange }) {
   return (
-    <Field label={label}>
-      <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+    <Field label={label} style={{ marginBottom: 0 }}>
+      <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
         <TextInput
           type="number"
           min={1}
           value={value ?? ""}
           disabled={value === null}
           onChange={(e) => onChange(Math.max(1, Math.floor(Number(e.target.value) || 1)))}
-          style={{ width: 90 }}
+          style={{ width: 96 }}
         />
         <Checkbox checked={value === null} onChange={(v) => onChange(v ? null : 5)} label="Unlimited" />
       </div>
@@ -311,11 +313,9 @@ function LimitInput({ label, value, onChange }) {
 
 function Section({ title, hint, children }) {
   return (
-    <div style={{ marginTop: 18 }}>
-      <div style={{ fontWeight: 700, fontSize: 13, marginBottom: 8 }}>
-        {title}
-        {hint ? <span style={{ ...muted, fontWeight: 400, marginLeft: 8 }}>{hint}</span> : null}
-      </div>
+    <div style={{ marginTop: 20, paddingTop: 18, borderTop: "1px solid var(--color-border)" }}>
+      <div style={{ fontWeight: 700, fontSize: 14, marginBottom: hint ? 2 : 10 }}>{title}</div>
+      {hint ? <p style={{ ...muted, fontSize: 12.5, margin: "0 0 10px" }}>{hint}</p> : null}
       {children}
     </div>
   );
