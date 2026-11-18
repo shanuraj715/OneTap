@@ -26,6 +26,7 @@ import { platformSiteRouter, siteRouter } from "./modules/site/site.routes.js";
 import { staffOrdersRouter } from "./modules/orders/staff-orders.routes.js";
 import { outletsRouter } from "./modules/outlets/outlets.routes.js";
 import { pagesRouter } from "./modules/pages/pages.routes.js";
+import { analyticsRouter } from "./modules/analytics/analytics.routes.js";
 import { marketingRouter } from "./modules/marketing/marketing.routes.js";
 import { whatsappRouter } from "./modules/whatsapp/whatsapp.routes.js";
 import { paymentsRouter } from "./modules/payments/payments.routes.js";
@@ -119,6 +120,7 @@ export function createApp()          {
   app.use("/api/pages", pagesRouter);
   app.use("/api/whatsapp", whatsappRouter);
   app.use("/api/marketing", marketingRouter);
+  app.use("/api/analytics", analyticsRouter);
   app.use("/api/tables", tablesRouter);
   app.use("/api/qr-cards", qrCardsRouter);
   app.use("/api/printing", printingRouter);

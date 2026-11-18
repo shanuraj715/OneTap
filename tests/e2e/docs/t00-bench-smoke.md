@@ -1,6 +1,6 @@
 # T00 — Bench smoke test — API, dashboard and storefronts are alive with the fake stores
 
-**Area:** bench · **Last result:** ✅ PASSED (11 passed, 0 failed · 2026-11-16 02:14 · headless · 13.3 s)
+**Area:** bench · **Last result:** ✅ PASSED (11 passed, 0 failed · 2026-11-16 03:04 · headless · 13.7 s)
 
 **Run it alone:** `node run.mjs --only t00` (add `--visible` to watch it)
 
@@ -56,13 +56,14 @@ _Nothing failed._
 
 **Step 4 — Ask for a customer sign-in code with an arbitrary phone number**
 
-- the code request is accepted (the test stores accept any phone) — _HTTP 200 {"channel":"sms","devCode":"796586"}_
+- the code request is accepted (the test stores accept any phone) — _HTTP 200 {"channel":"sms","devCode":"887665"}_
 - did not happen: the browser logged JavaScript errors
 
 ## History (latest 10 runs)
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-16 03:04 | pass | 11 | 0 | headless | 13.7 s |
 | 2026-11-16 02:14 | pass | 11 | 0 | headless | 13.3 s |
 | 2026-11-16 01:56 | pass | 11 | 0 | headless | 14.1 s |
 | 2026-11-16 01:38 | pass | 11 | 0 | headless | 13.1 s |

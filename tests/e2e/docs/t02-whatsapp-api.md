@@ -1,6 +1,6 @@
 # T02 — WhatsApp chat — API rules and the careful-pace sending worker
 
-**Area:** whatsapp · **Last result:** ✅ PASSED (118 passed, 0 failed · 2026-11-16 02:14 · headless · 12.3 s)
+**Area:** whatsapp · **Last result:** ✅ PASSED (133 passed, 0 failed · 2026-11-16 03:05 · headless · 13.8 s)
 
 **Run it alone:** `node run.mjs --only t02` (add `--visible` to watch it)
 
@@ -20,6 +20,7 @@ Runs suites/wa-api.mjs: its own in-memory API with the WhatsApp worker switched 
 8. clear and delete
 9. colours, stats, sharing chats out, cleanup, delete for everyone
 10. a real link QR from WhatsApp's servers (nothing is linked)
+11. WhatsApp chat taken away from a store — its numbers are unlinked and nothing stays connected
 
 ## What to expect (these must happen)
 
@@ -48,7 +49,7 @@ Runs suites/wa-api.mjs: its own in-memory API with the WhatsApp worker switched 
 
 _Nothing failed._
 
-### ✅ Passed (118)
+### ✅ Passed (133)
 
 **Step 1 — who can use it**
 
@@ -89,21 +90,21 @@ _Nothing failed._
 - (earlier queued messages stay with the number they were written on) — _2_
 - moving a chat to another number takes its waiting messages along
 - with no number online, a brand-new chat can't start
-- an attachment uploads — _http://localhost:3098/uploads/6afa19c00c9826af56b8_
+- an attachment uploads — _http://localhost:3098/uploads/6afa2591dcaedadbc347_
 - a photo with a caption is queued
 - a read-only role can't upload
 
 **Step 4 — the worker sends — at a careful pace**
 
-- it's quiet hours now (10 pm–9 am): first contacts wait for the morning — _2026-11-16T03:36:49.618Z_
+- it's quiet hours now (10 pm–9 am): first contacts wait for the morning — _2026-11-16T03:33:13.811Z_
 - one message goes out, to the right number — _919876543210@s.whatsapp.net_
 - …after showing 'typing…'
 - …and is marked sent, with WhatsApp's id saved first
-- the next first contact must wait 2–4 minutes — _132 s_
+- the next first contact must wait 2–4 minutes — _223 s_
 - so the next queued first-contact message does NOT go out yet
 - a reply to someone who wrote to us is a running conversation
 - …and goes out straight away, ahead of the waiting first contacts
-- 15 first contacts a day per number: the rest wait for tomorrow — _2026-11-16T18:31:56.657Z_
+- 15 first contacts a day per number: the rest wait for tomorrow — _2026-11-16T18:31:21.484Z_
 - a number that isn't on WhatsApp is never messaged — _This number isn't on WhatsApp._
 - a failed message can be tried again
 - a photo goes out as a photo, with its caption, read back from storage
@@ -198,10 +199,29 @@ _Nothing failed._
 - a session's keys are stored encrypted — _creds,pre-key-1_
 - …and read back intact (what lets a number stay linked after a restart)
 
+**Step 11 — WhatsApp chat taken away from a store — its numbers are unlinked and nothing stays connected**
+
+- the worker closes (and logs out) the connection of a store whose plan lacks WhatsApp chat
+- …the number shows as unlinked, with the reason
+- …and what was waiting to go out is failed, not left to leak out later
+- a store that has WhatsApp chat is left alone
+- the platform locks WhatsApp chat for one store — _200_
+- …its number is unlinked AT ONCE (no waiting for the worker) — _logged_out wantsLogout=true_
+- …and its waiting messages are failed at once
+- …then the worker closes the connection and logs the phone out
+- …and the card keeps the reason
+- a store on a plan that has WhatsApp chat keeps its number
+- the platform takes WhatsApp chat out of that plan — _200_
+- …every store on it is unlinked AT ONCE
+- …and its connection is closed
+- the stored messages are kept
+- the number stays unlinked when the feature returns — it must be linked again with a new scan — _logged_out_
+
 ## History (latest 10 runs)
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-16 03:05 | pass | 133 | 0 | headless | 13.8 s |
 | 2026-11-16 02:14 | pass | 118 | 0 | headless | 12.3 s |
 | 2026-11-16 01:57 | pass | 133 | 0 | headless | 11.9 s |
 | 2026-11-16 01:39 | pass | 118 | 0 | headless | 14.3 s |

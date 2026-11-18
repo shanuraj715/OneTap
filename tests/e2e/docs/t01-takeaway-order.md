@@ -1,6 +1,6 @@
 # T01 — Takeaway order of at least ₹999 — customer places it, staff take it all the way to Completed
 
-**Area:** orders · **Last result:** ✅ PASSED (45 passed, 0 failed · 2026-11-16 02:14 · headless · 32.5 s)
+**Area:** orders · **Last result:** ✅ PASSED (45 passed, 0 failed · 2026-11-16 03:05 · headless · 32.9 s)
 
 **Run it alone:** `node run.mjs --only t01` (add `--visible` to watch it) · starts from fresh fake data
 
@@ -105,7 +105,7 @@ _Nothing failed._
 **Step 10 — At the counter: the new order has arrived on the dashboard — nobody refreshed the page**
 
 - the order appeared on the dashboard by itself, instantly (live connection)
-- the row shows the customer, phone, type, item count, total and 'Placed' — _ #0001 02:14 AM Rohan Mehta 9811122233 TA 8 ₹1,030 Placed 0m Accepted_
+- the row shows the customer, phone, type, item count, total and 'Placed' — _ #0001 03:05 AM Rohan Mehta 9811122233 TA 8 ₹1,030 Placed 0m Accepted_
 
 **Step 11 — The staff open the order to see everything in it**
 
@@ -157,6 +157,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-16 03:05 | pass | 45 | 0 | headless | 32.9 s |
 | 2026-11-16 02:14 | pass | 45 | 0 | headless | 32.5 s |
 | 2026-11-16 01:56 | pass | 45 | 0 | headless | 32.9 s |
 | 2026-11-16 01:38 | pass | 45 | 0 | headless | 32.7 s |

@@ -10,6 +10,7 @@ import {
   Bell,
   Layers,
   Store,
+  BarChart3,
   Boxes,
   Building2,
   Check,
@@ -54,6 +55,14 @@ import { useLeads, useStore } from "./lib/usePlatform";
 import { useWaMe } from "./lib/useWhatsApp";
 import { WhatsAppChats } from "./routes/whatsapp/WhatsAppChats";
 import { WhatsAppNumbers } from "./routes/whatsapp/WhatsAppNumbers";
+import { Compare } from "./routes/analytics/Compare";
+import { Customers as AnalyticsCustomers } from "./routes/analytics/Customers";
+import { Items as AnalyticsItems } from "./routes/analytics/Items";
+import { Operations } from "./routes/analytics/Operations";
+import { Overview } from "./routes/analytics/Overview";
+import { Profit } from "./routes/analytics/Profit";
+import { Reports } from "./routes/analytics/Reports";
+import { Sales } from "./routes/analytics/Sales";
 import { Campaigns } from "./routes/marketing/Campaigns";
 import { Lists } from "./routes/marketing/Lists";
 import { NewCampaign } from "./routes/marketing/NewCampaign";
@@ -116,6 +125,14 @@ const ROUTE_META = {
   "/whatsapp/broadcast": { title: "WhatsApp broadcast", icon: MessageCircle },
   "/whatsapp/access": { title: "WhatsApp access", icon: MessageCircle },
   "/whatsapp/cleanup": { title: "WhatsApp clean up", icon: MessageCircle },
+  "/analytics/overview": { title: "Analytics", icon: BarChart3 },
+  "/analytics/sales": { title: "Sales analytics", icon: BarChart3 },
+  "/analytics/items": { title: "Items & stock", icon: BarChart3 },
+  "/analytics/customers": { title: "Customer analytics", icon: BarChart3 },
+  "/analytics/compare": { title: "Compare outlets", icon: BarChart3 },
+  "/analytics/operations": { title: "Operations", icon: BarChart3 },
+  "/analytics/profit": { title: "Profit & loss", icon: BarChart3 },
+  "/analytics/reports": { title: "Reports", icon: BarChart3 },
   "/marketing/new": { title: "Marketing", icon: Send },
   "/marketing/campaigns": { title: "Campaigns", icon: Send },
   "/marketing/lists": { title: "Contact lists", icon: Send },
@@ -178,6 +195,7 @@ const NAV_GROUPS = [
     group: "Customers & growth",
     divider: true,
     items: [
+      { to: "/analytics/overview", label: "Analytics", icon: <BarChart3 size={ICON} />, permission: "analytics:read", feature: "analytics", matchPaths: ["/analytics"] },
       { to: "/customers", label: "Customers", icon: <UsersIcon size={ICON} />, permission: "customer:read" },
       { to: "/marketing/new", label: "Marketing", icon: <Send size={ICON} />, permission: "marketing:read", feature: "marketing", matchPaths: ["/marketing"] },
       // shown to whoever the owner gave chat access (see WhatsApp → Access), when the plan includes it
@@ -597,6 +615,15 @@ function Shell({ can }                                     ) {
             <Route path="/whatsapp/chats/:chatId" element={<WaGate need="read"><WhatsAppChats /></WaGate>} />
             <Route path="/whatsapp/numbers" element={<WaGate need="manage"><WhatsAppNumbers /></WaGate>} />
             <Route path="/whatsapp/broadcast" element={<WaGate need="manage"><WhatsAppBroadcast /></WaGate>} />
+            <Route path="/analytics" element={<Navigate to="/analytics/overview" replace />} />
+            <Route path="/analytics/overview" element={<Overview />} />
+            <Route path="/analytics/sales" element={<Sales />} />
+            <Route path="/analytics/items" element={<AnalyticsItems />} />
+            <Route path="/analytics/customers" element={<AnalyticsCustomers />} />
+            <Route path="/analytics/compare" element={<Compare />} />
+            <Route path="/analytics/operations" element={<Operations />} />
+            <Route path="/analytics/profit" element={<Profit />} />
+            <Route path="/analytics/reports" element={<Reports />} />
             <Route path="/marketing" element={<Navigate to="/marketing/new" replace />} />
             <Route path="/marketing/new" element={<NewCampaign />} />
             <Route path="/marketing/campaigns" element={<Campaigns />} />

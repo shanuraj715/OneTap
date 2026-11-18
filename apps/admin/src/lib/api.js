@@ -795,3 +795,23 @@ export const mkCampaigns = (o) => mk(o, "/campaigns");
 export const mkCampaign = (o, id) => mk(o, `/campaigns/${id}`);
 export const mkCreateCampaign = (o, body) => mk(o, "/campaigns", mkJson("POST", body));
 export const mkCancelCampaign = (o, id) => mk(o, `/campaigns/${id}/cancel`, mkJson("POST"));
+
+/* ---------------------------------------------------------------- analytics */
+const anQuery = (params) => {
+  const q = new URLSearchParams();
+  for (const [k, v] of Object.entries(params ?? {})) if (v !== undefined && v !== null && v !== "") q.set(k, Array.isArray(v) ? v.join(",") : String(v));
+  const s = q.toString();
+  return s ? `?${s}` : "";
+};
+export const an = (o, kind, params) => req(`/api/analytics/${kind}${anQuery(params)}`, { outletId: o._id });
+export const anSaveProfile = (o, data) => req("/api/analytics/profile", { method: "PUT", body: JSON.stringify({ data }), outletId: o._id });
+/** Ask for a report file; resolves to { blob, filename } so the browser can save it. */
+export async function anExport(o, body) {
+  const res = await fetch(`${API_BASE}/api/analytics/export`, { method: "POST", credentials: "include", headers: { "content-type": "application/json", "x-onetap-outlet": o._id }, body: JSON.stringify(body) });
+  if (!res.ok) {
+    const j = await res.json().catch(() => ({}));
+    throw new ApiError(res.status, j.error ?? `The report could not be made (${res.status})`, j.details);
+  }
+  const name = /filename="?([^"]+)"?/.exec(res.headers.get("content-disposition") ?? "")?.[1] ?? "tablepe-report";
+  return { blob: await res.blob(), filename: name };
+}

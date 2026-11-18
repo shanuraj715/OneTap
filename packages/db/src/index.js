@@ -6,6 +6,7 @@ export { OutletModel } from "./models/outlet.js";
 export { PlanModel, PlatformSettingsModel } from "./models/plan.js";
 export { LeadModel, SitePageModel, SiteSettingsModel } from "./models/site.js";
 export { UserModel, SessionModel } from "./models/user.js";
+export { AnalyticsProfileModel } from "./models/analytics.js";
 export { LoginLogModel } from "./models/audit.js";
 export { LoginGuardModel } from "./models/security.js";
 export { OrderModel, CounterModel, nextSequence } from "./models/order.js";

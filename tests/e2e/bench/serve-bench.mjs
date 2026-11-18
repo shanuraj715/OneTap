@@ -304,8 +304,96 @@ await raw("wachats").insertOne({ brandId: brandM, phone: "919000000007", name: "
 await raw("wachats").insertOne({ brandId: brandM, phone: "919000000008", name: "Chat Only Chandni", accountId: martWa, unread: 0, createdAt: daysAgo(3), updatedAt: new Date(), lastMessageAt: daysAgo(3) }); // messaged on WhatsApp, not a customer
 await mk({ name: "Mail Only", email: "mail.only@example.com", gender: "female", age: 27, ageYear: yr }); // no phone → can't be messaged
 
+/* ------------------------------------------------ analytics fixtures (Marketing Mart) */
+// ~10 weeks of orders with weekday rhythm, order types, coupons, cancellations and slow kitchens, so every analytics
+// figure has a known answer. The EXPECTED figures are worked out below straight from the stored orders with plain loops
+// (not with the API's database queries), so a test compares the engine against a second calculation.
+for (const [email, name, password, role] of [["m@mart.test", "Mart Manager", "Manager123!", "manager"], ["a@mart.test", "Mart Accountant", "Account123!", "accountant"], ["s@mart.test", "Mart Cashier", "Staff1234!", "staff"]]) {
+  await call("POST", "/api/users", { cookie: ownerM, brand: brandM, body: { email, name, password, role } });
+}
+{
+  const IST = 330 * 60_000;
+  const istDay = (ms) => new Date(ms + IST).toISOString().slice(0, 10);
+  const PRICE = { "Paneer Steamed Momos": 9000, "Paneer Gravy Momos": 11000, "Veg Steamed Momos": 8000, "Chicken Momos": 10000, "Cold Coffee": 7000 };
+  const COMBOS = [[["Paneer Steamed Momos", 2], ["Cold Coffee", 1]], [["Veg Steamed Momos", 1]], [["Chicken Momos", 2]], [["Paneer Gravy Momos", 1], ["Cold Coffee", 1]]];
+  const BASE = [9, 4, 4, 5, 6, 8, 10]; // orders at Main on Sun…Sat; Second gets about half
+  const CHANNELS = ["takeaway", "delivery", "dine-in"];
+  let global = 0;
+  const docs = [];
+  for (let back = 70; back >= 1; back--) {
+    const dayMs = Date.now() - back * 86_400_000;
+    const key = istDay(dayMs);
+    const dow = new Date(`${key}T12:00:00Z`).getUTCDay();
+    for (const [outlet, count, shift] of [[mainM, BASE[dow], 0], [secondM, Math.floor(BASE[dow] / 2) + 1, 1]]) {
+      for (let i = 0; i < count; i++) {
+        global++;
+        const channel = CHANNELS[(i + shift) % 3];
+        const lines = COMBOS[(i + shift) % COMBOS.length].map(([name, quantity]) => ({ itemId: "x", name, quantity, unitPrice: PRICE[name], lineTotal: PRICE[name] * quantity }));
+        const subtotal = lines.reduce((a, l) => a + l.lineTotal, 0);
+        const coupon = global % 5 === 0;
+        const discount = coupon ? Math.round(subtotal * 0.1) : 0;
+        const deliveryFee = channel === "delivery" ? 3000 : 0;
+        const grand = subtotal - discount + deliveryFee;
+        const tax = Math.round((grand * 5) / 105);
+        const cancelled = global % 10 === 0;
+        const hour = 11 + ((i * 7 + shift * 3) % 11);
+        const at = new Date(`${key}T${String(hour).padStart(2, "0")}:${String((i * 13) % 60).padStart(2, "0")}:00+05:30`);
+        const slow = global % 4 === 0;
+        const t = (m) => new Date(at.getTime() + m * 60_000);
+        const cid = `walkin-${global % 30}`;
+        docs.push({
+          brandId: brandM, outletId: outlet, orderNumber: String(1000 + i), orderDay: key.replace(/-/g, ""), channel, placedBy: "customer",
+          status: cancelled ? "cancelled" : "completed",
+          customer: { customerId: cid, name: `Guest ${global % 30}`, phone: `9190000${String(global % 30).padStart(5, "0")}` },
+          lines, couponCode: coupon ? "SAVE20" : undefined,
+          totals: { subtotal, discount, deliveryFee, taxable: grand - tax, taxAmount: tax, cgst: Math.floor(tax / 2), sgst: tax - Math.floor(tax / 2), serviceCharge: 0, coinsDiscount: 0, grandTotal: grand },
+          payment: { gateway: channel === "delivery" ? "razorpay" : "cod", status: cancelled ? "pending" : "paid" },
+          statusHistory: cancelled ? [{ status: "placed", at }, { status: "cancelled", at: t(3) }] : [{ status: "placed", at }, { status: "accepted", at: t(slow ? 6 : 2) }, { status: "preparing", at: t(slow ? 8 : 4) }, { status: "ready", at: t(slow ? 34 : 14) }, { status: "completed", at: t(slow ? 40 : 20) }],
+          createdAt: at, updatedAt: at,
+        });
+      }
+    }
+  }
+  await raw("orders").insertMany(docs);
+
+  // ---- the expected answers, worked out from EVERY stored order of the store with plain loops
+  const all = await raw("orders").find({ brandId: brandM }).toArray();
+  const isSale = (o) => o.status !== "cancelled" && o.payment?.status === "paid";
+  const window = (fromBack, toBack, outlet) => {
+    const from = istDay(Date.now() - fromBack * 86_400_000), to = istDay(Date.now() - toBack * 86_400_000);
+    const rows = all.filter((o) => { const d = istDay(new Date(o.createdAt).getTime()); return d >= from && d <= to && (!outlet || o.outletId === outlet); });
+    const sold = rows.filter(isSale);
+    const sum = (list, f) => list.reduce((a, o) => a + f(o), 0);
+    const items = {};
+    for (const o of sold) for (const l of o.lines) items[l.name] = (items[l.name] ?? 0) + l.quantity;
+    return {
+      from, to,
+      sales: sum(sold, (o) => o.totals.grandTotal), tax: sum(sold, (o) => o.totals.taxAmount ?? 0), net: sum(sold, (o) => o.totals.grandTotal - (o.totals.taxAmount ?? 0)),
+      orders: sold.length, cancelled: rows.filter((o) => o.status === "cancelled").length, placed: rows.length,
+      itemsSold: sum(sold, (o) => sum(o.lines, (l) => l.quantity)), discount: sum(sold, (o) => o.totals.discount ?? 0),
+      topItems: Object.entries(items).sort((a, b) => b[1] - a[1]).map(([name, qty]) => ({ name, qty })),
+      cgst: sum(sold, (o) => o.totals.cgst ?? 0), sgst: sum(sold, (o) => o.totals.sgst ?? 0), taxable: sum(sold, (o) => o.totals.taxable ?? 0),
+      byChannel: Object.fromEntries(CHANNELS.map((c) => [c, sum(sold.filter((o) => o.channel === c), (o) => o.totals.grandTotal)])),
+      cash: sum(sold.filter((o) => o.payment.gateway === "cod"), (o) => o.totals.grandTotal),
+    };
+  };
+  // stock suggestions for Main: the last 6 whole weeks ending yesterday, average per weekday, +15%
+  const stock = {};
+  const sixWeeks = all.filter((o) => o.outletId === mainM && isSale(o) && (Date.now() - new Date(o.createdAt).getTime()) <= 42 * 86_400_000 + 86_400_000);
+  const dayKeys = Array.from({ length: 42 }, (_, i) => istDay(Date.now() - (i + 1) * 86_400_000));
+  for (const name of Object.keys(PRICE)) {
+    const perWeekday = Array.from({ length: 7 }, () => 0);
+    for (const d of dayKeys) {
+      const dow = new Date(`${d}T12:00:00Z`).getUTCDay();
+      for (const o of sixWeeks) if (istDay(new Date(o.createdAt).getTime()) === d) for (const l of o.lines) if (l.name === name) perWeekday[dow] += l.quantity;
+    }
+    stock[name] = perWeekday.map((total) => { const avg = total / 6; return avg > 0 ? Math.max(1, Math.ceil(avg * 1.15)) : 0; });
+  }
+  globalThis.__analyticsExpect = { last7: window(6, 0), last30: window(29, 0), prev30: window(59, 30), last30Main: window(29, 0, mainM), last30Second: window(29, 0, secondM), today: window(0, 0), stockMain: stock };
+}
+
 /* ------------------------------------------------------------------ done */
-const ids = { brandA, main, second, brandB, only, brandM, mainM, secondM, planStarter: idOf(starter), planPro: idOf(pro) };
+const ids = { analytics: globalThis.__analyticsExpect, brandA, main, second, brandB, only, brandM, mainM, secondM, planStarter: idOf(starter), planPro: idOf(pro) };
 writeFileSync(`${HERE}ids.json`, JSON.stringify(ids, null, 2));
 console.log("READY", JSON.stringify(ids));
 setInterval(() => {}, 1 << 30);

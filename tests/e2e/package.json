@@ -16,5 +16,8 @@
   },
   "devDependencies": {
     "playwright": "1.63.0"
+  },
+  "dependencies": {
+    "exceljs": "^4.4.0"
   }
 }

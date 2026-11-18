@@ -31,6 +31,11 @@ export const FEATURES = [
     label: "Marketing",
     description: "Send offers and announcements to customers, chosen by filters, over the channels the store has set up (linked WhatsApp, SMS, WhatsApp Business API).",
   },
+  {
+    key: "analytics",
+    label: "Analytics & reports",
+    description: "Sales, items, customers and outlets analysed on charts, a profit & loss calculator, stock suggestions, and reports to export (Excel, CSV, PDF).",
+  },
   { key: "favicon", label: "Own favicon", description: "The store's own icon in the browser tab, on every outlet's pages." },
   {
     key: "customDomain",

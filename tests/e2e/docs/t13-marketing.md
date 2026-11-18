@@ -1,6 +1,6 @@
 # T13 — Marketing — channels, audience filters (last visit, items, age, gender, order type, area), imports, lists, sending and the sidebar
 
-**Area:** marketing · **Last result:** ✅ PASSED (70 passed, 0 failed · 2026-11-16 02:30 · headless · 1 min 28 s)
+**Area:** marketing · **Last result:** ✅ PASSED (70 passed, 0 failed · 2026-11-16 03:14 · headless · 1 min 30 s)
 
 **Run it alone:** `node run.mjs --only t13` (add `--visible` to watch it) · starts from fresh fake data
 
@@ -154,7 +154,7 @@ _Nothing failed._
 - a preview shows the message with a sample name
 - the confirmation says who and over what
 - the page says the campaign is on its way
-- Campaigns: it finishes with 2 sent, 0 waiting, 0 failed — _Win-back SMS SMS · 16 Nov, 2:30 am · 2 people 2 sent · 0 waiting · 0 failed Done_
+- Campaigns: it finishes with 2 sent, 0 waiting, 0 failed — _Win-back SMS SMS · 16 Nov, 3:14 am · 2 people 2 sent · 0 waiting · 0 failed Done_
 - the SMS gateway was asked to send to exactly Ravi's and Karan's numbers — _9000000001, 9000000003_
 - did not happen: the gateway was asked to message anyone else (Stop Sam, Dev, Meena, Sana, Priya…)
 - did not happen: someone got the same message twice
@@ -171,7 +171,7 @@ _Nothing failed._
 
 **Step 15 — The Customers page shows ages as they are today**
 
-- Ravi (24 in 2020) shows 30 — _ Ravi Kumar — 9000000001 Male 30 3 0 18 Aug, 2:29 am_
+- Ravi (24 in 2020) shows 30 — _ Ravi Kumar — 9000000001 Male 30 3 0 18 Aug, 3:13 am_
 - Sana (19 in 2024) shows 21
 - did not happen: the browser logged JavaScript errors
 
@@ -179,6 +179,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-16 03:14 | pass | 70 | 0 | headless | 1 min 30 s |
 | 2026-11-16 02:30 | pass | 70 | 0 | headless | 1 min 28 s |
 | 2026-11-16 02:24 | pass | 70 | 0 | headless | 1 min 28 s |
 | 2026-11-16 01:02 | pass | 70 | 0 | headless | 1 min 28 s |
