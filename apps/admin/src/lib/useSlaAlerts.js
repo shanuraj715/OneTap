@@ -99,6 +99,9 @@ export function useSlaAlerts(orders              , sla                         )
   }, [activeKeys]);
 
   const audible = breaches.filter((b) => !dismissed.has(b.orderId));
+  // The chime below must look again as time passes — keyed only on WHICH orders are late, "keep reminding me" would
+  // chime once and then never again while the same order sits there. A ten-second slot is enough to notice a minute.
+  const remindSlot = Math.floor(now / 10_000);
 
   useEffect(() => {
     if (!sla?.enabled || !sla.sound || !soundReady || !audible.length) return;
@@ -115,10 +118,13 @@ export function useSlaAlerts(orders              , sla                         )
     for (const b of audible) map.set(`${b.orderId}:${b.rule}`, now);
     playChime();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeKeys, soundReady, sla?.enabled, sla?.sound, sla?.repeatAlert]);
+  }, [activeKeys, soundReady, sla?.enabled, sla?.sound, sla?.repeatAlert, remindSlot]);
 
   return {
-    breaches: audible,
+    // every late order — what tints the rows and counts on the "Running late" filter, dismissed or not
+    breaches,
+    // the late orders staff haven't waved away yet — what the banner and the sound are about
+    alerts: audible,
     dismissed,
     dismiss: (orderId) => setDismissed((prev) => new Set(prev).add(orderId)),
     dismissAll: () => setDismissed(new Set(breaches.map((b) => b.orderId))),

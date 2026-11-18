@@ -361,7 +361,7 @@ export function Orders() {
         </span>
       </div>
 
-      <SlaBanner sla={sla} onShowLate={() => setOnlyLate(true)} soundReady={sla.soundReady} />
+      <SlaBanner sla={sla} onShowLate={() => setOnlyLate(true)} soundReady={sla.soundReady} soundEnabled={ops?.sla?.sound !== false} />
 
       {/* ------------------------------------------------------------ filters */}
 
@@ -1284,13 +1284,15 @@ function SlaBanner({
   sla,
   onShowLate,
   soundReady,
+  soundEnabled = true,
 }   
                                        
                          
                       
+                            
  ) {
-  if (!sla.breaches.length) return null;
-  const worst = sla.breaches[0] ;
+  if (!sla.alerts.length) return null;
+  const worst = sla.alerts[0] ;
 
   return (
     <div style={banner} role="status" aria-live="polite">
@@ -1300,16 +1302,20 @@ function SlaBanner({
 
       <div style={{ flex: 1, minWidth: 200 }}>
         <strong style={{ fontSize: 14 }}>
-          {sla.breaches.length === 1
+          {sla.alerts.length === 1
             ? `Order #${worst.orderNumber} needs attention`
-            : `${sla.breaches.length} orders need attention`}
+            : `${sla.alerts.length} orders need attention`}
         </strong>
         <div style={{ fontSize: 12.5, marginTop: 3, lineHeight: 1.5 }}>
-          #{worst.orderNumber} {worst.message} for <strong>{worst.waitedMinutes} minutes</strong> — the limit is{" "}
+          #{worst.orderNumber} {worst.message} for <strong>{worst.waitedMinutes} minute{worst.waitedMinutes === 1 ? "" : "s"}</strong> — the limit is{" "}
           {worst.limitMinutes}.
-          {sla.breaches.length > 1 ? ` And ${sla.breaches.length - 1} more.` : ""}
+          {sla.alerts.length > 1 ? ` And ${sla.alerts.length - 1} more.` : ""}
         </div>
-        {!soundReady ? (
+        {!soundEnabled ? (
+          <div style={{ fontSize: 11.5, marginTop: 5, opacity: 0.85, display: "inline-flex", gap: 5, alignItems: "center" }}>
+            <BellOff size={11} /> Sound is off (Settings → Missed-order alerts)
+          </div>
+        ) : !soundReady ? (
           <div style={{ fontSize: 11.5, marginTop: 5, opacity: 0.85, display: "inline-flex", gap: 5, alignItems: "center" }}>
             <BellOff size={11} /> Click anywhere once to allow the alert sound.
           </div>
