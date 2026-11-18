@@ -31,6 +31,7 @@ Object.assign(process.env, {
   MONGODB_URI: mongod.getUri(),
   MONGODB_DB: "bench",
   WHATSAPP_WORKER: "off",
+  MAPS_RESOLVE_ALLOW_LOCAL: "1", // the onboarding form may follow a "short map link" to a local stand-in for Google (a test runs one)
   MARKETING_WORKER: "on", // the bench is throwaway, so it may send (to the fake SMS gateway a test starts)
   STORE_SUBDOMAIN_BASE: "localhost:3170", // store addresses like  acme.localhost:3170  (Chrome opens *.localhost with no DNS)
   CORS_ORIGINS: "http://localhost:3171,http://127.0.0.1:3171",

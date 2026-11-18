@@ -7,8 +7,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T21:34:33.360Z",
-    "durationMs": 13705,
+    "at": "2026-11-18T11:58:30.564Z",
+    "durationMs": 14140,
     "steps": [
       {
         "n": 1,
@@ -89,7 +89,7 @@
           {
             "label": "the code request is accepted (the test stores accept any phone)",
             "ok": true,
-            "detail": "HTTP 200 {\"channel\":\"sms\",\"devCode\":\"887665\"}",
+            "detail": "HTTP 200 {\"channel\":\"sms\",\"devCode\":\"009954\"}",
             "kind": "expect"
           },
           {
@@ -112,8 +112,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T21:35:10.427Z",
-    "durationMs": 32899,
+    "at": "2026-11-18T11:59:08.230Z",
+    "durationMs": 33494,
     "steps": [
       {
         "n": 1,
@@ -289,7 +289,7 @@
           {
             "label": "the new customer was saved with the details they gave",
             "ok": true,
-            "detail": "{\"id\":\"6afa2580e73cdf94cb8550ad\",\"name\":\"Rohan Mehta\",\"email\":\"rohan.mehta@example.com\",\"phone\":\"9811122233\",\"gender\":\"male\",\"age\":31,\"orderCount\":1,\"walletBalance\":0,\"lastOrderAt\":\"2026-11-15T21:35:01.348Z\",\"createdAt\":\"2026-11-15T21:34:56.651Z\"}",
+            "detail": "{\"id\":\"6afd92fedf43cb873680a2be\",\"name\":\"Rohan Mehta\",\"email\":\"rohan.mehta@example.com\",\"phone\":\"9811122233\",\"gender\":\"male\",\"age\":31,\"orderCount\":1,\"walletBalance\":0,\"lastOrderAt\":\"2026-11-18T11:58:59.172Z\",\"createdAt\":\"2026-11-18T11:58:54.467Z\"}",
             "kind": "expect"
           },
           {
@@ -313,7 +313,7 @@
           {
             "label": "the row shows the customer, phone, type, item count, total and 'Placed'",
             "ok": true,
-            "detail": " #0001 03:05 AM Rohan Mehta 9811122233 TA 8 ₹1,030 Placed 0m Accepted",
+            "detail": " #0001 05:28 PM Rohan Mehta 9811122233 TA 8 ₹1,030 Placed 0m Accepted",
             "kind": "expect"
           }
         ]
@@ -496,12 +496,12 @@
     "id": "t02-whatsapp-api",
     "title": "WhatsApp chat — API rules and the careful-pace sending worker",
     "status": "pass",
-    "pass": 133,
+    "pass": 132,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T21:35:24.230Z",
-    "durationMs": 13784,
+    "at": "2026-11-18T11:59:18.671Z",
+    "durationMs": 10422,
     "steps": [
       {
         "n": 1,
@@ -708,7 +708,7 @@
           {
             "label": "an attachment uploads",
             "ok": true,
-            "detail": "http://localhost:3098/uploads/6afa2591dcaedadbc347",
+            "detail": "http://localhost:3098/uploads/6afd930e7b99fda52e60",
             "kind": "expect"
           },
           {
@@ -730,12 +730,6 @@
         "title": "the worker sends — at a careful pace",
         "checks": [
           {
-            "label": "it's quiet hours now (10 pm–9 am): first contacts wait for the morning",
-            "ok": true,
-            "detail": "2026-11-16T03:33:13.811Z",
-            "kind": "expect"
-          },
-          {
             "label": "one message goes out, to the right number",
             "ok": true,
             "detail": "919876543210@s.whatsapp.net",
@@ -756,7 +750,7 @@
           {
             "label": "the next first contact must wait 2–4 minutes",
             "ok": true,
-            "detail": "223 s",
+            "detail": "155 s",
             "kind": "expect"
           },
           {
@@ -780,7 +774,7 @@
           {
             "label": "15 first contacts a day per number: the rest wait for tomorrow",
             "ok": true,
-            "detail": "2026-11-16T18:31:21.484Z",
+            "detail": "2026-11-19T03:35:16.650Z",
             "kind": "expect"
           },
           {
@@ -906,13 +900,13 @@
           {
             "label": "preview: 3 people (duplicates merged), 1 opted out",
             "ok": true,
-            "detail": "{\"recipients\":3,\"optedOut\":1,\"running\":0,\"firstContact\":3,\"numbersOnline\":[{\"id\":\"6afa2591dcaedadbc3474a2d\",\"label\":\"Counter phone\"},{\"id\":\"6afa2591dcaedadbc3474a35\",\"label\":\"Delivery phone\"}],\"estimatedDays\":1}",
+            "detail": "{\"recipients\":3,\"optedOut\":1,\"running\":0,\"firstContact\":3,\"numbersOnline\":[{\"id\":\"6afd930f7b99fda52e603139\",\"label\":\"Counter phone\"},{\"id\":\"6afd930f7b99fda52e603141\",\"label\":\"Delivery phone\"}],\"estimatedDays\":1}",
             "kind": "expect"
           },
           {
             "label": "a broadcast queues one message per person",
             "ok": true,
-            "detail": "{\"id\":\"6afa259bdcaedadbc3474bb9\",\"text\":\"Diwali: 20% off this weekend!\\n\\nReply STOP to stop offers.\",\"media\":null,\"createdAt\":\"2026-11-15T21:35:23.691Z\",\"status\":\"sending\",\"total\":3,\"skipped\":1,\"waiting\":3,\"sent\":0,\"read\":0,\"failed\":0}",
+            "detail": "{\"id\":\"6afd93167b99fda52e6032be\",\"text\":\"Diwali: 20% off this weekend!\\n\\nReply STOP to stop offers.\",\"media\":null,\"createdAt\":\"2026-11-18T11:59:18.338Z\",\"status\":\"sending\",\"total\":3,\"skipped\":1,\"waiting\":3,\"sent\":0,\"read\":0,\"failed\":0}",
             "kind": "expect"
           },
           {
@@ -1379,8 +1373,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T21:35:49.163Z",
-    "durationMs": 19757,
+    "at": "2026-11-18T11:59:42.606Z",
+    "durationMs": 19754,
     "steps": [
       {
         "n": 1,
@@ -1515,7 +1509,7 @@
           {
             "label": "a paced broadcast message says when it will go",
             "ok": true,
-            "detail": "BROADCAST | Diwali special: 20% off this weekend! | Reply STOP to stop offers. | sends at 5:05 pm · | 2:35 am",
+            "detail": "BROADCAST | Diwali special: 20% off this weekend! | Reply STOP to stop offers. | sends tomorrow 7:29 am · | 4:59 pm",
             "kind": "expect"
           },
           {
@@ -1688,8 +1682,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T21:36:09.826Z",
-    "durationMs": 16497,
+    "at": "2026-11-18T12:00:03.232Z",
+    "durationMs": 16469,
     "steps": [
       {
         "n": 1,
@@ -1818,7 +1812,7 @@
           {
             "label": "older than 30 days: 2 messages in 1 chat",
             "ok": true,
-            "detail": "2 messages from before Oct 18, 2026, in 1 chat.",
+            "detail": "2 messages from before Oct 20, 2026, in 1 chat.",
             "kind": "expect"
           },
           {
@@ -1847,8 +1841,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T21:36:27.398Z",
-    "durationMs": 13409,
+    "at": "2026-11-18T12:00:20.849Z",
+    "durationMs": 13453,
     "steps": [
       {
         "n": 0,
@@ -1940,8 +1934,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T21:37:04.943Z",
-    "durationMs": 37530,
+    "at": "2026-11-18T12:01:00.726Z",
+    "durationMs": 39860,
     "steps": [
       {
         "n": 1,
@@ -2046,7 +2040,7 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "0,0,0,1,59,267,807,1153,1240,1249,1249,1249,1249,1249",
+            "detail": "0,0,0,1,57,261,799,1114,1240,1249,1249,1249,1249,1249",
             "kind": "expect"
           },
           {
@@ -2112,7 +2106,7 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "508,508,508,509,581,833,1375,1608,1639,1639,1639,1639,1639,1639",
+            "detail": "508,508,508,509,581,919,1378,1608,1639,1639,1639,1639,1639,1639",
             "kind": "expect"
           },
           {
@@ -2141,8 +2135,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T21:37:08.654Z",
-    "durationMs": 3696,
+    "at": "2026-11-18T12:01:04.104Z",
+    "durationMs": 3361,
     "steps": [
       {
         "n": 1,
@@ -2210,8 +2204,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T21:40:23.904Z",
-    "durationMs": 191067,
+    "at": "2026-11-18T12:04:19.644Z",
+    "durationMs": 191343,
     "steps": [
       {
         "n": 1,
@@ -2226,7 +2220,7 @@
           {
             "label": "Basic shows 3 people · 1 outlet",
             "ok": true,
-            "detail": "Lifecycle Basic One outlet — takeaway and dine-in QR 0 stores 3 people · 1 outlet (multi-outlet off) Not on the website 3/13 features · 6/6 ",
+            "detail": "Lifecycle Basic One outlet — takeaway and dine-in QR 0 stores 3 people · 1 outlet (multi-outlet off) Not on the website 2/13 features · 6/6 ",
             "kind": "expect"
           },
           {
@@ -2542,8 +2536,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T21:40:57.138Z",
-    "durationMs": 33209,
+    "at": "2026-11-18T12:04:54.031Z",
+    "durationMs": 34359,
     "steps": [
       {
         "n": 1,
@@ -2797,8 +2791,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T21:42:49.298Z",
-    "durationMs": 112142,
+    "at": "2026-11-18T12:06:46.738Z",
+    "durationMs": 112688,
     "steps": [
       {
         "n": 1,
@@ -2831,13 +2825,13 @@
           {
             "label": "the platform page now shows Basic with 3 outlets against a limit of 1",
             "ok": true,
-            "detail": "Over its limits since Nov 16, 2026. Everything keeps working until Nov 23, 2026; aft",
+            "detail": "Over its limits since Nov 18, 2026. Everything keeps working until Nov 25, 2026; aft",
             "kind": "expect"
           },
           {
             "label": "…and says the store is over its limits, with the 7-day grace deadline",
             "ok": true,
-            "detail": "Over its limits since Nov 16, 2026. Everything keeps working until Nov 23, 2026; after that you'll be asked to choose what to block.",
+            "detail": "Over its limits since Nov 18, 2026. Everything keeps working until Nov 25, 2026; after that you'll be asked to choose what to block.",
             "kind": "expect"
           },
           {
@@ -2855,7 +2849,7 @@
           {
             "label": "the owner's dashboard shows 'Your store has 3 outlets (plan allows 1)' and 'Everything keeps working until …'",
             "ok": true,
-            "detail": "Your store has 3 outlets (plan allows 1). Everything keeps working until Nov 23, 2026. Remove the extras, or contact TablePe to upgrade your plan. Dashboard Central Revenue t",
+            "detail": "Your store has 3 outlets (plan allows 1). Everything keeps working until Nov 25, 2026. Remove the extras, or contact TablePe to upgrade your plan. Dashboard Central Revenue t",
             "kind": "expect"
           },
           {
@@ -2951,7 +2945,7 @@
           {
             "label": "the platform page says the grace period has ended",
             "ok": true,
-            "detail": "This store went over its limits on Nov 16, 2026 and its 0-day grace period ended on Nov 16, 2026. Choose what to block on the Outlets and People tabs — or raise its limits.",
+            "detail": "This store went over its limits on Nov 18, 2026 and its 0-day grace period ended on Nov 18, 2026. Choose what to block on the Outlets and People tabs — or raise its limits.",
             "kind": "expect"
           },
           {
@@ -3070,8 +3064,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T21:43:01.498Z",
-    "durationMs": 12166,
+    "at": "2026-11-18T12:06:59.895Z",
+    "durationMs": 13132,
     "steps": [
       {
         "n": 1,
@@ -3187,8 +3181,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T21:43:23.397Z",
-    "durationMs": 21874,
+    "at": "2026-11-18T12:07:22.370Z",
+    "durationMs": 22456,
     "steps": [
       {
         "n": 1,
@@ -3346,8 +3340,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T21:44:57.630Z",
-    "durationMs": 90051,
+    "at": "2026-11-18T12:08:54.950Z",
+    "durationMs": 88383,
     "steps": [
       {
         "n": 1,
@@ -3764,7 +3758,7 @@
           {
             "label": "Campaigns: it finishes with 2 sent, 0 waiting, 0 failed",
             "ok": true,
-            "detail": "Win-back SMS SMS · 16 Nov, 3:14 am · 2 people 2 sent · 0 waiting · 0 failed Done",
+            "detail": "Win-back SMS SMS · 18 Nov, 5:38 pm · 2 people 2 sent · 0 waiting · 0 failed Done",
             "kind": "expect"
           },
           {
@@ -3824,13 +3818,13 @@
           {
             "label": "it is queued: 3 waiting, still Sending (the sending worker is off here)",
             "ok": true,
-            "detail": "Ladies offer WhatsApp (linked numbers) · 16 Nov, 3:14 am · 3 people 0 sent · 3 waiting · 0 failed Sending Cancel",
+            "detail": "Ladies offer WhatsApp (linked numbers) · 18 Nov, 5:38 pm · 3 people 0 sent · 3 waiting · 0 failed Sending Cancel",
             "kind": "expect"
           },
           {
             "label": "cancelling stops it: Cancelled, nothing waiting",
             "ok": true,
-            "detail": "Ladies offer WhatsApp (linked numbers) · 16 Nov, 3:14 am · 3 people 0 sent · 0 waiting · 0 failed Cancelled",
+            "detail": "Ladies offer WhatsApp (linked numbers) · 18 Nov, 5:38 pm · 3 people 0 sent · 0 waiting · 0 failed Cancelled",
             "kind": "expect"
           }
         ]
@@ -3842,7 +3836,7 @@
           {
             "label": "Ravi (24 in 2020) shows 30",
             "ok": true,
-            "detail": " Ravi Kumar — 9000000001 Male 30 3 0 18 Aug, 3:13 am",
+            "detail": " Ravi Kumar — 9000000001 Male 30 3 0 20 Aug, 5:37 pm",
             "kind": "expect"
           },
           {
@@ -3871,8 +3865,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T21:46:07.527Z",
-    "durationMs": 65720,
+    "at": "2026-11-18T12:10:03.650Z",
+    "durationMs": 64510,
     "steps": [
       {
         "n": 1,
@@ -3911,7 +3905,7 @@
           {
             "label": "Marketing is in the sidebar of a store whose plan lacks it",
             "ok": true,
-            "detail": "[{\"group\":\"Store & orders\",\"divider\":false,\"items\":[\"Take order\",\"Dashboard\",\"Orders\",\"Menu\",\"Tables\"]},{\"group\":\"Customers & growth\",\"divider\":true,\"items\":[\"Analytics\",\"Customers\",\"Coupons\"]},{\"group\":\"Setup\",\"divider\":false,\"items\":[\"Storefront\",\"Settings\"]}]",
+            "detail": "[{\"group\":\"Store & orders\",\"divider\":false,\"items\":[\"Take order\",\"Dashboard\",\"Orders\",\"Menu\",\"Tables\"]},{\"group\":\"Customers & growth\",\"divider\":true,\"items\":[\"Customers\",\"Coupons\"]},{\"group\":\"Setup\",\"divider\":false,\"items\":[\"Storefront\",\"Settings\"]}]",
             "kind": "never"
           },
           {
@@ -4024,8 +4018,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T21:46:46.834Z",
-    "durationMs": 35123,
+    "at": "2026-11-18T12:10:42.581Z",
+    "durationMs": 34746,
     "steps": [
       {
         "n": 1,
@@ -4136,7 +4130,7 @@
           {
             "label": "Security lists the address as Blocked, for Dashboards, blocked twice",
             "ok": true,
-            "detail": "203.0.113.50 Dashboards Blocked · 9 seconds left 0 2 16 Nov, 3:16:26 am Unblock",
+            "detail": "203.0.113.50 Dashboards Blocked · 10 seconds left 0 2 18 Nov, 5:40:22 pm Unblock",
             "kind": "expect"
           },
           {
@@ -4249,8 +4243,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T21:47:27.210Z",
-    "durationMs": 36189,
+    "at": "2026-11-18T12:11:22.671Z",
+    "durationMs": 35902,
     "steps": [
       {
         "n": 1,
@@ -4283,13 +4277,13 @@
           {
             "label": "the browser's only websocket is the live order feed (/realtime) — WhatsApp chat doesn't open one",
             "ok": true,
-            "detail": "ws://localhost:3097/realtime?outletId=6afa2849c42af620732b9735",
+            "detail": "ws://localhost:3097/realtime?outletId=6afd95c58b59bfa084c727a5",
             "kind": "expect"
           },
           {
             "label": "a websocket for WhatsApp is opened by the browser",
             "ok": true,
-            "detail": "ws://localhost:3097/realtime?outletId=6afa2849c42af620732b9735",
+            "detail": "ws://localhost:3097/realtime?outletId=6afd95c58b59bfa084c727a5",
             "kind": "never"
           }
         ]
@@ -4515,8 +4509,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-15T21:48:43.516Z",
-    "durationMs": 71131,
+    "at": "2026-11-18T12:12:36.768Z",
+    "durationMs": 69922,
     "steps": [
       {
         "n": 1,
@@ -4541,21 +4535,21 @@
         "title": "Overview: the last 30 days match the totals worked out from the stored orders",
         "checks": [
           {
-            "label": "the figures equal the worked-out totals (Sales ₹52,427, Net sales ₹49,969, Orders 286, Items sold 561, Cancelled 32, Discounts given ₹503, Average order ₹183)",
+            "label": "the figures equal the worked-out totals (Sales ₹50,184, Net sales ₹47,833, Orders 280, Items sold 539, Cancelled 31, Discounts given ₹546, Average order ₹179)",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "Sales says how it moved against the 30 days before (-3.9%)",
+            "label": "Sales says how it moved against the 30 days before (-3.8%)",
             "ok": true,
-            "detail": "Sales ₹52,427 −3.9% vs the period before incl. GST",
+            "detail": "Sales ₹50,184 −3.8% vs the period before incl. GST",
             "kind": "expect"
           },
           {
             "label": "the range shown is the last 30 days",
             "ok": true,
-            "detail": "18 Oct 2026 – 16 Nov 2026 · 30 days",
+            "detail": "20 Oct 2026 – 18 Nov 2026 · 30 days",
             "kind": "expect"
           },
           {
@@ -4565,15 +4559,15 @@
             "kind": "never"
           },
           {
-            "label": "the day-by-day table has 30 days that add up to 286 orders",
+            "label": "the day-by-day table has 30 days that add up to 280 orders",
             "ok": true,
-            "detail": "30 rows, 286 orders",
+            "detail": "30 rows, 280 orders",
             "kind": "expect"
           },
           {
-            "label": "the hour-by-hour table adds up to 286 orders",
+            "label": "the hour-by-hour table adds up to 280 orders",
             "ok": true,
-            "detail": "11 hours",
+            "detail": "10 hours",
             "kind": "expect"
           },
           {
@@ -4595,13 +4589,13 @@
             "kind": "expect"
           },
           {
-            "label": "Marketing Mart — Main alone: ₹33,137 and 178 orders",
+            "label": "Marketing Mart — Main alone: ₹32,376 and 172 orders",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "Marketing Mart — Second alone: ₹19,290 and 108 orders",
+            "label": "Marketing Mart — Second alone: ₹17,808 and 108 orders",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -4613,7 +4607,7 @@
             "kind": "never"
           },
           {
-            "label": "Last 7 days: ₹11,476, 62 orders",
+            "label": "Last 7 days: ₹10,931, 61 orders",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -4627,17 +4621,17 @@
           {
             "label": "picking an earlier start date in the calendar widens the figures",
             "ok": true,
-            "detail": "458 orders from 2026-10-01",
+            "detail": "471 orders from 2026-10-01",
             "kind": "expect"
           },
           {
-            "label": "custom dates 2026-11-10 to 2026-11-16, picked in the calendar, give the same ₹11,476 as 'Last 7 days'",
+            "label": "custom dates 2026-11-12 to 2026-11-18, picked in the calendar, give the same ₹10,931 as 'Last 7 days'",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "Today (no orders yet in the sample) shows ₹0 and 0 orders, not an error",
+            "label": "Today (no paid orders yet in the sample) shows ₹0 and 0 orders, not an error",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -4651,25 +4645,25 @@
           {
             "label": "the chart has a line for each outlet (their names are in the legend)",
             "ok": true,
-            "detail": "Sales by outlet Each day — one line per outlet Table Marketing Mart — Main Marketing Mart — Second ₹0 ₹500 ₹1,000 ₹1,500 ₹2,000 19 Oct 23 Oct 27 Oct 31 Oct 4 No",
+            "detail": "Sales by outlet Each day — one line per outlet Table Marketing Mart — Main Marketing Mart — Second ₹0 ₹500 ₹1,000 ₹1,500 ₹2,000 21 Oct 25 Oct 29 Oct 2 Nov 6 Nov",
             "kind": "expect"
           },
           {
-            "label": "the order-types table adds up to 286 orders",
+            "label": "the order-types table adds up to 280 orders",
             "ok": true,
-            "detail": "286",
+            "detail": "280",
             "kind": "expect"
           },
           {
-            "label": "takeaway ₹20508, delivery ₹18612, dine-in ₹13307 (store totals)",
+            "label": "takeaway ₹19802, delivery ₹15532, dine-in ₹14850 (store totals)",
             "ok": true,
-            "detail": "{\"t\":20508,\"d\":18612,\"i\":13307}",
+            "detail": "{\"t\":19802,\"d\":15532,\"i\":14850}",
             "kind": "expect"
           },
           {
-            "label": "Marketing Mart — Main's rows add up to 178 orders",
+            "label": "Marketing Mart — Main's rows add up to 172 orders",
             "ok": true,
-            "detail": "178",
+            "detail": "172",
             "kind": "expect"
           },
           {
@@ -4685,37 +4679,37 @@
         "title": "Items & stock: best sellers, and how much to prepare",
         "checks": [
           {
-            "label": "the best sellers run Paneer Steamed Momos 141, Cold Coffee 137, Chicken Momos 134",
+            "label": "the best sellers run Chicken Momos 140, Paneer Steamed Momos 127, Cold Coffee 125",
             "ok": true,
-            "detail": "Best sellers By quantity sold in this period — with the change against the period before Paneer Steamed Momos 141 sold · ₹12,690 −4.1% Cold Coffee 137 sold · ₹9,610 −4.2% Chicken Momos 134 sold · ₹13,400 −6.3% Veg Steamed Momos 83 sold · ₹6,680 0% Paneer Gravy",
+            "detail": "Best sellers By quantity sold in this period — with the change against the period before Chicken Momos 140 sold · ₹14,000 −6% Paneer Steamed Momos 127 sold · ₹11,430 −5.9% Cold Coffee 125 sold · ₹8,770 −3.8% Veg Steamed Momos 86 sold · ₹6,920 0% Paneer Gravy M",
             "kind": "expect"
           },
           {
-            "label": "'Every item' lists each item with its quantity (Paneer Steamed Momos = 141)",
+            "label": "'Every item' lists each item with its quantity (Chicken Momos = 140)",
             "ok": true,
-            "detail": "[[\"1\",\"Paneer Steamed Momos\",\"141\",\"₹12,690\",\"4.7\",\"25.1%\",\"−4.1%\"],[\"2\",\"Cold Coffee\",\"137\",\"₹9,610\",\"4.6\",\"24.4%\",\"−4.2%\"]]",
+            "detail": "[[\"1\",\"Chicken Momos\",\"140\",\"₹14,000\",\"4.7\",\"26.0%\",\"−6%\"],[\"2\",\"Paneer Steamed Momos\",\"127\",\"₹11,430\",\"4.2\",\"23.6%\",\"−5.9%\"]]",
             "kind": "expect"
           },
           {
-            "label": "the prep list is for tomorrow, Tuesday",
+            "label": "the prep list is for tomorrow, Thursday",
             "ok": true,
-            "detail": "Tomorrow (Tuesday): prepare about",
+            "detail": "Tomorrow (Thursday): prepare about",
             "kind": "expect"
           },
           {
-            "label": "tomorrow's list matches the worked-out numbers (Paneer Steamed Momos 3, Paneer Gravy Momos 2, Veg Steamed Momos 2, Chicken Momos 2, Cold Coffee 3)",
+            "label": "tomorrow's list matches the worked-out numbers (Paneer Steamed Momos 5, Paneer Gravy Momos 2, Veg Steamed Momos 2, Chicken Momos 3, Cold Coffee 4)",
             "ok": true,
-            "detail": "[[\"Paneer Steamed Momos\",\"3\",\"2\",\"2\"],[\"Cold Coffee\",\"3\",\"2.2\",\"3\"],[\"Chicken Momos\",\"2\",\"1\",\"2\"],[\"Veg Steamed Momos\",\"2\",\"1\",\"1\"],[\"Paneer Gravy Momos\",\"2\",\"1\",\"1\"]]",
+            "detail": "[[\"Paneer Steamed Momos\",\"5\",\"4\",\"4\"],[\"Cold Coffee\",\"4\",\"3.2\",\"4\"],[\"Chicken Momos\",\"3\",\"2\",\"2\"],[\"Veg Steamed Momos\",\"2\",\"1.5\",\"2\"],[\"Paneer Gravy Momos\",\"2\",\"1\",\"1\"]]",
             "kind": "expect"
           },
           {
             "label": "every item's seven weekday numbers match the worked-out suggestions (average of the last 6 weeks + 15%, rounded up)",
             "ok": true,
-            "detail": "[[\"Paneer Steamed Momos\",\"3\",\"3\",\"4\",\"5\",\"5\",\"6\",\"6\"],[\"Cold Coffee\",\"3\",\"3\",\"3\",\"4\",\"5\",\"6\",\"5\"]]",
+            "detail": "[[\"Paneer Steamed Momos\",\"3\",\"3\",\"4\",\"5\",\"5\",\"6\",\"8\"],[\"Cold Coffee\",\"2\",\"3\",\"3\",\"4\",\"5\",\"5\",\"6\"]]",
             "kind": "expect"
           },
           {
-            "label": "a bigger safety margin gives a bigger number (Paneer Steamed Momos on Saturday: 6 → 9)",
+            "label": "a bigger safety margin gives a bigger number (Paneer Steamed Momos on Saturday: 6 → 8)",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -4745,27 +4739,27 @@
         "title": "Compare outlets: side by side for the same dates",
         "checks": [
           {
-            "label": "Sales: Marketing Mart — Main ₹33,137, Marketing Mart — Second ₹19,290",
+            "label": "Sales: Marketing Mart — Main ₹32,376, Marketing Mart — Second ₹17,808",
             "ok": true,
-            "detail": "[\"Sales\",\"₹33,137\",\"₹19,290 −42% vs Marketing Mart — Main\"]",
+            "detail": "[\"Sales\",\"₹32,376\",\"₹17,808 −45% vs Marketing Mart — Main\"]",
             "kind": "expect"
           },
           {
-            "label": "Orders: 178 and 108",
+            "label": "Orders: 172 and 108",
             "ok": true,
-            "detail": "[\"Orders\",\"178\",\"108 −39% vs Marketing Mart — Main\"]",
+            "detail": "[\"Orders\",\"172\",\"108 −37% vs Marketing Mart — Main\"]",
             "kind": "expect"
           },
           {
-            "label": "the second outlet's sales are compared with the first (-42%)",
+            "label": "the second outlet's sales are compared with the first (-45%)",
             "ok": true,
-            "detail": "₹19,290 −42% vs Marketing Mart — Main",
+            "detail": "₹17,808 −45% vs Marketing Mart — Main",
             "kind": "expect"
           },
           {
-            "label": "each outlet has its own best sellers",
+            "label": "each outlet has its own best sellers (Paneer Steamed Momos — 107 and Chicken Momos — 66)",
             "ok": true,
-            "detail": "",
+            "detail": " Dine-in: ₹8,090 · Takeaway: ₹14,358 Marketing Mart — Second Best sellers and how the orders arrive Chicken Momos — 66 Veg Steamed Momos — 39 Cold Coffee — 36 Paneer Gravy Momos — 26 Paneer Steamed Momos — 20 31% 31% 38% Takeaway Delivery Dine-in Takeaway: ₹5,444 · Delivery: ₹5,604 · Dine-in: ₹6,760",
             "kind": "expect"
           },
           {
@@ -4775,9 +4769,9 @@
             "kind": "expect"
           },
           {
-            "label": "for 2026-11-10 to 2026-11-16, picked in the calendar, the two outlets add up to the store's ₹11,476",
+            "label": "for 2026-11-12 to 2026-11-18, picked in the calendar, the two outlets add up to the store's ₹10,931",
             "ok": true,
-            "detail": "11476",
+            "detail": "10931",
             "kind": "expect"
           }
         ]
@@ -4787,15 +4781,15 @@
         "title": "Operations: cancellations and discounts",
         "checks": [
           {
-            "label": "32 orders were cancelled, 10.1% of 318",
+            "label": "31 orders were cancelled, 10.0% of 311",
             "ok": true,
-            "detail": "Cancelled orders 32 10.1% of 318 orders",
+            "detail": "Cancelled orders 31 10.0% of 311 orders",
             "kind": "expect"
           },
           {
-            "label": "coupon discounts are ₹503",
+            "label": "coupon discounts are ₹546",
             "ok": true,
-            "detail": "Discounts in total Coupons and coin discounts together Coupon discounts ₹503 Coin discounts ₹0 Orders with a coupon 31 of 286 Coupon discounts as a share of sales before discount 1.0%",
+            "detail": "Discounts in total Coupons and coin discounts together Coupon discounts ₹546 Coin discounts ₹0 Orders with a coupon 31 of 280 Coupon discounts as a share of sales before discount 1.2%",
             "kind": "expect"
           },
           {
@@ -4817,9 +4811,9 @@
             "kind": "expect"
           },
           {
-            "label": "net profit = 49969 net sales − 35% food − 22500 a month × 0.985 months = ₹10319",
+            "label": "net profit = 47833 net sales − 35% food − 22500 a month × 0.987 months = ₹8882",
             "ok": true,
-            "detail": "saw 10319",
+            "detail": "saw 8882",
             "kind": "expect"
           },
           {
@@ -4831,31 +4825,31 @@
           {
             "label": "the table lists every bill by name with its share for these days",
             "ok": true,
-            "detail": "Where the money goes Every expense for these days (monthly amounts shared out by the day) Net sales (without GST) ₹49,969 Food cost (35%) − ₹17,489 Gross profit ₹32,480 Marketing & ads − ₹2,462 Rent —",
+            "detail": "Where the money goes Every expense for these days (monthly amounts shared out by the day) Net sales (without GST) ₹47,833 Food cost (35%) − ₹16,742 Gross profit ₹31,091 Marketing & ads − ₹2,468 Rent —",
             "kind": "expect"
           },
           {
-            "label": "profit by outlet: Marketing Mart — Main ≈ ₹6177, Marketing Mart — Second ≈ ₹4142 (own bills + a share of the shared ones by sales)",
+            "label": "profit by outlet: Marketing Mart — Main ≈ ₹5642, Marketing Mart — Second ≈ ₹3239 (own bills + a share of the shared ones by sales)",
             "ok": true,
-            "detail": "[[\"Marketing Mart — Main\",\"₹31,597\",\"₹11,059\",\"₹14,361\",\"₹6,177\",\"19.5%\"],[\"Marketing Mart — Second\",\"₹18,372\",\"₹6,430\",\"₹7,800\",\"₹4,142\",\"22.5%\"]]",
+            "detail": "[[\"Marketing Mart — Main\",\"₹30,873\",\"₹10,805\",\"₹14,425\",\"₹5,642\",\"18.3%\"],[\"Marketing Mart — Second\",\"₹16,960\",\"₹5,936\",\"₹7,785\",\"₹3,239\",\"19.1%\"]]",
             "kind": "expect"
           },
           {
             "label": "a bill added by hand counts (₹1,000 a month more)",
             "ok": true,
-            "detail": "saw 9334",
+            "detail": "saw 7895",
             "kind": "expect"
           },
           {
             "label": "the removed bill still counts in the profit",
             "ok": true,
-            "detail": "saw 10319",
+            "detail": "saw 8882",
             "kind": "never"
           },
           {
             "label": "food cost 30% instead of 35% raises the profit to match",
             "ok": true,
-            "detail": "saw 12817",
+            "detail": "saw 11273",
             "kind": "expect"
           }
         ]
@@ -4873,7 +4867,7 @@
           {
             "label": "…and so is the profit",
             "ok": true,
-            "detail": "saw 10319",
+            "detail": "saw 8882",
             "kind": "expect"
           },
           {
@@ -4891,19 +4885,19 @@
           {
             "label": "…and the profit is the same again",
             "ok": true,
-            "detail": "saw 10319",
+            "detail": "saw 8882",
             "kind": "expect"
           },
           {
             "label": "changing a bill changes the profit",
             "ok": true,
-            "detail": "saw 5395",
+            "detail": "saw 3947",
             "kind": "expect"
           },
           {
             "label": "'Use the version saved to my store' puts the saved bill back",
             "ok": true,
-            "detail": "saw 10319",
+            "detail": "saw 8882",
             "kind": "expect"
           }
         ]
@@ -4927,7 +4921,7 @@
           {
             "label": "the file is named like a report and ends .xlsx",
             "ok": true,
-            "detail": "tablepe-marketing-mart-2026-10-18_to_2026-11-16.xlsx",
+            "detail": "tablepe-marketing-mart-2026-10-20_to_2026-11-18.xlsx",
             "kind": "expect"
           },
           {
@@ -4943,27 +4937,27 @@
             "kind": "never"
           },
           {
-            "label": "Summary: sales 52427, net 49969.05, GST 2457.95, orders 286, cancelled 32",
+            "label": "Summary: sales 50184, net 47832.87, GST 2351.13, orders 280, cancelled 31",
             "ok": true,
-            "detail": "[[\"Measure\",\"This period\",\"Previous period\"],[\"Sales (incl. GST)\",52427,54541],[\"Net sales (excl. GST)\",49969.05,51963.36],[\"GST collected\",2457.95,2577.64],[\"Orders\",286,298]]",
+            "detail": "[[\"Measure\",\"This period\",\"Previous period\"],[\"Sales (incl. GST)\",50184,52147],[\"Net sales (excl. GST)\",47832.87,49683.37],[\"GST collected\",2351.13,2463.63],[\"Orders\",280,291]]",
             "kind": "expect"
           },
           {
-            "label": "'Sales by day' has 30 days adding up to ₹52427",
+            "label": "'Sales by day' has 30 days adding up to ₹50184",
             "ok": true,
             "detail": "30 rows",
             "kind": "expect"
           },
           {
-            "label": "the GST sheet's days add up to ₹2457.95 GST, and its Total row says ₹2457.95 too",
+            "label": "the GST sheet's days add up to ₹2351.13 GST, and its Total row says ₹2351.13 too",
             "ok": true,
-            "detail": "29 days, total row [\"Total\",286,49169.05,1228.34,1229.61,2457.95,0,52427]",
+            "detail": "29 days, total row [\"Total\",280,47032.87,1175.02,1176.11,2351.13,0,50184]",
             "kind": "expect"
           },
           {
-            "label": "the Profit & loss sheet uses the bills typed earlier: net profit ≈ ₹10319",
+            "label": "the Profit & loss sheet uses the bills typed earlier: net profit ≈ ₹8882",
             "ok": true,
-            "detail": "sheet says 10318.59",
+            "detail": "sheet says 8881.69",
             "kind": "expect"
           }
         ]
@@ -4979,7 +4973,7 @@
             "kind": "expect"
           },
           {
-            "label": "Marketing Mart — Main's CSV adds up to ₹33137 and 178 orders (not the whole store's)",
+            "label": "Marketing Mart — Main's CSV adds up to ₹32376 and 172 orders (not the whole store's)",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -4993,7 +4987,7 @@
           {
             "label": "the weekly PDF is a real PDF file",
             "ok": true,
-            "detail": "4919 bytes",
+            "detail": "6949 bytes",
             "kind": "expect"
           },
           {
@@ -5005,7 +4999,7 @@
           {
             "label": "…and its summary holds at least the last 30 days' sales (the whole year includes them)",
             "ok": true,
-            "detail": "125855",
+            "detail": "123455",
             "kind": "expect"
           }
         ]
@@ -5015,15 +5009,15 @@
         "title": "GST and the daily cash close agree",
         "checks": [
           {
-            "label": "the GST total row: 286 orders, taxable ₹49,169, CGST ₹1,228, SGST ₹1,230, GST ₹2,458",
+            "label": "the GST total row: 280 orders, taxable ₹47,033, CGST ₹1,175, SGST ₹1,176, GST ₹2,351",
             "ok": true,
-            "detail": "Total 286 ₹49,169 ₹1,228 ₹1,230 ₹2,458 ₹52,427",
+            "detail": "Total 280 ₹47,033 ₹1,175 ₹1,176 ₹2,351 ₹50,184",
             "kind": "expect"
           },
           {
-            "label": "the cash close for 2026-11-15, picked in the calendar, equals that day's invoice total in the GST table (₹2325)",
+            "label": "the cash close for 2026-11-17, picked in the calendar, equals that day's invoice total in the GST table (₹1042)",
             "ok": true,
-            "detail": "₹2,325 vs 2325",
+            "detail": "₹1,042 vs 1042",
             "kind": "expect"
           }
         ]
@@ -5051,7 +5045,7 @@
             "kind": "never"
           },
           {
-            "label": "…and sees the same sales (₹52,427)",
+            "label": "…and sees the same sales (₹50,184)",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -5162,6 +5156,2531 @@
             "label": "back to 'from plan' (Pro has it): Analytics is back",
             "ok": true,
             "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser logged JavaScript errors",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t18-tables": {
+    "id": "t18-tables",
+    "title": "Tables — add a table (number, zone, seats), zones, limits and duplicates, QR panel, remove, per-outlet and per-store, who can manage",
+    "status": "pass",
+    "pass": 54,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-18T12:13:25.087Z",
+    "durationMs": 44133,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The Tables & QR page lists the seeded tables by zone",
+        "checks": [
+          {
+            "label": "five tables: T1, T2, T3, T4, T5, all Free",
+            "ok": true,
+            "detail": "T1 Free 4 seats | T2 Free 2 seats | T3 Free 6 seats | T4 Free 4 seats | T5 Free 4 seats",
+            "kind": "expect"
+          },
+          {
+            "label": "seats are shown on each (4, 2, 6, 4, 4)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "they are grouped by zone: Ground floor (T1–T3) and Terrace (T4, T5)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the page has the 'Tables & QR' and 'Table cards' tabs and an 'Add a table' form with Number, Zone, Seats (4 by default)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Add a table: number, zone and seats",
+        "checks": [
+          {
+            "label": "T9 appears as 'T9 Free 6 seats'",
+            "ok": true,
+            "detail": "T9 Free 6 seats",
+            "kind": "expect"
+          },
+          {
+            "label": "a new 'Rooftop' group holds it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the other tables are unchanged (six in all)",
+            "ok": true,
+            "detail": "T1,T2,T3,T9,T4,T5",
+            "kind": "expect"
+          },
+          {
+            "label": "the form is emptied after a successful add (Number and Zone empty, Seats back to 4)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a table with no zone and no seats typed is saved with the default 4 seats",
+            "ok": true,
+            "detail": "T10 Free 4 seats",
+            "kind": "expect"
+          },
+          {
+            "label": "…and sits in the 'Main' group",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "spaces around a number are trimmed ('  T11  ' → T11)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "T11 joins the Rooftop group",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Duplicates and limits",
+        "checks": [
+          {
+            "label": "a number already in use is refused: 'Table T9 already exists'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a second T9 was added",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "a refused add leaves what was typed in the form (nothing is lost)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an empty number created a table",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the browser asks for the number ('Please fill out this field')",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a number of 21 characters is refused",
+            "ok": true,
+            "detail": "Validation failed",
+            "kind": "expect"
+          },
+          {
+            "label": "the 21-character number was saved",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "51 seats is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "50 seats is accepted",
+            "ok": true,
+            "detail": "BIG Free 50 seats",
+            "kind": "expect"
+          },
+          {
+            "label": "0 seats is not refused — it becomes the default 4",
+            "ok": true,
+            "detail": "Z0 Free 4 seats",
+            "kind": "expect"
+          },
+          {
+            "label": "numbers are case-sensitive: 't9' is accepted next to 'T9'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "A table's panel: QR image, address, download, rotate, remove",
+        "checks": [
+          {
+            "label": "the panel says 'Table T9' and 'Rooftop · 6 seats · Free'",
+            "ok": true,
+            "detail": "Table T9 Rooftop · 6 seats · Free http://localhost:3170/t/6afd963d749209d7b356aa",
+            "kind": "expect"
+          },
+          {
+            "label": "it shows a QR image (a real 512-pixel picture, labelled for screen readers)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the address printed under it is /t/<id>?k=<code> on the store's own site",
+            "ok": true,
+            "detail": "http://localhost:3170/t/6afd963d749209d7b356aa70?k=i81j9HDYN_xmAHcYv5mKCpwJ",
+            "kind": "expect"
+          },
+          {
+            "label": "'Download PNG' is named table-T9-qr.png",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the file that downloads is a real PNG",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Rotate code', 'Remove table', 'Done' and the link to the card designer are there",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "every table has its own address and its own code",
+            "ok": true,
+            "detail": "http://localhost:3170/t/6afd963d749209d7b356aa70?k=i81j9HDYN_xmAHcYv5mKCpwJ | http://localhost:3170/t/6afd963e749209d7b356aa80?k=3B_NCSYdn6I2nWqhIPdneU19 | http://localhost:3170/t/6afd9637749209d7b356a5db?k=qeiOIehKt850Bj_B3OlOg10Y",
+            "kind": "expect"
+          },
+          {
+            "label": "'Design a printable card' opens the Table cards page",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Remove a table: it disappears and its printed code stops working",
+        "checks": [
+          {
+            "label": "before removing, T11's code opens its page (the storefront says 'Ordering to Table T11')",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the panel closes and T11 is gone from the page",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the other tables are still there",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the removed table's code now says 'That table code isn't valid'",
+            "ok": true,
+            "detail": "This code didn't work That table code isn't valid",
+            "kind": "expect"
+          },
+          {
+            "label": "a removed table's code still opens the menu",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Tables belong to one outlet, and to one store",
+        "checks": [
+          {
+            "label": "the other outlet, Second, starts with no tables",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it can have its own T1 (the same number as Main's)",
+            "ok": true,
+            "detail": "T1 Free 8 seats",
+            "kind": "expect"
+          },
+          {
+            "label": "…with a different code from Main's T1",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Second shows any of Main's tables",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "back on Main, nothing changed: the same tables, T1 still 4 seats",
+            "ok": true,
+            "detail": "10 tables",
+            "kind": "expect"
+          },
+          {
+            "label": "another store (Beta Bites) lists only its own tables: T1 and T2",
+            "ok": true,
+            "detail": "T1,T2",
+            "kind": "expect"
+          },
+          {
+            "label": "another store sees Acme's tables (T3, T9, T10…)",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "…and its T1 has a code of its own",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "Who may manage tables",
+        "checks": [
+          {
+            "label": "the kitchen sees the tables (T1, T2, T3 …)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the kitchen is offered 'Add a table'",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "…can open a table's QR and download it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the kitchen is offered Rotate code or Remove table",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the manager can add a table",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the cashier can add a table",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an accountant has a Tables item in the sidebar",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "an accountant opening /tables is told 'Your role can't view tables.'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an accountant sees tables or the add form",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the browser logged JavaScript errors",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      }
+    ],
+    "findings": [
+      "A refused table (too long a number, too many seats) says only 'Validation failed' — it doesn't say which box is wrong.",
+      "Typing 0 (or nothing) as the seats quietly saves 4 seats instead of saying 0 isn't allowed.",
+      "'T9' and 't9' count as different tables — two tables that look alike to a person can both exist."
+    ],
+    "problems": []
+  },
+  "t19-dine-in": {
+    "id": "t19-dine-in",
+    "title": "Dine-in at a table — create tables, scan the QR, order onto a running tab, staff move / settle / void, occupied tables, rotated codes, switch-off",
+    "status": "pass",
+    "pass": 55,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-18T12:14:26.186Z",
+    "durationMs": 56914,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Staff add three tables and copy the code of the first",
+        "checks": [
+          {
+            "label": "D1, D2 and D3 are in a 'Garden' group, Free",
+            "ok": true,
+            "detail": "D1 Free 2 seats | D2 Free 4 seats | D3 Free 4 seats | T1 Free 4 seats | T2 Free 2 seats | T3 Free 6 seats | T4 Free 4 seats | T5 Free 4 seats",
+            "kind": "expect"
+          },
+          {
+            "label": "each table has its own address",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "A diner scans D1, signs in and sends an order to the kitchen",
+        "checks": [
+          {
+            "label": "the code opens the menu for 'Table D1' ('Ordering to Table D1')",
+            "ok": true,
+            "detail": "Free delivery on orders above ₹499Order now Acme Momos — Connaught Place About us Contact & hours Table D1 Acme Momos — Connaught Place · 12 Janpath, Connaught ",
+            "kind": "expect"
+          },
+          {
+            "label": "a Takeaway / Delivery choice is shown to someone at a table",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the menu has the items to add",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "checkout asks the diner to sign in first (name and mobile number)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the order page says 'Table D1' and that it joins the running tab",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the diner is asked for a table number, or how they want it (takeaway / delivery)",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the button says 'Send to kitchen' (not 'Place order')",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Order #… placed' — 'Sent to the kitchen for Table D1.'",
+            "ok": true,
+            "detail": "Order confirmed Order #0001 placed Sent to the kitchen for Table D1. Order type Dine-in · Table D1 Total ₹70 Running tab ₹70 Back to menu",
+            "kind": "expect"
+          },
+          {
+            "label": "it is a dine-in order for the table: 'Dine-in · Table D1', total ₹70, 'Running tab ₹70'",
+            "ok": true,
+            "detail": "Order confirmed Order #0001 placed Sent to the kitchen for Table D1. Order type Dine-in · Table D1 Total ₹70 Running tab ₹70 Back to menu",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "The same diner orders again: one table, one running tab",
+        "checks": [
+          {
+            "label": "the diner who is seated here is told another party is seated here",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the menu shows the running tab: 'Ordering to Table D1 · Running tab ₹70'",
+            "ok": true,
+            "detail": "Connaught Place, New Delhi 110001 Ordering to Table D1 Running tab ₹70 All Veg Non-veg Steamed Momos Kurkure Momos Tandoori Momos Gravy Momos Beverages Steamed Momos Veg Steamed Mo",
+            "kind": "expect"
+          },
+          {
+            "label": "the second order is ₹60 and the running tab becomes ₹130",
+            "ok": true,
+            "detail": "Order confirmed Order #0002 placed Sent to the kitchen for Table D1. Order type Dine-in · Table D1 Total ₹60 Running tab ₹130 Back to menu",
+            "kind": "expect"
+          },
+          {
+            "label": "it is a new order number",
+            "ok": true,
+            "detail": "0001 → 0002",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "A stranger scanning the same code is turned away",
+        "checks": [
+          {
+            "label": "they see 'Another party is currently seated at this table. Please ask a member of staff.'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a stranger can add items to an occupied table's tab",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "going straight to its order page says 'Another party is seated here'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Staff see the party: seated now, orders, tab",
+        "checks": [
+          {
+            "label": "'Seated now — 1' with 'Table D1 … 2 orders · tab ₹130'",
+            "ok": true,
+            "detail": "Seated now — 1 Table D1 since 05:43 PM · 2 orders · tab ₹130 Move to… Table D2 Table D3 Table T1 Table T2 Table T3 Table T4 Table ",
+            "kind": "expect"
+          },
+          {
+            "label": "D1 shows as Seated, D2 and D3 Free",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the Orders page lists both: '#0001 … Dina Diner 9877712345 DI Table D1 … ₹70 Placed' and '#0002 … ₹60'",
+            "ok": true,
+            "detail": "#0001 05:43 PM Dina Diner 9877712345 DI Table D1 1 ₹70 Placed 0m Approve || #0002 05:43 PM Dina Diner 9877712345 DI Table D1 1 ₹60 Placed 0m Approve",
+            "kind": "expect"
+          },
+          {
+            "label": "the table overview shows D1 Seated with '₹130 · unpaid'",
+            "ok": true,
+            "detail": "Tables Every table, grouped by zone. Click one for who's seated there. Garden D1 Seated 2 seats ₹130 · unpaid D2 Free 4 seats D3 Free 4 seats Ground floor T1 Free 4 seats T2 Free 2 seats T3 Free 6 sea",
+            "kind": "expect"
+          },
+          {
+            "label": "its detail: Diner Dina Diner (9877712345), Running tab ₹130, ₹130 unpaid, both orders",
+            "ok": true,
+            "detail": "Table D1 Garden · 2 seats · Seated DINER Dina Diner 9877712345 RUNNING TAB ₹130 ₹130 unpaid ORDERS ON THIS TAB #0001 · 1× Cold Coffee ₹70 placed #0002 · 1× Veg Steamed Momos ₹60 placed ACTIONS Add item Confirm payment Mark table as vacant Full order history Cancel / void Move to… Table D2 Table D3 Table T1 Table T2 Table T3 Table T4 Table T5 Move",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Staff move the party from D1 to D2",
+        "checks": [
+          {
+            "label": "'Seated now' says 'Table D2 … moved: D1 → D2'",
+            "ok": true,
+            "detail": "Seated now — 1 Table D2moved: D1 → D2 since 05:43 PM · 2 orders · tab ₹130 Move to… Table D1 Table D3 Table T1 Table T2 Table T3 Table T4 Table T5 Move Close Garden D1 Ne",
+            "kind": "expect"
+          },
+          {
+            "label": "D1 'Needs cleaning', D2 'Seated', D3 still Free",
+            "ok": true,
+            "detail": "D1 Needs cleaning 2 seats | D2 Seated 4 seats | D3 Free 4 seats",
+            "kind": "expect"
+          },
+          {
+            "label": "the tab moved with them: still 2 orders · ₹130",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "both orders on the Orders page now say Table D2",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "A table that still owes money can't be closed; confirm payment, mark vacant, mark cleaned",
+        "checks": [
+          {
+            "label": "Close is refused: 'Confirm payment before marking this table vacant — ₹130 still unpaid.'",
+            "ok": true,
+            "detail": "Confirm payment before marking this table vacant — ₹130 still unpaid. Garden D1 Needs cleaning ",
+            "kind": "expect"
+          },
+          {
+            "label": "the table was freed although ₹130 is unpaid",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "in the overview 'Mark table as vacant' is disabled while it is unpaid",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Confirm payment' → the tab says 'Fully paid' and 'Confirm payment' is now disabled",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "D2 is now 'Needs cleaning' and offers 'Mark cleaned'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Mark cleaned' → D2 is Free again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the Tables page has no one seated and D1, D2, D3 all Free",
+            "ok": true,
+            "detail": "D1 Free 2 seats | D2 Free 4 seats | D3 Free 4 seats",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "A second diner at D3; staff void the party; a seated table can't be removed",
+        "checks": [
+          {
+            "label": "the new diner's order goes to D3 ('Sent to the kitchen for Table D3', 'Running tab ₹70')",
+            "ok": true,
+            "detail": "Order confirmed Order #0003 placed Sent to the kitchen for Table D3. Order type Dine-in · Table D3 Total ₹70 Running tab ₹70 Back to menu",
+            "kind": "expect"
+          },
+          {
+            "label": "D3 is Seated and listed under 'Seated now'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "removing a seated table is refused: 'Close the open session before removing this table'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a seated table was removed",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "after 'Cancel / void' the order #0003 is Cancelled",
+            "ok": true,
+            "detail": "#0003 05:44 PM Rohan Other 9877799999 DI Table D3 1 ₹70 Cancelled —",
+            "kind": "expect"
+          },
+          {
+            "label": "the voided order is still open for the kitchen",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "D3 is freed ('Needs cleaning') and nobody is seated",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "now that it is free, D3 can be removed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the removed table's code says 'That table code isn't valid'",
+            "ok": true,
+            "detail": "This code didn't work That table code isn't valid",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 9,
+        "title": "Rotating a code kills the printed one; forged and unknown codes are refused",
+        "checks": [
+          {
+            "label": "the panel shows a new code for the same table",
+            "ok": true,
+            "detail": "http://localhost:3170/t/6afd966ea24d801cbdab53df?k=E5sArn3FNkeAF1Zubs93Al5j → http://localhost:3170/t/6afd966ea24d801cbdab53df?k=0hDMnMB6xukMvH9Zj7R9pDVK",
+            "kind": "expect"
+          },
+          {
+            "label": "the old printed code says 'That table code has expired — please ask staff for a fresh one'",
+            "ok": true,
+            "detail": "This code didn't work That table code has expired — please ask staff for a fresh one",
+            "kind": "expect"
+          },
+          {
+            "label": "the old code still opens the menu",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the new code opens the menu for D2",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a made-up code for a real table is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a code for a table that doesn't exist says 'That table code isn't valid'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the table's address without its code opens the menu",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 10,
+        "title": "Dine-in QR ordering switched off in Settings, and on again",
+        "checks": [
+          {
+            "label": "a table's code says 'Table ordering is off right now' and 'Please order at the counter.'",
+            "ok": true,
+            "detail": "Table ordering is off right now Please order at the counter.",
+            "kind": "expect"
+          },
+          {
+            "label": "the menu opens while dine-in is off",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the order page of the table says the same",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "switched back on, the same code works again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser logged JavaScript errors",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t20-missed-order-alerts": {
+    "id": "t20-missed-order-alerts",
+    "title": "Missed-order alerts — with the feature off nothing warns anyone; with it on: banner, red row, sound, repeat, per-status messages, roles, dashboard, customer",
+    "status": "pass",
+    "pass": 74,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-18T12:17:27.256Z",
+    "durationMs": 176861,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Settings → Missed-order alerts: the defaults and the limits",
+        "checks": [
+          {
+            "label": "the switch 'Warn me about slow orders' is ticked from the start",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the limits are 2 / 5 / 20 / 10 minutes",
+            "ok": true,
+            "detail": "2/5/20/10",
+            "kind": "expect"
+          },
+          {
+            "label": "'Play a sound' and 'Keep reminding me' are ticked",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "typing 0 minutes gives 1 (never 0)",
+            "ok": true,
+            "detail": "1",
+            "kind": "expect"
+          },
+          {
+            "label": "241 minutes is refused ('Validation failed')",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the refused value 241 was saved",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "1 / 1 / 1 / 1 saves ('Settings saved.')",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "after a reload all four limits are 1",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Switch the alerts OFF",
+        "checks": [
+          {
+            "label": "the switch is still ticked after saving it off",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "with it off, the four limits, the sound and the reminder boxes are hidden",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "A customer places order A and nobody accepts it (alerts OFF)",
+        "checks": [
+          {
+            "label": "the customer sees 'Order #… placed' and the kitchen has it",
+            "ok": true,
+            "detail": "Order confirmed Order #0001 placed The kitchen has it. Order type Takeaway Ready in about 15 minutes Total ₹70 Payment Cash / pay at counter Back to menu",
+            "kind": "expect"
+          },
+          {
+            "label": "the counter's Orders screen has order A as 'Placed' with its wait running ('0m')",
+            "ok": true,
+            "detail": "#0001 05:44 PM Meera Late 9877700077 TA 1 ₹70 Placed 0m Accepted",
+            "kind": "expect"
+          },
+          {
+            "label": "a banner shows for a brand-new order",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "over a minute later the status still says 'Placed' and the wait shows 1m or more",
+            "ok": true,
+            "detail": "#0001 05:44 PM Meera Late 9877700077 TA 1 ₹70 Placed 1m Accepted",
+            "kind": "expect"
+          },
+          {
+            "label": "a banner ('needs attention') is shown although the alerts are off",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the late order's row is red although the alerts are off",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the status says 'over 1m limit'",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "'Running late' has no count and no order in it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Running late' lists the unattended order",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "no chime has played",
+            "ok": true,
+            "detail": "0",
+            "kind": "expect"
+          },
+          {
+            "label": "the dashboard says 'In the queue 1' and 'Missed orders 0'",
+            "ok": true,
+            "detail": "{\"queue\":1,\"missed\":0}",
+            "kind": "expect"
+          },
+          {
+            "label": "after all that time the order is still just 'Placed' (not accepted, not cancelled by itself)",
+            "ok": true,
+            "detail": "Placed",
+            "kind": "expect"
+          },
+          {
+            "label": "the customer's store page mentions the delay",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "The alerts are switched ON (order A is still waiting)",
+        "checks": [
+          {
+            "label": "ticking it brings the four limits back with the values saved earlier (1 / 1 / 1 / 1), sound and reminder ticked",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it saves",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "ALERTS ON: banner, red row, count, dashboard",
+        "checks": [
+          {
+            "label": "a banner names order A: 'Order #0001 needs attention'",
+            "ok": true,
+            "detail": "Order #0001 needs attention #0001 hasn't been accepted for 1 minute — the limit is 1. Click anywhere once to allow the alert sound. Show late orders",
+            "kind": "expect"
+          },
+          {
+            "label": "…with the reason and the limit: 'hasn't been accepted for N minute(s) — the limit is 1.' (N is however long it has really waited, at least 1)",
+            "ok": true,
+            "detail": "Order #0001 needs attention #0001 hasn't been accepted for 1 minute — the limit is 1. Click anywhere once to allow the alert sound. Show late orders",
+            "kind": "expect"
+          },
+          {
+            "label": "order A's row is red and its status says 'Placed Nm — over 1m limit' with the same N as the banner",
+            "ok": true,
+            "detail": "Placed 1m — over 1m limit (banner said 1)",
+            "kind": "expect"
+          },
+          {
+            "label": "'Running late (1)' counts it",
+            "ok": true,
+            "detail": "Running late (1)",
+            "kind": "expect"
+          },
+          {
+            "label": "the wait is shown in red and bold",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Show late orders' lists the late order",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "clicking the filter again goes back to every order",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the dashboard says 'In the queue 1' and 'Missed orders 1'",
+            "ok": true,
+            "detail": "{\"queue\":1,\"missed\":1}",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "The sound: waits for a click, chimes, chimes for a second late order, keeps reminding",
+        "checks": [
+          {
+            "label": "before anyone clicks: 'Click anywhere once to allow the alert sound.' and no chime",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "after one click on the page: 'Sound on' and one chime",
+            "ok": true,
+            "detail": "1 chimes",
+            "kind": "expect"
+          },
+          {
+            "label": "order B appears on the Orders screen by itself, and is not late yet (not red, banner still only about A)",
+            "ok": true,
+            "detail": "Order #0001 needs attention #0001 hasn't been accepted for 1 minute — the limit is 1. Sound on Show late orders",
+            "kind": "expect"
+          },
+          {
+            "label": "its arrival doesn't chime (it isn't late)",
+            "ok": true,
+            "detail": "1 chimes",
+            "kind": "expect"
+          },
+          {
+            "label": "a minute on, order B is late too: '2 orders need attention … And 1 more.'",
+            "ok": true,
+            "detail": "2 orders need attention #0001 hasn't been accepted for 2 minutes — the limit is 1. And 1 more. Sound on Show late orders",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the new late order chimes (2 chimes)",
+            "ok": true,
+            "detail": "2 chimes",
+            "kind": "expect"
+          },
+          {
+            "label": "'Keep reminding me': a minute later it chimes again while both are still late (3 chimes)",
+            "ok": true,
+            "detail": "3 chimes",
+            "kind": "expect"
+          },
+          {
+            "label": "…and another minute later again (4 chimes)",
+            "ok": true,
+            "detail": "4 chimes",
+            "kind": "expect"
+          },
+          {
+            "label": "both rows are red and 'Running late (2)'",
+            "ok": true,
+            "detail": "Running late (2)",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "Dismiss all warnings: the banner and the sound stop, the rows stay red",
+        "checks": [
+          {
+            "label": "the banner is gone",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "dismissing made a late order look normal again (rows no longer red)",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "'Running late (2)' is still counted",
+            "ok": true,
+            "detail": "Running late (2)",
+            "kind": "expect"
+          },
+          {
+            "label": "a dismissed warning chimes again",
+            "ok": true,
+            "detail": "4 chimes (was 4)",
+            "kind": "never"
+          },
+          {
+            "label": "a dismissed warning's banner comes back by itself",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "Staff move A along: every stage has its own warning, and Completed ends it",
+        "checks": [
+          {
+            "label": "cancelling the other late order (B) takes it out of the late list: 'Running late (1)'",
+            "ok": true,
+            "detail": "Cancelled · Running late (1)",
+            "kind": "expect"
+          },
+          {
+            "label": "a cancelled order is still red",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "accepted: order A is no longer red and its status says 'Accepted' (no 'over limit')",
+            "ok": true,
+            "detail": "Accepted",
+            "kind": "expect"
+          },
+          {
+            "label": "a minute later: '#A was accepted but nobody has started cooking for N minute(s) — the limit is 1.'",
+            "ok": true,
+            "detail": "Order #0001 needs attention #0001 was accepted but nobody has started cooking for 1 minute — the limit is 1. Sound on Show late orders",
+            "kind": "expect"
+          },
+          {
+            "label": "order A is red again: 'Accepted Nm — over 1m limit'",
+            "ok": true,
+            "detail": "Accepted 1m — over 1m limit",
+            "kind": "expect"
+          },
+          {
+            "label": "A had been dismissed as 'not accepted' — it speaks up again because this is a different delay",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "preparing: no warning for A yet",
+            "ok": true,
+            "detail": "Preparing",
+            "kind": "expect"
+          },
+          {
+            "label": "'#A has been cooking longer than expected for N minute(s) — the limit is 1.'",
+            "ok": true,
+            "detail": "Order #0001 needs attention #0001 has been cooking longer than expected for 1 minute — the limit is 1. Sound on Show late orders",
+            "kind": "expect"
+          },
+          {
+            "label": "'#A is ready and still waiting to go out for N minute(s) — the limit is 1.'",
+            "ok": true,
+            "detail": "Order #0001 needs attention #0001 is ready and still waiting to go out for 1 minute — the limit is 1. Sound on Show late orders",
+            "kind": "expect"
+          },
+          {
+            "label": "completed: order A has no timer and no warning",
+            "ok": true,
+            "detail": "Completed · #0001 05:44 PM Meera Late 9877700077 TA 1 ₹70 Completed —",
+            "kind": "expect"
+          },
+          {
+            "label": "nothing is late any more: 'Running late' has no count",
+            "ok": true,
+            "detail": "Running late",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 9,
+        "title": "'Keep reminding me' off, and 'Play a sound' off",
+        "checks": [
+          {
+            "label": "reminders off: the late order chimes once…",
+            "ok": true,
+            "detail": "1 chimes",
+            "kind": "expect"
+          },
+          {
+            "label": "…and chimes again although 'Keep reminding me' is off",
+            "ok": true,
+            "detail": "1 chimes",
+            "kind": "never"
+          },
+          {
+            "label": "the banner is still there (the warning stays, only the repeating stops)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "sound off: the banner still warns about the late order",
+            "ok": true,
+            "detail": "Order #0003 needs attention #0003 hasn't been accepted for 2 minutes — the limit is 1. Sound is off (Settings → Missed-order alerts) Show late orders",
+            "kind": "expect"
+          },
+          {
+            "label": "a chime played although 'Play a sound' is off",
+            "ok": true,
+            "detail": "0 chimes",
+            "kind": "never"
+          },
+          {
+            "label": "the banner says the sound is off (not 'Sound on')",
+            "ok": true,
+            "detail": "Order #0003 needs attention #0003 hasn't been accepted for 2 minutes — the limit is 1. Sound is off (Settings → Missed-order alerts) Show late orders",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 10,
+        "title": "The manager, the cashier and the kitchen see the same alerts",
+        "checks": [
+          {
+            "label": "the manager sees the banner for the late order (#0003)",
+            "ok": true,
+            "detail": "Order #0003 needs attention #0003 hasn't been accepted for 3 minutes — the limit is 1. Click anywhere once to allow the alert sound. Show late orders",
+            "kind": "expect"
+          },
+          {
+            "label": "…and order #0003 is red there too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the cashier sees the banner for the late order (#0003)",
+            "ok": true,
+            "detail": "Order #0003 needs attention #0003 hasn't been accepted for 3 minutes — the limit is 1. Click anywhere once to allow the alert sound. Show late orders",
+            "kind": "expect"
+          },
+          {
+            "label": "…and order #0003 is red there too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the kitchen sees the banner for the late order (#0003)",
+            "ok": true,
+            "detail": "Order #0003 needs attention #0003 hasn't been accepted for 3 minutes — the limit is 1. Click anywhere once to allow the alert sound. Show late orders",
+            "kind": "expect"
+          },
+          {
+            "label": "…and order #0003 is red there too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 11,
+        "title": "The customer's side",
+        "checks": [
+          {
+            "label": "a customer can still order while orders are late; their confirmation reads exactly like before the alerts were on",
+            "ok": true,
+            "detail": "Order confirmed Order #N placed The kitchen has it. Order type Takeaway Ready in about N minutes Total ₹70 Payment Cash / pay at counter Back to menu || Order confirmed Order #N placed The kitchen has it. Order type Takeaway Ready in about N minutes Total ₹70 Payment Cash / pay at counter Back to menu",
+            "kind": "expect"
+          },
+          {
+            "label": "the customer's confirmation mentions a delay or a late order",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "their new order simply appears on the Orders screen like any other",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser logged JavaScript errors",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      }
+    ],
+    "findings": [
+      "Missed-order alerts: a limit over 240 minutes is refused with only 'Validation failed' — it doesn't say which box or what the maximum is.",
+      "A missed order is never escalated: nobody is messaged and it is not cancelled — the only signs are the Orders screen alerts and the dashboard's 'Missed orders'.",
+      "The customer has no way to see that their order is waiting or late — their confirmation never changes (see also T01: there is no order-tracking page)."
+    ],
+    "problems": []
+  },
+  "t21-onboarding": {
+    "id": "t21-onboarding",
+    "title": "Client onboarding form — plan first, plan-fit alerts and 'allow anyway', full form, save / reset / cancel, PDF + print, publish as store",
+    "status": "pass",
+    "pass": 120,
+    "fail": 0,
+    "error": "",
+    "mode": "visible",
+    "at": "2026-11-18T12:23:23.114Z",
+    "durationMs": 253223,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The Onboarding list (empty at first)",
+        "checks": [
+          {
+            "label": "'Onboarding' is in the platform sidebar and opens the list",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it starts empty: 'No forms yet', All 0 · Drafts 0 · Published 0",
+            "ok": true,
+            "detail": "form, print it or save it as a PDF, then publish it as their store. Price list New requirement form All 0 Drafts 0 Published 0 No forms yet — press “New requirement form” when a client wants to start.",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "A new form asks for the plan first; the plan decides what can be chosen",
+        "checks": [
+          {
+            "label": "the first section on the page is '1 · Plan'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "with no plan, 'Plan fit' says to choose it first",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and Publish as store is disabled, with 'Choose a plan.' among the things missing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the disabled Publish button is visibly greyed out (faded, grey, 'not-allowed' pointer)",
+            "ok": true,
+            "detail": "{\"filter\":\"grayscale(1)\",\"opacity\":0.5,\"cursor\":\"not-allowed\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "and next to it says how much is left: '… things to finish before it can be published'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "choosing Starter shows what it includes: 'Up to 1 outlet and 3 people'",
+            "ok": true,
+            "detail": "Takeaway, dine-in QR and coupons · Up to 1 outlet and 3 people.",
+            "kind": "expect"
+          },
+          {
+            "label": "Coupons (in the plan) is a plain tick box",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Marketing is locked — 'Not in the Starter plan'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Analytics & reports is locked — 'Not in the Starter plan'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Own favicon is locked — 'Not in the Starter plan'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Coin wallet is locked — 'Not in the Starter plan'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Printing is locked — 'Not in the Starter plan'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "WhatsApp chat is locked — 'Not in the Starter plan'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "each locked one has ONE box: 'Add … for this client' (with what it costs a month)",
+            "ok": true,
+            "detail": "{\"lockedCount\":9,\"addBoxes\":1,\"marketingRow\":\"Marketing Not in the Starter plan Add for this client · +₹100 a month\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "Takeaway and Dine-in at the first outlet are fine, Delivery is locked",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an own domain can't be typed ('Own domain' box disabled, with its own 'Add' box)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the Glass style is marked 'not in plan'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Asking for more than the plan: error alerts, and 'Add … for this client'",
+        "checks": [
+          {
+            "label": "'Total outlets' is a − / + stepper: at 1 the − is greyed out",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "+ adds an outlet card (2 cards, the box says 2)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "− takes it away again (1 card)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the number box has no browser arrows (it has its own − and +)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "2 outlets on a 1-outlet plan: an error alert in the form",
+            "ok": true,
+            "detail": "The Starter plan allows 1 outlet and this form has 2. Remove outlets, choose another plan, or add the extra ones for this client.",
+            "kind": "expect"
+          },
+          {
+            "label": "…the same problem is listed in Plan fit (not allowed yet)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and Publish stays disabled",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "there are now two outlet cards",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Add the extra outlets for this client' turns the alert into 'Added for this client' and Plan fit marks it added",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Add Delivery for this client' (outlet 1) adds it AND ticks it: the row says 'Added for this client'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "ticking Delivery shows the delivery block (distance, fee, free above, minimum) and asks for the map pin",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "outlet 2 can now have Delivery too (it is added for the whole client) but it isn't ticked there",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Add Marketing for this client' adds and ticks it: 'Added for this client', and Plan fit lists it as added",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Take away' puts it back: locked again, unticked, and gone from Plan fit",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "choosing the Glass style raises an issue in Plan fit",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Add Glass style for this client' clears it ('added')",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Fill in the whole form",
+        "checks": [
+          {
+            "label": "the meeting date picked in the calendar is shown",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "its web address is made from the name: '/onboard-cafe-cp'",
+            "ok": true,
+            "detail": "Outlet 1 — Onboard Cafe CP Remove Outlet name Web address /onboard-cafe-cp Outlet phone Address Google Maps link or coordinates Find on map No pin yet. How cust",
+            "kind": "expect"
+          },
+          {
+            "label": "a long Google link sets the pin: 'Pin set: 28.6315, 77.2167'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the 'needs the map location' alert goes away",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a link that isn't Google's is refused: 'Only Google Maps links can be opened'",
+            "ok": true,
+            "detail": "Only Google Maps links can be opened. Paste a link from Google Maps, or type the coordinates.",
+            "kind": "expect"
+          },
+          {
+            "label": "plain text is refused: 'isn't a link or coordinates'",
+            "ok": true,
+            "detail": "That isn't a link or coordinates. Paste a Google Maps link, or type latitude and longitude like 28.6139, 77.2090.",
+            "kind": "expect"
+          },
+          {
+            "label": "a link that leads to no pin says so: 'didn't lead to a map pin'",
+            "ok": true,
+            "detail": "That link didn't lead to a map pin. Open it in a browser and paste the full address, or type the coordinates.",
+            "kind": "expect"
+          },
+          {
+            "label": "a short link is followed by the server: 'Pin set: 28.5245, 77.2066'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "plain coordinates work too: 'Pin set: 28.6, 77.2'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the 'Fresh green' colour scheme fills the colours (brand colour #2E7D46) and shows a preview",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the TablePe address is checked live: 'onboardcafe.localhost:3170 is free'",
+            "ok": true,
+            "detail": "onboardcafe.localhost:3170 is free",
+            "kind": "expect"
+          },
+          {
+            "label": "Plan fit: outlets is allowed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Plan fit: feature:delivery is allowed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Plan fit: feature:marketing is allowed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Plan fit: effect:glass is allowed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "nothing is missing any more: 'Nothing missing. You can save, then publish.'",
+            "ok": true,
+            "detail": "Nothing missing. You can save, then publish.",
+            "kind": "expect"
+          },
+          {
+            "label": "Publish as store is now enabled and looks it (full colour, no 'things to finish' note)",
+            "ok": true,
+            "detail": "{\"filter\":\"none\",\"opacity\":1,\"cursor\":\"pointer\"}",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Save, list, reopen — every answer is still there",
+        "checks": [
+          {
+            "label": "before saving the form says 'Not saved yet'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Save: 'Saved.' and the form is now a saved draft with its own address",
+            "ok": true,
+            "detail": "http://localhost:3171/platform/onboarding/6afd9825b4ab6b05718752bc",
+            "kind": "expect"
+          },
+          {
+            "label": "the Save button is disabled again — nothing has changed since",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the list shows 'Onboard Cafe' as a Draft on Starter with 2 outlets",
+            "ok": true,
+            "detail": "Onboard Cafe with Rep One Plan Starter Outlets 2 Draft just now",
+            "kind": "expect"
+          },
+          {
+            "label": "with counts All 1 · Drafts 1 · Published 0",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "after reopening and reloading: plan Starter, store and owner email as typed",
+            "ok": true,
+            "detail": "{\"plan\":\"Starter\",\"store\":\"Onboard Cafe\",\"email\":\"ola@onboardcafe.test\",\"outlets\":2,\"o1\":\"Onboard Cafe CP\",\"o1addr\":\"12 Janpath, Connaught Place, New Delhi\",\"o1radius\":\"4\",\"o1delivery\":true,\"o2opens\":\"09:00\",\"o2closes\":\"21:00\",\"pin1\":\"Pin set: 28.6315, 77.2167 · open in Maps\",\"pin2\":\"Pin set: 28.5245, 77.2066 · open in Maps\",\"marketing\":true,\"common\":\"23:00\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "…both outlets, with their names, address, delivery 4 km and Delivery ticked",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…outlet 2's own hours 09:00–21:00, both pins, Marketing, common closing 23:00",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the plan-fit permissions were saved with it (Plan fit still says 'Allowed anyway' for all four)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Cancel and Reset ask first, and never touch the saved draft",
+        "checks": [
+          {
+            "label": "a change shows 'Unsaved changes' and enables Save",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Cancel with unsaved changes asks 'Leave without saving?'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Keep editing' stays on the form with the change still there",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Reset asks 'Clear the whole form?' and says the saved copy stays until Save",
+            "ok": true,
+            "detail": "Clear the whole form? Every answer on this form will be emptied. The copy you saved earlier stays as it is until you press Save. Keep my answers Yes, clear everything",
+            "kind": "expect"
+          },
+          {
+            "label": "'Keep my answers' changes nothing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Yes, clear everything' empties the form: no store name, one outlet, no plan",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and it counts as an unsaved change; Publish is disabled",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Discard and leave' goes back to the list",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the saved draft is untouched by the reset: still Onboard Cafe, Starter, tagline 'Fresh and fast', 2 outlets",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Cancel with nothing changed leaves at once, without a question",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "Export as PDF, and print",
+        "checks": [
+          {
+            "label": "the file is onboarding-onboard-cafe.pdf and a real PDF",
+            "ok": true,
+            "detail": "onboarding-onboard-cafe.pdf",
+            "kind": "expect"
+          },
+          {
+            "label": "the PDF holds the store, plan and owner",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the PDF holds the owner's email",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the PDF holds both outlets and their addresses",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the PDF holds the map pins",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the PDF holds the delivery distance and fee",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the PDF holds outlet 2's own hours",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the PDF holds the common hours",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the PDF holds the brand colour",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the PDF holds what was added for this client beyond the plan",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the PDF holds the sign-off lines",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no blank pages: every page has real content (not just a footer) — printing it gives no empty sheets",
+            "ok": true,
+            "detail": "1091 / 1040 / 624",
+            "kind": "expect"
+          },
+          {
+            "label": "each page carries its own footer 'Page i of N', and N is the real number of pages",
+            "ok": true,
+            "detail": "3 pages",
+            "kind": "expect"
+          },
+          {
+            "label": "the PDF contains a password",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the PDF has several pages with 'Page 1 of N' footers",
+            "ok": true,
+            "detail": "3 pages",
+            "kind": "expect"
+          },
+          {
+            "label": "Print opens the print dialog with the PDF ('The print dialog was opened.')",
+            "ok": true,
+            "detail": "1 print calls",
+            "kind": "expect"
+          },
+          {
+            "label": "…and what was printed is the same document (a PDF loaded in a hidden frame)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "Publish as store",
+        "checks": [
+          {
+            "label": "the dialog summarises what will be created: store, plan + what is allowed beyond it, both outlets, address, owner",
+            "ok": true,
+            "detail": "Publish as store This creates the store, its outlets and the owner's login from this form. Store Onboard Cafe Plan Starter + added for this client: Marketing, Delivery, glass style, 2 outlets Outlets Onboard Cafe CP (/onboard-cafe-cp), Onboard Cafe Saket (/onboard-cafe-saket) Address onboardcafe.localhost:3170 Owner Ola Owner · ola@onboardcafe.test Owner's password Generate At least 8 characters. Shown here once — it isn't stored with the form or printed in the PDF. Not yet Create the store",
+            "kind": "expect"
+          },
+          {
+            "label": "'Create the store' is disabled until there is a password",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a 3-character password is not enough",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Generate' fills in a strong password (12 characters), which enables the button",
+            "ok": true,
+            "detail": "12 chars",
+            "kind": "expect"
+          },
+          {
+            "label": "the result says 'Onboard Cafe is live' with 2 outlets, the owner's email and the store address",
+            "ok": true,
+            "detail": "Onboard Cafe is live The store, its 2 outlets and the owner's login were created from this form. Owner signs in with ola@onboardcafe.test Password the one you just set (it isn't saved anywhere — share it with them now) Store address http://onboardcafe.localhost:3170 Open the store Close",
+            "kind": "expect"
+          },
+          {
+            "label": "the result screen shows the password",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the form is now read-only: a published banner, no Save / Reset / Publish buttons, fields disabled",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a published form can be edited",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "it can still be exported: the PDF now says 'Published as a store' and still has no password",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the list shows it as Published (All 1 · Drafts 0 · Published 1)",
+            "ok": true,
+            "detail": "Onboard Cafe with Rep One Plan Starter Outlets 2 Published just now",
+            "kind": "expect"
+          },
+          {
+            "label": "a published form has a delete button",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 9,
+        "title": "What was created: the store, its plan and extras, its outlets and settings, its look",
+        "checks": [
+          {
+            "label": "the store is in Stores on the Starter plan with 2 of 2 outlets",
+            "ok": true,
+            "detail": "Onboard Cafe ola@onboardcafe.test Plan Starter People 1 / 3 Outlets 2 / 2 Within plan",
+            "kind": "expect"
+          },
+          {
+            "label": "Marketing and Delivery are 'Unlocked for this store'",
+            "ok": true,
+            "detail": "Unlocked for this store / Unlocked for this store",
+            "kind": "expect"
+          },
+          {
+            "label": "Coupons, which the plan has, is just 'From plan'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Analytics & reports, which nobody asked for, is not unlocked",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the owner signs in with the password set while publishing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "their store has both outlets: 'Onboard Cafe CP' and 'Onboard Cafe Saket'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "outlet 1's settings are exactly what the form said: phone, GSTIN, FSSAI, 10:00–23:00, last order 30, prep 20, minimum ₹150, delivery ₹30 / free above ₹500 / 4 km, takeaway + dine-in + delivery",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the map location is set (Settings shows the pin)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "outlet 2 has its own hours 09:00–21:00 (last order 15), takeaway + dine-in and NO delivery",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the store's address opens: both outlets are offered",
+            "ok": true,
+            "detail": "Onboard Cafe Which location? Use my current location or choose manually Onboard Cafe CP 12 Janpath, Connaught Place, New Delhi Onboard Cafe Saket Saket District Centre, New Delhi",
+            "kind": "expect"
+          },
+          {
+            "label": "the storefront uses the chosen brand colour #2E7D46",
+            "ok": true,
+            "detail": "#2E7D46",
+            "kind": "expect"
+          },
+          {
+            "label": "…and shows the tagline",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 10,
+        "title": "A second form with the same name, email and address creates nothing",
+        "checks": [
+          {
+            "label": "it lists what is taken: the store name, the owner's email and the address",
+            "ok": true,
+            "detail": "A store called “onboard-cafe” already exists on TablePe — change the store's name.\nonboardcafe.localhost:3170 is already used by another store.\nThat email already has a TablePe account. Use a different email for this owner (it becomes their sign-in).",
+            "kind": "expect"
+          },
+          {
+            "label": "Publish as store stays disabled",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no second store was created",
+            "ok": true,
+            "detail": "4 stores before",
+            "kind": "expect"
+          },
+          {
+            "label": "the new form is a Draft in the list",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a draft can be deleted (a question is asked first); the published one stays",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 11,
+        "title": "A Custom plan is not gated",
+        "checks": [
+          {
+            "label": "it shows the limits to set for this client (outlets, people) and says what 'custom' means",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no choice is locked: Marketing and Delivery can be ticked, with no 'Not in the … plan' notes",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "3 outlets on a Custom plan raise no alert (the limits follow the form)",
+            "ok": true,
+            "detail": "Everything in the form fits the Bench Custom plan.",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser logged JavaScript errors",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t22-onboarding-price": {
+    "id": "t22-onboarding-price",
+    "title": "Onboarding price estimate — price list, plan + extras, Custom starts above the dearest plan, discount / GST / yearly, the Custom plan, plan dialog",
+    "status": "pass",
+    "pass": 55,
+    "fail": 0,
+    "error": "",
+    "mode": "visible",
+    "at": "2026-11-18T12:26:44.793Z",
+    "durationMs": 197223,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Before any plan has a price, there is nothing to estimate",
+        "checks": [
+          {
+            "label": "the Custom plan is offered although nobody has created it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "its estimate says to give Basic and Pro a monthly price first — no number",
+            "ok": true,
+            "detail": "Custom starts from your dearest plan — give your Basic and Pro plans a monthly price (Plans → edit → Website) and the estimate appears. Edit the price list",
+            "kind": "expect"
+          },
+          {
+            "label": "a standard plan with no monthly price says so: 'has no monthly price yet', ₹0",
+            "ok": true,
+            "detail": "Starter plan ₹0 A month ₹0 GST (18%) ₹0 Pays a month ₹0 Discount for this client (%) Negotiated — taken off the monthly price No standard plan fits this on its own. The Starter plan has no monthly price yet (Plans → edit → Website), so the estimate starts from ₹0. Edit the price list",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Two plans with prices: Basic ₹999 and Business ₹2,499",
+        "checks": [
+          {
+            "label": "both plans are listed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "The Price list: starting prices, and do they add up?",
+        "checks": [
+          {
+            "label": "the starting prices: Delivery ₹100, Dine-in ₹200, Marketing ₹100, Online payments ₹50, WhatsApp chat ₹150",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "each extra outlet ₹250, each extra person ₹15, GST 18%",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Your plans' lists Basic ₹999 and Business ₹2,499 (Custom: priced by this list)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Do the prices add up?': Basic → Business adds 9 features, 2 outlets, 15 people — this list charges ₹1,500, the plans differ by ₹1,500: 'They agree.'",
+            "ok": true,
+            "detail": "Basic → Business adds 9 features, 2 outlets, 15 people This list charges ₹1,500 · the plans differ by ₹1,500 They agree.",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "A standard plan: its own price, then GST and the year",
+        "checks": [
+          {
+            "label": "Basic alone is one line: 'Basic plan ₹999'",
+            "ok": true,
+            "detail": "Basic plan ₹999",
+            "kind": "expect"
+          },
+          {
+            "label": "a month ₹999, GST (18%) ₹180, pays ₹1,179 a month",
+            "ok": true,
+            "detail": "Basic plan ₹999 A month ₹999 GST (18%) ₹180 Pays a month ₹1,179 Paying for the year up front (10% off): ₹12,731 with GST — about ₹899 a month before GST, saving ₹1,199. Discount for this client (%) Negotiated — taken off the monthly price Standard plans that fit as they are: Basic (₹999), Business (₹2,499). Edit the price list",
+            "kind": "expect"
+          },
+          {
+            "label": "paying for the year (10% off): ₹12,731 with GST, about ₹899 a month, saving ₹1,199",
+            "ok": true,
+            "detail": "Paying for the year up front (10% off): ₹12,731 with GST — about ₹899 a month before GST, saving ₹1,199.",
+            "kind": "expect"
+          },
+          {
+            "label": "both Basic and Business are said to fit as they are",
+            "ok": true,
+            "detail": "Standard plans that fit as they are: Basic (₹999), Business (₹2,499).",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Asking for more than Basic: each extra is priced, then a discount",
+        "checks": [
+          {
+            "label": "Marketing (added for this client) adds ₹100 → ₹1,099",
+            "ok": true,
+            "detail": "Basic plan ₹999 | Marketing ₹100",
+            "kind": "expect"
+          },
+          {
+            "label": "a second outlet adds ₹250 ('1 extra outlet × ₹250') → ₹1,349",
+            "ok": true,
+            "detail": "Basic plan ₹999 | Marketing ₹100 | 1 extra outlet × ₹250 ₹250",
+            "kind": "expect"
+          },
+          {
+            "label": "Delivery adds ₹100 → ₹1,449",
+            "ok": true,
+            "detail": "Basic plan ₹999 | Marketing ₹100 | Delivery ₹100 | 1 extra outlet × ₹250 ₹250",
+            "kind": "expect"
+          },
+          {
+            "label": "a team of 7 + the owner is 8 people, 3 over Basic's 5: '3 extra people × ₹15' ₹45 → ₹1,494",
+            "ok": true,
+            "detail": "Basic plan ₹999 | Marketing ₹100 | Delivery ₹100 | 1 extra outlet × ₹250 ₹250 | 3 extra people × ₹15 ₹45",
+            "kind": "expect"
+          },
+          {
+            "label": "the lines in order: Basic ₹999, Marketing ₹100, Delivery ₹100, outlet ₹250, people ₹45",
+            "ok": true,
+            "detail": "Basic plan ₹999 | Marketing ₹100 | Delivery ₹100 | 1 extra outlet × ₹250 ₹250 | 3 extra people × ₹15 ₹45",
+            "kind": "expect"
+          },
+          {
+            "label": "10% discount: −₹149 → ₹1,345, GST ₹242, pays ₹1,587 a month",
+            "ok": true,
+            "detail": "Basic plan ₹999 Marketing ₹100 Delivery ₹100 1 extra outlet × ₹250 ₹250 3 extra people × ₹15 ₹45 A month ₹1,494 Discount (10%) − ₹149 GST (18%) ₹242 Pays a month ₹1,587 Paying for the year up front (10% off): ₹17,141 with GST — about ₹1,211 a month before GST, saving ₹1,614. Discount for this client (%) Negotiated — taken off the monthly price Standard plans that fit as they are: Business (₹2,499). Edit the price list",
+            "kind": "expect"
+          },
+          {
+            "label": "the yearly price follows: ₹17,141 with GST (saving ₹1,614)",
+            "ok": true,
+            "detail": "Paying for the year up front (10% off): ₹17,141 with GST — about ₹1,211 a month before GST, saving ₹1,614.",
+            "kind": "expect"
+          },
+          {
+            "label": "only Business fits these needs as they are (₹2,499) — Basic plus extras is cheaper than upgrading",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "The discount is saved with the form; the PDF has no prices",
+        "checks": [
+          {
+            "label": "saved",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "after reloading, the 10% discount and the ₹1,587 are still there",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the PDF shows the estimate (estimated price, 'Pays a month', ₹1,587, or the discount)",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "it is still the full form (the store name and the outlets are in it)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "The Custom plan: starts from the dearest plan and goes up in steps",
+        "checks": [
+          {
+            "label": "a small need on Custom is just the dearest plan: 'Business plan — every feature, up to 3 outlets and 20 people ₹2,499'",
+            "ok": true,
+            "detail": "Business plan — every feature, up to 3 outlets and 20 people ₹2,499",
+            "kind": "expect"
+          },
+          {
+            "label": "and says a standard plan would do: 'These needs fit the Basic plan (₹999)… Custom is for clients who need more'",
+            "ok": true,
+            "detail": "These needs fit the Basic plan (₹999 a month) — Custom is for clients who need more than the standard plans allow.",
+            "kind": "expect"
+          },
+          {
+            "label": "no limits to set beyond Business: the form shows the Custom limits boxes (outlets, people)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "5 outlets and 25 people: Business ₹2,499 + 2 more outlets × ₹250 (₹500) + 5 more people × ₹15 (₹75)",
+            "ok": true,
+            "detail": "Business plan — every feature, up to 3 outlets and 20 people ₹2,499 | 2 more outlets (5 in all) × ₹250 ₹500 | 5 more people (25 in all) × ₹15 ₹75",
+            "kind": "expect"
+          },
+          {
+            "label": "total ₹3,074 a month — dearer than Business's ₹2,499 and Basic's ₹999",
+            "ok": true,
+            "detail": "Business plan — every feature, up to 3 outlets and 20 people ₹2,499 2 more outlets (5 in all) × ₹250 ₹500 5 more people (25 in all) × ₹15 ₹75 A month ₹3,074 GST (18%) ₹553 Pays a month ₹3,627 Paying for the year up front (10% off): ₹39,175 with GST — about ₹2,767 a month before GST, saving ₹3,689. Discount for this client (%) Negotiated — taken off the monthly price No standard plan fits this on its own. Edit the price list",
+            "kind": "expect"
+          },
+          {
+            "label": "the Custom estimate is not above the dearest standard plan",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "no standard plan fits: 'No standard plan fits this on its own.'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "each extra outlet adds exactly ₹250 (3,074 → 3,324) and each extra person exactly ₹15 (→ 3,339)",
+            "ok": true,
+            "detail": "3324 then 3339",
+            "kind": "expect"
+          },
+          {
+            "label": "setting the outlets the client was promised (8) prices them even before the cards exist: 5 more outlets × ₹250",
+            "ok": true,
+            "detail": "Business plan — every feature, up to 3 outlets and 20 people ₹2,499 5 more outlets (8 in all) × ₹250 ₹1,250 6 more people (26 in all) × ₹15 ₹90 A month ₹3,839 GST (18%) ₹691 Pays a month ₹4,530 Paying for the year up front (10% off): ₹48,924 with GST — about ₹3,455 a month before GST, saving ₹4,607. Discount for this client (%) Negotiated — taken off the monthly price No standard plan fits this on its own. Edit the price list",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "Change the price list: the estimate follows; Back to the starting prices asks first",
+        "checks": [
+          {
+            "label": "the page says 'Unsaved changes'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "saved: the page says 'Saved'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Do the prices add up?' now says the plans are ₹330 cheaper than this list (2 outlets × ₹150 more, plus Marketing ₹30 more)",
+            "ok": true,
+            "detail": "Basic → Business\nadds 9 features, 2 outlets, 15 people\nThis list charges ₹1,830 · the plans differ by ₹1,500\nThe plans are ₹330 cheaper than this list says.",
+            "kind": "expect"
+          },
+          {
+            "label": "after a reload the new prices are still there",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "on the form: Marketing is now ₹130 and an extra outlet ₹400 (Basic ₹999 + 130 + 400 = ₹1,529)",
+            "ok": true,
+            "detail": "Basic plan ₹999 | Marketing ₹130 | 1 extra outlet × ₹400 ₹400",
+            "kind": "expect"
+          },
+          {
+            "label": "'Back to the starting prices' asks first",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Keep my prices' changes nothing (extra outlet still ₹400)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Use the starting prices' puts ₹250 and ₹100 back (unsaved until Save)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "saved again: the plans and the list agree once more ('They agree.')",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 9,
+        "title": "Publishing a Custom form creates the real Custom plan and puts the store on it",
+        "checks": [
+          {
+            "label": "no Custom plan has been created yet (it is only created the first time it is needed)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "on Custom nothing is disabled or flagged 'Not in the plan'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the estimate: Business ₹2,499 (3 outlets and 20 people cover it) — it says a standard plan would do",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the store was created",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the Custom plan now exists, as a real plan, with this store on it",
+            "ok": true,
+            "detail": "Custom Built around one restaurant — only the features and limits you agree on. Custom 1 store Nothing included — you set each store's limits and features on its page On the website: Custom Edit Archi",
+            "kind": "expect"
+          },
+          {
+            "label": "in Stores: Custom Cafe is on the Custom plan with 2 of 2 outlets and 1 of 3 people",
+            "ok": true,
+            "detail": "Custom Cafe pricing@custom-cafe.test Plan Custom People 1 / 3 Outlets 2 / 2 Within plan",
+            "kind": "expect"
+          },
+          {
+            "label": "Marketing, which was ticked, is unlocked for the store",
+            "ok": true,
+            "detail": "Unlocked for this store",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 10,
+        "title": "The New plan dialog: tidy limits, Save always in reach, room for the dropdown arrow",
+        "checks": [
+          {
+            "label": "the 'Multi-outlet' box sits directly under the people limit, on the same left edge",
+            "ok": true,
+            "detail": "people x=691 y=381 · multi x=695 y=432",
+            "kind": "expect"
+          },
+          {
+            "label": "'Unlimited' is on the same line as the people number",
+            "ok": true,
+            "detail": "391 vs 381",
+            "kind": "expect"
+          },
+          {
+            "label": "ticking Multi-outlet shows the 'Outlets' limit below it, aligned with the others",
+            "ok": true,
+            "detail": "691 vs 691",
+            "kind": "expect"
+          },
+          {
+            "label": "'Save plan' is in view without scrolling the dialog (it stays at the bottom)",
+            "ok": true,
+            "detail": "button at y=1088–1117 of 1202",
+            "kind": "expect"
+          },
+          {
+            "label": "a dropdown (the Plan box) has room for its arrow: more padding on the right than the left, its own arrow drawn",
+            "ok": true,
+            "detail": "{\"pr\":32,\"pl\":10,\"bg\":\"url(\\\"data:im\",\"app\":\"none\"}",
             "kind": "expect"
           },
           {

@@ -16,17 +16,17 @@ export const meta = {
   summary: "In Chrome as the owner of Marketing Mart (Pro plan, two outlets, about ten weeks of orders). Analytics sits at the top of 'Customers & growth'. The Overview's sales, net sales, orders, items sold, cancellations and discounts for the last 30 days equal the totals worked out from the stored orders, with the change against the 30 days before; choosing one outlet, 'Last 7 days' or custom dates picked in the calendar changes them to the expected figures. Sales shows each outlet as its own line; Items & stock ranks the best sellers and gives, for tomorrow and for every weekday, how many of each item to prepare (the average of recent weeks plus a safety margin that can be changed); Customers lists who has drifted away and 'Message them' opens Marketing with that filter; Compare outlets puts the outlets side by side for the same dates. Profit & loss takes the monthly bills (typed once, remembered in the browser, optionally saved to the store) and shows food cost, expenses, net profit and break-even, per outlet too. Reports downloads Excel, CSV, PDF and JSON for a week, month, year or custom dates, for the whole store or one outlet, and the files hold the same numbers; GST and the daily cash close agree with each other. A manager sees the figures but not profit/exports, an accountant sees everything, a cashier sees nothing, and a store whose plan lacks Analytics sees a notice until the platform unlocks it for that store.",
   expect: [
     "The sidebar shows Analytics first in 'Customers & growth'; its tabs are Overview, Sales, Items & stock, Customers, Compare outlets, Operations, Profit & loss and Reports.",
-    "Overview, last 30 days, whole store: Sales ₹52,427, Net sales ₹49,969, 286 orders, 561 items sold, 32 cancelled, ₹503 discounts, −3.9% against the 30 days before; the day-by-day and hour-by-hour tables add up to 286 orders.",
-    "Outlet Main alone: ₹33,137 and 178 orders; Second alone: ₹19,290 and 108; Last 7 days and the same dates picked in the calendar both give ₹11,476; Today gives ₹0.",
+    "Overview, last 30 days, whole store: sales, net sales (without GST), orders, items sold, cancelled orders, discounts and the average order each equal the totals worked out separately from the stored orders, with the change against the 30 days before; the day-by-day and hour-by-hour tables add up to the same order count.",
+    "Each outlet alone shows exactly its own sales and orders; Last 7 days and the same dates picked in the calendar both give the 7-day totals; Today gives the (empty) today.",
     "Sales shows one line per outlet, and the order-types table adds up to the same orders and to the takeaway/delivery/dine-in sales of the store.",
-    "Items & stock lists the best sellers in order (Paneer Steamed Momos 141, Cold Coffee 137, Chicken Momos 134); for outlet Main, tomorrow's prep list and the weekday table give the suggested quantities, and a bigger safety margin gives bigger numbers.",
+    "Items & stock lists the best sellers in order with their quantities; for outlet Main, tomorrow's prep list and the weekday table give the suggested quantities worked out separately (average of the last 6 weeks + 15%, rounded up), and a bigger safety margin gives bigger numbers.",
     "Customers: 'Message them' for the 30-day group opens Marketing with that filter and the same number of people.",
-    "Compare outlets: Main and Second side by side (₹33,137 / ₹19,290, 178 / 108 orders), each outlet's own best sellers, and for dates picked in the calendar the two outlets add up to the store's sales.",
-    "Operations: 32 cancelled of 318 orders, ₹503 of coupon discounts.",
+    "Compare outlets: the two outlets side by side with their own sales and orders, each outlet's own best sellers, and for dates picked in the calendar the two outlets add up to the store's sales.",
+    "Operations: the cancelled orders and their share of all placed orders, and the coupon discounts, equal the worked-out totals.",
     "Profit & loss: monthly bills typed per outlet and for the whole store give food cost, expenses and net profit that match the arithmetic for these 30 days; the same figures per outlet; a bill added by hand counts and can be removed; the food-cost % changes the result.",
     "The bills are remembered after a reload; 'Save to my store' keeps a copy that 'Use the version saved to my store' restores after the browser's memory is wiped.",
     "Reports: Excel has a sheet per section with the right totals (sales, orders, GST, profit & loss); CSV holds one table and sums to the outlet's sales; PDF is a real PDF; JSON has the range and the summary; this week / last week / this month / last month / this year / last year give the right dates.",
-    "GST totals match (₹2,458 GST on ₹49,169 taxable); the daily cash close for a day picked in the calendar equals that day's invoice total in the GST table.",
+    "GST totals match (orders, taxable value, CGST, SGST, total GST); the daily cash close for a day picked in the calendar equals that day's invoice total in the GST table.",
     "A manager has Analytics without Profit & loss and Reports (their addresses are 404s); an accountant has all tabs; a cashier has no Analytics at all (404).",
     "A store on a plan without Analytics sees 'Analytics isn't in your plan'; unlocking it for that store opens it; locking it for Marketing Mart removes it even though the plan has it; 'From plan' restores it.",
   ],
@@ -155,8 +155,8 @@ export async function run(d, h) {
   bad = await tilesAre({ Sales: inr(A.last7.sales), Orders: String(A.last7.orders) });
   d.check(`custom dates ${A.last7.from} to ${A.last7.to}, picked in the calendar, give the same ${inr(A.last7.sales)} as 'Last 7 days'`, bad.length === 0, bad.join("; "));
   await ui.pick(d, "Period", "Today");
-  bad = await tilesAre({ Sales: "₹0", Orders: "0" });
-  d.check("Today (no orders yet in the sample) shows ₹0 and 0 orders, not an error", bad.length === 0 && !/Something went wrong|error/i.test(await ui.text(d)), bad.join("; "));
+  bad = await tilesAre({ Sales: inr(A.today.sales), Orders: String(A.today.orders) });
+  d.check(`Today (no paid orders yet in the sample) shows ${inr(A.today.sales)} and ${A.today.orders} orders, not an error`, bad.length === 0 && !/Something went wrong|error/i.test(await ui.text(d)), bad.join("; "));
   await ui.pick(d, "Period", "Last 30 days");
 
   // ---------------------------------------------------------------------------------------------------------------- 4
@@ -232,7 +232,9 @@ export async function run(d, h) {
   d.check(`Orders: ${A.last30Main.orders} and ${A.last30Second.orders}`, rowOf("Orders")[1]?.startsWith(String(A.last30Main.orders)) && rowOf("Orders")[2]?.startsWith(String(A.last30Second.orders)), JSON.stringify(rowOf("Orders")));
   const pctSecond = Math.round(((A.last30Second.sales - A.last30Main.sales) / A.last30Main.sales) * 100);
   d.check(`the second outlet's sales are compared with the first (${pctSecond}%)`, new RegExp(`[−-]${Math.abs(pctSecond)}%`).test(rowOf("Sales")[2] ?? ""), rowOf("Sales")[2]);
-  d.check("each outlet has its own best sellers", /Paneer Steamed Momos — 107/.test(await ui.text(d)) && /Chicken Momos — 62/.test(await ui.text(d)));
+  const topOf = (w) => `${w.topItems[0].name} — ${w.topItems[0].qty}`;
+  const compareText = await ui.text(d);
+  d.check(`each outlet has its own best sellers (${topOf(A.last30Main)} and ${topOf(A.last30Second)})`, compareText.includes(topOf(A.last30Main)) && compareText.includes(topOf(A.last30Second)), compareText.slice(-300));
   d.check("there is a day-by-day line for each outlet", (await figure("Sales day by day").count()) === 1);
   await ui.pick(d, "Period", "Custom dates…");
   await d.page.getByText(longDate(A.last30.from), { exact: true }).first().waitFor({ timeout: 10000 });
