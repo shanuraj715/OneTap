@@ -18,26 +18,49 @@ const TIMEOUT_MS = 120_000;
  * (a safety refusal, Google being busy) would fail on any key, so it is just reported.
  */
 export class AiError extends Error {
-  constructor(message, { status = 502, reason = "" } = {}) {
+  constructor(message, { status = 502, reason = "", retryAfterMs = 0, daily = false } = {}) {
     super(message);
     this.name = "AiError";
     this.status = status;
     this.reason = reason;
+    /** how long Google said to wait (RetryInfo, or "retry in 34s" in the words); 0 = it didn't say */
+    this.retryAfterMs = retryAfterMs;
+    /** the limit that was hit is a per-day one: waiting a minute won't help */
+    this.daily = daily;
   }
 }
 
 const base = () => env.GEMINI_API_BASE_URL.replace(/\/$/, "");
 
-/** Google's error JSON → a plain sentence, and whose fault it is (see AiError). */
+/** How long Google said to wait: its RetryInfo detail ("34s"), or "retry in 34.5s" in the words. 0 = not said. */
+function retryDelayMs(err) {
+  for (const d of Array.isArray(err?.details) ? err.details : []) {
+    const m = String(d?.retryDelay ?? "").match(/^([\d.]+)s$/);
+    if (m) return Math.round(Number(m[1]) * 1000);
+  }
+  const words = String(err?.message ?? "").match(/retry in ([\d.]+)\s*s/i);
+  return words ? Math.round(Number(words[1]) * 1000) : 0;
+}
+
+/**
+ * Google's error JSON → a plain sentence, and whose fault it is (see AiError). A LIMIT is recognised however Google
+ * words it — HTTP 429, "RESOURCE_EXHAUSTED", or "quota…" in the message even under another status — and so is a key
+ * whose project can't make pictures at all (billing off): in both cases the next key is worth trying.
+ */
 function explain(httpStatus, body, fallback) {
   const err = body?.error ?? {};
   const said = String(err.message ?? "").trim();
   const code = String(err.status ?? "");
-  if (httpStatus === 400 && /api key|API_KEY/i.test(said + code)) return { message: "Google rejected this API key.", reason: "key" };
+  if (httpStatus === 429 || /RESOURCE_EXHAUSTED/i.test(code) || /quota|rate.?limit|too many requests|resource.?exhausted/i.test(said)) {
+    return { message: "Google says this key's quota or rate limit is used up.", reason: "quota", retryAfterMs: retryDelayMs(err), daily: /per.?day|daily/i.test(said) };
+  }
+  if ((httpStatus === 400 && /api key|API_KEY/i.test(said + code)) || /api key (is )?(not valid|expired|invalid)/i.test(said)) return { message: "Google rejected this API key.", reason: "key" };
+  if (/FAILED_PRECONDITION/i.test(code) || /billing|free tier|only (available|accessible) (to|for|on)/i.test(said)) {
+    return { message: "This key's Google project can't make pictures (billing may be switched off for it).", reason: "key" };
+  }
   if (httpStatus === 401 || httpStatus === 403) {
     return { message: `Google refused this key${said ? `: ${said}` : ""}. It may be wrong, restricted, or its project may need billing turned on.`, reason: "key" };
   }
-  if (httpStatus === 429) return { message: "Google says this key's quota or rate limit is used up.", reason: "quota" };
   if (httpStatus >= 500) return { message: "Google's picture service is busy or down right now. Try again in a moment.", reason: "" };
   return { message: `${fallback}${said ? `: ${said}` : ` (HTTP ${httpStatus})`}`, reason: "" };
 }
@@ -138,7 +161,7 @@ export async function generateImage({ apiKey, model, prompt, aspectRatio }) {
 
   if (!res.ok) {
     const e = explain(res.status, json, "Google couldn't make the picture");
-    throw new AiError(e.message, { reason: e.reason });
+    throw new AiError(e.message, { reason: e.reason, retryAfterMs: e.retryAfterMs, daily: e.daily });
   }
 
   const pic = findPicture(json);

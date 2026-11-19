@@ -36,6 +36,11 @@ const mock = http.createServer(async (rq, res) => {
   if (isInteractions && google.mode === "legacy") return send(res, 404, { error: { code: 404, message: "not found", status: "NOT_FOUND" } });
   if (how === "quota") return send(res, 429, { error: { code: 429, message: "Quota exceeded for this key", status: "RESOURCE_EXHAUSTED" } });
   if (how === "badkey") return send(res, 400, { error: { code: 400, message: "API key not valid. Please pass a valid API key.", status: "INVALID_ARGUMENT" } });
+  // the other ways Google words "this key is at its limit" / "this key's project can't do this"
+  if (how === "quota403") return send(res, 403, { error: { code: 403, message: "Quota exceeded for quota metric 'Generate Content API requests per minute'", status: "RESOURCE_EXHAUSTED" } });
+  if (how === "quotaRetry") return send(res, 429, { error: { code: 429, message: "You exceeded your current quota. Please retry in 40.2s.", status: "RESOURCE_EXHAUSTED", details: [{ "@type": "type.googleapis.com/google.rpc.RetryInfo", retryDelay: "40s" }] } });
+  if (how === "quotaDaily") return send(res, 429, { error: { code: 429, message: "Quota exceeded for metric: generate_requests_per_model_per_day, limit: 100", status: "RESOURCE_EXHAUSTED" } });
+  if (how === "billing") return send(res, 400, { error: { code: 400, message: "Image generation is only available to projects with billing enabled.", status: "FAILED_PRECONDITION" } });
   if (how === "forbidden") return send(res, 403, { error: { code: 403, message: "Billing is not enabled", status: "PERMISSION_DENIED" } });
   if (how === "busy") return send(res, 503, { error: { code: 503, message: "overloaded", status: "UNAVAILABLE" } });
   if (how === "safety") return send(res, 200, isInteractions ? { steps: [{ type: "model_output", content: [{ type: "text", text: "I can't do that." }] }] } : { promptFeedback: { blockReason: "SAFETY" }, candidates: [] });
@@ -294,6 +299,42 @@ resetGoogle();
 const dish9 = await mkItem("Kadai Paneer Special");
 r = await gen(dish9.id, { aspectRatio: "1:1", count: 1, prompt: "Kadai paneer in a black iron kadai, garnished with coriander, rustic wooden table" });
 ok(r.status === 200 && google.calls.at(-1).body.input[0].text === "Kadai paneer in a black iron kadai, garnished with coriander, rustic wooden table", "an edited description is sent as typed (one picture, so no angle added)");
+
+/* ------------------------------------------------------------------ 14 */
+say("14. however Google says 'limit reached', the next key takes over — and the key rests for as long as Google said");
+const restOf = async (label) => { const k = (await raw("platformais").findOne({ key: "platform" })).keys.find((x) => x.label === label); return k.cooldownUntil ? k.cooldownUntil.getTime() - Date.now() : 0; };
+/** make "Main account" the key that would be picked FIRST, so the limit is certain to be met by a single picture */
+const mainFirst = async () => {
+  await retestAll();
+  await raw("platformais").updateOne({ key: "platform", "keys.label": "Main account" }, { $set: { "keys.$.lastUsedAt": new Date(0) } });
+  for (const label of ["Second account", "Third"]) await raw("platformais").updateOne({ key: "platform", "keys.label": label }, { $set: { "keys.$.lastUsedAt": new Date() } });
+  resetGoogle();
+};
+const dishL = await mkItem("Limit test dish");
+const scenarios = [
+  ["quota403", "a limit reported as HTTP 403 with 'quota' in the words", 9 * 60_000, 11 * 60_000],
+  ["quotaRetry", "a limit that says 'retry in 40 s'", 40_000, 50_000],
+  ["quotaDaily", "a per-DAY limit", 5.5 * 3600_000, 6.5 * 3600_000],
+  ["quota", "a plain limit with no hint (429)", 9 * 60_000, 11 * 60_000],
+  ["billing", "a key whose Google project can't make pictures (billing off)", 20 * 3600_000, 25 * 3600_000],
+];
+for (const [how, what, lo, hi] of scenarios) {
+  await mainFirst();
+  google.behave[K(1)] = how;
+  r = await gen(dishL.id, { aspectRatio: "4:3", count: 1 });
+  const triedFirst = google.calls.filter((c) => c.path === "/v1beta/interactions" && c.key === K(1)).length;
+  ok(r.status === 200 && r.json.added.length === 1 && triedFirst === 1, `${what}: the picture is still made, on another key (the limited key was tried once)`, `${r.status} ${r.json.error ?? ""} tried ${triedFirst}`);
+  ok(r.json.rested?.length === 1 && r.json.rested[0].label === "Main account" && !r.json.usedKeys.includes("Main account"), "…and the answer says which key was switched away from, and which made the picture", JSON.stringify({ rested: r.json.rested?.map((x) => x.label), used: r.json.usedKeys }));
+  const rest = await restOf("Main account");
+  ok(rest >= lo && rest <= hi, `…that key rests ${how === "quotaRetry" ? "about as long as Google said" : how === "quotaDaily" ? "for hours (a daily limit)" : how === "billing" ? "for a day" : "10 minutes"}`, `${Math.round(rest / 1000)} s`);
+}
+await mainFirst();
+google.behave[K(1)] = "quota";
+google.behave[K(2)] = "quota";
+const dishM = await mkItem("Two limited keys dish");
+r = await gen(dishM.id, { aspectRatio: "4:3", count: 2 });
+ok(r.status === 200 && r.json.added.length === 2 && r.json.rested.length === 2 && r.json.usedKeys.join() === "Third", "with TWO keys at their limit the third carries the whole batch, and both are reported", JSON.stringify({ rested: r.json.rested?.map((x) => x.label), used: r.json.usedKeys }));
+await retestAll();
 
 console.log(`\nSUMMARY ${pass} passed, ${fail} failed`);
 server.close(); mock.close();

@@ -22,8 +22,10 @@ const PLATFORM = { key: "platform" };
 const MODEL_ID = /^[A-Za-z0-9][A-Za-z0-9._-]{2,79}$/;
 const MAX_KEYS = 20;
 /** how long a key rests after Google says its quota is used up / after Google refuses it */
-const QUOTA_REST_MS = 10 * 60_000;
+const QUOTA_REST_MS = 10 * 60_000; // when Google doesn't say how long
+const DAILY_REST_MS = 6 * 60 * 60_000; // a per-day limit: waiting a few minutes won't help
 const REFUSED_REST_MS = 24 * 60 * 60_000;
+const MIN_REST_MS = 30_000;
 
 const load = () => PlatformAiModel.findOne(PLATFORM).lean();
 const fingerprint = (key) => createHash("sha256").update(key).digest("hex").slice(0, 16);
@@ -136,15 +138,22 @@ function pickKey(keys, tried, now) {
   return usable[0] ?? null;
 }
 
-async function rest(key, reason, message) {
-  const until = new Date(Date.now() + (reason === "quota" ? QUOTA_REST_MS : REFUSED_REST_MS));
+/** How long a key sits out: exactly as long as Google said (plus a little), or a sensible guess when it didn't. */
+function restFor(err) {
+  if (err.reason !== "quota") return REFUSED_REST_MS;
+  if (err.retryAfterMs > 0) return Math.min(DAILY_REST_MS, Math.max(MIN_REST_MS, err.retryAfterMs + 5_000));
+  return err.daily ? DAILY_REST_MS : QUOTA_REST_MS;
+}
+
+async function rest(key, err, message) {
+  const until = new Date(Date.now() + restFor(err));
   key.cooldownUntil = until; // this request's copy, so the next picture doesn't pick it again
   key.lastError = message;
   await PlatformAiModel.updateOne({ ...PLATFORM, "keys.id": key.id }, { $set: { "keys.$.cooldownUntil": until, "keys.$.lastError": message } });
 }
 
 /** One picture, on whichever key is free; a key that is used up or refused is rested and the NEXT key is tried. */
-async function makeOne({ keys, model, prompt, aspectRatio }) {
+async function makeOne({ keys, model, prompt, aspectRatio, rested }) {
   const tried = new Set();
   let last = null;
   for (;;) {
@@ -165,7 +174,7 @@ async function makeOne({ keys, model, prompt, aspectRatio }) {
       try {
         plain = decryptSecret(key.encryptedKey);
       } catch {
-        await rest(key, "key", "This key can't be read any more — remove it and add it again.");
+        await rest(key, { reason: "key" }, "This key can't be read any more — remove it and add it again.");
         last = new AiError("A saved key can't be read any more (the server's encryption key changed).", { reason: "key" });
         continue;
       }
@@ -176,7 +185,8 @@ async function makeOne({ keys, model, prompt, aspectRatio }) {
       return { ...made, keyLabel: key.label || key.keyHint };
     } catch (err) {
       if (err instanceof AiError && (err.reason === "quota" || err.reason === "key")) {
-        await rest(key, err.reason, err.message);
+        await rest(key, err, err.message);
+        if (!rested.some((r) => r.id === key.id)) rested.push({ id: key.id, label: key.label || key.keyHint, reason: err.reason, message: err.message });
         last = new AiError(`${err.message} (${key.label || key.keyHint})`, { status: err.status, reason: err.reason });
         continue; // another key may still have room
       }
@@ -217,10 +227,11 @@ export async function generateItemImages(ctx, itemId, { aspectRatio, count, prom
     text = buildItemImagePrompt({ name: item.name, description: item.description, foodType: item.foodType, category: categoryPathLabel(tree, String(item.categoryId)) });
   }
 
+  const rested = []; // keys that hit their limit (or were refused) during THIS request, so the pictures moved to another key
   const results = await Promise.allSettled(
     Array.from({ length: count }, async (_, i) => {
       const angle = angleFor(i, count);
-      const made = await makeOne({ keys, model, prompt: angle ? `${text} ${angle}` : text, aspectRatio });
+      const made = await makeOne({ keys, model, prompt: angle ? `${text} ${angle}` : text, aspectRatio, rested });
       const stored = await putImage(ctx, { body: made.buffer, kind: "menu-items" });
       return { url: stored.url, key: stored.key, width: stored.width, height: stored.height, via: made.keyLabel };
     }),
@@ -244,5 +255,5 @@ export async function generateItemImages(ctx, itemId, { aspectRatio, count, prom
 
   const updated = await updateItem(ctx, itemId, { images: [...(item.images ?? []), ...added.map(({ via: _via, ...im }) => im)] });
   logger.info({ itemId, userId, model, made: added.length, failed: failed.length, aspectRatio, keysUsed: [...new Set(added.map((a) => a.via))].length }, "ai pictures added to a dish");
-  return { item: updated, added: added.map(({ via: _via, ...im }) => im), usedKeys: [...new Set(added.map((a) => a.via))], failed, model };
+  return { item: updated, added: added.map(({ via: _via, ...im }) => im), usedKeys: [...new Set(added.map((a) => a.via))], rested: rested.map(({ id: _id, ...r }) => r), failed, model };
 }

@@ -57,6 +57,19 @@ export function GenerateImagesDialog({ outlet, menu, item, onClose }) {
                 <img key={im.key} src={im.url} alt="" data-testid="ai-new-picture" style={{ height: 96, borderRadius: 10, border: "1px solid var(--color-border)", objectFit: "cover" }} />
               ))}
             </div>
+            {result.usedKeys?.length ? (
+              <p style={{ margin: "8px 0 0", fontSize: 12.5, color: "var(--color-text-muted)" }} data-testid="ai-used-keys">
+                Made with {result.usedKeys.join(" and ")}.
+              </p>
+            ) : null}
+            {result.rested?.length > 0 ? (
+              <div data-testid="ai-switched">
+                <Toast kind="info">
+                  {result.rested.map((r) => r.label).join(" and ")} {result.rested.length === 1 ? "has" : "have"} reached {result.rested.length === 1 ? "its" : "their"} limit (or {result.rested.length === 1 ? "was" : "were"} refused), so another key was used
+                  automatically. {result.rested.length === 1 ? "That key rests" : "Those keys rest"} until Google allows it again — see AI pictures in the console.
+                </Toast>
+              </div>
+            ) : null}
             {result.failed.length > 0 ? (
               <Toast kind="error">
                 {result.failed.length} {result.failed.length === 1 ? "picture" : "pictures"} couldn&apos;t be made: {[...new Set(result.failed)].join(" ")}

@@ -100,6 +100,8 @@ export async function run(d) {
   await dlg.getByTestId("ai-result").waitFor({ timeout: 90000 });
   d.check("three new pictures are shown", (await dlg.getByTestId("ai-new-picture").count()) === 3 && /3 pictures were added/.test(await dlg.innerText()));
   d.check("each picture really loads", await dlg.getByTestId("ai-new-picture").evaluateAll((imgs) => imgs.every((i) => i.complete && i.naturalWidth > 100)));
+  d.check("it says which key made them", /Made with Primary/.test(await dlg.getByTestId("ai-used-keys").innerText()));
+  d.check("and that the Backup key reached its limit so another key was used automatically", /Backup/.test(await dlg.getByTestId("ai-switched").innerText()) && /automatically/.test(await dlg.getByTestId("ai-switched").innerText()));
   await d.shot("ai-pictures-result");
   await d.click(dlg.getByRole("button", { name: "Done" }), { after: 800 });
   await dlg.waitFor({ state: "hidden", timeout: 5000 });
