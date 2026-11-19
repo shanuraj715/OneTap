@@ -112,8 +112,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T17:20:48.082Z",
-    "durationMs": 32661,
+    "at": "2026-11-19T17:36:37.294Z",
+    "durationMs": 32920,
     "steps": [
       {
         "n": 1,
@@ -289,7 +289,7 @@
           {
             "label": "the new customer was saved with the details they gave",
             "ok": true,
-            "detail": "{\"id\":\"6aff2fe27b0afda372fc6176\",\"name\":\"Rohan Mehta\",\"email\":\"rohan.mehta@example.com\",\"phone\":\"9811122233\",\"gender\":\"male\",\"age\":31,\"orderCount\":1,\"walletBalance\":0,\"lastOrderAt\":\"2026-11-19T17:20:39.151Z\",\"createdAt\":\"2026-11-19T17:20:34.563Z\"}",
+            "detail": "{\"id\":\"6aff3397d1cdc06733225c32\",\"name\":\"Rohan Mehta\",\"email\":\"rohan.mehta@example.com\",\"phone\":\"9811122233\",\"gender\":\"male\",\"age\":31,\"orderCount\":1,\"walletBalance\":0,\"lastOrderAt\":\"2026-11-19T17:36:28.321Z\",\"createdAt\":\"2026-11-19T17:36:23.713Z\"}",
             "kind": "expect"
           },
           {
@@ -313,7 +313,7 @@
           {
             "label": "the row shows the customer, phone, type, item count, total and 'Placed'",
             "ok": true,
-            "detail": " #0001 10:50 PM Rohan Mehta 9811122233 TA 8 ₹1,030 Placed 0m Accepted",
+            "detail": " #0001 11:06 PM Rohan Mehta 9811122233 TA 8 ₹1,030 Placed 0m Accepted",
             "kind": "expect"
           }
         ]
@@ -1928,8 +1928,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T17:21:25.085Z",
-    "durationMs": 36979,
+    "at": "2026-11-19T17:37:14.104Z",
+    "durationMs": 36779,
     "steps": [
       {
         "n": 1,
@@ -2034,7 +2034,7 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "0,0,0,1,45,306,854,1098,1169,1170,1170,1170,1170,1170",
+            "detail": "0,0,0,1,42,296,762,1094,1169,1170,1170,1170,1170,1170",
             "kind": "expect"
           },
           {
@@ -2100,7 +2100,7 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "17,17,17,17,59,207,625,1167,1396,1487,1494,1494,1494,1494",
+            "detail": "17,17,17,17,45,206,531,1098,1395,1481,1494,1494,1494,1494",
             "kind": "expect"
           },
           {
@@ -10634,8 +10634,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T17:23:11.587Z",
-    "durationMs": 43086,
+    "at": "2026-11-19T17:38:01.411Z",
+    "durationMs": 43119,
     "steps": [
       {
         "n": 1,
@@ -10740,7 +10740,7 @@
           {
             "label": "'View details' lists the items and the bill",
             "ok": true,
-            "detail": "2 × Veg Steamed Momos (5 pcs) ₹120 Items ₹120 Taxes ₹5.71 Total ₹120 Placed 19 Nov 2026, 10:52 pm",
+            "detail": "2 × Veg Steamed Momos (5 pcs) ₹120 Items ₹120 Taxes ₹5.71 Total ₹120 Placed 19 Nov 2026, 11:07 pm",
             "kind": "expect"
           }
         ]
@@ -10752,7 +10752,7 @@
           {
             "label": "(the order is on the dashboard)",
             "ok": true,
-            "detail": "6aff305c23ef5715f16b64d4",
+            "detail": "6aff33d557e647f5ecaee622",
             "kind": "expect"
           },
           {
@@ -12710,8 +12710,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T17:23:31.908Z",
-    "durationMs": 20297,
+    "at": "2026-11-19T17:38:21.438Z",
+    "durationMs": 20004,
     "steps": [
       {
         "n": 1,
@@ -12947,8 +12947,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T17:23:39.266Z",
-    "durationMs": 7337,
+    "at": "2026-11-19T17:35:04.763Z",
+    "durationMs": 8149,
     "steps": [
       {
         "n": 1,
@@ -14102,8 +14102,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T17:24:17.218Z",
-    "durationMs": 37935,
+    "at": "2026-11-19T17:39:00.676Z",
+    "durationMs": 39220,
     "steps": [
       {
         "n": 0,
@@ -14143,12 +14143,12 @@
     "id": "t41-storefront-view-all",
     "title": "Storefront View all — as configured on a wide screen; under the cards and centred on phones and tablets (portrait and landscape); the extra cards slide open and shut",
     "status": "pass",
-    "pass": 64,
+    "pass": 70,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T17:25:20.685Z",
-    "durationMs": 26854,
+    "at": "2026-11-19T17:35:47.564Z",
+    "durationMs": 42783,
     "steps": [
       {
         "n": 1,
@@ -14385,7 +14385,7 @@
           {
             "label": "desktop: opening SLIDES — several in-between heights, not an instant jump",
             "ok": true,
-            "detail": "15 in-between heights: 56, 75, 95, 113, 129, 142, 152, 160…",
+            "detail": "40 in-between heights: 56, 57, 58, 60, 61, 63, 66, 69…",
             "kind": "expect"
           },
           {
@@ -14398,6 +14398,18 @@
             "label": "desktop: it ends fully open",
             "ok": true,
             "detail": "56px → 191px",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: opening takes long enough to WATCH (about 0.8 s), without dragging",
+            "ok": true,
+            "detail": "793 ms",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: the new dishes also FADE in (opacity 0 → 1, 11 in-between steps)",
+            "ok": true,
+            "detail": "0.2, 0.3, 0.35, 0.45, 0.55, 0.6",
             "kind": "expect"
           },
           {
@@ -14415,7 +14427,13 @@
           {
             "label": "desktop: closing slides too",
             "ok": true,
-            "detail": "14 in-between heights",
+            "detail": "33 in-between heights",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: closing is visible too (about 0.7 s)",
+            "ok": true,
+            "detail": "670 ms",
             "kind": "expect"
           },
           {
@@ -14475,7 +14493,7 @@
           {
             "label": "phone: opening SLIDES — several in-between heights, not an instant jump",
             "ok": true,
-            "detail": "18 in-between heights: 191, 240, 288, 333, 373, 406, 433, 453…",
+            "detail": "55 in-between heights: 191, 192, 194, 196, 198, 201, 204, 209…",
             "kind": "expect"
           },
           {
@@ -14488,6 +14506,18 @@
             "label": "phone: it ends fully open",
             "ok": true,
             "detail": "191px → 529px",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: opening takes long enough to WATCH (about 1.0 s), without dragging",
+            "ok": true,
+            "detail": "1021 ms",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: the new dishes also FADE in (opacity 0 → 1, 11 in-between steps)",
+            "ok": true,
+            "detail": "0.2, 0.3, 0.35, 0.45, 0.55, 0.6",
             "kind": "expect"
           },
           {
@@ -14505,7 +14535,13 @@
           {
             "label": "phone: closing slides too",
             "ok": true,
-            "detail": "17 in-between heights",
+            "detail": "47 in-between heights",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: closing is visible too (about 0.9 s)",
+            "ok": true,
+            "detail": "854 ms",
             "kind": "expect"
           },
           {

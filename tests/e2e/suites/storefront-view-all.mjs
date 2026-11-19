@@ -109,16 +109,22 @@ try {
     const button = section.getByRole("button", { name: /View all|Show less/ }).filter({ visible: true }).first();
     const cardCount = () => section.locator("[aria-label^='Add']").count();
     /** the height of the clipping box around the cards, sampled every frame for `ms` after `act` runs */
-    const sample = (act, ms = 900) => page.evaluate(async ([act, ms]) => {
+    const sample = (act, ms = 2400) => page.evaluate(async ([act, ms]) => {
       const box = document.querySelector("#sec-va-left [aria-label^='Add']").parentElement.parentElement;
-      const heights = [];
+      const heights = [], times = [], fade = [];
       const start = performance.now();
       new Function(`return (${act})()`)();
       await new Promise((resolve) => {
-        const tick = () => { heights.push(Math.round(box.getBoundingClientRect().height)); performance.now() - start < ms ? requestAnimationFrame(tick) : resolve(); };
+        const tick = () => {
+          heights.push(Math.round(box.getBoundingClientRect().height));
+          times.push(Math.round(performance.now() - start));
+          const extra = document.querySelectorAll("#sec-va-left [aria-label^='Add']")[3]; // the first dish that is not kept: it fades in
+          if (extra) fade.push(Number(getComputedStyle(extra).opacity));
+          performance.now() - start < ms ? requestAnimationFrame(tick) : resolve();
+        };
         tick();
       });
-      return heights;
+      return { heights, times, fade };
     }, [act, ms]);
     const clickIt = `() => [...document.querySelectorAll("#sec-va-left button")].filter((b) => /View all|Show less/.test(b.textContent) && b.getClientRects().length > 0)[0].click()`;
 
@@ -127,13 +133,17 @@ try {
     ok(/View all \(5 more\)/.test(label0), `${label}: the button says how many more`, label0);
     const closedH = await section.locator("[aria-label^='Add']").first().evaluate((el) => Math.round(el.parentElement.parentElement.getBoundingClientRect().height));
 
-    const opening = await sample(clickIt);
+    const { heights: opening, times: openTimes, fade } = await sample(clickIt);
     const openH = opening.at(-1);
     const stepsUp = [...new Set(opening)].filter((x) => x > closedH + 4 && x < openH - 4).length;
     ok(Math.abs(opening[0] - closedH) <= 6, `${label}: it starts from the closed height`, `${opening[0]}px vs ${closedH}px`);
     ok(stepsUp >= 4, `${label}: opening SLIDES — several in-between heights, not an instant jump`, `${stepsUp} in-between heights: ${[...new Set(opening)].slice(0, 8).join(", ")}…`);
     ok(opening.every((x, i) => i === 0 || x >= opening[i - 1] - 1), `${label}: and only ever grows while opening`);
     ok(openH > closedH * 1.8, `${label}: it ends fully open`, `${closedH}px → ${openH}px`);
+    const settledAt = openTimes[opening.findIndex((x) => Math.abs(x - openH) <= 3)];
+    ok(settledAt >= 750 && settledAt <= 2000, `${label}: opening takes long enough to WATCH (about ${(settledAt / 1000).toFixed(1)} s), without dragging`, `${settledAt} ms`);
+    const mid = [...new Set(fade.map((x) => Math.round(x * 20) / 20))].filter((x) => x > 0.1 && x < 0.9);
+    ok(fade[0] < 0.2 && fade.at(-1) === 1 && mid.length >= 3, `${label}: the new dishes also FADE in (opacity ${fade[0]} → ${fade.at(-1)}, ${mid.length} in-between steps)`, mid.slice(0, 6).join(", "));
     ok((await cardCount()) === 8 && /Show less/.test(await button.innerText()) && (await button.getAttribute("aria-expanded")) === "true", `${label}: all 8 dishes are there, the button says Show less`);
     ok((await section.locator("[inert]").count()) === 0, `${label}: nothing is inert once open`);
 
@@ -142,17 +152,19 @@ try {
     await page.waitForTimeout(200);
     const closingHeights = await page.evaluate(async (act) => {
       const box = document.querySelector("#sec-va-left [aria-label^='Add']").parentElement.parentElement;
-      const out = { heights: [], inertAtOnce: null };
+      const out = { heights: [], times: [], inertAtOnce: null };
       const start = performance.now();
       new Function(`return (${act})()`)();
       await new Promise((r) => requestAnimationFrame(r)); // the page re-renders for the click
       out.inertAtOnce = document.querySelectorAll("#sec-va-left [inert]").length;
-      await new Promise((resolve) => { const tick = () => { out.heights.push(Math.round(box.getBoundingClientRect().height)); performance.now() - start < 900 ? requestAnimationFrame(tick) : resolve(); }; tick(); });
+      await new Promise((resolve) => { const tick = () => { out.heights.push(Math.round(box.getBoundingClientRect().height)); out.times.push(Math.round(performance.now() - start)); performance.now() - start < 2400 ? requestAnimationFrame(tick) : resolve(); }; tick(); });
       return out;
     }, clickIt);
     const down = closingHeights.heights;
     const stepsDown = [...new Set(down)].filter((x) => x > closedH + 4 && x < openH - 4).length;
     ok(stepsDown >= 4, `${label}: closing slides too`, `${stepsDown} in-between heights`);
+    const closedAt = closingHeights.times[down.findIndex((x) => Math.abs(x - closedH) <= 3)];
+    ok(closedAt >= 600 && closedAt <= 1800, `${label}: closing is visible too (about ${(closedAt / 1000).toFixed(1)} s)`, `${closedAt} ms`);
     ok(down.every((x, i) => i === 0 || x <= down[i - 1] + 1), `${label}: and only ever shrinks while closing`);
     ok(closingHeights.inertAtOnce === 1, `${label}: the leaving cards can't be tabbed into while they close`, `${closingHeights.inertAtOnce} inert group`);
     await page.waitForTimeout(150);
@@ -163,7 +175,7 @@ try {
     await section.getByRole("button", { name: /View all/ }).filter({ visible: true }).first().click();
     await page.waitForTimeout(120);
     await section.getByRole("button", { name: /Show less/ }).filter({ visible: true }).first().click();
-    await page.waitForTimeout(900);
+    await page.waitForTimeout(2300);
     ok((await cardCount()) === 3 && /View all/.test(await button.innerText()), `${label}: pressing twice quickly (mid-slide) turns round cleanly and ends closed`);
     await page.waitForTimeout(100);
     await ctx.close();
@@ -176,7 +188,7 @@ try {
     const grid = page.locator("#sec-va-grid");
     ok((await grid.locator("[aria-label^='Add']").count()) === 4, "a 3-column grid shows its first 4 cards");
     await grid.getByRole("button", { name: /View all/ }).filter({ visible: true }).first().click();
-    await page.waitForTimeout(900);
+    await page.waitForTimeout(2000);
     const pos = await grid.locator("[aria-label^='Add']").evaluateAll((els) => els.map((e) => { const r = e.getBoundingClientRect(); return [Math.round(r.left), Math.round(r.top)]; }));
     ok(pos.length === 9, "…and all 9 once open", String(pos.length));
     ok(Math.abs(pos[4][1] - pos[3][1]) <= 2 && pos[4][0] > pos[3][0], "the 5th card carries on in the same row as the 4th — the opened cards flow on from the kept ones, exactly as one grid", JSON.stringify([pos[3], pos[4]]));
@@ -202,12 +214,12 @@ try {
     const { ctx, page } = await open({ width: 1280, height: 900 });
     const section = page.locator("#sec-va-right");
     await section.getByRole("button", { name: /View all/ }).filter({ visible: true }).first().click();
-    await page.waitForTimeout(900);
+    await page.waitForTimeout(2000);
     await page.evaluate(() => { const s = document.querySelector("#sec-va-right"); window.scrollTo(0, s.getBoundingClientRect().bottom + scrollY - 300); });
     await page.waitForTimeout(300);
     const before = await section.evaluate((el) => Math.round(el.getBoundingClientRect().top));
     await section.getByRole("button", { name: /Show less/ }).filter({ visible: true }).first().click();
-    await page.waitForTimeout(1800);
+    await page.waitForTimeout(3800);
     const after = await section.evaluate((el) => Math.round(el.getBoundingClientRect().top));
     ok(before < 0 && after >= 0 && after < 300, "closing a section you have scrolled far down in brings its heading back into view", `${before}px → ${after}px from the top`);
     await ctx.close();

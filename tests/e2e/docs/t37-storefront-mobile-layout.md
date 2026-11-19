@@ -1,12 +1,12 @@
 # T37 — Storefront — page side padding is smaller on phones and tablets (desktop unchanged); on phones a path title is two lines with a smaller View all button
 
-**Area:** storefront · **Last result:** ✅ PASSED (45 passed, 0 failed · 2026-11-19 22:53 · headless · 7.3 s)
+**Area:** storefront · **Last result:** ✅ PASSED (45 passed, 0 failed · 2026-11-19 23:05 · headless · 8.1 s)
 
 **Run it alone:** `node run.mjs --only t37` (add `--visible` to watch it)
 
 ## What this test does
 
-Runs suites/storefront-mobile-layout.mjs: through the bench API it makes a category 'Mob South Indian' with 'Mob Idli & Vada' inside (5 dishes), a plain category, and a custom menu layout with two collapsible sections — one titled 'Mob South Indian › Mob Idli & Vada' with its View all button beside the title, one plain with View all at the bottom. In Chrome at desktop, tablet and phone: on tablet and phone every page-width block (menu, hero, offers, order bar, footer…) and the header sit 14px from the screen edge, while desktop keeps its 24px; on a phone the path title is on two lines — the parent small and muted ('Mob South Indian ›'), the name a little smaller than a normal heading — and the View all buttons (beside the title, and at the bottom) are smaller, with the title and button on one row and fully on screen; on tablet and desktop the title stays one line at the normal size and the button keeps its size; a plain heading is unchanged everywhere; View all still opens all 5 dishes; no sideways scroll. The test categories are removed and the layout restored at the end.
+Runs suites/storefront-mobile-layout.mjs: through the bench API it makes a category 'Mob South Indian' with 'Mob Idli & Vada' inside (5 dishes), a plain category, and a custom menu layout with two collapsible sections — one titled 'Mob South Indian › Mob Idli & Vada' with its View all button beside the title, one plain with View all at the bottom. In Chrome at desktop, tablet and phone: on tablet and phone every page-width block (menu, hero, offers, order bar, footer…) and the header sit 14px from the screen edge, while desktop keeps its 24px; on a phone the path title is on two lines — the parent small and muted ('Mob South Indian ›'), the name a little smaller than a normal heading — the View all button is under the cards, centred, and smaller (see t41 for where it goes and how it animates); on tablet and desktop the title stays one line at the normal size (on a desktop the button stays beside the title as configured, and keeps its size); a plain heading is unchanged everywhere; View all still opens all 5 dishes; no sideways scroll. The test categories are removed and the layout restored at the end.
 
 ## Steps
 
@@ -17,14 +17,14 @@ Runs suites/storefront-mobile-layout.mjs: through the bench API it makes a categ
 ## What to expect (these must happen)
 
 - Phones and tablets (up to 1023px): the menu, hero, offers, order bar and footer sit 14px from each screen edge, matching the header; desktop keeps 24px.
-- Phones (up to 640px): a path title is on two lines — the parent small, the name a little smaller than normal — and View all buttons are smaller; title and button fit on one row.
-- Tablet and desktop: the title is one line at the normal size and View all keeps its size.
+- Phones (up to 640px): a path title is on two lines — the parent small, the name a little smaller than normal — with the whole row to itself; the View all button is under the cards, centred, and smaller.
+- Tablet and desktop: the title is one line at the normal size; on desktop View all stays beside the title and keeps its size.
 - A heading that is not a path, and the View all behaviour, are unchanged; no sideways scroll at any size.
 
 ## What must NOT happen
 
 - Desktop padding must NOT change.
-- The View all button must NOT overflow or overlap the title on a phone.
+- The View all button must NOT sit beside the title on a phone or tablet.
 - A plain (non-path) heading must NOT shrink.
 - The browser must NOT log errors or warnings.
 
@@ -94,6 +94,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-19 23:05 | pass | 45 | 0 | headless | 8.1 s |
+| 2026-11-19 23:03 | pass | 45 | 0 | headless | 7.5 s |
 | 2026-11-19 22:53 | pass | 45 | 0 | headless | 7.3 s |
 | 2026-11-19 22:48 | pass | 45 | 0 | headless | 7.5 s |
 | 2026-11-19 22:43 | pass | 43 | 0 | headless | 15.2 s |
