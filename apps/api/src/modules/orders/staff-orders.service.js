@@ -5,7 +5,7 @@ import { safeEqual } from "../../lib/crypto.js";
 import { logger } from "../../logger.js";
 import { HttpError } from "../../middleware/error.js";
 import { requestOtp, verifyCoinsCode } from "../customer/customer.service.js";
-import { smsCodeSender } from "../notify/notify.service.js";
+import { codeSender } from "../notify/notify.service.js";
 import { effectiveOutletConfig } from "../outlets/config.service.js";
 import { openSession } from "../tables/tables.service.js";
 import { placeOrder, quote, updateStatus } from "./orders.service.js";
@@ -76,7 +76,7 @@ export async function lookupCustomer(ctx, rawPhone) {
   const [customer, config, sender] = await Promise.all([
     CustomerModel.findOne({ brandId: ctx.brandId, phone }).lean(),
     effectiveOutletConfig(ctx),
-    smsCodeSender(ctx.brandId),
+    codeSender(ctx.brandId),
   ]);
   return {
     phone,
@@ -144,8 +144,8 @@ export async function staffQuote(ctx, { cart, tableId, phone }) {
 
 export async function sendCoinsCode(ctx, rawPhone) {
   const phone = normalizePhone(rawPhone);
-  if (!(await smsCodeSender(ctx.brandId))) {
-    throw new HttpError(409, "SMS codes aren't switched on for this store — coins can be used without a code.");
+  if (!(await codeSender(ctx.brandId))) {
+    throw new HttpError(409, "Verification codes aren't switched on for this store — coins can be used without a code.");
   }
   const customer = await CustomerModel.exists({ brandId: ctx.brandId, phone });
   if (!customer) throw new HttpError(404, "This number has no coins yet.");
@@ -200,7 +200,7 @@ export async function placeStaffOrder(ctx, user, input) {
   // leaves a table locked with nothing on it.
   if ((input.cart.redeemCoins ?? 0) > 0) {
     if (!customerId) throw new HttpError(409, "Coins need a customer with a mobile number.");
-    if ((await smsCodeSender(ctx.brandId)) && !coinsApprovalValid(input.coinsApproval, ctx.brandId, customerId)) {
+    if ((await codeSender(ctx.brandId)) && !coinsApprovalValid(input.coinsApproval, ctx.brandId, customerId)) {
       throw new HttpError(403, "Ask the customer for the code sent to their phone before using their coins.");
     }
   }

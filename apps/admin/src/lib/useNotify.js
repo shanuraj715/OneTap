@@ -42,3 +42,20 @@ export function useNotificationLogs(
     refetchInterval: 15_000,
   });
 }
+
+/** Message sending: which way verification codes go out, and what each way needs. Brand-level, like the credentials. */
+export function useMessaging(outlet                    , enabled         ) {
+  return useQuery({
+    queryKey: ["messaging", outlet?.brandId],
+    queryFn: () => api.getMessaging(outlet ),
+    enabled: Boolean(outlet) && enabled,
+  });
+}
+
+export function useSaveMessaging(outlet                    ) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (body         ) => api.saveMessaging(outlet , body),
+    onSuccess: (data) => qc.setQueryData(["messaging", outlet?.brandId], data),
+  });
+}

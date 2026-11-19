@@ -58,6 +58,8 @@ export function CustomerGate({ customer, outletId, onSuccess, onStepChange }) {
   const [sent, setSent] = useState(false);
   const [code, setCode] = useState("");
   const [devCode, setDevCode] = useState(null);
+  // how the store sent the code: "linked" / "whatsapp" (WhatsApp) or "sms"
+  const [via, setVia] = useState(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
   const [resendCooldown, setResendCooldown] = useState(0);
@@ -135,6 +137,7 @@ export function CustomerGate({ customer, outletId, onSuccess, onStepChange }) {
       setSent(true);
       setCode("");
       setDevCode(r.devCode ?? null);
+      setVia(r.via ?? null);
       setResendCooldown(RESEND_COOLDOWN_SEC);
       saveDraft({ destination, name: name.trim() });
     });
@@ -235,7 +238,7 @@ export function CustomerGate({ customer, outletId, onSuccess, onStepChange }) {
           {isCompletion
             ? "We use this to personalise your account and your coin rewards."
             : sent
-              ? `We sent a 6-digit code to ${destination}.`
+              ? `We sent a 6-digit code to ${destination}${via === "linked" || via === "whatsapp" ? " on WhatsApp" : via === "sms" ? " by SMS" : ""}.`
               : "Your name and number — then you can apply coupons and redeem coins on every order."}
         </p>
 

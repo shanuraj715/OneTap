@@ -11,6 +11,7 @@ import {
   Megaphone,
   Palette,
   QrCode,
+  Route as RouteIcon,
   Store,
   Type,
   Users as UsersIcon,
@@ -68,6 +69,8 @@ export const SETTINGS_TABS = [
   { to: "/outlets", label: "Outlets", icon: <Store size={ICON_SIZE} />, permission: "outlet:manage" },
   { to: "/payments", label: "Payments", icon: <CreditCard size={ICON_SIZE} />, permission: "payment-config:read" },
   { to: "/notifications", label: "Notifications", icon: <Bell size={ICON_SIZE} />, permission: "notification-config:read", feature: "notifications" },
+  // a way to send codes needs WhatsApp chat (your own number) or WhatsApp & SMS alerts (Business API / SMS) — either is enough to see the page
+  { to: "/message-sending", label: "Message sending", icon: <RouteIcon size={ICON_SIZE} />, permission: "notification-config:read", feature: ["notifications", "whatsappChat"] },
   { to: "/users", label: "Users & roles", icon: <UsersIcon size={ICON_SIZE} />, permission: "user:read" },
   { to: "/dashboard-config", label: "Configure dashboard", icon: <LayoutGrid size={ICON_SIZE} />, permission: "dashboard:configure" },
 ];
@@ -90,7 +93,7 @@ export const TABLES_TABS = [
 function FamilyNav({ tabs }) {
   const { can } = useAuth();
   const { hasFeature } = useStorePlan();
-  return <SubNav items={tabs.filter((i) => (!i.permission || can(i.permission)) && (!i.feature || hasFeature(i.feature)))} />;
+  return <SubNav items={tabs.filter((i) => (!i.permission || can(i.permission)) && (!i.feature || [].concat(i.feature).some(hasFeature)))} />;
 }
 
 export const SettingsNav = () => <FamilyNav tabs={SETTINGS_TABS} />;

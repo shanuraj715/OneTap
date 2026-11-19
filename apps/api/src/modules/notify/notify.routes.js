@@ -4,8 +4,10 @@ import { notifyChannelSchema, orderStatusSchema } from "@onetap/config-schema";
 import { requireOutletContext, requireUser } from "../../middleware/auth.js";
 import {
   clearNotifyCredentials,
+  getMessaging,
   listNotificationLogs,
   listNotifyConfig,
+  saveMessaging,
   saveNotifyCredentials,
 } from "./notify.service.js";
 
@@ -33,6 +35,19 @@ notifyRouter.delete("/config/:channel", async (req, res) => {
   const ctx = await requireOutletContext(req, "notification-config:manage");
   await clearNotifyCredentials(ctx, notifyChannelSchema.parse(req.params.channel));
   res.json({ channels: await listNotifyConfig(ctx) });
+});
+
+/* ---------------------------------------------------------- message sending */
+
+/** Which way each kind of message goes out (today: verification codes), and whether each way can send right now. */
+notifyRouter.get("/messaging", async (req, res) => {
+  const ctx = await requireOutletContext(req, "notification-config:read");
+  res.json(await getMessaging(ctx));
+});
+
+notifyRouter.put("/messaging", async (req, res) => {
+  const ctx = await requireOutletContext(req, "notification-config:manage");
+  res.json(await saveMessaging(ctx, req.body));
 });
 
 /* ------------------------------------------------------------------- logs */

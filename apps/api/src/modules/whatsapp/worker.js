@@ -11,6 +11,7 @@ import {
   isOptInText,
   isOptOutText,
   WA_MAX_MEDIA_BYTES,
+  WA_CODE_REDACTED,
   WA_PACING,
   waAfterQuietHours,
   waLocalClock,
@@ -298,7 +299,7 @@ async function record(accountId, entry, m, type) {
   });
 
   const preview = (text || (media ? `📎 ${kind}` : "")).slice(0, 120);
-  const set = { lastMessageAt: ts, lastPreview: preview, lastDirection: fromMe ? "out" : "in" };
+  const set = { lastMessageAt: ts, lastPreview: preview, lastDirection: fromMe ? "out" : "in", hidden: false };
   const inc = {};
   if (fromMe) set.lastOutboundAt = ts;
   else {
@@ -314,7 +315,8 @@ async function record(accountId, entry, m, type) {
 
 /* ------------------------------------------------------------------- sending */
 
-const RANK = { warm: 0, order: 1, cold: 2 };
+// a verification code goes before everything else: someone is waiting on their phone for it
+const RANK = { code: -1, warm: 0, order: 1, cold: 2 };
 
 /** Show a message as deleted (its words and file are gone, like on WhatsApp). */
 async function markDeleted(brandId, filter) {
@@ -348,7 +350,9 @@ async function sendNext(accountId, entry) {
     if (await revokeNext(accountId, entry)) return;
     const brandId = entry.brandId;
     const now = new Date();
-    const due = await WaMessageModel.find({ brandId, accountId, status: "queued", sendAfter: { $lte: now } }).sort({ sendAfter: 1 }).limit(20).lean();
+    // verification codes first, whatever is queued ahead of them: a store with a 500-person broadcast waiting must still sign people in
+    const codes = await WaMessageModel.find({ brandId, accountId, status: "queued", pace: "code", sendAfter: { $lte: now } }).sort({ sendAfter: 1 }).limit(5).lean();
+    const due = codes.length ? codes : await WaMessageModel.find({ brandId, accountId, status: "queued", sendAfter: { $lte: now } }).sort({ sendAfter: 1 }).limit(20).lean();
     if (!due.length) return;
     due.sort((a, b) => (RANK[a.pace] ?? 0) - (RANK[b.pace] ?? 0));
     let acc = await WaAccountModel.findOne({ _id: accountId, brandId }).lean();
@@ -394,8 +398,10 @@ async function sendNext(accountId, entry) {
 async function deliver(entry, acc, msg) {
   const brandId = entry.brandId;
   const accountId = String(acc._id);
+  const isCode = msg.source === "code";
+  // a verification code is never kept: once it has gone out (or failed) the stored message only says that a code was sent
   const fail = (error) =>
-    WaMessageModel.updateOne({ _id: msg._id, brandId }, { $set: { status: "failed", error: String(error).slice(0, 300) } });
+    WaMessageModel.updateOne({ _id: msg._id, brandId }, { $set: { status: "failed", error: String(error).slice(0, 300), ...(isCode ? { text: WA_CODE_REDACTED } : {}) } });
   try {
     const chat = await WaChatModel.findOne({ _id: msg.chatId, brandId }).lean();
     if (!chat) return fail("The chat was deleted.");
@@ -423,7 +429,7 @@ async function deliver(entry, acc, msg) {
 
     // a human pause, with "typing…" showing
     await entry.sock.sendPresenceUpdate("composing", jid).catch(() => {});
-    await sleep(between(WA_PACING.warm.typingMinMs, WA_PACING.warm.typingMaxMs));
+    await sleep(isCode ? between(WA_PACING.code.typingMinMs, WA_PACING.code.typingMaxMs) : between(WA_PACING.warm.typingMinMs, WA_PACING.warm.typingMaxMs));
     await entry.sock.sendPresenceUpdate("paused", jid).catch(() => {});
 
     // the id is decided and saved first, so the echo of our own message isn't mistaken for one typed on the phone
@@ -432,11 +438,14 @@ async function deliver(entry, acc, msg) {
     await entry.sock.sendMessage(jid, content, { messageId: waId });
 
     const now = new Date();
-    await WaMessageModel.updateOne({ _id: msg._id, brandId }, { $set: { status: "sent", at: now, error: "" } });
-    await WaChatModel.updateOne(
-      { _id: chat._id, brandId },
-      { $set: { lastOutboundAt: now, lastMessageAt: now, lastDirection: "out", lastPreview: (msg.text || `📎 ${msg.type}`).slice(0, 120) } },
-    );
+    await WaMessageModel.updateOne({ _id: msg._id, brandId }, { $set: { status: "sent", at: now, error: "", ...(isCode ? { text: WA_CODE_REDACTED } : {}) } });
+    // a code isn't a conversation: it doesn't move the chat up the inbox, show in its preview, or loosen the pacing of later messages
+    if (!isCode) {
+      await WaChatModel.updateOne(
+        { _id: chat._id, brandId },
+        { $set: { lastOutboundAt: now, lastMessageAt: now, lastDirection: "out", hidden: false, lastPreview: (msg.text || `📎 ${msg.type}`).slice(0, 120) } },
+      );
+    }
 
     const { day } = waLocalClock(now);
     const set = { lastSendAt: now };

@@ -624,6 +624,12 @@ export const saveNotifyConfig = (o        , channel                    , values 
     outletId: o._id,
   });
 
+/** How each kind of message is sent (today: verification codes), and whether each way can send right now. */
+export const getMessaging = (o        ) => req                                     ("/api/notify/messaging", { outletId: o._id });
+
+export const saveMessaging = (o        , body         ) =>
+  req                                     ("/api/notify/messaging", { method: "PUT", body: JSON.stringify(body), outletId: o._id });
+
 export const clearNotifyConfig = (o        , channel                    ) =>
   req                                     (`/api/notify/config/${channel}`, { method: "DELETE", outletId: o._id });
 

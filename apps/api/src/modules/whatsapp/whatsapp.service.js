@@ -16,6 +16,7 @@ import {
   renderMarketing,
   WA_NUMBER_COLORS,
   WA_REVOKE_HOURS,
+  WA_CODE_REDACTED,
 } from "@onetap/config-schema";
 import { BrandModel, CustomerModel, WaAccountModel, WaCampaignModel, WaChatModel, WaMessageModel } from "@onetap/db";
 import { logger } from "../../logger.js";
@@ -217,7 +218,7 @@ async function labelsOf(brandId) {
  * accountId: only chats that go out from this linked number ("none" = no number yet)
  */
 export async function listChats(ctx, { q = "", unread = false, view = "all", accountId = "", limit = 200 } = {}) {
-  const filter = { brandId: ctx.brandId };
+  const filter = { brandId: ctx.brandId, hidden: { $ne: true } };
   const term = q.trim();
   if (term) {
     const digits = term.replace(/\D/g, "");
@@ -288,7 +289,7 @@ export async function startChat(ctx, { phone, name }) {
   const customer = await CustomerModel.findOne({ brandId: ctx.brandId, phone: { $in: [p, p.slice(2), `+${p}`] } }).lean();
   const chat = await WaChatModel.findOneAndUpdate(
     { brandId: ctx.brandId, phone: p },
-    { $setOnInsert: { brandId: ctx.brandId, phone: p, name: (name || customer?.name || "").trim().slice(0, 80), customerId: customer ? String(customer._id) : null } },
+    { $set: { hidden: false }, $setOnInsert: { brandId: ctx.brandId, phone: p, name: (name || customer?.name || "").trim().slice(0, 80), customerId: customer ? String(customer._id) : null } },
     { upsert: true, new: true },
   ).lean();
   return getChat(ctx, chat._id);
@@ -351,7 +352,7 @@ export async function deleteMessage(ctx, chatId, messageId, { everyone = false }
 }
 
 export async function retryMessage(ctx, chatId, messageId) {
-  const r = await WaMessageModel.updateOne({ _id: messageId, brandId: ctx.brandId, chatId: String(chatId), status: "failed" }, { $set: { status: "queued", error: "", sendAfter: new Date() } });
+  const r = await WaMessageModel.updateOne({ _id: messageId, brandId: ctx.brandId, chatId: String(chatId), status: "failed", source: { $ne: "code" } }, { $set: { status: "queued", error: "", sendAfter: new Date() } });
   if (!r.matchedCount) throw new HttpError(404, "Only a failed message can be sent again.");
 }
 
@@ -588,6 +589,86 @@ export async function queueOrderUpdate(ctx, order, status, config) {
     logger.error({ err, orderId: String(order?._id) }, "whatsapp: couldn't queue an order update");
   }
 }
+
+/* ------------------------------------------------------------ verification codes */
+
+const CODE_WAIT_MS = 25_000;
+const CODE_POLL_MS = 400;
+const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+
+/**
+ * Send a verification code from the store's own linked number, and wait until it has really gone out (or failed).
+ * The same queue and worker as every other linked message — so it works across API processes — but in its own
+ * "code" lane: it goes first, with no first-contact spacing, quiet hours or daily first-contact budget (nobody
+ * can wait until tomorrow for a sign-in code), and only a short "typing…" pause.
+ *
+ * Never throws. Returns { ok, reason?, userMessage? } — `reason` is for the log, `userMessage` is safe to show a
+ * customer. The code is removed from the stored message the moment it has been sent or has failed.
+ */
+export async function sendCodeLinked(brandId, rawPhone, text) {
+  const ctx = { brandId: String(brandId) };
+  try {
+    if (!(await storePlan(ctx.brandId)).entitlements.features.includes("whatsappChat")) {
+      return { ok: false, reason: "WhatsApp chat isn't in the store's plan", userMessage: UNAVAILABLE };
+    }
+    const phone = normalizeWaPhone(rawPhone);
+    if (!phone) return { ok: false, reason: "not a WhatsApp number", userMessage: "Enter a valid mobile number." };
+
+    const since = new Date(Date.now() - 24 * 3_600_000);
+    const recent = await WaMessageModel.countDocuments({ brandId: ctx.brandId, source: "code", createdAt: { $gte: since } });
+    if (recent >= WA_PACING.code.perDay) {
+      return { ok: false, reason: `${recent} codes already sent in 24 h — the daily cap protects the number from being banned`, userMessage: "Too many codes have been sent today. Please try again later." };
+    }
+
+    // a chat is needed to hold the message; a stranger's is kept out of the inbox until there's a real conversation
+    const chat = await WaChatModel.findOneAndUpdate(
+      { brandId: ctx.brandId, phone },
+      { $setOnInsert: { brandId: ctx.brandId, phone, hidden: true } },
+      { upsert: true, new: true },
+    ).lean();
+    // the number they last talked to, if it's online; otherwise any online number
+    let account = chat.accountId ? await WaAccountModel.findOne({ _id: chat.accountId, brandId: ctx.brandId }).lean() : null;
+    if (!isOnline(account)) account = await pickOnlineAccount(ctx);
+    if (!account) return { ok: false, reason: "no linked WhatsApp number is online", userMessage: UNAVAILABLE };
+
+    const msg = await WaMessageModel.create({
+      brandId: ctx.brandId,
+      chatId: String(chat._id),
+      accountId: String(account._id),
+      direction: "out",
+      type: "text",
+      text,
+      status: "queued",
+      source: "code",
+      pace: "code",
+    });
+
+    const deadline = Date.now() + CODE_WAIT_MS;
+    while (Date.now() < deadline) {
+      await wait(CODE_POLL_MS);
+      const m = await WaMessageModel.findOne({ _id: msg._id, brandId: ctx.brandId }).select("status error").lean();
+      if (m?.status === "sent" || m?.status === "delivered" || m?.status === "read") return { ok: true };
+      if (m?.status === "failed") return failedCode(m.error);
+    }
+    // nobody picked it up (the sending process is down?): take it back so it can't arrive after we said it failed
+    const taken = await WaMessageModel.findOneAndUpdate(
+      { _id: msg._id, brandId: ctx.brandId, status: "queued" },
+      { $set: { status: "failed", error: "Not sent in time.", text: WA_CODE_REDACTED } },
+    ).lean();
+    if (taken) return { ok: false, reason: "the WhatsApp sender didn't pick the code up in time", userMessage: UNAVAILABLE };
+    const last = await WaMessageModel.findOne({ _id: msg._id, brandId: ctx.brandId }).select("status error").lean();
+    return last?.status === "failed" ? failedCode(last.error) : { ok: true };
+  } catch (err) {
+    logger.error({ err, brandId: ctx.brandId }, "whatsapp: couldn't send a verification code");
+    return { ok: false, reason: err.message || "unexpected error", userMessage: UNAVAILABLE };
+  }
+}
+
+const UNAVAILABLE = "We can't send the code right now. Please try again in a few minutes.";
+const failedCode = (error) =>
+  /isn't on WhatsApp/i.test(error ?? "")
+    ? { ok: false, reason: error, userMessage: "That number isn't on WhatsApp. Use a number that is." }
+    : { ok: false, reason: error || "the number couldn't send it", userMessage: UNAVAILABLE };
 
 export const DELEGABLE_ROLES = WA_DELEGABLE_ROLES;
 

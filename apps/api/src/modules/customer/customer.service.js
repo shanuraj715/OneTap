@@ -7,7 +7,7 @@ import {
 import { isProd } from "../../env.js";
 import { HttpError } from "../../middleware/error.js";
 import { sendOtp } from "../notifications/notify.js";
-import { smsCodeSender } from "../notify/notify.service.js";
+import { codeSender } from "../notify/notify.service.js";
 
 const OTP_TTL_MIN = 10;
 const MAX_ATTEMPTS = 5;
@@ -24,10 +24,9 @@ export const normalizeDestination = (v        ) =>
  * Send a 6-digit code. `purpose` keeps sign-in codes and staff coin codes
  * apart, so one flow can never consume the other's code.
  *
- * When the store has "Send login & coin codes by SMS" switched on, the code
- * goes out by SMS and is never returned. When it hasn't, nothing is sent and
- * the code comes back as `devCode` for the screen to show — today's behaviour,
- * kept for stores that haven't set SMS up.
+ * How it goes out is the store's choice (Settings → Message sending): its linked WhatsApp number, WhatsApp
+ * Business, or SMS — and then it is never returned to the caller. When the store hasn't chosen one, nothing is sent
+ * and the code comes back as `devCode` for the screen to show — kept for stores that haven't set sending up.
  */
 export async function requestOtp(input) {
   const purpose = input.purpose ?? "login";
@@ -62,11 +61,12 @@ export async function requestOtp(input) {
     expiresAt: new Date(Date.now() + OTP_TTL_MIN * 60 * 1000),
   });
 
-  const sender = channel === "sms" ? await smsCodeSender(input.brandId) : null;
+  const sender = channel === "sms" ? await codeSender(input.brandId) : null;
   if (sender) {
     const sent = await sender.send(destination, code);
-    if (!sent.ok) throw new HttpError(502, "Couldn't send the code. Check the number and try again.");
-    return { channel, sent: true };
+    // (the unsent challenge stays: nobody has the code, and it still counts toward the hourly limit)
+    if (!sent.ok) throw new HttpError(502, sent.userMessage || "Couldn't send the code. Check the number and try again.");
+    return { channel, sent: true, via: sender.method };
   }
 
   const result = await sendOtp(channel, destination, code);
@@ -75,8 +75,8 @@ export async function requestOtp(input) {
 
 /**
  * Check a code for `purpose` and consume it. 123456 is accepted only for a
- * store that doesn't send real codes — once SMS codes are on, only the code
- * that was actually sent works.
+ * store that doesn't send real codes — once codes are sent (linked WhatsApp,
+ * WhatsApp Business or SMS), only the code that was actually sent works.
  */
 async function consumeCode({ brandId, destination, code, purpose }) {
   const challenge = await OtpChallengeModel.findOne({
@@ -91,8 +91,8 @@ async function consumeCode({ brandId, destination, code, purpose }) {
   if (!challenge) throw new HttpError(400, "That code has expired. Request a new one.");
   if (challenge.attempts >= MAX_ATTEMPTS) throw new HttpError(429, "Too many attempts. Request a new code.");
 
-  const smsCodesOn = Boolean(await smsCodeSender(brandId));
-  const isValidCode = challenge.codeHash === sha(code.trim()) || (!smsCodesOn && code.trim() === "123456");
+  const codesAreSent = Boolean(await codeSender(brandId));
+  const isValidCode = challenge.codeHash === sha(code.trim()) || (!codesAreSent && code.trim() === "123456");
   if (!isValidCode) {
     challenge.attempts += 1;
     await challenge.save();

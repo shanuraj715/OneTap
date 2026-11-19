@@ -60,6 +60,8 @@ const schema = z.object({
   LOGIN_FLOOD_PER_MINUTE: z.coerce.number().int().min(1).default(30),
   /** the ONE process that sends queued SMS / WhatsApp Business API marketing messages (same rule as WHATSAPP_WORKER) */
   MARKETING_WORKER: z.enum(["on", "off"]).default("off"),
+  /** Meta's WhatsApp Cloud API address. Only ever changed to point a test at a stand-in — leave it alone. */
+  WHATSAPP_GRAPH_URL: z.string().url().default("https://graph.facebook.com"),
   WEBSITE_REVALIDATE_SECRET: z.string().default("dev-only-website-revalidate-secret"),
   /**
    * Cloudflare Turnstile for the website's enquiry form — a real "are you a

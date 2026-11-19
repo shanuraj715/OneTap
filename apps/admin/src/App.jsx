@@ -49,6 +49,7 @@ import {
   Server as ServerIcon,
   MessageCircle,
   ClipboardList,
+  Route as RouteIcon,
 } from "lucide-react";
 import { useAuth, useLogout } from "./lib/useAuth";
 import { OutletSelectionProvider, useOpenStore, useOutlets } from "./lib/useOutlet";
@@ -86,6 +87,7 @@ import { Coupons } from "./routes/Coupons";
 import { MenuEditor } from "./routes/MenuEditor";
 import { MenuLayout } from "./routes/MenuLayout";
 import { Notifications } from "./routes/Notifications";
+import { MessageSending } from "./routes/MessageSending";
 import { Orders } from "./routes/Orders";
 import { Outlets } from "./routes/Outlets";
 import { Payments } from "./routes/Payments";
@@ -149,6 +151,7 @@ const ROUTE_META = {
   "/printing": { title: "Printing", icon: Printer },
   "/payments": { title: "Payments", icon: CreditCard },
   "/notifications": { title: "Notifications", icon: Bell },
+  "/message-sending": { title: "Message sending", icon: RouteIcon },
   "/customers": { title: "Customers", icon: UsersIcon },
   "/appearance": { title: "Appearance", icon: Wand2 },
   "/banners": { title: "Banners", icon: Megaphone },
@@ -246,7 +249,7 @@ const PLATFORM_NAV_GROUPS = [
  * a plain link to its first tab they can open, or disappears.
  */
 function resolveNavItem(n, can, hasFeature, waLevel = "none") {
-  const open = (x) => (!x.permission || can(x.permission)) && (!x.feature || hasFeature(x.feature)) && (!x.whatsapp || waLevel !== "none");
+  const open = (x) => (!x.permission || can(x.permission)) && (!x.feature || [].concat(x.feature).some(hasFeature)) && (!x.whatsapp || waLevel !== "none");
   if (!n.tabs) return open(n) ? n : null;
   const allowed = n.tabs.filter(open);
   if (!allowed.length) return null;
@@ -608,6 +611,7 @@ function Shell({ can }                                     ) {
             <Route path="/printing" element={<Printing />} />
             <Route path="/payments" element={<Payments />} />
             <Route path="/notifications" element={<Notifications />} />
+            <Route path="/message-sending" element={<MessageSending />} />
             <Route path="/customers" element={<Customers />} />
             <Route path="/appearance" element={<Appearance />} />
             <Route path="/banners" element={<Banners />} />
