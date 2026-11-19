@@ -338,4 +338,25 @@
   .ot-cat-chips { display: none !important; }
   .ot-cat-button { display: inline-flex !important; }
 }
+/*
+ * Chip rows (the Veg/Egg/Non-veg filter, the category chips): ONE line high, however many there are. Too many to fit
+ * means the row scrolls sideways (no scrollbar), with a soft fade at an edge that has more behind it.
+ */
+.ot-chip-row,
+.ot-chip-strip { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; -ms-overflow-style: none; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; }
+.ot-chip-row::-webkit-scrollbar,
+.ot-chip-strip::-webkit-scrollbar { display: none; }
+.ot-chip-row > *,
+.ot-chip-strip > * { flex: 0 0 auto; }
+.ot-chip-strip {
+  --fade-l: 0px;
+  --fade-r: 0px;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent 100%);
+}
+.ot-chip-strip[data-more-left="true"] { --fade-l: 22px; }
+.ot-chip-strip[data-more-right="true"] { --fade-r: 22px; }
+.ot-strip-arrow:disabled { opacity: 0.35; cursor: default; }
+/* touch screens swipe; the arrows are for a mouse */
+@media (hover: none) { .ot-strip-arrow { display: none !important; } }
 .ot-cat-sheet { animation: ot-fade var(--motion-fast) var(--ease-out) both; }

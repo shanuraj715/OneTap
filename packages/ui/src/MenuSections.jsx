@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
                                            
 import {
   pruneEmptySections,
@@ -65,8 +65,9 @@ export function MenuSections({
   };
 
   // which top-level category is in view: the last section whose top has passed just under the sticky bar
+  const wantsNav = Boolean(layout.showCategoryNav) && visibleSections.length > 1;
   useEffect(() => {
-    if (!nested) return undefined;
+    if (!wantsNav) return undefined;
     let frame = 0;
     const update = () => {
       cancelAnimationFrame(frame);
@@ -79,6 +80,8 @@ export function MenuSections({
           if (el.getBoundingClientRect().top <= line) current = s.rootId;
           else break;
         }
+        // at the very bottom the last categories can't reach the top of the screen — the last one is the one being read
+        if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) current = visibleSections[visibleSections.length - 1]?.rootId ?? current;
         setActiveRoot(current);
       });
     };
@@ -90,7 +93,7 @@ export function MenuSections({
       window.removeEventListener("scroll", update);
       window.removeEventListener("resize", update);
     };
-  }, [nested, visibleSections]);
+  }, [wantsNav, visibleSections]);
 
   const foodTypesPresent = useMemo(() => {
     const set = new Set          ();
@@ -104,10 +107,10 @@ export function MenuSections({
 
   return (
     <div className="ot-menu-sections" style={wrap}>
-      {(layout.showCategoryNav && visibleSections.length > 1) || (layout.showFoodTypeFilter && foodTypesPresent.length > 1) ? (
+      {wantsNav || (layout.showFoodTypeFilter && foodTypesPresent.length > 1) ? (
         <div ref={toolbarRef} className="ot-fx-bar" data-fx-toolbar="" style={toolbarStyle()}>
           {layout.showFoodTypeFilter && foodTypesPresent.length > 1 ? (
-            <div style={{ display: "flex", gap: "var(--fx-toolbar-gap, 6px)" }}>
+            <div className="ot-chip-row" style={filterRow}>
               <FilterChip active={foodFilter === null} onClick={() => setFoodFilter(null)}>
                 All
               </FilterChip>
@@ -117,33 +120,32 @@ export function MenuSections({
                 </FilterChip>
               ))}
             </div>
-          ) : (
-            <span />
-          )}
+          ) : null}
 
-          {layout.showCategoryNav && visibleSections.length > 1 ? (
-            /* No overflow here: the chips wrap anyway, and a scrolling box crops
-               whatever it holds at its edges — including the chips' shadows. */
+          {wantsNav ? (
             <>
-              {/* desktop: every category as a chip */}
-              <nav className="ot-cat-chips" aria-label="Menu categories" style={{ display: "flex", gap: "var(--fx-toolbar-gap, 6px)", flexWrap: "wrap" }}>
-                {rootSections.map((s) => (
-                  <a
-                    key={s.id}
-                    href={`#sec-${s.id}`}
-                    className="ot-fx-chip"
-                    aria-current={nested && s.rootId === activeRoot ? "true" : undefined}
-                    style={{ ...fx("chip", jumpLink), ...(nested && s.rootId === activeRoot ? jumpLinkActive : null) }}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      goTo(s.id);
-                    }}
-                  >
-                    {s.imageUrl ? <img src={s.imageUrl} alt="" style={chipPhoto} /> : null}
-                    {s.title}
-                  </a>
-                ))}
-              </nav>
+              {/* desktop: every category as a chip — in ONE row that scrolls sideways, so a long menu never makes the sticky bar tall */}
+              <ChipStrip className="ot-cat-chips" label="Menu categories" watch={rootSections.map((s) => s.id).join()} activeKey={activeRoot}>
+                {rootSections.map((s) => {
+                  const current = s.rootId === activeRoot;
+                  return (
+                    <a
+                      key={s.id}
+                      href={`#sec-${s.id}`}
+                      className="ot-fx-chip"
+                      aria-current={current ? "true" : undefined}
+                      style={{ ...fx("chip", jumpLink), ...(current ? jumpLinkActive : null) }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        goTo(s.id);
+                      }}
+                    >
+                      {s.imageUrl ? <img src={s.imageUrl} alt="" style={chipPhoto} /> : null}
+                      {s.title}
+                    </a>
+                  );
+                })}
+              </ChipStrip>
               {/* phones and tablets: one button, the list opens in a sheet */}
               <button type="button" className="ot-cat-button ot-press ot-fx-chip" aria-haspopup="dialog" aria-expanded={sheetOpen} onClick={() => setSheetOpen(true)} style={fx("chip", categoriesBtn)}>
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
@@ -153,7 +155,7 @@ export function MenuSections({
               </button>
               {/* what is inside the top-level category in view */}
               {subSections.length > 0 ? (
-                <nav aria-label="Inside this category" style={{ flexBasis: "100%", display: "flex", gap: "var(--fx-toolbar-gap, 6px)", flexWrap: "wrap", paddingTop: 2 }}>
+                <ChipStrip label="Inside this category" watch={subSections.map((s) => s.id).join()} style={{ flexBasis: "100%" }}>
                   {subSections.map((s) => (
                     <a
                       key={s.id}
@@ -169,7 +171,7 @@ export function MenuSections({
                       {s.title}
                     </a>
                   ))}
-                </nav>
+                </ChipStrip>
               ) : null}
             </>
           ) : null}
@@ -381,6 +383,84 @@ function CategorySheet({ sections, onPick, onClose }) {
   );
 }
 
+/**
+ * A row of chips that is always ONE line high: when there are more than fit, it scrolls sideways (swipe, trackpad,
+ * the ‹ › buttons) with a soft fade at whichever edge has more. `activeKey` is re-centred into view when it changes,
+ * so the chip for the category being read is never hidden off to the side. The strip keeps a few pixels of padding
+ * so the chips' shadows aren't cropped by the scroll box.
+ */
+function ChipStrip({ className, label, watch, activeKey, style, children }) {
+  const outer = useRef(null);
+  const strip = useRef(null);
+  const [more, setMore] = useState({ can: false, left: false, right: false });
+
+  const measure = useCallback(() => {
+    const el = strip.current;
+    const box = outer.current;
+    if (!el || !box) return;
+    const can = el.scrollWidth > box.clientWidth + 2; // measured against the whole box, so showing the arrows can't flip it back
+    const left = el.scrollLeft > 2;
+    const right = el.scrollLeft + el.clientWidth < el.scrollWidth - 2;
+    setMore((m) => (m.can === can && m.left === left && m.right === right ? m : { can, left, right }));
+  }, []);
+
+  useEffect(() => {
+    const el = strip.current;
+    if (!el) return undefined;
+    measure();
+    el.addEventListener("scroll", measure, { passive: true });
+    const ro = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(measure);
+    ro?.observe(el);
+    if (outer.current) ro?.observe(outer.current);
+    return () => {
+      el.removeEventListener("scroll", measure);
+      ro?.disconnect();
+    };
+  }, [measure]);
+  useEffect(measure, [measure, watch]);
+
+  // keep the chip being read in view (without moving the page itself)
+  useEffect(() => {
+    const el = strip.current;
+    const chip = el?.querySelector('[aria-current="true"]');
+    if (!el || !chip) return;
+    const pad = 12;
+    if (chip.offsetLeft >= el.scrollLeft + pad && chip.offsetLeft + chip.offsetWidth <= el.scrollLeft + el.clientWidth - pad) return;
+    const calm = typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    el.scrollTo({ left: Math.max(0, chip.offsetLeft - (el.clientWidth - chip.offsetWidth) / 2), behavior: calm ? "auto" : "smooth" });
+  }, [activeKey, watch]);
+
+  const nudge = (dir) => {
+    const el = strip.current;
+    if (el) el.scrollBy({ left: dir * Math.max(120, el.clientWidth * 0.7), behavior: "smooth" });
+  };
+
+  return (
+    <div ref={outer} className={className} style={{ flex: "1 1 0", minWidth: 0, display: "flex", alignItems: "center", gap: 6, ...style }}>
+      {more.can ? (
+        <button type="button" className="ot-strip-arrow ot-press" aria-label={`Scroll ${label.toLowerCase()} left`} disabled={!more.left} onClick={() => nudge(-1)} style={stripArrow}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+        </button>
+      ) : null}
+      <nav
+        ref={strip}
+        aria-label={label}
+        className="ot-chip-strip"
+        data-more-left={more.left}
+        data-more-right={more.right}
+        style={{ flex: "1 1 0", minWidth: 0, display: "flex", gap: "var(--fx-toolbar-gap, 6px)", padding: "4px 3px", margin: "-4px 0", position: "relative" }}
+      >
+        {children}
+      </nav>
+      {more.can ? (
+        <button type="button" className="ot-strip-arrow ot-press" aria-label={`Scroll ${label.toLowerCase()} right`} disabled={!more.right} onClick={() => nudge(1)} style={stripArrow}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg>
+        </button>
+      ) : null}
+    </div>
+  );
+}
+
 function FilterChip({ active, onClick, children }                                                                     ) {
   return (
     <button
@@ -456,7 +536,22 @@ const jumpLink                = {
   border: "1px solid var(--color-border)",
   whiteSpace: "nowrap",
 };
+const filterRow = { display: "flex", gap: "var(--fx-toolbar-gap, 6px)", flex: "0 1 auto", minWidth: 0, padding: "4px 3px", margin: "-4px -3px" };
+const stripArrow = {
+  flex: "0 0 auto",
+  width: 28,
+  height: 28,
+  display: "inline-grid",
+  placeItems: "center",
+  padding: 0,
+  borderRadius: 999,
+  border: "1px solid var(--color-border)",
+  background: "var(--color-bg)",
+  color: "var(--color-text)",
+  cursor: "pointer",
+};
 const categoriesBtn = {
+  marginLeft: "auto",
   font: "inherit",
   fontSize: "0.85rem",
   fontWeight: 600,
