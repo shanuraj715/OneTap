@@ -112,8 +112,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T12:40:21.959Z",
-    "durationMs": 33370,
+    "at": "2026-11-19T17:20:48.082Z",
+    "durationMs": 32661,
     "steps": [
       {
         "n": 1,
@@ -289,7 +289,7 @@
           {
             "label": "the new customer was saved with the details they gave",
             "ok": true,
-            "detail": "{\"id\":\"6afeee2860e67c5229d56581\",\"name\":\"Rohan Mehta\",\"email\":\"rohan.mehta@example.com\",\"phone\":\"9811122233\",\"gender\":\"male\",\"age\":31,\"orderCount\":1,\"walletBalance\":0,\"lastOrderAt\":\"2026-11-19T12:40:12.967Z\",\"createdAt\":\"2026-11-19T12:40:08.400Z\"}",
+            "detail": "{\"id\":\"6aff2fe27b0afda372fc6176\",\"name\":\"Rohan Mehta\",\"email\":\"rohan.mehta@example.com\",\"phone\":\"9811122233\",\"gender\":\"male\",\"age\":31,\"orderCount\":1,\"walletBalance\":0,\"lastOrderAt\":\"2026-11-19T17:20:39.151Z\",\"createdAt\":\"2026-11-19T17:20:34.563Z\"}",
             "kind": "expect"
           },
           {
@@ -313,7 +313,7 @@
           {
             "label": "the row shows the customer, phone, type, item count, total and 'Placed'",
             "ok": true,
-            "detail": " #0001 06:10 PM Rohan Mehta 9811122233 TA 8 ₹1,030 Placed 0m Accepted",
+            "detail": " #0001 10:50 PM Rohan Mehta 9811122233 TA 8 ₹1,030 Placed 0m Accepted",
             "kind": "expect"
           }
         ]
@@ -1928,8 +1928,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T13:59:27.176Z",
-    "durationMs": 36922,
+    "at": "2026-11-19T17:21:25.085Z",
+    "durationMs": 36979,
     "steps": [
       {
         "n": 1,
@@ -2034,7 +2034,7 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "0,0,0,1,69,307,854,1098,1169,1170,1170,1170,1170,1170",
+            "detail": "0,0,0,1,45,306,854,1098,1169,1170,1170,1170,1170,1170",
             "kind": "expect"
           },
           {
@@ -2100,7 +2100,7 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "17,17,17,17,60,257,731,1169,1422,1491,1494,1494,1494,1494",
+            "detail": "17,17,17,17,59,207,625,1167,1396,1487,1494,1494,1494,1494",
             "kind": "expect"
           },
           {
@@ -5557,8 +5557,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T12:42:46.483Z",
-    "durationMs": 55803,
+    "at": "2026-11-19T17:22:24.305Z",
+    "durationMs": 55038,
     "steps": [
       {
         "n": 1,
@@ -5699,7 +5699,7 @@
           {
             "label": "'Seated now — 1' with 'Table D1 … 2 orders · tab ₹130'",
             "ok": true,
-            "detail": "Seated now — 1 Table D1 since 06:12 PM · 2 orders · tab ₹130 Move to… Table D2 Table D3 Table T1 Table T2 Table T3 Table T4 Table ",
+            "detail": "Seated now — 1 Table D1 since 10:51 PM · 2 orders · tab ₹130 Move to… Table D2 Table D3 Table T1 Table T2 Table T3 Table T4 Table ",
             "kind": "expect"
           },
           {
@@ -5711,7 +5711,7 @@
           {
             "label": "the Orders page lists both: '#0001 … Dina Diner 9877712345 DI Table D1 … ₹70 Placed' and '#0002 … ₹60'",
             "ok": true,
-            "detail": "#0001 06:12 PM Dina Diner 9877712345 DI Table D1 1 ₹70 Placed 0m Approve || #0002 06:12 PM Dina Diner 9877712345 DI Table D1 1 ₹60 Placed 0m Approve",
+            "detail": "#0001 10:51 PM Dina Diner 9877712345 DI Table D1 1 ₹70 Placed 0m Approve || #0002 10:51 PM Dina Diner 9877712345 DI Table D1 1 ₹60 Placed 0m Approve",
             "kind": "expect"
           },
           {
@@ -5735,7 +5735,7 @@
           {
             "label": "'Seated now' says 'Table D2 … moved: D1 → D2'",
             "ok": true,
-            "detail": "Seated now — 1 Table D2moved: D1 → D2 since 06:12 PM · 2 orders · tab ₹130 Move to… Table D1 Table D3 Table T1 Table T2 Table T3 Table T4 Table T5 Move Close Garden D1 Ne",
+            "detail": "Seated now — 1 Table D2moved: D1 → D2 since 10:51 PM · 2 orders · tab ₹130 Move to… Table D1 Table D3 Table T1 Table T2 Table T3 Table T4 Table T5 Move Close Garden D1 Ne",
             "kind": "expect"
           },
           {
@@ -5837,7 +5837,7 @@
           {
             "label": "after 'Cancel / void' the order #0003 is Cancelled",
             "ok": true,
-            "detail": "#0003 06:12 PM Rohan Other 9877799999 DI Table D3 1 ₹70 Cancelled —",
+            "detail": "#0003 10:52 PM Rohan Other 9877799999 DI Table D3 1 ₹70 Cancelled —",
             "kind": "expect"
           },
           {
@@ -5873,7 +5873,7 @@
           {
             "label": "the panel shows a new code for the same table",
             "ok": true,
-            "detail": "http://localhost:3170/t/6afeee934fc17954c4940f30?k=KrjRkflk8-FzBoZk6yeCQcF6 → http://localhost:3170/t/6afeee934fc17954c4940f30?k=QIONtAH6IQCxbLSqAH23l11y",
+            "detail": "http://localhost:3170/t/6aff301edd932f536711e414?k=WTHIxbIU_7BYergeIfIfKUga → http://localhost:3170/t/6aff301edd932f536711e414?k=OrQ5juyLYsBWVjuj2kbp9-Zw",
             "kind": "expect"
           },
           {
@@ -10634,8 +10634,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T12:43:33.363Z",
-    "durationMs": 42693,
+    "at": "2026-11-19T17:23:11.587Z",
+    "durationMs": 43086,
     "steps": [
       {
         "n": 1,
@@ -10740,7 +10740,7 @@
           {
             "label": "'View details' lists the items and the bill",
             "ok": true,
-            "detail": "2 × Veg Steamed Momos (5 pcs) ₹120 Items ₹120 Taxes ₹5.71 Total ₹120 Placed 19 Nov 2026, 6:12 pm",
+            "detail": "2 × Veg Steamed Momos (5 pcs) ₹120 Items ₹120 Taxes ₹5.71 Total ₹120 Placed 19 Nov 2026, 10:52 pm",
             "kind": "expect"
           }
         ]
@@ -10752,7 +10752,7 @@
           {
             "label": "(the order is on the dashboard)",
             "ok": true,
-            "detail": "6afeeed234b44e0146e7790b",
+            "detail": "6aff305c23ef5715f16b64d4",
             "kind": "expect"
           },
           {
@@ -11717,8 +11717,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T14:00:29.235Z",
-    "durationMs": 45413,
+    "at": "2026-11-19T17:12:55.949Z",
+    "durationMs": 47927,
     "steps": [
       {
         "n": 1,
@@ -12710,8 +12710,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T14:00:59.681Z",
-    "durationMs": 20071,
+    "at": "2026-11-19T17:23:31.908Z",
+    "durationMs": 20297,
     "steps": [
       {
         "n": 1,
@@ -12720,7 +12720,7 @@
           {
             "label": "all 30+ categories are in the bar",
             "ok": true,
-            "detail": "36",
+            "detail": "35",
             "kind": "expect"
           },
           {
@@ -12738,7 +12738,7 @@
           {
             "label": "more chips than fit: the row scrolls sideways instead of wrapping",
             "ok": true,
-            "detail": "5282px of chips in 768px",
+            "detail": "5177px of chips in 768px",
             "kind": "expect"
           },
           {
@@ -12768,7 +12768,7 @@
           {
             "label": "choosing it scrolls the menu to that category, just under the (short) bar",
             "ok": true,
-            "detail": "{\"top\":66,\"bar\":53}",
+            "detail": "{\"top\":65,\"bar\":53}",
             "kind": "expect"
           },
           {
@@ -12846,7 +12846,7 @@
           {
             "label": "tablet: the sheet fits the screen and lists every category",
             "ok": true,
-            "detail": "792px of 1100px, 37 buttons",
+            "detail": "792px of 1100px, 36 buttons",
             "kind": "expect"
           },
           {
@@ -12900,7 +12900,7 @@
           {
             "label": "phone: the sheet fits the screen and lists every category",
             "ok": true,
-            "detail": "608px of 844px, 37 buttons",
+            "detail": "608px of 844px, 36 buttons",
             "kind": "expect"
           },
           {
@@ -12943,12 +12943,12 @@
     "id": "t37-storefront-mobile-layout",
     "title": "Storefront — page side padding is smaller on phones and tablets (desktop unchanged); on phones a path title is two lines with a smaller View all button",
     "status": "pass",
-    "pass": 43,
+    "pass": 45,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T14:01:09.544Z",
-    "durationMs": 5019,
+    "at": "2026-11-19T17:23:39.266Z",
+    "durationMs": 7337,
     "steps": [
       {
         "n": 1,
@@ -12985,9 +12985,15 @@
             "kind": "expect"
           },
           {
-            "label": "desktop: the View all button keeps its size",
+            "label": "desktop: the button stays beside the title, as configured",
             "ok": true,
-            "detail": "12.8px",
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: and keeps its size",
+            "ok": true,
+            "detail": "",
             "kind": "expect"
           },
           {
@@ -13051,9 +13057,15 @@
             "kind": "expect"
           },
           {
-            "label": "tablet: the View all button keeps its size",
+            "label": "tablet: the button configured beside the title is NOT there — it is under the cards instead",
             "ok": true,
-            "detail": "12.8px",
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet: it sits below the cards, centred on the screen",
+            "ok": true,
+            "detail": "0.0px off centre",
             "kind": "expect"
           },
           {
@@ -13153,21 +13165,21 @@
             "kind": "expect"
           },
           {
-            "label": "phone: the View all button is smaller",
+            "label": "phone: the title has the whole row to itself and fits",
             "ok": true,
-            "detail": "11.52px text, 28px high",
+            "detail": "149 of 390",
             "kind": "expect"
           },
           {
-            "label": "phone: the title and the button fit on one row without overlapping",
+            "label": "phone: the button configured beside the title is NOT there — it is under the cards instead",
             "ok": true,
-            "detail": "149 <= 261",
+            "detail": "",
             "kind": "expect"
           },
           {
-            "label": "phone: the button is fully on screen",
+            "label": "phone: it sits below the cards, centred on the screen",
             "ok": true,
-            "detail": "376 of 390",
+            "detail": "0.0px off centre",
             "kind": "expect"
           },
           {
@@ -14072,6 +14084,504 @@
         "checks": [
           {
             "label": "both keys can be removed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t40-react-style-warnings": {
+    "id": "t40-react-style-warnings",
+    "title": "Storefront menu — no React warnings (e.g. \"Removing a style property during rerender (borderColor) when a conflicting property is set (border)\") while scrolling, filtering and expanding",
+    "status": "pass",
+    "pass": 4,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-19T17:24:17.218Z",
+    "durationMs": 37935,
+    "steps": [
+      {
+        "n": 0,
+        "title": "Setup",
+        "checks": [
+          {
+            "label": "the real menu is on the page (14+ sections, the category bar, the filter)",
+            "ok": true,
+            "detail": "14",
+            "kind": "expect"
+          },
+          {
+            "label": "scrolling the page moves the highlighted category chip many times",
+            "ok": true,
+            "detail": "12 different chips highlighted",
+            "kind": "expect"
+          },
+          {
+            "label": "React reports no style or other warnings while the menu is scrolled, filtered and expanded",
+            "ok": true,
+            "detail": "none",
+            "kind": "expect"
+          },
+          {
+            "label": "and nothing else is logged as an error",
+            "ok": true,
+            "detail": "none",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t41-storefront-view-all": {
+    "id": "t41-storefront-view-all",
+    "title": "Storefront View all — as configured on a wide screen; under the cards and centred on phones and tablets (portrait and landscape); the extra cards slide open and shut",
+    "status": "pass",
+    "pass": 64,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-19T17:25:20.685Z",
+    "durationMs": 26854,
+    "steps": [
+      {
+        "n": 1,
+        "title": "desktop 1280px (mouse): as configured",
+        "checks": [
+          {
+            "label": "'Bottom — left': under the cards, at the left edge",
+            "ok": true,
+            "detail": "{\"count\":1,\"left\":0,\"right\":880,\"off\":439.9765625,\"below\":true,\"besideTitle\":false,\"cards\":3}",
+            "kind": "expect"
+          },
+          {
+            "label": "'Bottom — centred': under the cards, in the middle",
+            "ok": true,
+            "detail": "0.0px off",
+            "kind": "expect"
+          },
+          {
+            "label": "'Bottom — right': under the cards, at the right edge",
+            "ok": true,
+            "detail": "{\"count\":1,\"left\":880,\"right\":0,\"off\":439.9765625,\"below\":true,\"besideTitle\":false,\"cards\":3}",
+            "kind": "expect"
+          },
+          {
+            "label": "'Right side of the title': beside the title, and no second button under the cards",
+            "ok": true,
+            "detail": "{\"count\":1,\"left\":898,\"right\":0,\"off\":449.2109375,\"below\":false,\"besideTitle\":true,\"cards\":3}",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "phone 390px",
+        "checks": [
+          {
+            "label": "phone: configured left → ONE button, under the cards, in the middle",
+            "ok": true,
+            "detail": "0.0px off centre, below=true, beside title=false",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: configured centre → ONE button, under the cards, in the middle",
+            "ok": true,
+            "detail": "0.0px off centre, below=true, beside title=false",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: configured right → ONE button, under the cards, in the middle",
+            "ok": true,
+            "detail": "0.0px off centre, below=true, beside title=false",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: configured beside the title → ONE button, under the cards, in the middle",
+            "ok": true,
+            "detail": "0.0px off centre, below=true, beside title=false",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: a grid of cards, configured left → ONE button, under the cards, in the middle",
+            "ok": true,
+            "detail": "0.0px off centre, below=true, beside title=false",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "tablet, portrait 820px",
+        "checks": [
+          {
+            "label": "tablet, portrait: configured left → ONE button, under the cards, in the middle",
+            "ok": true,
+            "detail": "0.0px off centre, below=true, beside title=false",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet, portrait: configured centre → ONE button, under the cards, in the middle",
+            "ok": true,
+            "detail": "0.0px off centre, below=true, beside title=false",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet, portrait: configured right → ONE button, under the cards, in the middle",
+            "ok": true,
+            "detail": "0.0px off centre, below=true, beside title=false",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet, portrait: configured beside the title → ONE button, under the cards, in the middle",
+            "ok": true,
+            "detail": "0.0px off centre, below=true, beside title=false",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet, portrait: a grid of cards, configured left → ONE button, under the cards, in the middle",
+            "ok": true,
+            "detail": "0.0px off centre, below=true, beside title=false",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "tablet, landscape 1180px",
+        "checks": [
+          {
+            "label": "tablet, landscape: configured left → ONE button, under the cards, in the middle",
+            "ok": true,
+            "detail": "0.0px off centre, below=true, beside title=false",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet, landscape: configured centre → ONE button, under the cards, in the middle",
+            "ok": true,
+            "detail": "0.0px off centre, below=true, beside title=false",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet, landscape: configured right → ONE button, under the cards, in the middle",
+            "ok": true,
+            "detail": "0.0px off centre, below=true, beside title=false",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet, landscape: configured beside the title → ONE button, under the cards, in the middle",
+            "ok": true,
+            "detail": "0.0px off centre, below=true, beside title=false",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet, landscape: a grid of cards, configured left → ONE button, under the cards, in the middle",
+            "ok": true,
+            "detail": "0.0px off centre, below=true, beside title=false",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "large tablet, landscape 1366px",
+        "checks": [
+          {
+            "label": "large tablet, landscape: configured left → ONE button, under the cards, in the middle",
+            "ok": true,
+            "detail": "0.0px off centre, below=true, beside title=false",
+            "kind": "expect"
+          },
+          {
+            "label": "large tablet, landscape: configured centre → ONE button, under the cards, in the middle",
+            "ok": true,
+            "detail": "0.0px off centre, below=true, beside title=false",
+            "kind": "expect"
+          },
+          {
+            "label": "large tablet, landscape: configured right → ONE button, under the cards, in the middle",
+            "ok": true,
+            "detail": "0.0px off centre, below=true, beside title=false",
+            "kind": "expect"
+          },
+          {
+            "label": "large tablet, landscape: configured beside the title → ONE button, under the cards, in the middle",
+            "ok": true,
+            "detail": "0.0px off centre, below=true, beside title=false",
+            "kind": "expect"
+          },
+          {
+            "label": "large tablet, landscape: a grid of cards, configured left → ONE button, under the cards, in the middle",
+            "ok": true,
+            "detail": "0.0px off centre, below=true, beside title=false",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "a narrow desktop window (mouse) 900px",
+        "checks": [
+          {
+            "label": "a narrow desktop window (mouse): configured left → ONE button, under the cards, in the middle",
+            "ok": true,
+            "detail": "0.0px off centre, below=true, beside title=false",
+            "kind": "expect"
+          },
+          {
+            "label": "a narrow desktop window (mouse): configured centre → ONE button, under the cards, in the middle",
+            "ok": true,
+            "detail": "0.0px off centre, below=true, beside title=false",
+            "kind": "expect"
+          },
+          {
+            "label": "a narrow desktop window (mouse): configured right → ONE button, under the cards, in the middle",
+            "ok": true,
+            "detail": "0.0px off centre, below=true, beside title=false",
+            "kind": "expect"
+          },
+          {
+            "label": "a narrow desktop window (mouse): configured beside the title → ONE button, under the cards, in the middle",
+            "ok": true,
+            "detail": "0.0px off centre, below=true, beside title=false",
+            "kind": "expect"
+          },
+          {
+            "label": "a narrow desktop window (mouse): a grid of cards, configured left → ONE button, under the cards, in the middle",
+            "ok": true,
+            "detail": "0.0px off centre, below=true, beside title=false",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "animation, desktop",
+        "checks": [
+          {
+            "label": "desktop: closed, the section shows its first 3 of 8 dishes",
+            "ok": true,
+            "detail": "3",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: the button says how many more",
+            "ok": true,
+            "detail": "View all (5 more)",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: it starts from the closed height",
+            "ok": true,
+            "detail": "56px vs 56px",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: opening SLIDES — several in-between heights, not an instant jump",
+            "ok": true,
+            "detail": "15 in-between heights: 56, 75, 95, 113, 129, 142, 152, 160…",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: and only ever grows while opening",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: it ends fully open",
+            "ok": true,
+            "detail": "56px → 191px",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: all 8 dishes are there, the button says Show less",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: nothing is inert once open",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: closing slides too",
+            "ok": true,
+            "detail": "14 in-between heights",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: and only ever shrinks while closing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: the leaving cards can't be tabbed into while they close",
+            "ok": true,
+            "detail": "1 inert group",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: closed again — 3 dishes in the page, the original height",
+            "ok": true,
+            "detail": "3 dishes, 56px vs 56px",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: the button says View all again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: pressing twice quickly (mid-slide) turns round cleanly and ends closed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "animation, phone",
+        "checks": [
+          {
+            "label": "phone: closed, the section shows its first 3 of 8 dishes",
+            "ok": true,
+            "detail": "3",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: the button says how many more",
+            "ok": true,
+            "detail": "View all (5 more)",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: it starts from the closed height",
+            "ok": true,
+            "detail": "191px vs 191px",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: opening SLIDES — several in-between heights, not an instant jump",
+            "ok": true,
+            "detail": "18 in-between heights: 191, 240, 288, 333, 373, 406, 433, 453…",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: and only ever grows while opening",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: it ends fully open",
+            "ok": true,
+            "detail": "191px → 529px",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: all 8 dishes are there, the button says Show less",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: nothing is inert once open",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: closing slides too",
+            "ok": true,
+            "detail": "17 in-between heights",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: and only ever shrinks while closing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: the leaving cards can't be tabbed into while they close",
+            "ok": true,
+            "detail": "1 inert group",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: closed again — 3 dishes in the page, the original height",
+            "ok": true,
+            "detail": "3 dishes, 191px vs 191px",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: the button says View all again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: pressing twice quickly (mid-slide) turns round cleanly and ends closed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 9,
+        "title": "the grid layout, reduced motion and the scroll position",
+        "checks": [
+          {
+            "label": "a 3-column grid shows its first 4 cards",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and all 9 once open",
+            "ok": true,
+            "detail": "9",
+            "kind": "expect"
+          },
+          {
+            "label": "the 5th card carries on in the same row as the 4th — the opened cards flow on from the kept ones, exactly as one grid",
+            "ok": true,
+            "detail": "[[124,200],[472,200]]",
+            "kind": "expect"
+          },
+          {
+            "label": "with 'reduce motion' switched on in the system it opens at once (no slide)",
+            "ok": true,
+            "detail": "2 distinct heights",
+            "kind": "expect"
+          },
+          {
+            "label": "closing a section you have scrolled far down in brings its heading back into view",
+            "ok": true,
+            "detail": "-6px → 72px from the top",
+            "kind": "expect"
+          },
+          {
+            "label": "the test categories are removed and the menu layout is put back",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser logged no errors or warnings",
             "ok": true,
             "detail": "",
             "kind": "expect"

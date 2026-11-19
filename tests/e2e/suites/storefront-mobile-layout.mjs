@@ -71,24 +71,31 @@ try {
     const crumb = page.locator("#sec-mob-1 .ot-sec-crumb");
     const name = page.locator("#sec-mob-1 .ot-sec-name");
     const btn = page.locator("#sec-mob-1 .ot-viewall-title");
-    const cb = await crumb.boundingBox(), nb = await name.boundingBox(), bb = await btn.boundingBox();
+    const cb = await crumb.boundingBox(), nb = await name.boundingBox();
     const heading = await px(page, "#sec-mob-1 .ot-sec-title", "fontSize");
     const crumbSize = await px(page, "#sec-mob-1 .ot-sec-crumb", "fontSize");
     const nameSize = await px(page, "#sec-mob-1 .ot-sec-name", "fontSize");
-    const btnSize = await px(page, "#sec-mob-1 .ot-viewall-title", "fontSize");
     if (w <= 640) {
       ok(cb.y + cb.height <= nb.y + 2, "phone: the title is on TWO lines — parent first, then the name", `${Math.round(cb.y)} / ${Math.round(nb.y)}`);
       ok((await crumb.innerText()).trim() === "Mob South Indian ›" && (await name.innerText()).trim() === "Mob Idli & Vada", "phone: line one is the parent, line two is the category", `"${(await crumb.innerText()).trim()}" / "${(await name.innerText()).trim()}"`);
       ok(crumbSize <= 13 && crumbSize < nameSize / 1.4, "phone: the parent is small", `${crumbSize}px`);
       ok(nameSize < heading && nameSize >= 15, "phone: the category name is a little smaller than a normal heading", `${nameSize}px of ${heading}px`);
-      ok(btnSize <= 12 && bb.height <= 30, "phone: the View all button is smaller", `${btnSize}px text, ${Math.round(bb.height)}px high`);
-      ok(nb.x + nb.width <= bb.x + 1, "phone: the title and the button fit on one row without overlapping", `${Math.round(nb.x + nb.width)} <= ${Math.round(bb.x)}`);
-      ok(bb.x + bb.width <= w - 12, "phone: the button is fully on screen", `${Math.round(bb.x + bb.width)} of ${w}`);
+      ok(nb.x + nb.width <= w - 14, "phone: the title has the whole row to itself and fits", `${Math.round(nb.x + nb.width)} of ${w}`);
       await page.locator("#sec-mob-1").scrollIntoViewIfNeeded();
       await page.screenshot({ path: "mobile-layout-phone.png" });
     } else {
       ok(Math.abs(cb.y - nb.y) < 4 && crumbSize === nameSize, `${label}: the title stays on ONE line at the normal size`, `${crumbSize}px / ${nameSize}px`);
-      ok(btnSize >= 12.5, `${label}: the View all button keeps its size`, `${btnSize}px`);
+    }
+    // View all: as configured on a wide screen; on a phone or tablet ALWAYS under the cards, in the middle (see t41 for every placement)
+    const titleBtnShown = await btn.isVisible();
+    const bottom1 = page.locator("#sec-mob-1 .ot-viewall");
+    if (small) {
+      ok(!titleBtnShown && (await bottom1.isVisible()), `${label}: the button configured beside the title is NOT there — it is under the cards instead`);
+      const c = await page.evaluate(() => { const sec = document.querySelector("#sec-mob-1").getBoundingClientRect(); const b = document.querySelector("#sec-mob-1 .ot-viewall").getBoundingClientRect(); const cards = [...document.querySelectorAll("#sec-mob-1 [aria-label^='Add']")].map((x) => x.getBoundingClientRect().bottom); return { off: Math.abs(b.left + b.width / 2 - (sec.left + sec.width / 2)), below: b.top >= Math.max(...cards) - 1 }; });
+      ok(c.off <= 2 && c.below, `${label}: it sits below the cards, centred on the screen`, `${c.off.toFixed(1)}px off centre`);
+    } else {
+      ok(titleBtnShown && !(await bottom1.isVisible()), "desktop: the button stays beside the title, as configured");
+      ok((await px(page, "#sec-mob-1 .ot-viewall-title", "fontSize")) >= 12.5, "desktop: and keeps its size");
     }
     // the sticky filter bar: ONE row with all four filter chips and the Categories button
     if (small) {
@@ -108,7 +115,8 @@ try {
     const bottomBtn = await px(page, "#sec-mob-2 .ot-viewall", "fontSize");
     ok(w <= 640 ? bottomBtn <= 12.6 : bottomBtn >= 13.5, w <= 640 ? "phone: the bottom View all button is smaller too" : `${label}: the bottom View all button keeps its size`, `${bottomBtn}px`);
     // it still works
-    await page.locator("#sec-mob-1 .ot-viewall-title").click();
+    await (small ? bottom1 : btn).click();
+    await page.waitForTimeout(700); // the extra cards slide open
     ok((await page.locator("#sec-mob-1 [aria-label^='Add']").count()) === 5, `${label}: View all still shows all 5 dishes`);
     ok((await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)) <= 1, `${label}: no sideways scroll`);
     await ctx.close();
