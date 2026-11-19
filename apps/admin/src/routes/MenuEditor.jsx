@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { flattenCategories, formatINR, IMAGE_RULES } from "@onetap/config-schema";
+import { flattenCategories, formatINR, IMAGE_RULES, modifierRuleText } from "@onetap/config-schema";
 import { ClipboardPaste, Download, ImagePlus, Loader, Star, X } from "lucide-react";
 import * as api from "../lib/api";
 import { ImportMenuModal } from "../components/ImportMenuModal";
@@ -13,6 +13,7 @@ import {
   useDeleteModifierGroup,
   useMenu,
   useUpdateItem,
+  useUpdateModifierGroup,
 } from "../lib/useMenu";
 import { CategoriesPanel } from "./menu/CategoriesPanel";
 import { ItemsPanel } from "./menu/ItemsPanel";
@@ -301,21 +302,27 @@ function ItemForm({
       {menu.modifierGroups.length > 0 && (
         <div style={{ borderTop: "1px solid var(--color-border)", margin: "6px 0 14px", paddingTop: 14 }}>
           <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 8 }}>Add-on groups</div>
-          {menu.modifierGroups.map((g) => (
-            <label key={g.id} style={{ display: "flex", gap: 8, alignItems: "center", fontSize: 14, marginBottom: 6 }}>
-              <input
-                type="checkbox"
-                checked={groupIds.includes(g.id)}
-                onChange={(e) =>
-                  setGroupIds(e.target.checked ? [...groupIds, g.id] : groupIds.filter((id) => id !== g.id))
-                }
-              />
-              {g.name}
-              <span style={{ color: "var(--color-text-muted)", fontSize: 12 }}>
-                ({g.options.length} options)
-              </span>
-            </label>
-          ))}
+          {/* as many columns as fit (each at least 190px wide), so a long list runs across the box, not down the page */}
+          <div data-testid="item-addon-groups" style={groupGrid}>
+            {menu.modifierGroups.map((g) => (
+              <label key={g.id} data-testid="item-addon-group" data-group={g.name} style={groupCheck}>
+                <input
+                  type="checkbox"
+                  style={{ marginTop: 3, flexShrink: 0 }}
+                  checked={groupIds.includes(g.id)}
+                  onChange={(e) =>
+                    setGroupIds(e.target.checked ? [...groupIds, g.id] : groupIds.filter((id) => id !== g.id))
+                  }
+                />
+                <span style={{ minWidth: 0, overflowWrap: "anywhere" }}>
+                  {g.name}
+                  <span style={{ display: "block", color: "var(--color-text-muted)", fontSize: 12 }}>
+                    {g.options.length} {g.options.length === 1 ? "option" : "options"}
+                  </span>
+                </span>
+              </label>
+            ))}
+          </div>
         </div>
       )}
 
@@ -490,9 +497,10 @@ function ItemPhotos({ outlet, images, originalKeys, onChange }) {
 
 /* ---------------------------------------------------------- modifier groups */
 
-function ModifierGroups({ outlet, menu }                                ) {
+function ModifierGroups({ outlet, menu }) {
   const [name, setName] = useState("");
   const [options, setOptions] = useState("");
+  const [editingId, setEditingId] = useState(null);
   const create = useCreateModifierGroup(outlet);
   const remove = useDeleteModifierGroup(outlet);
 
@@ -522,25 +530,41 @@ function ModifierGroups({ outlet, menu }                                ) {
       {menu.modifierGroups.length === 0 ? (
         <p style={{ color: "var(--color-text-muted)", margin: "0 0 14px", fontSize: 14 }}>None yet.</p>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 16 }}>
-          {menu.modifierGroups.map((g) => (
-            <div key={g.id} style={itemRow}>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 600, fontSize: 14 }}>{g.name}</div>
-                <div style={{ fontSize: 12, color: "var(--color-text-muted)" }}>
-                  {g.options.map((o) => `${o.label} +${formatINR(o.priceDelta)}`).join(" · ") || "no options"}
+        // columns as wide as they can be while still fitting (at least 340px each); the group being edited takes the full width
+        <div data-testid="group-list" style={groupListGrid}>
+          {menu.modifierGroups.map((g) =>
+            editingId === g.id ? (
+              <GroupEditor key={g.id} outlet={outlet} group={g} onDone={() => setEditingId(null)} />
+            ) : (
+              <div key={g.id} style={itemRow} data-testid="group-row" data-group={g.name}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: 600, fontSize: 14 }}>{g.name}</div>
+                  <div style={{ fontSize: 12, color: "var(--color-text-muted)", overflowWrap: "anywhere" }}>
+                    {g.options.map((o) => `${o.label} +${formatINR(o.priceDelta)}`).join(" · ") || "no options"}
+                  </div>
                 </div>
+                <button
+                  type="button"
+                  style={iconBtn}
+                  title="Edit"
+                  aria-label={`Edit ${g.name}`}
+                  data-testid="group-edit"
+                  onClick={() => setEditingId(g.id)}
+                >
+                  ✎
+                </button>
+                <button
+                  type="button"
+                  style={iconBtn}
+                  title="Delete"
+                  aria-label={`Delete ${g.name}`}
+                  onClick={() => window.confirm(`Delete "${g.name}"?`) && remove.mutate(g.id)}
+                >
+                  ×
+                </button>
               </div>
-              <button
-                type="button"
-                style={iconBtn}
-                title="Delete"
-                onClick={() => window.confirm(`Delete "${g.name}"?`) && remove.mutate(g.id)}
-              >
-                ×
-              </button>
-            </div>
-          ))}
+            ),
+          )}
         </div>
       )}
 
@@ -569,9 +593,134 @@ function ModifierGroups({ outlet, menu }                                ) {
       </div>
       <p style={{ margin: "8px 0 0", fontSize: 12, color: "var(--color-text-muted)" }}>
         Separate the options with commas, and put a price after a + for an extra charge — e.g. Cheese Dip + 30, Extra Mayo + 15.
+        To change a group later, press ✎ on it.
       </p>
-      {create.error ? <Toast kind="error">{(create.error         ).message}</Toast> : null}
+      {create.error ? <Toast kind="error">{create.error.message}</Toast> : null}
+      {remove.error ? <Toast kind="error">{remove.error.message}</Toast> : null}
     </Card>
+  );
+}
+
+/**
+ * What a group allows a customer to pick once it has `n` options. A group that let people pick any number keeps doing
+ * so when options are added or removed; a group with a deliberate limit ("choose up to 2", "pick one") keeps its limit
+ * (never more than it has options). Nothing here is typed in — the editor only changes the name and the options.
+ */
+function ruleFor(group, n) {
+  const anyNumber = group.maxSelect >= group.options.length;
+  const maxSelect = Math.max(1, anyNumber ? n : Math.min(group.maxSelect, n));
+  return { maxSelect, minSelect: Math.min(group.minSelect, maxSelect) };
+}
+
+let rowKeyCounter = 0;
+const nextRowKey = () => `opt-${++rowKeyCounter}`;
+
+/** Edit one add-on group in place: rename it, change what each option is called and costs, add options, remove options. */
+function GroupEditor({ outlet, group, onDone }) {
+  const update = useUpdateModifierGroup(outlet);
+  const [name, setName] = useState(group.name);
+  // an existing option keeps its id (orders, carts and items refer to it); a new one gets its id from the server
+  const [rows, setRows] = useState(() =>
+    group.options.map((o) => ({ key: nextRowKey(), id: o.id, label: o.label, price: toRupees(o.priceDelta) })),
+  );
+  const [problem, setProblem] = useState(null);
+
+  const setRow = (key, patch) => setRows((rs) => rs.map((r) => (r.key === key ? { ...r, ...patch } : r)));
+
+  const save = () => {
+    if (!name.trim()) return setProblem("Give the group a name.");
+    if (rows.length === 0) return setProblem("A group needs at least one option — add one, or delete the group instead.");
+    for (const r of rows) {
+      if (!r.label.trim()) return setProblem("Every option needs a name — type it in, or remove the empty row.");
+      const price = Number(r.price === "" ? 0 : r.price);
+      if (!Number.isFinite(price) || price < 0) return setProblem(`"${r.label.trim()}": the extra price must be 0 or more.`);
+    }
+    setProblem(null);
+    update.mutate(
+      {
+        id: group.id,
+        body: {
+          name: name.trim(),
+          ...ruleFor(group, rows.length),
+          options: rows.map((r) => ({ ...(r.id ? { id: r.id } : {}), label: r.label.trim(), priceDelta: toPaise(r.price) })),
+        },
+      },
+      { onSuccess: onDone },
+    );
+  };
+
+  const rule = modifierRuleText({ ...group, ...ruleFor(group, rows.length), options: rows });
+
+  return (
+    <div style={groupEditorBox} data-testid="group-editor" data-group={group.name}>
+      <Field label="Group name" style={{ marginBottom: 0, maxWidth: 340 }}>
+        <TextInput data-testid="group-name" value={name} onChange={(e) => setName(e.target.value)} />
+      </Field>
+
+      <div>
+        <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 6 }}>
+          Options <span style={{ fontWeight: 400, color: "var(--color-text-muted)" }}>— the extra price is in ₹; 0 means free</span>
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8, maxWidth: 560 }}>
+          {rows.map((r) => (
+            <div key={r.key} style={{ display: "flex", gap: 8, alignItems: "center" }} data-testid="group-option">
+              <TextInput
+                data-testid="group-option-label"
+                aria-label="Option name"
+                value={r.label}
+                placeholder="Option, e.g. Cheese Dip"
+                onChange={(e) => setRow(r.key, { label: e.target.value })}
+                style={{ flex: 1 }}
+              />
+              <TextInput
+                data-testid="group-option-price"
+                aria-label="Extra price in rupees"
+                type="number"
+                min="0"
+                value={r.price}
+                placeholder="₹"
+                onChange={(e) => setRow(r.key, { price: e.target.value })}
+                style={{ width: 100 }}
+              />
+              <button
+                type="button"
+                style={iconBtn}
+                title="Remove this option"
+                aria-label={`Remove ${r.label || "this option"}`}
+                data-testid="group-option-remove"
+                onClick={() => setRows((rs) => rs.filter((x) => x.key !== r.key))}
+              >
+                ×
+              </button>
+            </div>
+          ))}
+        </div>
+        <div style={{ marginTop: 8 }}>
+          <Button
+            variant="outline"
+            data-testid="group-option-add"
+            onClick={() => setRows((rs) => [...rs, { key: nextRowKey(), id: undefined, label: "", price: "0" }])}
+          >
+            + Add option
+          </Button>
+        </div>
+      </div>
+
+      <div style={{ fontSize: 12, color: "var(--color-text-muted)" }} data-testid="group-rule">
+        {rule ? `${rule}.` : "Customers can pick any number of these."} Items that use this group keep using it.
+      </div>
+
+      <div style={{ display: "flex", gap: 10 }}>
+        <Button onClick={save} disabled={update.isPending} data-testid="group-save">
+          {update.isPending ? "Saving…" : "Save changes"}
+        </Button>
+        <Button variant="outline" onClick={onDone} data-testid="group-cancel">
+          Cancel
+        </Button>
+      </div>
+      {problem ? <Toast kind="error">{problem}</Toast> : null}
+      {update.error ? <Toast kind="error">{update.error.message}</Toast> : null}
+    </div>
   );
 }
 
@@ -590,6 +739,19 @@ const iconBtn                = {
   color: "var(--color-text-muted)",
   cursor: "pointer",
   flexShrink: 0,
+};
+const groupGrid = { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(190px, 100%), 1fr))", gap: "10px 18px" };
+const groupCheck = { display: "flex", gap: 8, alignItems: "flex-start", fontSize: 14, minWidth: 0, cursor: "pointer" };
+const groupListGrid = { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(340px, 100%), 1fr))", gap: 8, marginBottom: 16 };
+const groupEditorBox = {
+  gridColumn: "1 / -1",
+  display: "flex",
+  flexDirection: "column",
+  gap: 14,
+  padding: "14px 14px 16px",
+  border: "1px solid var(--color-primary)",
+  borderRadius: 8,
+  background: "var(--color-bg)",
 };
 const itemRow = {
   display: "flex",

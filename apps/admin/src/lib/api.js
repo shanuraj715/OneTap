@@ -265,6 +265,9 @@ export const deleteItem = (o        , id        ) =>
 export const createModifierGroup = (o        , body                               ) =>
   req                          ("/api/menu/modifier-groups", { method: "POST", body: JSON.stringify(body), outletId: o._id });
 
+export const updateModifierGroup = (o, id, body) =>
+  req(`/api/menu/modifier-groups/${id}`, { method: "PATCH", body: JSON.stringify(body), outletId: o._id });
+
 export const deleteModifierGroup = (o        , id        ) =>
   req      (`/api/menu/modifier-groups/${id}`, { method: "DELETE", outletId: o._id });
 

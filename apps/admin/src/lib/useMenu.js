@@ -90,6 +90,10 @@ export const useCreateModifierGroup = (o         ) =>
     api.createModifierGroup(outlet, body),
   );
 
+/** Change an existing add-on group — its name and options (option ids are kept, so items and carts stay attached). */
+export const useUpdateModifierGroup = (o) =>
+  useMenuMutation(o, (outlet, a) => api.updateModifierGroup(outlet, a.id, a.body));
+
 export const useDeleteModifierGroup = (o         ) =>
   useMenuMutation        (o, (outlet, id) => api.deleteModifierGroup(outlet, id));
 
