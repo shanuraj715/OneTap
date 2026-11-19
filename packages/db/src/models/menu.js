@@ -9,6 +9,13 @@ const { Schema, model, models } = mongoose;
 const categorySchema = new Schema(
   {
     name: { type: String, required: true, trim: true },
+    // the category this one sits inside (South Indian → Dosa); null = a top-level category
+    parentId: { type: String, default: null, index: true },
+    // an optional picture for the category (shown beside its heading and in the category lists)
+    image: {
+      type: new Schema({ url: { type: String, required: true }, key: { type: String, default: "" }, width: Number, height: Number }, { _id: false }),
+      default: undefined,
+    },
     sortOrder: { type: Number, default: 0 },
     isActive: { type: Boolean, default: true },
   },

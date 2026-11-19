@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { formatINR, IMAGE_RULES, itemPriceLabel } from "@onetap/config-schema";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { flattenCategories, formatINR, IMAGE_RULES } from "@onetap/config-schema";
 import { Download, ImagePlus, Loader, Star, X } from "lucide-react";
 import * as api from "../lib/api";
 import { ImportMenuModal } from "../components/ImportMenuModal";
@@ -7,16 +7,15 @@ import { ImportMenuModal } from "../components/ImportMenuModal";
 import { useOutlet } from "../lib/useOutlet";
 import { useImageUpload } from "../lib/useStorage";
 import {
-  useCreateCategory,
   useCreateItem,
   useCreateModifierGroup,
-  useDeleteCategory,
-  useDeleteItem,
   useDeleteModifierGroup,
   useMenu,
-  useUpdateCategory,
   useUpdateItem,
 } from "../lib/useMenu";
+import { CategoriesPanel } from "./menu/CategoriesPanel";
+import { ItemsPanel } from "./menu/ItemsPanel";
+import { useSelection } from "./menu/shared";
 import { AwesomeLoader, Button, Card, Field, PageHeader, TextInput, Toast } from "../ui";
 
 const toPaise = (rupees        ) => Math.round(Number(rupees || 0) * 100);
@@ -28,12 +27,27 @@ export function MenuEditor() {
   const [categoryId, setCategoryId] = useState               (null);
   const [editing, setEditing] = useState                         (null);
   const [importModal, setImportModal] = useState(null);
+  // ticked categories / ticked items, for "delete selected"
+  const catSel = useSelection();
+  const itemSel = useSelection();
 
   const menu = menuQuery.data;
 
+  // land on the first top-level category; if the selected one was deleted, fall back to it
   useEffect(() => {
-    if (menu && !categoryId && menu.categories[0]) setCategoryId(menu.categories[0].id);
+    if (!menu) return;
+    if (categoryId && menu.categories.some((c) => c.id === categoryId)) return;
+    const first = flattenCategories(menu.categories)[0]?.category;
+    setCategoryId(first ? first.id : null);
   }, [menu, categoryId]);
+
+  // ticks never outlive the thing they were on
+  useEffect(() => {
+    if (!menu) return;
+    catSel.keepOnly(new Set(menu.categories.map((c) => c.id)));
+    itemSel.keepOnly(new Set(menu.items.map((i) => i.id)));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [menu]);
 
   if (!outlet) {
     return (
@@ -58,10 +72,6 @@ export function MenuEditor() {
     );
   }
 
-  const items = menu.items
-    .filter((i) => i.categoryId === categoryId)
-    .sort((a, b) => a.sortOrder - b.sortOrder);
-
   return (
     <>
       <PageHeader
@@ -77,16 +87,18 @@ export function MenuEditor() {
         }
       />
 
-      <div style={{ display: "grid", gridTemplateColumns: "300px 1fr", gap: 20, alignItems: "start" }}>
-        <Categories
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(340px, 420px) minmax(0, 1fr)", gap: 20, alignItems: "start" }}>
+        <CategoriesPanel
           outlet={outlet}
           menu={menu}
           selected={categoryId}
           onSelect={(id) => {
             setCategoryId(id);
             setEditing(null);
+            itemSel.clear();
           }}
           onImport={() => setImportModal({ targetCategoryId: null })}
+          selection={catSel}
         />
 
         <div>
@@ -99,13 +111,14 @@ export function MenuEditor() {
               onDone={() => setEditing(null)}
             />
           ) : (
-            <Items
+            <ItemsPanel
               outlet={outlet}
-              items={items}
-              disabled={!categoryId}
+              menu={menu}
+              categoryId={categoryId}
               onNew={() => setEditing("new")}
               onEdit={setEditing}
               onImport={() => setImportModal({ targetCategoryId: categoryId })}
+              selection={itemSel}
             />
           )}
         </div>
@@ -122,202 +135,6 @@ export function MenuEditor() {
         />
       )}
     </>
-  );
-}
-
-/* --------------------------------------------------------------- categories */
-
-function Categories({
-  outlet,
-  menu,
-  selected,
-  onSelect,
-  onImport,
-}) {
-  const [name, setName] = useState("");
-  const create = useCreateCategory(outlet);
-  const update = useUpdateCategory(outlet);
-  const remove = useDeleteCategory(outlet);
-
-  const add = () => {
-    if (!name.trim()) return;
-    create.mutate({ name: name.trim(), sortOrder: menu.categories.length }, { onSuccess: () => setName("") });
-  };
-
-  return (
-    <Card
-      title="Categories"
-      action={
-        onImport ? (
-          <button
-            type="button"
-            onClick={onImport}
-            style={{
-              font: "inherit",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 4,
-              fontSize: 12,
-              padding: "2px 7px",
-              borderRadius: 6,
-              border: "1px solid var(--color-border)",
-              background: "var(--color-bg)",
-              color: "var(--color-text)",
-              cursor: "pointer",
-            }}
-            title="Import categories from another outlet"
-          >
-            <Download size={12} /> Import
-          </button>
-        ) : null
-      }
-    >
-      <div style={{ display: "flex", flexDirection: "column", gap: 2, marginBottom: 12 }}>
-        {menu.categories
-          .slice()
-          .sort((a, b) => a.sortOrder - b.sortOrder)
-          .map((c) => {
-            const count = menu.items.filter((i) => i.categoryId === c.id).length;
-            const active = c.id === selected;
-            return (
-              <div key={c.id} style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                <button
-                  type="button"
-                  onClick={() => onSelect(c.id)}
-                  style={{
-                    ...catBtn,
-                    background: active ? "var(--color-primary)" : "transparent",
-                    color: active ? "var(--color-on-primary)" : "var(--color-text)",
-                  }}
-                >
-                  <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.name}</span>
-                  <span style={{ opacity: 0.7, fontSize: 12, flexShrink: 0 }}>{count}</span>
-                </button>
-                <button
-                  type="button"
-                  title="Rename"
-                  onClick={() => {
-                    const next = window.prompt("Category name", c.name);
-                    if (next && next !== c.name) update.mutate({ id: c.id, body: { name: next } });
-                  }}
-                  style={iconBtn}
-                >
-                  ✎
-                </button>
-                <button
-                  type="button"
-                  title="Delete"
-                  onClick={() => {
-                    if (window.confirm(`Delete "${c.name}"?`)) remove.mutate(c.id);
-                  }}
-                  style={iconBtn}
-                >
-                  ×
-                </button>
-              </div>
-            );
-          })}
-      </div>
-
-      <div style={{ display: "flex", gap: 6 }}>
-        <TextInput
-          value={name}
-          placeholder="New category"
-          onChange={(e) => setName(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && add()}
-          style={{ flex: 1, minWidth: 0 }}
-        />
-        <Button onClick={add} disabled={create.isPending}>
-          +
-        </Button>
-      </div>
-      {remove.error ? <Toast kind="error">{(remove.error         ).message}</Toast> : null}
-    </Card>
-  );
-}
-
-/* -------------------------------------------------------------------- items */
-
-function Items({
-  outlet,
-  items,
-  disabled,
-  onNew,
-  onEdit,
-  onImport,
-}) {
-  const update = useUpdateItem(outlet);
-  const remove = useDeleteItem(outlet);
-
-  return (
-    <Card
-      title="Items"
-      action={
-        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          {onImport && (
-            <Button
-              onClick={onImport}
-              disabled={disabled}
-              style={{ display: "inline-flex", gap: 6, alignItems: "center" }}
-              title="Import items into this category from another outlet"
-            >
-              <Download size={13} /> Import
-            </Button>
-          )}
-          <Button onClick={onNew} disabled={disabled}>
-            Add item
-          </Button>
-        </div>
-      }
-    >
-      {items.length === 0 ? (
-        <p style={{ color: "var(--color-text-muted)", margin: 0, fontSize: 14 }}>
-          {disabled ? "Pick a category." : "No items yet."}
-        </p>
-      ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-          {items.map((it) => (
-            <div key={it.id} style={itemRow}>
-              {it.images?.[0]?.url ? (
-                <img
-                  src={it.images[0].url}
-                  alt=""
-                  style={{ width: 34, height: 34, borderRadius: 6, objectFit: "cover", flexShrink: 0 }}
-                />
-              ) : null}
-              <Mark type={it.foodType} />
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontWeight: 600, fontSize: 14 }}>{it.name}</div>
-                <div style={{ fontSize: 12, color: "var(--color-text-muted)" }}>
-                  {itemPriceLabel(it)}
-                  {it.variants.length > 1 ? ` · ${it.variants.length} sizes` : ""}
-                  {it.modifierGroupIds.length ? ` · ${it.modifierGroupIds.length} add-on group` : ""}
-                </div>
-              </div>
-              <label style={{ fontSize: 12, display: "flex", gap: 5, alignItems: "center" }}>
-                <input
-                  type="checkbox"
-                  checked={it.isAvailable}
-                  onChange={(e) => update.mutate({ id: it.id, body: { isAvailable: e.target.checked } })}
-                />
-                available
-              </label>
-              <button type="button" style={iconBtn} title="Edit" onClick={() => onEdit(it)}>
-                ✎
-              </button>
-              <button
-                type="button"
-                style={iconBtn}
-                title="Delete"
-                onClick={() => window.confirm(`Delete "${it.name}"?`) && remove.mutate(it.id)}
-              >
-                ×
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
-    </Card>
   );
 }
 
@@ -349,6 +166,12 @@ function ItemForm({
   );
   const [groupIds, setGroupIds] = useState          (item?.modifierGroupIds ?? []);
   const [tags, setTags] = useState((item?.tags ?? []).join(", "));
+  // where the dish lives — any category in the tree, so a dish can be placed or moved
+  const [catId, setCatId] = useState(item?.categoryId ?? categoryId);
+  const categoryChoices = useMemo(
+    () => flattenCategories(menu.categories).map(({ category, depth }) => ({ id: category.id, label: `${"\u00A0\u00A0\u00A0".repeat(depth)}${depth ? "↳ " : ""}${category.name}` })),
+    [menu.categories],
+  );
 
   const pending = create.isPending || update.isPending;
   const error = (create.error ?? update.error)                ;
@@ -356,7 +179,7 @@ function ItemForm({
   const save = () => {
     if (!name.trim()) return;
     const body = {
-      categoryId,
+      categoryId: catId,
       name: name.trim(),
       description: description.trim(),
       foodType,
@@ -384,6 +207,15 @@ function ItemForm({
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 14 }}>
         <Field label="Name" info="What diners see on the menu and what the kitchen reads on the ticket. Keep it short — long names wrap awkwardly on a 58 mm receipt roll." style={{ maxWidth: "none" }}>
           <TextInput value={name} onChange={(e) => setName(e.target.value)} autoFocus />
+        </Field>
+        <Field label="Category" hint="Where it appears on the menu" info="Any category, including one inside another (South Indian → Dosa). Change it to move the dish." style={{ maxWidth: "none" }}>
+          <select value={catId} onChange={(e) => setCatId(e.target.value)} style={selectStyle} aria-label="Category">
+            {categoryChoices.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.label}
+              </option>
+            ))}
+          </select>
         </Field>
         <Field label="Description" info="One line under the item on the website. Use it for what is actually in the dish; it never prints on a kitchen ticket, so it costs the cooks nothing." style={{ maxWidth: "none" }}>
           <TextInput value={description} onChange={(e) => setDescription(e.target.value)} />
@@ -702,41 +534,7 @@ function ModifierGroups({ outlet, menu }                                ) {
 
 /* ------------------------------------------------------------------- shared */
 
-function Mark({ type }                    ) {
-  const color = type === "veg" ? "#0E8A3E" : type === "egg" ? "#C79A20" : "#B23B3B";
-  const round = type !== "veg";
-  return (
-    <span
-      style={{
-        width: 13,
-        height: 13,
-        flexShrink: 0,
-        border: `2px solid ${color}`,
-        borderRadius: round ? "50%" : 3,
-        display: "grid",
-        placeItems: "center",
-      }}
-    >
-      <span style={{ width: 6, height: 6, background: color, borderRadius: round ? "50%" : 1 }} />
-    </span>
-  );
-}
 
-const catBtn = {
-  flex: 1,
-  minWidth: 0,
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  gap: 8,
-  font: "inherit",
-  fontSize: 14,
-  textAlign: "left",
-  padding: "7px 10px",
-  border: "none",
-  borderRadius: 8,
-  cursor: "pointer",
-};
 const iconBtn                = {
   font: "inherit",
   fontSize: 14,
@@ -750,7 +548,7 @@ const iconBtn                = {
   cursor: "pointer",
   flexShrink: 0,
 };
-const itemRow                = {
+const itemRow = {
   display: "flex",
   alignItems: "center",
   gap: 10,

@@ -218,6 +218,26 @@ export const updateCategory = (o        , id        , body                      
 export const deleteCategory = (o        , id        ) =>
   req      (`/api/menu/categories/${id}`, { method: "DELETE", outletId: o._id });
 
+/** Create several categories at once (`names` already split on commas). */
+export const createCategories = (o        , body                                                                    ) =>
+  req("/api/menu/categories/bulk", { method: "POST", body: JSON.stringify(body), outletId: o._id });
+
+/** Delete several categories (and the ones inside them) at once; `deleteItems` also deletes the dishes in them. */
+export const deleteCategories = (o        , body                                           ) =>
+  req("/api/menu/categories/bulk-delete", { method: "POST", body: JSON.stringify(body), outletId: o._id });
+
+/** Drag-and-drop: move a category inside another (or the top level), before a sibling (or at the end). */
+export const moveCategory = (o        , body                                                           ) =>
+  req("/api/menu/categories/move", { method: "POST", body: JSON.stringify(body), outletId: o._id });
+
+/** Put one level of categories in a new order. */
+export const reorderCategories = (o        , ids          ) =>
+  req("/api/menu/categories/order", { method: "POST", body: JSON.stringify({ ids }), outletId: o._id });
+
+/** Delete several items at once. */
+export const deleteItems = (o        , ids          ) =>
+  req("/api/menu/items/bulk-delete", { method: "POST", body: JSON.stringify({ ids }), outletId: o._id });
+
 export const createItem = (o        , body                                                  ) =>
   req                    ("/api/menu/items", { method: "POST", body: JSON.stringify(body), outletId: o._id });
 

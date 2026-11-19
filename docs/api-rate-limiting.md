@@ -50,12 +50,13 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | `public-compute` | visitor's address | 90 per min | Price quotes, delivery checks and capacity lookups are open to visitors and each runs several database reads — they must stay fast for real customers, not be a way to load the database. | `POST /api/delivery/check`<br>`GET /api/orders/capacity`<br>`POST /api/orders/quote` |
 | `coupon-guess` | visitor's address | 20 per 5 min | Coupon codes are short; without a limit a script can try thousands to find a valid one. | `POST /api/coupons/apply` |
 | `table-scan` | visitor's address | 60 per min | QR scans and table lookups are open to anyone with a link; this stops table ids or tokens being guessed at speed. A dining room's Wi-Fi scanning at once still fits. | `POST /api/tables/claim`<br>`GET /api/tables/public`<br>`GET /api/tables/scan/:tableId`<br>`POST /api/tables/scan/:tableId/session`<br>`GET /api/tables/sessions/:id/tab` |
-| `customer-account` | user, else customer, else address | 30 per 10 min | A customer saving their profile or signing out: a few a day is normal, so a high rate means a script. | `POST /api/customer/logout`<br>`PATCH /api/customer/profile` |
+| `customer-account` | user, else customer, else address | 30 per 10 min | A customer saving their profile or signing out: a few a day is normal, so a high rate means a script. | `POST /api/customer/logout`<br>`DELETE /api/customer/orders/:id`<br>`PATCH /api/customer/profile` |
+| `customer-orders` | user, else customer, else address | 90 per 10 min | A customer's Account page (their order history). It refreshes every 20 seconds or so while an order is being prepared, which is far under this; a higher rate is a script copying history or loading the database. | `GET /api/customer/orders` |
 | `order-place` | user, else customer, else address | 12 per 10 min for a customer · 150 per 10 min for staff at the till | A customer placing orders: a dozen in ten minutes is generous, more is a script flooding the kitchen. Staff at the till (who send the outlet header) get a much bigger budget. | `POST /api/orders` |
 | `payment` | user, else customer, else address | 40 per 10 min | Starting and confirming a payment calls the payment gateway; this stops a script burning the store's gateway quota. | `POST /api/payments/intent`<br>`POST /api/payments/verify` |
 | `webhook` | visitor's address | 240 per min | Payment gateways call this with a signature we check — but a flood of forged calls would still cost a signature check and a database read each. A gateway's servers speak for every merchant it has, so the ceiling is generous (4 a second per address) — raise RATE_LIMIT_SCALE if the platform grows to many busy stores. | `POST /api/payments/webhook/:gateway` |
 | `print-agent` | visitor's address | 300 per min | The little program at a restaurant's printer asks for jobs every second or two with its own token. 300 a minute leaves room for several printers; it stops a leaked token being used to hammer the queue. | `GET /api/printing/agent/jobs`<br>`POST /api/printing/agent/jobs/:id/result` |
-| `team-write` | signed-in user (else address) | 240 per min | Every change a team member makes to the dashboard (menu, outlets, orders, tables, pages, settings…). 240 a minute is four a second — more than any person — so a stolen session can't mass-delete or mass-edit in a blink. | 141 routes (see the full list below) |
+| `team-write` | signed-in user (else address) | 240 per min | Every change a team member makes to the dashboard (menu, outlets, orders, tables, pages, settings…). 240 a minute is four a second — more than any person — so a stolen session can't mass-delete or mass-edit in a blink. | 147 routes (see the full list below) |
 | `account-write` | signed-in user (else address) | 30 per 10 min | Creating team members, changing roles and resetting passwords. Takeover of accounts is the worst thing that can happen to a store, so it is slow on purpose. | `POST /api/platform/stores/:id/owners`<br>`DELETE /api/platform/stores/:id/owners/:userId`<br>`PATCH /api/platform/stores/:id/owners/:userId`<br>`DELETE /api/platform/stores/:id/people/:userId`<br>`POST /api/platform/stores/:id/people/:userId/block`<br>`POST /api/platform/stores/:id/people/:userId/unblock`<br>`POST /api/users`<br>`DELETE /api/users/:id`<br>`PATCH /api/users/:id` |
 | `secrets` | signed-in user (else address) | 30 per 10 min | Saving or revealing payment-gateway keys, SMS / WhatsApp connections, storage credentials and printer-agent tokens. They are rarely touched; a flood means something is wrong. | `DELETE /api/notify/config/:channel`<br>`PUT /api/notify/config/:channel`<br>`PUT /api/notify/messaging`<br>`DELETE /api/payments/config/:gateway`<br>`PUT /api/payments/config/:gateway`<br>`DELETE /api/platform/storage`<br>`PUT /api/platform/storage`<br>`POST /api/platform/storage/adopt/:brandId`<br>`POST /api/platform/storage/test`<br>`GET /api/printing/printers/:id/agent-token` |
 | `pii-read` | signed-in user (else address) | 120 per min | Looking up customers and their wallets by phone number. A person looks one up at a time; a loop is someone (or a stolen session) copying the customer list or trying phone numbers to see who has coins. | `GET /api/customers`<br>`GET /api/customers/:id/wallet`<br>`GET /api/orders/staff/customer`<br>`GET /api/orders/staff/customers` |
@@ -68,7 +69,7 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | `chat-send` | signed-in user (else address) | 120 per min | Sending and retrying chat messages from the store's own WhatsApp number. (The WhatsApp worker also paces what actually goes out.) | `POST /api/whatsapp/chats`<br>`POST /api/whatsapp/chats/:id/messages`<br>`POST /api/whatsapp/chats/:id/messages/:messageId/retry` |
 | `wa-link` | signed-in user (else address) | 30 per 10 min | Linking, relinking and unlinking WhatsApp numbers. Repeated linking attempts are what get a number logged out or banned. | `POST /api/whatsapp/accounts`<br>`DELETE /api/whatsapp/accounts/:id`<br>`POST /api/whatsapp/accounts/:id/relink`<br>`POST /api/whatsapp/accounts/:id/unlink` |
 | `hardware` | signed-in user (else address) | 60 per min | Test prints, reprints and retries physically drive a printer in the restaurant. | `POST /api/printing/jobs/:id/reprint`<br>`POST /api/printing/jobs/:id/retry`<br>`POST /api/printing/orders/:orderId/print`<br>`POST /api/printing/printers/:id/test` |
-| `destructive` | signed-in user (else address) | 20 per 10 min | Deleting or switching off a store, an outlet or a chat; publishing a client onboarding as a live store; creating stores. A stolen super-admin session can't wipe the platform at machine speed. | `POST /api/brands`<br>`DELETE /api/outlets/:id`<br>`POST /api/platform/onboarding/:id/publish`<br>`DELETE /api/platform/stores/:id`<br>`POST /api/platform/stores/:id/disable`<br>`POST /api/platform/stores/:id/enable`<br>`DELETE /api/platform/stores/:id/outlets/:outletId`<br>`DELETE /api/whatsapp/chats/:id`<br>`POST /api/whatsapp/chats/:id/clear` |
+| `destructive` | signed-in user (else address) | 20 per 10 min | Deleting an order, a chat, an outlet or a store (or switching a store off); publishing a client onboarding as a live store; creating stores. A stolen super-admin session can't wipe the platform at machine speed. | `POST /api/brands`<br>`POST /api/menu/categories/bulk-delete`<br>`POST /api/menu/items/bulk-delete`<br>`DELETE /api/orders/:id`<br>`DELETE /api/outlets/:id`<br>`POST /api/platform/onboarding/:id/publish`<br>`DELETE /api/platform/stores/:id`<br>`POST /api/platform/stores/:id/disable`<br>`POST /api/platform/stores/:id/enable`<br>`DELETE /api/platform/stores/:id/outlets/:outletId`<br>`DELETE /api/whatsapp/chats/:id`<br>`POST /api/whatsapp/chats/:id/clear` |
 | `ws-connect` | visitor's address | 30 per min | Live-order and live-preview WebSocket connections: each one is a held-open socket. 30 new connections a minute per address (a few browser tabs reconnecting) is plenty. | the live-order connection `/realtime` and the live-preview connection `/preview` (WebSocket upgrades — not routes, so not in the route list) |
 
 ### Every route
@@ -104,6 +105,8 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | GET | `/api/customer/guard` | `api` |
 | POST | `/api/customer/logout` | `api`, `customer-account` |
 | GET | `/api/customer/me` | `api` |
+| GET | `/api/customer/orders` | `api`, `customer-orders` |
+| DELETE | `/api/customer/orders/:id` | `api`, `customer-account` |
 | POST | `/api/customer/otp/request` | `api`, `otp-send-ip`, `otp-send-store`, `otp-resend-number`, `otp-flood` |
 | POST | `/api/customer/otp/verify` | `api`, `otp-flood` |
 | PATCH | `/api/customer/profile` | `api`, `customer-account` |
@@ -130,10 +133,15 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | POST | `/api/menu/categories` | `api`, `team-write` |
 | DELETE | `/api/menu/categories/:id` | `api`, `team-write` |
 | PATCH | `/api/menu/categories/:id` | `api`, `team-write` |
+| POST | `/api/menu/categories/bulk` | `api`, `team-write` |
+| POST | `/api/menu/categories/bulk-delete` | `api`, `team-write`, `destructive` |
+| POST | `/api/menu/categories/move` | `api`, `team-write` |
+| POST | `/api/menu/categories/order` | `api`, `team-write` |
 | POST | `/api/menu/import` | `api`, `team-write`, `upload` |
 | POST | `/api/menu/items` | `api`, `team-write` |
 | DELETE | `/api/menu/items/:id` | `api`, `team-write` |
 | PATCH | `/api/menu/items/:id` | `api`, `team-write` |
+| POST | `/api/menu/items/bulk-delete` | `api`, `team-write`, `destructive` |
 | POST | `/api/menu/modifier-groups` | `api`, `team-write` |
 | DELETE | `/api/menu/modifier-groups/:id` | `api`, `team-write` |
 | PATCH | `/api/menu/modifier-groups/:id` | `api`, `team-write` |
@@ -145,6 +153,7 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | PUT | `/api/notify/messaging` | `api`, `team-write`, `secrets` |
 | GET | `/api/orders` | `api` |
 | POST | `/api/orders` | `api`, `team-write`, `order-place` |
+| DELETE | `/api/orders/:id` | `api`, `team-write`, `destructive` |
 | GET | `/api/orders/:id` | `api` |
 | PATCH | `/api/orders/:id` | `api`, `team-write` |
 | PATCH | `/api/orders/:id/status` | `api`, `team-write` |

@@ -7,8 +7,13 @@ import {
   createCategory,
   createItem,
   createModifierGroup,
+  createCategories,
+  deleteCategories,
   deleteCategory,
   deleteItem,
+  deleteItems,
+  moveCategory,
+  reorderCategories,
   deleteModifierGroup,
   getMenu,
   importMenu,
@@ -49,8 +54,19 @@ menuRouter.get("/", async (req, res) => {
 
 /* --------------------------------------------------------------- categories */
 
+const categoryImageBody = z.object({
+  url: z.string().min(1),
+  key: z.string().optional(),
+  width: z.number().int().positive().optional(),
+  height: z.number().int().positive().optional(),
+});
+
 const categoryBody = z.object({
   name: z.string().min(1),
+  /** the category this one goes inside; null = top level */
+  parentId: z.string().nullable().optional(),
+  /** a picture for the category; null removes it */
+  image: categoryImageBody.nullable().optional(),
   sortOrder: z.number().int().optional(),
   isActive: z.boolean().optional(),
 });
@@ -63,6 +79,37 @@ menuRouter.post("/categories", async (req, res) => {
 menuRouter.patch("/categories/:id", async (req, res) => {
   const body = categoryBody.partial().parse(req.body);
   res.json({ category: await updateCategory(await writeContext(req), req.params.id, body) });
+});
+
+/** Several categories at once, each with its own name and optional picture, inside a parent or at the top level. */
+menuRouter.post("/categories/bulk", async (req, res) => {
+  const body = z
+    .object({
+      parentId: z.string().nullable().optional(),
+      categories: z.array(z.object({ name: z.string().max(120), image: categoryImageBody.nullable().optional() })).min(1).max(200),
+      isActive: z.boolean().optional(),
+    })
+    .parse(req.body);
+  res.status(201).json({ categories: await createCategories(await writeContext(req), body) });
+});
+
+/** Delete several categories at once — and the sub-categories inside them. Refuses if they hold items unless `deleteItems`. */
+menuRouter.post("/categories/bulk-delete", limiter("destructive"), async (req, res) => {
+  const body = z.object({ ids: z.array(z.string().min(1)).min(1).max(200), deleteItems: z.boolean().optional() }).parse(req.body);
+  res.json(await deleteCategories(await writeContext(req), body.ids, { deleteItems: body.deleteItems === true }));
+});
+
+/** Drag-and-drop: move a category inside another (or to the top level), just before a given sibling (or to the end). */
+menuRouter.post("/categories/move", async (req, res) => {
+  const body = z.object({ id: z.string().min(1), parentId: z.string().nullable().optional(), beforeId: z.string().nullable().optional() }).parse(req.body);
+  res.json(await moveCategory(await writeContext(req), body.id, { parentId: body.parentId ?? null, beforeId: body.beforeId ?? null }));
+});
+
+/** Put the categories of one level in a new order (the ids are that level, top to bottom). */
+menuRouter.post("/categories/order", async (req, res) => {
+  const body = z.object({ ids: z.array(z.string().min(1)).min(1).max(500) }).parse(req.body);
+  await reorderCategories(await writeContext(req), body.ids);
+  res.status(204).end();
 });
 
 menuRouter.delete("/categories/:id", async (req, res) => {
@@ -108,6 +155,12 @@ menuRouter.post("/items", async (req, res) => {
 menuRouter.patch("/items/:id", async (req, res) => {
   const body = itemBody.partial().parse(req.body);
   res.json({ item: await updateItem(await writeContext(req), req.params.id, body) });
+});
+
+/** Delete several items at once. */
+menuRouter.post("/items/bulk-delete", limiter("destructive"), async (req, res) => {
+  const body = z.object({ ids: z.array(z.string().min(1)).min(1).max(500) }).parse(req.body);
+  res.json(await deleteItems(await writeContext(req), body.ids));
 });
 
 menuRouter.delete("/items/:id", async (req, res) => {

@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { formatINR } from "@onetap/config-schema";
+import { flattenCategories, formatINR } from "@onetap/config-schema";
 import { useQuery } from "@tanstack/react-query";
 import {
   Check,
@@ -71,7 +71,11 @@ export function ImportMenuModal({
     enabled: Boolean(selectedSourceOutlet),
   });
 
-  const sourceCategories = sourceMenu?.categories ?? [];
+  // the other outlet's categories in tree order, each with how deep it is and its full name ("South Indian › Dosa")
+  const sourceCategories = useMemo(
+    () => flattenCategories(sourceMenu?.categories ?? []).map((e) => ({ ...e.category, depth: e.depth, label: [...e.trail, e.category.name].join(" › ") })),
+    [sourceMenu],
+  );
   const sourceItems = sourceMenu?.items ?? [];
 
   // Filtered categories & items
@@ -287,9 +291,9 @@ export function ImportMenuModal({
                       onChange={(e) => setTargetCatId(e.target.value)}
                       disabled={importMutation.isPending}
                     >
-                      {currentMenu.categories.map((c) => (
+                      {flattenCategories(currentMenu.categories).map(({ category: c, depth }) => (
                         <option key={c.id} value={c.id}>
-                          {c.name}
+                          {`${"\u00A0\u00A0\u00A0".repeat(depth)}${depth ? "↳ " : ""}${c.name}`}
                         </option>
                       ))}
                     </Select>
@@ -350,7 +354,7 @@ export function ImportMenuModal({
                   const isCollapsed = collapsedCatIds.has(cat.id);
 
                   return (
-                    <div key={cat.id} style={categoryCard}>
+                    <div key={cat.id} style={{ ...categoryCard, marginLeft: Math.min(cat.depth, 4) * 14 }}>
                       {/* Category Header Bar */}
                       <div style={categoryHeader}>
                         <button
@@ -369,7 +373,7 @@ export function ImportMenuModal({
                             onChange={() => handleToggleCategory(cat.id)}
                             style={{ accentColor: "var(--color-primary)", width: 16, height: 16 }}
                           />
-                          <span>{cat.name}</span>
+                          <span title={cat.label}>{cat.depth > 0 ? <span style={{ opacity: 0.6 }}>{cat.label.slice(0, cat.label.length - cat.name.length)}</span> : null}{cat.name}</span>
                           <span style={pillBadge}>
                             {selectedCountInCat}/{catItems.length} items
                           </span>

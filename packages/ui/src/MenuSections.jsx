@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
                                            
 import {
+  pruneEmptySections,
   resolveMenuSections,
                 
             
@@ -41,19 +42,55 @@ export function MenuSections({
   const toolbarRef = useRef(null);
 
   /** Go to a category: a short pause (the sheet closes, the tap registers), then an eased glide that stops just below the sticky bar. */
-  const goTo = (id) => {
-    setSheetOpen(false);
-    window.setTimeout(() => glideTo(document.getElementById(`sec-${id}`), toolbarRef.current), 500);
-  };
-
   const sections = useMemo(() => resolveMenuSections(menu, layout), [menu, layout]);
 
   const visibleSections = useMemo(() => {
     if (!foodFilter) return sections;
-    return sections
-      .map((s) => ({ ...s, items: s.items.filter((i) => i.foodType === foodFilter) }))
-      .filter((s) => s.items.length > 0);
+    // a parent's heading stays only while something inside it is still shown
+    return pruneEmptySections(sections.map((s) => ({ ...s, items: s.items.filter((i) => i.foodType === foodFilter) })));
   }, [sections, foodFilter]);
+
+  // Categories inside categories: the top-level ones are the main chips; the one in view gets a second row of chips
+  // for what is inside it.
+  const nested = visibleSections.some((s) => (s.depth ?? 0) > 0);
+  const rootSections = nested ? visibleSections.filter((s) => (s.depth ?? 0) === 0) : visibleSections;
+  const [activeRoot, setActiveRoot] = useState(null);
+  const subSections = nested ? visibleSections.filter((s) => s.rootId === activeRoot && (s.depth ?? 0) > 0) : [];
+
+  const goTo = (id) => {
+    setSheetOpen(false);
+    const target = visibleSections.find((s) => s.id === id);
+    if (target) setActiveRoot(target.rootId);
+    window.setTimeout(() => glideTo(document.getElementById(`sec-${id}`), toolbarRef.current), 500);
+  };
+
+  // which top-level category is in view: the last section whose top has passed just under the sticky bar
+  useEffect(() => {
+    if (!nested) return undefined;
+    let frame = 0;
+    const update = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const line = (toolbarRef.current?.getBoundingClientRect().bottom ?? 0) + 24;
+        let current = visibleSections[0]?.rootId ?? null;
+        for (const s of visibleSections) {
+          const el = document.getElementById(`sec-${s.id}`);
+          if (!el) continue;
+          if (el.getBoundingClientRect().top <= line) current = s.rootId;
+          else break;
+        }
+        setActiveRoot(current);
+      });
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, [nested, visibleSections]);
 
   const foodTypesPresent = useMemo(() => {
     const set = new Set          ();
@@ -90,17 +127,19 @@ export function MenuSections({
             <>
               {/* desktop: every category as a chip */}
               <nav className="ot-cat-chips" aria-label="Menu categories" style={{ display: "flex", gap: "var(--fx-toolbar-gap, 6px)", flexWrap: "wrap" }}>
-                {visibleSections.map((s) => (
+                {rootSections.map((s) => (
                   <a
                     key={s.id}
                     href={`#sec-${s.id}`}
                     className="ot-fx-chip"
-                    style={fx("chip", jumpLink)}
+                    aria-current={nested && s.rootId === activeRoot ? "true" : undefined}
+                    style={{ ...fx("chip", jumpLink), ...(nested && s.rootId === activeRoot ? jumpLinkActive : null) }}
                     onClick={(e) => {
                       e.preventDefault();
                       goTo(s.id);
                     }}
                   >
+                    {s.imageUrl ? <img src={s.imageUrl} alt="" style={chipPhoto} /> : null}
                     {s.title}
                   </a>
                 ))}
@@ -112,6 +151,26 @@ export function MenuSections({
                 </svg>
                 Categories
               </button>
+              {/* what is inside the top-level category in view */}
+              {subSections.length > 0 ? (
+                <nav aria-label="Inside this category" style={{ flexBasis: "100%", display: "flex", gap: "var(--fx-toolbar-gap, 6px)", flexWrap: "wrap", paddingTop: 2 }}>
+                  {subSections.map((s) => (
+                    <a
+                      key={s.id}
+                      href={`#sec-${s.id}`}
+                      className="ot-fx-chip"
+                      style={{ ...fx("chip", jumpLink), fontSize: "0.75rem", padding: "3px 10px", marginLeft: (s.depth - 1) * 6 }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        goTo(s.id);
+                      }}
+                    >
+                      {s.imageUrl ? <img src={s.imageUrl} alt="" style={chipPhoto} /> : null}
+                      {s.title}
+                    </a>
+                  ))}
+                </nav>
+              ) : null}
             </>
           ) : null}
         </div>
@@ -134,11 +193,36 @@ export function MenuSections({
         const align = section.titleAlign === "center" ? "center" : "left";
         const buttonPlacement = section.viewAllPlacement || "left";
         const isTitleRight = buttonPlacement === "title-right" && !section.hideTitle;
+        // a category inside another sits a level down: smaller heading, the names above it, set in from the left
+        const depth = section.depth ?? 0;
+        const Heading = depth === 0 ? "h2" : depth === 1 ? "h3" : "h4";
+        const headingEl = (
+          <Heading
+            style={{
+              ...heading,
+              ...(depth > 0 ? nestedHeading(depth) : null),
+              borderBottom: "none",
+              paddingBottom: 0,
+              textAlign: align,
+              flex: align === "center" && !section.imageUrl ? 1 : undefined,
+              margin: 0,
+            }}
+          >
+            {section.title}
+            {section.showItemCount ? <span style={countBadge}> ({section.items.length})</span> : null}
+          </Heading>
+        );
 
         return (
-          <section key={section.id} id={`sec-${section.id}`} style={{ marginBottom: 40, scrollMarginTop: 72 }}>
+          <section
+            key={section.id}
+            id={`sec-${section.id}`}
+            data-depth={depth}
+            style={{ marginBottom: section.headingOnly ? 14 : depth > 0 ? 30 : 40, marginLeft: depth > 1 ? (depth - 1) * 14 : 0, scrollMarginTop: 72 }}
+          >
             {section.hideTitle && !section.subtitle ? null : (
-              <div style={{ marginBottom: 14 }}>
+              <div style={{ marginBottom: section.headingOnly ? 0 : 14 }}>
+                {depth > 0 && section.trail?.length && !section.hideTitle ? <div style={crumb}>{section.trail.join(" › ")}</div> : null}
                 {section.hideTitle ? null : (
                   <div
                     style={{
@@ -146,25 +230,18 @@ export function MenuSections({
                       alignItems: "center",
                       justifyContent: "space-between",
                       gap: 12,
-                      paddingBottom: 8,
-                      borderBottom: align === "center" && !isTitleRight ? "none" : "1px solid var(--color-border)",
+                      paddingBottom: depth > 0 ? 2 : 8,
+                      borderBottom: (align === "center" && !isTitleRight) || depth > 0 ? "none" : "1px solid var(--color-border)",
                     }}
                   >
-                    <h2
-                      style={{
-                        ...heading,
-                        borderBottom: "none",
-                        paddingBottom: 0,
-                        textAlign: align,
-                        flex: align === "center" ? 1 : undefined,
-                        margin: 0,
-                      }}
-                    >
-                      {section.title}
-                      {section.showItemCount ? (
-                        <span style={countBadge}> ({section.items.length})</span>
-                      ) : null}
-                    </h2>
+                    {section.imageUrl ? (
+                      <div style={{ display: "flex", alignItems: "center", gap: 12, flex: align === "center" ? 1 : undefined, justifyContent: align === "center" ? "center" : undefined }}>
+                        <img src={section.imageUrl} alt="" style={{ ...catPhoto, width: depth === 0 ? 52 : 40, height: depth === 0 ? 52 : 40 }} />
+                        {headingEl}
+                      </div>
+                    ) : (
+                      headingEl
+                    )}
                     {isTitleRight && section.collapsible ? (
                       <button
                         type="button"
@@ -183,6 +260,7 @@ export function MenuSections({
                 {section.subtitle ? <p style={{ ...subtitle, textAlign: align }}>{section.subtitle}</p> : null}
               </div>
             )}
+            {section.headingOnly ? null : (
             <div className={gridProps.className} style={gridProps.style}>
               {shownItems.map((item) =>
                 onSelectItem && item.isAvailable ? (
@@ -207,6 +285,7 @@ export function MenuSections({
                 ),
               )}
             </div>
+            )}
             {section.collapsible && !isTitleRight ? (
               <div
                 style={{
@@ -288,9 +367,12 @@ function CategorySheet({ sections, onPick, onClose }) {
         </div>
         <div style={{ overflowY: "auto", display: "flex", flexDirection: "column", gap: 2 }}>
           {sections.map((s, i) => (
-            <button key={s.id} ref={i === 0 ? first : undefined} type="button" onClick={() => onPick(s.id)} style={sheetItem}>
-              <span>{s.title}</span>
-              <span style={{ fontSize: 13, color: "var(--color-text-muted)", fontVariantNumeric: "tabular-nums" }}>{s.items.length}</span>
+            <button key={s.id} ref={i === 0 ? first : undefined} type="button" onClick={() => onPick(s.id)} style={{ ...sheetItem, paddingLeft: 12 + (s.depth ?? 0) * 18, fontWeight: (s.depth ?? 0) === 0 ? 700 : 600 }}>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 10, minWidth: 0 }}>
+                {s.imageUrl ? <img src={s.imageUrl} alt="" style={{ ...catPhoto, width: 30, height: 30, borderRadius: 8 }} /> : null}
+                {s.title}
+              </span>
+              {s.headingOnly ? null : <span style={{ fontSize: 13, color: "var(--color-text-muted)", fontVariantNumeric: "tabular-nums" }}>{s.items.length}</span>}
             </button>
           ))}
         </div>
@@ -428,6 +510,17 @@ const heading                = {
   paddingBottom: 8,
   borderBottom: "1px solid var(--color-border)",
 };
+/** a category inside another: smaller, set in from the left with a thin bar */
+const nestedHeading = (depth) => ({
+  fontSize: depth === 1 ? 18 : 16,
+  fontWeight: 650,
+  paddingLeft: 10,
+  borderLeft: `3px solid ${depth === 1 ? "var(--color-primary)" : "var(--color-border)"}`,
+});
+const crumb = { fontSize: 12, fontWeight: 600, letterSpacing: "0.02em", color: "var(--color-text-muted)", margin: "0 0 4px 13px" };
+const catPhoto = { borderRadius: 12, objectFit: "cover", flexShrink: 0, border: "1px solid var(--color-border)", background: "var(--color-surface)" };
+const chipPhoto = { width: 18, height: 18, borderRadius: 999, objectFit: "cover", verticalAlign: -4, marginRight: 6 };
+const jumpLinkActive = { color: "var(--color-text)", borderColor: "var(--color-primary)", boxShadow: "inset 0 0 0 1px var(--color-primary)" };
 const subtitle                = { margin: "6px 0 0", fontSize: 13.5, color: "var(--color-text-muted)" };
 const clickable                = { cursor: "pointer", borderRadius: "var(--radius-card)" };
 const countBadge                = { fontSize: "0.7em", fontWeight: 500, color: "var(--color-text-muted)" };

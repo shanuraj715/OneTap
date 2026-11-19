@@ -14,6 +14,8 @@ import {
   themeTokensSchema,
   tokensToCssVars,
   TONES_LIGHT,
+  categorySubtreeIds,
+  flattenCategories,
 } from "@onetap/config-schema";
 import { itemCardVariants, MenuSections } from "@onetap/ui";
 import {
@@ -154,11 +156,13 @@ export function MenuLayout() {
                     sections:
                       layout.sections.length > 0
                         ? layout.sections
-                        : categories.map((c) => ({
+                        : flattenCategories(categories).map(({ category: c, trail }) => ({
                             ...emptySection(layout.defaultCardVariant),
-                            title: c.name,
+                            title: [...trail, c.name].join(" › "),
                             source: "category",
                             categoryId: c.id,
+                            // one section per category: each shows its own dishes (the ones inside it have sections of their own)
+                            includeSubcategories: false,
                           })),
                   })
                 }
@@ -426,16 +430,21 @@ function PreviewLink({ preview, dirty, active, onStart, onStop }) {
 
 function SectionRow({ section, index, total, categories, items, onChange, onMove, onRemove }) {
   const manual = section.source === "picks" || section.itemSelection === "manual";
+  // the categories whose dishes this section shows: the chosen one, and the ones inside it unless switched off
+  const sectionCategoryIds = useMemo(
+    () => new Set(section.categoryId ? (section.includeSubcategories === false ? [section.categoryId] : categorySubtreeIds(categories, section.categoryId)) : []),
+    [categories, section.categoryId, section.includeSubcategories],
+  );
   const categoryItems = useMemo(
-    () => (section.categoryId ? items.filter((i) => i.categoryId === section.categoryId) : items),
-    [items, section.categoryId],
+    () => (section.categoryId ? items.filter((i) => sectionCategoryIds.has(i.categoryId)) : items),
+    [items, section.categoryId, sectionCategoryIds],
   );
 
   const resolvedCount = useMemo(() => {
     if (manual) return section.itemIds.filter((id) => items.some((i) => i.id === id)).length;
-    if (section.source === "category") return items.filter((i) => i.categoryId === section.categoryId).length;
+    if (section.source === "category") return items.filter((i) => sectionCategoryIds.has(i.categoryId)).length;
     return items.length;
-  }, [section, items, manual]);
+  }, [section, items, manual, sectionCategoryIds]);
 
   const capped = section.maxItems > 0 ? Math.min(resolvedCount, section.maxItems) : resolvedCount;
 
@@ -495,10 +504,20 @@ function SectionRow({ section, index, total, categories, items, onChange, onMove
               <Field label="Category" style={fieldMed}>
                 <Select value={section.categoryId} onChange={(e) => onChange({ categoryId: e.target.value })}>
                   <option value="">Choose a category…</option>
-                  {categories.map((c) => (
-                    <option key={c.id} value={c.id}>{c.name}</option>
+                  {flattenCategories(categories).map(({ category: c, depth }) => (
+                    <option key={c.id} value={c.id}>{`${"\u00A0\u00A0\u00A0".repeat(depth)}${depth ? "↳ " : ""}${c.name}`}</option>
                   ))}
                 </Select>
+              </Field>
+            ) : null}
+
+            {section.source === "category" && categories.some((c) => c.parentId === section.categoryId) ? (
+              <Field label="Categories inside it" style={fieldMed} info="This category has others inside it (like Dosa inside South Indian). Tick to show their dishes in this section too; leave it off if they have sections of their own.">
+                <Checkbox
+                  checked={section.includeSubcategories !== false}
+                  onChange={(v) => onChange({ includeSubcategories: v })}
+                  label="Also show their dishes"
+                />
               </Field>
             ) : null}
 
