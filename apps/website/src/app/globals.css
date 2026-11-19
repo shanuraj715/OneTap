@@ -17,6 +17,11 @@
   --nonveg: #b3261e;
   --brand: #c8372d;
   --brand-ink: #ffffff;
+  /* a dark panel with light text — dark in both themes (--ink itself turns cream in dark mode) */
+  --panel: var(--ink);
+  --panel-text: #ffffff;
+  --panel-muted: #c9c2b8;
+  --panel-edge: transparent;
   --brand-wash: color-mix(in srgb, var(--brand) 9%, var(--surface));
   --shadow: 0 1px 2px rgb(26 24 21 / 0.06), 0 12px 32px -12px rgb(26 24 21 / 0.18);
   --radius: 14px;
@@ -34,6 +39,8 @@
     --muted: #a39b91;
     --line: #2d2a26;
     --ticket: #221f1c;
+    --panel: #25221e;
+    --panel-edge: #38342f;
     --veg: #4fb06d;
     --nonveg: #e0675e;
     --brand-wash: color-mix(in srgb, var(--brand) 16%, var(--surface));
@@ -489,7 +496,7 @@ p { margin: 0; text-wrap: pretty; }
 .m-card-text span { font-size: 11px; color: var(--muted); }
 
 .m-loyal { width: 100%; max-width: 380px; display: grid; gap: 12px; }
-.m-wallet { background: var(--ink); color: var(--paper); border-radius: 18px; padding: 18px 20px; display: grid; gap: 6px; box-shadow: var(--shadow); }
+.m-wallet { background: var(--panel); color: var(--panel-text); border: 1px solid var(--panel-edge); border-radius: 18px; padding: 18px 20px; display: grid; gap: 6px; box-shadow: var(--shadow); }
 .m-wallet-top { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; opacity: 0.85; }
 .m-wallet-top svg { color: #f2b43c; }
 .m-wallet > b { font-family: var(--font-display); font-size: 44px; line-height: 1; font-weight: 800; }
@@ -505,17 +512,17 @@ p { margin: 0; text-wrap: pretty; }
 .m-wa-icon { width: 30px; height: 30px; border-radius: 99px; display: grid; place-items: center; background: #25d366; color: #fff; }
 
 /* --------------------------------------------------------------- stat band */
-.statband { position: relative; background: var(--ink); color: var(--paper); border-radius: 28px; padding: 44px 28px; overflow: hidden; }
+.statband { position: relative; background: var(--panel); color: var(--panel-text); border: 1px solid var(--panel-edge); border-radius: 28px; padding: 44px 28px; overflow: hidden; }
 @media (min-width: 900px) { .statband { padding: 56px 56px; } }
 .statband::before, .statband::after { content: ""; position: absolute; left: 0; right: 0; height: 12px; background: radial-gradient(circle at 10px 0, var(--paper) 6px, transparent 6.5px); background-size: 20px 12px; }
 .statband::before { top: 0; }
 .statband::after { bottom: 0; transform: scaleY(-1); }
 .statband-head { max-width: 640px; margin-bottom: 30px; }
-.statband-head h2, .statband-head h1 { font-size: clamp(26px, 3.6vw, 38px); font-weight: 800; color: #fff; }
+.statband-head h2, .statband-head h1 { font-size: clamp(26px, 3.6vw, 38px); font-weight: 800; color: var(--panel-text); }
 .statband-row { list-style: none; padding: 0; margin: 0; display: grid; gap: 22px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
 .statband-row li { border-left: 2px solid color-mix(in srgb, var(--brand) 70%, transparent); padding-left: 16px; }
-.statband-row b { display: block; font-family: var(--font-display); font-size: clamp(34px, 4.6vw, 52px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; color: #fff; }
-.statband-row span { display: block; margin-top: 6px; font-size: 14.5px; color: #c9c2b8; }
+.statband-row b { display: block; font-family: var(--font-display); font-size: clamp(34px, 4.6vw, 52px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; color: var(--panel-text); }
+.statband-row span { display: block; margin-top: 6px; font-size: 14.5px; color: var(--panel-muted); }
 
 /* ------------------------------------------------- who it's for: icon cards */
 .card-icon { width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center; margin-bottom: 6px; }
