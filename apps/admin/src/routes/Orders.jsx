@@ -42,6 +42,7 @@ import {
   Store,
   Tag,
   Timer,
+  Trash2,
   User,
   UtensilsCrossed,
   Wallet,
@@ -51,7 +52,7 @@ import * as api from "../lib/api";
                                                            
 import { useAuth } from "../lib/useAuth";
 import { useMenu } from "../lib/useMenu";
-import { useCapacity, useOrders, useSetOrderStatus } from "../lib/useOrders";
+import { useCapacity, useDeleteOrder, useOrders, useSetOrderStatus } from "../lib/useOrders";
 import { useOrderStream } from "../lib/useOrderStream";
 import { useOutlet } from "../lib/useOutlet";
 import { useActiveSessions, useMoveSession, useTables } from "../lib/useTables";
@@ -175,6 +176,7 @@ export function Orders() {
   const [showPending, setShowPending] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
   const [editing, setEditing] = useState                   (null);
+  const [deleting, setDeleting] = useState(null);
   const [expanded, setExpanded] = useState             (new Set());
   const [showShortcuts, setShowShortcuts] = useState(false);
   const [showTables, setShowTables] = useState(false);
@@ -198,6 +200,7 @@ export function Orders() {
   const setStatus = useSetOrderStatus(outlet);
   const manual = useManualStatus(outlet);
   const printOn = usePrintOrderOn(outlet);
+  const deleteOrder = useDeleteOrder(outlet);
   const printers = usePrinters(outlet, can("printer:read"));
   const menu = useMenu(outlet);
 
@@ -514,6 +517,7 @@ export function Orders() {
                 printSummary={printSummaryFor(order.id)}
                 printers={printers.data?.printers ?? []}
                 canUpdate={can("order:update")}
+                canDelete={can("order:delete")}
                 canPrint={can("print:job")}
                 showTimer={ops?.orders.showTimers ?? true}
                 isNew={stream.lastCreatedId === order.id}
@@ -529,6 +533,10 @@ export function Orders() {
                 onRequestStatus={(status, isManual) => setConfirming({ order, status, manual: isManual })}
                 onPrint={(printerId) => printOn.mutate({ orderId: order.id, printerId })}
                 onEdit={() => setEditing(order)}
+                onDelete={() => {
+                  deleteOrder.reset();
+                  setDeleting(order);
+                }}
               />
             ))}
           </tbody>
@@ -596,6 +604,16 @@ export function Orders() {
         />
       ) : null}
 
+      {deleting ? (
+        <DeleteOrderDialog
+          order={deleting}
+          busy={deleteOrder.isPending}
+          error={deleteOrder.error?.message}
+          onCancel={() => setDeleting(null)}
+          onConfirm={() => deleteOrder.mutate(deleting.id, { onSuccess: () => setDeleting(null) })}
+        />
+      ) : null}
+
       {showShortcuts ? <ShortcutsModal onClose={() => setShowShortcuts(false)} /> : null}
     </>
   );
@@ -609,6 +627,7 @@ function OrderRow({
   printSummary,
   printers,
   canUpdate,
+  canDelete,
   canPrint,
   outlet,
   table,
@@ -622,6 +641,7 @@ function OrderRow({
   onRequestStatus,
   onPrint,
   onEdit,
+  onDelete,
 }   
                     
                      
@@ -827,15 +847,21 @@ function OrderRow({
             />
           ) : null}
 
-          {canUpdate ? (
+          {canUpdate || canDelete ? (
             <Menu
               options={[
-                { value: "edit", label: "Edit order", description: "Change items, customer or note", icon: <Pencil size={13} /> },
-                { value: "cancel", label: "Cancel order", icon: <X size={13} />, danger: true, disabled: order.status === "cancelled" },
+                ...(canUpdate
+                  ? [
+                      { value: "edit", label: "Edit order", description: "Change items, customer or note", icon: <Pencil size={13} /> },
+                      { value: "cancel", label: "Cancel order", icon: <X size={13} />, danger: true, disabled: order.status === "cancelled" },
+                    ]
+                  : []),
+                ...(canDelete ? [{ value: "delete", label: "Delete order", description: "Remove it from the list and the reports", icon: <Trash2 size={13} />, danger: true }] : []),
               ]}
               onSelect={(v) => {
                 if (v === "edit") onEdit();
                 if (v === "cancel") onRequestStatus("cancelled", true);
+                if (v === "delete") onDelete();
               }}
               trigger={({ toggle }) => (
                 <button type="button" onClick={toggle} style={iconBtn} aria-label="More actions">
@@ -1237,6 +1263,49 @@ function ConfirmDialog({
         </Button>
         <Button type="button" onClick={onConfirm} disabled={busy} style={actionStyle(toStatus)} title="Shortcut key: Enter">
           {busy ? "Working…" : "Confirm"}
+        </Button>
+      </footer>
+    </Modal>
+  );
+}
+
+/**
+ * Deleting is not like cancelling: the order leaves the list and the reports altogether. So this dialog says exactly
+ * what happens and has no Enter-to-confirm — it takes a deliberate click on the red button. If the server refuses
+ * (an order paid online has to be refunded first) its reason is shown right here.
+ */
+function DeleteOrderDialog({ order, busy, error, onConfirm, onCancel }) {
+  const coinsUsed = order.totals?.coinsRedeemed ?? 0;
+  const coinsEarned = order.totals?.coinsEarned ?? 0;
+  return (
+    <Modal onClose={onCancel} width={440} ariaLabel="Delete order">
+      <div style={confirmBody}>
+        <span style={{ ...confirmIcon, background: "color-mix(in srgb, var(--tone-danger) 16%, transparent)", color: "var(--tone-danger)" }}>
+          <Trash2 size={19} />
+        </span>
+        <h3 style={{ margin: "12px 0 6px", fontSize: 16, fontFamily: "var(--font-heading)" }}>Delete order #{order.orderNumber}?</h3>
+        <p style={{ margin: 0, fontSize: 13, color: "var(--color-text-muted)", lineHeight: 1.55 }}>
+          It disappears from the orders list, your reports and the customer&apos;s order history
+          {order.customer?.name ? ` (${order.customer.name})` : ""}. This can&apos;t be undone from the dashboard.
+        </p>
+        {coinsUsed > 0 || coinsEarned > 0 ? (
+          <p style={{ margin: "10px 0 0", fontSize: 12.5, color: "var(--color-text-muted)", lineHeight: 1.55 }} data-testid="delete-coins-note">
+            {coinsUsed > 0 ? `The ${coinsUsed} coins used on it go back to the customer. ` : ""}
+            {coinsEarned > 0 ? `The ${coinsEarned} coins it earned are taken back (never below zero).` : ""}
+          </p>
+        ) : null}
+        {error ? (
+          <p role="alert" style={{ margin: "12px 0 0", fontSize: 13, color: "var(--tone-danger)", lineHeight: 1.5 }}>
+            {error}
+          </p>
+        ) : null}
+      </div>
+      <footer style={confirmFooter}>
+        <Button variant="outline" type="button" onClick={onCancel} disabled={busy} title="Shortcut key: Esc">
+          Keep it
+        </Button>
+        <Button type="button" onClick={onConfirm} disabled={busy} style={{ background: "var(--tone-danger)", borderColor: "var(--tone-danger)", color: "#fff" }}>
+          {busy ? "Deleting…" : "Delete order"}
         </Button>
       </footer>
     </Modal>

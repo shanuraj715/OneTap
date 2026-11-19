@@ -5,7 +5,7 @@ import { contactDetails } from "@onetap/config-schema";
 import { StoreBottom, StoreTop } from "@/components/Chrome";
 import { OutletUnavailable } from "@/components/OutletUnavailable";
 import { ThemeStyle } from "@/components/ThemeStyle";
-import { getOutletBySlug, getPageLinks, getStorePage } from "@/lib/outlet";
+import { getOutletBySlug, getPageLinks, getStorePage, storeName } from "@/lib/outlet";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +22,7 @@ export async function generateMetadata({ params }) {
   const { outletSlug, pageSlug } = await params;
   const { outlet, page } = await load(outletSlug, pageSlug);
   if (!outlet || !page) return { title: "Page not found" };
-  const name = outlet.config.identity.name || outlet.name;
+  const name = storeName(outlet);
   return { title: `${page.title} — ${name}`, description: page.description || undefined };
 }
 

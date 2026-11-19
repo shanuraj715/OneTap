@@ -1,10 +1,13 @@
 import { Router } from "express";
 import { z } from "zod";
-import { currentAge, customerAgeSchema, customerEmailSchema, customerGenderSchema, customerNameSchema, isProfileComplete } from "@onetap/config-schema";
+import { coinsValuePaise, currentAge, customerAgeSchema, customerEmailSchema, customerGenderSchema, customerNameSchema, isProfileComplete } from "@onetap/config-schema";
 import { OutletModel } from "@onetap/db";
 import { isProd } from "../../env.js";
 import { HttpError } from "../../middleware/error.js";
 import { assertNotBlocked, blockInfo, failed, floodLimiter } from "../security/login-guard.js";
+import { effectiveOutletConfig } from "../outlets/config.service.js";
+import { customerOrderHistory, hideOrderFromCustomer } from "../orders/orders.service.js";
+import { storePlan } from "../platform/plan.service.js";
 import { completeProfile, customerFromToken, endCustomerSession, requestOtp, verifyOtp } from "./customer.service.js";
 import { limiter, usesPolicy } from "../../middleware/rate-limit.js";
 
@@ -121,6 +124,44 @@ customerRouter.post("/otp/verify", otpFlood, async (req, res) => {
     path: "/",
   });
   res.json({ customer: shapeCustomer(result.customer) });
+});
+
+/**
+ * The Account page: the signed-in customer's own orders with this store (every outlet), and their coins if the
+ * store has them switched on. Only ever the caller's own — the customer comes from their sign-in cookie, never
+ * from the request — and only for the store the outlet belongs to.
+ */
+customerRouter.get("/orders", limiter("customer-orders"), async (req, res) => {
+  const customer = await currentCustomer(req);
+  if (!customer) throw new HttpError(401, "Sign in to see your orders");
+  const outlet = await outletOf(typeof req.query.outletId === "string" ? req.query.outletId : "");
+  if (customer.brandId !== outlet.brandId) throw new HttpError(403, "Sign in again for this restaurant");
+
+  const before = typeof req.query.before === "string" ? new Date(req.query.before) : undefined;
+  if (before && Number.isNaN(before.getTime())) throw new HttpError(400, "That isn't a valid date");
+  const history = await customerOrderHistory({ brandId: outlet.brandId, customerId: String(customer._id), before, limit: Number(req.query.limit) || 15 });
+
+  // coins are shown only when the store has them: the plan includes the feature AND the outlet has switched them on
+  const [config, plan] = await Promise.all([effectiveOutletConfig({ brandId: outlet.brandId, outletId: String(outlet._id) }), storePlan(outlet.brandId)]);
+  const enabled = plan.entitlements.features.includes("wallet") && Boolean(config.wallet?.enabled);
+  const balance = customer.walletBalance ?? 0;
+  res.json({
+    ...history,
+    customer: shapeCustomer(customer),
+    coins: { enabled, balance: enabled ? balance : 0, valuePaise: enabled ? coinsValuePaise(balance, config.wallet) : 0 },
+  });
+});
+
+/**
+ * Remove one order from the customer's own Account page. Their list only: the store keeps the order (and its
+ * payment, coins and place in the reports) exactly as it was.
+ */
+customerRouter.delete("/orders/:id", limiter("customer-account"), async (req, res) => {
+  const customer = await currentCustomer(req);
+  if (!customer) throw new HttpError(401, "Sign in to manage your orders");
+  const outlet = await outletOf(typeof req.query.outletId === "string" ? req.query.outletId : "");
+  if (customer.brandId !== outlet.brandId) throw new HttpError(403, "Sign in again for this restaurant");
+  res.json(await hideOrderFromCustomer({ brandId: outlet.brandId, customerId: String(customer._id), orderId: req.params.id }));
 });
 
 customerRouter.get("/me", async (req, res) => {

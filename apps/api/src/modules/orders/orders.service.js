@@ -16,9 +16,12 @@ import {
                    
 } from "@onetap/config-schema";
 import {
+  brandFilter,
   CustomerModel,
   nextSequence,
   OrderModel,
+  OutletModel,
+  PrintJobModel,
   tenantFilter,
                 
                      
@@ -33,7 +36,7 @@ import { assertOutletOpen, effectiveOutletConfig } from "../outlets/config.servi
 import { publicOutletById } from "../outlets/outlet-cache.js";
 import { fireOrderNotifications } from "../notify/notify.service.js";
 import { autoPrintForOrder } from "../printing/printing.service.js";
-import { earnForOrder, previewRedeem, redeemForOrder, reverseRedeemForOrder } from "../wallet/wallet.service.js";
+import { earnForOrder, previewRedeem, redeemForOrder, reverseRedeemForOrder, revokeEarnForOrder } from "../wallet/wallet.service.js";
 
 /** Shape an order for the wire the same way the REST routes do. */
 export function wire(o          ) {
@@ -661,4 +664,88 @@ export async function editOrder(
   const updated = order.toObject();
   broadcast(ctx.outletId , { type: "order.updated", order: wire(updated) });
   return updated;
+}
+
+/* ----------------------------------------------------------------- delete an order */
+
+/**
+ * Delete an order from the Orders page. It is marked (not erased): from then on it is gone from the orders list,
+ * the reports, the customer's history and a table's tab, but nothing is lost for good.
+ *
+ * Money and coins are put right first: coins the order redeemed go back to the customer and coins it earned are
+ * taken back (never below zero); a ticket still waiting to print is cancelled. An order the customer already paid
+ * for ONLINE can't be deleted — the money has really moved, and hiding the order would hide the payment; it must
+ * be refunded with the payment gateway first.
+ */
+export async function deleteOrder(ctx, id, user) {
+  const order = await OrderModel.findOne(tenantFilter(ctx, { _id: id }));
+  if (!order) throw new HttpError(404, "Order not found");
+
+  if (order.payment?.gateway === "razorpay" && order.payment?.status === "paid") {
+    throw new HttpError(409, `Order #${order.orderNumber} was paid online. Refund it with the payment gateway first — deleting it would hide a real payment.`, { code: "order_paid_online" });
+  }
+
+  await reverseRedeemForOrder(ctx, order);
+  await revokeEarnForOrder(ctx, order);
+  await PrintJobModel.updateMany(tenantFilter(ctx, { orderId: String(order._id), status: "queued" }), { $set: { status: "cancelled", lastError: "The order was deleted" } });
+
+  order.deletedAt = new Date();
+  order.deletedBy = String(user._id);
+  order.deletedByName = user.name ?? "";
+  await order.save();
+
+  // every dashboard watching this outlet refreshes its list (any "order.*" event does)
+  broadcast(ctx.outletId, { type: "order.deleted", orderId: String(order._id), orderNumber: order.orderNumber });
+  logger.info({ orderId: String(order._id), orderNumber: order.orderNumber, by: String(user._id) }, "order deleted");
+  return { ok: true, orderNumber: order.orderNumber };
+}
+
+/* ------------------------------------------------------ a customer's own order history */
+
+/**
+ * The orders a signed-in customer has placed with this store (every outlet of it), newest first, in the form the
+ * storefront's Account page shows: status, how it is paid and whether it has been, the items and the money.
+ * `before` is the placed-at time of the last order already shown (paging); `limit` is capped at 30.
+ */
+export async function customerOrderHistory({ brandId, customerId, before, limit = 15 }) {
+  const take = Math.min(Math.max(Math.floor(limit) || 15, 1), 30);
+  // (orders the customer removed from their own account are left out — the store still has them)
+  const filter = { "customer.customerId": String(customerId), customerHiddenAt: null };
+  if (before) filter.createdAt = { $lt: before };
+  const rows = await OrderModel.find(brandFilter({ brandId }, filter)).sort({ createdAt: -1, _id: -1 }).limit(take + 1).lean();
+  const page = rows.slice(0, take);
+
+  const outletIds = [...new Set(page.map((o) => o.outletId))];
+  const outlets = outletIds.length ? await OutletModel.find({ brandId, _id: { $in: outletIds } }).select("name slug config.identity.name").lean() : [];
+  const byId = new Map(outlets.map((o) => [String(o._id), { id: String(o._id), name: o.config?.identity?.name || o.name, slug: o.slug }]));
+
+  return {
+    orders: page.map((o) => ({
+      id: String(o._id),
+      orderNumber: o.orderNumber,
+      placedAt: o.createdAt,
+      channel: o.channel,
+      status: o.status,
+      payment: { gateway: o.payment?.gateway ?? "cod", status: o.payment?.status ?? "pending" },
+      outlet: byId.get(o.outletId) ?? { id: o.outletId, name: "", slug: "" },
+      items: (o.lines ?? []).map((l) => ({ name: l.name, variantLabel: l.variantLabel ?? null, quantity: l.quantity, lineTotal: l.lineTotal, modifiers: (l.modifiers ?? []).map((m) => m.name ?? m.label ?? "").filter(Boolean) })),
+      totals: o.totals,
+      couponCode: o.couponCode ?? null,
+      deliveryAddress: o.deliveryAddress?.text ?? null,
+      etaMinutes: o.etaMinutes ?? null,
+    })),
+    nextBefore: rows.length > take ? page.at(-1).createdAt : null,
+  };
+}
+
+/**
+ * A customer removes one of their orders from their own Account page. Only that order, only for them: it is marked
+ * hidden from their history and nothing else changes — the store keeps seeing it (orders list, reports, a table's
+ * tab), and a payment or coins are untouched. Only the customer's own order can be hidden. Safe to repeat.
+ */
+export async function hideOrderFromCustomer({ brandId, customerId, orderId }) {
+  if (!/^[a-f\d]{24}$/i.test(String(orderId))) throw new HttpError(404, "Order not found");
+  const found = await OrderModel.updateOne(brandFilter({ brandId }, { _id: orderId, "customer.customerId": String(customerId) }), { $set: { customerHiddenAt: new Date() } });
+  if (!found.matchedCount) throw new HttpError(404, "Order not found");
+  return { ok: true };
 }

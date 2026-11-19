@@ -5,7 +5,7 @@ import { OutletUnavailable } from "@/components/OutletUnavailable";
 import { ThemeStyle } from "@/components/ThemeStyle";
 import { getMenu } from "@/lib/menu";
 import { visitorHeaders } from "@/lib/visitor";
-import { getOutletById, getPageLinks } from "@/lib/outlet";
+import { getOutletById, getPageLinks, storeName } from "@/lib/outlet";
 
 export const dynamic = "force-dynamic";
 
@@ -83,7 +83,8 @@ export default async function TablePage({
       ? outlet.name.split("-")[1]?.trim()
       : "";
   const outletLocation = identity.address || identity.location?.formattedAddress || locationFromOutletName;
-  const outletDisplayName = identity.name || (locationFromOutletName ? outlet.name.split(/—|-/)[0]?.trim() : outlet.name);
+  // the store's name; the address next to it says which outlet
+  const outletDisplayName = storeName(outlet);
 
   return (
     <>

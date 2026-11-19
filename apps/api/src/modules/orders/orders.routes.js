@@ -7,6 +7,7 @@ import { requireOutletContext, requireUser } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import { currentCustomer } from "../customer/customer.routes.js";
 import {
+  deleteOrder,
   editOrder,
   getCapacityStatus,
   getOrder,
@@ -247,6 +248,15 @@ const editBody = z.object({
   note: z.string().max(300).optional(),
   customerName: z.string().max(80).optional(),
   customerPhone: z.string().max(20).optional(),
+});
+
+/**
+ * Delete an order from the Orders page. Owners and managers (`order:delete`). The order is hidden everywhere rather
+ * than erased; coins it used or earned are put right; an order paid online must be refunded first.
+ */
+ordersRouter.delete("/:id", limiter("destructive"), async (req, res) => {
+  const ctx = await requireOutletContext(req, "order:delete");
+  res.json(await deleteOrder(ctx, req.params.id, requireUser(req)));
 });
 
 ordersRouter.patch("/:id", async (req, res) => {

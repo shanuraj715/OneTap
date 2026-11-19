@@ -1,4 +1,5 @@
 import { getAnnouncementVariant, getFooterVariant, getHeaderVariant } from "@onetap/ui";
+import { storeName } from "@/lib/outlet";
 
 /**
  * What every storefront page shares above and below its own content, built from the outlet's settings:
@@ -15,6 +16,8 @@ export function headerLinks({ outletSlug, config, pages, onHome }) {
   return [
     // on the menu page this is an in-page anchor; from another page it goes back to the menu
     { label: "Menu", href: onHome ? "#menu" : `/${outletSlug}#menu` },
+    // the customer's Account page: their orders, how each is going and paid for, and their coins
+    { label: "My orders", href: `/${outletSlug}/account` },
     ...(features.ordering.dineInQr ? [{ label: "Order at table", href: "#" }] : []),
     ...(features.reservations.enabled ? [{ label: "Book a table", href: "#" }] : []),
     ...(pages ?? []).filter((p) => p.showInHeader).map((p) => ({ label: p.title, href: `/${outletSlug}/${p.slug}` })),
@@ -25,7 +28,7 @@ export function headerLinks({ outletSlug, config, pages, onHome }) {
 
 export function StoreTop({ outlet, outletSlug, pages = [], onHome = false, links }) {
   const { identity, layout, announcement } = outlet.config;
-  const name = identity.name || outlet.name;
+  const name = storeName(outlet); // the store, not this outlet
   const Bar = getAnnouncementVariant(layout.announcementVariant).Component;
   const Header = getHeaderVariant(layout.headerVariant).Component;
   const messages = announcement.messages.filter((m) => m.text.trim());
@@ -51,7 +54,7 @@ export function StoreBottom({ outlet, outletSlug, pages = [] }) {
   const Footer = getFooterVariant(layout.footerVariant).Component;
   return (
     <Footer
-      name={identity.name || outlet.name}
+      name={storeName(outlet)}
       address={identity.address || undefined}
       phone={identity.phone || undefined}
       fssaiLicense={identity.fssaiLicense || undefined}

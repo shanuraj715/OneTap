@@ -141,6 +141,13 @@ export const POLICIES = {
     why: "A customer saving their profile or signing out: a few a day is normal, so a high rate means a script.",
     message: "Too many requests. Please wait {wait}.",
   },
+  "customer-orders": {
+    windowMs: 10 * MINUTE,
+    limit: 90,
+    key: "identity",
+    why: "A customer's Account page (their order history). It refreshes every 20 seconds or so while an order is being prepared, which is far under this; a higher rate is a script copying history or loading the database.",
+    message: "Too many requests. Please wait {wait}.",
+  },
   "order-place": {
     windowMs: 10 * MINUTE,
     limit: (req) => (req.header("x-onetap-outlet") ? 150 : 12),
@@ -267,7 +274,7 @@ export const POLICIES = {
     windowMs: 10 * MINUTE,
     limit: 20,
     key: "user",
-    why: "Deleting or switching off a store, an outlet or a chat; publishing a client onboarding as a live store; creating stores. A stolen super-admin session can't wipe the platform at machine speed.",
+    why: "Deleting an order, a chat, an outlet or a store (or switching a store off); publishing a client onboarding as a live store; creating stores. A stolen super-admin session can't wipe the platform at machine speed.",
     message: "Too many of these actions. Please wait {wait}.",
   },
 

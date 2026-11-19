@@ -63,6 +63,15 @@ export async function apiPatch(path, body) {
   return json;
 }
 
+/** Same as `api`, but for DELETE — used by the Account page to remove an order from the customer's own list. */
+export async function apiDelete(path) {
+  const base = getApiBase();
+  const res = await fetch(`${base}${path}`, { method: "DELETE", credentials: "include" });
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok) throw apiError(json, res.status);
+  return json;
+}
+
 function loadScript(src) {
   return new Promise((resolve, reject) => {
     if (document.querySelector(`script[src="${src}"]`)) return resolve();

@@ -6,7 +6,7 @@ import { OrderBar } from "@/components/OrderBar";
 import { OutletUnavailable } from "@/components/OutletUnavailable";
 import { ThemeStyle } from "@/components/ThemeStyle";
 import { getMenu } from "@/lib/menu";
-import { getOutletBySlug, getOutletsForHost, getPageLinks } from "@/lib/outlet";
+import { getOutletBySlug, getOutletsForHost, getPageLinks, storeName } from "@/lib/outlet";
 
 export const dynamic = "force-dynamic";
 
@@ -29,7 +29,7 @@ export default async function OutletHomePage({ params }) {
   // Anyone can order online if any online channel is on.
   const onlineOrdering =
     features.ordering.takeaway || features.ordering.delivery || features.ordering.dineInQr;
-  const name = identity.name || outlet.name;
+  const name = storeName(outlet); // the big heading is the store's name; the outlet is chosen in the dropdown
 
   // The promo carousel — its style comes from Appearance, its slides from Banners; a slide needs a picture or a title to show.
   const slides = carousel.enabled ? carousel.slides.filter((s) => s.imageUrl || s.title) : [];

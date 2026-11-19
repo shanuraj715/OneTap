@@ -28,6 +28,7 @@ export async function getOutlet()                                 {
     return {
       id: outlet._id,
       name: outlet.name,
+      brandName: outlet.brandName || "",
       slug: outlet.slug,
       blocked: Boolean(outlet.blocked),
       config: parseOutletConfig(outlet.config),
@@ -53,6 +54,7 @@ export async function getOutletBySlug(outletSlug        )                       
     return {
       id: outlet._id,
       name: outlet.name,
+      brandName: outlet.brandName || "",
       slug: outlet.slug,
       blocked: Boolean(outlet.blocked),
       config: parseOutletConfig(outlet.config),
@@ -117,6 +119,7 @@ export async function getOutletById(outletId        )                           
       return {
         id: outlet._id,
         name: outlet.name,
+        brandName: outlet.brandName || "",
         slug: outlet.slug,
         blocked: Boolean(outlet.blocked),
         config: parseOutletConfig(outlet.config),
@@ -149,3 +152,10 @@ export async function getStorePage(outletId, slug) {
     return null;
   }
 }
+
+/**
+ * The name a visitor sees in the page header, the footer, the big heading and the tab title: the STORE's name
+ * ("Gazab Momos"), not one outlet's ("Ludhiana"). An outlet's own name only appears where the visitor is choosing or
+ * confirming an outlet — the outlet dropdown, checkout. Falls back to the outlet's names only if the store's is missing.
+ */
+export const storeName = (outlet) => outlet.brandName || outlet.config?.identity?.name || outlet.name;

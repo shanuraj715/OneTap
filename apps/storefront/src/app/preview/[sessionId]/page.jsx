@@ -41,7 +41,8 @@ export default async function PreviewPage({ params }) {
   if (!outletJson?.outlet) return <Expired />;
 
   const config = parseOutletConfig(outletJson.outlet.config);
-  const outletName = config.identity.name || outletJson.outlet.name;
+  // the live preview shows the page as visitors see it: headed by the STORE's name
+  const outletName = outletJson.outlet.brandName || config.identity.name || outletJson.outlet.name;
 
   return (
     <>

@@ -92,7 +92,9 @@ async function loadBundle(brandId) {
 
   const brand = plan?.brand ?? (await BrandModel.findById(brandId).select("name slug").lean().then((b) => (b ? { id: String(b._id), name: b.name, slug: b.slug } : null)));
   const switchedOff = plan?.disabled ? { at: plan.disabled.at } : null;
-  const publicOutlets = outlets.map((outlet) => ({ ...outlet, blocked: outlet.blocked ?? switchedOff, config: effectiveConfigWith(outlet, plan) }));
+  // `brandName` is what the storefront puts in its header and heading — the STORE's name, never one outlet's; an
+  // outlet's own name is for the outlet switcher and for places that are really about that one outlet
+  const publicOutlets = outlets.map((outlet) => ({ ...outlet, brandName: brand?.name ?? "", blocked: outlet.blocked ?? switchedOff, config: effectiveConfigWith(outlet, plan) }));
   const displayName = (o) => o.config.identity.name || o.name;
   const open = publicOutlets.filter((o) => !o.blocked);
   // Two outlets that call themselves the same ("Gazab Momos" twice) are told apart by their outlet names

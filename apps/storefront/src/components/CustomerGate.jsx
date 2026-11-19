@@ -52,7 +52,7 @@ function saveDraft(d) {
  * are pre-filled from what this device typed last time (`loadDraft`), never
  * from anything sent to the server.
  */
-export function CustomerGate({ customer, outletId, onSuccess, onStepChange }) {
+export function CustomerGate({ customer, outletId, onSuccess, onStepChange, heading, intro }) {
   const [destination, setDestination] = useState("");
   const [name, setName] = useState(customer?.name ?? "");
   const [gender, setGender] = useState(customer?.gender ?? "");
@@ -261,13 +261,13 @@ export function CustomerGate({ customer, outletId, onSuccess, onStepChange }) {
 
         <div style={iconBadge}>{isCompletion ? <User size={22} /> : <LogIn size={22} />}</div>
 
-        <h1 style={title}>{isCompletion ? "Just a couple more details" : sent ? "Enter the code" : "Sign in to order"}</h1>
+        <h1 style={title}>{isCompletion ? "Just a couple more details" : sent ? "Enter the code" : (heading ?? "Sign in to order")}</h1>
         <p style={subtitle}>
           {isCompletion
             ? "We use this to personalise your account and your coin rewards."
             : sent
               ? `We sent a 6-digit code to ${destination}${via === "linked" || via === "whatsapp" ? " on WhatsApp" : via === "sms" ? " by SMS" : ""}.`
-              : "Your name and number — then you can apply coupons and redeem coins on every order."}
+              : (intro ?? "Your name and number — then you can apply coupons and redeem coins on every order.")}
         </p>
         {notice ? (
           <p style={{ ...devHint, margin: "0 0 12px" }} role="status" data-testid="otp-notice">

@@ -322,6 +322,10 @@ export const editOrder = (o        , id        , body           ) =>
     outletId: o._id,
   });
 
+/** Delete an order from the Orders page (owner / manager). */
+export const deleteOrder = (o        , id        ) =>
+  req                       (`/api/orders/${id}`, { method: "DELETE", outletId: o._id });
+
 /** Staff placing an order on a diner's behalf — a walk-in, a phoned-in order,
  *  or a second round added to a table already in service (`sessionId`). */
 export const placeOrder = (o        , body           ) =>
