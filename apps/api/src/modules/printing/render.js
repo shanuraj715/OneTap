@@ -1,3 +1,4 @@
+import { toPublicUrl } from "../storage/upload-urls.js";
 import {
   charsFor,
   isThermal,
@@ -359,7 +360,7 @@ export function renderHtml(input             )         {
     if (block.key === "logo" && template.logoUrl) {
       body.push(
         `<div class="b" style="text-align:${block.align}">` +
-          `<img class="logo" src="${esc(template.logoUrl)}" alt="" style="width:${template.logoWidthPct}%">` +
+          `<img class="logo" src="${esc(toPublicUrl(template.logoUrl))}" alt="" style="width:${template.logoWidthPct}%">` +
           `</div>`,
       );
       if (block.rule) body.push(`<hr>`);

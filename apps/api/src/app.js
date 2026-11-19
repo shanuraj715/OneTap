@@ -1,3 +1,4 @@
+import { uploadUrls } from "./middleware/upload-urls.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express, {              } from "express";
@@ -99,6 +100,8 @@ export function createApp()          {
     }),
   );
   app.use(cookieParser());
+  // picture addresses are kept without a domain in the database and get this deployment's domain on the way out
+  app.use(uploadUrls());
   app.use(pinoHttp({ logger }));
   // counts requests, failures and speed for the Server page
   app.use(requestStats);

@@ -14,6 +14,7 @@ import { decryptSecret, encryptSecret, maskSecret } from "../../lib/crypto.js";
 import { logger } from "../../logger.js";
 import { HttpError } from "../../middleware/error.js";
 import { processImage } from "./image.js";
+import { toPublicUrl } from "./upload-urls.js";
 import { localUploadsPath, providerFor } from "./providers/index.js";
 
 const UPLOADS_ROOT = localUploadsPath(env.UPLOADS_DIR);
@@ -331,7 +332,7 @@ export async function readFile(ctx, { key, url }) {
     const { join } = await import("node:path");
     return read(join(cfg.uploadsRoot, key));
   }
-  const r = await fetch(url);
+  const r = await fetch(toPublicUrl(url));
   if (!r.ok) throw new Error(`couldn't fetch the file (${r.status})`);
   return Buffer.from(await r.arrayBuffer());
 }
