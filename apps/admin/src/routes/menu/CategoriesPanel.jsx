@@ -686,7 +686,7 @@ function NewCategoryRow({ outlet, row, index, onlyOne, autoFocus, duplicate, onN
               onEnter();
             }
           }}
-          style={{ flex: 1, minWidth: 0, ...(duplicate ? { borderColor: "var(--tone-danger)" } : null) }}
+          style={{ flex: 1, minWidth: 0, borderColor: duplicate ? "var(--tone-danger)" : "var(--color-border)" }}
         />
         <Button variant="outline" onClick={() => fileRef.current?.click()} disabled={busy} style={{ display: "inline-flex", gap: 6, alignItems: "center", justifyContent: "center", flexShrink: 0, width: 104 }} aria-label={`${row.image ? "Change" : "Add"} the picture of ${label}`}>
           {busy ? <Loader size={14} /> : <ImagePlus size={14} />} {row.image ? "Change" : "Picture"}

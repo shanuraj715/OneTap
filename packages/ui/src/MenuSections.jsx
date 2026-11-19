@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Children, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
                                            
 import {
   pruneEmptySections,
@@ -134,7 +134,7 @@ export function MenuSections({
                       href={`#sec-${s.id}`}
                       className="ot-fx-chip"
                       aria-current={current ? "true" : undefined}
-                      style={{ ...fx("chip", jumpLink), ...(current ? jumpLinkActive : null) }}
+                      style={fx("chip", { ...jumpLink, ...(current ? jumpLinkActive : null) })}
                       onClick={(e) => {
                         e.preventDefault();
                         goTo(s.id);
@@ -189,8 +189,6 @@ export function MenuSections({
         // until the diner opens them, so a long category doesn't push the whole
         // menu down three screens.
         const isOpen = expanded[section.id] === true;
-        const collapsed = section.collapsible && !isOpen;
-        const shownItems = collapsed ? section.items.slice(0, section.initialItems) : section.items;
         const hiddenCount = section.items.length - section.initialItems;
         const align = section.titleAlign === "center" ? "center" : "left";
         const buttonPlacement = section.viewAllPlacement || "left";
@@ -259,7 +257,7 @@ export function MenuSections({
                     {isTitleRight && section.collapsible ? (
                       <button
                         type="button"
-                        className="ot-press ot-fx-chip ot-viewall-title"
+                        className="ot-press ot-fx-chip ot-viewall-title ot-viewall-lg-only"
                         onClick={() => setExpanded((e) => ({ ...e, [section.id]: !isOpen }))}
                         style={fx("chip", viewAllTitleBtn)}
                         aria-expanded={isOpen}
@@ -275,8 +273,8 @@ export function MenuSections({
               </div>
             )}
             {section.headingOnly ? null : (
-            <div className={gridProps.className} style={gridProps.style}>
-              {shownItems.map((item) =>
+            (() => {
+              const cards = section.items.map((item) =>
                 onSelectItem && item.isAvailable ? (
                   <div
                     key={item.id}
@@ -297,13 +295,26 @@ export function MenuSections({
                 ) : (
                   <Card key={item.id} item={item} />
                 ),
-              )}
-            </div>
+              );
+              // a long section shows its first few cards and slides the rest open (and shut) — see CollapsibleCards
+              return section.collapsible && section.items.length > section.initialItems ? (
+                <CollapsibleCards open={isOpen} keep={section.initialItems} className={gridProps.className} style={gridProps.style} onClosed={() => keepSectionInView(section.id)}>
+                  {cards}
+                </CollapsibleCards>
+              ) : (
+                <div className={gridProps.className} style={gridProps.style}>
+                  {cards}
+                </div>
+              );
+            })()
             )}
-            {section.collapsible && !isTitleRight ? (
+            {section.collapsible ? (
+              // as configured on a wide screen; on a phone or tablet it is ALWAYS here, under the cards, in the middle
+              // (CSS: .ot-viewall-row / .ot-viewall-sm-only) — a title-right button is hidden there and this one shown instead
               <div
+                className={isTitleRight ? "ot-viewall-sm-only" : "ot-viewall-row"}
                 style={{
-                  display: "flex",
+                  display: isTitleRight ? "none" : "flex",
                   justifyContent:
                     buttonPlacement === "center"
                       ? "center"
@@ -331,6 +342,97 @@ export function MenuSections({
       })}
     </div>
   );
+}
+
+/**
+ * The cards of a "View all" section: the first `keep` are always there; the rest SLIDE open and shut instead of
+ * appearing and vanishing. The extra cards only exist in the page while open (and while closing), so a closed section
+ * costs nothing and the server-rendered page is exactly what it was.
+ *
+ * They sit in a `display: contents` group — which adds no box, so the grid or list flows on exactly as one — and are
+ * `inert` while closing (no keyboard focus into something that is leaving). The slide is the height of a clipping box
+ * animated from the bottom of the last kept card to the bottom of the whole grid, or back; `prefers-reduced-motion`
+ * makes it instant. Pressing the button again mid-slide turns round from where it is.
+ */
+function CollapsibleCards({ open, keep, className, style, onClosed, children }) {
+  const cards = Children.toArray(children);
+  const boxRef = useRef(null);
+  const gridRef = useRef(null);
+  const running = useRef(null);
+  const last = useRef(open);
+  const [closing, setClosing] = useState(false);
+  const [seen, setSeen] = useState(open);
+  if (seen !== open) {
+    // derived during render, so the very render that starts closing still has the extra cards in the page
+    setSeen(open);
+    setClosing(!open);
+  }
+  const showExtras = open || closing;
+
+  useLayoutEffect(() => {
+    if (last.current === open) return undefined;
+    last.current = open;
+    const box = boxRef.current;
+    const grid = gridRef.current;
+    if (!box || !grid) return undefined;
+    const calm = typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const wasRunning = running.current !== null;
+    const heightNow = box.getBoundingClientRect().height; // before the old slide (if any) is cancelled
+    running.current?.cancel();
+    running.current = null;
+
+    const gridTop = grid.getBoundingClientRect().top;
+    let collapsedH = 0; // the bottom of the last row of kept cards
+    for (let i = 0; i < Math.min(keep, grid.children.length); i += 1) collapsedH = Math.max(collapsedH, grid.children[i].getBoundingClientRect().bottom - gridTop);
+    const fullH = grid.getBoundingClientRect().height;
+
+    const from = wasRunning ? heightNow : open ? collapsedH : fullH;
+    const to = open ? fullH : collapsedH;
+    box.style.overflow = "hidden";
+    const slide = box.animate([{ height: `${from}px` }, { height: `${to}px` }], { duration: calm ? 1 : 420, easing: "cubic-bezier(0.22, 0.8, 0.24, 1)", fill: "forwards" });
+    running.current = slide;
+    slide.onfinish = () => {
+      if (running.current !== slide) return;
+      running.current = null;
+      const letGo = () => {
+        slide.cancel();
+        box.style.overflow = "";
+      };
+      if (open) letGo();
+      else {
+        setClosing(false); // take the extra cards out of the page …
+        requestAnimationFrame(() => requestAnimationFrame(() => { // … and only then release the height, so nothing flashes
+          letGo();
+          onClosed?.();
+        }));
+      }
+    };
+    return undefined;
+  }, [open, keep, onClosed]);
+
+  useEffect(() => () => running.current?.cancel(), []);
+
+  return (
+    <div ref={boxRef}>
+      <div ref={gridRef} className={className} style={style}>
+        {cards.slice(0, keep)}
+        {showExtras ? (
+          <div style={{ display: "contents" }} inert={!open}>
+            {cards.slice(keep)}
+          </div>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+/** After a section folds shut, if its heading has scrolled off the top, bring it back so the reader isn't left lost further down. */
+function keepSectionInView(id) {
+  const el = document.getElementById(`sec-${id}`);
+  if (!el || el.getBoundingClientRect().top >= 0) return;
+  const calm = typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  el.scrollIntoView({ behavior: calm ? "auto" : "smooth", block: "start" });
 }
 
 /** Eased scroll to a section, ending just below the sticky category bar. Reduced motion: straight there. */
@@ -627,7 +729,8 @@ const nestedHeading = (depth) => ({
 const crumb = { fontSize: 12, fontWeight: 600, letterSpacing: "0.02em", color: "var(--color-text-muted)", margin: "0 0 4px 13px" };
 const catPhoto = { borderRadius: 12, objectFit: "cover", flexShrink: 0, border: "1px solid var(--color-border)", background: "var(--color-surface)" };
 const chipPhoto = { width: 18, height: 18, borderRadius: 999, objectFit: "cover", verticalAlign: -4, marginRight: 6 };
-const jumpLinkActive = { color: "var(--color-text)", borderColor: "var(--color-primary)", boxShadow: "inset 0 0 0 1px var(--color-primary)" };
+// replaces the chip's whole `border` (never a lone borderColor on top of it: React warns when a longhand is added and removed over a shorthand)
+const jumpLinkActive = { color: "var(--color-text)", border: "1px solid var(--color-primary)", boxShadow: "inset 0 0 0 1px var(--color-primary)" };
 const subtitle                = { margin: "6px 0 0", fontSize: 13.5, color: "var(--color-text-muted)" };
 const clickable                = { cursor: "pointer", borderRadius: "var(--radius-card)" };
 const countBadge                = { fontSize: "0.7em", fontWeight: 500, color: "var(--color-text-muted)" };
