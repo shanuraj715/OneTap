@@ -351,8 +351,8 @@ export function MenuSections({
  *
  * They sit in a `display: contents` group — which adds no box, so the grid or list flows on exactly as one — and are
  * `inert` while closing (no keyboard focus into something that is leaving). The slide is the height of a clipping box
- * animated from the bottom of the last kept card to the bottom of the whole grid, or back; `prefers-reduced-motion`
- * makes it instant. Pressing the button again mid-slide turns round from where it is.
+ * animated from the bottom of the last kept card to the bottom of the whole grid, or back, over about a second (see the
+ * duration below) while the dishes fade and rise in one after another; `prefers-reduced-motion` makes it instant. Pressing the button again mid-slide turns round from where it is.
  */
 function CollapsibleCards({ open, keep, className, style, onClosed, children }) {
   const cards = Children.toArray(children);
@@ -390,7 +390,19 @@ function CollapsibleCards({ open, keep, className, style, onClosed, children }) 
     const from = wasRunning ? heightNow : open ? collapsedH : fullH;
     const to = open ? fullH : collapsedH;
     box.style.overflow = "hidden";
-    const slide = box.animate([{ height: `${from}px` }, { height: `${to}px` }], { duration: calm ? 1 : 420, easing: "cubic-bezier(0.22, 0.8, 0.24, 1)", fill: "forwards" });
+    // slow enough to WATCH: at least ~1 s, longer the further it has to open (a tall reveal takes longer than a short one),
+    // and a little quicker closing than opening; a smooth start-and-stop curve rather than a fast start that is over before it is seen
+    const travel = Math.abs(to - from);
+    const duration = calm ? 1 : Math.round(Math.min(1700, Math.max(950, 850 + travel * 0.85)) * (open ? 1 : 0.85));
+    const slide = box.animate([{ height: `${from}px` }, { height: `${to}px` }], { duration, easing: "cubic-bezier(0.37, 0, 0.3, 1)", fill: "forwards" });
+    // the dishes themselves fade and rise in, one after another (or fade away together when closing)
+    const extras = calm ? [] : [...(grid.children[keep]?.children ?? [])];
+    extras.forEach((card, i) => {
+      card.animate(
+        open ? [{ opacity: 0, transform: "translateY(16px)" }, { opacity: 1, transform: "none" }] : [{ opacity: 1, transform: "none" }, { opacity: 0, transform: "translateY(8px)" }],
+        open ? { duration: 650, delay: Math.min(i, 8) * 70, easing: "cubic-bezier(0.2, 0.7, 0.2, 1)", fill: "backwards" } : { duration: Math.round(duration * 0.6), easing: "ease-in", fill: "forwards" },
+      );
+    });
     running.current = slide;
     slide.onfinish = () => {
       if (running.current !== slide) return;
