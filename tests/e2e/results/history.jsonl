@@ -311,3 +311,40 @@
 {"id":"t17-analytics","status":"pass","pass":93,"fail":0,"mode":"headless","at":"2026-11-18T19:52:55.040Z","durationMs":70530}
 {"id":"t23-message-sending","status":"pass","pass":67,"fail":0,"mode":"headless","at":"2026-11-18T19:53:50.922Z","durationMs":51694}
 {"id":"t24-message-sending-api","status":"pass","pass":47,"fail":0,"mode":"headless","at":"2026-11-18T19:53:59.890Z","durationMs":8939}
+{"id":"t26-signin-resend-timer","status":"fail","pass":19,"fail":1,"mode":"headless","at":"2026-11-19T05:29:07.660Z","durationMs":36898}
+{"id":"t27-signin-codes-switch","status":"fail","pass":19,"fail":2,"mode":"headless","at":"2026-11-19T05:29:43.453Z","durationMs":31600}
+{"id":"t26-signin-resend-timer","status":"pass","pass":20,"fail":0,"mode":"headless","at":"2026-11-19T05:30:38.817Z","durationMs":36498}
+{"id":"t27-signin-codes-switch","status":"pass","pass":21,"fail":0,"mode":"headless","at":"2026-11-19T05:31:13.672Z","durationMs":30658}
+{"id":"t00-bench-smoke","status":"fail","pass":10,"fail":1,"mode":"headless","at":"2026-11-19T05:31:32.393Z","durationMs":12871}
+{"id":"t01-takeaway-order","status":"pass","pass":45,"fail":0,"mode":"headless","at":"2026-11-19T05:32:08.653Z","durationMs":32073}
+{"id":"t02-whatsapp-api","status":"pass","pass":132,"fail":0,"mode":"headless","at":"2026-11-19T05:32:20.074Z","durationMs":11398}
+{"id":"t03-whatsapp-dashboard","status":"pass","pass":44,"fail":0,"mode":"headless","at":"2026-11-19T05:32:44.120Z","durationMs":19853}
+{"id":"t04-whatsapp-manage","status":"pass","pass":20,"fail":0,"mode":"headless","at":"2026-11-19T05:33:04.747Z","durationMs":16442}
+{"id":"t05-whatsapp-chat-filters","status":"pass","pass":12,"fail":0,"mode":"headless","at":"2026-11-19T05:33:23.378Z","durationMs":13441}
+{"id":"t06-storefront-header-categories","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-19T05:33:59.834Z","durationMs":36440}
+{"id":"t07-favicon-plan-rules","status":"pass","pass":8,"fail":0,"mode":"headless","at":"2026-11-19T05:34:02.739Z","durationMs":2888}
+{"id":"t08-plans-outlets-settings","status":"pass","pass":42,"fail":0,"mode":"headless","at":"2026-11-19T05:37:13.814Z","durationMs":186872}
+{"id":"t09-store-subdomain","status":"pass","pass":36,"fail":0,"mode":"headless","at":"2026-11-19T05:37:46.506Z","durationMs":32663}
+{"id":"t10-plan-downgrade","status":"pass","pass":37,"fail":0,"mode":"headless","at":"2026-11-19T05:39:38.491Z","durationMs":111964}
+{"id":"t11-outlet-delete","status":"pass","pass":13,"fail":0,"mode":"headless","at":"2026-11-19T05:39:50.601Z","durationMs":12080}
+{"id":"t12-store-delete","status":"pass","pass":19,"fail":0,"mode":"headless","at":"2026-11-19T05:40:12.133Z","durationMs":21508}
+{"id":"t13-marketing","status":"pass","pass":70,"fail":0,"mode":"headless","at":"2026-11-19T05:41:44.597Z","durationMs":88265}
+{"id":"t14-marketing-plan","status":"pass","pass":16,"fail":0,"mode":"headless","at":"2026-11-19T05:42:53.568Z","durationMs":63768}
+{"id":"t15-login-protection","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-19T05:43:30.953Z","durationMs":33197}
+{"id":"t16-whatsapp-plan-gating","status":"pass","pass":37,"fail":0,"mode":"headless","at":"2026-11-19T05:44:10.341Z","durationMs":35189}
+{"id":"t17-analytics","status":"pass","pass":93,"fail":0,"mode":"headless","at":"2026-11-19T05:45:22.958Z","durationMs":68428}
+{"id":"t18-tables","status":"pass","pass":54,"fail":0,"mode":"headless","at":"2026-11-19T05:46:10.468Z","durationMs":43312}
+{"id":"t19-dine-in","status":"pass","pass":55,"fail":0,"mode":"headless","at":"2026-11-19T05:47:11.346Z","durationMs":56675}
+{"id":"t20-missed-order-alerts","status":"error","pass":13,"fail":0,"mode":"headless","at":"2026-11-19T05:47:46.775Z","durationMs":31238,"error":"page.waitForTimeout: Target page, context or browser has been closed"}
+{"id":"t21-onboarding","status":"error","pass":0,"fail":0,"mode":"headless","at":"2026-11-19T05:47:51.337Z","durationMs":377,"error":"page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3171/ Call log:   - navigating to \"http://localhost:3171/\", waiting until \"load\""}
+{"id":"t22-onboarding-price","status":"error","pass":3,"fail":1,"mode":"headless","at":"2026-11-19T05:48:23.720Z","durationMs":28182,"error":"locator.waitFor: Timeout 15000ms exceeded. Call log:   - waiting for getByRole('button', { name: 'Price list' }).first() to be visible"}
+{"id":"t00-bench-smoke","status":"error","pass":9,"fail":0,"mode":"headless","at":"2026-11-19T05:48:24.699Z","durationMs":13115,"error":"apiRequestContext.fetch: connect ECONNREFUSED ::1:3097 connect ECONNREFUSED 127.0.0.1:3097 Call log:"}
+{"id":"t23-message-sending","status":"fail","pass":79,"fail":2,"mode":"headless","at":"2026-11-19T05:49:23.045Z","durationMs":54165}
+{"id":"t24-message-sending-api","status":"pass","pass":61,"fail":0,"mode":"headless","at":"2026-11-19T05:49:55.954Z","durationMs":32884}
+{"id":"t25-otp-resend-api","status":"pass","pass":43,"fail":0,"mode":"headless","at":"2026-11-19T05:50:00.283Z","durationMs":4306}
+{"id":"t26-signin-resend-timer","status":"pass","pass":20,"fail":0,"mode":"headless","at":"2026-11-19T05:50:40.599Z","durationMs":36106}
+{"id":"t27-signin-codes-switch","status":"pass","pass":21,"fail":0,"mode":"headless","at":"2026-11-19T05:51:14.377Z","durationMs":29580}
+{"id":"t23-message-sending","status":"pass","pass":81,"fail":0,"mode":"headless","at":"2026-11-19T05:52:27.943Z","durationMs":56285}
+{"id":"t20-missed-order-alerts","status":"pass","pass":74,"fail":0,"mode":"headless","at":"2026-11-19T05:57:34.701Z","durationMs":176870}
+{"id":"t21-onboarding","status":"pass","pass":120,"fail":0,"mode":"headless","at":"2026-11-19T05:58:30.953Z","durationMs":52045}
+{"id":"t22-onboarding-price","status":"pass","pass":55,"fail":0,"mode":"headless","at":"2026-11-19T05:59:11.825Z","durationMs":35664}

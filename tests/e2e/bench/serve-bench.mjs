@@ -69,7 +69,7 @@ await new Promise((r) => server.once("listening", r));
     user: { id: `${phone}:1@s.whatsapp.net`, name: "Shop" },
     onWhatsApp: async (jid) => [{ exists: !jid.split("@")[0].endsWith("0000"), jid }], // a number ending 0000 is "not on WhatsApp"
     sendPresenceUpdate: async () => {},
-    sendMessage: async (jid, content, opts) => { sentByNumber.push({ jid, text: content.text ?? "", id: opts?.messageId, at: new Date().toISOString() }); return { key: { id: opts?.messageId } }; },
+    sendMessage: async (jid, content, opts) => { sentByNumber.push({ jid, text: content.text ?? "", id: opts?.messageId, at: new Date().toISOString(), from: phone }); return { key: { id: opts?.messageId } }; },
     end() {},
   });
   createServer(async (rq, rs) => {

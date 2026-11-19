@@ -11,9 +11,11 @@ export const meta = {
   expect: [
     "Before anything is chosen the code is shown on screen (as it always was).",
     "A way that can't send (no connected number, no gateway, no template, message without {{code}}, plan lacks it) is refused with a reason; 'Don't send' is always allowed; only managers of notifications can change it.",
+    "The message can run over several lines and use nine variables ({{code}}, {{store}}, {{outlet}}, {{name}}, {{phone}}, {{minutes}}, {{date}}, {{time}}, {{store_phone}}): all are filled in, the line breaks reach WhatsApp as typed, a customer we know is greeted by the name on file, a typed name that isn't a plain name becomes 'there', a variable that doesn't exist is refused by name, 1000 characters is the limit; an SMS 'Code message' can use them too.",
     "Over linked WhatsApp the code goes out from the store's number in seconds, in the store's wording, and is not returned to the caller; 123456 stops working.",
     "The stored WhatsApp message never contains the code; the stranger's chat stays out of the inbox (and appears once the store really chats with them); a failed code can't be retried from the inbox.",
     "SMS goes through the gateway in the 'Code message' wording; WhatsApp Business reaches Meta with the template, language, code in {{1}} and (when ticked) the Copy-code button.",
+    "With several numbers connected each code goes out from one of them picked at random (16 customers at once use both); a number that is offline is never picked.",
     "A number that isn't on WhatsApp is told so; past the daily cap nothing more goes out; with the number offline the customer is asked to try later.",
     "Staff coin codes use the chosen way.",
     "A store that switched on SMS codes before this existed keeps them until its owner chooses something.",
@@ -22,6 +24,7 @@ export const meta = {
     "A code must NOT be returned to the caller, or accepted as 123456, once a real way is chosen — even when that way is offline.",
     "The code must NOT be kept in any stored WhatsApp message.",
     "A stranger who only got a code must NOT appear in the owner's WhatsApp inbox.",
+    "A code must NOT be sent from a number that is offline.",
     "More codes than the daily cap must NOT go out.",
   ],
 };

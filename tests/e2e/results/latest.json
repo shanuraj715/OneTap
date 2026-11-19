@@ -2,13 +2,13 @@
   "t00-bench-smoke": {
     "id": "t00-bench-smoke",
     "title": "Bench smoke test — API, dashboard and storefronts are alive with the fake stores",
-    "status": "pass",
-    "pass": 11,
+    "status": "error",
+    "pass": 9,
     "fail": 0,
-    "error": "",
+    "error": "apiRequestContext.fetch: connect ECONNREFUSED ::1:3097 connect ECONNREFUSED 127.0.0.1:3097 Call log:",
     "mode": "headless",
-    "at": "2026-11-18T19:29:25.635Z",
-    "durationMs": 13285,
+    "at": "2026-11-19T05:48:24.699Z",
+    "durationMs": 13115,
     "steps": [
       {
         "n": 1,
@@ -85,20 +85,7 @@
       {
         "n": 4,
         "title": "Ask for a customer sign-in code with an arbitrary phone number",
-        "checks": [
-          {
-            "label": "the code request is accepted (the test stores accept any phone)",
-            "ok": true,
-            "detail": "HTTP 200 {\"channel\":\"sms\",\"devCode\":\"781010\"}",
-            "kind": "expect"
-          },
-          {
-            "label": "the browser logged JavaScript errors",
-            "ok": true,
-            "detail": "",
-            "kind": "never"
-          }
-        ]
+        "checks": []
       }
     ],
     "findings": [],
@@ -5974,8 +5961,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-18T19:48:20.808Z",
-    "durationMs": 178386,
+    "at": "2026-11-19T05:57:34.701Z",
+    "durationMs": 176870,
     "steps": [
       {
         "n": 1,
@@ -6062,7 +6049,7 @@
           {
             "label": "the counter's Orders screen has order A as 'Placed' with its wait running ('0m')",
             "ok": true,
-            "detail": "#0001 01:15 AM Meera Late 9877700077 TA 1 ₹70 Placed 0m Accepted",
+            "detail": "#0001 11:24 AM Meera Late 9877700077 TA 1 ₹70 Placed 0m Accepted",
             "kind": "expect"
           },
           {
@@ -6074,7 +6061,7 @@
           {
             "label": "over a minute later the status still says 'Placed' and the wait shows 1m or more",
             "ok": true,
-            "detail": "#0001 01:15 AM Meera Late 9877700077 TA 1 ₹70 Placed 1m Accepted",
+            "detail": "#0001 11:24 AM Meera Late 9877700077 TA 1 ₹70 Placed 1m Accepted",
             "kind": "expect"
           },
           {
@@ -6362,7 +6349,7 @@
           {
             "label": "completed: order A has no timer and no warning",
             "ok": true,
-            "detail": "Completed · #0001 01:15 AM Meera Late 9877700077 TA 1 ₹70 Completed —",
+            "detail": "Completed · #0001 11:24 AM Meera Late 9877700077 TA 1 ₹70 Completed —",
             "kind": "expect"
           },
           {
@@ -6503,8 +6490,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-18T19:49:16.746Z",
-    "durationMs": 51751,
+    "at": "2026-11-19T05:58:30.953Z",
+    "durationMs": 52045,
     "steps": [
       {
         "n": 1,
@@ -6855,7 +6842,7 @@
           {
             "label": "Save: 'Saved.' and the form is now a saved draft with its own address",
             "ok": true,
-            "detail": "http://localhost:3171/platform/onboarding/6afe011c928f6af5e460806a",
+            "detail": "http://localhost:3171/platform/onboarding/6afe8fe6f3615fe4e57c34ca",
             "kind": "expect"
           },
           {
@@ -7041,7 +7028,7 @@
           {
             "label": "no blank pages: every page has real content (not just a footer) — printing it gives no empty sheets",
             "ok": true,
-            "detail": "1091 / 1040 / 624",
+            "detail": "1092 / 1040 / 624",
             "kind": "expect"
           },
           {
@@ -7304,8 +7291,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-18T19:49:56.769Z",
-    "durationMs": 35825,
+    "at": "2026-11-19T05:59:11.825Z",
+    "durationMs": 35664,
     "steps": [
       {
         "n": 1,
@@ -7705,12 +7692,12 @@
     "id": "t23-message-sending",
     "title": "Message sending — codes by linked WhatsApp / WhatsApp Business / SMS, chosen by the owner",
     "status": "pass",
-    "pass": 67,
+    "pass": 81,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-18T19:53:50.922Z",
-    "durationMs": 51694,
+    "at": "2026-11-19T05:52:27.943Z",
+    "durationMs": 56285,
     "steps": [
       {
         "n": 1,
@@ -7815,7 +7802,7 @@
           {
             "label": "the standard preview uses the store's name and a sample code",
             "ok": true,
-            "detail": "Preview:482915 is your Acme Momos verification code. It is valid for 10 minutes ",
+            "detail": "Preview:\n482915 is your Acme Momos verification code. It is valid for 10 minutes",
             "kind": "expect"
           },
           {
@@ -7823,15 +7810,117 @@
             "ok": true,
             "detail": "",
             "kind": "expect"
-          },
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "The message can run over several lines",
+        "checks": [
           {
-            "label": "the preview follows what is typed",
+            "label": "pressing Enter starts a new line in the box (three lines typed)",
             "ok": true,
-            "detail": "Preview:Acme code 482915 — valid 10 minutes",
+            "detail": "\"Hi {{name}}, welcome to \\n{{code}} is your {{store}} code.\\nValid for {{minutes}} minutes.\"",
             "kind": "expect"
           },
           {
-            "label": "a message without {{code}} is refused with a clear reason",
+            "label": "the preview shows the three lines, with the variables filled in",
+            "ok": true,
+            "detail": "\"Hi Asha, welcome to \\n482915 is your Acme Momos code.\\nValid for 10 minutes.\"",
+            "kind": "expect"
+          },
+          {
+            "label": "a counter shows how long the message is",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "The Variables pop-up lists every variable and puts one where the cursor was",
+        "checks": [
+          {
+            "label": "a pop-up opens",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it lists all nine variables",
+            "ok": true,
+            "detail": "code, store, outlet, name, phone, minutes, date, time, store_phone",
+            "kind": "expect"
+          },
+          {
+            "label": "each says what it is and gives an example",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "{{code}} is marked as required",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the button confirms it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the pop-up closes",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "{{outlet}} went in at the end of the first line — not at the start or the end of the message",
+            "ok": true,
+            "detail": "\"Hi {{name}}, welcome to {{outlet}}\\n{{code}} is your {{store}} code.\\nValid for {{minutes}} minutes.\"",
+            "kind": "expect"
+          },
+          {
+            "label": "the preview shows it too",
+            "ok": true,
+            "detail": "\"Hi Asha, welcome to Main\\n482915 is your Acme Momos code.\\nValid for 10 minutes.\"",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "A variable that doesn't exist, or a message without {{code}}, can't be saved",
+        "checks": [
+          {
+            "label": "a misspelt variable is called out by name",
+            "ok": true,
+            "detail": "{{cod}} isn't a variable — pick from the Variables list (or check the spelling).",
+            "kind": "expect"
+          },
+          {
+            "label": "Save is off while it is wrong",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a message without {{code}} is refused with a clear reason, and Save is off",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "spaces and capitals inside the brackets are fine",
+            "ok": true,
+            "detail": "\"482915 for Acme Momos\"",
+            "kind": "expect"
+          },
+          {
+            "label": "the three-line message is back, with no complaint",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -7843,15 +7932,15 @@
             "kind": "expect"
           },
           {
-            "label": "after a reload it is still the chosen way, with the same wording",
+            "label": "after a reload it is still the chosen way, with the same three lines",
             "ok": true,
-            "detail": "",
+            "detail": "\"Hi {{name}}, welcome to {{outlet}}\\n{{code}} is your {{store}} code.\\nValid for {{minutes}} minutes.\"",
             "kind": "expect"
           }
         ]
       },
       {
-        "n": 4,
+        "n": 7,
         "title": "A new customer asks for a code: it arrives on WhatsApp from the store's number",
         "checks": [
           {
@@ -7873,9 +7962,9 @@
             "kind": "expect"
           },
           {
-            "label": "…in the store's own words, with a 6-digit code",
+            "label": "…in the store's own words: three lines, with the customer's first name, the outlet, the store, the code and the minutes filled in",
             "ok": true,
-            "detail": "Acme code 056905 — valid 10 minutes",
+            "detail": "\"Hi Linked, welcome to Main\\n579223 is your Acme Momos code.\\nValid for 10 minutes.\"",
             "kind": "expect"
           },
           {
@@ -7893,7 +7982,7 @@
         ]
       },
       {
-        "n": 5,
+        "n": 8,
         "title": "The customer who only got a code doesn't clutter the owner's WhatsApp inbox",
         "checks": [
           {
@@ -7905,7 +7994,7 @@
         ]
       },
       {
-        "n": 6,
+        "n": 9,
         "title": "A number that isn't on WhatsApp is told so",
         "checks": [
           {
@@ -7923,7 +8012,7 @@
         ]
       },
       {
-        "n": 7,
+        "n": 10,
         "title": "With the store's number offline the customer is asked to try later — and is not shown the code",
         "checks": [
           {
@@ -7959,7 +8048,7 @@
         ]
       },
       {
-        "n": 8,
+        "n": 11,
         "title": "Staff asking for a coin code use the same chosen way",
         "checks": [
           {
@@ -7971,7 +8060,7 @@
           {
             "label": "the customer (Asha) got the code on WhatsApp from the store's number",
             "ok": true,
-            "detail": "519967",
+            "detail": "047210",
             "kind": "expect"
           },
           {
@@ -7989,7 +8078,7 @@
         ]
       },
       {
-        "n": 9,
+        "n": 12,
         "title": "SMS: set up the gateway, then choose it",
         "checks": [
           {
@@ -8037,7 +8126,7 @@
           {
             "label": "…in the 'Code message' wording",
             "ok": true,
-            "detail": "Code 418607 for Acme Momos",
+            "detail": "Code 436116 for Acme Momos",
             "kind": "expect"
           },
           {
@@ -8061,7 +8150,7 @@
         ]
       },
       {
-        "n": 10,
+        "n": 13,
         "title": "WhatsApp Business: connection details, then a template for the code",
         "checks": [
           {
@@ -8109,13 +8198,13 @@
           {
             "label": "…the code fills {{1}}",
             "ok": true,
-            "detail": "343456",
+            "detail": "588359",
             "kind": "expect"
           },
           {
             "label": "…and also goes to the Copy-code button",
             "ok": true,
-            "detail": "{\"type\":\"button\",\"sub_type\":\"url\",\"index\":\"0\",\"parameters\":[{\"type\":\"text\",\"text\":\"343456\"}]}",
+            "detail": "{\"type\":\"button\",\"sub_type\":\"url\",\"index\":\"0\",\"parameters\":[{\"type\":\"text\",\"text\":\"588359\"}]}",
             "kind": "expect"
           },
           {
@@ -8133,7 +8222,7 @@
         ]
       },
       {
-        "n": 11,
+        "n": 14,
         "title": "A store whose plan has neither WhatsApp chat nor WhatsApp & SMS alerts",
         "checks": [
           {
@@ -8157,7 +8246,7 @@
         ]
       },
       {
-        "n": 12,
+        "n": 15,
         "title": "Back to 'Don't send': the on-screen code and 123456 return",
         "checks": [
           {
@@ -8194,12 +8283,12 @@
     "id": "t24-message-sending-api",
     "title": "Message sending — API rules: codes by linked WhatsApp / WhatsApp Business / SMS, never stored, never shown, capped, plan-gated",
     "status": "pass",
-    "pass": 47,
+    "pass": 61,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-18T19:53:59.890Z",
-    "durationMs": 8939,
+    "at": "2026-11-19T05:49:55.954Z",
+    "durationMs": 32884,
     "steps": [
       {
         "n": 1,
@@ -8286,7 +8375,7 @@
           {
             "label": "the request is answered 'sent' and the code is NOT returned",
             "ok": true,
-            "detail": "{\"channel\":\"sms\",\"sent\":true,\"via\":\"linked\"}",
+            "detail": "{\"channel\":\"sms\",\"sent\":true,\"via\":\"linked\",\"resendAfterSec\":30}",
             "kind": "expect"
           },
           {
@@ -8298,13 +8387,13 @@
           {
             "label": "…in the store's own words",
             "ok": true,
-            "detail": "Your Acme code: 208060",
+            "detail": "Your Acme code: 887331",
             "kind": "expect"
           },
           {
             "label": "…within seconds",
             "ok": true,
-            "detail": "818 ms",
+            "detail": "1258 ms",
             "kind": "expect"
           },
           {
@@ -8360,11 +8449,71 @@
             "ok": true,
             "detail": "",
             "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "3b. the message — several lines and variables",
+        "checks": [
+          {
+            "label": "a four-line message using every variable is saved exactly as typed (line breaks kept)",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "every variable is filled in, the four lines arrive as four lines",
+            "ok": true,
+            "detail": "\"Hi Ravi\\n318940 — Acme / Main\\nPhone 98112 00031 · 19 Nov 2026 11:19 am\\nValid 10 min · Help: +91 98765 43210\"",
+            "kind": "expect"
+          },
+          {
+            "label": "…the line breaks reach WhatsApp as typed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a customer we already know is greeted by the name on file, not by what was typed into the form",
+            "ok": true,
+            "detail": "Hi Asha",
+            "kind": "expect"
+          },
+          {
+            "label": "a typed name that isn't a plain name (a link, digits, nothing) is replaced by 'there'; an accented name is kept",
+            "ok": true,
+            "detail": "[\"Hi there\",\"Hi there\",\"Hi there\",\"Hi there\",\"Hi Zoë\"]",
+            "kind": "expect"
+          },
+          {
+            "label": "a variable that doesn't exist is refused, naming the ones that are wrong",
+            "ok": true,
+            "detail": "400 {{cod}}, {{foo}} aren't variables — pick from the Variables list (or check the spelling).",
+            "kind": "expect"
+          },
+          {
+            "label": "spaces and capitals inside the brackets are fine, blank lines too",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "a message longer than 1000 characters is refused",
+            "ok": true,
+            "detail": "400",
+            "kind": "expect"
+          },
+          {
+            "label": "(the earlier wording is put back for the checks below)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
           },
           {
             "label": "a code goes out at once even with 30 broadcast messages queued ahead of it",
             "ok": true,
-            "detail": "200 in 1635 ms",
+            "detail": "200 in 2051 ms",
             "kind": "expect"
           },
           {
@@ -8372,11 +8521,35 @@
             "ok": true,
             "detail": "",
             "kind": "expect"
+          },
+          {
+            "label": "16 customers ask for a code at once with two numbers online — all are sent",
+            "ok": true,
+            "detail": "200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200",
+            "kind": "expect"
+          },
+          {
+            "label": "the codes were spread over BOTH connected numbers (picked at random)",
+            "ok": true,
+            "detail": "{\"919000000002\":8,\"919000000001\":10}",
+            "kind": "expect"
+          },
+          {
+            "label": "…and each customer got exactly one code",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a number that is offline is never picked",
+            "ok": true,
+            "detail": "919000000001",
+            "kind": "expect"
           }
         ]
       },
       {
-        "n": 4,
+        "n": 5,
         "title": "problems",
         "checks": [
           {
@@ -8412,7 +8585,7 @@
         ]
       },
       {
-        "n": 5,
+        "n": 6,
         "title": "SMS",
         "checks": [
           {
@@ -8430,13 +8603,19 @@
           {
             "label": "the code goes through the gateway in the 'Code message' wording",
             "ok": true,
-            "detail": "200 Code 236431 for Acme",
+            "detail": "200 Code 457116 for Acme",
+            "kind": "expect"
+          },
+          {
+            "label": "an SMS 'Code message' can use the same variables",
+            "ok": true,
+            "detail": "466708 is your Acme code, there (Main)",
             "kind": "expect"
           }
         ]
       },
       {
-        "n": 6,
+        "n": 7,
         "title": "WhatsApp Business",
         "checks": [
           {
@@ -8472,7 +8651,7 @@
         ]
       },
       {
-        "n": 7,
+        "n": 8,
         "title": "staff coin codes and plan rules",
         "checks": [
           {
@@ -8508,7 +8687,7 @@
         ]
       },
       {
-        "n": 8,
+        "n": 9,
         "title": "a store that turned SMS codes on the old way keeps working",
         "checks": [
           {
@@ -8527,6 +8706,675 @@
             "label": "once the owner chooses 'Don't send' that wins over the old switch",
             "ok": true,
             "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t26-signin-resend-timer": {
+    "id": "t26-signin-resend-timer",
+    "title": "Sign-in code — resend timer on the screen (30 s first), kept by the server: Back, reload and direct API calls can't skip it",
+    "status": "pass",
+    "pass": 20,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-19T05:50:40.599Z",
+    "durationMs": 36106,
+    "steps": [
+      {
+        "n": 1,
+        "title": "A new customer asks for a sign-in code",
+        "checks": [
+          {
+            "label": "the code step opens, and 'Resend code' counts down from about 30 seconds",
+            "ok": true,
+            "detail": "Resend code (30s)",
+            "kind": "expect"
+          },
+          {
+            "label": "the Resend button is switched off while it counts",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the hint says codes aren't being sent for this store yet — not 'No SMS provider'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the number ticks down",
+            "ok": true,
+            "detail": "30 → 28",
+            "kind": "expect"
+          },
+          {
+            "label": "the page made one request and the server said OK",
+            "ok": true,
+            "detail": "{\"n\":1,\"s\":200,\"wait\":30}",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Going Back and asking again does not reset the wait",
+        "checks": [
+          {
+            "label": "we are back on the details step",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the server refused the second request (429, 'Please wait …', with a Retry-After)",
+            "ok": true,
+            "detail": "{\"s\":429,\"e\":\"Please wait 27 seconds before asking for another code.\",\"h\":\"27\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the screen went straight back to typing the code that was already sent",
+            "ok": true,
+            "detail": "A code was already sent to 9811400001. Enter it below, or ask for a new one when the timer",
+            "kind": "expect"
+          },
+          {
+            "label": "the countdown carried on (it did not go back to 30)",
+            "ok": true,
+            "detail": "28 → 27",
+            "kind": "expect"
+          },
+          {
+            "label": "there is no red error for it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "A page reload does not reset it either",
+        "checks": [
+          {
+            "label": "a fresh page, same number: refused (429) and taken to the code step with the countdown still running",
+            "ok": true,
+            "detail": "429 · 24s",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Calling the API directly can't get round it",
+        "checks": [
+          {
+            "label": "the same number, however it is written, is refused every time",
+            "ok": true,
+            "detail": "429,429,429,429,429",
+            "kind": "expect"
+          },
+          {
+            "label": "each refusal carries a Retry-After header",
+            "ok": true,
+            "detail": "24,24,24,24,24",
+            "kind": "expect"
+          },
+          {
+            "label": "a different number is not held back",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "When the 30 seconds are really over, Resend works — and the next wait is longer",
+        "checks": [
+          {
+            "label": "(still waiting for the timer)",
+            "ok": true,
+            "detail": "24 s to go",
+            "kind": "expect"
+          },
+          {
+            "label": "the button comes back when the timer ends",
+            "ok": true,
+            "detail": "Resend code",
+            "kind": "expect"
+          },
+          {
+            "label": "pressing it sends a new code (200) — the second one",
+            "ok": true,
+            "detail": "200 · next wait 60s",
+            "kind": "expect"
+          },
+          {
+            "label": "the button now counts down from 1 minute",
+            "ok": true,
+            "detail": "60",
+            "kind": "expect"
+          },
+          {
+            "label": "the new code is on screen",
+            "ok": true,
+            "detail": "204638",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "The new code signs the customer in",
+        "checks": [
+          {
+            "label": "a new customer lands on the 'a couple more details' step",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t27-signin-codes-switch": {
+    "id": "t27-signin-codes-switch",
+    "title": "WhatsApp → Numbers has a 'Send sign-in codes from my WhatsApp numbers' switch; with several numbers each code leaves from a random one",
+    "status": "pass",
+    "pass": 21,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-19T05:51:14.377Z",
+    "durationMs": 29580,
+    "steps": [
+      {
+        "n": 0,
+        "title": "Setup",
+        "checks": [
+          {
+            "label": "the store has two numbers to connect (the counter phone and number 3)",
+            "ok": true,
+            "detail": "Counter phone, Number 2, New phone, Number 3",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 1,
+        "title": "Nothing connected: the switch is there, but can't be turned on yet",
+        "checks": [
+          {
+            "label": "WhatsApp → Numbers has a 'Sign-in codes' card with the switch, off",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "with no number connected the switch is disabled, and the card says why",
+            "ok": true,
+            "detail": "Off. Customers are shown the code on the sign-in screen — fine while you test, b",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Two numbers come online; the switch becomes available but the customer still sees the code on screen",
+        "checks": [
+          {
+            "label": "the switch can now be used",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it says customers are shown the code on screen",
+            "ok": true,
+            "detail": "Off. Customers are shown the code on the sign-in screen — fine while you test, but anyone could then sign in as any number.",
+            "kind": "expect"
+          },
+          {
+            "label": "a new customer is shown the code on screen (a 'dev code')",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "The owner ticks the switch",
+        "checks": [
+          {
+            "label": "it saves at once and says it is on, with how many numbers and 'at random'",
+            "ok": true,
+            "detail": "On. Each code is sent from one of your 2 connected numbers, picked at random.",
+            "kind": "expect"
+          },
+          {
+            "label": "the box is ticked",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "after a reload it is still on",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Settings → Message sending shows 'Your linked WhatsApp number' chosen — the same setting",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "The next customer gets the code on WhatsApp",
+        "checks": [
+          {
+            "label": "the screen says the code was sent on WhatsApp, and shows no code",
+            "ok": true,
+            "detail": "We sent a 6-digit code to 9811500002 on WhatsApp.",
+            "kind": "expect"
+          },
+          {
+            "label": "it arrived from one of the store's two numbers",
+            "ok": true,
+            "detail": "[\"919000000001\"]",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Fourteen customers ask at the same moment",
+        "checks": [
+          {
+            "label": "every one of them is sent a code, and none is shown on screen",
+            "ok": true,
+            "detail": "200,200,200,200,200,200,200,200,200,200,200,200,200,200",
+            "kind": "expect"
+          },
+          {
+            "label": "both connected numbers were used (picked at random)",
+            "ok": true,
+            "detail": "{\"919000000003\":7,\"919000000001\":7}",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Unticking asks first",
+        "checks": [
+          {
+            "label": "a confirmation explains that anyone could sign in as anyone",
+            "ok": true,
+            "detail": "Stop sending sign-in codes?\nCustomers will be shown the code on the sign-in scre",
+            "kind": "expect"
+          },
+          {
+            "label": "nothing has changed yet",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Keep sending' leaves it on",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Stop sending' turns it off",
+            "ok": true,
+            "detail": "Off. Customers are shown the code on the sign-in screen — fine while you test, but anyone could then sign in as any number.",
+            "kind": "expect"
+          },
+          {
+            "label": "customers are shown the code on screen again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "Every number goes offline while the switch is on",
+        "checks": [
+          {
+            "label": "the card warns that customers can't get a code",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a customer is asked to try again later — and is not shown a code",
+            "ok": true,
+            "detail": "We can't send the code right now.",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t25-otp-resend-api": {
+    "id": "t25-otp-resend-api",
+    "title": "Code resend rule — the API makes a number wait 30 s, 1 min, 2 min, 5 min, 15 min, 1 h, then 6 h between codes, however it is called",
+    "status": "pass",
+    "pass": 43,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-19T05:50:00.283Z",
+    "durationMs": 4306,
+    "steps": [
+      {
+        "n": 1,
+        "title": "the schedule — every code makes the next wait longer",
+        "checks": [
+          {
+            "label": "the shared schedule is 30 s, 1 min, 2 min, 5 min, 15 min, 1 hour, 6 hours",
+            "ok": true,
+            "detail": "30,60,120,300,900,3600,21600",
+            "kind": "expect"
+          },
+          {
+            "label": "code 1: sent, the next one must wait 30 seconds — asking at once is refused",
+            "ok": true,
+            "detail": "status 200/429, told 30s, left 30s, header 30, codes stored 1",
+            "kind": "expect"
+          },
+          {
+            "label": "code 2: sent, the next one must wait 1 minute — asking at once is refused",
+            "ok": true,
+            "detail": "status 200/429, told 60s, left 60s, header 60, codes stored 2",
+            "kind": "expect"
+          },
+          {
+            "label": "code 3: sent, the next one must wait 2 minutes — asking at once is refused",
+            "ok": true,
+            "detail": "status 200/429, told 120s, left 120s, header 120, codes stored 3",
+            "kind": "expect"
+          },
+          {
+            "label": "code 4: sent, the next one must wait 5 minutes — asking at once is refused",
+            "ok": true,
+            "detail": "status 200/429, told 300s, left 300s, header 300, codes stored 4",
+            "kind": "expect"
+          },
+          {
+            "label": "code 5: sent, the next one must wait 15 minutes — asking at once is refused",
+            "ok": true,
+            "detail": "status 200/429, told 900s, left 900s, header 900, codes stored 5",
+            "kind": "expect"
+          },
+          {
+            "label": "code 6: sent, the next one must wait 1 hour — asking at once is refused",
+            "ok": true,
+            "detail": "status 200/429, told 3600s, left 3600s, header 3600, codes stored 6",
+            "kind": "expect"
+          },
+          {
+            "label": "code 7: sent, the next one must wait 6 hours — asking at once is refused",
+            "ok": true,
+            "detail": "status 200/429, told 21600s, left 21600s, header 21600, codes stored 7",
+            "kind": "expect"
+          },
+          {
+            "label": "code 8: sent, the next one must wait 6 hours — asking at once is refused",
+            "ok": true,
+            "detail": "status 200/429, told 21600s, left 21600s, header 21600, codes stored 8",
+            "kind": "expect"
+          },
+          {
+            "label": "code 9: sent, the next one must wait 6 hours — asking at once is refused",
+            "ok": true,
+            "detail": "status 200/429, told 21600s, left 21600s, header 21600, codes stored 9",
+            "kind": "expect"
+          },
+          {
+            "label": "…and from the 7th code on the wait stays at 6 hours (the 8th and 9th codes too)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the refusal says it in words: 'Please wait 6 hours before asking for another code.'",
+            "ok": true,
+            "detail": "Please wait 6 hours before asking for another code.",
+            "kind": "expect"
+          },
+          {
+            "label": "even 2 seconds early is refused, and the message says how long is left",
+            "ok": true,
+            "detail": "429 Please wait 2 seconds before asking for another code.",
+            "kind": "expect"
+          },
+          {
+            "label": "the moment the wait is over the next code is allowed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "hitting the API directly — many requests at once",
+        "checks": [
+          {
+            "label": "15 requests for a new number at the same moment: exactly ONE code is sent, 14 are refused",
+            "ok": true,
+            "detail": "200,429,429,429,429,429,429,429,429,429,429,429,429,429,429",
+            "kind": "expect"
+          },
+          {
+            "label": "…only one code exists for it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "after the wait, 15 at the same moment again: exactly one more code",
+            "ok": true,
+            "detail": "200,429,429,429,429,429,429,429,429,429,429,429,429,429,429",
+            "kind": "expect"
+          },
+          {
+            "label": "…two codes in all, and the next wait is the second step (1 minute)",
+            "ok": true,
+            "detail": "2 codes, wait 60s",
+            "kind": "expect"
+          },
+          {
+            "label": "100 requests in a row for one number: only the first one sends a code",
+            "ok": true,
+            "detail": "1 sent",
+            "kind": "expect"
+          },
+          {
+            "label": "writing the same number another way (+91, 0091, spaces, dashes, a leading 0) does NOT get another code",
+            "ok": true,
+            "detail": "429,429,429,429,429,429,429",
+            "kind": "expect"
+          },
+          {
+            "label": "…there is still only one code for that phone",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "each number has its own clock",
+        "checks": [
+          {
+            "label": "a different number is not held back by someone else's wait",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an email address has its own clock too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the staff coin code for a number that is waiting on a sign-in code is still allowed (separate flow)",
+            "ok": true,
+            "detail": "{\"channel\":\"sms\",\"devCode\":\"983979\",\"resendAfterSec\":30}",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the coin code has the same waits (asking again at once is refused)",
+            "ok": true,
+            "detail": "429 Please wait 30 seconds before asking for another code.",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "the screen is told what to do",
+        "checks": [
+          {
+            "label": "refused too early, with the code just sent still good → 'liveCode' lets the screen take the customer straight to typing it",
+            "ok": true,
+            "detail": "{\"code\":\"otp_wait\",\"retryAfterSec\":30,\"liveCode\":true,\"via\":null}",
+            "kind": "expect"
+          },
+          {
+            "label": "once that code has expired, 'liveCode' is false — the customer only has to wait",
+            "ok": true,
+            "detail": "{\"code\":\"otp_wait\",\"retryAfterSec\":30,\"liveCode\":false,\"via\":null}",
+            "kind": "expect"
+          },
+          {
+            "label": "a number that isn't valid is a plain 400 and doesn't start a clock",
+            "ok": true,
+            "detail": "400",
+            "kind": "expect"
+          },
+          {
+            "label": "…nothing was recorded for it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "signing in starts the number over",
+        "checks": [
+          {
+            "label": "(two codes so far)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the customer signs in (dev code accepted on a store that sends nothing)",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the number's waits are wiped",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "asking again right after signing in works, and starts at 30 seconds",
+            "ok": true,
+            "detail": "200 30",
+            "kind": "expect"
+          },
+          {
+            "label": "after a day without a request the count starts again at 30 seconds",
+            "ok": true,
+            "detail": "200 30",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "a code that could not be sent doesn't count",
+        "checks": [
+          {
+            "label": "(the store's SMS gateway is set up and chosen)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(…as the way codes are sent)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the gateway is down: the customer is told the code couldn't be sent",
+            "ok": true,
+            "detail": "502 Couldn't send the code. Check the number and try again.",
+            "kind": "expect"
+          },
+          {
+            "label": "…and no unsent code is left behind",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…it doesn't count as a code sent; the number can try again after 30 seconds (not at once)",
+            "ok": true,
+            "detail": "count 0, in 30s",
+            "kind": "expect"
+          },
+          {
+            "label": "trying again at once is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "once it works, this is the FIRST code (next wait 30 s, not 1 minute)",
+            "ok": true,
+            "detail": "200 30",
+            "kind": "expect"
+          },
+          {
+            "label": "a resend while the gateway is down fails",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the code the customer already had still signs them in",
+            "ok": true,
+            "detail": "200",
             "kind": "expect"
           }
         ]

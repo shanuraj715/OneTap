@@ -1,10 +1,10 @@
 # TablePe end-to-end tests — catalog
 
-**25 tests** · 25 passing · 0 failing/error · 0 not run yet
+**28 tests** · 27 passing · 1 failing/error · 0 not run yet
 
 | Test | Area | Result | Checks | Last run |
 |---|---|---|---|---|
-| [t00-bench-smoke](t00-bench-smoke.md) — Bench smoke test — API, dashboard and storefronts are alive with the fake stores | bench | ✅ PASSED | 11/11 | 2026-11-19 00:59 |
+| [t00-bench-smoke](t00-bench-smoke.md) — Bench smoke test — API, dashboard and storefronts are alive with the fake stores | bench | 💥 ERROR | 9/9 | 2026-11-19 11:18 |
 | [t01-takeaway-order](t01-takeaway-order.md) — Takeaway order of at least ₹999 — customer places it, staff take it all the way to Completed | orders | ✅ PASSED | 45/45 | 2026-11-19 01:00 |
 | [t02-whatsapp-api](t02-whatsapp-api.md) — WhatsApp chat — API rules and the careful-pace sending worker | whatsapp | ✅ PASSED | 133/133 | 2026-11-19 01:21 |
 | [t03-whatsapp-dashboard](t03-whatsapp-dashboard.md) — WhatsApp in the dashboard — chat window, numbers, broadcast, access and phone layout | whatsapp | ✅ PASSED | 44/44 | 2026-11-19 01:00 |
@@ -24,11 +24,14 @@
 | [t17-analytics](t17-analytics.md) — Analytics — sales, per-outlet graphs, compare outlets, best sellers + what to prepare, profit & loss, weekly/monthly/yearly exports, plan and role access | analytics | ✅ PASSED | 93/93 | 2026-11-19 01:22 |
 | [t18-tables](t18-tables.md) — Tables — add a table (number, zone, seats), zones, limits and duplicates, QR panel, remove, per-outlet and per-store, who can manage | tables | ✅ PASSED | 54/54 | 2026-11-19 01:14 |
 | [t19-dine-in](t19-dine-in.md) — Dine-in at a table — create tables, scan the QR, order onto a running tab, staff move / settle / void, occupied tables, rotated codes, switch-off | tables | ✅ PASSED | 55/55 | 2026-11-19 01:15 |
-| [t20-missed-order-alerts](t20-missed-order-alerts.md) — Missed-order alerts — with the feature off nothing warns anyone; with it on: banner, red row, sound, repeat, per-status messages, roles, dashboard, customer | orders | ✅ PASSED | 74/74 | 2026-11-19 01:18 |
-| [t21-onboarding](t21-onboarding.md) — Client onboarding form — plan first, plan-fit alerts and 'allow anyway', full form, save / reset / cancel, PDF + print, publish as store | onboarding | ✅ PASSED | 120/120 | 2026-11-19 01:19 |
-| [t22-onboarding-price](t22-onboarding-price.md) — Onboarding price estimate — price list, plan + extras, Custom starts above the dearest plan, discount / GST / yearly, the Custom plan, plan dialog | onboarding | ✅ PASSED | 55/55 | 2026-11-19 01:19 |
-| [t23-message-sending](t23-message-sending.md) — Message sending — codes by linked WhatsApp / WhatsApp Business / SMS, chosen by the owner | notifications | ✅ PASSED | 67/67 | 2026-11-19 01:23 |
-| [t24-message-sending-api](t24-message-sending-api.md) — Message sending — API rules: codes by linked WhatsApp / WhatsApp Business / SMS, never stored, never shown, capped, plan-gated | notifications | ✅ PASSED | 47/47 | 2026-11-19 01:23 |
+| [t20-missed-order-alerts](t20-missed-order-alerts.md) — Missed-order alerts — with the feature off nothing warns anyone; with it on: banner, red row, sound, repeat, per-status messages, roles, dashboard, customer | orders | ✅ PASSED | 74/74 | 2026-11-19 11:27 |
+| [t21-onboarding](t21-onboarding.md) — Client onboarding form — plan first, plan-fit alerts and 'allow anyway', full form, save / reset / cancel, PDF + print, publish as store | onboarding | ✅ PASSED | 120/120 | 2026-11-19 11:28 |
+| [t22-onboarding-price](t22-onboarding-price.md) — Onboarding price estimate — price list, plan + extras, Custom starts above the dearest plan, discount / GST / yearly, the Custom plan, plan dialog | onboarding | ✅ PASSED | 55/55 | 2026-11-19 11:29 |
+| [t23-message-sending](t23-message-sending.md) — Message sending — codes by linked WhatsApp / WhatsApp Business / SMS, chosen by the owner | notifications | ✅ PASSED | 81/81 | 2026-11-19 11:22 |
+| [t24-message-sending-api](t24-message-sending-api.md) — Message sending — API rules: codes by linked WhatsApp / WhatsApp Business / SMS, never stored, never shown, capped, plan-gated | notifications | ✅ PASSED | 61/61 | 2026-11-19 11:19 |
+| [t25-otp-resend-api](t25-otp-resend-api.md) — Code resend rule — the API makes a number wait 30 s, 1 min, 2 min, 5 min, 15 min, 1 h, then 6 h between codes, however it is called | security | ✅ PASSED | 43/43 | 2026-11-19 11:20 |
+| [t26-signin-resend-timer](t26-signin-resend-timer.md) — Sign-in code — resend timer on the screen (30 s first), kept by the server: Back, reload and direct API calls can't skip it | security | ✅ PASSED | 20/20 | 2026-11-19 11:20 |
+| [t27-signin-codes-switch](t27-signin-codes-switch.md) — WhatsApp → Numbers has a 'Send sign-in codes from my WhatsApp numbers' switch; with several numbers each code leaves from a random one | notifications | ✅ PASSED | 21/21 | 2026-11-19 11:21 |
 
 ## Open findings (noticed during tests, not yet fixed)
 

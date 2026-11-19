@@ -14,7 +14,7 @@ process.chdir(__RUN); // no .env here → the real database URI is never read
 const req = createRequire(`${API}/package.json`);
 const mms = await import(pathToFileURL(req.resolve("mongodb-memory-server")).href);
 const mongod = await (mms.MongoMemoryServer ?? mms.default.MongoMemoryServer).create();
-Object.assign(process.env, { NODE_ENV: "development", API_PORT: String(PORT), MONGODB_URI: mongod.getUri(), MONGODB_DB: "sandbox", WHATSAPP_WORKER: "on", LOG_LEVEL: "warn", WHATSAPP_GRAPH_URL: "http://127.0.0.1:3093" });
+Object.assign(process.env, { NODE_ENV: "development", API_PORT: String(PORT), MONGODB_URI: mongod.getUri(), MONGODB_DB: "sandbox", WHATSAPP_WORKER: "on", LOG_LEVEL: "warn", WHATSAPP_GRAPH_URL: "http://127.0.0.1:3093", LOGIN_FLOOD_PER_MINUTE: "1000" });
 const db = await import(`${REPO}/packages/db/src/index.js`);
 await db.connectDb({ uri: mongod.getUri(), dbName: "sandbox" });
 const { createApp } = await import(`${API}/src/app.js`);
@@ -60,7 +60,7 @@ const fakeSock = (phone) => ({
   user: { id: `${phone}:1@s.whatsapp.net`, name: "Shop" },
   onWhatsApp: async (jid) => [{ exists: !jid.split("@")[0].endsWith("0000"), jid }],
   sendPresenceUpdate: async () => {},
-  sendMessage: async (jid, content, opts) => { sent.push({ jid, text: content.text, id: opts?.messageId }); return { key: { id: opts?.messageId } }; },
+  sendMessage: async (jid, content, opts) => { sent.push({ jid, text: content.text, id: opts?.messageId, from: phone }); return { key: { id: opts?.messageId } }; },
   end() {},
 });
 const sms = [];
@@ -74,7 +74,8 @@ await must(call("POST", "/api/users", { cookie: owner, headers: { "x-onetap-bran
 const manager = await login("m@acme.test", "Manager123!");
 const acc = (await must(call("POST", "/api/whatsapp/accounts", { cookie: owner, body: { label: "Counter phone" } }))).json.account.id;
 const mapping = (method, extra = {}) => ({ codes: { method, linkedMessage: "", whatsappTemplate: { name: "", language: "en", copyButton: false }, ...extra } });
-const request = (phone) => call("POST", "/api/customer/otp/request", { body: { outletId: OUTLET, destination: phone } });
+// (this suite is about HOW codes go out, so the "wait before asking again" history is cleared first — the waits have their own suite, otp-resend.mjs)
+const request = async (phone) => { await raw("otpthrottles").deleteMany({}); return call("POST", "/api/customer/otp/request", { body: { outletId: OUTLET, destination: phone } }); };
 
 say("1. before anything is chosen");
 let r = await call("GET", "/api/notify/messaging", { cookie: owner });
@@ -127,6 +128,35 @@ ok(r.status === 200 || r.status === 201, "when the store starts a real chat with
 r = await call("GET", "/api/whatsapp/chats", { cookie: owner });
 ok(r.json.chats.some((c) => c.phone === "919876543210"), "…they show up in the inbox");
 
+// the message can run over several lines and use variables
+say("3b. the message — several lines and variables");
+await raw("outlets").updateOne({ _id: oid(OUTLET_A) }, { $set: { "config.identity.phone": "+91 98765 43210" } });
+const multi = "Hi {{name}}\n{{code}} — {{store}} / {{outlet}}\nPhone {{phone}} · {{date}} {{time}}\nValid {{minutes}} min · Help: {{store_phone}}";
+r = await call("PUT", "/api/notify/messaging", { cookie: owner, body: mapping("linked", { linkedMessage: multi }) });
+ok(r.status === 200 && r.json.codes.linkedMessage === multi, "a four-line message using every variable is saved exactly as typed (line breaks kept)", `${r.status} ${r.json.error ?? ""}`);
+const asCustomer = (phone, name) => call("POST", "/api/customer/otp/request", { body: { outletId: OUTLET, destination: phone, ...(name ? { name } : {}) } });
+const sentAt = sent.length;
+await raw("otpthrottles").deleteMany({});
+r = await asCustomer("9811200031", "Ravi Kumar");
+const line = (sent[sentAt]?.text ?? "");
+ok(r.status === 200 && /^Hi Ravi\n\d{6} — Acme \/ Main\nPhone 98112 00031 · \d{1,2} [A-Z][a-z]{2} \d{4} \d{1,2}:\d{2} (am|pm)\nValid 10 min · Help: \+91 98765 43210$/.test(line), "every variable is filled in, the four lines arrive as four lines", JSON.stringify(line));
+ok(line.split("\n").length === 4, "…the line breaks reach WhatsApp as typed");
+await raw("otpthrottles").deleteMany({});
+r = await asCustomer("9876543210", "Mallory Evil");
+ok(r.status === 200 && /^Hi Asha\n/.test(sent.at(-1)?.text ?? ""), "a customer we already know is greeted by the name on file, not by what was typed into the form", sent.at(-1)?.text?.split("\n")[0]);
+const names = [["http://evil.example/pay", "9811200032"], ["12345", "9811200033"], [undefined, "9811200034"], ["  ", "9811200035"], ["Zoë", "9811200036"]];
+const greeted = [];
+for (const [nm, ph] of names) { await raw("otpthrottles").deleteMany({}); await asCustomer(ph, nm); greeted.push((sent.at(-1)?.text ?? "").split("\n")[0]); }
+ok(greeted.slice(0, 4).every((g) => g === "Hi there") && greeted[4] === "Hi Zoë", "a typed name that isn't a plain name (a link, digits, nothing) is replaced by 'there'; an accented name is kept", JSON.stringify(greeted));
+r = await call("PUT", "/api/notify/messaging", { cookie: owner, body: mapping("linked", { linkedMessage: "{{code}} for {{store}} {{cod}} {{foo}}" }) });
+ok(r.status === 400 && /\{\{cod\}\}, \{\{foo\}\} aren't variables/.test(r.json.error ?? ""), "a variable that doesn't exist is refused, naming the ones that are wrong", `${r.status} ${r.json.error}`);
+r = await call("PUT", "/api/notify/messaging", { cookie: owner, body: mapping("linked", { linkedMessage: "{{ CODE }}\n\n{{ Store }}" }) });
+ok(r.status === 200, "spaces and capitals inside the brackets are fine, blank lines too", `${r.status} ${r.json.error ?? ""}`);
+r = await call("PUT", "/api/notify/messaging", { cookie: owner, body: mapping("linked", { linkedMessage: "{{code}} " + "x".repeat(1001) }) });
+ok(r.status === 400, "a message longer than 1000 characters is refused", `${r.status}`);
+r = await call("PUT", "/api/notify/messaging", { cookie: owner, body: mapping("linked", { linkedMessage: "Your {{store}} code: {{code}}" }) });
+ok(r.status === 200, "(the earlier wording is put back for the checks below)");
+
 // a big broadcast is waiting in the same number's queue: a sign-in code must not wait behind it
 // (daytime for this check — in quiet hours the broadcast would simply be put off until morning, hiding the problem)
 const quiet = { from: schema.WA_PACING.cold.quietFrom, to: schema.WA_PACING.cold.quietTo };
@@ -140,6 +170,28 @@ ok(r.status === 200 && r.json.sent === true && sent.length === sentBeforeBacklog
 ok((await raw("wamessages").countDocuments({ source: "broadcast", status: "queued" })) >= 28, "…while the broadcast keeps waiting for its own slow pace");
 await raw("wamessages").deleteMany({ source: "broadcast" });
 schema.WA_PACING.cold.quietFrom = quiet.from; schema.WA_PACING.cold.quietTo = quiet.to;
+
+// two connected numbers: each code goes out from one of them, picked at random
+const acc2 = (await must(call("POST", "/api/whatsapp/accounts", { cookie: owner, body: { label: "Second phone" } }))).json.account.id;
+await raw("waaccounts").updateOne({ _id: oid(acc2) }, { $set: { status: "connected", phone: "919000000002", seenAt: new Date(), qr: "" } });
+const entry2 = { sock: fakeSock("919000000002"), brandId: brandA, connected: true, busy: false };
+worker.__test.sockets.set(acc2, entry2);
+const loop2 = setInterval(() => { raw("waaccounts").updateOne({ _id: oid(acc2) }, { $set: { seenAt: new Date() } }).catch(() => {}); worker.__test.sendNext(acc2, entry2).catch(() => {}); }, 300);
+const sentBeforeSpread = sent.length;
+const people = Array.from({ length: 16 }, (_, i) => `98112003${String(i).padStart(2, "0")}`);
+await raw("otpthrottles").deleteMany({});
+const spread = await Promise.all(people.map((p) => call("POST", "/api/customer/otp/request", { body: { outletId: OUTLET, destination: p } })));
+ok(spread.every((x) => x.status === 200 && x.json.sent === true), "16 customers ask for a code at once with two numbers online — all are sent", spread.map((x) => x.status).join(","));
+const byNumber = sent.slice(sentBeforeSpread).reduce((m, x) => ({ ...m, [x.from]: (m[x.from] ?? 0) + 1 }), {});
+ok(Object.keys(byNumber).length === 2, "the codes were spread over BOTH connected numbers (picked at random)", JSON.stringify(byNumber));
+ok(people.every((p) => sent.slice(sentBeforeSpread).filter((x) => x.jid === `91${p}@s.whatsapp.net`).length === 1), "…and each customer got exactly one code");
+// only ONLINE numbers are picked: with the second one gone, everything goes through the first again
+clearInterval(loop2); worker.__test.sockets.delete(acc2);
+await raw("waaccounts").updateOne({ _id: oid(acc2) }, { $set: { status: "disconnected", seenAt: new Date(Date.now() - 3600_000) } });
+const sentBeforeOne = sent.length;
+r = await request("9811200400");
+ok(r.status === 200 && sent.slice(sentBeforeOne).every((x) => x.from === "919000000001") && sent.length === sentBeforeOne + 1, "a number that is offline is never picked", sent.at(-1)?.from);
+await raw("waaccounts").deleteOne({ _id: oid(acc2) });
 
 say("4. problems");
 r = await request("9811230000");
@@ -165,6 +217,13 @@ ok(r.status === 200 && r.json.codes.method === "sms" && r.json.codes.smsMessage 
 r = await request("9811200010");
 const hit = sms.at(-1);
 ok(r.status === 200 && r.json.via === "sms" && !r.json.devCode && hit?.searchParams.get("to") === "9811200010" && /^Code \d{6} for Acme$/.test(hit?.searchParams.get("msg") ?? ""), "the code goes through the gateway in the 'Code message' wording", `${r.status} ${hit?.searchParams.get("msg")}`);
+
+// the SMS "Code message" can use the same variables
+const smsUrl = "http://127.0.0.1:3092/sms?key={{apiKey}}&to={{to}}&msg={{message}}";
+await call("PUT", "/api/notify/config/sms", { cookie: owner, body: { values: { requestUrl: smsUrl, apiKey: "K9", otpTemplate: "{{code}} is your {{store}} code, {{name}} ({{outlet}})" } } });
+r = await request("9811200050");
+ok(r.status === 200 && /^\d{6} is your Acme code, there \(Main\)$/.test(sms.at(-1)?.searchParams.get("msg") ?? ""), "an SMS 'Code message' can use the same variables", sms.at(-1)?.searchParams.get("msg"));
+await call("PUT", "/api/notify/config/sms", { cookie: owner, body: { values: { requestUrl: smsUrl, apiKey: "K9", otpTemplate: "Code {{code}} for {{store}}" } } });
 
 say("6. WhatsApp Business");
 ok((await call("PUT", "/api/notify/config/whatsapp", { cookie: owner, body: { values: { phoneNumberId: "109876543", accessToken: "tok_abc" } } })).status === 200, "the owner adds the WhatsApp Business connection");

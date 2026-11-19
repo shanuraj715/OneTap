@@ -20,12 +20,18 @@ export const meta = {
     "A number that isn't on WhatsApp is told so; with the store's number offline the customer is asked to try again later — and no code is shown or sent.",
     "SMS: once the gateway is set up it can be chosen; the gateway receives the code in the store's 'Code message' wording for the customer's number; the screen says by SMS.",
     "WhatsApp Business: a missing template name is refused with a clear message; with a template, Meta receives the template name, language, the code as {{1}} and (when ticked) in the Copy-code button, with the store's token.",
+    "The message box takes several lines (Enter starts a new line), shows a live preview with the line breaks, and counts the characters.",
+    "A 'Variables' button opens a pop-up listing all nine variables ({{code}}, {{store}}, {{outlet}}, {{name}}, {{phone}}, {{minutes}}, {{date}}, {{time}}, {{store_phone}}) with what each is and an example; Insert puts one where the cursor was and the list stays open; Done closes it.",
+    "A variable that doesn't exist is called out by name and Save is off; so is a message without {{code}}; spaces and capitals inside the brackets are fine.",
+    "The customer's WhatsApp message arrives as the same three lines, with their first name, the outlet, the store, the code and the minutes filled in.",
     "Staff asking a customer for a coin code use the same chosen way.",
     "'Don't send' brings back the on-screen code and 123456.",
   ],
   expectNot: [
     "A code must NOT be shown on screen, or accepted as 123456, once a real way of sending is chosen — even when that way is offline.",
     "A way that isn't ready must NOT be selectable.",
+    "Line breaks typed in the message must NOT be lost in the preview, when saved, or in what the customer receives.",
+    "A misspelt variable must NOT be saved (it would reach customers as raw {{text}}).",
     "A code must NOT be sent over a way other than the chosen one.",
     "The browser must NOT log JavaScript errors.",
   ],
@@ -135,17 +141,57 @@ export async function run(d, h) {
     d.check("the standard preview uses the store's name and a sample code", /Acme Momos verification code/.test(await d.page.getByTestId("code-preview").innerText()) && /\d{6} is your/.test(await d.page.getByTestId("code-preview").innerText()), (await d.page.getByTestId("code-preview").innerText()).slice(0, 80));
     d.check("Save is now on", await save().isEnabled());
     await d.shot("message-sending-linked");
-    await ui.fill(d, "What the message says", "Acme code {{code}} — valid 10 minutes");
-    d.check("the preview follows what is typed", /Acme code 482915 — valid 10 minutes/.test(await d.page.getByTestId("code-preview").innerText()), await d.page.getByTestId("code-preview").innerText());
-    await ui.fill(d, "What the message says", "No code in this one");
-    await d.click(save(), { after: 700 });
-    d.check("a message without {{code}} is refused with a clear reason", /must contain \{\{code\}\}/.test(await text(d)));
-    await ui.fill(d, "What the message says", "Acme code {{code}} — valid 10 minutes");
+    // the message box: click in, select everything, type — a line break is a real Enter key press
+    const box = () => d.page.getByLabel("Message sent with the code");
+    const clearBox = async () => { await d.click(box(), { after: 100 }); await d.page.keyboard.press("ControlOrMeta+a"); await d.page.keyboard.press("Backspace"); };
+    const typeLines = async (...lines) => { for (let i = 0; i < lines.length; i++) { if (i) await d.page.keyboard.press("Enter"); await d.page.keyboard.type(lines[i], { delay: 4 }); } };
+    const previewText = () => d.page.getByTestId("code-preview-text").innerText();
+
+    await d.step("The message can run over several lines", 500);
+    await clearBox();
+    await typeLines("Hi {{name}}, welcome to ", "{{code}} is your {{store}} code.", "Valid for {{minutes}} minutes.");
+    d.check("pressing Enter starts a new line in the box (three lines typed)", ((await box().inputValue()).match(/\n/g) ?? []).length === 2, JSON.stringify(await box().inputValue()));
+    d.check("the preview shows the three lines, with the variables filled in", (await previewText()) === "Hi Asha, welcome to \n482915 is your Acme Momos code.\nValid for 10 minutes.", JSON.stringify(await previewText()));
+    d.check("a counter shows how long the message is", /\d+\/1000/.test(await text(d)));
+
+    await d.step("The Variables pop-up lists every variable and puts one where the cursor was", 500);
+    // the cursor goes at the end of the first line (set directly: "go to the top" is a different key on every system)
+    await box().evaluate((el) => { el.focus(); const at = el.value.indexOf("\n"); el.setSelectionRange(at, at); });
+    await d.click(d.page.getByRole("button", { name: "Variables" }), { after: 500 });
+    const vars = d.page.getByRole("dialog", { name: "Message variables" });
+    d.check("a pop-up opens", await vars.isVisible());
+    const listed = (await vars.locator("li[data-variable]").evaluateAll((els) => els.map((e) => e.getAttribute("data-variable"))));
+    d.check("it lists all nine variables", ["code", "store", "outlet", "name", "phone", "minutes", "date", "time", "store_phone"].every((k) => listed.includes(k)) && listed.length === 9, listed.join(", "));
+    d.check("each says what it is and gives an example", /Verification code/.test(await vars.innerText()) && /Example: 482915/.test(await vars.innerText()) && /Customer's first name/.test(await vars.innerText()) && /Example: Asha/.test(await vars.innerText()));
+    d.check("{{code}} is marked as required", /required/.test(await vars.locator('li[data-variable="code"]').innerText()));
+    await d.shot("message-sending-variables");
+    await d.click(vars.getByRole("button", { name: "Insert {{outlet}}" }), { after: 400 });
+    d.check("the button confirms it", /Inserted/.test(await vars.locator('li[data-variable="outlet"]').innerText()));
+    await d.click(vars.getByRole("button", { name: "Done" }), { after: 400 });
+    d.check("the pop-up closes", !(await vars.isVisible().catch(() => false)));
+    d.check("{{outlet}} went in at the end of the first line — not at the start or the end of the message", (await box().inputValue()) === "Hi {{name}}, welcome to {{outlet}}\n{{code}} is your {{store}} code.\nValid for {{minutes}} minutes.", JSON.stringify(await box().inputValue()));
+    d.check("the preview shows it too", /^Hi Asha, welcome to .+\n482915 is your Acme Momos code\.\nValid for 10 minutes\.$/.test(await previewText()), JSON.stringify(await previewText()));
+
+    await d.step("A variable that doesn't exist, or a message without {{code}}, can't be saved", 500);
+    await box().evaluate((el) => { el.focus(); el.setSelectionRange(el.value.length, el.value.length); });
+    await d.page.keyboard.type(" {{cod}}", { delay: 4 });
+    const problem = d.page.getByTestId("message-problem");
+    d.check("a misspelt variable is called out by name", await problem.isVisible() && /\{\{cod\}\} isn't a variable/.test(await problem.innerText()), (await problem.innerText().catch(() => "")).slice(0, 100));
+    d.check("Save is off while it is wrong", await save().isDisabled());
+    await clearBox();
+    await d.page.keyboard.type("No code in this one", { delay: 4 });
+    d.check("a message without {{code}} is refused with a clear reason, and Save is off", /must contain \{\{code\}\}/.test(await problem.innerText().catch(() => "")) && (await save().isDisabled()));
+    await clearBox();
+    await d.page.keyboard.type("{{ CODE }} for {{Store}}", { delay: 4 });
+    d.check("spaces and capitals inside the brackets are fine", !(await problem.isVisible().catch(() => false)) && (await previewText()) === "482915 for Acme Momos", JSON.stringify(await previewText()));
+    await clearBox();
+    await typeLines("Hi {{name}}, welcome to {{outlet}}", "{{code}} is your {{store}} code.", "Valid for {{minutes}} minutes.");
+    d.check("the three-line message is back, with no complaint", !(await problem.isVisible().catch(() => false)));
     await d.click(save(), { after: 900 });
     d.check("saving works", /Saved\. New sign-in codes now go out this way\./.test(await text(d)));
     await d.page.reload({ waitUntil: "load" });
     await d.page.getByRole("heading", { name: "Verification codes" }).waitFor({ timeout: 15000 });
-    d.check("after a reload it is still the chosen way, with the same wording", (await radio("Your linked WhatsApp number").isChecked()) && (await d.page.getByLabel("Message sent with the code").inputValue()) === "Acme code {{code}} — valid 10 minutes");
+    d.check("after a reload it is still the chosen way, with the same three lines", (await radio("Your linked WhatsApp number").isChecked()) && (await box().inputValue()) === "Hi {{name}}, welcome to {{outlet}}\n{{code}} is your {{store}} code.\nValid for {{minutes}} minutes.", JSON.stringify(await box().inputValue()));
 
     /* ------------------------------------------------------------- a customer, over linked WhatsApp */
     await d.step("A new customer asks for a code: it arrives on WhatsApp from the store's number", 400);
@@ -157,7 +203,7 @@ export async function run(d, h) {
     const sentNow = await waSent();
     const linkedCode = codeFrom(sentNow, "9811200002");
     d.check("the store's number sent exactly one message, to the customer's number", sentNow.length === 1 && sentNow[0].jid === "919811200002@s.whatsapp.net", JSON.stringify(sentNow.map((m) => m.jid)));
-    d.check("…in the store's own words, with a 6-digit code", /^Acme code \d{6} — valid 10 minutes$/.test(sentNow[0]?.text ?? ""), sentNow[0]?.text);
+    d.check("…in the store's own words: three lines, with the customer's first name, the outlet, the store, the code and the minutes filled in", /^Hi Linked, welcome to .+\n\d{6} is your Acme Momos code\.\nValid for 10 minutes\.$/.test(sentNow[0]?.text ?? ""), JSON.stringify(sentNow[0]?.text));
     await typeCode("123456");
     d.check("the test code 123456 is refused", /That code isn't right/.test(await text(d)));
     await typeCode(linkedCode ?? "000000");

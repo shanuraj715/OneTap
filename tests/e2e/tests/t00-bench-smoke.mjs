@@ -5,7 +5,7 @@ export const meta = {
   id: "t00-bench-smoke",
   title: "Bench smoke test — API, dashboard and storefronts are alive with the fake stores",
   area: "bench",
-  fresh: false,
+  fresh: true, // it checks the pristine fake data — a bench left over from an earlier test must be reset first
   summary: "Checks the throwaway environment (in-memory API, dashboard, storefront) answers, the two fake stores resolve by address, and every seeded login works.",
   expect: [
     "The API answers and reports healthy.",

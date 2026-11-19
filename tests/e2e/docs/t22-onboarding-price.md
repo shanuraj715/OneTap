@@ -1,6 +1,6 @@
 # T22 — Onboarding price estimate — price list, plan + extras, Custom starts above the dearest plan, discount / GST / yearly, the Custom plan, plan dialog
 
-**Area:** onboarding · **Last result:** ✅ PASSED (55 passed, 0 failed · 2026-11-19 01:19 · headless · 35.8 s)
+**Area:** onboarding · **Last result:** ✅ PASSED (55 passed, 0 failed · 2026-11-19 11:29 · headless · 35.7 s)
 
 **Run it alone:** `node run.mjs --only t22` (add `--visible` to watch it) · starts from fresh fake data
 
@@ -139,6 +139,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-19 11:29 | pass | 55 | 0 | headless | 35.7 s |
+| 2026-11-19 11:18 | error | 3 | 1 | headless | 28.2 s |
 | 2026-11-19 01:19 | pass | 55 | 0 | headless | 35.8 s |
 | 2026-11-18 17:56 | pass | 55 | 0 | visible | 3 min 17 s |
 | 2026-11-18 17:49 | pass | 55 | 0 | headless | 35.4 s |
