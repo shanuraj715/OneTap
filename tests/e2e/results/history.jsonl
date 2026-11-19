@@ -486,3 +486,15 @@
 {"id":"t34-image-compression-api","status":"pass","pass":32,"fail":0,"mode":"headless","at":"2026-11-19T12:21:23.851Z","durationMs":10107}
 {"id":"t35-storefront-category-bar","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-19T12:21:50.320Z","durationMs":26449}
 {"id":"t36-upload-urls-api","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-19T12:21:55.178Z","durationMs":4840}
+{"id":"t06-storefront-header-categories","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-19T12:39:03.477Z","durationMs":37220}
+{"id":"t35-storefront-category-bar","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-19T12:39:23.695Z","durationMs":20196}
+{"id":"t37-storefront-mobile-layout","status":"pass","pass":37,"fail":0,"mode":"headless","at":"2026-11-19T12:39:28.675Z","durationMs":4960}
+{"id":"t01-takeaway-order","status":"pass","pass":45,"fail":0,"mode":"headless","at":"2026-11-19T12:40:21.959Z","durationMs":33370}
+{"id":"t06-storefront-header-categories","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-19T12:40:58.834Z","durationMs":36840}
+{"id":"t18-tables","status":"pass","pass":54,"fail":0,"mode":"headless","at":"2026-11-19T12:41:46.483Z","durationMs":43471}
+{"id":"t19-dine-in","status":"pass","pass":55,"fail":0,"mode":"headless","at":"2026-11-19T12:42:46.483Z","durationMs":55803}
+{"id":"t30-account-orders","status":"pass","pass":41,"fail":0,"mode":"headless","at":"2026-11-19T12:43:33.363Z","durationMs":42693}
+{"id":"t31-store-name-header","status":"pass","pass":12,"fail":0,"mode":"headless","at":"2026-11-19T12:43:36.312Z","durationMs":2926}
+{"id":"t33-menu-tree","status":"pass","pass":71,"fail":0,"mode":"headless","at":"2026-11-19T12:44:25.554Z","durationMs":45059}
+{"id":"t35-storefront-category-bar","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-19T12:44:45.791Z","durationMs":20214}
+{"id":"t37-storefront-mobile-layout","status":"pass","pass":37,"fail":0,"mode":"headless","at":"2026-11-19T12:44:50.845Z","durationMs":5036}

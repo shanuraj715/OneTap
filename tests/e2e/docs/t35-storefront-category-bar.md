@@ -1,6 +1,6 @@
 # T35 — Storefront — with 30+ categories the sticky category bar stays ONE short row that scrolls sideways, and phones keep one short bar with a Categories sheet
 
-**Area:** storefront · **Last result:** ✅ PASSED (34 passed, 0 failed · 2026-11-19 17:51 · headless · 26.4 s)
+**Area:** storefront · **Last result:** ✅ PASSED (34 passed, 0 failed · 2026-11-19 18:14 · headless · 20.2 s)
 
 **Run it alone:** `node run.mjs --only t35` (add `--visible` to watch it)
 
@@ -83,6 +83,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-19 18:14 | pass | 34 | 0 | headless | 20.2 s |
+| 2026-11-19 18:09 | pass | 34 | 0 | headless | 20.2 s |
 | 2026-11-19 17:51 | pass | 34 | 0 | headless | 26.4 s |
 | 2026-11-19 17:46 | pass | 34 | 0 | headless | 27.7 s |
 | 2026-11-19 17:41 | pass | 34 | 0 | headless | 20.5 s |

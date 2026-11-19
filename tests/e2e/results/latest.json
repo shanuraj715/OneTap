@@ -112,8 +112,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T12:18:12.970Z",
-    "durationMs": 35059,
+    "at": "2026-11-19T12:40:21.959Z",
+    "durationMs": 33370,
     "steps": [
       {
         "n": 1,
@@ -289,7 +289,7 @@
           {
             "label": "the new customer was saved with the details they gave",
             "ok": true,
-            "detail": "{\"id\":\"6afee8f7c6d35872c3a02830\",\"name\":\"Rohan Mehta\",\"email\":\"rohan.mehta@example.com\",\"phone\":\"9811122233\",\"gender\":\"male\",\"age\":31,\"orderCount\":1,\"walletBalance\":0,\"lastOrderAt\":\"2026-11-19T12:18:03.928Z\",\"createdAt\":\"2026-11-19T12:17:59.223Z\"}",
+            "detail": "{\"id\":\"6afeee2860e67c5229d56581\",\"name\":\"Rohan Mehta\",\"email\":\"rohan.mehta@example.com\",\"phone\":\"9811122233\",\"gender\":\"male\",\"age\":31,\"orderCount\":1,\"walletBalance\":0,\"lastOrderAt\":\"2026-11-19T12:40:12.967Z\",\"createdAt\":\"2026-11-19T12:40:08.400Z\"}",
             "kind": "expect"
           },
           {
@@ -313,7 +313,7 @@
           {
             "label": "the row shows the customer, phone, type, item count, total and 'Placed'",
             "ok": true,
-            "detail": " #0001 05:48 PM Rohan Mehta 9811122233 TA 8 ₹1,030 Placed 0m Accepted",
+            "detail": " #0001 06:10 PM Rohan Mehta 9811122233 TA 8 ₹1,030 Placed 0m Accepted",
             "kind": "expect"
           }
         ]
@@ -1934,8 +1934,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T12:19:07.097Z",
-    "durationMs": 42782,
+    "at": "2026-11-19T12:40:58.834Z",
+    "durationMs": 36840,
     "steps": [
       {
         "n": 1,
@@ -2004,7 +2004,7 @@
           {
             "label": "only one message is visible at a time",
             "ok": true,
-            "detail": "[\"Free delivery on ord\"]",
+            "detail": "[\"Fresh momos, steamed\"]",
             "kind": "expect"
           },
           {
@@ -2040,7 +2040,7 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "0,0,0,1,68,304,852,1097,1169,1170,1170,1170,1170,1170",
+            "detail": "0,0,0,1,70,388,857,1123,1169,1170,1170,1170,1170,1170",
             "kind": "expect"
           },
           {
@@ -2070,7 +2070,7 @@
           {
             "label": "only one message is visible at a time",
             "ok": true,
-            "detail": "[\"Free delivery on ord\"]",
+            "detail": "[\"Fresh momos, steamed\"]",
             "kind": "expect"
           },
           {
@@ -2106,13 +2106,13 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "20,20,20,20,60,198,588,1152,1416,1539,1555,1555,1555,1555",
+            "detail": "20,20,20,20,62,209,625,1168,1396,1488,1494,1494,1494,1494",
             "kind": "expect"
           },
           {
             "label": "phone: 'Kurkure Momos' lands just below the sticky bar",
             "ok": true,
-            "detail": "{\"top\":70,\"bar\":59}",
+            "detail": "{\"top\":71,\"bar\":59}",
             "kind": "expect"
           },
           {
@@ -5178,8 +5178,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T07:26:52.583Z",
-    "durationMs": 42574,
+    "at": "2026-11-19T12:41:46.483Z",
+    "durationMs": 43471,
     "steps": [
       {
         "n": 1,
@@ -5344,7 +5344,7 @@
           {
             "label": "the panel says 'Table T9' and 'Rooftop · 6 seats · Free'",
             "ok": true,
-            "detail": "Table T9 Rooftop · 6 seats · Free http://localhost:3170/t/6afea4968194d9530d7dc2",
+            "detail": "Table T9 Rooftop · 6 seats · Free http://localhost:3170/t/6afeee63fbe3a280f36883",
             "kind": "expect"
           },
           {
@@ -5356,7 +5356,7 @@
           {
             "label": "the address printed under it is /t/<id>?k=<code> on the store's own site",
             "ok": true,
-            "detail": "http://localhost:3170/t/6afea4968194d9530d7dc238?k=1prbv6DBzuXHnDNSzMorHDzL",
+            "detail": "http://localhost:3170/t/6afeee63fbe3a280f36883d5?k=FKUu6tQUWLSUII4X2AQaQjMk",
             "kind": "expect"
           },
           {
@@ -5380,7 +5380,7 @@
           {
             "label": "every table has its own address and its own code",
             "ok": true,
-            "detail": "http://localhost:3170/t/6afea4968194d9530d7dc238?k=1prbv6DBzuXHnDNSzMorHDzL | http://localhost:3170/t/6afea4968194d9530d7dc248?k=2gWhVi25yNStl2mcymMqo1hO | http://localhost:3170/t/6afea4918194d9530d7dbd9c?k=qh6zyFNqmo4VKIvV1EqUqHRW",
+            "detail": "http://localhost:3170/t/6afeee63fbe3a280f36883d5?k=FKUu6tQUWLSUII4X2AQaQjMk | http://localhost:3170/t/6afeee64fbe3a280f36883e5?k=FH_gQcvcl8OTeTATi_OCRXmL | http://localhost:3170/t/6afeee5dfbe3a280f3687f2c?k=x7kmYkHFWDXLYtGDzGhQo8H2",
             "kind": "expect"
           },
           {
@@ -5563,8 +5563,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T07:27:52.553Z",
-    "durationMs": 55795,
+    "at": "2026-11-19T12:42:46.483Z",
+    "durationMs": 55803,
     "steps": [
       {
         "n": 1,
@@ -5705,7 +5705,7 @@
           {
             "label": "'Seated now — 1' with 'Table D1 … 2 orders · tab ₹130'",
             "ok": true,
-            "detail": "Seated now — 1 Table D1 since 12:57 PM · 2 orders · tab ₹130 Move to… Table D2 Table D3 Table T1 Table T2 Table T3 Table T4 Table ",
+            "detail": "Seated now — 1 Table D1 since 06:12 PM · 2 orders · tab ₹130 Move to… Table D2 Table D3 Table T1 Table T2 Table T3 Table T4 Table ",
             "kind": "expect"
           },
           {
@@ -5717,7 +5717,7 @@
           {
             "label": "the Orders page lists both: '#0001 … Dina Diner 9877712345 DI Table D1 … ₹70 Placed' and '#0002 … ₹60'",
             "ok": true,
-            "detail": "#0001 12:57 PM Dina Diner 9877712345 DI Table D1 1 ₹70 Placed 0m Approve || #0002 12:57 PM Dina Diner 9877712345 DI Table D1 1 ₹60 Placed 0m Approve",
+            "detail": "#0001 06:12 PM Dina Diner 9877712345 DI Table D1 1 ₹70 Placed 0m Approve || #0002 06:12 PM Dina Diner 9877712345 DI Table D1 1 ₹60 Placed 0m Approve",
             "kind": "expect"
           },
           {
@@ -5741,7 +5741,7 @@
           {
             "label": "'Seated now' says 'Table D2 … moved: D1 → D2'",
             "ok": true,
-            "detail": "Seated now — 1 Table D2moved: D1 → D2 since 12:57 PM · 2 orders · tab ₹130 Move to… Table D1 Table D3 Table T1 Table T2 Table T3 Table T4 Table T5 Move Close Garden D1 Ne",
+            "detail": "Seated now — 1 Table D2moved: D1 → D2 since 06:12 PM · 2 orders · tab ₹130 Move to… Table D1 Table D3 Table T1 Table T2 Table T3 Table T4 Table T5 Move Close Garden D1 Ne",
             "kind": "expect"
           },
           {
@@ -5843,7 +5843,7 @@
           {
             "label": "after 'Cancel / void' the order #0003 is Cancelled",
             "ok": true,
-            "detail": "#0003 12:57 PM Rohan Other 9877799999 DI Table D3 1 ₹70 Cancelled —",
+            "detail": "#0003 06:12 PM Rohan Other 9877799999 DI Table D3 1 ₹70 Cancelled —",
             "kind": "expect"
           },
           {
@@ -5879,7 +5879,7 @@
           {
             "label": "the panel shows a new code for the same table",
             "ok": true,
-            "detail": "http://localhost:3170/t/6afea4c501bb875a64d94607?k=7h1tpBqsGXbJzXBRGWTjAjqn → http://localhost:3170/t/6afea4c501bb875a64d94607?k=j0TVjMqOk8exQY5aiN_voJqK",
+            "detail": "http://localhost:3170/t/6afeee934fc17954c4940f30?k=KrjRkflk8-FzBoZk6yeCQcF6 → http://localhost:3170/t/6afeee934fc17954c4940f30?k=QIONtAH6IQCxbLSqAH23l11y",
             "kind": "expect"
           },
           {
@@ -10640,8 +10640,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T12:20:13.258Z",
-    "durationMs": 45505,
+    "at": "2026-11-19T12:43:33.363Z",
+    "durationMs": 42693,
     "steps": [
       {
         "n": 1,
@@ -10746,7 +10746,7 @@
           {
             "label": "'View details' lists the items and the bill",
             "ok": true,
-            "detail": "2 × Veg Steamed Momos (5 pcs) ₹120 Items ₹120 Taxes ₹5.71 Total ₹120 Placed 19 Nov 2026, 5:49 pm",
+            "detail": "2 × Veg Steamed Momos (5 pcs) ₹120 Items ₹120 Taxes ₹5.71 Total ₹120 Placed 19 Nov 2026, 6:12 pm",
             "kind": "expect"
           }
         ]
@@ -10758,7 +10758,7 @@
           {
             "label": "(the order is on the dashboard)",
             "ok": true,
-            "detail": "6afee95913b68f522800ec9d",
+            "detail": "6afeeed234b44e0146e7790b",
             "kind": "expect"
           },
           {
@@ -10967,8 +10967,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T12:20:18.453Z",
-    "durationMs": 5168,
+    "at": "2026-11-19T12:43:36.312Z",
+    "durationMs": 2926,
     "steps": [
       {
         "n": 1,
@@ -11723,8 +11723,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T12:21:13.717Z",
-    "durationMs": 47694,
+    "at": "2026-11-19T12:44:25.554Z",
+    "durationMs": 45059,
     "steps": [
       {
         "n": 1,
@@ -12716,8 +12716,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T12:21:50.320Z",
-    "durationMs": 26449,
+    "at": "2026-11-19T12:44:45.791Z",
+    "durationMs": 20214,
     "steps": [
       {
         "n": 1,
@@ -12840,7 +12840,7 @@
           {
             "label": "tablet: the Veg/Egg/Non-veg filter and the Categories button share the row",
             "ok": true,
-            "detail": "{\"barH\":58.75,\"btnRight\":796,\"barRight\":796,\"filterBottom\":822,\"btnTop\":783,\"filterTop\":781}",
+            "detail": "{\"barH\":58.75,\"btnRight\":806,\"barRight\":806,\"filterBottom\":822,\"btnTop\":783,\"filterTop\":781}",
             "kind": "expect"
           },
           {
@@ -12894,7 +12894,7 @@
           {
             "label": "phone: the Veg/Egg/Non-veg filter and the Categories button share the row",
             "ok": true,
-            "detail": "{\"barH\":58.75,\"btnRight\":366,\"barRight\":366,\"filterBottom\":866,\"btnTop\":827,\"filterTop\":825}",
+            "detail": "{\"barH\":58.75,\"btnRight\":376,\"barRight\":376,\"filterBottom\":866,\"btnTop\":827,\"filterTop\":825}",
             "kind": "expect"
           },
           {
@@ -12929,6 +12929,261 @@
           },
           {
             "label": "the 30 extra categories and their dishes are removed again",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser logged no errors or warnings",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t37-storefront-mobile-layout": {
+    "id": "t37-storefront-mobile-layout",
+    "title": "Storefront — page side padding is smaller on phones and tablets (desktop unchanged); on phones a path title is two lines with a smaller View all button",
+    "status": "pass",
+    "pass": 37,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-19T12:44:50.845Z",
+    "durationMs": 5036,
+    "steps": [
+      {
+        "n": 1,
+        "title": "desktop 1280px",
+        "checks": [
+          {
+            "label": "desktop: the menu keeps its 24px side padding",
+            "ok": true,
+            "detail": "24/24",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: none of the page blocks lost padding",
+            "ok": true,
+            "detail": "[[\"div\",18],[\"section\",24],[\"section\",18],[\"div\",24]]",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: the header is unchanged (24px)",
+            "ok": true,
+            "detail": "24",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: the first category starts 124px from the left edge",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: the title stays on ONE line at the normal size",
+            "ok": true,
+            "detail": "22px / 22px",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: the View all button keeps its size",
+            "ok": true,
+            "detail": "12.8px",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: a plain heading is unchanged (22px)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: the bottom View all button keeps its size",
+            "ok": true,
+            "detail": "13.6px",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: View all still shows all 5 dishes",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: no sideways scroll",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "tablet 820px",
+        "checks": [
+          {
+            "label": "tablet: the menu sits 14px from each edge (was 24)",
+            "ok": true,
+            "detail": "14/14",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet: every page-width block (hero, offers, order bar, menu, footer…) uses the same 14px edge",
+            "ok": true,
+            "detail": "[[\"div\",14],[\"section\",14],[\"section\",14],[\"div\",14]]",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet: the header lines up with them (14px)",
+            "ok": true,
+            "detail": "14",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet: the first category starts 14px from the left edge",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet: the title stays on ONE line at the normal size",
+            "ok": true,
+            "detail": "22px / 22px",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet: the View all button keeps its size",
+            "ok": true,
+            "detail": "12.8px",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet: a plain heading is unchanged (22px)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet: the bottom View all button keeps its size",
+            "ok": true,
+            "detail": "13.6px",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet: View all still shows all 5 dishes",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet: no sideways scroll",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "phone 390px",
+        "checks": [
+          {
+            "label": "phone: the menu sits 14px from each edge (was 24)",
+            "ok": true,
+            "detail": "14/14",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: every page-width block (hero, offers, order bar, menu, footer…) uses the same 14px edge",
+            "ok": true,
+            "detail": "[[\"div\",14],[\"section\",14],[\"section\",14],[\"div\",14]]",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: the header lines up with them (14px)",
+            "ok": true,
+            "detail": "14",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: the first category starts 14px from the left edge",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: the title is on TWO lines — parent first, then the name",
+            "ok": true,
+            "detail": "887 / 903",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: line one is the parent, line two is the category",
+            "ok": true,
+            "detail": "\"Mob South Indian ›\" / \"Mob Idli & Vada\"",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: the parent is small",
+            "ok": true,
+            "detail": "11.88px",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: the category name is a little smaller than a normal heading",
+            "ok": true,
+            "detail": "18.92px of 22px",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: the View all button is smaller",
+            "ok": true,
+            "detail": "11.52px text, 28px high",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: the title and the button fit on one row without overlapping",
+            "ok": true,
+            "detail": "149 <= 261",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: the button is fully on screen",
+            "ok": true,
+            "detail": "376 of 390",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: a plain heading is unchanged (22px)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: the bottom View all button is smaller too",
+            "ok": true,
+            "detail": "12.48px",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: View all still shows all 5 dishes",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: no sideways scroll",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the test categories are removed and the menu layout is put back",
             "ok": true,
             "detail": "200",
             "kind": "expect"
