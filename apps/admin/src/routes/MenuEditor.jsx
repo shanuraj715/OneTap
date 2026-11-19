@@ -669,19 +669,32 @@ function ModifierGroups({ outlet, menu }                                ) {
         </div>
       )}
 
-      <div style={{ display: "flex", gap: 8, alignItems: "flex-end", flexWrap: "wrap" }}>
-        <Field label="Group name" info="The heading a diner sees above a set of choices — 'Extra dips', 'Choose your spice'. It appears when they tap an item to customise it.">
-          <TextInput value={name} placeholder="Add-ons" onChange={(e) => setName(e.target.value)} style={{ width: 180 }} />
+      {/*
+        One row: both boxes and the button share a bottom edge and a height. The "how to write the options" hint sits under
+        the whole row — inside the Options field it made that field taller and pushed its box out of line with the others.
+      */}
+      <div style={{ display: "flex", gap: 12, alignItems: "flex-end", flexWrap: "wrap" }}>
+        <Field
+          label="Group name"
+          info="The heading a diner sees above a set of choices — 'Extra dips', 'Choose your spice'. It appears when they tap an item to customise it."
+          style={{ marginBottom: 0, flex: "1 1 180px", maxWidth: 260 }}
+        >
+          <TextInput value={name} placeholder="Add-ons" onChange={(e) => setName(e.target.value)} />
         </Field>
-        <Field label="Options" hint="Comma separated, e.g. Cheese Dip + 30, Extra Mayo + 15" info="Each choice and what it adds to the price. Write 'Cheese Dip + 30' to charge ₹30 extra, or just 'No onion' for a free option. These print on the kitchen ticket under the item, so cooks see them.">
-          <TextInput value={options} onChange={(e) => setOptions(e.target.value)} style={{ width: 340 }} />
+        <Field
+          label="Options"
+          info="Each choice and what it adds to the price. Write 'Cheese Dip + 30' to charge ₹30 extra, or just 'No onion' for a free option. These print on the kitchen ticket under the item, so cooks see them."
+          style={{ marginBottom: 0, flex: "2 1 280px", maxWidth: 520 }}
+        >
+          <TextInput value={options} placeholder="Cheese Dip + 30, Extra Mayo + 15" onChange={(e) => setOptions(e.target.value)} />
         </Field>
-        <div style={{ marginBottom: 14 }}>
-          <Button onClick={add} disabled={create.isPending}>
-            Add group
-          </Button>
-        </div>
+        <Button onClick={add} disabled={create.isPending} style={{ height: 35, flexShrink: 0 }}>
+          Add group
+        </Button>
       </div>
+      <p style={{ margin: "8px 0 0", fontSize: 12, color: "var(--color-text-muted)" }}>
+        Separate the options with commas, and put a price after a + for an extra charge — e.g. Cheese Dip + 30, Extra Mayo + 15.
+      </p>
       {create.error ? <Toast kind="error">{(create.error         ).message}</Toast> : null}
     </Card>
   );
