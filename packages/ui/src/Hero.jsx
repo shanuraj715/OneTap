@@ -10,7 +10,7 @@ import { fx } from "./fx";
 
 export function Hero({ title, subtitle, ctaLabel, ctaHref }           ) {
   return (
-    <section style={wrap}>
+    <section className="ot-page-px" style={wrap}>
       <h1 style={h1}>{title}</h1>
       {subtitle ? <p style={sub}>{subtitle}</p> : null}
       {ctaLabel && ctaHref ? (

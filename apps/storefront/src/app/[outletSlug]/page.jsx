@@ -51,7 +51,7 @@ export default async function OutletHomePage({ params }) {
       />
 
       {slides.length > 0 ? (
-        <section aria-label="Offers and news" style={{ maxWidth: 1080, margin: "0 auto", padding: "0 18px 18px", boxSizing: "border-box" }}>
+        <section aria-label="Offers and news" className="ot-page-px" style={{ maxWidth: 1080, margin: "0 auto", padding: "0 18px 18px", boxSizing: "border-box" }}>
           <Carousel
             items={slides.map((s) => ({ id: s.id, imageUrl: s.imageUrl || undefined, title: s.title, subtitle: s.subtitle, ctaLabel: s.ctaLabel, href: s.ctaHref }))}
             autoplay={carousel.autoplay}

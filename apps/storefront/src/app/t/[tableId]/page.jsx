@@ -97,7 +97,7 @@ export default async function TablePage({
         links={pages.filter((p) => p.showInHeader).map((p) => ({ label: p.title, href: `/${outlet.slug}/${p.slug}` }))}
       />
 
-      <section style={tableHeaderWrap}>
+      <section className="ot-page-px" style={tableHeaderWrap}>
         <h1 style={tableHeading}>Table {scan.table.number}</h1>
         <div style={tableMeta}>
           <span style={outletNameStyle}>{outletDisplayName}</span>

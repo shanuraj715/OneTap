@@ -139,7 +139,7 @@ export function AccountView({ outletId, menuHref }) {
 
   if (loading) {
     return (
-      <section style={wrap} aria-busy="true">
+      <section className="ot-page-px" style={wrap} aria-busy="true">
         <p style={muted}>Loading your account…</p>
       </section>
     );
@@ -169,7 +169,7 @@ export function AccountView({ outletId, menuHref }) {
     });
 
   return (
-    <section style={wrap} data-testid="account">
+    <section className="ot-page-px" style={wrap} data-testid="account">
       <header style={head}>
         <div>
           <h1 style={h1}>Your account</h1>

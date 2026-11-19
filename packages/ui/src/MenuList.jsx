@@ -21,7 +21,7 @@ export function MenuList({
     .sort((a, b) => a.sortOrder - b.sortOrder);
 
   return (
-    <div style={wrap}>
+    <div className="ot-page-px" style={wrap}>
       {categories.map((cat) => {
         const items = menu.items
           .filter((i) => i.categoryId === cat.id)

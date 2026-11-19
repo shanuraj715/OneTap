@@ -106,7 +106,7 @@ export function MenuSections({
   }
 
   return (
-    <div className="ot-menu-sections" style={wrap}>
+    <div className="ot-menu-sections ot-page-px" style={wrap}>
       {wantsNav || (layout.showFoodTypeFilter && foodTypesPresent.length > 1) ? (
         <div ref={toolbarRef} className="ot-fx-bar" data-fx-toolbar="" style={toolbarStyle()}>
           {layout.showFoodTypeFilter && foodTypesPresent.length > 1 ? (
@@ -198,8 +198,13 @@ export function MenuSections({
         // a category inside another sits a level down: smaller heading, the names above it, set in from the left
         const depth = section.depth ?? 0;
         const Heading = depth === 0 ? "h2" : depth === 1 ? "h3" : "h4";
+        // a title that is a path ("South Indian › Idli & Vada") keeps reading as one line on a wide screen; on a phone the
+        // parent part drops to a small line above the name (CSS: .ot-sec-crumb / .ot-sec-name)
+        const titleParts = String(section.title).split(" › ");
+        const pathTitle = depth === 0 && titleParts.length > 1;
         const headingEl = (
           <Heading
+            className="ot-sec-title"
             style={{
               ...heading,
               ...(depth > 0 ? nestedHeading(depth) : null),
@@ -210,7 +215,14 @@ export function MenuSections({
               margin: 0,
             }}
           >
-            {section.title}
+            {pathTitle ? (
+              <>
+                <span className="ot-sec-crumb">{titleParts.slice(0, -1).join(" › ")} › </span>
+                <span className="ot-sec-name">{titleParts[titleParts.length - 1]}</span>
+              </>
+            ) : (
+              section.title
+            )}
             {section.showItemCount ? <span style={countBadge}> ({section.items.length})</span> : null}
           </Heading>
         );
@@ -247,7 +259,7 @@ export function MenuSections({
                     {isTitleRight && section.collapsible ? (
                       <button
                         type="button"
-                        className="ot-press ot-fx-chip"
+                        className="ot-press ot-fx-chip ot-viewall-title"
                         onClick={() => setExpanded((e) => ({ ...e, [section.id]: !isOpen }))}
                         style={fx("chip", viewAllTitleBtn)}
                         aria-expanded={isOpen}
@@ -303,7 +315,7 @@ export function MenuSections({
               >
                 <button
                   type="button"
-                  className="ot-press ot-fx-chip"
+                  className="ot-press ot-fx-chip ot-viewall"
                   onClick={() => setExpanded((e) => ({ ...e, [section.id]: !isOpen }))}
                   style={fx("chip", viewAllBtn)}
                   aria-expanded={isOpen}

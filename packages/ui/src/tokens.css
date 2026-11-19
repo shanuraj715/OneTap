@@ -258,6 +258,28 @@
   .ot-header-px { padding-left: 14px; padding-right: 14px; }
 }
 
+/*
+ * Page side padding on phones AND tablets (up to 1023px — the same line as the Categories button): every page-width
+ * container carries .ot-page-px and keeps its own padding on a desktop, but sits 14px from the screen edge here, so
+ * the menu, hero, offers, order bar and footer share one edge (the header already uses 14px on a phone).
+ */
+@media (max-width: 1023px) {
+  .ot-page-px { padding-left: 14px !important; padding-right: 14px !important; }
+  .ot-header-px { padding-left: 14px; padding-right: 14px; }
+}
+
+/*
+ * Phones only: a section title that is a path ("South Indian › Idli & Vada") is written on two lines — the parent small
+ * and muted, the name a little smaller than the normal heading — and the View all buttons are smaller, so the heading
+ * and the button fit on one row of a narrow screen.
+ */
+@media (max-width: 640px) {
+  .ot-sec-title .ot-sec-crumb { display: block; font-size: 0.54em; font-weight: 600; line-height: 1.25; letter-spacing: 0.02em; color: var(--color-text-muted); margin-bottom: 1px; }
+  .ot-sec-title .ot-sec-name { display: block; font-size: 0.86em; line-height: 1.2; }
+  .ot-viewall-title { font-size: 0.72rem !important; padding: 4px 10px !important; }
+  .ot-viewall { font-size: 0.78rem !important; padding: 7px 14px !important; }
+}
+
 /* Parts of a header that only make sense on a wide screen (a phone number's text, a second button). */
 @media (max-width: 720px) {
   .ot-hide-sm { display: none !important; }

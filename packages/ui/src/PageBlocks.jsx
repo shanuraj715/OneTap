@@ -172,7 +172,7 @@ function Block({ block, contact, layout, preview }) {
 
 export function PageBlocks({ blocks = [], contact, layout, preview = false }) {
   return (
-    <div style={column}>
+    <div className="ot-page-px" style={column}>
       {blocks.map((block) => (
         <Block key={block.id} block={block} contact={contact} layout={layout} preview={preview} />
       ))}

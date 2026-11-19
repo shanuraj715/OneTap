@@ -71,7 +71,7 @@ export function Ordering({
   return (
     <>
       {dineIn ? (
-        <div style={tableBannerWrap}>
+        <div className="ot-page-px" style={tableBannerWrap}>
           <div className="ot-anim-fade" style={tableBanner}>
             <span>
               Ordering to <strong>Table {dineIn.tableNumber}</strong>

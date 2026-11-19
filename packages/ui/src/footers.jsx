@@ -156,7 +156,7 @@ export function FooterMinimalBar(p             ) {
     .join("  ·  ");
   return (
     <footer style={{ ...shell, marginTop: 48 }}>
-      <div style={{ ...inner, padding: "16px 24px", display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
+      <div className="ot-page-px" style={{ ...inner, padding: "16px 24px", display: "flex", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
         <span style={muted}>{bits}</span>
         <PageLinksRow links={p.links} style={{ marginTop: 0 }} />
         <span style={muted}>Powered by TablePe</span>
@@ -169,7 +169,7 @@ export function FooterMinimalBar(p             ) {
 export function FooterBrandBlock(p             ) {
   return (
     <footer className="ot-fx-bar" style={fx("bar", shell)}>
-      <div style={inner}>
+      <div className="ot-page-px" style={inner}>
         <div style={{ fontFamily: "var(--font-heading)", fontWeight: 700, fontSize: "clamp(1.8rem, 6vw, 3rem)", letterSpacing: "-0.02em", color: "var(--color-text)", lineHeight: 1 }}>
           {p.name}
         </div>
@@ -238,7 +238,7 @@ export function FooterContact(p             ) {
         </div>
       </div>
       <div style={{ borderTop: "1px solid var(--color-border)" }}>
-        <div style={{ ...inner, padding: "12px 24px", textAlign: "center" }}>
+        <div className="ot-page-px" style={{ ...inner, padding: "12px 24px", textAlign: "center" }}>
           <span style={muted}>{p.name} · Powered by TablePe</span>
         </div>
       </div>

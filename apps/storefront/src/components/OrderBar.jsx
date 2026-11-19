@@ -107,7 +107,7 @@ export function OrderBar({ current, outlets }) {
 
   return (
     <section aria-label="How would you like your order?" className="ot-fx-bar" style={fx("bar", bar)}>
-      <div style={inner}>
+      <div className="ot-page-px" style={inner}>
         <div style={controls}>
           {offered.length > 1 ? (
             <div role="group" aria-label="Order type" style={segmented}>
