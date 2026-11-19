@@ -74,7 +74,10 @@ async function run() {
   // informational: pictures are only shown if the file is on the machine that serves them
   const root = join(process.cwd(), env.UPLOADS_DIR);
   const missing = [...new Set(changes.map((c) => c.next.slice("/uploads/".length)))].filter((key) => !existsSync(join(root, key)));
-  if (missing.length) console.log(`note: ${missing.length} of those files are not under ${root} on THIS machine (they would not show here either way)`);
+  if (missing.length) {
+    console.log(`note: ${missing.length} of those files are not under ${root} on THIS machine (they would not show here either way):`);
+    for (const key of missing.slice(0, 200)) console.log(`  missing: ${key}`);
+  }
 
   if (!apply) {
     console.log("\nDry run — nothing was changed. Run again with --apply to write.");
