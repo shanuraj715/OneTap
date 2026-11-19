@@ -25,6 +25,7 @@ import {
   ExternalLink,
   FileText,
   HardDrive,
+  Sparkles,
   PanelLeftClose,
   PanelLeftOpen,
   LayoutDashboard,
@@ -105,6 +106,7 @@ import { TakeOrder } from "./routes/take-order/TakeOrder";
 import { PlatformDashboard } from "./routes/platform/PlatformDashboard";
 import { PlatformCache } from "./routes/platform/PlatformCache";
 import { PlatformStorage } from "./routes/platform/PlatformStorage";
+import { PlatformAi } from "./routes/platform/PlatformAi";
 import { PlatformSecurity } from "./routes/platform/PlatformSecurity";
 import { PlatformServer } from "./routes/platform/PlatformServer";
 import { PlatformPlans } from "./routes/platform/PlatformPlans";
@@ -172,6 +174,7 @@ const ROUTE_META = {
   "/platform/security": { title: "Security", icon: ShieldCheck },
   "/platform/cache": { title: "Cache", icon: Database },
   "/platform/storage": { title: "Storage", icon: HardDrive },
+  "/platform/ai": { title: "AI pictures", icon: Sparkles },
   "/platform/settings": { title: "Platform settings", icon: SettingsIcon },
   "/platform/website": { title: "Website", icon: Globe },
   "/platform/website/settings": { title: "Website settings", icon: Globe },
@@ -231,6 +234,7 @@ const PLATFORM_NAV_GROUPS = [
       { to: "/platform/security", label: "Security", icon: <ShieldCheck size={ICON} /> },
       { to: "/platform/cache", label: "Cache", icon: <Database size={ICON} /> },
       { to: "/platform/storage", label: "Storage", icon: <HardDrive size={ICON} /> },
+      { to: "/platform/ai", label: "AI pictures", icon: <Sparkles size={ICON} /> },
       { to: "/platform/settings", label: "Settings", icon: <SettingsIcon size={ICON} /> },
     ],
   },
@@ -591,6 +595,7 @@ function Shell({ can }                                     ) {
               <Route path="/platform/security" element={<PlatformSecurity />} />
               <Route path="/platform/cache" element={<PlatformCache />} />
               <Route path="/platform/storage" element={<PlatformStorage />} />
+              <Route path="/platform/ai" element={<PlatformAi />} />
               <Route path="/platform/settings" element={<PlatformSettings />} />
               <Route path="/platform/website" element={<WebsitePages />} />
               <Route path="/platform/website/settings" element={<WebsiteSettings />} />

@@ -96,3 +96,6 @@ export const useDeleteModifierGroup = (o         ) =>
 export const useImportMenu = (o         ) =>
   useMenuMutation        (o, (outlet, body) => api.importMenu(outlet, body));
 
+/** AI pictures for a dish (super admin only): the dish's pictures change, so the menu is refreshed. */
+export const useGenerateItemImages = (o) =>
+  useMenuMutation(o, (outlet, a) => api.generateItemImages(outlet, a.id, a.body));

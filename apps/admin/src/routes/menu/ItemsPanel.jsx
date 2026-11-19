@@ -1,8 +1,10 @@
 import { useMemo, useState } from "react";
 import { categoryPathLabel, categorySubtreeIds, flattenCategories, itemPriceLabel } from "@onetap/config-schema";
-import { Download, Trash2 } from "lucide-react";
+import { Download, Sparkles, Trash2 } from "lucide-react";
+import { useAuth } from "../../lib/useAuth";
 import { useDeleteItem, useDeleteItems, useUpdateItem } from "../../lib/useMenu";
 import { Button, Card, Checkbox, Modal, Toast } from "../../ui";
+import { GenerateImagesDialog } from "./GenerateImagesDialog";
 import { bulkBar, checkStyle, dangerBtn, iconBtn, linkBtn, selectAllState } from "./shared";
 
 /**
@@ -14,6 +16,9 @@ export function ItemsPanel({ outlet, menu, categoryId, onNew, onEdit, onImport, 
   const removeOne = useDeleteItem(outlet);
   const [includeInside, setIncludeInside] = useState(true);
   const [confirming, setConfirming] = useState(null); // item ids being confirmed
+  // AI pictures are the platform admin's tool: the button exists only for them, never for a store owner or their team
+  const isSuperAdmin = Boolean(useAuth().user?.isSuperAdmin);
+  const [aiItem, setAiItem] = useState(null);
 
   const categories = menu.categories;
   const order = useMemo(() => new Map(flattenCategories(categories).map((e, n) => [e.category.id, n])), [categories]);
@@ -100,6 +105,11 @@ export function ItemsPanel({ outlet, menu, categoryId, onNew, onEdit, onImport, 
                 <input type="checkbox" checked={it.isAvailable} onChange={(e) => update.mutate({ id: it.id, body: { isAvailable: e.target.checked } })} />
                 available
               </label>
+              {isSuperAdmin ? (
+                <button type="button" style={iconBtn} title="Make pictures with AI" aria-label={`Make pictures of ${it.name} with AI`} data-testid="ai-button" onClick={() => setAiItem(it)}>
+                  <Sparkles size={14} />
+                </button>
+              ) : null}
               <button type="button" style={iconBtn} title="Edit" onClick={() => onEdit(it)}>
                 ✎
               </button>
@@ -112,6 +122,7 @@ export function ItemsPanel({ outlet, menu, categoryId, onNew, onEdit, onImport, 
       )}
       {removeOne.error ? <Toast kind="error">{removeOne.error.message}</Toast> : null}
 
+      {aiItem ? <GenerateImagesDialog outlet={outlet} menu={menu} item={menu.items.find((i) => i.id === aiItem.id) ?? aiItem} onClose={() => setAiItem(null)} /> : null}
       {confirming ? (
         <DeleteItemsDialog
           outlet={outlet}

@@ -20,6 +20,7 @@ export { CouponModel, CouponRedemptionModel } from "./models/coupon.js";
 export { WalletLedgerModel } from "./models/wallet.js";
 export { NotificationCredentialModel, NotificationLogModel } from "./models/notify.js";
 export { PlatformStorageModel, StorageConfigModel } from "./models/storage.js";
+export { PlatformAiModel } from "./models/ai.js";
 export { StorePageModel } from "./models/store-page.js";
 export { MarketingCampaignModel, MarketingContactModel, MarketingListModel, MarketingMessageModel } from "./models/marketing.js";
 export { WaAccountModel, WaAuthKeyModel, WaCampaignModel, WaChatModel, WaMessageModel } from "./models/whatsapp.js";

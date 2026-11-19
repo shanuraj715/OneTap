@@ -49,6 +49,9 @@ export const useStoreCache = (id) => useQuery({ queryKey: ["platform", "store-ca
 /** Where every store's images are kept (the platform's one setting) — and which stores still have older settings of their own. */
 export const usePlatformStorage = () => useQuery({ queryKey: ["platform", "storage"], queryFn: api.getPlatformStorage });
 
+/** The Gemini keys that make AI dish pictures (masked) and the model they use. */
+export const usePlatformAi = () => useQuery({ queryKey: ["platform", "ai"], queryFn: api.getPlatformAi });
+
 /** Client onboarding forms: the list, and one form. */
 export const useOnboardingList = () => useQuery({ queryKey: ["platform", "onboarding", "list"], queryFn: () => api.listOnboarding() });
 export const useOnboardingForm = (id) => useQuery({ queryKey: ["platform", "onboarding", "form", id], queryFn: () => api.getOnboarding(id), enabled: Boolean(id), staleTime: Infinity, refetchOnWindowFocus: false });

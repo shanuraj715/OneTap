@@ -13,6 +13,8 @@ const schema = z.object({
   ALLOW_MOCK_GATEWAY: z.coerce.boolean().default(true),
   /** this API's own public origin — used to build URLs for locally-stored uploads */
   PUBLIC_API_URL: z.string().default(""),
+  /** where Google's Gemini API lives — only ever changed by the tests, which point it at a stand-in server */
+  GEMINI_API_BASE_URL: z.string().default("https://generativelanguage.googleapis.com"),
   /** where the local storage provider writes uploads (relative to the API's working dir) */
   UPLOADS_DIR: z.string().default(".uploads"),
   /**

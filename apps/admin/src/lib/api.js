@@ -158,6 +158,21 @@ export const getPlatformStorage = () => req("/api/platform/storage");
 /** payload: { provider?, values?, processing? } */
 export const savePlatformStorage = (payload) => req("/api/platform/storage", json("PUT", payload));
 
+/* ------------------------------------------------------------------ AI pictures (super admin) */
+
+export const getPlatformAi = () => req("/api/platform/ai");
+export const savePlatformAiModel = (model) => req("/api/platform/ai", json("PUT", { model }));
+/** { label?, apiKey } */
+export const addPlatformAiKey = (payload) => req("/api/platform/ai/keys", json("POST", payload));
+/** { id, label?, enabled? } */
+export const updatePlatformAiKey = ({ id, ...patch }) => req(`/api/platform/ai/keys/${id}`, json("PATCH", patch));
+export const removePlatformAiKey = (id) => req(`/api/platform/ai/keys/${id}`, json("DELETE"));
+export const testPlatformAiKey = (id) => req(`/api/platform/ai/keys/${id}/test`, json("POST"));
+
+/** Make pictures of a dish with AI and add them to it. body: { aspectRatio, count, prompt? } — super admin only. */
+export const generateItemImages = (o, id, body) =>
+  req(`/api/menu/items/${id}/generate-images`, { method: "POST", body: JSON.stringify(body), outletId: o._id });
+
 export const resetPlatformStorage = () => req("/api/platform/storage", json("DELETE"));
 
 export const testPlatformStorage = () => req("/api/platform/storage/test", json("POST"));

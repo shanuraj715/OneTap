@@ -6,6 +6,7 @@ import { requireBrandContext, requireSuperAdmin } from "../../middleware/auth.js
 import { HttpError } from "../../middleware/error.js";
 import { checkLabel, hostStatus, probeBase, subdomainInfo } from "../outlets/subdomains.js";
 import * as storage from "../storage/storage.service.js";
+import * as ai from "../ai/ai.service.js";
 import * as cacheAdmin from "./cache.service.js";
 import * as cacheInspect from "./cache-inspect.service.js";
 import { dashboard } from "./dashboard.service.js";
@@ -123,6 +124,43 @@ platformRouter.post("/storage/test", limiter("secrets"), async (_req, res) => {
     // A bad key or an unreachable bucket is the point of this endpoint — report it, don't 500.
     throw new HttpError(400, err instanceof Error ? err.message : "Storage test failed");
   }
+});
+
+/* ----------------------------------------------------------------- AI pictures */
+
+/**
+ * The Gemini API keys that make dish pictures (several: each key has its own usage limit, so pictures are spread
+ * over them), and which model they use. Only the super admin sees or changes this; the keys are encrypted and never
+ * sent back — only a masked hint is.
+ */
+platformRouter.get("/ai", async (req, res) => {
+  requireSuperAdmin(req);
+  res.json(await ai.getAiSettings());
+});
+
+platformRouter.put("/ai", limiter("secrets"), async (req, res) => {
+  const body = z.object({ model: z.string().min(1).max(80) }).parse(req.body);
+  res.json(await ai.saveAiModel(body.model, String(requireSuperAdmin(req)._id)));
+});
+
+platformRouter.post("/ai/keys", limiter("secrets"), async (req, res) => {
+  const body = z.object({ label: z.string().max(60).optional(), apiKey: z.string().min(1).max(300) }).parse(req.body);
+  res.status(201).json(await ai.addAiKey(body, String(requireSuperAdmin(req)._id)));
+});
+
+platformRouter.patch("/ai/keys/:id", limiter("secrets"), async (req, res) => {
+  const body = z.object({ label: z.string().max(60).optional(), enabled: z.boolean().optional() }).parse(req.body);
+  res.json(await ai.updateAiKey(req.params.id, body, String(requireSuperAdmin(req)._id)));
+});
+
+platformRouter.delete("/ai/keys/:id", limiter("secrets"), async (req, res) => {
+  res.json(await ai.removeAiKey(req.params.id, String(requireSuperAdmin(req)._id)));
+});
+
+/** Free: asks Google for a model list with this one key — no picture is made. */
+platformRouter.post("/ai/keys/:id/test", limiter("secrets"), async (req, res) => {
+  requireSuperAdmin(req);
+  res.json(await ai.testAiKey(req.params.id));
 });
 
 /** Use one store's own (older) storage settings as the platform's. The secret stays encrypted. */

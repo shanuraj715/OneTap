@@ -193,6 +193,13 @@ export const POLICIES = {
     why: "Creating team members, changing roles and resetting passwords. Takeover of accounts is the worst thing that can happen to a store, so it is slow on purpose.",
     message: "Too many account changes. Please wait {wait}.",
   },
+  "ai-images": {
+    windowMs: 10 * MINUTE,
+    limit: 15,
+    key: "user",
+    why: "Making dish pictures with Gemini. Every picture is a paid call to Google, one request can make up to four, and only the platform's super admin can start one — this is a brake on a stuck button or a script, not on normal use.",
+    message: "That's a lot of AI pictures in a short time. Please wait {wait}.",
+  },
   "secrets": {
     windowMs: 10 * MINUTE,
     limit: 30,

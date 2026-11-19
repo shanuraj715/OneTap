@@ -1,7 +1,8 @@
 import { Router,              } from "express";
 import { z } from "zod";
 import { outletBrand } from "../outlets/outlet-cache.js";
-import { requireOutletContext } from "../../middleware/auth.js";
+import { requireOutletContext, requireSuperAdmin } from "../../middleware/auth.js";
+import { generateItemImages } from "../ai/ai.service.js";
 import { HttpError } from "../../middleware/error.js";
 import {
   createCategory,
@@ -22,6 +23,7 @@ import {
   updateModifierGroup,
 } from "./menu.service.js";
 import { limiter } from "../../middleware/rate-limit.js";
+import { AI_ASPECT_RATIO_IDS, AI_MAX_IMAGES_AT_ONCE, AI_MAX_PROMPT_LENGTH } from "@onetap/config-schema";
 
 export const menuRouter         = Router();
 
@@ -161,6 +163,23 @@ menuRouter.patch("/items/:id", async (req, res) => {
 menuRouter.post("/items/bulk-delete", limiter("destructive"), async (req, res) => {
   const body = z.object({ ids: z.array(z.string().min(1)).min(1).max(500) }).parse(req.body);
   res.json(await deleteItems(await writeContext(req), body.ids));
+});
+
+/**
+ * Make pictures of a dish with Gemini and add them to it. For the platform's super admin ONLY — a store owner never
+ * sees the button and is refused here — because every picture is a paid call on the platform's own keys.
+ */
+menuRouter.post("/items/:id/generate-images", limiter("ai-images"), async (req, res) => {
+  const admin = requireSuperAdmin(req);
+  const ctx = await writeContext(req);
+  const body = z
+    .object({
+      aspectRatio: z.enum(AI_ASPECT_RATIO_IDS),
+      count: z.number().int().min(1).max(AI_MAX_IMAGES_AT_ONCE),
+      prompt: z.string().max(AI_MAX_PROMPT_LENGTH).optional(),
+    })
+    .parse(req.body);
+  res.json(await generateItemImages(ctx, req.params.id, body, String(admin._id)));
 });
 
 menuRouter.delete("/items/:id", async (req, res) => {
