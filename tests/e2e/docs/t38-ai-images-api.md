@@ -1,6 +1,6 @@
 # T38 — AI dish pictures — several Gemini keys used in turn, only the super admin can use them, and what is made is saved to the dish
 
-**Area:** menu · **Last result:** ✅ PASSED (82 passed, 0 failed · 2026-11-20 00:26 · headless · 4.2 s)
+**Area:** menu · **Last result:** ✅ PASSED (82 passed, 0 failed · 2026-11-20 02:15 · headless · 5.1 s)
 
 **Run it alone:** `node run.mjs --only t38` (add `--visible` to watch it)
 
@@ -84,14 +84,14 @@ _Nothing failed._
 - Google was asked for the chosen model and shape (16:9) — _{"type":"image","aspect_ratio":"16:9","image_size":"1K"}_
 - the request describes the dish: its name, that it's vegetarian, its section
 - one of the saved keys was used, in a header
-- the picture was compressed to WebP, stored in the store's own folder, and saved without a domain — _/uploads/6aff466196bd9baef7eee294/6aff466196bd9baef7eee297/m_
-- …and the menu hands out a full address — _http://localhost:3101/uploads/6aff466196bd9baef7ee_
+- the picture was compressed to WebP, stored in the store's own folder, and saved without a domain — _/uploads/6aff5fd1e8faa3e946bffeda/6aff5fd1e8faa3e946bffedd/m_
+- …and the menu hands out a full address — _http://localhost:3101/uploads/6aff5fd1e8faa3e946bf_
 - the file opens
 
 **Step 5 — several pictures — at once, on different keys, from different angles**
 
 - three pictures are made — _200 added 3_
-- …at the same time, not one after another (3 × 0.4 s took under 1.1 s) — _476 ms_
+- …at the same time, not one after another (3 × 0.4 s took under 1.1 s) — _489 ms_
 - …each on a DIFFERENT key — _2_,4_,1__
 - …and each asked for from a different angle, so they aren't copies
 - all in the chosen shape (4:3)
@@ -157,19 +157,19 @@ _Nothing failed._
 **Step 14 — however Google says 'limit reached', the next key takes over — and the key rests for as long as Google said**
 
 - a limit reported as HTTP 403 with 'quota' in the words: the picture is still made, on another key (the limited key was tried once) — _200  tried 1_
-- …and the answer says which key was switched away from, and which made the picture — _{"rested":["Main account"],"used":["Second account"]}_
+- …and the answer says which key was switched away from, and which made the picture — _{"rested":["Main account"],"used":["Third"]}_
 - …that key rests 10 minutes — _600 s_
 - a limit that says 'retry in 40 s': the picture is still made, on another key (the limited key was tried once) — _200  tried 1_
 - …and the answer says which key was switched away from, and which made the picture — _{"rested":["Main account"],"used":["Second account"]}_
 - …that key rests about as long as Google said — _45 s_
 - a per-DAY limit: the picture is still made, on another key (the limited key was tried once) — _200  tried 1_
-- …and the answer says which key was switched away from, and which made the picture — _{"rested":["Main account"],"used":["Second account"]}_
+- …and the answer says which key was switched away from, and which made the picture — _{"rested":["Main account"],"used":["Third"]}_
 - …that key rests for hours (a daily limit) — _21600 s_
 - a plain limit with no hint (429): the picture is still made, on another key (the limited key was tried once) — _200  tried 1_
-- …and the answer says which key was switched away from, and which made the picture — _{"rested":["Main account"],"used":["Third"]}_
+- …and the answer says which key was switched away from, and which made the picture — _{"rested":["Main account"],"used":["Second account"]}_
 - …that key rests 10 minutes — _600 s_
 - a key whose Google project can't make pictures (billing off): the picture is still made, on another key (the limited key was tried once) — _200  tried 1_
-- …and the answer says which key was switched away from, and which made the picture — _{"rested":["Main account"],"used":["Second account"]}_
+- …and the answer says which key was switched away from, and which made the picture — _{"rested":["Main account"],"used":["Third"]}_
 - …that key rests for a day — _86400 s_
 - with TWO keys at their limit the third carries the whole batch, and both are reported — _{"rested":["Main account","Second account"],"used":["Third"]}_
 
@@ -177,6 +177,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-20 02:15 | pass | 82 | 0 | headless | 5.1 s |
 | 2026-11-20 00:26 | pass | 82 | 0 | headless | 4.2 s |
 | 2026-11-19 19:46 | pass | 82 | 0 | headless | 4.3 s |
 | 2026-11-19 19:46 | fail | 81 | 1 | headless | 4.6 s |

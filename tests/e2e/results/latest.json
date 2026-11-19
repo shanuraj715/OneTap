@@ -11729,8 +11729,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:55:47.861Z",
-    "durationMs": 45629,
+    "at": "2026-11-19T20:45:02.997Z",
+    "durationMs": 45342,
     "steps": [
       {
         "n": 1,
@@ -13262,8 +13262,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:56:35.528Z",
-    "durationMs": 4168,
+    "at": "2026-11-19T20:45:08.141Z",
+    "durationMs": 5104,
     "steps": [
       {
         "n": 1,
@@ -13410,7 +13410,7 @@
           {
             "label": "a picture is made and added to the dish",
             "ok": true,
-            "detail": "200 {\"item\":{\"id\":\"6aff466196bd9baef7eee2e0\",\"categoryId\":\"6aff466196bd9baef7eee2da\",\"name\":\"Kadai Paneer\",\"description\":\"Pa",
+            "detail": "200 {\"item\":{\"id\":\"6aff5fd2e8faa3e946bfff28\",\"categoryId\":\"6aff5fd2e8faa3e946bfff23\",\"name\":\"Kadai Paneer\",\"description\":\"Pa",
             "kind": "expect"
           },
           {
@@ -13434,13 +13434,13 @@
           {
             "label": "the picture was compressed to WebP, stored in the store's own folder, and saved without a domain",
             "ok": true,
-            "detail": "/uploads/6aff466196bd9baef7eee294/6aff466196bd9baef7eee297/m",
+            "detail": "/uploads/6aff5fd1e8faa3e946bffeda/6aff5fd1e8faa3e946bffedd/m",
             "kind": "expect"
           },
           {
             "label": "…and the menu hands out a full address",
             "ok": true,
-            "detail": "http://localhost:3101/uploads/6aff466196bd9baef7ee",
+            "detail": "http://localhost:3101/uploads/6aff5fd1e8faa3e946bf",
             "kind": "expect"
           },
           {
@@ -13464,7 +13464,7 @@
           {
             "label": "…at the same time, not one after another (3 × 0.4 s took under 1.1 s)",
             "ok": true,
-            "detail": "476 ms",
+            "detail": "489 ms",
             "kind": "expect"
           },
           {
@@ -13752,7 +13752,7 @@
           {
             "label": "…and the answer says which key was switched away from, and which made the picture",
             "ok": true,
-            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Second account\"]}",
+            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Third\"]}",
             "kind": "expect"
           },
           {
@@ -13788,7 +13788,7 @@
           {
             "label": "…and the answer says which key was switched away from, and which made the picture",
             "ok": true,
-            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Second account\"]}",
+            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Third\"]}",
             "kind": "expect"
           },
           {
@@ -13806,7 +13806,7 @@
           {
             "label": "…and the answer says which key was switched away from, and which made the picture",
             "ok": true,
-            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Third\"]}",
+            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Second account\"]}",
             "kind": "expect"
           },
           {
@@ -13824,7 +13824,7 @@
           {
             "label": "…and the answer says which key was switched away from, and which made the picture",
             "ok": true,
-            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Second account\"]}",
+            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Third\"]}",
             "kind": "expect"
           },
           {
@@ -13853,8 +13853,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:56:58.858Z",
-    "durationMs": 19127,
+    "at": "2026-11-19T20:45:32.652Z",
+    "durationMs": 19294,
     "steps": [
       {
         "n": 1,
@@ -15413,8 +15413,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T19:05:34.638Z",
-    "durationMs": 9219,
+    "at": "2026-11-19T20:45:41.391Z",
+    "durationMs": 8712,
     "steps": [
       {
         "n": 1,
@@ -15459,7 +15459,7 @@
           {
             "label": "it is a stored picture (not a data: link)",
             "ok": true,
-            "detail": "http://localhost:3097/uploads/6aff4770bc89f5e36935fe24/6aff4770bc89f5e36935fe28/",
+            "detail": "http://localhost:3097/uploads/6aff5fd6067ee9a0ac8d9a5f/6aff5fd6067ee9a0ac8d9a63/",
             "kind": "expect"
           }
         ]
@@ -15580,6 +15580,363 @@
             "label": "the 2400px picture was made smaller (at most 1600px wide)",
             "ok": true,
             "detail": "600,600,600,600,600,1600",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t46-addon-groups": {
+    "id": "t46-addon-groups",
+    "title": "Add-on groups — the list is multi-column (dish editor and the groups list) and a group can be edited after creation (name, option names and prices, add/remove options)",
+    "status": "pass",
+    "pass": 50,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-19T20:45:57.990Z",
+    "durationMs": 16581,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The dish editor's Add-on groups list runs across several columns",
+        "checks": [
+          {
+            "label": "every group is listed",
+            "ok": true,
+            "detail": "16 of 16",
+            "kind": "expect"
+          },
+          {
+            "label": "the list uses several columns on a wide screen",
+            "ok": true,
+            "detail": "3 columns, 6 rows, 16 groups",
+            "kind": "expect"
+          },
+          {
+            "label": "the list is one long column on a wide screen",
+            "ok": true,
+            "detail": "3 columns",
+            "kind": "never"
+          },
+          {
+            "label": "nothing crosses the edge of its box",
+            "ok": true,
+            "detail": "0 crossing",
+            "kind": "expect"
+          },
+          {
+            "label": "one option reads '1 option'",
+            "ok": true,
+            "detail": "T46 One 1 option",
+            "kind": "expect"
+          },
+          {
+            "label": "four options read '4 options'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "on a phone-width window the list stays inside its box and the window",
+            "ok": true,
+            "detail": "1 column(s), crossing 0, sideways false",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Ticking groups and saving still attaches them",
+        "checks": [
+          {
+            "label": "the dish now has both ticked groups",
+            "ok": true,
+            "detail": "2 groups",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "The groups list at the bottom of the Menu page is multi-column too",
+        "checks": [
+          {
+            "label": "every group has a row",
+            "ok": true,
+            "detail": "16 of 16",
+            "kind": "expect"
+          },
+          {
+            "label": "the rows run across several columns",
+            "ok": true,
+            "detail": "3 columns, 6 rows",
+            "kind": "expect"
+          },
+          {
+            "label": "each row has an edit button",
+            "ok": true,
+            "detail": "16 buttons",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Editing a group: rename it, change a price, rename an option, remove one, add one",
+        "checks": [
+          {
+            "label": "the editor spans the full width of the list",
+            "ok": true,
+            "detail": "1110 of 1110",
+            "kind": "expect"
+          },
+          {
+            "label": "it shows the group's name",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it shows the four options with their prices",
+            "ok": true,
+            "detail": "[[\"Mint Dip\",\"10\"],[\"Cheese Dip\",\"30\"],[\"Mayo\",\"15\"],[\"Schezwan\",\"20\"]]",
+            "kind": "expect"
+          },
+          {
+            "label": "it says any number can be picked",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "removing a row takes it out of the editor",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the editor closes after saving",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the group has the new name",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it is the same group (same id)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it has the four options in the new order",
+            "ok": true,
+            "detail": "[\"Mint Dip\",\"Cheese Dip\",\"Mayonnaise\",\"Garlic Dip\"]",
+            "kind": "expect"
+          },
+          {
+            "label": "the prices are right (₹10, ₹35, ₹15, ₹25)",
+            "ok": true,
+            "detail": "[1000,3500,1500,2500]",
+            "kind": "expect"
+          },
+          {
+            "label": "a kept option got a different id",
+            "ok": true,
+            "detail": "ids of Mint Dip / Cheese Dip / Mayonnaise",
+            "kind": "never"
+          },
+          {
+            "label": "the new option has an id of its own",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it still allows any number to be picked (max follows the 4 options)",
+            "ok": true,
+            "detail": "0–4",
+            "kind": "expect"
+          },
+          {
+            "label": "editing detached the group from the dish",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the list shows the new name and options",
+            "ok": true,
+            "detail": "T46 Dips & Sauces Mint Dip +₹10 · Cheese Dip +₹35 · Mayonnaise +₹15 · Garlic Dip +₹25 ✎ ×",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Mistakes are refused and change nothing; Cancel discards",
+        "checks": [
+          {
+            "label": "an empty name is refused with a message",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the editor stays open",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an option without a name is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a negative price is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "all options can be taken out of the editor…",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…but a group with no options is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a refused save changed the group",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "Cancel closes the editor",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the typing is gone",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Cancel changed the group",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Rules stay right after an edit",
+        "checks": [
+          {
+            "label": "a pick-one group says so",
+            "ok": true,
+            "detail": "Choose up to 1. Items that use this group keep using it.",
+            "kind": "expect"
+          },
+          {
+            "label": "a third option was added",
+            "ok": true,
+            "detail": "[\"Mild\",\"Medium\",\"Hot\"]",
+            "kind": "expect"
+          },
+          {
+            "label": "a pick-one group is still pick-one",
+            "ok": true,
+            "detail": "max 1",
+            "kind": "expect"
+          },
+          {
+            "label": "a required group says 'Required · choose 1'",
+            "ok": true,
+            "detail": "Required · choose 1. Items that use this group keep using it.",
+            "kind": "expect"
+          },
+          {
+            "label": "it was renamed and is still required, choose 1",
+            "ok": true,
+            "detail": "{\"r\":true,\"min\":1,\"max\":1}",
+            "kind": "expect"
+          },
+          {
+            "label": "it is still on the dish",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an any-number group allows any number of its four options",
+            "ok": true,
+            "detail": "4 options, max 4",
+            "kind": "expect"
+          },
+          {
+            "label": "taken down to one option it allows exactly one pick",
+            "ok": true,
+            "detail": "1 option, 0–1",
+            "kind": "expect"
+          },
+          {
+            "label": "the original last option kept its id",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "The storefront shows the edited group",
+        "checks": [
+          {
+            "label": "the pop-up shows the renamed group",
+            "ok": true,
+            "detail": "Veg Steamed Momos Veg Steamed Momos — made fresh to order CHOOSE A SIZE 5 pcs ₹60 8 pcs ₹90 T46 DIPS & SAUCES Mint Dip +₹10 Cheese Dip +₹35 Mayonnaise +₹15 Garlic Dip +₹25 T46 REQUIRED CHOICE Veg +₹0 ",
+            "kind": "expect"
+          },
+          {
+            "label": "…with the new prices and options",
+            "ok": true,
+            "detail": "Veg Steamed Momos Veg Steamed Momos — made fresh to order CHOOSE A SIZE 5 pcs ₹60 8 pcs ₹90 T46 DIPS & SAUCES Mint Dip +₹10 Cheese Dip +₹35 Mayonnaise +₹15 Garlic Dip +₹25 T46 REQUIRED CHOICE Veg +₹0 Non-veg +₹20 − 1 + Add · ₹60 Cancel",
+            "kind": "expect"
+          },
+          {
+            "label": "the removed option is still offered",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the old group name is still shown",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "everything the test made was removed",
+            "ok": true,
+            "detail": "0 left",
             "kind": "expect"
           }
         ]

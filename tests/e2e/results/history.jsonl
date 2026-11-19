@@ -638,3 +638,10 @@
 {"id":"t45-paste-item-photo","status":"fail","pass":11,"fail":10,"mode":"headless","at":"2026-11-19T19:04:41.039Z","durationMs":113821}
 {"id":"t45-paste-item-photo","status":"pass","pass":22,"fail":0,"mode":"headless","at":"2026-11-19T19:05:09.112Z","durationMs":9197}
 {"id":"t45-paste-item-photo","status":"pass","pass":21,"fail":0,"mode":"headless","at":"2026-11-19T19:05:34.638Z","durationMs":9219}
+{"id":"t46-addon-groups","status":"fail","pass":48,"fail":2,"mode":"headless","at":"2026-11-19T20:42:44.799Z","durationMs":61786}
+{"id":"t46-addon-groups","status":"pass","pass":50,"fail":0,"mode":"headless","at":"2026-11-19T20:43:34.023Z","durationMs":17310}
+{"id":"t33-menu-tree","status":"pass","pass":71,"fail":0,"mode":"headless","at":"2026-11-19T20:45:02.997Z","durationMs":45342}
+{"id":"t38-ai-images-api","status":"pass","pass":82,"fail":0,"mode":"headless","at":"2026-11-19T20:45:08.141Z","durationMs":5104}
+{"id":"t39-ai-item-images","status":"pass","pass":32,"fail":0,"mode":"headless","at":"2026-11-19T20:45:32.652Z","durationMs":19294}
+{"id":"t45-paste-item-photo","status":"pass","pass":21,"fail":0,"mode":"headless","at":"2026-11-19T20:45:41.391Z","durationMs":8712}
+{"id":"t46-addon-groups","status":"pass","pass":50,"fail":0,"mode":"headless","at":"2026-11-19T20:45:57.990Z","durationMs":16581}

@@ -1,6 +1,6 @@
 # TablePe end-to-end tests — catalog
 
-**46 tests** · 46 passing · 0 failing/error · 0 not run yet
+**47 tests** · 47 passing · 0 failing/error · 0 not run yet
 
 | Test | Area | Result | Checks | Last run |
 |---|---|---|---|---|
@@ -37,19 +37,20 @@
 | [t30-account-orders](t30-account-orders.md) — Storefront Account page — 'My orders' menu link, order history with status, payment mode & state, coins; Delete order on the dashboard | storefront | ✅ PASSED | 41/41 | 2026-11-20 00:24 |
 | [t31-store-name-header](t31-store-name-header.md) — Storefront — the header and the big heading say the store's name; the outlet's name is only in the outlet dropdown | storefront | ✅ PASSED | 12/12 | 2026-11-20 00:24 |
 | [t32-menu-tree-api](t32-menu-tree-api.md) — Menu categories inside categories — depth, moving, pictures, ordering, bulk delete of categories and items, import, and how the storefront builds its sections | menu | ✅ PASSED | 91/91 | 2026-11-20 00:24 |
-| [t33-menu-tree](t33-menu-tree.md) — Menu — categories inside categories, category pictures, and multi-select delete for categories and items | menu | ✅ PASSED | 71/71 | 2026-11-20 00:25 |
+| [t33-menu-tree](t33-menu-tree.md) — Menu — categories inside categories, category pictures, and multi-select delete for categories and items | menu | ✅ PASSED | 71/71 | 2026-11-20 02:15 |
 | [t34-image-compression-api](t34-image-compression-api.md) — Pictures are compressed and optimised on the server when uploaded — size, shape, rotation, privacy, limits and settings | storage | ✅ PASSED | 32/32 | 2026-11-20 00:25 |
 | [t35-storefront-category-bar](t35-storefront-category-bar.md) — Storefront — with 30+ categories the sticky category bar stays ONE short row that scrolls sideways, and phones keep one short bar with a Categories sheet | storefront | ✅ PASSED | 34/34 | 2026-11-20 00:26 |
 | [t36-upload-urls-api](t36-upload-urls-api.md) — Pictures are stored without a domain and get the current domain when sent out — so a new domain or machine never breaks them | storage | ✅ PASSED | 28/28 | 2026-11-20 00:26 |
 | [t37-storefront-mobile-layout](t37-storefront-mobile-layout.md) — Storefront — page side padding is smaller on phones and tablets (desktop unchanged); on phones a path title is two lines with a smaller View all button | storefront | ✅ PASSED | 45/45 | 2026-11-20 00:26 |
-| [t38-ai-images-api](t38-ai-images-api.md) — AI dish pictures — several Gemini keys used in turn, only the super admin can use them, and what is made is saved to the dish | menu | ✅ PASSED | 82/82 | 2026-11-20 00:26 |
-| [t39-ai-item-images](t39-ai-item-images.md) — AI dish pictures — keys added in the platform console, a sparkles button on the dish row (super admin only), shape and count chosen in a pop-up, pictures saved to the dish | menu | ✅ PASSED | 32/32 | 2026-11-20 00:26 |
+| [t38-ai-images-api](t38-ai-images-api.md) — AI dish pictures — several Gemini keys used in turn, only the super admin can use them, and what is made is saved to the dish | menu | ✅ PASSED | 82/82 | 2026-11-20 02:15 |
+| [t39-ai-item-images](t39-ai-item-images.md) — AI dish pictures — keys added in the platform console, a sparkles button on the dish row (super admin only), shape and count chosen in a pop-up, pictures saved to the dish | menu | ✅ PASSED | 32/32 | 2026-11-20 02:15 |
 | [t40-react-style-warnings](t40-react-style-warnings.md) — Storefront menu — no React warnings (e.g. "Removing a style property during rerender (borderColor) when a conflicting property is set (border)") while scrolling, filtering and expanding | storefront | ✅ PASSED | 4/4 | 2026-11-20 00:27 |
 | [t41-storefront-view-all](t41-storefront-view-all.md) — Storefront View all — as configured on a wide screen; under the cards and centred on phones and tablets (portrait and landscape); the extra cards slide open and shut | storefront | ✅ PASSED | 70/70 | 2026-11-20 00:28 |
 | [t42-storefront-order-type](t42-storefront-order-type.md) — Storefront — the Takeaway / Delivery choice (menu page and checkout) always shows both; one the outlet doesn't offer is shown greyed out and can't be chosen | storefront | ✅ PASSED | 39/39 | 2026-11-20 00:28 |
 | [t43-checkout-coupons](t43-checkout-coupons.md) — Checkout — the coupon box is hidden when the platform locks Coupons for the store, and comes back when it is unlocked | storefront | ✅ PASSED | 10/10 | 2026-11-20 00:29 |
 | [t44-website-product-menu](t44-website-product-menu.md) — Website header — the Product dropdown is wide, fits the window, and its hovered item is a soft rounded tile with a brand-filled icon (not a grey pill), in light and dark | website | ✅ PASSED | 53/53 | 2026-11-20 00:32 |
-| [t45-paste-item-photo](t45-paste-item-photo.md) — Dish photos — a picture copied to the clipboard can be pasted (Ctrl/⌘+V or the 'Paste photo' button) instead of choosing a file | menu | ✅ PASSED | 21/21 | 2026-11-20 00:35 |
+| [t45-paste-item-photo](t45-paste-item-photo.md) — Dish photos — a picture copied to the clipboard can be pasted (Ctrl/⌘+V or the 'Paste photo' button) instead of choosing a file | menu | ✅ PASSED | 21/21 | 2026-11-20 02:15 |
+| [t46-addon-groups](t46-addon-groups.md) — Add-on groups — the list is multi-column (dish editor and the groups list) and a group can be edited after creation (name, option names and prices, add/remove options) | menu | ✅ PASSED | 50/50 | 2026-11-20 02:15 |
 
 ## Open findings (noticed during tests, not yet fixed)
 
