@@ -1,13 +1,16 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { CUSTOMER_AGE_MAX, CUSTOMER_AGE_MIN, CUSTOMER_GENDER_LABELS, CUSTOMER_GENDERS } from "@onetap/config-schema";
+import { CUSTOMER_AGE_MAX, CUSTOMER_AGE_MIN, CUSTOMER_GENDER_LABELS, CUSTOMER_GENDERS, formatCountdown } from "@onetap/config-schema";
 import { fx } from "@onetap/ui";
 import { Calendar, Check, ChevronLeft, Loader2, LogIn, Mail, Phone, ShieldAlert, ShieldCheck, User } from "lucide-react";
 import { api, apiPatch } from "@/lib/clientApi";
 
 const DRAFT_KEY = "onetap.customerDraft";
-const RESEND_COOLDOWN_SEC = 30;
+// How long to wait before asking for another code is the SERVER's call (it grows with every code: 30 s, 1 min, 2 min,
+// 5 min … up to 6 hours) and it refuses an early request no matter who sends it. This screen only shows the countdown
+// the server gave, and remembers it for the number it belongs to — going Back, or retyping the same number, doesn't reset it.
+const FALLBACK_RESEND_SEC = 30;
 
 /** Remembers what a returning visitor typed last time, on this device only — never sent anywhere until they submit. */
 function loadDraft() {
@@ -62,7 +65,11 @@ export function CustomerGate({ customer, outletId, onSuccess, onStepChange }) {
   const [via, setVia] = useState(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
-  const [resendCooldown, setResendCooldown] = useState(0);
+  // when another code may be asked for, and which number that is about (a different number has its own wait)
+  const [resendWindow, setResendWindow] = useState({ at: 0, destination: "" });
+  const [clock, setClock] = useState(() => Date.now());
+  // a gentle line under the heading: "a code was already sent…"
+  const [notice, setNotice] = useState(null);
   // What step 1 itself just created — null until `verify` succeeds. Once
   // set, it is treated exactly like the `customer` prop for the rest of this
   // component's life, so step 2 renders the same way regardless of which
@@ -82,11 +89,18 @@ export function CustomerGate({ customer, outletId, onSuccess, onStepChange }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // One ticker for the resend cooldown, for the life of the component.
+  // One ticker for the resend countdown, for the life of the component. It reads the clock rather than counting
+  // ticks, so a throttled background tab still shows the right time when it wakes up.
   useEffect(() => {
-    const t = setInterval(() => setResendCooldown((s) => (s > 0 ? s - 1 : 0)), 1000);
+    const t = setInterval(() => setClock(Date.now()), 1000);
     return () => clearInterval(t);
   }, []);
+  const resendCooldown = resendWindow.destination === destination ? Math.max(0, Math.ceil((resendWindow.at - clock) / 1000)) : 0;
+  const startResendWait = (seconds) => {
+    const now = Date.now();
+    setClock(now);
+    setResendWindow({ at: now + Math.max(1, seconds || FALLBACK_RESEND_SEC) * 1000, destination });
+  };
 
   const needsName = !activeCustomer?.name;
   const needsGender = !activeCustomer?.gender;
@@ -124,7 +138,20 @@ export function CustomerGate({ customer, outletId, onSuccess, onStepChange }) {
       await fn();
     } catch (e) {
       if (e.details?.code === "ip_blocked") setBlockedUntil(e.details.blockedUntil);
-      else setError(e.message);
+      else if (e.details?.code === "otp_wait") {
+        // asked too soon (a second tab, a reload, Back and Send again…): the server says how long is left
+        startResendWait(e.details.retryAfterSec);
+        if (e.details.liveCode) {
+          // the code already sent is still good — go straight to typing it
+          setSent(true);
+          setCode("");
+          setVia(e.details.via ?? null);
+          setNotice(`A code was already sent to ${destination}. Enter it below, or ask for a new one when the timer ends.`);
+        } else setError(e.message);
+      } else {
+        if (e.details?.code === "otp_send_failed") startResendWait(e.details.retryAfterSec);
+        setError(e.message);
+      }
     } finally {
       setBusy(false);
     }
@@ -136,9 +163,10 @@ export function CustomerGate({ customer, outletId, onSuccess, onStepChange }) {
       const r = await api("/api/customer/otp/request", { outletId, destination });
       setSent(true);
       setCode("");
+      setNotice(null);
       setDevCode(r.devCode ?? null);
       setVia(r.via ?? null);
-      setResendCooldown(RESEND_COOLDOWN_SEC);
+      startResendWait(r.resendAfterSec);
       saveDraft({ destination, name: name.trim() });
     });
 
@@ -185,7 +213,7 @@ export function CustomerGate({ customer, outletId, onSuccess, onStepChange }) {
     setSent(false);
     setCode("");
     setDevCode(null);
-    setResendCooldown(0);
+    setNotice(null);
     setError(null);
     setVerifiedCustomer(null);
   };
@@ -241,6 +269,11 @@ export function CustomerGate({ customer, outletId, onSuccess, onStepChange }) {
               ? `We sent a 6-digit code to ${destination}${via === "linked" || via === "whatsapp" ? " on WhatsApp" : via === "sms" ? " by SMS" : ""}.`
               : "Your name and number — then you can apply coupons and redeem coins on every order."}
         </p>
+        {notice ? (
+          <p style={{ ...devHint, margin: "0 0 12px" }} role="status" data-testid="otp-notice">
+            {notice}
+          </p>
+        ) : null}
 
         <div key={step} className="ot-swap">
           {isCompletion ? (
@@ -339,7 +372,7 @@ export function CustomerGate({ customer, outletId, onSuccess, onStepChange }) {
               <OtpInput value={code} onChange={setCode} error={Boolean(error)} />
               {devCode ? (
                 <p style={{ ...devHint, cursor: "pointer" }} onClick={() => setCode(devCode)} title="Click to fill code">
-                  No SMS provider configured yet — dev code: <strong>{devCode}</strong>
+                  Codes aren't being sent for this store yet — dev code: <strong>{devCode}</strong>
                 </p>
               ) : null}
             </Field>
@@ -363,7 +396,7 @@ export function CustomerGate({ customer, outletId, onSuccess, onStepChange }) {
               disabled={resendCooldown > 0 || busy}
               onClick={requestCode}
             >
-              {resendCooldown > 0 ? `Resend code (${resendCooldown}s)` : "Resend code"}
+              {resendCooldown > 0 ? `Resend code (${formatCountdown(resendCooldown)})` : "Resend code"}
             </button>
           </div>
         ) : null}

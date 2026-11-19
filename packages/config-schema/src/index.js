@@ -23,6 +23,7 @@ export * from "./printing.js";
 export * from "./rbac.js";
 export * from "./wallet.js";
 export * from "./messaging.js";
+export * from "./otp.js";
 export * from "./order-notify.js";
 export * from "./analytics.js";
 export * from "./onboarding.js";
