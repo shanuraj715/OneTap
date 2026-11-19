@@ -1,6 +1,6 @@
 # T25 — Code resend rule — the API makes a number wait 30 s, 1 min, 2 min, 5 min, 15 min, 1 h, then 6 h between codes, however it is called
 
-**Area:** security · **Last result:** ✅ PASSED (41 passed, 0 failed · 2026-11-19 12:43 · headless · 4.3 s)
+**Area:** security · **Last result:** ✅ PASSED (41 passed, 0 failed · 2026-11-20 00:22 · headless · 4.5 s)
 
 **Run it alone:** `node run.mjs --only t25` (add `--visible` to watch it)
 
@@ -73,8 +73,7 @@ _Nothing failed._
 
 - a different number is not held back by someone else's wait
 - an email address has its own clock too
-- the staff coin code for a number that is waiting on a sign-in code is still allowed (separate flow) — _{"channel":"sms","devCode":"140262","resendAfterSec":30}_
-- …and the coin code has the same waits (asking again at once is refused) — _429 Please wait 30 seconds before asking for another code._
+- the staff coin code for a number that is waiting on a sign-in code is still allowed (separate flow) — _{"channel":"sms","devCode":"722963","resendAfterSec":30}_
 
 **Step 4 — the screen is told what to do**
 
@@ -93,6 +92,7 @@ _Nothing failed._
 
 **Step 6 — a code that could not be sent doesn't count**
 
+- (the store's SMS gateway is set up and chosen)
 - (…as the way codes are sent)
 - the gateway is down: the customer is told the code couldn't be sent — _502 Couldn't send the code. Check the number and try again._
 - …and no unsent code is left behind
@@ -106,6 +106,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-20 00:22 | pass | 41 | 0 | headless | 4.5 s |
 | 2026-11-19 12:43 | pass | 41 | 0 | headless | 4.3 s |
 | 2026-11-19 11:20 | pass | 43 | 0 | headless | 4.3 s |
 

@@ -1,6 +1,6 @@
 # T32 — Menu categories inside categories — depth, moving, pictures, ordering, bulk delete of categories and items, import, and how the storefront builds its sections
 
-**Area:** menu · **Last result:** ✅ PASSED (93 passed, 0 failed · 2026-11-19 19:29 · headless · 3.9 s)
+**Area:** menu · **Last result:** ✅ PASSED (91 passed, 0 failed · 2026-11-20 00:24 · headless · 3.2 s)
 
 **Run it alone:** `node run.mjs --only t32` (add `--visible` to watch it)
 
@@ -46,7 +46,7 @@ Runs suites/menu-tree.mjs: its own in-memory API with two outlets. Categories ca
 
 _Nothing failed._
 
-### ✅ Passed (93)
+### ✅ Passed (91)
 
 **Step 1 — categories inside categories**
 
@@ -110,7 +110,6 @@ _Nothing failed._
 - (three top-level categories, in order)
 - dropping a category on the top edge of another puts it just before it — _200 DnD C,DnD A,DnD B_
 - …and dropping it on the strip below the tree puts it last
-- dropping B between A1 and A2 puts it inside A, between them — _DnD A1,DnD B,DnD A2 \| DnD A,DnD C_
 - the level it joined is renumbered 0, 1, 2
 - dropping a category into its own branch is refused — _400 A category can't be moved inside itself or inside one of its own sub-categories._
 - 'before' something that isn't on that level is refused — _400 It can't be placed there._
@@ -126,7 +125,6 @@ _Nothing failed._
 **Step 8 — 6c. several categories at once, each with its own name and picture**
 
 - three categories are made in one request (201)
-- they are in the order given, with the spaces tidied — _Bulk Dosa\|Bulk Idli & Vada\|Bulk Uttapam_
 - all sit inside the parent, numbered 0, 1, 2
 - each keeps ITS OWN picture — the first and third have one, the second has none — _[true,false,true]_
 - more can be added later: they go to the end of the level and can be created switched off — _0,1,2,3_
@@ -178,6 +176,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-20 00:24 | pass | 91 | 0 | headless | 3.2 s |
 | 2026-11-19 19:29 | pass | 93 | 0 | headless | 3.9 s |
 | 2026-11-19 17:50 | pass | 93 | 0 | headless | 3.4 s |
 | 2026-11-19 17:44 | pass | 93 | 0 | headless | 3.3 s |

@@ -1,6 +1,6 @@
 # T41 — Storefront View all — as configured on a wide screen; under the cards and centred on phones and tablets (portrait and landscape); the extra cards slide open and shut
 
-**Area:** storefront · **Last result:** ✅ PASSED (70 passed, 0 failed · 2026-11-19 23:05 · headless · 42.8 s)
+**Area:** storefront · **Last result:** ✅ PASSED (70 passed, 0 failed · 2026-11-20 00:28 · headless · 41.5 s)
 
 **Run it alone:** `node run.mjs --only t41` (add `--visible` to watch it)
 
@@ -97,12 +97,12 @@ _Nothing failed._
 - desktop: opening SLIDES — several in-between heights, not an instant jump — _40 in-between heights: 56, 57, 58, 60, 61, 63, 66, 69…_
 - desktop: and only ever grows while opening
 - desktop: it ends fully open — _56px → 191px_
-- desktop: opening takes long enough to WATCH (about 0.8 s), without dragging — _793 ms_
+- desktop: opening takes long enough to WATCH (about 0.8 s), without dragging — _794 ms_
 - desktop: the new dishes also FADE in (opacity 0 → 1, 11 in-between steps) — _0.2, 0.3, 0.35, 0.45, 0.55, 0.6_
 - desktop: all 8 dishes are there, the button says Show less
 - desktop: nothing is inert once open
 - desktop: closing slides too — _33 in-between heights_
-- desktop: closing is visible too (about 0.7 s) — _670 ms_
+- desktop: closing is visible too (about 0.7 s) — _667 ms_
 - desktop: and only ever shrinks while closing
 - desktop: the leaving cards can't be tabbed into while they close — _1 inert group_
 - desktop: closed again — 3 dishes in the page, the original height — _3 dishes, 56px vs 56px_
@@ -117,12 +117,12 @@ _Nothing failed._
 - phone: opening SLIDES — several in-between heights, not an instant jump — _55 in-between heights: 191, 192, 194, 196, 198, 201, 204, 209…_
 - phone: and only ever grows while opening
 - phone: it ends fully open — _191px → 529px_
-- phone: opening takes long enough to WATCH (about 1.0 s), without dragging — _1021 ms_
+- phone: opening takes long enough to WATCH (about 1.0 s), without dragging — _1014 ms_
 - phone: the new dishes also FADE in (opacity 0 → 1, 11 in-between steps) — _0.2, 0.3, 0.35, 0.45, 0.55, 0.6_
 - phone: all 8 dishes are there, the button says Show less
 - phone: nothing is inert once open
 - phone: closing slides too — _47 in-between heights_
-- phone: closing is visible too (about 0.9 s) — _854 ms_
+- phone: closing is visible too (about 0.9 s) — _851 ms_
 - phone: and only ever shrinks while closing
 - phone: the leaving cards can't be tabbed into while they close — _1 inert group_
 - phone: closed again — 3 dishes in the page, the original height — _3 dishes, 191px vs 191px_
@@ -143,6 +143,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-20 00:28 | pass | 70 | 0 | headless | 41.5 s |
+| 2026-11-19 23:31 | pass | 70 | 0 | headless | 1 min 4 s |
 | 2026-11-19 23:05 | pass | 70 | 0 | headless | 42.8 s |
 | 2026-11-19 23:04 | fail | 69 | 1 | headless | 41.8 s |
 | 2026-11-19 22:55 | pass | 64 | 0 | headless | 26.9 s |

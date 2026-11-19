@@ -1,6 +1,6 @@
 # T36 — Pictures are stored without a domain and get the current domain when sent out — so a new domain or machine never breaks them
 
-**Area:** storage · **Last result:** ✅ PASSED (28 passed, 0 failed · 2026-11-19 19:31 · headless · 4.8 s)
+**Area:** storage · **Last result:** ✅ PASSED (28 passed, 0 failed · 2026-11-20 00:26 · headless · 4.9 s)
 
 **Run it alone:** `node run.mjs --only t36` (add `--visible` to watch it)
 
@@ -86,7 +86,7 @@ _Nothing failed._
 - the dry run lists the domains it would remove
 - …and changes nothing
 - applying it updates the documents
-- both now keep only the path — _/uploads/6aff011edd86204c459c60b2/6aff01_
+- both now keep only the path — _/uploads/6aff46552381ae9bb8d2cc5a/6aff46_
 - other people's addresses were not touched
 - running it again finds nothing to do (safe to repeat)
 
@@ -94,6 +94,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-20 00:26 | pass | 28 | 0 | headless | 4.9 s |
 | 2026-11-19 19:31 | pass | 28 | 0 | headless | 4.8 s |
 | 2026-11-19 17:51 | pass | 28 | 0 | headless | 4.8 s |
 | 2026-11-19 17:46 | pass | 28 | 0 | headless | 3.8 s |

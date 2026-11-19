@@ -1,6 +1,6 @@
 # T39 — AI dish pictures — keys added in the platform console, a sparkles button on the dish row (super admin only), shape and count chosen in a pop-up, pictures saved to the dish
 
-**Area:** menu · **Last result:** ✅ PASSED (32 passed, 0 failed · 2026-11-19 19:47 · headless · 19.5 s)
+**Area:** menu · **Last result:** ✅ PASSED (32 passed, 0 failed · 2026-11-20 00:26 · headless · 19.1 s)
 
 **Run it alone:** `node run.mjs --only t39` (add `--visible` to watch it) · starts from fresh fake data
 
@@ -106,6 +106,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-20 00:26 | pass | 32 | 0 | headless | 19.1 s |
 | 2026-11-19 19:47 | pass | 32 | 0 | headless | 19.5 s |
 | 2026-11-19 19:31 | pass | 30 | 0 | headless | 18.6 s |
 | 2026-11-19 19:27 | pass | 30 | 0 | headless | 19.5 s |
