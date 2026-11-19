@@ -112,8 +112,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T10:19:48.060Z",
-    "durationMs": 32982,
+    "at": "2026-11-19T12:18:12.970Z",
+    "durationMs": 35059,
     "steps": [
       {
         "n": 1,
@@ -289,7 +289,7 @@
           {
             "label": "the new customer was saved with the details they gave",
             "ok": true,
-            "detail": "{\"id\":\"6afecd3624d9266706fd33e5\",\"name\":\"Rohan Mehta\",\"email\":\"rohan.mehta@example.com\",\"phone\":\"9811122233\",\"gender\":\"male\",\"age\":31,\"orderCount\":1,\"walletBalance\":0,\"lastOrderAt\":\"2026-11-19T10:19:39.129Z\",\"createdAt\":\"2026-11-19T10:19:34.510Z\"}",
+            "detail": "{\"id\":\"6afee8f7c6d35872c3a02830\",\"name\":\"Rohan Mehta\",\"email\":\"rohan.mehta@example.com\",\"phone\":\"9811122233\",\"gender\":\"male\",\"age\":31,\"orderCount\":1,\"walletBalance\":0,\"lastOrderAt\":\"2026-11-19T12:18:03.928Z\",\"createdAt\":\"2026-11-19T12:17:59.223Z\"}",
             "kind": "expect"
           },
           {
@@ -313,7 +313,7 @@
           {
             "label": "the row shows the customer, phone, type, item count, total and 'Placed'",
             "ok": true,
-            "detail": " #0001 03:49 PM Rohan Mehta 9811122233 TA 8 ₹1,030 Placed 0m Accepted",
+            "detail": " #0001 05:48 PM Rohan Mehta 9811122233 TA 8 ₹1,030 Placed 0m Accepted",
             "kind": "expect"
           }
         ]
@@ -496,12 +496,12 @@
     "id": "t02-whatsapp-api",
     "title": "WhatsApp chat — API rules and the careful-pace sending worker",
     "status": "pass",
-    "pass": 131,
+    "pass": 132,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T06:52:22.243Z",
-    "durationMs": 12430,
+    "at": "2026-11-19T12:18:24.297Z",
+    "durationMs": 11298,
     "steps": [
       {
         "n": 1,
@@ -708,7 +708,7 @@
           {
             "label": "an attachment uploads",
             "ok": true,
-            "detail": "http://localhost:3098/uploads/6afe9c9cc5b946433341",
+            "detail": "http://localhost:3098/uploads/6afee907248ecdfae366",
             "kind": "expect"
           },
           {
@@ -750,7 +750,7 @@
           {
             "label": "the next first contact must wait 2–4 minutes",
             "ok": true,
-            "detail": "183 s",
+            "detail": "178 s",
             "kind": "expect"
           },
           {
@@ -774,7 +774,7 @@
           {
             "label": "15 first contacts a day per number: the rest wait for tomorrow",
             "ok": true,
-            "detail": "2026-11-20T03:33:20.109Z",
+            "detail": "2026-11-20T03:40:22.130Z",
             "kind": "expect"
           },
           {
@@ -900,13 +900,13 @@
           {
             "label": "preview: 3 people (duplicates merged), 1 opted out",
             "ok": true,
-            "detail": "{\"recipients\":3,\"optedOut\":1,\"running\":0,\"firstContact\":3,\"numbersOnline\":[{\"id\":\"6afe9c9cc5b946433341faae\",\"label\":\"Counter phone\"},{\"id\":\"6afe9c9cc5b946433341fab6\",\"label\":\"Delivery phone\"}],\"estimatedDays\":1}",
+            "detail": "{\"recipients\":3,\"optedOut\":1,\"running\":0,\"firstContact\":3,\"numbersOnline\":[{\"id\":\"6afee907248ecdfae366e830\",\"label\":\"Counter phone\"},{\"id\":\"6afee907248ecdfae366e837\",\"label\":\"Delivery phone\"}],\"estimatedDays\":1}",
             "kind": "expect"
           },
           {
             "label": "a broadcast queues one message per person",
             "ok": true,
-            "detail": "{\"id\":\"6afe9ca5c5b946433341fc37\",\"text\":\"Diwali: 20% off this weekend!\\n\\nReply STOP to stop offers.\",\"media\":null,\"createdAt\":\"2026-11-19T06:52:21.860Z\",\"status\":\"sending\",\"total\":3,\"skipped\":1,\"waiting\":3,\"sent\":0,\"read\":0,\"failed\":0}",
+            "detail": "{\"id\":\"6afee90f248ecdfae366e9be\",\"text\":\"Diwali: 20% off this weekend!\\n\\nReply STOP to stop offers.\",\"media\":null,\"createdAt\":\"2026-11-19T12:18:23.633Z\",\"status\":\"sending\",\"total\":3,\"skipped\":1,\"waiting\":3,\"sent\":0,\"read\":0,\"failed\":0}",
             "kind": "expect"
           },
           {
@@ -1251,6 +1251,12 @@
         "n": 10,
         "title": "a real link QR from WhatsApp's servers (nothing is linked)",
         "checks": [
+          {
+            "label": "a session's keys are stored encrypted",
+            "ok": true,
+            "detail": "creds,pre-key-1",
+            "kind": "expect"
+          },
           {
             "label": "…and read back intact (what lets a number stay linked after a restart)",
             "ok": true,
@@ -1928,8 +1934,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T10:20:24.655Z",
-    "durationMs": 36567,
+    "at": "2026-11-19T12:19:07.097Z",
+    "durationMs": 42782,
     "steps": [
       {
         "n": 1,
@@ -1998,7 +2004,7 @@
           {
             "label": "only one message is visible at a time",
             "ok": true,
-            "detail": "[\"Fresh momos, steamed\"]",
+            "detail": "[\"Free delivery on ord\"]",
             "kind": "expect"
           },
           {
@@ -2064,7 +2070,7 @@
           {
             "label": "only one message is visible at a time",
             "ok": true,
-            "detail": "[\"Fresh momos, steamed\"]",
+            "detail": "[\"Free delivery on ord\"]",
             "kind": "expect"
           },
           {
@@ -2100,7 +2106,7 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "20,20,20,22,61,246,591,1156,1418,1539,1555,1555,1555,1555",
+            "detail": "20,20,20,20,60,198,588,1152,1416,1539,1555,1555,1555,1555",
             "kind": "expect"
           },
           {
@@ -2129,8 +2135,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T11:00:36.489Z",
-    "durationMs": 3493,
+    "at": "2026-11-19T12:19:10.307Z",
+    "durationMs": 3186,
     "steps": [
       {
         "n": 1,
@@ -9380,8 +9386,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T11:00:45.699Z",
-    "durationMs": 9156,
+    "at": "2026-11-19T12:19:18.338Z",
+    "durationMs": 8008,
     "steps": [
       {
         "n": 1,
@@ -10199,8 +10205,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T10:20:38.940Z",
-    "durationMs": 5664,
+    "at": "2026-11-19T12:19:23.579Z",
+    "durationMs": 5215,
     "steps": [
       {
         "n": 1,
@@ -10269,7 +10275,7 @@
           {
             "label": "paging: the first page of two says there are more",
             "ok": true,
-            "detail": "2 2026-11-19T09:50:38.531Z",
+            "detail": "2 2026-11-19T11:49:23.305Z",
             "kind": "expect"
           },
           {
@@ -10634,8 +10640,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T10:21:25.766Z",
-    "durationMs": 42625,
+    "at": "2026-11-19T12:20:13.258Z",
+    "durationMs": 45505,
     "steps": [
       {
         "n": 1,
@@ -10740,7 +10746,7 @@
           {
             "label": "'View details' lists the items and the bill",
             "ok": true,
-            "detail": "2 × Veg Steamed Momos (5 pcs) ₹120 Items ₹120 Taxes ₹5.71 Total ₹120 Placed 19 Nov 2026, 3:50 pm",
+            "detail": "2 × Veg Steamed Momos (5 pcs) ₹120 Items ₹120 Taxes ₹5.71 Total ₹120 Placed 19 Nov 2026, 5:49 pm",
             "kind": "expect"
           }
         ]
@@ -10752,7 +10758,7 @@
           {
             "label": "(the order is on the dashboard)",
             "ok": true,
-            "detail": "6afecd828f9a0ff6bf00cd97",
+            "detail": "6afee95913b68f522800ec9d",
             "kind": "expect"
           },
           {
@@ -10961,8 +10967,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T10:21:28.824Z",
-    "durationMs": 3033,
+    "at": "2026-11-19T12:20:18.453Z",
+    "durationMs": 5168,
     "steps": [
       {
         "n": 1,
@@ -11074,12 +11080,12 @@
     "id": "t32-menu-tree-api",
     "title": "Menu categories inside categories — depth, moving, pictures, ordering, bulk delete of categories and items, import, and how the storefront builds its sections",
     "status": "pass",
-    "pass": 91,
+    "pass": 93,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T10:21:31.956Z",
-    "durationMs": 3115,
+    "at": "2026-11-19T12:20:21.839Z",
+    "durationMs": 3368,
     "steps": [
       {
         "n": 1,
@@ -11296,6 +11302,12 @@
             "kind": "expect"
           },
           {
+            "label": "a filter that empties a section drops it, but keeps the headings above sections that remain",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
             "label": "a hand-made section for a parent includes the dishes of the categories inside it",
             "ok": true,
             "detail": "Masala Dosa,Paneer Dosa,Rava Masala,Plain Idli",
@@ -11428,6 +11440,12 @@
             "kind": "expect"
           },
           {
+            "label": "a drop that would make the branch too deep is refused",
+            "ok": true,
+            "detail": "400 Categories can go 6 levels deep at most — that move would go deeper.",
+            "kind": "expect"
+          },
+          {
             "label": "the public menu shows the new place straight away",
             "ok": true,
             "detail": "",
@@ -11442,7 +11460,7 @@
           {
             "label": "three categories are made in one request (201)",
             "ok": true,
-            "detail": "201 {\"categories\":[{\"id\":\"6afecdabc49871d24db34b8d\",\"name\":\"Bulk Dosa\",\"parentId\":\"6afecdabc49871d24db34b87\",\"image\":{\"url\":",
+            "detail": "201 {\"categories\":[{\"id\":\"6afee9856f94316e39082a7c\",\"name\":\"Bulk Dosa\",\"parentId\":\"6afee9856f94316e39082a75\",\"image\":{\"url\":",
             "kind": "expect"
           },
           {
@@ -11705,8 +11723,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T11:01:37.672Z",
-    "durationMs": 47780,
+    "at": "2026-11-19T12:21:13.717Z",
+    "durationMs": 47694,
     "steps": [
       {
         "n": 1,
@@ -12224,8 +12242,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T11:01:47.898Z",
-    "durationMs": 10202,
+    "at": "2026-11-19T12:21:23.851Z",
+    "durationMs": 10107,
     "steps": [
       {
         "n": 1,
@@ -12234,7 +12252,7 @@
           {
             "label": "a 24-megapixel JPEG at quality 95 (about 19 MB) is accepted",
             "ok": true,
-            "detail": "201 19860 KB",
+            "detail": "201 19861 KB",
             "kind": "expect"
           },
           {
@@ -12244,9 +12262,9 @@
             "kind": "expect"
           },
           {
-            "label": "it is now 282 KB — under the 400 KB target and at least 20 times smaller than the original",
+            "label": "it is now 313 KB — under the 400 KB target and at least 20 times smaller than the original",
             "ok": true,
-            "detail": "19860 KB → 282 KB",
+            "detail": "19861 KB → 313 KB",
             "kind": "expect"
           },
           {
@@ -12258,13 +12276,13 @@
           {
             "label": "the answer reports the real final size, bytes and the original's bytes",
             "ok": true,
-            "detail": "{\"w\":1600,\"h\":1067,\"bytes\":289134}",
+            "detail": "{\"w\":1600,\"h\":1067,\"bytes\":320110}",
             "kind": "expect"
           },
           {
             "label": "it is stored inside this store's own folder, with a name the uploader doesn't control",
             "ok": true,
-            "detail": "6afed714c0cc33318828dcd7/6afed714c0cc33318828dcdb/menu-items/b629961e-1b9b-4712-ae12-6e4377efcb20.webp",
+            "detail": "6afee9bcffeb37768663ff04/6afee9bcffeb37768663ff08/menu-items/d417e382-18cd-420c-9e4a-faf102d551bd.webp",
             "kind": "expect"
           }
         ]
@@ -12348,7 +12366,7 @@
           {
             "label": "a \"pixel bomb\" (225 megapixels, only 672 KB on disk) is shrunk safely and quickly",
             "ok": true,
-            "detail": "201 in 388 ms",
+            "detail": "201 in 381 ms",
             "kind": "expect"
           },
           {
@@ -12408,7 +12426,7 @@
           {
             "label": "…in a reasonable time",
             "ok": true,
-            "detail": "812 ms",
+            "detail": "810 ms",
             "kind": "expect"
           },
           {
@@ -12432,7 +12450,7 @@
           {
             "label": "the platform owner can change the compression settings",
             "ok": true,
-            "detail": "200 {\"provider\":\"local\",\"updatedAt\":\"2026-11-19T11:01:47.108Z\",\"limits\":{\"maxPerItem",
+            "detail": "200 {\"provider\":\"local\",\"updatedAt\":\"2026-11-19T12:21:23.081Z\",\"limits\":{\"maxPerItem",
             "kind": "expect"
           },
           {
@@ -12455,6 +12473,468 @@
           },
           {
             "label": "putting the defaults back works",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t36-upload-urls-api": {
+    "id": "t36-upload-urls-api",
+    "title": "Pictures are stored without a domain and get the current domain when sent out — so a new domain or machine never breaks them",
+    "status": "pass",
+    "pass": 28,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-19T12:21:55.178Z",
+    "durationMs": 4840,
+    "steps": [
+      {
+        "n": 1,
+        "title": "a new upload: the domain is added on the way out, only the path is kept",
+        "checks": [
+          {
+            "label": "the upload's answer carries THIS deployment's domain",
+            "ok": true,
+            "detail": "https://img.example.test/uploads/6afee9e0ca48b09458e5e40e/6afee9e0ca48b09458e5e411/menu-items/df1df474-dea3-408b-bf02-060d8582a1a4.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the file is served at that path",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the dashboard sent the full address — the database keeps only the path",
+            "ok": true,
+            "detail": "/uploads/6afee9e0ca48b09458e5e40e/6afee9e0ca48b09458e5e411/menu-items/df1df474-dea3-408b-bf02-060d8582a1a4.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "the key is kept too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the menu the storefront reads has the domain again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a category's picture is kept domain-free as well",
+            "ok": true,
+            "detail": "/uploads/6afee9e0ca48b09458e5e40e/6afee9e0ca48b09458e5e411/menu-items/3c231c72-8713-407e-a4d0-fdbbf05be8f9.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "…and comes out with the domain",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "pictures saved the OLD way heal on the way out, no migration needed",
+        "checks": [
+          {
+            "label": "an address saved from localhost now points at this deployment",
+            "ok": true,
+            "detail": "https://img.example.test/uploads/6afee9e0ca48b09458e5e40e/6afee9e0ca48b09458e5e411/menu-items/01234567-1111-4222-8333-000000000001.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "an address saved with an OLD domain now points at this deployment",
+            "ok": true,
+            "detail": "https://img.example.test/uploads/6afee9e0ca48b09458e5e40e/6afee9e0ca48b09458e5e411/menu-items/01234567-1111-4222-8333-000000000002.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "a domain-free path gets the domain",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no localhost or old domain is left anywhere in the menu the storefront reads",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "other people's addresses are left exactly as they are",
+        "checks": [
+          {
+            "label": "a CDN link, a look-alike /uploads/ path, a path under another prefix and a data: picture are stored untouched",
+            "ok": true,
+            "detail": "https://cdn.other-site.example | https://other-site.example/upl | https://other-site.example/pre | data:image/png;base64,iVBORw0K",
+            "kind": "expect"
+          },
+          {
+            "label": "…and sent out untouched",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an address mentioned inside a sentence is not rewritten either",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "saving what the dashboard received keeps the database clean",
+        "checks": [
+          {
+            "label": "an edit that sends the full address back still stores only the path",
+            "ok": true,
+            "detail": "/uploads/6afee9e0ca48b09458e5e40e/6afee9e0ca48b09458e5e411/menu-items/df1df474-dea3-408b-bf02-060d8582a1a4.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "…even when the editor still holds a localhost address",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "nothing the menu returns mentions localhost",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "a new domain needs no data changes",
+        "checks": [
+          {
+            "label": "the same stored data comes out on whichever domain the API is configured with",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "toPublicUrl adds the domain to ours and leaves others",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "toStoredUrl removes whatever domain was there",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "receipts: the logo gets a real address too",
+        "checks": [
+          {
+            "label": "the receipt preview's logo is an absolute address on this domain",
+            "ok": true,
+            "detail": "<img class=\"logo\" src=\"https://img.example.test/uploads/6afee9e0ca48b09458e5e40e/6afee9e0ca48b09458e5e411/menu-items/df1",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "the clean-up script removes the domain from what is already stored",
+        "checks": [
+          {
+            "label": "(two items still carry a full address)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the dry run lists the domains it would remove",
+            "ok": true,
+            "detail": "domains being removed: /      1  http://localhost:3072 /      1  https://api.old-domain.example",
+            "kind": "expect"
+          },
+          {
+            "label": "…and changes nothing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "applying it updates the documents",
+            "ok": true,
+            "detail": "updated 2 document(s). Restart the API now — its in-memory cache still holds the old addresses.",
+            "kind": "expect"
+          },
+          {
+            "label": "both now keep only the path",
+            "ok": true,
+            "detail": "/uploads/6afee9e0ca48b09458e5e40e/6afee9",
+            "kind": "expect"
+          },
+          {
+            "label": "other people's addresses were not touched",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "running it again finds nothing to do (safe to repeat)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t35-storefront-category-bar": {
+    "id": "t35-storefront-category-bar",
+    "title": "Storefront — with 30+ categories the sticky category bar stays ONE short row that scrolls sideways, and phones keep one short bar with a Categories sheet",
+    "status": "pass",
+    "pass": 34,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-19T12:21:50.320Z",
+    "durationMs": 26449,
+    "steps": [
+      {
+        "n": 1,
+        "title": "desktop 1280px",
+        "checks": [
+          {
+            "label": "all 30+ categories are in the bar",
+            "ok": true,
+            "detail": "36",
+            "kind": "expect"
+          },
+          {
+            "label": "the sticky bar is ONE short row (it used to be seven)",
+            "ok": true,
+            "detail": "53px",
+            "kind": "expect"
+          },
+          {
+            "label": "every chip sits on the same row",
+            "ok": true,
+            "detail": "1 row(s)",
+            "kind": "expect"
+          },
+          {
+            "label": "more chips than fit: the row scrolls sideways instead of wrapping",
+            "ok": true,
+            "detail": "5282px of chips in 768px",
+            "kind": "expect"
+          },
+          {
+            "label": "no scrollbar is drawn on it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "‹ › buttons appear; ‹ is off at the start",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "› moves the row along and turns ‹ on",
+            "ok": true,
+            "detail": "0 → 538",
+            "kind": "expect"
+          },
+          {
+            "label": "‹ moves it back",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "choosing it scrolls the menu to that category, just under the (short) bar",
+            "ok": true,
+            "detail": "{\"top\":66,\"bar\":53}",
+            "kind": "expect"
+          },
+          {
+            "label": "that chip is the highlighted one",
+            "ok": true,
+            "detail": "Bar Test 22 Specials",
+            "kind": "expect"
+          },
+          {
+            "label": "…and it is scrolled into view in the row, not hidden off to the side",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "scrolling the page by hand moves the highlight to the category being read",
+            "ok": true,
+            "detail": "Bar Test 05 Specials",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the row follows it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the bar is still one short row while scrolled",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "choosing the very last category highlights it, even though the page can't scroll it to the top",
+            "ok": true,
+            "detail": "Bar Test 30 Specials",
+            "kind": "expect"
+          },
+          {
+            "label": "no sideways scroll on the page",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "tablet 820px",
+        "checks": [
+          {
+            "label": "tablet: the bar is one short row",
+            "ok": true,
+            "detail": "59px",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet: one Categories button",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet: the Veg/Egg/Non-veg filter and the Categories button share the row",
+            "ok": true,
+            "detail": "{\"barH\":58.75,\"btnRight\":796,\"barRight\":796,\"filterBottom\":822,\"btnTop\":783,\"filterTop\":781}",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet: the Categories button is fully on screen",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet: the sheet fits the screen and lists every category",
+            "ok": true,
+            "detail": "792px of 1100px, 37 buttons",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet: the list inside it scrolls (there are more categories than fit)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet: a category picked in the sheet lands just under the bar",
+            "ok": true,
+            "detail": "{\"top\":71,\"bar\":59}",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet: no sideways scroll",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "phone 390px",
+        "checks": [
+          {
+            "label": "phone: the bar is one short row",
+            "ok": true,
+            "detail": "59px",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: one Categories button",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: the Veg/Egg/Non-veg filter and the Categories button share the row",
+            "ok": true,
+            "detail": "{\"barH\":58.75,\"btnRight\":366,\"barRight\":366,\"filterBottom\":866,\"btnTop\":827,\"filterTop\":825}",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: the Categories button is fully on screen",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: the sheet fits the screen and lists every category",
+            "ok": true,
+            "detail": "608px of 844px, 37 buttons",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: the list inside it scrolls (there are more categories than fit)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: a category picked in the sheet lands just under the bar",
+            "ok": true,
+            "detail": "{\"top\":71,\"bar\":59}",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: no sideways scroll",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the 30 extra categories and their dishes are removed again",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser logged no errors or warnings",
             "ok": true,
             "detail": "",
             "kind": "expect"

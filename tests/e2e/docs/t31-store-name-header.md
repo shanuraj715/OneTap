@@ -1,6 +1,6 @@
 # T31 — Storefront — the header and the big heading say the store's name; the outlet's name is only in the outlet dropdown
 
-**Area:** storefront · **Last result:** ✅ PASSED (12 passed, 0 failed · 2026-11-19 15:51 · headless · 3.0 s)
+**Area:** storefront · **Last result:** ✅ PASSED (12 passed, 0 failed · 2026-11-19 17:50 · headless · 5.2 s)
 
 **Run it alone:** `node run.mjs --only t31` (add `--visible` to watch it)
 
@@ -68,6 +68,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-19 17:50 | pass | 12 | 0 | headless | 5.2 s |
+| 2026-11-19 17:44 | pass | 12 | 0 | headless | 4.4 s |
 | 2026-11-19 15:51 | pass | 12 | 0 | headless | 3.0 s |
 | 2026-11-19 13:20 | pass | 12 | 0 | headless | 5.0 s |
 | 2026-11-19 12:48 | pass | 12 | 0 | headless | 3.0 s |

@@ -447,3 +447,42 @@
 {"id":"t28-rate-limits-api","status":"pass","pass":124,"fail":0,"mode":"headless","at":"2026-11-19T11:00:45.699Z","durationMs":9156}
 {"id":"t33-menu-tree","status":"pass","pass":71,"fail":0,"mode":"headless","at":"2026-11-19T11:01:37.672Z","durationMs":47780}
 {"id":"t34-image-compression-api","status":"pass","pass":32,"fail":0,"mode":"headless","at":"2026-11-19T11:01:47.898Z","durationMs":10202}
+{"id":"t36-upload-urls-api","status":"error","pass":0,"fail":0,"mode":"headless","at":"2026-11-19T11:58:50.537Z","durationMs":2756,"error":"upload-urls.mjs produced no checks (exit 1). SETUP FAILED brand 404 {}"}
+{"id":"t36-upload-urls-api","status":"fail","pass":19,"fail":3,"mode":"headless","at":"2026-11-19T12:00:57.642Z","durationMs":64254}
+{"id":"t36-upload-urls-api","status":"error","pass":22,"fail":0,"mode":"headless","at":"2026-11-19T12:02:17.455Z","durationMs":64431,"error":"upload-urls.mjs exited with code 1. }  Node.js v22.17.0"}
+{"id":"t36-upload-urls-api","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-19T12:03:43.814Z","durationMs":5190}
+{"id":"t36-upload-urls-api","status":"fail","pass":27,"fail":1,"mode":"headless","at":"2026-11-19T12:05:04.746Z","durationMs":5277}
+{"id":"t36-upload-urls-api","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-19T12:05:15.589Z","durationMs":4845}
+{"id":"t06-storefront-header-categories","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-19T12:06:57.539Z","durationMs":37055}
+{"id":"t35-storefront-category-bar","status":"fail","pass":18,"fail":3,"mode":"headless","at":"2026-11-19T12:07:38.214Z","durationMs":40652}
+{"id":"t35-storefront-category-bar","status":"fail","pass":19,"fail":2,"mode":"headless","at":"2026-11-19T12:08:34.281Z","durationMs":40522}
+{"id":"t35-storefront-category-bar","status":"error","pass":22,"fail":0,"mode":"headless","at":"2026-11-19T12:09:52.288Z","durationMs":42488,"error":"storefront-category-bar.mjs exited with code 1. }  Node.js v22.17.0"}
+{"id":"t35-storefront-category-bar","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-19T12:11:11.014Z","durationMs":18913}
+{"id":"t35-storefront-category-bar","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-19T12:11:45.489Z","durationMs":20491}
+{"id":"t01-takeaway-order","status":"pass","pass":45,"fail":0,"mode":"headless","at":"2026-11-19T12:12:43.159Z","durationMs":32698}
+{"id":"t02-whatsapp-api","status":"fail","pass":129,"fail":2,"mode":"headless","at":"2026-11-19T12:12:52.749Z","durationMs":9562}
+{"id":"t06-storefront-header-categories","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-19T12:13:31.599Z","durationMs":38833}
+{"id":"t07-favicon-plan-rules","status":"pass","pass":8,"fail":0,"mode":"headless","at":"2026-11-19T12:13:34.571Z","durationMs":2955}
+{"id":"t28-rate-limits-api","status":"pass","pass":124,"fail":0,"mode":"headless","at":"2026-11-19T12:13:43.637Z","durationMs":9038}
+{"id":"t29-orders-account-api","status":"pass","pass":63,"fail":0,"mode":"headless","at":"2026-11-19T12:13:48.892Z","durationMs":5230}
+{"id":"t30-account-orders","status":"pass","pass":41,"fail":0,"mode":"headless","at":"2026-11-19T12:14:36.953Z","durationMs":43881}
+{"id":"t31-store-name-header","status":"pass","pass":12,"fail":0,"mode":"headless","at":"2026-11-19T12:14:41.342Z","durationMs":4367}
+{"id":"t32-menu-tree-api","status":"pass","pass":93,"fail":0,"mode":"headless","at":"2026-11-19T12:14:44.657Z","durationMs":3297}
+{"id":"t33-menu-tree","status":"pass","pass":71,"fail":0,"mode":"headless","at":"2026-11-19T12:15:36.450Z","durationMs":46592}
+{"id":"t34-image-compression-api","status":"pass","pass":32,"fail":0,"mode":"headless","at":"2026-11-19T12:15:46.261Z","durationMs":9781}
+{"id":"t35-storefront-category-bar","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-19T12:16:14.036Z","durationMs":27725}
+{"id":"t36-upload-urls-api","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-19T12:16:17.822Z","durationMs":3767}
+{"id":"t02-whatsapp-api","status":"pass","pass":132,"fail":0,"mode":"headless","at":"2026-11-19T12:17:18.989Z","durationMs":12801}
+{"id":"t01-takeaway-order","status":"pass","pass":45,"fail":0,"mode":"headless","at":"2026-11-19T12:18:12.970Z","durationMs":35059}
+{"id":"t02-whatsapp-api","status":"pass","pass":132,"fail":0,"mode":"headless","at":"2026-11-19T12:18:24.297Z","durationMs":11298}
+{"id":"t06-storefront-header-categories","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-19T12:19:07.097Z","durationMs":42782}
+{"id":"t07-favicon-plan-rules","status":"pass","pass":8,"fail":0,"mode":"headless","at":"2026-11-19T12:19:10.307Z","durationMs":3186}
+{"id":"t28-rate-limits-api","status":"pass","pass":124,"fail":0,"mode":"headless","at":"2026-11-19T12:19:18.338Z","durationMs":8008}
+{"id":"t29-orders-account-api","status":"pass","pass":63,"fail":0,"mode":"headless","at":"2026-11-19T12:19:23.579Z","durationMs":5215}
+{"id":"t30-account-orders","status":"pass","pass":41,"fail":0,"mode":"headless","at":"2026-11-19T12:20:13.258Z","durationMs":45505}
+{"id":"t31-store-name-header","status":"pass","pass":12,"fail":0,"mode":"headless","at":"2026-11-19T12:20:18.453Z","durationMs":5168}
+{"id":"t32-menu-tree-api","status":"pass","pass":93,"fail":0,"mode":"headless","at":"2026-11-19T12:20:21.839Z","durationMs":3368}
+{"id":"t33-menu-tree","status":"pass","pass":71,"fail":0,"mode":"headless","at":"2026-11-19T12:21:13.717Z","durationMs":47694}
+{"id":"t34-image-compression-api","status":"pass","pass":32,"fail":0,"mode":"headless","at":"2026-11-19T12:21:23.851Z","durationMs":10107}
+{"id":"t35-storefront-category-bar","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-19T12:21:50.320Z","durationMs":26449}
+{"id":"t36-upload-urls-api","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-19T12:21:55.178Z","durationMs":4840}

@@ -1,6 +1,6 @@
 # T30 — Storefront Account page — 'My orders' menu link, order history with status, payment mode & state, coins; Delete order on the dashboard
 
-**Area:** storefront · **Last result:** ✅ PASSED (41 passed, 0 failed · 2026-11-19 15:51 · headless · 42.6 s)
+**Area:** storefront · **Last result:** ✅ PASSED (41 passed, 0 failed · 2026-11-19 17:50 · headless · 45.5 s)
 
 **Run it alone:** `node run.mjs --only t30` (add `--visible` to watch it) · starts from fresh fake data
 
@@ -82,7 +82,7 @@ _Nothing failed._
 
 **Step 5 — The owner moves the order along; the customer's card follows**
 
-- (the order is on the dashboard) — _6afecd828f9a0ff6bf00cd97_
+- (the order is on the dashboard) — _6afee95913b68f522800ec9d_
 - without reloading, the page picks up 'Accepted' by itself
 - after a reload it says Ready, with the pickup sentence
 - Completed
@@ -132,6 +132,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-19 17:50 | pass | 41 | 0 | headless | 45.5 s |
+| 2026-11-19 17:44 | pass | 41 | 0 | headless | 43.9 s |
 | 2026-11-19 15:51 | pass | 41 | 0 | headless | 42.6 s |
 | 2026-11-19 13:20 | pass | 41 | 0 | headless | 45.2 s |
 | 2026-11-19 12:51 | pass | 41 | 0 | headless | 42.7 s |

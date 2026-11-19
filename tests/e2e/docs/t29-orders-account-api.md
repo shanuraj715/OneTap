@@ -1,6 +1,6 @@
 # T29 — Order history for the storefront Account page, and deleting an order — who may, what it puts right, where it disappears
 
-**Area:** orders · **Last result:** ✅ PASSED (63 passed, 0 failed · 2026-11-19 15:50 · headless · 5.7 s)
+**Area:** orders · **Last result:** ✅ PASSED (63 passed, 0 failed · 2026-11-19 17:49 · headless · 5.2 s)
 
 **Run it alone:** `node run.mjs --only t29` (add `--visible` to watch it)
 
@@ -59,7 +59,7 @@ _Nothing failed._
 - staff details, the customer record and internal history are not sent
 - a customer of one store can't read orders through another store — _403_
 - …each store's customers see only their own store
-- paging: the first page of two says there are more — _2 2026-11-19T09:50:38.531Z_
+- paging: the first page of two says there are more — _2 2026-11-19T11:49:23.305Z_
 - …the second page has the rest, and no more after it — _1 null_
 - a nonsense date is a plain 400
 - an outlet that doesn't exist is a 404
@@ -135,6 +135,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-19 17:49 | pass | 63 | 0 | headless | 5.2 s |
+| 2026-11-19 17:43 | pass | 63 | 0 | headless | 5.2 s |
 | 2026-11-19 15:50 | pass | 63 | 0 | headless | 5.7 s |
 | 2026-11-19 13:19 | pass | 63 | 0 | headless | 5.8 s |
 | 2026-11-19 12:47 | pass | 63 | 0 | headless | 5.1 s |

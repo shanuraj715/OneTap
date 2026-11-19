@@ -1,6 +1,6 @@
 # T32 — Menu categories inside categories — depth, moving, pictures, ordering, bulk delete of categories and items, import, and how the storefront builds its sections
 
-**Area:** menu · **Last result:** ✅ PASSED (91 passed, 0 failed · 2026-11-19 15:51 · headless · 3.1 s)
+**Area:** menu · **Last result:** ✅ PASSED (93 passed, 0 failed · 2026-11-19 17:50 · headless · 3.4 s)
 
 **Run it alone:** `node run.mjs --only t32` (add `--visible` to watch it)
 
@@ -46,7 +46,7 @@ Runs suites/menu-tree.mjs: its own in-memory API with two outlets. Categories ca
 
 _Nothing failed._
 
-### ✅ Passed (91)
+### ✅ Passed (93)
 
 **Step 1 — categories inside categories**
 
@@ -93,6 +93,7 @@ _Nothing failed._
 - a parent with no dishes of its own still gets a heading, because dishes sit inside it
 - switching a category off hides it AND everything inside it — _Starters_
 - a category with no dishes anywhere inside it is left out
+- a filter that empties a section drops it, but keeps the headings above sections that remain
 - a hand-made section for a parent includes the dishes of the categories inside it — _Masala Dosa,Paneer Dosa,Rava Masala,Plain Idli_
 - …unless that is switched off for the section
 - existing sections default to including what's inside (nothing changes for menus with no nesting)
@@ -119,6 +120,7 @@ _Nothing failed._
 - a sub-category dragged out becomes top-level and the level it left closes up — _DnD A,DnD C,DnD A1 \| DnD B,DnD A2_
 - the kitchen can't move categories — _403_
 - a category of ANOTHER outlet can't be moved through this one
+- a drop that would make the branch too deep is refused — _400 Categories can go 6 levels deep at most — that move would go deeper._
 - the public menu shows the new place straight away
 
 **Step 8 — 6c. several categories at once, each with its own name and picture**
@@ -176,6 +178,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-19 17:50 | pass | 93 | 0 | headless | 3.4 s |
+| 2026-11-19 17:44 | pass | 93 | 0 | headless | 3.3 s |
 | 2026-11-19 15:51 | pass | 91 | 0 | headless | 3.1 s |
 | 2026-11-19 13:35 | pass | 91 | 0 | headless | 4.0 s |
 | 2026-11-19 13:27 | pass | 76 | 0 | headless | 3.8 s |

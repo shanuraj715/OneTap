@@ -1,6 +1,6 @@
 # T33 — Menu — categories inside categories, category pictures, and multi-select delete for categories and items
 
-**Area:** menu · **Last result:** ✅ PASSED (71 passed, 0 failed · 2026-11-19 16:31 · headless · 47.8 s)
+**Area:** menu · **Last result:** ✅ PASSED (71 passed, 0 failed · 2026-11-19 17:51 · headless · 47.7 s)
 
 **Run it alone:** `node run.mjs --only t33` (add `--visible` to watch it) · starts from fresh fake data
 
@@ -168,6 +168,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-19 17:51 | pass | 71 | 0 | headless | 47.7 s |
+| 2026-11-19 17:45 | pass | 71 | 0 | headless | 46.6 s |
 | 2026-11-19 16:31 | pass | 71 | 0 | headless | 47.8 s |
 | 2026-11-19 15:52 | pass | 71 | 0 | headless | 45.2 s |
 | 2026-11-19 13:40 | pass | 71 | 0 | headless | 45.1 s |
