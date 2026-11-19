@@ -1,6 +1,6 @@
 # T19 — Dine-in at a table — create tables, scan the QR, order onto a running tab, staff move / settle / void, occupied tables, rotated codes, switch-off
 
-**Area:** tables · **Last result:** ✅ PASSED (55 passed, 0 failed · 2026-11-18 17:44 · headless · 56.9 s)
+**Area:** tables · **Last result:** ✅ PASSED (55 passed, 0 failed · 2026-11-19 01:15 · headless · 58.3 s)
 
 **Run it alone:** `node run.mjs --only t19` (add `--visible` to watch it) · starts from fresh fake data
 
@@ -115,7 +115,7 @@ _Nothing failed._
 - D3 is Seated and listed under 'Seated now'
 - removing a seated table is refused: 'Close the open session before removing this table'
 - did not happen: a seated table was removed
-- after 'Cancel / void' the order #0003 is Cancelled — _#0003 05:44 PM Rohan Other 9877799999 DI Table D3 1 ₹70 Cancelled —_
+- after 'Cancel / void' the order #0003 is Cancelled — _#0003 01:14 AM Rohan Other 9877799999 DI Table D3 1 ₹70 Cancelled —_
 - did not happen: the voided order is still open for the kitchen
 - D3 is freed ('Needs cleaning') and nobody is seated
 - now that it is free, D3 can be removed
@@ -143,6 +143,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-19 01:15 | pass | 55 | 0 | headless | 58.3 s |
 | 2026-11-18 17:44 | pass | 55 | 0 | headless | 56.9 s |
 | 2026-11-18 15:24 | pass | 55 | 0 | visible | 4 min 26 s |
 | 2026-11-18 15:08 | pass | 55 | 0 | headless | 57.0 s |

@@ -7,8 +7,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-18T11:58:30.564Z",
-    "durationMs": 14140,
+    "at": "2026-11-18T19:29:25.635Z",
+    "durationMs": 13285,
     "steps": [
       {
         "n": 1,
@@ -89,7 +89,7 @@
           {
             "label": "the code request is accepted (the test stores accept any phone)",
             "ok": true,
-            "detail": "HTTP 200 {\"channel\":\"sms\",\"devCode\":\"009954\"}",
+            "detail": "HTTP 200 {\"channel\":\"sms\",\"devCode\":\"781010\"}",
             "kind": "expect"
           },
           {
@@ -112,8 +112,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-18T11:59:08.230Z",
-    "durationMs": 33494,
+    "at": "2026-11-18T19:30:02.294Z",
+    "durationMs": 32466,
     "steps": [
       {
         "n": 1,
@@ -289,7 +289,7 @@
           {
             "label": "the new customer was saved with the details they gave",
             "ok": true,
-            "detail": "{\"id\":\"6afd92fedf43cb873680a2be\",\"name\":\"Rohan Mehta\",\"email\":\"rohan.mehta@example.com\",\"phone\":\"9811122233\",\"gender\":\"male\",\"age\":31,\"orderCount\":1,\"walletBalance\":0,\"lastOrderAt\":\"2026-11-18T11:58:59.172Z\",\"createdAt\":\"2026-11-18T11:58:54.467Z\"}",
+            "detail": "{\"id\":\"6afdfcac2adbe055747c787d\",\"name\":\"Rohan Mehta\",\"email\":\"rohan.mehta@example.com\",\"phone\":\"9811122233\",\"gender\":\"male\",\"age\":31,\"orderCount\":1,\"walletBalance\":0,\"lastOrderAt\":\"2026-11-18T19:29:53.217Z\",\"createdAt\":\"2026-11-18T19:29:48.546Z\"}",
             "kind": "expect"
           },
           {
@@ -313,7 +313,7 @@
           {
             "label": "the row shows the customer, phone, type, item count, total and 'Placed'",
             "ok": true,
-            "detail": " #0001 05:28 PM Rohan Mehta 9811122233 TA 8 ₹1,030 Placed 0m Accepted",
+            "detail": " #0001 12:59 AM Rohan Mehta 9811122233 TA 8 ₹1,030 Placed 0m Accepted",
             "kind": "expect"
           }
         ]
@@ -496,12 +496,12 @@
     "id": "t02-whatsapp-api",
     "title": "WhatsApp chat — API rules and the careful-pace sending worker",
     "status": "pass",
-    "pass": 132,
+    "pass": 133,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-18T11:59:18.671Z",
-    "durationMs": 10422,
+    "at": "2026-11-18T19:51:40.321Z",
+    "durationMs": 13602,
     "steps": [
       {
         "n": 1,
@@ -708,7 +708,7 @@
           {
             "label": "an attachment uploads",
             "ok": true,
-            "detail": "http://localhost:3098/uploads/6afd930e7b99fda52e60",
+            "detail": "http://localhost:3098/uploads/6afe01c1376bce2e6a31",
             "kind": "expect"
           },
           {
@@ -730,6 +730,12 @@
         "title": "the worker sends — at a careful pace",
         "checks": [
           {
+            "label": "it's quiet hours now (10 pm–9 am): first contacts wait for the morning",
+            "ok": true,
+            "detail": "2026-11-19T03:35:30.003Z",
+            "kind": "expect"
+          },
+          {
             "label": "one message goes out, to the right number",
             "ok": true,
             "detail": "919876543210@s.whatsapp.net",
@@ -750,7 +756,7 @@
           {
             "label": "the next first contact must wait 2–4 minutes",
             "ok": true,
-            "detail": "155 s",
+            "detail": "200 s",
             "kind": "expect"
           },
           {
@@ -774,7 +780,7 @@
           {
             "label": "15 first contacts a day per number: the rest wait for tomorrow",
             "ok": true,
-            "detail": "2026-11-19T03:35:16.650Z",
+            "detail": "2026-11-19T18:31:37.044Z",
             "kind": "expect"
           },
           {
@@ -900,13 +906,13 @@
           {
             "label": "preview: 3 people (duplicates merged), 1 opted out",
             "ok": true,
-            "detail": "{\"recipients\":3,\"optedOut\":1,\"running\":0,\"firstContact\":3,\"numbersOnline\":[{\"id\":\"6afd930f7b99fda52e603139\",\"label\":\"Counter phone\"},{\"id\":\"6afd930f7b99fda52e603141\",\"label\":\"Delivery phone\"}],\"estimatedDays\":1}",
+            "detail": "{\"recipients\":3,\"optedOut\":1,\"running\":0,\"firstContact\":3,\"numbersOnline\":[{\"id\":\"6afe01c1376bce2e6a31b9f5\",\"label\":\"Counter phone\"},{\"id\":\"6afe01c1376bce2e6a31b9fc\",\"label\":\"Delivery phone\"}],\"estimatedDays\":1}",
             "kind": "expect"
           },
           {
             "label": "a broadcast queues one message per person",
             "ok": true,
-            "detail": "{\"id\":\"6afd93167b99fda52e6032be\",\"text\":\"Diwali: 20% off this weekend!\\n\\nReply STOP to stop offers.\",\"media\":null,\"createdAt\":\"2026-11-18T11:59:18.338Z\",\"status\":\"sending\",\"total\":3,\"skipped\":1,\"waiting\":3,\"sent\":0,\"read\":0,\"failed\":0}",
+            "detail": "{\"id\":\"6afe01cb376bce2e6a31bb9a\",\"text\":\"Diwali: 20% off this weekend!\\n\\nReply STOP to stop offers.\",\"media\":null,\"createdAt\":\"2026-11-18T19:51:39.910Z\",\"status\":\"sending\",\"total\":3,\"skipped\":1,\"waiting\":3,\"sent\":0,\"read\":0,\"failed\":0}",
             "kind": "expect"
           },
           {
@@ -1373,8 +1379,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-18T11:59:42.606Z",
-    "durationMs": 19754,
+    "at": "2026-11-18T19:30:41.355Z",
+    "durationMs": 20109,
     "steps": [
       {
         "n": 1,
@@ -1509,7 +1515,7 @@
           {
             "label": "a paced broadcast message says when it will go",
             "ok": true,
-            "detail": "BROADCAST | Diwali special: 20% off this weekend! | Reply STOP to stop offers. | sends tomorrow 7:29 am · | 4:59 pm",
+            "detail": "BROADCAST | Diwali special: 20% off this weekend! | Reply STOP to stop offers. | sends at 3:00 pm · | 12:30 am",
             "kind": "expect"
           },
           {
@@ -1682,8 +1688,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-18T12:00:03.232Z",
-    "durationMs": 16469,
+    "at": "2026-11-18T19:31:03.207Z",
+    "durationMs": 16658,
     "steps": [
       {
         "n": 1,
@@ -1812,7 +1818,7 @@
           {
             "label": "older than 30 days: 2 messages in 1 chat",
             "ok": true,
-            "detail": "2 messages from before Oct 20, 2026, in 1 chat.",
+            "detail": "2 messages from before Oct 21, 2026, in 1 chat.",
             "kind": "expect"
           },
           {
@@ -1841,8 +1847,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-18T12:00:20.849Z",
-    "durationMs": 13453,
+    "at": "2026-11-18T19:31:21.799Z",
+    "durationMs": 13390,
     "steps": [
       {
         "n": 0,
@@ -1934,8 +1940,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-18T12:01:00.726Z",
-    "durationMs": 39860,
+    "at": "2026-11-18T19:31:58.597Z",
+    "durationMs": 36782,
     "steps": [
       {
         "n": 1,
@@ -2040,7 +2046,7 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "0,0,0,1,57,261,799,1114,1240,1249,1249,1249,1249,1249",
+            "detail": "0,0,0,1,39,267,808,1118,1240,1249,1249,1249,1249,1249",
             "kind": "expect"
           },
           {
@@ -2106,7 +2112,7 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "508,508,508,509,581,919,1378,1608,1639,1639,1639,1639,1639,1639",
+            "detail": "508,508,508,509,581,918,1438,1608,1639,1639,1639,1639,1639,1639",
             "kind": "expect"
           },
           {
@@ -2135,8 +2141,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-18T12:01:04.104Z",
-    "durationMs": 3361,
+    "at": "2026-11-18T19:32:01.907Z",
+    "durationMs": 3292,
     "steps": [
       {
         "n": 1,
@@ -2204,8 +2210,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-18T12:04:19.644Z",
-    "durationMs": 191343,
+    "at": "2026-11-18T19:35:12.718Z",
+    "durationMs": 186612,
     "steps": [
       {
         "n": 1,
@@ -2536,8 +2542,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-18T12:04:54.031Z",
-    "durationMs": 34359,
+    "at": "2026-11-18T19:35:45.781Z",
+    "durationMs": 33034,
     "steps": [
       {
         "n": 1,
@@ -2791,8 +2797,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-18T12:06:46.738Z",
-    "durationMs": 112688,
+    "at": "2026-11-18T19:37:37.530Z",
+    "durationMs": 111725,
     "steps": [
       {
         "n": 1,
@@ -2825,13 +2831,13 @@
           {
             "label": "the platform page now shows Basic with 3 outlets against a limit of 1",
             "ok": true,
-            "detail": "Over its limits since Nov 18, 2026. Everything keeps working until Nov 25, 2026; aft",
+            "detail": "Over its limits since Nov 19, 2026. Everything keeps working until Nov 26, 2026; aft",
             "kind": "expect"
           },
           {
             "label": "…and says the store is over its limits, with the 7-day grace deadline",
             "ok": true,
-            "detail": "Over its limits since Nov 18, 2026. Everything keeps working until Nov 25, 2026; after that you'll be asked to choose what to block.",
+            "detail": "Over its limits since Nov 19, 2026. Everything keeps working until Nov 26, 2026; after that you'll be asked to choose what to block.",
             "kind": "expect"
           },
           {
@@ -2849,7 +2855,7 @@
           {
             "label": "the owner's dashboard shows 'Your store has 3 outlets (plan allows 1)' and 'Everything keeps working until …'",
             "ok": true,
-            "detail": "Your store has 3 outlets (plan allows 1). Everything keeps working until Nov 25, 2026. Remove the extras, or contact TablePe to upgrade your plan. Dashboard Central Revenue t",
+            "detail": "Your store has 3 outlets (plan allows 1). Everything keeps working until Nov 26, 2026. Remove the extras, or contact TablePe to upgrade your plan. Dashboard Central Revenue t",
             "kind": "expect"
           },
           {
@@ -2945,7 +2951,7 @@
           {
             "label": "the platform page says the grace period has ended",
             "ok": true,
-            "detail": "This store went over its limits on Nov 18, 2026 and its 0-day grace period ended on Nov 18, 2026. Choose what to block on the Outlets and People tabs — or raise its limits.",
+            "detail": "This store went over its limits on Nov 19, 2026 and its 0-day grace period ended on Nov 19, 2026. Choose what to block on the Outlets and People tabs — or raise its limits.",
             "kind": "expect"
           },
           {
@@ -3064,8 +3070,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-18T12:06:59.895Z",
-    "durationMs": 13132,
+    "at": "2026-11-18T19:37:49.572Z",
+    "durationMs": 12015,
     "steps": [
       {
         "n": 1,
@@ -3181,8 +3187,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-18T12:07:22.370Z",
-    "durationMs": 22456,
+    "at": "2026-11-18T19:38:11.255Z",
+    "durationMs": 21659,
     "steps": [
       {
         "n": 1,
@@ -3340,8 +3346,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-18T12:08:54.950Z",
-    "durationMs": 88383,
+    "at": "2026-11-18T19:39:44.476Z",
+    "durationMs": 89034,
     "steps": [
       {
         "n": 1,
@@ -3758,7 +3764,7 @@
           {
             "label": "Campaigns: it finishes with 2 sent, 0 waiting, 0 failed",
             "ok": true,
-            "detail": "Win-back SMS SMS · 18 Nov, 5:38 pm · 2 people 2 sent · 0 waiting · 0 failed Done",
+            "detail": "Win-back SMS SMS · 19 Nov, 1:09 am · 2 people 2 sent · 0 waiting · 0 failed Done",
             "kind": "expect"
           },
           {
@@ -3818,13 +3824,13 @@
           {
             "label": "it is queued: 3 waiting, still Sending (the sending worker is off here)",
             "ok": true,
-            "detail": "Ladies offer WhatsApp (linked numbers) · 18 Nov, 5:38 pm · 3 people 0 sent · 3 waiting · 0 failed Sending Cancel",
+            "detail": "Ladies offer WhatsApp (linked numbers) · 19 Nov, 1:09 am · 3 people 0 sent · 3 waiting · 0 failed Sending Cancel",
             "kind": "expect"
           },
           {
             "label": "cancelling stops it: Cancelled, nothing waiting",
             "ok": true,
-            "detail": "Ladies offer WhatsApp (linked numbers) · 18 Nov, 5:38 pm · 3 people 0 sent · 0 waiting · 0 failed Cancelled",
+            "detail": "Ladies offer WhatsApp (linked numbers) · 19 Nov, 1:09 am · 3 people 0 sent · 0 waiting · 0 failed Cancelled",
             "kind": "expect"
           }
         ]
@@ -3836,7 +3842,7 @@
           {
             "label": "Ravi (24 in 2020) shows 30",
             "ok": true,
-            "detail": " Ravi Kumar — 9000000001 Male 30 3 0 20 Aug, 5:37 pm",
+            "detail": " Ravi Kumar — 9000000001 Male 30 3 0 21 Aug, 1:08 am",
             "kind": "expect"
           },
           {
@@ -3865,8 +3871,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-18T12:10:03.650Z",
-    "durationMs": 64510,
+    "at": "2026-11-18T19:40:53.641Z",
+    "durationMs": 64984,
     "steps": [
       {
         "n": 1,
@@ -4018,8 +4024,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-18T12:10:42.581Z",
-    "durationMs": 34746,
+    "at": "2026-11-18T19:41:31.843Z",
+    "durationMs": 34000,
     "steps": [
       {
         "n": 1,
@@ -4130,7 +4136,7 @@
           {
             "label": "Security lists the address as Blocked, for Dashboards, blocked twice",
             "ok": true,
-            "detail": "203.0.113.50 Dashboards Blocked · 10 seconds left 0 2 18 Nov, 5:40:22 pm Unblock",
+            "detail": "203.0.113.50 Dashboards Blocked · 10 seconds left 0 2 19 Nov, 1:11:12 am Unblock",
             "kind": "expect"
           },
           {
@@ -4243,8 +4249,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-18T12:11:22.671Z",
-    "durationMs": 35902,
+    "at": "2026-11-18T19:42:11.956Z",
+    "durationMs": 35917,
     "steps": [
       {
         "n": 1,
@@ -4277,13 +4283,13 @@
           {
             "label": "the browser's only websocket is the live order feed (/realtime) — WhatsApp chat doesn't open one",
             "ok": true,
-            "detail": "ws://localhost:3097/realtime?outletId=6afd95c58b59bfa084c727a5",
+            "detail": "ws://localhost:3097/realtime?outletId=6afdff6eb15ce882c09d4ea5",
             "kind": "expect"
           },
           {
             "label": "a websocket for WhatsApp is opened by the browser",
             "ok": true,
-            "detail": "ws://localhost:3097/realtime?outletId=6afd95c58b59bfa084c727a5",
+            "detail": "ws://localhost:3097/realtime?outletId=6afdff6eb15ce882c09d4ea5",
             "kind": "never"
           }
         ]
@@ -4509,8 +4515,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-18T12:12:36.768Z",
-    "durationMs": 69922,
+    "at": "2026-11-18T19:52:55.040Z",
+    "durationMs": 70530,
     "steps": [
       {
         "n": 1,
@@ -4535,21 +4541,21 @@
         "title": "Overview: the last 30 days match the totals worked out from the stored orders",
         "checks": [
           {
-            "label": "the figures equal the worked-out totals (Sales ₹50,184, Net sales ₹47,833, Orders 280, Items sold 539, Cancelled 31, Discounts given ₹546, Average order ₹179)",
+            "label": "the figures equal the worked-out totals (Sales ₹50,654, Net sales ₹48,280, Orders 281, Items sold 544, Cancelled 31, Discounts given ₹556, Average order ₹180)",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "Sales says how it moved against the 30 days before (-3.8%)",
+            "label": "Sales says how it moved against the 30 days before (-1.0%)",
             "ok": true,
-            "detail": "Sales ₹50,184 −3.8% vs the period before incl. GST",
+            "detail": "Sales ₹50,654 −1% vs the period before incl. GST",
             "kind": "expect"
           },
           {
             "label": "the range shown is the last 30 days",
             "ok": true,
-            "detail": "20 Oct 2026 – 18 Nov 2026 · 30 days",
+            "detail": "21 Oct 2026 – 19 Nov 2026 · 30 days",
             "kind": "expect"
           },
           {
@@ -4559,15 +4565,15 @@
             "kind": "never"
           },
           {
-            "label": "the day-by-day table has 30 days that add up to 280 orders",
+            "label": "the day-by-day table has 30 days that add up to 281 orders",
             "ok": true,
-            "detail": "30 rows, 280 orders",
+            "detail": "30 rows, 281 orders",
             "kind": "expect"
           },
           {
-            "label": "the hour-by-hour table adds up to 280 orders",
+            "label": "the hour-by-hour table adds up to 281 orders",
             "ok": true,
-            "detail": "10 hours",
+            "detail": "11 hours",
             "kind": "expect"
           },
           {
@@ -4589,13 +4595,13 @@
             "kind": "expect"
           },
           {
-            "label": "Marketing Mart — Main alone: ₹32,376 and 172 orders",
+            "label": "Marketing Mart — Main alone: ₹33,342 and 177 orders",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "Marketing Mart — Second alone: ₹17,808 and 108 orders",
+            "label": "Marketing Mart — Second alone: ₹17,312 and 104 orders",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -4607,7 +4613,7 @@
             "kind": "never"
           },
           {
-            "label": "Last 7 days: ₹10,931, 61 orders",
+            "label": "Last 7 days: ₹10,837, 59 orders",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -4621,11 +4627,11 @@
           {
             "label": "picking an earlier start date in the calendar widens the figures",
             "ok": true,
-            "detail": "471 orders from 2026-10-01",
+            "detail": "478 orders from 2026-10-01",
             "kind": "expect"
           },
           {
-            "label": "custom dates 2026-11-12 to 2026-11-18, picked in the calendar, give the same ₹10,931 as 'Last 7 days'",
+            "label": "custom dates 2026-11-13 to 2026-11-19, picked in the calendar, give the same ₹10,837 as 'Last 7 days'",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -4645,25 +4651,25 @@
           {
             "label": "the chart has a line for each outlet (their names are in the legend)",
             "ok": true,
-            "detail": "Sales by outlet Each day — one line per outlet Table Marketing Mart — Main Marketing Mart — Second ₹0 ₹500 ₹1,000 ₹1,500 ₹2,000 21 Oct 25 Oct 29 Oct 2 Nov 6 Nov",
+            "detail": "Sales by outlet Each day — one line per outlet Table Marketing Mart — Main Marketing Mart — Second ₹0 ₹500 ₹1,000 ₹1,500 ₹2,000 22 Oct 26 Oct 30 Oct 3 Nov 7 Nov",
             "kind": "expect"
           },
           {
-            "label": "the order-types table adds up to 280 orders",
+            "label": "the order-types table adds up to 281 orders",
             "ok": true,
-            "detail": "280",
+            "detail": "281",
             "kind": "expect"
           },
           {
-            "label": "takeaway ₹19802, delivery ₹15532, dine-in ₹14850 (store totals)",
+            "label": "takeaway ₹19648, delivery ₹17122, dine-in ₹13884 (store totals)",
             "ok": true,
-            "detail": "{\"t\":19802,\"d\":15532,\"i\":14850}",
+            "detail": "{\"t\":19648,\"d\":17122,\"i\":13884}",
             "kind": "expect"
           },
           {
-            "label": "Marketing Mart — Main's rows add up to 172 orders",
+            "label": "Marketing Mart — Main's rows add up to 177 orders",
             "ok": true,
-            "detail": "172",
+            "detail": "177",
             "kind": "expect"
           },
           {
@@ -4679,37 +4685,37 @@
         "title": "Items & stock: best sellers, and how much to prepare",
         "checks": [
           {
-            "label": "the best sellers run Chicken Momos 140, Paneer Steamed Momos 127, Cold Coffee 125",
+            "label": "the best sellers run Paneer Steamed Momos 133, Cold Coffee 132, Chicken Momos 128",
             "ok": true,
-            "detail": "Best sellers By quantity sold in this period — with the change against the period before Chicken Momos 140 sold · ₹14,000 −6% Paneer Steamed Momos 127 sold · ₹11,430 −5.9% Cold Coffee 125 sold · ₹8,770 −3.8% Veg Steamed Momos 86 sold · ₹6,920 0% Paneer Gravy M",
+            "detail": "Best sellers By quantity sold in this period — with the change against the period before Paneer Steamed Momos 133 sold · ₹11,970 0% Cold Coffee 132 sold · ₹9,260 −1.5% Chicken Momos 128 sold · ₹12,800 −5.2% Veg Steamed Momos 86 sold · ₹6,920 +4.9% Paneer Gravy",
             "kind": "expect"
           },
           {
-            "label": "'Every item' lists each item with its quantity (Chicken Momos = 140)",
+            "label": "'Every item' lists each item with its quantity (Paneer Steamed Momos = 133)",
             "ok": true,
-            "detail": "[[\"1\",\"Chicken Momos\",\"140\",\"₹14,000\",\"4.7\",\"26.0%\",\"−6%\"],[\"2\",\"Paneer Steamed Momos\",\"127\",\"₹11,430\",\"4.2\",\"23.6%\",\"−5.9%\"]]",
+            "detail": "[[\"1\",\"Paneer Steamed Momos\",\"133\",\"₹11,970\",\"4.4\",\"24.4%\",\"0%\"],[\"2\",\"Cold Coffee\",\"132\",\"₹9,260\",\"4.4\",\"24.3%\",\"−1.5%\"]]",
             "kind": "expect"
           },
           {
-            "label": "the prep list is for tomorrow, Thursday",
+            "label": "the prep list is for tomorrow, Friday",
             "ok": true,
-            "detail": "Tomorrow (Thursday): prepare about",
+            "detail": "Tomorrow (Friday): prepare about",
             "kind": "expect"
           },
           {
-            "label": "tomorrow's list matches the worked-out numbers (Paneer Steamed Momos 5, Paneer Gravy Momos 2, Veg Steamed Momos 2, Chicken Momos 3, Cold Coffee 4)",
+            "label": "tomorrow's list matches the worked-out numbers (Paneer Steamed Momos 4, Paneer Gravy Momos 3, Veg Steamed Momos 3, Chicken Momos 5, Cold Coffee 5)",
             "ok": true,
-            "detail": "[[\"Paneer Steamed Momos\",\"5\",\"4\",\"4\"],[\"Cold Coffee\",\"4\",\"3.2\",\"4\"],[\"Chicken Momos\",\"3\",\"2\",\"2\"],[\"Veg Steamed Momos\",\"2\",\"1.5\",\"2\"],[\"Paneer Gravy Momos\",\"2\",\"1\",\"1\"]]",
+            "detail": "[[\"Cold Coffee\",\"5\",\"3.7\",\"4\"],[\"Chicken Momos\",\"5\",\"4\",\"4\"],[\"Paneer Steamed Momos\",\"4\",\"3\",\"4\"],[\"Veg Steamed Momos\",\"3\",\"2\",\"2\"],[\"Paneer Gravy Momos\",\"3\",\"2\",\"2\"]]",
             "kind": "expect"
           },
           {
             "label": "every item's seven weekday numbers match the worked-out suggestions (average of the last 6 weeks + 15%, rounded up)",
             "ok": true,
-            "detail": "[[\"Paneer Steamed Momos\",\"3\",\"3\",\"4\",\"5\",\"5\",\"6\",\"8\"],[\"Cold Coffee\",\"2\",\"3\",\"3\",\"4\",\"5\",\"5\",\"6\"]]",
+            "detail": "[[\"Paneer Steamed Momos\",\"3\",\"3\",\"5\",\"4\",\"4\",\"7\",\"6\"],[\"Cold Coffee\",\"3\",\"3\",\"4\",\"3\",\"5\",\"6\",\"6\"]]",
             "kind": "expect"
           },
           {
-            "label": "a bigger safety margin gives a bigger number (Paneer Steamed Momos on Saturday: 6 → 8)",
+            "label": "a bigger safety margin gives a bigger number (Paneer Steamed Momos on Saturday: 7 → 10)",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -4739,27 +4745,27 @@
         "title": "Compare outlets: side by side for the same dates",
         "checks": [
           {
-            "label": "Sales: Marketing Mart — Main ₹32,376, Marketing Mart — Second ₹17,808",
+            "label": "Sales: Marketing Mart — Main ₹33,342, Marketing Mart — Second ₹17,312",
             "ok": true,
-            "detail": "[\"Sales\",\"₹32,376\",\"₹17,808 −45% vs Marketing Mart — Main\"]",
+            "detail": "[\"Sales\",\"₹33,342\",\"₹17,312 −48% vs Marketing Mart — Main\"]",
             "kind": "expect"
           },
           {
-            "label": "Orders: 172 and 108",
+            "label": "Orders: 177 and 104",
             "ok": true,
-            "detail": "[\"Orders\",\"172\",\"108 −37% vs Marketing Mart — Main\"]",
+            "detail": "[\"Orders\",\"177\",\"104 −41% vs Marketing Mart — Main\"]",
             "kind": "expect"
           },
           {
-            "label": "the second outlet's sales are compared with the first (-45%)",
+            "label": "the second outlet's sales are compared with the first (-48%)",
             "ok": true,
-            "detail": "₹17,808 −45% vs Marketing Mart — Main",
+            "detail": "₹17,312 −48% vs Marketing Mart — Main",
             "kind": "expect"
           },
           {
-            "label": "each outlet has its own best sellers (Paneer Steamed Momos — 107 and Chicken Momos — 66)",
+            "label": "each outlet has its own best sellers (Paneer Steamed Momos — 105 and Chicken Momos — 54)",
             "ok": true,
-            "detail": " Dine-in: ₹8,090 · Takeaway: ₹14,358 Marketing Mart — Second Best sellers and how the orders arrive Chicken Momos — 66 Veg Steamed Momos — 39 Cold Coffee — 36 Paneer Gravy Momos — 26 Paneer Steamed Momos — 20 31% 31% 38% Takeaway Delivery Dine-in Takeaway: ₹5,444 · Delivery: ₹5,604 · Dine-in: ₹6,760",
+            "detail": " Delivery: ₹10,298 · Dine-in: ₹8,444 Marketing Mart — Second Best sellers and how the orders arrive Chicken Momos — 54 Veg Steamed Momos — 39 Cold Coffee — 38 Paneer Steamed Momos — 28 Paneer Gravy Momos — 24 39% 29% 31% Delivery Takeaway Dine-in Delivery: ₹6,824 · Takeaway: ₹5,048 · Dine-in: ₹5,440",
             "kind": "expect"
           },
           {
@@ -4769,9 +4775,9 @@
             "kind": "expect"
           },
           {
-            "label": "for 2026-11-12 to 2026-11-18, picked in the calendar, the two outlets add up to the store's ₹10,931",
+            "label": "for 2026-11-13 to 2026-11-19, picked in the calendar, the two outlets add up to the store's ₹10,837",
             "ok": true,
-            "detail": "10931",
+            "detail": "10837",
             "kind": "expect"
           }
         ]
@@ -4781,15 +4787,15 @@
         "title": "Operations: cancellations and discounts",
         "checks": [
           {
-            "label": "31 orders were cancelled, 10.0% of 311",
+            "label": "31 orders were cancelled, 9.9% of 312",
             "ok": true,
-            "detail": "Cancelled orders 31 10.0% of 311 orders",
+            "detail": "Cancelled orders 31 9.9% of 312 orders",
             "kind": "expect"
           },
           {
-            "label": "coupon discounts are ₹546",
+            "label": "coupon discounts are ₹556",
             "ok": true,
-            "detail": "Discounts in total Coupons and coin discounts together Coupon discounts ₹546 Coin discounts ₹0 Orders with a coupon 31 of 280 Coupon discounts as a share of sales before discount 1.2%",
+            "detail": "Discounts in total Coupons and coin discounts together Coupon discounts ₹556 Coin discounts ₹0 Orders with a coupon 31 of 281 Coupon discounts as a share of sales before discount 1.2%",
             "kind": "expect"
           },
           {
@@ -4811,9 +4817,9 @@
             "kind": "expect"
           },
           {
-            "label": "net profit = 47833 net sales − 35% food − 22500 a month × 0.987 months = ₹8882",
+            "label": "net profit = 48280 net sales − 35% food − 22500 a month × 0.988 months = ₹9148",
             "ok": true,
-            "detail": "saw 8882",
+            "detail": "saw 9148",
             "kind": "expect"
           },
           {
@@ -4825,31 +4831,31 @@
           {
             "label": "the table lists every bill by name with its share for these days",
             "ok": true,
-            "detail": "Where the money goes Every expense for these days (monthly amounts shared out by the day) Net sales (without GST) ₹47,833 Food cost (35%) − ₹16,742 Gross profit ₹31,091 Marketing & ads − ₹2,468 Rent —",
+            "detail": "Where the money goes Every expense for these days (monthly amounts shared out by the day) Net sales (without GST) ₹48,280 Food cost (35%) − ₹16,898 Gross profit ₹31,382 Marketing & ads − ₹2,470 Rent —",
             "kind": "expect"
           },
           {
-            "label": "profit by outlet: Marketing Mart — Main ≈ ₹5642, Marketing Mart — Second ≈ ₹3239 (own bills + a share of the shared ones by sales)",
+            "label": "profit by outlet: Marketing Mart — Main ≈ ₹6192, Marketing Mart — Second ≈ ₹2956 (own bills + a share of the shared ones by sales)",
             "ok": true,
-            "detail": "[[\"Marketing Mart — Main\",\"₹30,873\",\"₹10,805\",\"₹14,425\",\"₹5,642\",\"18.3%\"],[\"Marketing Mart — Second\",\"₹16,960\",\"₹5,936\",\"₹7,785\",\"₹3,239\",\"19.1%\"]]",
+            "detail": "[[\"Marketing Mart — Main\",\"₹31,793\",\"₹11,127\",\"₹14,473\",\"₹6,192\",\"19.5%\"],[\"Marketing Mart — Second\",\"₹16,488\",\"₹5,771\",\"₹7,761\",\"₹2,956\",\"17.9%\"]]",
             "kind": "expect"
           },
           {
             "label": "a bill added by hand counts (₹1,000 a month more)",
             "ok": true,
-            "detail": "saw 7895",
+            "detail": "saw 8160",
             "kind": "expect"
           },
           {
             "label": "the removed bill still counts in the profit",
             "ok": true,
-            "detail": "saw 8882",
+            "detail": "saw 9148",
             "kind": "never"
           },
           {
             "label": "food cost 30% instead of 35% raises the profit to match",
             "ok": true,
-            "detail": "saw 11273",
+            "detail": "saw 11562",
             "kind": "expect"
           }
         ]
@@ -4867,7 +4873,7 @@
           {
             "label": "…and so is the profit",
             "ok": true,
-            "detail": "saw 8882",
+            "detail": "saw 9148",
             "kind": "expect"
           },
           {
@@ -4885,19 +4891,19 @@
           {
             "label": "…and the profit is the same again",
             "ok": true,
-            "detail": "saw 8882",
+            "detail": "saw 9148",
             "kind": "expect"
           },
           {
             "label": "changing a bill changes the profit",
             "ok": true,
-            "detail": "saw 3947",
+            "detail": "saw 4209",
             "kind": "expect"
           },
           {
             "label": "'Use the version saved to my store' puts the saved bill back",
             "ok": true,
-            "detail": "saw 8882",
+            "detail": "saw 9148",
             "kind": "expect"
           }
         ]
@@ -4921,7 +4927,7 @@
           {
             "label": "the file is named like a report and ends .xlsx",
             "ok": true,
-            "detail": "tablepe-marketing-mart-2026-10-20_to_2026-11-18.xlsx",
+            "detail": "tablepe-marketing-mart-2026-10-21_to_2026-11-19.xlsx",
             "kind": "expect"
           },
           {
@@ -4937,27 +4943,27 @@
             "kind": "never"
           },
           {
-            "label": "Summary: sales 50184, net 47832.87, GST 2351.13, orders 280, cancelled 31",
+            "label": "Summary: sales 50654, net 48280.45, GST 2373.55, orders 281, cancelled 31",
             "ok": true,
-            "detail": "[[\"Measure\",\"This period\",\"Previous period\"],[\"Sales (incl. GST)\",50184,52147],[\"Net sales (excl. GST)\",47832.87,49683.37],[\"GST collected\",2351.13,2463.63],[\"Orders\",280,291]]",
+            "detail": "[[\"Measure\",\"This period\",\"Previous period\"],[\"Sales (incl. GST)\",50654,51166],[\"Net sales (excl. GST)\",48280.45,48749.04],[\"GST collected\",2373.55,2416.96],[\"Orders\",281,284]]",
             "kind": "expect"
           },
           {
-            "label": "'Sales by day' has 30 days adding up to ₹50184",
+            "label": "'Sales by day' has 30 days adding up to ₹50654",
             "ok": true,
             "detail": "30 rows",
             "kind": "expect"
           },
           {
-            "label": "the GST sheet's days add up to ₹2351.13 GST, and its Total row says ₹2351.13 too",
+            "label": "the GST sheet's days add up to ₹2373.55 GST, and its Total row says ₹2373.55 too",
             "ok": true,
-            "detail": "29 days, total row [\"Total\",280,47032.87,1175.02,1176.11,2351.13,0,50184]",
+            "detail": "29 days, total row [\"Total\",281,47480.45,1186.17,1187.38,2373.55,0,50654]",
             "kind": "expect"
           },
           {
-            "label": "the Profit & loss sheet uses the bills typed earlier: net profit ≈ ₹8882",
+            "label": "the Profit & loss sheet uses the bills typed earlier: net profit ≈ ₹9148",
             "ok": true,
-            "detail": "sheet says 8881.69",
+            "detail": "sheet says 9148.42",
             "kind": "expect"
           }
         ]
@@ -4973,7 +4979,7 @@
             "kind": "expect"
           },
           {
-            "label": "Marketing Mart — Main's CSV adds up to ₹32376 and 172 orders (not the whole store's)",
+            "label": "Marketing Mart — Main's CSV adds up to ₹33342 and 177 orders (not the whole store's)",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -4987,7 +4993,7 @@
           {
             "label": "the weekly PDF is a real PDF file",
             "ok": true,
-            "detail": "6949 bytes",
+            "detail": "7168 bytes",
             "kind": "expect"
           },
           {
@@ -4999,7 +5005,7 @@
           {
             "label": "…and its summary holds at least the last 30 days' sales (the whole year includes them)",
             "ok": true,
-            "detail": "123455",
+            "detail": "123960",
             "kind": "expect"
           }
         ]
@@ -5009,15 +5015,15 @@
         "title": "GST and the daily cash close agree",
         "checks": [
           {
-            "label": "the GST total row: 280 orders, taxable ₹47,033, CGST ₹1,175, SGST ₹1,176, GST ₹2,351",
+            "label": "the GST total row: 281 orders, taxable ₹47,480, CGST ₹1,186, SGST ₹1,187, GST ₹2,374",
             "ok": true,
-            "detail": "Total 280 ₹47,033 ₹1,175 ₹1,176 ₹2,351 ₹50,184",
+            "detail": "Total 281 ₹47,480 ₹1,186 ₹1,187 ₹2,374 ₹50,654",
             "kind": "expect"
           },
           {
-            "label": "the cash close for 2026-11-17, picked in the calendar, equals that day's invoice total in the GST table (₹1042)",
+            "label": "the cash close for 2026-11-18, picked in the calendar, equals that day's invoice total in the GST table (₹1310)",
             "ok": true,
-            "detail": "₹1,042 vs 1042",
+            "detail": "₹1,310 vs 1310",
             "kind": "expect"
           }
         ]
@@ -5045,7 +5051,7 @@
             "kind": "never"
           },
           {
-            "label": "…and sees the same sales (₹50,184)",
+            "label": "…and sees the same sales (₹50,654)",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -5178,8 +5184,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-18T12:13:25.087Z",
-    "durationMs": 44133,
+    "at": "2026-11-18T19:44:15.762Z",
+    "durationMs": 45303,
     "steps": [
       {
         "n": 1,
@@ -5344,7 +5350,7 @@
           {
             "label": "the panel says 'Table T9' and 'Rooftop · 6 seats · Free'",
             "ok": true,
-            "detail": "Table T9 Rooftop · 6 seats · Free http://localhost:3170/t/6afd963d749209d7b356aa",
+            "detail": "Table T9 Rooftop · 6 seats · Free http://localhost:3170/t/6afdffe6c2a24202b5f59d",
             "kind": "expect"
           },
           {
@@ -5356,7 +5362,7 @@
           {
             "label": "the address printed under it is /t/<id>?k=<code> on the store's own site",
             "ok": true,
-            "detail": "http://localhost:3170/t/6afd963d749209d7b356aa70?k=i81j9HDYN_xmAHcYv5mKCpwJ",
+            "detail": "http://localhost:3170/t/6afdffe6c2a24202b5f59d49?k=QcYuMfKDgvaDhyTznXAkHmwa",
             "kind": "expect"
           },
           {
@@ -5380,7 +5386,7 @@
           {
             "label": "every table has its own address and its own code",
             "ok": true,
-            "detail": "http://localhost:3170/t/6afd963d749209d7b356aa70?k=i81j9HDYN_xmAHcYv5mKCpwJ | http://localhost:3170/t/6afd963e749209d7b356aa80?k=3B_NCSYdn6I2nWqhIPdneU19 | http://localhost:3170/t/6afd9637749209d7b356a5db?k=qeiOIehKt850Bj_B3OlOg10Y",
+            "detail": "http://localhost:3170/t/6afdffe6c2a24202b5f59d49?k=QcYuMfKDgvaDhyTznXAkHmwa | http://localhost:3170/t/6afdffe7c2a24202b5f59d59?k=KTZee5ZkF3QBGby0pz-i0J7O | http://localhost:3170/t/6afdffe1c2a24202b5f598af?k=5WS1d4r7wipSxgLqvIWdbHBK",
             "kind": "expect"
           },
           {
@@ -5563,8 +5569,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-18T12:14:26.186Z",
-    "durationMs": 56914,
+    "at": "2026-11-18T19:45:18.238Z",
+    "durationMs": 58293,
     "steps": [
       {
         "n": 1,
@@ -5705,7 +5711,7 @@
           {
             "label": "'Seated now — 1' with 'Table D1 … 2 orders · tab ₹130'",
             "ok": true,
-            "detail": "Seated now — 1 Table D1 since 05:43 PM · 2 orders · tab ₹130 Move to… Table D2 Table D3 Table T1 Table T2 Table T3 Table T4 Table ",
+            "detail": "Seated now — 1 Table D1 since 01:14 AM · 2 orders · tab ₹130 Move to… Table D2 Table D3 Table T1 Table T2 Table T3 Table T4 Table ",
             "kind": "expect"
           },
           {
@@ -5717,7 +5723,7 @@
           {
             "label": "the Orders page lists both: '#0001 … Dina Diner 9877712345 DI Table D1 … ₹70 Placed' and '#0002 … ₹60'",
             "ok": true,
-            "detail": "#0001 05:43 PM Dina Diner 9877712345 DI Table D1 1 ₹70 Placed 0m Approve || #0002 05:43 PM Dina Diner 9877712345 DI Table D1 1 ₹60 Placed 0m Approve",
+            "detail": "#0001 01:14 AM Dina Diner 9877712345 DI Table D1 1 ₹70 Placed 0m Approve || #0002 01:14 AM Dina Diner 9877712345 DI Table D1 1 ₹60 Placed 0m Approve",
             "kind": "expect"
           },
           {
@@ -5741,7 +5747,7 @@
           {
             "label": "'Seated now' says 'Table D2 … moved: D1 → D2'",
             "ok": true,
-            "detail": "Seated now — 1 Table D2moved: D1 → D2 since 05:43 PM · 2 orders · tab ₹130 Move to… Table D1 Table D3 Table T1 Table T2 Table T3 Table T4 Table T5 Move Close Garden D1 Ne",
+            "detail": "Seated now — 1 Table D2moved: D1 → D2 since 01:14 AM · 2 orders · tab ₹130 Move to… Table D1 Table D3 Table T1 Table T2 Table T3 Table T4 Table T5 Move Close Garden D1 Ne",
             "kind": "expect"
           },
           {
@@ -5843,7 +5849,7 @@
           {
             "label": "after 'Cancel / void' the order #0003 is Cancelled",
             "ok": true,
-            "detail": "#0003 05:44 PM Rohan Other 9877799999 DI Table D3 1 ₹70 Cancelled —",
+            "detail": "#0003 01:14 AM Rohan Other 9877799999 DI Table D3 1 ₹70 Cancelled —",
             "kind": "expect"
           },
           {
@@ -5879,7 +5885,7 @@
           {
             "label": "the panel shows a new code for the same table",
             "ok": true,
-            "detail": "http://localhost:3170/t/6afd966ea24d801cbdab53df?k=E5sArn3FNkeAF1Zubs93Al5j → http://localhost:3170/t/6afd966ea24d801cbdab53df?k=0hDMnMB6xukMvH9Zj7R9pDVK",
+            "detail": "http://localhost:3170/t/6afe001930a195333d9a00b4?k=4vsLzhv_5RGIItH1Jl6lAx0h → http://localhost:3170/t/6afe001930a195333d9a00b4?k=mS-4ScxdsVuKUw_0Rf_JUnjR",
             "kind": "expect"
           },
           {
@@ -5968,8 +5974,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-18T12:17:27.256Z",
-    "durationMs": 176861,
+    "at": "2026-11-18T19:48:20.808Z",
+    "durationMs": 178386,
     "steps": [
       {
         "n": 1,
@@ -6056,7 +6062,7 @@
           {
             "label": "the counter's Orders screen has order A as 'Placed' with its wait running ('0m')",
             "ok": true,
-            "detail": "#0001 05:44 PM Meera Late 9877700077 TA 1 ₹70 Placed 0m Accepted",
+            "detail": "#0001 01:15 AM Meera Late 9877700077 TA 1 ₹70 Placed 0m Accepted",
             "kind": "expect"
           },
           {
@@ -6068,7 +6074,7 @@
           {
             "label": "over a minute later the status still says 'Placed' and the wait shows 1m or more",
             "ok": true,
-            "detail": "#0001 05:44 PM Meera Late 9877700077 TA 1 ₹70 Placed 1m Accepted",
+            "detail": "#0001 01:15 AM Meera Late 9877700077 TA 1 ₹70 Placed 1m Accepted",
             "kind": "expect"
           },
           {
@@ -6356,7 +6362,7 @@
           {
             "label": "completed: order A has no timer and no warning",
             "ok": true,
-            "detail": "Completed · #0001 05:44 PM Meera Late 9877700077 TA 1 ₹70 Completed —",
+            "detail": "Completed · #0001 01:15 AM Meera Late 9877700077 TA 1 ₹70 Completed —",
             "kind": "expect"
           },
           {
@@ -6496,9 +6502,9 @@
     "pass": 120,
     "fail": 0,
     "error": "",
-    "mode": "visible",
-    "at": "2026-11-18T12:23:23.114Z",
-    "durationMs": 253223,
+    "mode": "headless",
+    "at": "2026-11-18T19:49:16.746Z",
+    "durationMs": 51751,
     "steps": [
       {
         "n": 1,
@@ -6849,7 +6855,7 @@
           {
             "label": "Save: 'Saved.' and the form is now a saved draft with its own address",
             "ok": true,
-            "detail": "http://localhost:3171/platform/onboarding/6afd9825b4ab6b05718752bc",
+            "detail": "http://localhost:3171/platform/onboarding/6afe011c928f6af5e460806a",
             "kind": "expect"
           },
           {
@@ -7297,9 +7303,9 @@
     "pass": 55,
     "fail": 0,
     "error": "",
-    "mode": "visible",
-    "at": "2026-11-18T12:26:44.793Z",
-    "durationMs": 197223,
+    "mode": "headless",
+    "at": "2026-11-18T19:49:56.769Z",
+    "durationMs": 35825,
     "steps": [
       {
         "n": 1,
@@ -7656,25 +7662,25 @@
           {
             "label": "the 'Multi-outlet' box sits directly under the people limit, on the same left edge",
             "ok": true,
-            "detail": "people x=691 y=381 · multi x=695 y=432",
+            "detail": "people x=381 y=323 · multi x=385 y=376",
             "kind": "expect"
           },
           {
             "label": "'Unlimited' is on the same line as the people number",
             "ok": true,
-            "detail": "391 vs 381",
+            "detail": "333 vs 323",
             "kind": "expect"
           },
           {
             "label": "ticking Multi-outlet shows the 'Outlets' limit below it, aligned with the others",
             "ok": true,
-            "detail": "691 vs 691",
+            "detail": "383 vs 381",
             "kind": "expect"
           },
           {
             "label": "'Save plan' is in view without scrolling the dialog (it stays at the bottom)",
             "ok": true,
-            "detail": "button at y=1088–1117 of 1202",
+            "detail": "button at y=811–840 of 900",
             "kind": "expect"
           },
           {
@@ -7688,6 +7694,840 @@
             "ok": true,
             "detail": "",
             "kind": "never"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t23-message-sending": {
+    "id": "t23-message-sending",
+    "title": "Message sending — codes by linked WhatsApp / WhatsApp Business / SMS, chosen by the owner",
+    "status": "pass",
+    "pass": 67,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-18T19:53:50.922Z",
+    "durationMs": 51694,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The owner opens Settings → Message sending",
+        "checks": [
+          {
+            "label": "Settings has a 'Message sending' tab",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it offers all four ways",
+            "ok": true,
+            "detail": "linked · business · SMS · don't send",
+            "kind": "expect"
+          },
+          {
+            "label": "'Don't send' is chosen, and a note says codes are not being sent yet",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "linked WhatsApp says why: no number is linked yet",
+            "ok": true,
+            "detail": "Your linked WhatsApp number Sent from the WhatsApp number you scanned in — free, and it arrives as a normal chat message. No WhatsApp number",
+            "kind": "expect"
+          },
+          {
+            "label": "SMS and WhatsApp Business say what to set up",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "linked, WhatsApp Business and SMS are all disabled (none set up)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "each of them shows 'Needs setting up'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Save is off until something changes",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Before any setup a new customer is shown the code on screen (as before)",
+        "checks": [
+          {
+            "label": "the code step opens and shows a 'dev code'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it does not claim to have sent anything",
+            "ok": true,
+            "detail": "We sent a 6-digit code to 9811200001.",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "The owner links a WhatsApp number and its connection comes online",
+        "checks": [
+          {
+            "label": "the store has a linked number to switch on",
+            "ok": true,
+            "detail": "4 number(s)",
+            "kind": "expect"
+          },
+          {
+            "label": "linked WhatsApp now says Ready and can be chosen",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "SMS and WhatsApp Business still say they need setting up",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "choosing it shows the wording, a preview, and the number list",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the standard preview uses the store's name and a sample code",
+            "ok": true,
+            "detail": "Preview:482915 is your Acme Momos verification code. It is valid for 10 minutes ",
+            "kind": "expect"
+          },
+          {
+            "label": "Save is now on",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the preview follows what is typed",
+            "ok": true,
+            "detail": "Preview:Acme code 482915 — valid 10 minutes",
+            "kind": "expect"
+          },
+          {
+            "label": "a message without {{code}} is refused with a clear reason",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "saving works",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "after a reload it is still the chosen way, with the same wording",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "A new customer asks for a code: it arrives on WhatsApp from the store's number",
+        "checks": [
+          {
+            "label": "the screen says the code was sent on WhatsApp",
+            "ok": true,
+            "detail": "We sent a 6-digit code to 9811200002 on WhatsApp.",
+            "kind": "expect"
+          },
+          {
+            "label": "the code is shown on screen ('dev code')",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the store's number sent exactly one message, to the customer's number",
+            "ok": true,
+            "detail": "[\"919811200002@s.whatsapp.net\"]",
+            "kind": "expect"
+          },
+          {
+            "label": "…in the store's own words, with a 6-digit code",
+            "ok": true,
+            "detail": "Acme code 056905 — valid 10 minutes",
+            "kind": "expect"
+          },
+          {
+            "label": "the test code 123456 is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the real code signs the customer up",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "The customer who only got a code doesn't clutter the owner's WhatsApp inbox",
+        "checks": [
+          {
+            "label": "the owner's chat list does not contain that customer",
+            "ok": true,
+            "detail": "4 chats",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "A number that isn't on WhatsApp is told so",
+        "checks": [
+          {
+            "label": "the customer is told the number isn't on WhatsApp",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a code step opened, or a code was shown",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "With the store's number offline the customer is asked to try later — and is not shown the code",
+        "checks": [
+          {
+            "label": "the customer is asked to try again in a few minutes",
+            "ok": true,
+            "detail": "We can't send the code right now.",
+            "kind": "expect"
+          },
+          {
+            "label": "a code is shown on screen, or the code step opened",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "nothing was sent",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the owner's page warns that the chosen number isn't connected",
+            "ok": true,
+            "detail": "Your linked WhatsApp number Sent from the WhatsApp number you scanned in — free, and it arrives as a normal chat message. Your linked number isn't connected rig",
+            "kind": "expect"
+          },
+          {
+            "label": "…and linked WhatsApp stays the chosen way (nothing was switched behind their back)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "Staff asking for a coin code use the same chosen way",
+        "checks": [
+          {
+            "label": "the coin code request is accepted",
+            "ok": true,
+            "detail": "200 {\"sent\":true}",
+            "kind": "expect"
+          },
+          {
+            "label": "the customer (Asha) got the code on WhatsApp from the store's number",
+            "ok": true,
+            "detail": "519967",
+            "kind": "expect"
+          },
+          {
+            "label": "123456 is refused for coins too",
+            "ok": true,
+            "detail": "400",
+            "kind": "expect"
+          },
+          {
+            "label": "the code that was sent is accepted",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 9,
+        "title": "SMS: set up the gateway, then choose it",
+        "checks": [
+          {
+            "label": "the SMS settings still offer the old 'Send login & coin codes by SMS' switch",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "SMS is now Ready and can be chosen",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "its preview uses the 'Code message' set under Notifications → SMS",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "saved",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the screen says the code was sent by SMS",
+            "ok": true,
+            "detail": "We sent a 6-digit code to 9811200004 by SMS.",
+            "kind": "expect"
+          },
+          {
+            "label": "the code is shown on screen",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "the gateway was asked to text exactly that customer, with the store's key",
+            "ok": true,
+            "detail": "1 request(s)",
+            "kind": "expect"
+          },
+          {
+            "label": "…in the 'Code message' wording",
+            "ok": true,
+            "detail": "Code 418607 for Acme Momos",
+            "kind": "expect"
+          },
+          {
+            "label": "nothing went out over WhatsApp",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "123456 is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the code from the SMS signs them up",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 10,
+        "title": "WhatsApp Business: connection details, then a template for the code",
+        "checks": [
+          {
+            "label": "WhatsApp Business is now Ready",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "without a template name it is refused with a clear reason",
+            "ok": true,
+            "detail": "Enter the name of your approved WhatsApp template.",
+            "kind": "expect"
+          },
+          {
+            "label": "saved",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the screen says the code was sent on WhatsApp",
+            "ok": true,
+            "detail": "We sent a 6-digit code to 9811200005 on WhatsApp.",
+            "kind": "expect"
+          },
+          {
+            "label": "the code is shown on screen",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "Meta was called once, on the store's phone-number ID, with the store's token",
+            "ok": true,
+            "detail": "1 call(s) /v20.0/109876543/messages",
+            "kind": "expect"
+          },
+          {
+            "label": "…to the customer's number, with the approved template and language",
+            "ok": true,
+            "detail": "\"919811200005\"",
+            "kind": "expect"
+          },
+          {
+            "label": "…the code fills {{1}}",
+            "ok": true,
+            "detail": "343456",
+            "kind": "expect"
+          },
+          {
+            "label": "…and also goes to the Copy-code button",
+            "ok": true,
+            "detail": "{\"type\":\"button\",\"sub_type\":\"url\",\"index\":\"0\",\"parameters\":[{\"type\":\"text\",\"text\":\"343456\"}]}",
+            "kind": "expect"
+          },
+          {
+            "label": "nothing went out over SMS or the linked number for this customer",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the code sent through Meta signs them up",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 11,
+        "title": "A store whose plan has neither WhatsApp chat nor WhatsApp & SMS alerts",
+        "checks": [
+          {
+            "label": "the API refuses linked WhatsApp for that store",
+            "ok": true,
+            "detail": "409 WhatsApp chat isn't in this store's plan.",
+            "kind": "expect"
+          },
+          {
+            "label": "…and SMS",
+            "ok": true,
+            "detail": "409",
+            "kind": "expect"
+          },
+          {
+            "label": "Beta Bites' Settings tabs include 'Message sending'",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
+          }
+        ]
+      },
+      {
+        "n": 12,
+        "title": "Back to 'Don't send': the on-screen code and 123456 return",
+        "checks": [
+          {
+            "label": "a warning explains what 'Don't send' means",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "saved",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the customer is shown the code on screen again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "123456 signs them up again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t24-message-sending-api": {
+    "id": "t24-message-sending-api",
+    "title": "Message sending — API rules: codes by linked WhatsApp / WhatsApp Business / SMS, never stored, never shown, capped, plan-gated",
+    "status": "pass",
+    "pass": 47,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-18T19:53:59.890Z",
+    "durationMs": 8939,
+    "steps": [
+      {
+        "n": 1,
+        "title": "before anything is chosen",
+        "checks": [
+          {
+            "label": "a store that never chose sends nothing and shows the code on screen",
+            "ok": true,
+            "detail": "screen",
+            "kind": "expect"
+          },
+          {
+            "label": "linked WhatsApp says why it can't be chosen yet, and the page knows the store's name",
+            "ok": true,
+            "detail": "No WhatsApp number is linked yet — link one under WhatsApp → Numbers.",
+            "kind": "expect"
+          },
+          {
+            "label": "the sign-in screen still gets the code (as before)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "choosing a way that can't send is refused",
+        "checks": [
+          {
+            "label": "linked WhatsApp with no connected number is refused",
+            "ok": true,
+            "detail": "409 No WhatsApp number is linked yet — link one under WhatsApp → Numbers.",
+            "kind": "expect"
+          },
+          {
+            "label": "SMS with no gateway is refused",
+            "ok": true,
+            "detail": "409 Your SMS gateway isn't set up yet — add its details under Notifications → SMS.",
+            "kind": "expect"
+          },
+          {
+            "label": "WhatsApp Business without a template name is refused",
+            "ok": true,
+            "detail": "400 Enter the name of your approved WhatsApp template.",
+            "kind": "expect"
+          },
+          {
+            "label": "a message without {{code}} is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an unknown way is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "only people allowed to manage notifications can change it (a manager can't)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…but a manager can read it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "linked WhatsApp",
+        "checks": [
+          {
+            "label": "linked WhatsApp can be chosen once a number is online",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the request is answered 'sent' and the code is NOT returned",
+            "ok": true,
+            "detail": "{\"channel\":\"sms\",\"sent\":true,\"via\":\"linked\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "the code went out over the linked number, to the right person",
+            "ok": true,
+            "detail": "919876543210@s.whatsapp.net",
+            "kind": "expect"
+          },
+          {
+            "label": "…in the store's own words",
+            "ok": true,
+            "detail": "Your Acme code: 208060",
+            "kind": "expect"
+          },
+          {
+            "label": "…within seconds",
+            "ok": true,
+            "detail": "818 ms",
+            "kind": "expect"
+          },
+          {
+            "label": "the stored message says a code was sent — never the code itself",
+            "ok": true,
+            "detail": "🔒 Verification code",
+            "kind": "expect"
+          },
+          {
+            "label": "the code is nowhere in any stored WhatsApp message",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the stranger's chat is hidden, and sending the code didn't count as a conversation",
+            "ok": true,
+            "detail": "{\"hidden\":true}",
+            "kind": "expect"
+          },
+          {
+            "label": "…so the owner's chat list doesn't show them",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a failed code can't be re-sent from the inbox",
+            "ok": true,
+            "detail": "404",
+            "kind": "expect"
+          },
+          {
+            "label": "the test code 123456 no longer works once codes are really sent",
+            "ok": true,
+            "detail": "400",
+            "kind": "expect"
+          },
+          {
+            "label": "the code that was sent signs the customer up",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "when the store starts a real chat with that customer…",
+            "ok": true,
+            "detail": "201",
+            "kind": "expect"
+          },
+          {
+            "label": "…they show up in the inbox",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a code goes out at once even with 30 broadcast messages queued ahead of it",
+            "ok": true,
+            "detail": "200 in 1635 ms",
+            "kind": "expect"
+          },
+          {
+            "label": "…while the broadcast keeps waiting for its own slow pace",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "problems",
+        "checks": [
+          {
+            "label": "a number that isn't on WhatsApp is told so",
+            "ok": true,
+            "detail": "502 That number isn't on WhatsApp. Use a number that is.",
+            "kind": "expect"
+          },
+          {
+            "label": "past the daily cap no more codes go out (the number is protected from a flood)",
+            "ok": true,
+            "detail": "502 Too many codes have been sent today. Please try again later.",
+            "kind": "expect"
+          },
+          {
+            "label": "with the number offline the customer is asked to try later — and is NOT shown the code",
+            "ok": true,
+            "detail": "502 We can't send the code right now. Please try again in a few minutes.",
+            "kind": "expect"
+          },
+          {
+            "label": "nothing else was sent",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and 123456 does not let them in",
+            "ok": true,
+            "detail": "400",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "SMS",
+        "checks": [
+          {
+            "label": "the owner sets up the SMS gateway",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "SMS can now be chosen",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the code goes through the gateway in the 'Code message' wording",
+            "ok": true,
+            "detail": "200 Code 236431 for Acme",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "WhatsApp Business",
+        "checks": [
+          {
+            "label": "the owner adds the WhatsApp Business connection",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "WhatsApp Business can now be chosen, with a template",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Meta receives the template, language and number",
+            "ok": true,
+            "detail": "200 /v20.0/109876543/messages",
+            "kind": "expect"
+          },
+          {
+            "label": "…with the code in {{1}} and in the Copy-code button",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "without the button ticked only the body carries the code",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "staff coin codes and plan rules",
+        "checks": [
+          {
+            "label": "coin codes need a customer who has coins (a number that never ordered has none)",
+            "ok": true,
+            "detail": "404",
+            "kind": "expect"
+          },
+          {
+            "label": "a staff coin code uses the chosen way too (SMS here)",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "a store whose plan lacks WhatsApp chat can't choose linked WhatsApp",
+            "ok": true,
+            "detail": "409 WhatsApp chat isn't in this store's plan.",
+            "kind": "expect"
+          },
+          {
+            "label": "…nor SMS or WhatsApp Business (WhatsApp & SMS alerts)",
+            "ok": true,
+            "detail": "409",
+            "kind": "expect"
+          },
+          {
+            "label": "…but 'Don't send' is always allowed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "a store that turned SMS codes on the old way keeps working",
+        "checks": [
+          {
+            "label": "with no choice saved, the old 'codes by SMS' switch still counts: SMS",
+            "ok": true,
+            "detail": "{\"m\":\"sms\",\"e\":false}",
+            "kind": "expect"
+          },
+          {
+            "label": "…and codes still go out by SMS",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "once the owner chooses 'Don't send' that wins over the old switch",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
           }
         ]
       }

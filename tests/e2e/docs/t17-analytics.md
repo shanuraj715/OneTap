@@ -1,6 +1,6 @@
 # T17 — Analytics — sales, per-outlet graphs, compare outlets, best sellers + what to prepare, profit & loss, weekly/monthly/yearly exports, plan and role access
 
-**Area:** analytics · **Last result:** ✅ PASSED (93 passed, 0 failed · 2026-11-18 17:42 · headless · 1 min 10 s)
+**Area:** analytics · **Last result:** ✅ PASSED (93 passed, 0 failed · 2026-11-19 01:22 · headless · 1 min 11 s)
 
 **Run it alone:** `node run.mjs --only t17` (add `--visible` to watch it) · starts from fresh fake data
 
@@ -69,42 +69,42 @@ _Nothing failed._
 
 **Step 2 — Overview: the last 30 days match the totals worked out from the stored orders**
 
-- the figures equal the worked-out totals (Sales ₹50,184, Net sales ₹47,833, Orders 280, Items sold 539, Cancelled 31, Discounts given ₹546, Average order ₹179)
-- Sales says how it moved against the 30 days before (-3.8%) — _Sales ₹50,184 −3.8% vs the period before incl. GST_
-- the range shown is the last 30 days — _20 Oct 2026 – 18 Nov 2026 · 30 days_
+- the figures equal the worked-out totals (Sales ₹50,654, Net sales ₹48,280, Orders 281, Items sold 544, Cancelled 31, Discounts given ₹556, Average order ₹180)
+- Sales says how it moved against the 30 days before (-1.0%) — _Sales ₹50,654 −1% vs the period before incl. GST_
+- the range shown is the last 30 days — _21 Oct 2026 – 19 Nov 2026 · 30 days_
 - did not happen: cancelled orders are counted as sales (orders + cancelled would be 318)
-- the day-by-day table has 30 days that add up to 280 orders — _30 rows, 280 orders_
-- the hour-by-hour table adds up to 280 orders — _10 hours_
+- the day-by-day table has 30 days that add up to 281 orders — _30 rows, 281 orders_
+- the hour-by-hour table adds up to 281 orders — _11 hours_
 - the 'Busiest times' heat map and the order-type and payment charts are there
 
 **Step 3 — Choosing an outlet, a shorter period or custom dates changes every figure**
 
 - the Outlet box offers the whole store and each outlet — _Whole store \| Marketing Mart — Main \| Marketing Mart — Second_
-- Marketing Mart — Main alone: ₹32,376 and 172 orders
-- Marketing Mart — Second alone: ₹17,808 and 108 orders
+- Marketing Mart — Main alone: ₹33,342 and 177 orders
+- Marketing Mart — Second alone: ₹17,312 and 104 orders
 - did not happen: one outlet's page still shows the other outlet's sales or the whole store's
-- Last 7 days: ₹10,931, 61 orders
+- Last 7 days: ₹10,837, 59 orders
 - 'Custom dates…' shows two date pickers (From, To) that start from the range just used
-- picking an earlier start date in the calendar widens the figures — _471 orders from 2026-10-01_
-- custom dates 2026-11-12 to 2026-11-18, picked in the calendar, give the same ₹10,931 as 'Last 7 days'
+- picking an earlier start date in the calendar widens the figures — _478 orders from 2026-10-01_
+- custom dates 2026-11-13 to 2026-11-19, picked in the calendar, give the same ₹10,837 as 'Last 7 days'
 - Today (no paid orders yet in the sample) shows ₹0 and 0 orders, not an error
 
 **Step 4 — Sales: one line per outlet, and the order types add up**
 
 - the chart has a line for each outlet (their names are in the legend)
-- the order-types table adds up to 280 orders — _280_
-- takeaway ₹19802, delivery ₹15532, dine-in ₹14850 (store totals) — _{"t":19802,"d":15532,"i":14850}_
-- Marketing Mart — Main's rows add up to 172 orders — _172_
+- the order-types table adds up to 281 orders — _281_
+- takeaway ₹19648, delivery ₹17122, dine-in ₹13884 (store totals) — _{"t":19648,"d":17122,"i":13884}_
+- Marketing Mart — Main's rows add up to 177 orders — _177_
 - the best and quietest weekday are named
 
 **Step 5 — Items & stock: best sellers, and how much to prepare**
 
-- the best sellers run Chicken Momos 140, Paneer Steamed Momos 127, Cold Coffee 125
-- 'Every item' lists each item with its quantity (Chicken Momos = 140)
-- the prep list is for tomorrow, Thursday — _Tomorrow (Thursday): prepare about_
-- tomorrow's list matches the worked-out numbers (Paneer Steamed Momos 5, Paneer Gravy Momos 2, Veg Steamed Momos 2, Chicken Momos 3, Cold Coffee 4)
+- the best sellers run Paneer Steamed Momos 133, Cold Coffee 132, Chicken Momos 128
+- 'Every item' lists each item with its quantity (Paneer Steamed Momos = 133)
+- the prep list is for tomorrow, Friday — _Tomorrow (Friday): prepare about_
+- tomorrow's list matches the worked-out numbers (Paneer Steamed Momos 4, Paneer Gravy Momos 3, Veg Steamed Momos 3, Chicken Momos 5, Cold Coffee 5)
 - every item's seven weekday numbers match the worked-out suggestions (average of the last 6 weeks + 15%, rounded up)
-- a bigger safety margin gives a bigger number (Paneer Steamed Momos on Saturday: 6 → 8)
+- a bigger safety margin gives a bigger number (Paneer Steamed Momos on Saturday: 7 → 10)
 
 **Step 6 — Customers: who has drifted away, and 'Message them' opens Marketing**
 
@@ -113,39 +113,39 @@ _Nothing failed._
 
 **Step 7 — Compare outlets: side by side for the same dates**
 
-- Sales: Marketing Mart — Main ₹32,376, Marketing Mart — Second ₹17,808 — _["Sales","₹32,376","₹17,808 −45% vs Marketing Mart — Main"]_
-- Orders: 172 and 108 — _["Orders","172","108 −37% vs Marketing Mart — Main"]_
-- the second outlet's sales are compared with the first (-45%) — _₹17,808 −45% vs Marketing Mart — Main_
-- each outlet has its own best sellers (Paneer Steamed Momos — 107 and Chicken Momos — 66)
+- Sales: Marketing Mart — Main ₹33,342, Marketing Mart — Second ₹17,312 — _["Sales","₹33,342","₹17,312 −48% vs Marketing Mart — Main"]_
+- Orders: 177 and 104 — _["Orders","177","104 −41% vs Marketing Mart — Main"]_
+- the second outlet's sales are compared with the first (-48%) — _₹17,312 −48% vs Marketing Mart — Main_
+- each outlet has its own best sellers (Paneer Steamed Momos — 105 and Chicken Momos — 54)
 - there is a day-by-day line for each outlet
-- for 2026-11-12 to 2026-11-18, picked in the calendar, the two outlets add up to the store's ₹10,931 — _10931_
+- for 2026-11-13 to 2026-11-19, picked in the calendar, the two outlets add up to the store's ₹10,837 — _10837_
 
 **Step 8 — Operations: cancellations and discounts**
 
-- 31 orders were cancelled, 10.0% of 311 — _Cancelled orders 31 10.0% of 311 orders_
-- coupon discounts are ₹546
+- 31 orders were cancelled, 9.9% of 312 — _Cancelled orders 31 9.9% of 312 orders_
+- coupon discounts are ₹556
 - kitchen speed and the coupon table are shown
 
 **Step 9 — Profit & loss: type the monthly bills once, get the profit**
 
 - the 'Shared by every outlet' list adds up to ₹2,500 a month — _₹2,500_
-- net profit = 47833 net sales − 35% food − 22500 a month × 0.987 months = ₹8882 — _saw 8882_
+- net profit = 48280 net sales − 35% food − 22500 a month × 0.988 months = ₹9148 — _saw 9148_
 - it is called a profit (not a loss)
 - the table lists every bill by name with its share for these days
-- profit by outlet: Marketing Mart — Main ≈ ₹5642, Marketing Mart — Second ≈ ₹3239 (own bills + a share of the shared ones by sales)
-- a bill added by hand counts (₹1,000 a month more) — _saw 7895_
+- profit by outlet: Marketing Mart — Main ≈ ₹6192, Marketing Mart — Second ≈ ₹2956 (own bills + a share of the shared ones by sales)
+- a bill added by hand counts (₹1,000 a month more) — _saw 8160_
 - did not happen: the removed bill still counts in the profit
-- food cost 30% instead of 35% raises the profit to match — _saw 11273_
+- food cost 30% instead of 35% raises the profit to match — _saw 11562_
 
 **Step 10 — The bills are remembered; 'Save to my store' keeps a copy for other devices**
 
 - after a reload the rent typed for the first outlet is still there — _5000_
-- …and so is the profit — _saw 8882_
+- …and so is the profit — _saw 9148_
 - 'Save to my store' says it was saved — _Saved to your store — any device you sign in on will have these numbers._
 - with the browser's memory wiped (a new device) the saved bills load by themselves — _Loaded the numbers saved to your store._
-- …and the profit is the same again — _saw 8882_
-- changing a bill changes the profit — _saw 3947_
-- 'Use the version saved to my store' puts the saved bill back — _saw 8882_
+- …and the profit is the same again — _saw 9148_
+- changing a bill changes the profit — _saw 4209_
+- 'Use the version saved to my store' puts the saved bill back — _saw 9148_
 
 **Step 11 — Reports: this week / last week / this month / last month / this year / last year**
 
@@ -153,34 +153,34 @@ _Nothing failed._
 
 **Step 12 — Reports: Excel — a sheet per section with the right totals**
 
-- the file is named like a report and ends .xlsx — _tablepe-marketing-mart-2026-10-20_to_2026-11-18.xlsx_
+- the file is named like a report and ends .xlsx — _tablepe-marketing-mart-2026-10-21_to_2026-11-19.xlsx_
 - there is a sheet for each chosen section
 - did not happen: a section that was not chosen (Sales by hour, Every order) is in the file
-- Summary: sales 50184, net 47832.87, GST 2351.13, orders 280, cancelled 31
-- 'Sales by day' has 30 days adding up to ₹50184 — _30 rows_
-- the GST sheet's days add up to ₹2351.13 GST, and its Total row says ₹2351.13 too — _29 days, total row ["Total",280,47032.87,1175.02,1176.11,2351.13,0,50184]_
-- the Profit & loss sheet uses the bills typed earlier: net profit ≈ ₹8882 — _sheet says 8881.69_
+- Summary: sales 50654, net 48280.45, GST 2373.55, orders 281, cancelled 31
+- 'Sales by day' has 30 days adding up to ₹50654 — _30 rows_
+- the GST sheet's days add up to ₹2373.55 GST, and its Total row says ₹2373.55 too — _29 days, total row ["Total",281,47480.45,1186.17,1187.38,2373.55,0,50654]_
+- the Profit & loss sheet uses the bills typed earlier: net profit ≈ ₹9148 — _sheet says 9148.42_
 
 **Step 13 — Reports: one outlet as CSV, and PDF and JSON**
 
 - the CSV has a header and one row per day, with the BOM Excel needs — _Day,Orders,Sales (incl. GST),Net sales_
-- Marketing Mart — Main's CSV adds up to ₹32376 and 172 orders (not the whole store's)
+- Marketing Mart — Main's CSV adds up to ₹33342 and 177 orders (not the whole store's)
 - did not happen: the outlet's CSV contains the whole store's sales
-- the weekly PDF is a real PDF file — _6949 bytes_
+- the weekly PDF is a real PDF file — _7168 bytes_
 - the yearly JSON says 2026-01-01 to 2026-12-31 for the whole store — _[{"from":"2026-01-01","to":"2026-12-31"},"Whole store"]_
-- …and its summary holds at least the last 30 days' sales (the whole year includes them) — _123455_
+- …and its summary holds at least the last 30 days' sales (the whole year includes them) — _123960_
 
 **Step 14 — GST and the daily cash close agree**
 
-- the GST total row: 280 orders, taxable ₹47,033, CGST ₹1,175, SGST ₹1,176, GST ₹2,351 — _Total 280 ₹47,033 ₹1,175 ₹1,176 ₹2,351 ₹50,184_
-- the cash close for 2026-11-17, picked in the calendar, equals that day's invoice total in the GST table (₹1042) — _₹1,042 vs 1042_
+- the GST total row: 281 orders, taxable ₹47,480, CGST ₹1,186, SGST ₹1,187, GST ₹2,374 — _Total 281 ₹47,480 ₹1,186 ₹1,187 ₹2,374 ₹50,654_
+- the cash close for 2026-11-18, picked in the calendar, equals that day's invoice total in the GST table (₹1310) — _₹1,310 vs 1310_
 
 **Step 15 — Who can see what: manager, accountant, cashier**
 
 - the manager has Analytics in the sidebar
 - …with Overview, Sales, Items & stock, Customers, Compare outlets and Operations
 - did not happen: the manager is offered Profit & loss or Reports
-- …and sees the same sales (₹50,184)
+- …and sees the same sales (₹50,654)
 - /analytics/profit is a 404 for the manager
 - did not happen: the manager sees the profit screen
 - /analytics/reports is a 404 for the manager
@@ -207,6 +207,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-19 01:22 | pass | 93 | 0 | headless | 1 min 11 s |
+| 2026-11-19 01:13 | fail | 92 | 1 | headless | 1 min 10 s |
 | 2026-11-18 17:42 | pass | 93 | 0 | headless | 1 min 10 s |
 | 2026-11-18 15:06 | pass | 93 | 0 | headless | 1 min 10 s |
 | 2026-11-18 14:32 | pass | 93 | 0 | headless | 1 min 9 s |
@@ -215,8 +217,6 @@ _Nothing failed._
 | 2026-11-18 13:54 | fail | 92 | 1 | headless | 1 min 10 s |
 | 2026-11-16 03:18 | pass | 93 | 0 | headless | 1 min 11 s |
 | 2026-11-16 03:04 | pass | 93 | 0 | headless | 1 min 10 s |
-| 2026-11-16 03:02 | fail | 92 | 1 | headless | 1 min 10 s |
-| 2026-11-16 03:00 | error | 73 | 3 | headless | 58.7 s |
 
 ---
 _Generated by `tests/e2e/run.mjs` — edit the test file (`tests/t17-analytics.mjs`), not this page._

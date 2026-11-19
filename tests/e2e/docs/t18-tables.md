@@ -1,6 +1,6 @@
 # T18 — Tables — add a table (number, zone, seats), zones, limits and duplicates, QR panel, remove, per-outlet and per-store, who can manage
 
-**Area:** tables · **Last result:** ✅ PASSED (54 passed, 0 failed · 2026-11-18 17:43 · headless · 44.1 s)
+**Area:** tables · **Last result:** ✅ PASSED (54 passed, 0 failed · 2026-11-19 01:14 · headless · 45.3 s)
 
 **Run it alone:** `node run.mjs --only t18` (add `--visible` to watch it) · starts from fresh fake data
 
@@ -82,9 +82,9 @@ _Nothing failed._
 
 **Step 4 — A table's panel: QR image, address, download, rotate, remove**
 
-- the panel says 'Table T9' and 'Rooftop · 6 seats · Free' — _Table T9 Rooftop · 6 seats · Free http://localhost:3170/t/6afd963d749209d7b356aa_
+- the panel says 'Table T9' and 'Rooftop · 6 seats · Free' — _Table T9 Rooftop · 6 seats · Free http://localhost:3170/t/6afdffe6c2a24202b5f59d_
 - it shows a QR image (a real 512-pixel picture, labelled for screen readers)
-- the address printed under it is /t/<id>?k=<code> on the store's own site — _http://localhost:3170/t/6afd963d749209d7b356aa70?k=i81j9HDYN_xmAHcYv5mKCpwJ_
+- the address printed under it is /t/<id>?k=<code> on the store's own site — _http://localhost:3170/t/6afdffe6c2a24202b5f59d49?k=QcYuMfKDgvaDhyTznXAkHmwa_
 - 'Download PNG' is named table-T9-qr.png
 - …and the file that downloads is a real PNG
 - 'Rotate code', 'Remove table', 'Done' and the link to the card designer are there
@@ -133,6 +133,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-19 01:14 | pass | 54 | 0 | headless | 45.3 s |
 | 2026-11-18 17:43 | pass | 54 | 0 | headless | 44.1 s |
 | 2026-11-18 15:20 | pass | 54 | 0 | visible | 3 min 27 s |
 | 2026-11-18 15:07 | pass | 54 | 0 | headless | 44.0 s |

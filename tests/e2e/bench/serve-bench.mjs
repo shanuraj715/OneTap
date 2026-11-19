@@ -32,6 +32,7 @@ Object.assign(process.env, {
   MONGODB_DB: "bench",
   WHATSAPP_WORKER: "off",
   MAPS_RESOLVE_ALLOW_LOCAL: "1", // the onboarding form may follow a "short map link" to a local stand-in for Google (a test runs one)
+  WHATSAPP_GRAPH_URL: "http://127.0.0.1:3096", // WhatsApp Business (Meta) goes to a stand-in a test may run on this port
   MARKETING_WORKER: "on", // the bench is throwaway, so it may send (to the fake SMS gateway a test starts)
   STORE_SUBDOMAIN_BASE: "localhost:3170", // store addresses like  acme.localhost:3170  (Chrome opens *.localhost with no DNS)
   CORS_ORIGINS: "http://localhost:3171,http://127.0.0.1:3171",
@@ -55,6 +56,60 @@ await new Promise((r) => server.once("listening", r));
 (await import(`${API}/src/realtime/preview.js`)).attachPreview(server);
 // the marketing sender (SMS / WhatsApp Business API) — on here because the bench is throwaway
 (await import(`${API}/src/modules/marketing/worker.js`)).startMarketingWorker();
+// A stand-in for a CONNECTED linked WhatsApp number: the real worker would need a phone to scan. A test switches a number
+// "on" (it is marked connected, and a fake connection sends its queued messages exactly like the worker does) and reads
+// what it "sent". Control port 3095:  POST /wa/online?account=ID  ·  POST /wa/offline?account=ID  ·  POST /wa/reset?brand=ID  ·  GET /wa/sent  ·  POST /wa/clear
+{
+  const worker = await import(`${API}/src/modules/whatsapp/worker.js`);
+  const { createServer } = await import("node:http");
+  const rawc = (c) => db.mongoose.connection.db.collection(c);
+  const sentByNumber = [];
+  const live = new Map();
+  const fakeSock = (phone) => ({
+    user: { id: `${phone}:1@s.whatsapp.net`, name: "Shop" },
+    onWhatsApp: async (jid) => [{ exists: !jid.split("@")[0].endsWith("0000"), jid }], // a number ending 0000 is "not on WhatsApp"
+    sendPresenceUpdate: async () => {},
+    sendMessage: async (jid, content, opts) => { sentByNumber.push({ jid, text: content.text ?? "", id: opts?.messageId, at: new Date().toISOString() }); return { key: { id: opts?.messageId } }; },
+    end() {},
+  });
+  createServer(async (rq, rs) => {
+    const u = new URL(rq.url, "http://x");
+    const account = u.searchParams.get("account");
+    const send = (j) => { rs.setHeader("content-type", "application/json"); rs.end(JSON.stringify(j)); };
+    try {
+      if (rq.method === "POST" && u.pathname === "/wa/online") {
+        const oid = new db.mongoose.Types.ObjectId(account);
+        const acc = await rawc("waaccounts").findOne({ _id: oid });
+        const phone = acc?.phone || "919000000001";
+        await rawc("waaccounts").updateOne({ _id: oid }, { $set: { status: "connected", phone, seenAt: new Date(), qr: "" } });
+        const entry = { sock: fakeSock(phone), brandId: acc.brandId, connected: true, busy: false };
+        worker.__test.sockets.set(account, entry);
+        live.get(account) && clearInterval(live.get(account));
+        live.set(account, setInterval(() => {
+          rawc("waaccounts").updateOne({ _id: oid }, { $set: { seenAt: new Date() } }).catch(() => {});
+          worker.__test.sendNext(account, entry).catch(() => {});
+        }, 300));
+        return send({ ok: true });
+      }
+      if (rq.method === "POST" && u.pathname === "/wa/offline") {
+        live.get(account) && clearInterval(live.get(account));
+        live.delete(account);
+        worker.__test.sockets.delete(account);
+        await rawc("waaccounts").updateOne({ _id: new db.mongoose.Types.ObjectId(account) }, { $set: { status: "disconnected" } });
+        return send({ ok: true });
+      }
+      if (rq.method === "POST" && u.pathname === "/wa/reset") {
+        // every number of one store goes back to "waiting for a scan" (the seeded ones look online for their first 90 s)
+        for (const [id, t] of live) { clearInterval(t); live.delete(id); worker.__test.sockets.delete(id); }
+        await rawc("waaccounts").updateMany({ brandId: u.searchParams.get("brand") }, { $set: { status: "pending", seenAt: null } });
+        return send({ ok: true });
+      }
+      if (u.pathname === "/wa/sent") return send(sentByNumber);
+      if (rq.method === "POST" && u.pathname === "/wa/clear") { sentByNumber.length = 0; return send({ ok: true }); }
+      rs.statusCode = 404; rs.end("{}");
+    } catch (e) { rs.statusCode = 500; send({ error: String(e?.message ?? e) }); }
+  }).listen(3095, "127.0.0.1");
+}
 const { ensureSuperAdmin } = await import(`${API}/src/modules/auth/auth.service.js`);
 await ensureSuperAdmin({ email: "super@sandbox.test", name: "Platform Admin", password: "Super123!" });
 const { FEATURE_KEYS } = await import(`${REPO}/packages/config-schema/src/index.js`);

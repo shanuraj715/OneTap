@@ -114,7 +114,10 @@ export async function run(d, h) {
   const bad30 = await tilesAre(want30);
   d.check(`the figures equal the worked-out totals (${Object.entries(want30).map(([k, v]) => `${k} ${v}`).join(", ")})`, bad30.length === 0, bad30.join("; "));
   const drop = ((A.last30.sales - A.prev30.sales) / A.prev30.sales) * 100;
-  d.check(`Sales says how it moved against the 30 days before (${drop.toFixed(1)}%)`, new RegExp(`[−-]\\s?${Math.abs(drop).toFixed(1).replace(".", "\\.")}%`).test(await tileText("Sales")), await tileText("Sales"));
+  // the page drops a trailing ".0" ("−1%", not "−1.0%"), so either spelling is right
+  const dropDigits = Math.abs(drop).toFixed(1);
+  const dropPattern = dropDigits.endsWith(".0") ? `${dropDigits.slice(0, -2)}(\\.0)?` : dropDigits.replace(".", "\\.");
+  d.check(`Sales says how it moved against the 30 days before (${drop.toFixed(1)}%)`, new RegExp(`[−-]\\s?${dropPattern}%`).test(await tileText("Sales")), await tileText("Sales"));
   d.check("the range shown is the last 30 days", new RegExp(`${longDate(A.last30.from).replace(/^0/, "")} – ${longDate(A.last30.to)} · 30 days`).test(await d.page.locator("[data-range-text]").innerText()), await d.page.locator("[data-range-text]").innerText());
   d.never("cancelled orders are counted as sales (orders + cancelled would be 318)", (await tileValue("Orders")) === String(A.last30.placed));
   const days = await openTable("Sales over time");

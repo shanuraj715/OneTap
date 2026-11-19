@@ -1,6 +1,6 @@
 # T21 — Client onboarding form — plan first, plan-fit alerts and 'allow anyway', full form, save / reset / cancel, PDF + print, publish as store
 
-**Area:** onboarding · **Last result:** ✅ PASSED (120 passed, 0 failed · 2026-11-18 17:53 · visible · 4 min 13 s)
+**Area:** onboarding · **Last result:** ✅ PASSED (120 passed, 0 failed · 2026-11-19 01:19 · headless · 51.8 s)
 
 **Run it alone:** `node run.mjs --only t21` (add `--visible` to watch it) · starts from fresh fake data
 
@@ -125,7 +125,7 @@ _Nothing failed._
 **Step 5 — Save, list, reopen — every answer is still there**
 
 - before saving the form says 'Not saved yet'
-- Save: 'Saved.' and the form is now a saved draft with its own address — _http://localhost:3171/platform/onboarding/6afd9825b4ab6b05718752bc_
+- Save: 'Saved.' and the form is now a saved draft with its own address — _http://localhost:3171/platform/onboarding/6afe011c928f6af5e460806a_
 - the Save button is disabled again — nothing has changed since
 - the list shows 'Onboard Cafe' as a Draft on Starter with 2 outlets — _Onboard Cafe with Rep One Plan Starter Outlets 2 Draft just now_
 - with counts All 1 · Drafts 1 · Published 0
@@ -215,6 +215,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-19 01:19 | pass | 120 | 0 | headless | 51.8 s |
 | 2026-11-18 17:53 | pass | 120 | 0 | visible | 4 min 13 s |
 | 2026-11-18 17:48 | pass | 118 | 0 | headless | 52.8 s |
 | 2026-11-18 17:28 | pass | 118 | 0 | headless | 52.9 s |

@@ -1,6 +1,6 @@
 # T22 — Onboarding price estimate — price list, plan + extras, Custom starts above the dearest plan, discount / GST / yearly, the Custom plan, plan dialog
 
-**Area:** onboarding · **Last result:** ✅ PASSED (55 passed, 0 failed · 2026-11-18 17:56 · visible · 3 min 17 s)
+**Area:** onboarding · **Last result:** ✅ PASSED (55 passed, 0 failed · 2026-11-19 01:19 · headless · 35.8 s)
 
 **Run it alone:** `node run.mjs --only t22` (add `--visible` to watch it) · starts from fresh fake data
 
@@ -128,10 +128,10 @@ _Nothing failed._
 
 **Step 10 — The New plan dialog: tidy limits, Save always in reach, room for the dropdown arrow**
 
-- the 'Multi-outlet' box sits directly under the people limit, on the same left edge — _people x=691 y=381 · multi x=695 y=432_
-- 'Unlimited' is on the same line as the people number — _391 vs 381_
-- ticking Multi-outlet shows the 'Outlets' limit below it, aligned with the others — _691 vs 691_
-- 'Save plan' is in view without scrolling the dialog (it stays at the bottom) — _button at y=1088–1117 of 1202_
+- the 'Multi-outlet' box sits directly under the people limit, on the same left edge — _people x=381 y=323 · multi x=385 y=376_
+- 'Unlimited' is on the same line as the people number — _333 vs 323_
+- ticking Multi-outlet shows the 'Outlets' limit below it, aligned with the others — _383 vs 381_
+- 'Save plan' is in view without scrolling the dialog (it stays at the bottom) — _button at y=811–840 of 900_
 - a dropdown (the Plan box) has room for its arrow: more padding on the right than the left, its own arrow drawn — _{"pr":32,"pl":10,"bg":"url(\"data:im","app":"none"}_
 - did not happen: the browser logged JavaScript errors
 
@@ -139,6 +139,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-19 01:19 | pass | 55 | 0 | headless | 35.8 s |
 | 2026-11-18 17:56 | pass | 55 | 0 | visible | 3 min 17 s |
 | 2026-11-18 17:49 | pass | 55 | 0 | headless | 35.4 s |
 | 2026-11-18 17:26 | pass | 55 | 0 | headless | 34.9 s |
