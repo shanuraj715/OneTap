@@ -103,7 +103,7 @@ p { margin: 0; text-wrap: pretty; }
 @supports (backdrop-filter: blur(1px)) {
   .site-header { background: color-mix(in srgb, var(--paper) 82%, transparent); backdrop-filter: saturate(1.4) blur(12px); }
 }
-.site-header .wrap { display: flex; align-items: center; gap: 24px; min-height: 68px; }
+.site-header .wrap { display: flex; align-items: center; gap: 24px; min-height: 68px; position: relative; }
 .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--font-display); font-weight: 800; font-size: 21px; letter-spacing: -0.03em; }
 .brand-mark { width: 26px; height: 26px; border-radius: 7px; background: var(--brand); position: relative; flex-shrink: 0; }
 .brand-mark::before, .brand-mark::after { content: ""; position: absolute; background: var(--brand-ink); border-radius: 2px; }
@@ -111,8 +111,8 @@ p { margin: 0; text-wrap: pretty; }
 .brand-mark::after { right: 6px; bottom: 6px; width: 4px; height: 4px; }
 .brand img { height: 30px; width: auto; }
 .nav { display: none; gap: 4px; margin-left: auto; }
-.nav a { text-decoration: none; padding: 8px 12px; border-radius: 999px; font-size: 15px; font-weight: 500; color: var(--ink-2); }
-.nav a:hover { background: color-mix(in srgb, var(--ink) 6%, transparent); color: var(--ink); }
+.nav > a { text-decoration: none; padding: 8px 12px; border-radius: 999px; font-size: 15px; font-weight: 500; color: var(--ink-2); }
+.nav > a:hover { background: color-mix(in srgb, var(--ink) 6%, transparent); color: var(--ink); }
 .header-cta { display: none; }
 .menu { margin-left: auto; position: relative; }
 .menu summary { list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 14px; border: 1px solid var(--line); border-radius: 999px; font-weight: 600; font-size: 14.5px; background: var(--surface); }
@@ -359,19 +359,21 @@ p { margin: 0; text-wrap: pretty; }
 .hero-note svg { color: var(--veg); }
 
 /* ------------------------------------------------------------- nav: Product */
-.dd { position: relative; }
+.dd { position: static; } /* the panel is placed against the header row (below), so a wide panel can never run off the window's right edge */
 .dd-btn { cursor: pointer; display: inline-flex; align-items: center; gap: 4px; padding: 8px 12px; border: 0; background: transparent; border-radius: 999px; font: 500 15px/1.6 var(--font-body), sans-serif; color: var(--ink-2); }
 .dd:hover .dd-btn, .dd:focus-within .dd-btn { background: color-mix(in srgb, var(--ink) 6%, transparent); color: var(--ink); }
 .dd-btn svg { transition: transform 160ms ease; }
 .dd:hover .dd-btn svg, .dd:focus-within .dd-btn svg { transform: rotate(180deg); }
-.dd-panel { display: none; position: absolute; left: -8px; top: calc(100% + 10px); width: 420px; padding: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); grid-template-columns: 1fr 1fr; gap: 4px; z-index: 50; }
-.dd-panel::before { content: ""; position: absolute; left: 0; right: 0; top: -12px; height: 12px; } /* hover bridge */
+.dd-panel { display: none; position: absolute; right: var(--gutter); top: calc(100% + 4px); width: min(580px, calc(100vw - 2 * var(--gutter))); padding: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); grid-template-columns: 1fr 1fr; gap: 4px; z-index: 50; }
+.dd-panel::before { content: ""; position: absolute; left: 0; right: 0; top: -24px; height: 24px; } /* hover bridge: the pointer can travel from the button down into the panel */
 .dd:hover .dd-panel, .dd:focus-within .dd-panel { display: grid; }
-.dd-item { display: grid; grid-template-columns: 34px 1fr; gap: 10px; align-items: start; padding: 10px; border-radius: 10px; text-decoration: none; }
-.dd-item:hover { background: var(--paper); }
+.dd-item { display: grid; grid-template-columns: 34px 1fr; gap: 12px; align-items: start; padding: 10px 12px; border-radius: 12px; text-decoration: none; color: inherit; transition: background-color 140ms ease; }
+.dd-item:hover, .dd-item:focus-visible { background: var(--paper); }
+.dd-item:focus-visible { outline: 2px solid var(--brand); outline-offset: -2px; }
 .dd-item b { display: block; font-size: 14.5px; font-weight: 600; color: var(--ink); }
 .dd-item small { display: block; font-size: 12.5px; line-height: 1.35; color: var(--muted); margin-top: 2px; }
-.dd-icon { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: var(--brand-wash); color: var(--brand); }
+.dd-icon { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: var(--brand-wash); color: var(--brand); transition: background-color 140ms ease, color 140ms ease; }
+.dd-item:hover .dd-icon, .dd-item:focus-visible .dd-icon { background: var(--brand); color: var(--brand-ink); }
 .menu-label { font-size: 11.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 10px 14px 4px; }
 .menu-panel a.menu-sub { display: flex; align-items: center; gap: 10px; }
 .menu-panel a.menu-sub svg { color: var(--brand); }
