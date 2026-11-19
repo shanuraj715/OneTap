@@ -18,7 +18,7 @@ export const meta = {
     "Each outlet has its own menu on its own storefront page, and its own settings; saving one outlet changes nothing on the others.",
     "Every saved setting shows exactly the same after reloading Settings.",
     "Delivery: the storefront tells a customer inside the radius 'We deliver here' with that outlet's fee and distance, and one outside the radius that delivery isn't possible.",
-    "Load management: at the busy threshold checkout shows the outlet's own 'busy' message; at the stop threshold the stop message appears and Delivery can no longer be chosen; after the orders are cancelled it returns to normal.",
+    "Load management: at the busy threshold checkout shows the outlet's own 'busy' message; at the stop threshold the stop message appears and Delivery is still listed but greyed out, so it can no longer be chosen; after the orders are cancelled it returns to normal.",
     "A Pro store gets 3 outlets and every feature; a Custom store starts with nothing and gets exactly what the platform sets by hand.",
   ],
   expectNot: [
@@ -193,8 +193,11 @@ export async function run(d, h) {
   const sawStop = await banner(/Second is not taking orders\./);
   d.check("4 orders: checkout shows Second's own 'not taking orders' message", sawStop);
   const bodyStop = await ui.text(d);
-  const deliveryChoice = await d.page.getByRole("button", { name: /Delivery/ }).first().isVisible().catch(() => false);
-  d.never("a customer can still choose Delivery while load management has it stopped", deliveryChoice && /How would you like it/.test(bodyStop));
+  const deliveryButton = d.page.getByRole("group", { name: "Order type" }).getByRole("button", { name: "Delivery" });
+  const deliveryListed = await deliveryButton.isVisible().catch(() => false);
+  const deliveryChoice = deliveryListed && (await deliveryButton.isEnabled().catch(() => false));
+  d.check("Delivery is still listed in checkout but greyed out while load management has it stopped", deliveryListed && /How would you like it/.test(bodyStop) && !deliveryChoice);
+  d.never("a customer can still choose Delivery while load management has it stopped", deliveryChoice);
   await d.shot("load-stopped");
   d.check("Central (busy only at 5 orders) shows no load message", await (async () => { await d.goto(`${SUB_URL}/central`, 300); await ui.addToCart(d, "Veg Burger"); await d.click(d.page.getByRole("link", { name: /View cart/ }), { after: 600 }); return !/busy right now|not taking orders/.test(await ui.text(d)); })());
 

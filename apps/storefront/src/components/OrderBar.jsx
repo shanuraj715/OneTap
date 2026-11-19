@@ -21,6 +21,8 @@ import { useUserLocation } from "@/lib/useUserLocation";
  */
 
 const TYPE_ICON = { takeaway: ShoppingBag, delivery: Bike };
+/** the switch always shows BOTH, in this order — one an outlet doesn't offer is shown greyed out and can't be chosen */
+const SWITCH_TYPES = ["takeaway", "delivery"];
 const CHOICE_COOKIE = "onetap_outlet_slug"; // the same cookie the "which location?" page remembers a choice in
 
 const kmText = (km) => (km < 0.1 ? "under 0.1 km" : km < 10 ? `${km.toFixed(1)} km` : `${Math.round(km)} km`);
@@ -99,7 +101,7 @@ export function OrderBar({ current, outlets }) {
 
   if (!here) return null;
   const several = outlets.length > 1;
-  if (!several && offered.length < 2) return null; // nothing for the visitor to choose
+  if (!several && offered.length < 1) return null; // nothing to order online here at all
 
   const mine = rows.find((r) => r.outlet.id === here.id);
   const myNote = mine?.note;
@@ -109,17 +111,35 @@ export function OrderBar({ current, outlets }) {
     <section aria-label="How would you like your order?" className="ot-fx-bar" style={fx("bar", bar)}>
       <div className="ot-page-px" style={inner}>
         <div style={controls}>
-          {offered.length > 1 ? (
-            <div role="group" aria-label="Order type" style={segmented}>
-              {offered.map((t) => {
-                const Icon = TYPE_ICON[t];
-                const active = type === t;
-                return (
-                  <button key={t} type="button" aria-pressed={active} onClick={() => choose(t)} className="ot-fx-chip" style={fx("chip", { ...segBtn, ...(active ? segActive : null) })}>
-                    <Icon size={16} aria-hidden="true" /> {ORDER_TYPE_LABELS[t]}
-                  </button>
-                );
-              })}
+          {offered.length > 0 ? (
+            <div style={switchWrap}>
+              <div role="group" aria-label="Order type" style={segmented}>
+                {SWITCH_TYPES.map((t) => {
+                  const Icon = TYPE_ICON[t];
+                  const available = offered.includes(t);
+                  const active = available && type === t;
+                  return (
+                    <button
+                      key={t}
+                      type="button"
+                      disabled={!available}
+                      aria-pressed={active}
+                      title={available ? undefined : `${ORDER_TYPE_LABELS[t]} isn't available from this outlet`}
+                      onClick={() => available && choose(t)}
+                      className="ot-fx-chip"
+                      data-unavailable={available ? undefined : "true"}
+                      style={fx("chip", { ...segBtn, ...(active ? segActive : null), ...(available ? null : segOff) })}
+                    >
+                      <Icon size={16} aria-hidden="true" /> {ORDER_TYPE_LABELS[t]}
+                    </button>
+                  );
+                })}
+              </div>
+              {SWITCH_TYPES.some((t) => !offered.includes(t)) ? (
+                <p style={offHint} data-testid="order-type-hint">
+                  {SWITCH_TYPES.filter((t) => !offered.includes(t)).map((t) => ORDER_TYPE_LABELS[t]).join(" and ")} isn&apos;t available from this outlet.
+                </p>
+              ) : null}
             </div>
           ) : null}
 
@@ -223,7 +243,11 @@ const bar = { background: "var(--color-bg)", borderBottom: "1px solid var(--colo
 const inner = { maxWidth: 1080, margin: "0 auto", padding: "12px 18px", display: "flex", flexDirection: "column", gap: 10 };
 const controls = { display: "flex", flexWrap: "wrap", alignItems: "stretch", gap: 10 };
 // fills the row on a phone (it wraps onto its own line there); stays a compact switch on a wide screen
-const segmented = { display: "flex", gap: 6, padding: 4, borderRadius: 14, background: "var(--color-surface)", border: "1px solid var(--color-border)", flex: "1 1 260px", maxWidth: 360 };
+const switchWrap = { flex: "1 1 260px", maxWidth: 360, display: "flex", flexDirection: "column", gap: 6 };
+const segmented = { display: "flex", gap: 6, padding: 4, borderRadius: 14, background: "var(--color-surface)", border: "1px solid var(--color-border)" };
+// an order type this outlet doesn't offer: visible, but plainly off
+const segOff = { opacity: 0.45, cursor: "not-allowed", background: "transparent", color: "var(--color-text-muted)", boxShadow: "none" };
+const offHint = { margin: 0, fontSize: 12.5, lineHeight: 1.4, color: "var(--color-text-muted)" };
 const segBtn = {
   font: "inherit",
   display: "inline-flex",

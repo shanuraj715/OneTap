@@ -13,7 +13,7 @@ export const meta = {
   expect: [
     "Right after the downgrade the platform page shows the store over its limits with a grace deadline; the owner's dashboard shows 'Everything keeps working until …'.",
     "During grace all 3 outlets still open for customers and accept orders; the owner can still sign in and change settings.",
-    "Locked on Basic: 'Add outlet' is greyed out, creating a coupon is refused, customers are no longer offered Delivery — while .",
+    "Locked on Basic: 'Add outlet' is greyed out, creating a coupon is refused, customers can no longer choose Delivery (it is still listed, but greyed out) — while .",
     "After the grace period the owner's notice says the grace period ended; still nothing is blocked automatically.",
     "Disabling outlet 3: its page says 'This outlet is temporarily unavailable' with no menu; outlets 1 and 2 are unaffected; enabling it again brings the menu back.",
   ],
@@ -39,7 +39,7 @@ export async function run(d, h) {
   await d.step("Before: the store is on Pro and customers can choose Delivery");
   const p0 = await ui.storeUsageText(d, W.store);
   d.check("the platform shows Pro with 3 of 3 outlets and no grace period", p0.includes(PLAN.pro) && /Outlets\s*3\s*\/\s*3/.test(p0) && !/grace period|Over its limits/i.test(p0), p0.match(/Within plan[^]{0,60}/)?.[0]);
-  d.check("customers are offered Delivery at Central", /Delivery/.test(await orderChoices("central")), await orderChoices("central"));
+  d.check("customers are offered Delivery at Central (and can choose it)", /Delivery/.test(await orderChoices("central")) && (await d.page.getByRole("group", { name: "Order type" }).getByRole("button", { name: "Delivery" }).isEnabled()), await orderChoices("central"));
   await asSuper();
   await ui.setGraceDays(d, 7);
   await ui.openPlatform(d, "/settings");
@@ -82,7 +82,11 @@ export async function run(d, h) {
     const page = await customer(`${SUB_URL}/${slug}`);
     d.check(`outlet "${slug}" still opens`, page.status === 200 && page.text.includes(o.title) && !/temporarily unavailable/.test(page.text));
   }
-  d.never("customers are still offered Delivery", /Delivery/.test(await orderChoices("central")), await orderChoices("central"));
+  // Delivery is still SHOWN (the switch always lists both) but is switched off: it can't be chosen
+  await orderChoices("central");
+  const orderGroup = d.page.getByRole("group", { name: "Order type" });
+  d.check("Delivery is still listed, but greyed out and can't be chosen", (await orderGroup.getByRole("button", { name: "Delivery" }).isDisabled()) && (await orderGroup.getByRole("button", { name: "Takeaway" }).isEnabled()), await orderChoices("central"));
+  d.never("customers can still choose Delivery", await orderGroup.getByRole("button", { name: "Delivery" }).isEnabled());
   const order1 = await ui.placeTakeaway(d, `${SUB_URL}/second`, [{ name: "Margherita Pizza" }], { name: "Grace Customer", phone: "9811100010" });
   d.check("a customer can still place a takeaway order at outlet 2", /^\d+$/.test(order1), `order #${order1}`);
 
