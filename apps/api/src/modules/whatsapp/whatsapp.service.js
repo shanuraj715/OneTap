@@ -1,3 +1,4 @@
+import { randomInt } from "node:crypto";
 import {
   formatINR,
   normalizeWaPhone,
@@ -189,6 +190,15 @@ async function pickOnlineAccount(ctx) {
   const online = (await WaAccountModel.find({ brandId: ctx.brandId, status: "connected" }).lean()).filter(isOnline);
   online.sort((a, b) => (a.coldDay === day ? a.coldCount : 0) - (b.coldDay === day ? b.coldCount : 0));
   return online[0] ?? null;
+}
+
+/**
+ * A random online number — for verification codes. A code doesn't need the number the customer last talked to, and
+ * picking at random keeps any one number from carrying every sign-in (and every ban risk).
+ */
+async function pickRandomOnlineAccount(ctx) {
+  const online = (await WaAccountModel.find({ brandId: ctx.brandId, status: "connected" }).lean()).filter(isOnline);
+  return online.length ? online[randomInt(online.length)] : null;
 }
 
 /* ------------------------------------------------------------------- chats */
@@ -626,9 +636,8 @@ export async function sendCodeLinked(brandId, rawPhone, text) {
       { $setOnInsert: { brandId: ctx.brandId, phone, hidden: true } },
       { upsert: true, new: true },
     ).lean();
-    // the number they last talked to, if it's online; otherwise any online number
-    let account = chat.accountId ? await WaAccountModel.findOne({ _id: chat.accountId, brandId: ctx.brandId }).lean() : null;
-    if (!isOnline(account)) account = await pickOnlineAccount(ctx);
+    // any online number, picked at random
+    const account = await pickRandomOnlineAccount(ctx);
     if (!account) return { ok: false, reason: "no linked WhatsApp number is online", userMessage: UNAVAILABLE };
 
     const msg = await WaMessageModel.create({

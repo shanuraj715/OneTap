@@ -2,12 +2,15 @@ import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import QRCode from "qrcode";
 import { formatWaPhone, WA_NUMBER_COLORS, WA_PACING, waTextOn } from "@onetap/config-schema";
-import { ArrowRight, Link2, Pencil, Plus, RefreshCw, Shuffle, Smartphone, Trash2, Unlink } from "lucide-react";
+import { AlertTriangle, ArrowRight, KeyRound, Link2, Pencil, Plus, RefreshCw, Shuffle, Smartphone, Trash2, Unlink } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useAuth } from "../../lib/useAuth";
+import { useMessaging, useSaveMessaging } from "../../lib/useNotify";
 import { useOutlet } from "../../lib/useOutlet";
 import { NumberChip, WaConfirm } from "./WaConfirm";
 import * as api from "../../lib/api";
 import { useWaAccounts, useWaAction } from "../../lib/useWhatsApp";
-import { Button, Card, Modal, Pill, Select, TextInput, Toast } from "../../ui";
+import { Button, Card, Checkbox, Modal, Note, Pill, Select, TextInput, Toast } from "../../ui";
 import { WaHeader } from "./WaNav";
 
 const STATUS = {
@@ -102,6 +105,8 @@ export function WhatsAppNumbers() {
         </div>
       </Card>
 
+      <SignInCodesCard accounts={accounts} />
+
       <StatsCard accounts={accounts} onShare={() => setSharing(true)} />
 
       <Card title="Keeping your numbers safe" subtitle="These are personal WhatsApp numbers, so the dashboard paces what it sends.">
@@ -114,6 +119,9 @@ export function WhatsAppNumbers() {
           <li>
             Order updates to a customer who hasn&apos;t chatted with you are spaced {WA_PACING.order.minGapSec}–{WA_PACING.order.maxGapSec} seconds apart, at most {WA_PACING.order.perDay} a day per
             number.
+          </li>
+          <li>
+            Sign-in codes (when switched on above) go out first, from one of your connected numbers picked at random, at most {WA_PACING.code.perDay} a day per store, and are never kept in the chat history.
           </li>
           <li>Numbers that aren&apos;t on WhatsApp are never messaged. More numbers means more first contacts a day.</li>
         </ul>
@@ -152,6 +160,83 @@ export function WhatsAppNumbers() {
         </WaConfirm>
       ) : null}
     </>
+  );
+}
+
+/**
+ * The switch that makes the sign-in code go out over WhatsApp. It is the same setting as Settings → Message sending
+ * ("Your linked WhatsApp number") — put here too because this is where a store owner is the moment a number is linked.
+ */
+function SignInCodesCard({ accounts }) {
+  const { outlet } = useOutlet();
+  const { can } = useAuth();
+  const canManage = can("notification-config:manage");
+  const query = useMessaging(outlet, can("notification-config:read"));
+  const save = useSaveMessaging(outlet);
+  const [confirmOff, setConfirmOff] = useState(false);
+  if (!query.data) return null;
+
+  const { codes, ready } = query.data;
+  const on = codes.method === "linked";
+  const connected = accounts.filter((a) => a.status === "connected").length;
+  const planLocked = Boolean(ready.linked.planLocked);
+
+  const choose = (method) =>
+    save.mutate(
+      { codes: { method, linkedMessage: codes.linkedMessage, whatsappTemplate: codes.whatsappTemplate } },
+      { onSuccess: () => setConfirmOff(false) },
+    );
+
+  const other = codes.method === "sms" ? "SMS" : codes.method === "whatsapp" ? "WhatsApp Business" : null;
+
+  return (
+    <Card
+      title="Sign-in codes"
+      icon={<KeyRound size={17} />}
+      subtitle="The 6-digit code a customer types to sign up or sign in on your website."
+    >
+      <div data-testid="signin-codes">
+        <Checkbox
+          checked={on}
+          disabled={!canManage || save.isPending || (!on && !ready.linked.ok)}
+          label="Send sign-in codes from my WhatsApp numbers"
+          onChange={(v) => (v ? choose("linked") : setConfirmOff(true))}
+        />
+        <p style={{ ...muted, margin: "8px 0 0 22px" }} data-testid="signin-codes-status">
+          {on
+            ? connected > 1
+              ? `On. Each code is sent from one of your ${connected} connected numbers, picked at random.`
+              : "On. Each code is sent from your connected number."
+            : codes.method === "screen"
+              ? "Off. Customers are shown the code on the sign-in screen — fine while you test, but anyone could then sign in as any number."
+              : `Off. Codes currently go out by ${other}. Turn this on to send them from your WhatsApp numbers instead.`}
+        </p>
+        {on && connected === 0 ? (
+          <Note icon={<AlertTriangle size={16} />}>None of your numbers is connected right now, so customers can&apos;t get a code. Reconnect one above.</Note>
+        ) : null}
+        {!on && !ready.linked.ok ? <p style={{ ...muted, margin: "8px 0 0 22px", color: "var(--tone-warning)" }}>{ready.linked.reason}</p> : null}
+        {planLocked ? null : (
+          <p style={{ ...muted, margin: "8px 0 0 22px" }}>
+            Want to change the wording, or use SMS or WhatsApp Business instead? See <Link to="/message-sending">Settings → Message sending</Link>.
+          </p>
+        )}
+        {!canManage ? <p style={{ ...muted, margin: "8px 0 0 22px" }}>Only the owner can change this.</p> : null}
+        {save.error ? <Toast kind="error">{save.error.message}</Toast> : null}
+      </div>
+
+      {confirmOff ? (
+        <WaConfirm
+          title="Stop sending sign-in codes?"
+          onCancel={() => setConfirmOff(false)}
+          cancelLabel="Keep sending"
+          busy={save.isPending}
+          actions={[{ label: "Stop sending", tone: "danger", onClick: () => choose("screen") }]}
+        >
+          Customers will be shown the code on the sign-in screen instead, so anyone could sign in as any phone number. Only do this while you are testing.
+          {save.error ? <Toast kind="error">{save.error.message}</Toast> : null}
+        </WaConfirm>
+      ) : null}
+    </Card>
   );
 }
 

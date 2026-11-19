@@ -270,7 +270,7 @@ function LinkedDetails({ draft, data, change, canManage }) {
       </div>
 
       <p style={{ ...hint, margin: "12px 0 0" }}>
-        Codes go out first, within seconds, from the number the customer last chatted with — or any number that is online. The code is wiped from your chat history the moment it is sent, and the customer
+        Codes go out first, within seconds, from one of your connected numbers — picked at random, so no single number carries every sign-in. The code is wiped from your chat history the moment it is sent, and the customer
         doesn&apos;t appear in your WhatsApp inbox until they write to you. If every number is offline, customers are asked to try again.
       </p>
     </>
