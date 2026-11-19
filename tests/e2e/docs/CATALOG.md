@@ -42,8 +42,8 @@
 | [t35-storefront-category-bar](t35-storefront-category-bar.md) — Storefront — with 30+ categories the sticky category bar stays ONE short row that scrolls sideways, and phones keep one short bar with a Categories sheet | storefront | ✅ PASSED | 34/34 | 2026-11-19 19:30 |
 | [t36-upload-urls-api](t36-upload-urls-api.md) — Pictures are stored without a domain and get the current domain when sent out — so a new domain or machine never breaks them | storage | ✅ PASSED | 28/28 | 2026-11-19 19:31 |
 | [t37-storefront-mobile-layout](t37-storefront-mobile-layout.md) — Storefront — page side padding is smaller on phones and tablets (desktop unchanged); on phones a path title is two lines with a smaller View all button | storefront | ✅ PASSED | 43/43 | 2026-11-19 19:31 |
-| [t38-ai-images-api](t38-ai-images-api.md) — AI dish pictures — several Gemini keys used in turn, only the super admin can use them, and what is made is saved to the dish | menu | ✅ PASSED | 66/66 | 2026-11-19 19:31 |
-| [t39-ai-item-images](t39-ai-item-images.md) — AI dish pictures — keys added in the platform console, a sparkles button on the dish row (super admin only), shape and count chosen in a pop-up, pictures saved to the dish | menu | ✅ PASSED | 30/30 | 2026-11-19 19:31 |
+| [t38-ai-images-api](t38-ai-images-api.md) — AI dish pictures — several Gemini keys used in turn, only the super admin can use them, and what is made is saved to the dish | menu | ✅ PASSED | 82/82 | 2026-11-19 19:46 |
+| [t39-ai-item-images](t39-ai-item-images.md) — AI dish pictures — keys added in the platform console, a sparkles button on the dish row (super admin only), shape and count chosen in a pop-up, pictures saved to the dish | menu | ✅ PASSED | 32/32 | 2026-11-19 19:47 |
 
 ## Open findings (noticed during tests, not yet fixed)
 

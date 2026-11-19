@@ -515,3 +515,6 @@
 {"id":"t37-storefront-mobile-layout","status":"pass","pass":43,"fail":0,"mode":"headless","at":"2026-11-19T14:01:09.544Z","durationMs":5019}
 {"id":"t38-ai-images-api","status":"pass","pass":66,"fail":0,"mode":"headless","at":"2026-11-19T14:01:13.577Z","durationMs":4014}
 {"id":"t39-ai-item-images","status":"pass","pass":30,"fail":0,"mode":"headless","at":"2026-11-19T14:01:36.427Z","durationMs":18642}
+{"id":"t38-ai-images-api","status":"fail","pass":81,"fail":1,"mode":"headless","at":"2026-11-19T14:16:28.461Z","durationMs":4569}
+{"id":"t38-ai-images-api","status":"pass","pass":82,"fail":0,"mode":"headless","at":"2026-11-19T14:16:39.391Z","durationMs":4318}
+{"id":"t39-ai-item-images","status":"pass","pass":32,"fail":0,"mode":"headless","at":"2026-11-19T14:17:24.806Z","durationMs":19485}

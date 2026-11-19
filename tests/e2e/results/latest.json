@@ -13234,12 +13234,12 @@
     "id": "t38-ai-images-api",
     "title": "AI dish pictures — several Gemini keys used in turn, only the super admin can use them, and what is made is saved to the dish",
     "status": "pass",
-    "pass": 66,
+    "pass": 82,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T14:01:13.577Z",
-    "durationMs": 4014,
+    "at": "2026-11-19T14:16:39.391Z",
+    "durationMs": 4318,
     "steps": [
       {
         "n": 1,
@@ -13386,7 +13386,7 @@
           {
             "label": "a picture is made and added to the dish",
             "ok": true,
-            "detail": "200 {\"item\":{\"id\":\"6aff01281b55f916cb98b587\",\"categoryId\":\"6aff01281b55f916cb98b582\",\"name\":\"Kadai Paneer\",\"description\":\"Pa",
+            "detail": "200 {\"item\":{\"id\":\"6aff04c52859a437fbe79db4\",\"categoryId\":\"6aff04c52859a437fbe79daf\",\"name\":\"Kadai Paneer\",\"description\":\"Pa",
             "kind": "expect"
           },
           {
@@ -13410,13 +13410,13 @@
           {
             "label": "the picture was compressed to WebP, stored in the store's own folder, and saved without a domain",
             "ok": true,
-            "detail": "/uploads/6aff01281b55f916cb98b542/6aff01281b55f916cb98b545/m",
+            "detail": "/uploads/6aff04c52859a437fbe79d65/6aff04c52859a437fbe79d69/m",
             "kind": "expect"
           },
           {
             "label": "…and the menu hands out a full address",
             "ok": true,
-            "detail": "http://localhost:3101/uploads/6aff01281b55f916cb98",
+            "detail": "http://localhost:3101/uploads/6aff04c52859a437fbe7",
             "kind": "expect"
           },
           {
@@ -13440,7 +13440,7 @@
           {
             "label": "…at the same time, not one after another (3 × 0.4 s took under 1.1 s)",
             "ok": true,
-            "detail": "447 ms",
+            "detail": "488 ms",
             "kind": "expect"
           },
           {
@@ -13714,6 +13714,108 @@
             "kind": "expect"
           }
         ]
+      },
+      {
+        "n": 14,
+        "title": "however Google says 'limit reached', the next key takes over — and the key rests for as long as Google said",
+        "checks": [
+          {
+            "label": "a limit reported as HTTP 403 with 'quota' in the words: the picture is still made, on another key (the limited key was tried once)",
+            "ok": true,
+            "detail": "200  tried 1",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the answer says which key was switched away from, and which made the picture",
+            "ok": true,
+            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Second account\"]}",
+            "kind": "expect"
+          },
+          {
+            "label": "…that key rests 10 minutes",
+            "ok": true,
+            "detail": "600 s",
+            "kind": "expect"
+          },
+          {
+            "label": "a limit that says 'retry in 40 s': the picture is still made, on another key (the limited key was tried once)",
+            "ok": true,
+            "detail": "200  tried 1",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the answer says which key was switched away from, and which made the picture",
+            "ok": true,
+            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Second account\"]}",
+            "kind": "expect"
+          },
+          {
+            "label": "…that key rests about as long as Google said",
+            "ok": true,
+            "detail": "45 s",
+            "kind": "expect"
+          },
+          {
+            "label": "a per-DAY limit: the picture is still made, on another key (the limited key was tried once)",
+            "ok": true,
+            "detail": "200  tried 1",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the answer says which key was switched away from, and which made the picture",
+            "ok": true,
+            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Second account\"]}",
+            "kind": "expect"
+          },
+          {
+            "label": "…that key rests for hours (a daily limit)",
+            "ok": true,
+            "detail": "21600 s",
+            "kind": "expect"
+          },
+          {
+            "label": "a plain limit with no hint (429): the picture is still made, on another key (the limited key was tried once)",
+            "ok": true,
+            "detail": "200  tried 1",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the answer says which key was switched away from, and which made the picture",
+            "ok": true,
+            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Third\"]}",
+            "kind": "expect"
+          },
+          {
+            "label": "…that key rests 10 minutes",
+            "ok": true,
+            "detail": "600 s",
+            "kind": "expect"
+          },
+          {
+            "label": "a key whose Google project can't make pictures (billing off): the picture is still made, on another key (the limited key was tried once)",
+            "ok": true,
+            "detail": "200  tried 1",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the answer says which key was switched away from, and which made the picture",
+            "ok": true,
+            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Second account\"]}",
+            "kind": "expect"
+          },
+          {
+            "label": "…that key rests for a day",
+            "ok": true,
+            "detail": "86400 s",
+            "kind": "expect"
+          },
+          {
+            "label": "with TWO keys at their limit the third carries the whole batch, and both are reported",
+            "ok": true,
+            "detail": "{\"rested\":[\"Main account\",\"Second account\"],\"used\":[\"Third\"]}",
+            "kind": "expect"
+          }
+        ]
       }
     ],
     "findings": [],
@@ -13723,12 +13825,12 @@
     "id": "t39-ai-item-images",
     "title": "AI dish pictures — keys added in the platform console, a sparkles button on the dish row (super admin only), shape and count chosen in a pop-up, pictures saved to the dish",
     "status": "pass",
-    "pass": 30,
+    "pass": 32,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T14:01:36.427Z",
-    "durationMs": 18642,
+    "at": "2026-11-19T14:17:24.806Z",
+    "durationMs": 19485,
     "steps": [
       {
         "n": 1,
@@ -13838,6 +13940,18 @@
           },
           {
             "label": "each picture really loads",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it says which key made them",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "and that the Backup key reached its limit so another key was used automatically",
             "ok": true,
             "detail": "",
             "kind": "expect"

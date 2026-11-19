@@ -1,6 +1,6 @@
 # T39 — AI dish pictures — keys added in the platform console, a sparkles button on the dish row (super admin only), shape and count chosen in a pop-up, pictures saved to the dish
 
-**Area:** menu · **Last result:** ✅ PASSED (30 passed, 0 failed · 2026-11-19 19:31 · headless · 18.6 s)
+**Area:** menu · **Last result:** ✅ PASSED (32 passed, 0 failed · 2026-11-19 19:47 · headless · 19.5 s)
 
 **Run it alone:** `node run.mjs --only t39` (add `--visible` to watch it) · starts from fresh fake data
 
@@ -41,7 +41,7 @@ In Chrome as the platform admin: the console has an 'AI pictures' page where two
 
 _Nothing failed._
 
-### ✅ Passed (30)
+### ✅ Passed (32)
 
 **Step 1 — The platform admin adds two Gemini keys**
 
@@ -69,6 +69,8 @@ _Nothing failed._
 - while it works, the pop-up says so and can't be cancelled
 - three new pictures are shown
 - each picture really loads
+- it says which key made them
+- and that the Backup key reached its limit so another key was used automatically
 
 **Step 5 — What Google was asked, and what the dish has now**
 
@@ -104,6 +106,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-19 19:47 | pass | 32 | 0 | headless | 19.5 s |
 | 2026-11-19 19:31 | pass | 30 | 0 | headless | 18.6 s |
 | 2026-11-19 19:27 | pass | 30 | 0 | headless | 19.5 s |
 
