@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { flattenCategories, formatINR, IMAGE_RULES } from "@onetap/config-schema";
-import { Download, ImagePlus, Loader, Star, X } from "lucide-react";
+import { ClipboardPaste, Download, ImagePlus, Loader, Star, X } from "lucide-react";
 import * as api from "../lib/api";
 import { ImportMenuModal } from "../components/ImportMenuModal";
 
 import { useOutlet } from "../lib/useOutlet";
 import { useImageUpload } from "../lib/useStorage";
+import { readClipboardImages, usePasteImages } from "../lib/usePasteImages";
 import {
   useCreateItem,
   useCreateModifierGroup,
@@ -241,6 +242,7 @@ function ItemForm({
         <div style={{ fontSize: 12, color: "var(--color-text-muted)", marginBottom: 10, lineHeight: 1.5 }}>
           Up to {IMAGE_RULES.maxPerItem}. The first is the cover shown on menu cards. Any format (JPEG, PNG, WebP,
           AVIF, HEIC…) — compressed automatically. TablePe sets where photos are kept and how small they are made.
+          Copied a picture? Press Ctrl+V (⌘V on a Mac) here, or use Paste.
         </div>
         <ItemPhotos outlet={outlet} images={images} originalKeys={item?.images ?? []} onChange={setImages} />
       </div>
@@ -340,6 +342,9 @@ function ItemPhotos({ outlet, images, originalKeys, onChange }) {
   const originalKeySet = new Set((originalKeys ?? []).map((im) => im.key).filter(Boolean));
   const room = IMAGE_RULES.maxPerItem - images.length;
 
+  // what to tell the person after a paste that couldn't be used (the upload hook reports its own errors)
+  const [pasteNote, setPasteNote] = useState(null);
+
   const addFiles = async (fileList) => {
     clearError();
     const files = Array.from(fileList ?? []).slice(0, Math.max(0, room));
@@ -350,6 +355,28 @@ function ItemPhotos({ outlet, images, originalKeys, onChange }) {
     } catch {
       /* error surfaced by the hook */
     }
+  };
+
+  // A picture pasted from the clipboard (Ctrl/⌘+V, or the Paste button) is added like one picked from the file box.
+  const addPasted = (files) => {
+    setPasteNote(null);
+    if (busy) return;
+    if (room <= 0) {
+      setPasteNote(`This item already has ${IMAGE_RULES.maxPerItem} photos — remove one to paste another.`);
+      return;
+    }
+    if (files.length > room) setPasteNote(`Only the first ${room} of ${files.length} pasted pictures fit (up to ${IMAGE_RULES.maxPerItem} per item).`);
+    void addFiles(files);
+  };
+  usePasteImages(addPasted);
+
+  const pasteFromButton = async () => {
+    setPasteNote(null);
+    const r = await readClipboardImages();
+    if (r.files) addPasted(r.files);
+    else if (r.reason === "empty") setPasteNote("There's no picture on your clipboard. Copy a picture first, then press Paste.");
+    else if (r.reason === "denied") setPasteNote("Your browser didn't allow reading the clipboard. Click on this page and press Ctrl+V (⌘V on a Mac) instead.");
+    else setPasteNote("This browser can't paste from a button. Press Ctrl+V (⌘V on a Mac) instead.");
   };
 
   const removeAt = (idx) => {
@@ -386,7 +413,7 @@ function ItemPhotos({ outlet, images, originalKeys, onChange }) {
         style={{ display: "flex", flexWrap: "wrap", gap: 10 }}
       >
         {images.map((im, idx) => (
-          <div key={im.key || im.url} style={thumbBox}>
+          <div key={im.key || im.url} style={thumbBox} data-testid="item-photo">
             <img src={im.url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             {idx === 0 ? (
               <span style={coverBadge}>
@@ -416,6 +443,7 @@ function ItemPhotos({ outlet, images, originalKeys, onChange }) {
             type="button"
             onClick={() => inputRef.current?.click()}
             disabled={busy}
+            data-testid="add-photo"
             style={{
               ...thumbBox,
               ...addTile,
@@ -425,6 +453,20 @@ function ItemPhotos({ outlet, images, originalKeys, onChange }) {
           >
             {busy ? <Loader size={18} /> : <ImagePlus size={18} />}
             <span style={{ fontSize: 11 }}>{busy ? "Uploading…" : "Add photo"}</span>
+          </button>
+        ) : null}
+
+        {room > 0 ? (
+          <button
+            type="button"
+            onClick={() => void pasteFromButton()}
+            disabled={busy}
+            title="Add the picture you copied (or press Ctrl+V / ⌘V)"
+            data-testid="paste-photo"
+            style={{ ...thumbBox, ...addTile, background: "var(--color-bg)", borderColor: "var(--color-border)" }}
+          >
+            <ClipboardPaste size={18} />
+            <span style={{ fontSize: 11 }}>Paste photo</span>
           </button>
         ) : null}
       </div>
@@ -441,6 +483,7 @@ function ItemPhotos({ outlet, images, originalKeys, onChange }) {
         }}
       />
       {error ? <Toast kind="error">{error}</Toast> : null}
+      {pasteNote ? <Toast kind="info">{pasteNote}</Toast> : null}
     </>
   );
 }
