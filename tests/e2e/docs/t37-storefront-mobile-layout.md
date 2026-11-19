@@ -1,6 +1,6 @@
 # T37 — Storefront — page side padding is smaller on phones and tablets (desktop unchanged); on phones a path title is two lines with a smaller View all button
 
-**Area:** storefront · **Last result:** ✅ PASSED (43 passed, 0 failed · 2026-11-19 18:18 · headless · 5.0 s)
+**Area:** storefront · **Last result:** ✅ PASSED (43 passed, 0 failed · 2026-11-19 19:31 · headless · 5.0 s)
 
 **Run it alone:** `node run.mjs --only t37` (add `--visible` to watch it)
 
@@ -92,6 +92,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-19 19:31 | pass | 43 | 0 | headless | 5.0 s |
 | 2026-11-19 18:18 | pass | 43 | 0 | headless | 5.0 s |
 | 2026-11-19 18:14 | pass | 37 | 0 | headless | 5.0 s |
 | 2026-11-19 18:09 | pass | 37 | 0 | headless | 5.0 s |

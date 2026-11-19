@@ -1,6 +1,6 @@
 # T34 — Pictures are compressed and optimised on the server when uploaded — size, shape, rotation, privacy, limits and settings
 
-**Area:** storage · **Last result:** ✅ PASSED (32 passed, 0 failed · 2026-11-19 17:51 · headless · 10.1 s)
+**Area:** storage · **Last result:** ✅ PASSED (32 passed, 0 failed · 2026-11-19 19:30 · headless · 10.3 s)
 
 **Run it alone:** `node run.mjs --only t34` (add `--visible` to watch it)
 
@@ -48,9 +48,9 @@ _Nothing failed._
 
 - a 24-megapixel JPEG at quality 95 (about 19 MB) is accepted — _201 19861 KB_
 - the stored file is WebP and can be fetched from its address — _200 image/webp_
-- it is now 313 KB — under the 400 KB target and at least 20 times smaller than the original — _19861 KB → 313 KB_
+- it is now 307 KB — under the 400 KB target and at least 20 times smaller than the original — _19861 KB → 307 KB_
 - scaled down to 1600 px on the long side, keeping the shape — _1600x1067_
-- the answer reports the real final size, bytes and the original's bytes — _{"w":1600,"h":1067,"bytes":320110}_
+- the answer reports the real final size, bytes and the original's bytes — _{"w":1600,"h":1067,"bytes":314802}_
 - it is stored inside this store's own folder, with a name the uploader doesn't control
 
 **Step 2 — phone photos: rotation and private metadata**
@@ -73,7 +73,7 @@ _Nothing failed._
 
 **Step 5 — things that must be refused, or survived**
 
-- a "pixel bomb" (225 megapixels, only 672 KB on disk) is shrunk safely and quickly — _201 in 381 ms_
+- a "pixel bomb" (225 megapixels, only 672 KB on disk) is shrunk safely and quickly — _201 in 374 ms_
 - the server is still healthy afterwards
 - a picture over the 268-megapixel ceiling is refused with a clear message
 - a file that isn't a picture is refused (415) — _415 That file isn't an image we can read. Try JPEG, PNG, WebP, AVIF or HEIC._
@@ -85,13 +85,13 @@ _Nothing failed._
 **Step 6 — several big pictures at once**
 
 - five 19 MB photos uploaded at the same moment all succeed — _201,201,201,201,201_
-- …in a reasonable time — _810 ms_
+- …in a reasonable time — _837 ms_
 - …each stored under its own name
 - the server is still healthy afterwards
 
 **Step 7 — the platform's compression settings are what is applied**
 
-- the platform owner can change the compression settings — _200 {"provider":"local","updatedAt":"2026-11-19T12:21:23.081Z","limits":{"maxPerItem_
+- the platform owner can change the compression settings — _200 {"provider":"local","updatedAt":"2026-11-19T14:00:38.729Z","limits":{"maxPerItem_
 - the next upload follows them: JPEG, 800 px, under 100 KB — _image/jpeg 800x533 3 KB_
 - a store owner can't change them — _403_
 - settings outside the allowed ranges (300 px minimum, quality 30–100) are refused — _400_
@@ -101,6 +101,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-19 19:30 | pass | 32 | 0 | headless | 10.3 s |
 | 2026-11-19 17:51 | pass | 32 | 0 | headless | 10.1 s |
 | 2026-11-19 17:45 | pass | 32 | 0 | headless | 9.8 s |
 | 2026-11-19 16:31 | pass | 32 | 0 | headless | 10.2 s |

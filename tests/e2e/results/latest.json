@@ -496,12 +496,12 @@
     "id": "t02-whatsapp-api",
     "title": "WhatsApp chat — API rules and the careful-pace sending worker",
     "status": "pass",
-    "pass": 132,
+    "pass": 131,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T12:18:24.297Z",
-    "durationMs": 11298,
+    "at": "2026-11-19T13:58:50.228Z",
+    "durationMs": 11610,
     "steps": [
       {
         "n": 1,
@@ -708,7 +708,7 @@
           {
             "label": "an attachment uploads",
             "ok": true,
-            "detail": "http://localhost:3098/uploads/6afee907248ecdfae366",
+            "detail": "http://localhost:3098/uploads/6aff00918607bc01bd7f",
             "kind": "expect"
           },
           {
@@ -750,7 +750,7 @@
           {
             "label": "the next first contact must wait 2–4 minutes",
             "ok": true,
-            "detail": "178 s",
+            "detail": "180 s",
             "kind": "expect"
           },
           {
@@ -774,7 +774,7 @@
           {
             "label": "15 first contacts a day per number: the rest wait for tomorrow",
             "ok": true,
-            "detail": "2026-11-20T03:40:22.130Z",
+            "detail": "2026-11-20T03:41:47.251Z",
             "kind": "expect"
           },
           {
@@ -900,13 +900,13 @@
           {
             "label": "preview: 3 people (duplicates merged), 1 opted out",
             "ok": true,
-            "detail": "{\"recipients\":3,\"optedOut\":1,\"running\":0,\"firstContact\":3,\"numbersOnline\":[{\"id\":\"6afee907248ecdfae366e830\",\"label\":\"Counter phone\"},{\"id\":\"6afee907248ecdfae366e837\",\"label\":\"Delivery phone\"}],\"estimatedDays\":1}",
+            "detail": "{\"recipients\":3,\"optedOut\":1,\"running\":0,\"firstContact\":3,\"numbersOnline\":[{\"id\":\"6aff00918607bc01bd7fecb6\",\"label\":\"Counter phone\"},{\"id\":\"6aff00918607bc01bd7fecbd\",\"label\":\"Delivery phone\"}],\"estimatedDays\":1}",
             "kind": "expect"
           },
           {
             "label": "a broadcast queues one message per person",
             "ok": true,
-            "detail": "{\"id\":\"6afee90f248ecdfae366e9be\",\"text\":\"Diwali: 20% off this weekend!\\n\\nReply STOP to stop offers.\",\"media\":null,\"createdAt\":\"2026-11-19T12:18:23.633Z\",\"status\":\"sending\",\"total\":3,\"skipped\":1,\"waiting\":3,\"sent\":0,\"read\":0,\"failed\":0}",
+            "detail": "{\"id\":\"6aff00998607bc01bd7fee4f\",\"text\":\"Diwali: 20% off this weekend!\\n\\nReply STOP to stop offers.\",\"media\":null,\"createdAt\":\"2026-11-19T13:58:49.846Z\",\"status\":\"sending\",\"total\":3,\"skipped\":1,\"waiting\":3,\"sent\":0,\"read\":0,\"failed\":0}",
             "kind": "expect"
           },
           {
@@ -1269,12 +1269,6 @@
         "n": 11,
         "title": "WhatsApp chat taken away from a store — its numbers are unlinked and nothing stays connected",
         "checks": [
-          {
-            "label": "the worker closes (and logs out) the connection of a store whose plan lacks WhatsApp chat",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
           {
             "label": "…the number shows as unlinked, with the reason",
             "ok": true,
@@ -1934,8 +1928,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T12:48:32.314Z",
-    "durationMs": 37062,
+    "at": "2026-11-19T13:59:27.176Z",
+    "durationMs": 36922,
     "steps": [
       {
         "n": 1,
@@ -2022,7 +2016,7 @@
           {
             "label": "the sheet lists every category (+ close)",
             "ok": true,
-            "detail": "7",
+            "detail": "6",
             "kind": "expect"
           },
           {
@@ -2040,7 +2034,7 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "0,0,0,1,67,302,849,1096,1169,1170,1170,1170,1170,1170",
+            "detail": "0,0,0,1,69,307,854,1098,1169,1170,1170,1170,1170,1170",
             "kind": "expect"
           },
           {
@@ -2088,7 +2082,7 @@
           {
             "label": "the sheet lists every category (+ close)",
             "ok": true,
-            "detail": "7",
+            "detail": "6",
             "kind": "expect"
           },
           {
@@ -2106,7 +2100,7 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "17,17,17,17,59,207,625,1167,1396,1487,1494,1494,1494,1494",
+            "detail": "17,17,17,17,60,257,731,1169,1422,1491,1494,1494,1494,1494",
             "kind": "expect"
           },
           {
@@ -9386,8 +9380,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T12:19:18.338Z",
-    "durationMs": 8008,
+    "at": "2026-11-19T13:59:35.719Z",
+    "durationMs": 8524,
     "steps": [
       {
         "n": 1,
@@ -10104,7 +10098,7 @@
           {
             "label": "the inventory sees the whole API",
             "ok": true,
-            "detail": "280 routes, 161 change data",
+            "detail": "287 routes, 167 change data",
             "kind": "expect"
           },
           {
@@ -11084,8 +11078,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T12:20:21.839Z",
-    "durationMs": 3368,
+    "at": "2026-11-19T13:59:39.623Z",
+    "durationMs": 3883,
     "steps": [
       {
         "n": 1,
@@ -11460,7 +11454,7 @@
           {
             "label": "three categories are made in one request (201)",
             "ok": true,
-            "detail": "201 {\"categories\":[{\"id\":\"6afee9856f94316e39082a7c\",\"name\":\"Bulk Dosa\",\"parentId\":\"6afee9856f94316e39082a75\",\"image\":{\"url\":",
+            "detail": "201 {\"categories\":[{\"id\":\"6aff00ca29a2d7d4e50d7490\",\"name\":\"Bulk Dosa\",\"parentId\":\"6aff00ca29a2d7d4e50d748a\",\"image\":{\"url\":",
             "kind": "expect"
           },
           {
@@ -11723,8 +11717,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T12:44:25.554Z",
-    "durationMs": 45059,
+    "at": "2026-11-19T14:00:29.235Z",
+    "durationMs": 45413,
     "steps": [
       {
         "n": 1,
@@ -12242,8 +12236,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T12:21:23.851Z",
-    "durationMs": 10107,
+    "at": "2026-11-19T14:00:39.586Z",
+    "durationMs": 10325,
     "steps": [
       {
         "n": 1,
@@ -12262,9 +12256,9 @@
             "kind": "expect"
           },
           {
-            "label": "it is now 313 KB — under the 400 KB target and at least 20 times smaller than the original",
+            "label": "it is now 307 KB — under the 400 KB target and at least 20 times smaller than the original",
             "ok": true,
-            "detail": "19861 KB → 313 KB",
+            "detail": "19861 KB → 307 KB",
             "kind": "expect"
           },
           {
@@ -12276,13 +12270,13 @@
           {
             "label": "the answer reports the real final size, bytes and the original's bytes",
             "ok": true,
-            "detail": "{\"w\":1600,\"h\":1067,\"bytes\":320110}",
+            "detail": "{\"w\":1600,\"h\":1067,\"bytes\":314802}",
             "kind": "expect"
           },
           {
             "label": "it is stored inside this store's own folder, with a name the uploader doesn't control",
             "ok": true,
-            "detail": "6afee9bcffeb37768663ff04/6afee9bcffeb37768663ff08/menu-items/d417e382-18cd-420c-9e4a-faf102d551bd.webp",
+            "detail": "6aff00ffcc2074bb607b37cf/6aff00ffcc2074bb607b37d2/menu-items/752961d7-5684-437a-b45f-01df8045891b.webp",
             "kind": "expect"
           }
         ]
@@ -12366,7 +12360,7 @@
           {
             "label": "a \"pixel bomb\" (225 megapixels, only 672 KB on disk) is shrunk safely and quickly",
             "ok": true,
-            "detail": "201 in 381 ms",
+            "detail": "201 in 374 ms",
             "kind": "expect"
           },
           {
@@ -12426,7 +12420,7 @@
           {
             "label": "…in a reasonable time",
             "ok": true,
-            "detail": "810 ms",
+            "detail": "837 ms",
             "kind": "expect"
           },
           {
@@ -12450,7 +12444,7 @@
           {
             "label": "the platform owner can change the compression settings",
             "ok": true,
-            "detail": "200 {\"provider\":\"local\",\"updatedAt\":\"2026-11-19T12:21:23.081Z\",\"limits\":{\"maxPerItem",
+            "detail": "200 {\"provider\":\"local\",\"updatedAt\":\"2026-11-19T14:00:38.729Z\",\"limits\":{\"maxPerItem",
             "kind": "expect"
           },
           {
@@ -12491,8 +12485,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T12:21:55.178Z",
-    "durationMs": 4840,
+    "at": "2026-11-19T14:01:04.507Z",
+    "durationMs": 4808,
     "steps": [
       {
         "n": 1,
@@ -12501,7 +12495,7 @@
           {
             "label": "the upload's answer carries THIS deployment's domain",
             "ok": true,
-            "detail": "https://img.example.test/uploads/6afee9e0ca48b09458e5e40e/6afee9e0ca48b09458e5e411/menu-items/df1df474-dea3-408b-bf02-060d8582a1a4.webp",
+            "detail": "https://img.example.test/uploads/6aff011edd86204c459c60b2/6aff011edd86204c459c60b6/menu-items/37d2a70c-5596-4d27-b89c-abd512e587be.webp",
             "kind": "expect"
           },
           {
@@ -12513,7 +12507,7 @@
           {
             "label": "the dashboard sent the full address — the database keeps only the path",
             "ok": true,
-            "detail": "/uploads/6afee9e0ca48b09458e5e40e/6afee9e0ca48b09458e5e411/menu-items/df1df474-dea3-408b-bf02-060d8582a1a4.webp",
+            "detail": "/uploads/6aff011edd86204c459c60b2/6aff011edd86204c459c60b6/menu-items/37d2a70c-5596-4d27-b89c-abd512e587be.webp",
             "kind": "expect"
           },
           {
@@ -12531,7 +12525,7 @@
           {
             "label": "a category's picture is kept domain-free as well",
             "ok": true,
-            "detail": "/uploads/6afee9e0ca48b09458e5e40e/6afee9e0ca48b09458e5e411/menu-items/3c231c72-8713-407e-a4d0-fdbbf05be8f9.webp",
+            "detail": "/uploads/6aff011edd86204c459c60b2/6aff011edd86204c459c60b6/menu-items/f8357551-d82e-4c5f-8b51-e6af77a93b38.webp",
             "kind": "expect"
           },
           {
@@ -12549,13 +12543,13 @@
           {
             "label": "an address saved from localhost now points at this deployment",
             "ok": true,
-            "detail": "https://img.example.test/uploads/6afee9e0ca48b09458e5e40e/6afee9e0ca48b09458e5e411/menu-items/01234567-1111-4222-8333-000000000001.webp",
+            "detail": "https://img.example.test/uploads/6aff011edd86204c459c60b2/6aff011edd86204c459c60b6/menu-items/01234567-1111-4222-8333-000000000001.webp",
             "kind": "expect"
           },
           {
             "label": "an address saved with an OLD domain now points at this deployment",
             "ok": true,
-            "detail": "https://img.example.test/uploads/6afee9e0ca48b09458e5e40e/6afee9e0ca48b09458e5e411/menu-items/01234567-1111-4222-8333-000000000002.webp",
+            "detail": "https://img.example.test/uploads/6aff011edd86204c459c60b2/6aff011edd86204c459c60b6/menu-items/01234567-1111-4222-8333-000000000002.webp",
             "kind": "expect"
           },
           {
@@ -12603,7 +12597,7 @@
           {
             "label": "an edit that sends the full address back still stores only the path",
             "ok": true,
-            "detail": "/uploads/6afee9e0ca48b09458e5e40e/6afee9e0ca48b09458e5e411/menu-items/df1df474-dea3-408b-bf02-060d8582a1a4.webp",
+            "detail": "/uploads/6aff011edd86204c459c60b2/6aff011edd86204c459c60b6/menu-items/37d2a70c-5596-4d27-b89c-abd512e587be.webp",
             "kind": "expect"
           },
           {
@@ -12651,7 +12645,7 @@
           {
             "label": "the receipt preview's logo is an absolute address on this domain",
             "ok": true,
-            "detail": "<img class=\"logo\" src=\"https://img.example.test/uploads/6afee9e0ca48b09458e5e40e/6afee9e0ca48b09458e5e411/menu-items/df1",
+            "detail": "<img class=\"logo\" src=\"https://img.example.test/uploads/6aff011edd86204c459c60b2/6aff011edd86204c459c60b6/menu-items/37d",
             "kind": "expect"
           }
         ]
@@ -12687,7 +12681,7 @@
           {
             "label": "both now keep only the path",
             "ok": true,
-            "detail": "/uploads/6afee9e0ca48b09458e5e40e/6afee9",
+            "detail": "/uploads/6aff011edd86204c459c60b2/6aff01",
             "kind": "expect"
           },
           {
@@ -12716,8 +12710,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T12:48:52.368Z",
-    "durationMs": 20030,
+    "at": "2026-11-19T14:00:59.681Z",
+    "durationMs": 20071,
     "steps": [
       {
         "n": 1,
@@ -12953,8 +12947,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T12:48:57.425Z",
-    "durationMs": 5038,
+    "at": "2026-11-19T14:01:09.544Z",
+    "durationMs": 5019,
     "steps": [
       {
         "n": 1,
@@ -13226,6 +13220,744 @@
           },
           {
             "label": "the browser logged no errors or warnings",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t38-ai-images-api": {
+    "id": "t38-ai-images-api",
+    "title": "AI dish pictures — several Gemini keys used in turn, only the super admin can use them, and what is made is saved to the dish",
+    "status": "pass",
+    "pass": 66,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-19T14:01:13.577Z",
+    "durationMs": 4014,
+    "steps": [
+      {
+        "n": 1,
+        "title": "only the platform's super admin",
+        "checks": [
+          {
+            "label": "the super admin sees an empty setup with the default model",
+            "ok": true,
+            "detail": "200 gemini-nano-banana-2.1",
+            "kind": "expect"
+          },
+          {
+            "label": "a store owner can neither see the keys, add one, nor make a picture",
+            "ok": true,
+            "detail": "403/403/403",
+            "kind": "expect"
+          },
+          {
+            "label": "the kitchen can neither see the keys, add one, nor make a picture",
+            "ok": true,
+            "detail": "403/403/403",
+            "kind": "expect"
+          },
+          {
+            "label": "someone not signed in can neither see the keys, add one, nor make a picture",
+            "ok": true,
+            "detail": "401/401/401",
+            "kind": "expect"
+          },
+          {
+            "label": "…and Google was never called for them",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "adding keys",
+        "checks": [
+          {
+            "label": "something that isn't a key is refused",
+            "ok": true,
+            "detail": "400 That doesn't look like a Gemini API key (they are one long word with no spaces).",
+            "kind": "expect"
+          },
+          {
+            "label": "a key can be added with a name",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the answer carries only a masked hint, never the key",
+            "ok": true,
+            "detail": "AIza••••xxxx",
+            "kind": "expect"
+          },
+          {
+            "label": "in the database the key is encrypted",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the same key can't be added twice",
+            "ok": true,
+            "detail": "That key is already in the list.",
+            "kind": "expect"
+          },
+          {
+            "label": "three keys are in the list",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the model can be chosen",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a model name with odd characters is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "testing, pausing and removing a key",
+        "checks": [
+          {
+            "label": "a good key tests fine (a free model-list call, no picture)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the key travels in a header, never in the address",
+            "ok": true,
+            "detail": "?pageSize=1",
+            "kind": "expect"
+          },
+          {
+            "label": "a refused key says so and remembers it",
+            "ok": true,
+            "detail": "Google rejected this API key.",
+            "kind": "expect"
+          },
+          {
+            "label": "a key can be paused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and switched on again, or renamed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a key can be removed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "removing one that isn't there is a 404",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "one picture",
+        "checks": [
+          {
+            "label": "a picture is made and added to the dish",
+            "ok": true,
+            "detail": "200 {\"item\":{\"id\":\"6aff01281b55f916cb98b587\",\"categoryId\":\"6aff01281b55f916cb98b582\",\"name\":\"Kadai Paneer\",\"description\":\"Pa",
+            "kind": "expect"
+          },
+          {
+            "label": "Google was asked for the chosen model and shape (16:9)",
+            "ok": true,
+            "detail": "{\"type\":\"image\",\"aspect_ratio\":\"16:9\",\"image_size\":\"1K\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "the request describes the dish: its name, that it's vegetarian, its section",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "one of the saved keys was used, in a header",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the picture was compressed to WebP, stored in the store's own folder, and saved without a domain",
+            "ok": true,
+            "detail": "/uploads/6aff01281b55f916cb98b542/6aff01281b55f916cb98b545/m",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the menu hands out a full address",
+            "ok": true,
+            "detail": "http://localhost:3101/uploads/6aff01281b55f916cb98",
+            "kind": "expect"
+          },
+          {
+            "label": "the file opens",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "several pictures — at once, on different keys, from different angles",
+        "checks": [
+          {
+            "label": "three pictures are made",
+            "ok": true,
+            "detail": "200 added 3",
+            "kind": "expect"
+          },
+          {
+            "label": "…at the same time, not one after another (3 × 0.4 s took under 1.1 s)",
+            "ok": true,
+            "detail": "447 ms",
+            "kind": "expect"
+          },
+          {
+            "label": "…each on a DIFFERENT key",
+            "ok": true,
+            "detail": "2_,4_,1_",
+            "kind": "expect"
+          },
+          {
+            "label": "…and each asked for from a different angle, so they aren't copies",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "all in the chosen shape (4:3)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the dish now has four pictures",
+            "ok": true,
+            "detail": "4",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "spreading the work across keys over time",
+        "checks": [
+          {
+            "label": "two single-picture requests in a row use two different keys (the one used longest ago goes first)",
+            "ok": true,
+            "detail": "{\"Main account\":3,\"Second account\":2,\"Third\":1}",
+            "kind": "expect"
+          },
+          {
+            "label": "paused keys are never used",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "a key that has used up its limit is skipped — the picture is still made",
+        "checks": [
+          {
+            "label": "all three pictures are made even though one key is over its limit",
+            "ok": true,
+            "detail": "200 []",
+            "kind": "expect"
+          },
+          {
+            "label": "that key now rests, with the reason shown",
+            "ok": true,
+            "detail": "cooling · Google says this key's quota or rate limit is used up.",
+            "kind": "expect"
+          },
+          {
+            "label": "it was tried exactly once — that is how its limit was found",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the next request doesn't even try the resting key",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "testing the keys again ends their rest",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "a key Google refuses",
+        "checks": [
+          {
+            "label": "all three pictures are made on the other keys",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "the refused key is set aside, with Google's reason",
+            "ok": true,
+            "detail": "Google rejected this API key.",
+            "kind": "expect"
+          },
+          {
+            "label": "…for a long time (it won't work until someone fixes it)",
+            "ok": true,
+            "detail": "24 h",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 9,
+        "title": "every key at its limit",
+        "checks": [
+          {
+            "label": "with every key used up the answer says so (429)",
+            "ok": true,
+            "detail": "Google says this key's quota or rate limit is used up. (Main account)",
+            "kind": "expect"
+          },
+          {
+            "label": "nothing was saved",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the next try doesn't bother Google while they all rest, and says when they're back",
+            "ok": true,
+            "detail": "Every Gemini key is resting after hitting its limit. The first is ready again in about 10 min — or add another key.",
+            "kind": "expect"
+          },
+          {
+            "label": "once the keys are tested again it works",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 10,
+        "title": "when Google won't make it, or is busy",
+        "checks": [
+          {
+            "label": "a refusal is explained in plain words",
+            "ok": true,
+            "detail": "Google's safety filter would not make this picture. Change the description and try again.",
+            "kind": "expect"
+          },
+          {
+            "label": "a text-only answer is explained in plain words",
+            "ok": true,
+            "detail": "Google answered with words instead of a picture: “Here is a description instead of a picture”",
+            "kind": "expect"
+          },
+          {
+            "label": "nothing was saved, and no key was punished for it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "one picture failing doesn't lose the others: 2 saved, 1 reported",
+            "ok": true,
+            "detail": "added 2 failed 1: Google's picture service is busy or down right now. Try again in a moment.",
+            "kind": "expect"
+          },
+          {
+            "label": "the two that worked are on the dish",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 11,
+        "title": "the older Google interface is the fallback",
+        "checks": [
+          {
+            "label": "when the newer interface answers 'not found', the older one makes the picture",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "…with the same shape and description",
+            "ok": true,
+            "detail": "/v1beta/models/gemini-3.1-flash-lite-image:generateContent",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 12,
+        "title": "the limits",
+        "checks": [
+          {
+            "label": "a shape that isn't offered is refused",
+            "ok": true,
+            "detail": "400",
+            "kind": "expect"
+          },
+          {
+            "label": "a count of 0 is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a count of 5 is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a count of 1.5 is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a dish that doesn't exist is a 404",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a dish of ANOTHER outlet can't be reached through this one",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "none of those cost anything (Google wasn't called)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a dish with six pictures can't take more",
+            "ok": true,
+            "detail": "This dish already has 6 pictures. Remove one first.",
+            "kind": "expect"
+          },
+          {
+            "label": "asking for more than fit is refused before anything is spent",
+            "ok": true,
+            "detail": "Only 1 more picture fits (a dish can have 6).",
+            "kind": "expect"
+          },
+          {
+            "label": "…and exactly the room left works",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the pictures the dish already had are kept, in order",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 13,
+        "title": "the description you type is used",
+        "checks": [
+          {
+            "label": "an edited description is sent as typed (one picture, so no angle added)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t39-ai-item-images": {
+    "id": "t39-ai-item-images",
+    "title": "AI dish pictures — keys added in the platform console, a sparkles button on the dish row (super admin only), shape and count chosen in a pop-up, pictures saved to the dish",
+    "status": "pass",
+    "pass": 30,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-19T14:01:36.427Z",
+    "durationMs": 18642,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The platform admin adds two Gemini keys",
+        "checks": [
+          {
+            "label": "with no key yet, the page says so",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "both keys are listed, each Ready",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a key is shown only as its first and last characters, never in full",
+            "ok": true,
+            "detail": "AIza••••aaaa",
+            "kind": "expect"
+          },
+          {
+            "label": "the key box is empty again after adding",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Test says Google accepted the key",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the model can be chosen",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Opening Acme Momos' dashboard as the platform admin: every dish has a ✦ button",
+        "checks": [
+          {
+            "label": "every dish row has the sparkles button",
+            "ok": true,
+            "detail": "4 buttons on 4 rows",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "The pop-up asks for the shape and how many pictures",
+        "checks": [
+          {
+            "label": "it names the dish and how many of its six pictures are used",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "five shapes are offered",
+            "ok": true,
+            "detail": "1:1 4:3 3:2 16:9 3:4",
+            "kind": "expect"
+          },
+          {
+            "label": "1 to 4 pictures can be chosen",
+            "ok": true,
+            "detail": "1,2,3,4",
+            "kind": "expect"
+          },
+          {
+            "label": "nothing is made yet (Google has not been asked)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "16:9, three pictures",
+        "checks": [
+          {
+            "label": "the button says what it will make",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "while it works, the pop-up says so and can't be cancelled",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "three new pictures are shown",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "each picture really loads",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "What Google was asked, and what the dish has now",
+        "checks": [
+          {
+            "label": "Google was asked for three pictures, all 16:9, with the chosen model",
+            "ok": true,
+            "detail": "[[\"16:9\",\"gemini-3.1-flash-lite-image\"],[\"16:9\",\"gemini-3.1-flash-lite-image\"],[\"16:9\",\"gemini-3.1-flash-lite-image\"]]",
+            "kind": "expect"
+          },
+          {
+            "label": "each description names the dish and says it is vegetarian",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "all three pictures came from the Primary key",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the Backup key was tried once, said its limit was used up, and was left alone after that",
+            "ok": true,
+            "detail": "1 try",
+            "kind": "expect"
+          },
+          {
+            "label": "the dish now has three more pictures",
+            "ok": true,
+            "detail": "3",
+            "kind": "expect"
+          },
+          {
+            "label": "they are WebP files on this server, and open",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the dish row now shows a picture",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "The pop-up stops at the room left on a dish",
+        "checks": [
+          {
+            "label": "with 3 pictures, only 3 more can be chosen",
+            "ok": true,
+            "detail": "3 enabled",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "The key that hit its limit is resting",
+        "checks": [
+          {
+            "label": "Backup shows Resting, with Google's reason",
+            "ok": true,
+            "detail": "Backup quot••••bbbb Resting 0 pictures made · back Nov 19, 2026 Google says this key's quota or rate limit is used up. T",
+            "kind": "expect"
+          },
+          {
+            "label": "Primary shows the three pictures it made and is Ready",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "A store owner never sees any of it",
+        "checks": [
+          {
+            "label": "the owner sees the dishes but no sparkles button on any of them",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and no AI pop-up trigger anywhere on the page",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the API refuses the owner too (403 for making pictures and for the key list)",
+            "ok": true,
+            "detail": "403/403",
+            "kind": "expect"
+          },
+          {
+            "label": "Google was not asked again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 9,
+        "title": "Removing the keys again",
+        "checks": [
+          {
+            "label": "both keys can be removed",
             "ok": true,
             "detail": "",
             "kind": "expect"

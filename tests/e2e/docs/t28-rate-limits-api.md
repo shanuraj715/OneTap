@@ -1,6 +1,6 @@
 # T28 — Request limits — every protected API stops at its limit with a clear 429, per account sign-in guard, live connections, and nothing that changes data is left unprotected
 
-**Area:** security · **Last result:** ✅ PASSED (124 passed, 0 failed · 2026-11-19 17:49 · headless · 8.0 s)
+**Area:** security · **Last result:** ✅ PASSED (124 passed, 0 failed · 2026-11-19 19:29 · headless · 8.5 s)
 
 **Run it alone:** `node run.mjs --only t28` (add `--visible` to watch it)
 
@@ -183,7 +183,7 @@ _Nothing failed._
 
 **Step 9 — coverage — nothing that changes data is left without a limit of its own**
 
-- the inventory sees the whole API — _280 routes, 161 change data_
+- the inventory sees the whole API — _287 routes, 167 change data_
 - every route is under the general limit — except /health, which the server's own monitoring calls — _GET /health_
 - every route that changes data has a limit of its own (or is on the short exempt list) — _none missing_
 - the exempt list names only routes that exist
@@ -205,6 +205,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-19 19:29 | pass | 124 | 0 | headless | 8.5 s |
 | 2026-11-19 17:49 | pass | 124 | 0 | headless | 8.0 s |
 | 2026-11-19 17:43 | pass | 124 | 0 | headless | 9.0 s |
 | 2026-11-19 16:30 | pass | 124 | 0 | headless | 9.2 s |

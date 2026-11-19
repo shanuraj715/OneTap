@@ -501,3 +501,17 @@
 {"id":"t06-storefront-header-categories","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-19T12:48:32.314Z","durationMs":37062}
 {"id":"t35-storefront-category-bar","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-19T12:48:52.368Z","durationMs":20030}
 {"id":"t37-storefront-mobile-layout","status":"pass","pass":43,"fail":0,"mode":"headless","at":"2026-11-19T12:48:57.425Z","durationMs":5038}
+{"id":"t38-ai-images-api","status":"fail","pass":64,"fail":2,"mode":"headless","at":"2026-11-19T13:53:28.816Z","durationMs":4383}
+{"id":"t38-ai-images-api","status":"pass","pass":66,"fail":0,"mode":"headless","at":"2026-11-19T13:53:47.628Z","durationMs":4270}
+{"id":"t39-ai-item-images","status":"pass","pass":30,"fail":0,"mode":"headless","at":"2026-11-19T13:57:59.502Z","durationMs":19535}
+{"id":"t02-whatsapp-api","status":"pass","pass":131,"fail":0,"mode":"headless","at":"2026-11-19T13:58:50.228Z","durationMs":11610}
+{"id":"t06-storefront-header-categories","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-19T13:59:27.176Z","durationMs":36922}
+{"id":"t28-rate-limits-api","status":"pass","pass":124,"fail":0,"mode":"headless","at":"2026-11-19T13:59:35.719Z","durationMs":8524}
+{"id":"t32-menu-tree-api","status":"pass","pass":93,"fail":0,"mode":"headless","at":"2026-11-19T13:59:39.623Z","durationMs":3883}
+{"id":"t33-menu-tree","status":"pass","pass":71,"fail":0,"mode":"headless","at":"2026-11-19T14:00:29.235Z","durationMs":45413}
+{"id":"t34-image-compression-api","status":"pass","pass":32,"fail":0,"mode":"headless","at":"2026-11-19T14:00:39.586Z","durationMs":10325}
+{"id":"t35-storefront-category-bar","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-19T14:00:59.681Z","durationMs":20071}
+{"id":"t36-upload-urls-api","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-19T14:01:04.507Z","durationMs":4808}
+{"id":"t37-storefront-mobile-layout","status":"pass","pass":43,"fail":0,"mode":"headless","at":"2026-11-19T14:01:09.544Z","durationMs":5019}
+{"id":"t38-ai-images-api","status":"pass","pass":66,"fail":0,"mode":"headless","at":"2026-11-19T14:01:13.577Z","durationMs":4014}
+{"id":"t39-ai-item-images","status":"pass","pass":30,"fail":0,"mode":"headless","at":"2026-11-19T14:01:36.427Z","durationMs":18642}

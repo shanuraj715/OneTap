@@ -1,6 +1,6 @@
 # T32 — Menu categories inside categories — depth, moving, pictures, ordering, bulk delete of categories and items, import, and how the storefront builds its sections
 
-**Area:** menu · **Last result:** ✅ PASSED (93 passed, 0 failed · 2026-11-19 17:50 · headless · 3.4 s)
+**Area:** menu · **Last result:** ✅ PASSED (93 passed, 0 failed · 2026-11-19 19:29 · headless · 3.9 s)
 
 **Run it alone:** `node run.mjs --only t32` (add `--visible` to watch it)
 
@@ -178,6 +178,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-19 19:29 | pass | 93 | 0 | headless | 3.9 s |
 | 2026-11-19 17:50 | pass | 93 | 0 | headless | 3.4 s |
 | 2026-11-19 17:44 | pass | 93 | 0 | headless | 3.3 s |
 | 2026-11-19 15:51 | pass | 91 | 0 | headless | 3.1 s |
