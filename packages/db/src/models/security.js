@@ -12,7 +12,7 @@ const loginGuardSchema = new Schema(
     key: { type: String, required: true, unique: true },
     ip: { type: String, required: true },
     /** "staff" = the dashboards (store team + platform), "customer" = a diner's one-time code */
-    scope: { type: String, enum: ["staff", "customer"], required: true },
+    scope: { type: String, enum: ["staff", "customer", "staff-account"], required: true },
     /** failed attempts inside the current window */
     failures: { type: Number, default: 0 },
     windowStart: { type: Date },

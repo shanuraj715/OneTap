@@ -27,6 +27,7 @@ import {
   updateTable,
   voidSession,
 } from "./tables.service.js";
+import { limiter } from "../../middleware/rate-limit.js";
 
 export const tablesRouter         = Router();
 
@@ -147,7 +148,7 @@ tablesRouter.post("/sessions/:id/void", async (req, res) => {
 /* ------------------------------------------------------------ diner (public) */
 
 /** Scan landing: validate the signed code and say which table this is. */
-tablesRouter.get("/scan/:tableId", async (req, res) => {
+tablesRouter.get("/scan/:tableId", limiter("table-scan"), async (req, res) => {
   const token = typeof req.query.k === "string" ? req.query.k : "";
   const { table, ctx } = await resolveScan(req.params.tableId, token);
 
@@ -163,7 +164,7 @@ tablesRouter.get("/scan/:tableId", async (req, res) => {
 });
 
 /** Open (or rejoin) a session — requires a verified diner. */
-tablesRouter.post("/scan/:tableId/session", async (req, res) => {
+tablesRouter.post("/scan/:tableId/session", limiter("table-scan"), async (req, res) => {
   const { token } = z.object({ token: z.string().min(1) }).parse(req.body);
   const { table, ctx } = await resolveScan(req.params.tableId, token);
 
@@ -180,7 +181,7 @@ tablesRouter.post("/scan/:tableId/session", async (req, res) => {
  * scanning a code. Only the number and whether it is taken — no ids, no QR
  * secrets, nothing that would let someone forge a scan.
  */
-tablesRouter.get("/public", async (req, res) => {
+tablesRouter.get("/public", limiter("table-scan"), async (req, res) => {
   const outletId = typeof req.query.outletId === "string" ? req.query.outletId : "";
   if (!outletId) throw new HttpError(400, "outletId is required");
 
@@ -212,7 +213,7 @@ tablesRouter.get("/public", async (req, res) => {
  * party, and the claim is recorded against them. A scan stays the better path
  * and is what the QR flow uses.
  */
-tablesRouter.post("/claim", async (req, res) => {
+tablesRouter.post("/claim", limiter("table-scan"), async (req, res) => {
   const { outletId, tableNumber } = z
     .object({ outletId: z.string().min(1), tableNumber: z.string().min(1).max(20) })
     .parse(req.body);
@@ -247,7 +248,7 @@ tablesRouter.post("/claim", async (req, res) => {
 });
 
 /** The diner's own running tab. */
-tablesRouter.get("/sessions/:id/tab", async (req, res) => {
+tablesRouter.get("/sessions/:id/tab", limiter("table-scan"), async (req, res) => {
   const outletId = typeof req.query.outletId === "string" ? req.query.outletId : "";
   if (!outletId) throw new HttpError(400, "outletId is required");
 

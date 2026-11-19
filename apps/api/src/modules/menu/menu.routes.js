@@ -16,6 +16,7 @@ import {
   updateItem,
   updateModifierGroup,
 } from "./menu.service.js";
+import { limiter } from "../../middleware/rate-limit.js";
 
 export const menuRouter         = Router();
 
@@ -150,7 +151,7 @@ const importBody = z.object({
   targetCategoryId: z.string().optional(),
 });
 
-menuRouter.post("/import", async (req, res) => {
+menuRouter.post("/import", limiter("upload"), async (req, res) => {
   const body = importBody.parse(req.body);
   res.status(201).json(await importMenu(await writeContext(req), body));
 });

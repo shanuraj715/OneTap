@@ -10,6 +10,7 @@ import { installCacheInvalidation } from "./modules/cache/invalidation.js";
 import { requestStats } from "./modules/sysmon/request-stats.js";
 import { authenticate } from "./middleware/auth.js";
 import { errorHandler, notFound } from "./middleware/error.js";
+import { limiter, onlyWrites } from "./middleware/rate-limit.js";
 import { authRouter } from "./modules/auth/auth.routes.js";
 import { brandsRouter } from "./modules/brands/brands.routes.js";
 import { platformRouter, storeRouter } from "./modules/platform/platform.routes.js";
@@ -36,6 +37,13 @@ import { qrCardsRouter } from "./modules/qr-cards/qr-cards.routes.js";
 import { storageRouter } from "./modules/storage/storage.routes.js";
 import { tablesRouter } from "./modules/tables/tables.routes.js";
 import { usersRouter } from "./modules/users/users.routes.js";
+
+/** The dashboard's own routers: what a signed-in team member changes (each gets the "team-write" limit). */
+const TEAM_ROUTES = [
+  "/api/brands", "/api/platform", "/api/store", "/api/users", "/api/outlets", "/api/menu", "/api/orders", "/api/coupons",
+  "/api/pages", "/api/whatsapp", "/api/marketing", "/api/analytics", "/api/tables", "/api/qr-cards", "/api/printing",
+  "/api/preview", "/api/storage", "/api/customers", "/api/notify", "/api/dashboard",
+];
 
 export function createApp()          {
   // cached data is thrown away the moment the data behind it is written (see modules/cache)
@@ -97,6 +105,11 @@ export function createApp()          {
 
   // Attaches req.user when a valid session cookie is present; routes enforce.
   app.use(authenticate);
+
+  // Request limits (middleware/rate-limit.js has every policy and the reason for it):
+  // the floor under every /api request, and a cap on how fast a team member can change things.
+  app.use("/api", limiter("api"));
+  app.use(TEAM_ROUTES, onlyWrites(limiter("team-write")));
 
   app.use("/health", healthRouter);
   app.use("/api/auth", authRouter);

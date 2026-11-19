@@ -3,7 +3,8 @@ import { z } from "zod";
 import { isProd } from "../../env.js";
 import { requireUser, SESSION_COOKIE } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
-import { assertNotBlocked, blockInfo, failed, floodLimiter } from "../security/login-guard.js";
+import { usesPolicy } from "../../middleware/rate-limit.js";
+import { accountBlockedError, assertAccountNotBlocked, assertNotBlocked, blockInfo, clearAccountFailures, failed, floodLimiter, recordAccountFailure } from "../security/login-guard.js";
 import { describeSessionUser, login, logout } from "./auth.service.js";
 
 export const authRouter         = Router();
@@ -25,9 +26,11 @@ authRouter.get("/guard", async (req, res) => {
   res.json(await blockInfo(req, "staff"));
 });
 
-authRouter.post("/login", loginFlood, async (req, res) => {
+authRouter.post("/login", loginFlood, usesPolicy("login-account"), async (req, res) => {
   const body = credentials.parse(req.body);
   await assertNotBlocked(req, "staff");
+  // …and the account itself, whichever address the guesses come from
+  await assertAccountNotBlocked(body.email);
   let result;
   try {
     result = await login(body.email, body.password, {
@@ -35,9 +38,14 @@ authRouter.post("/login", loginFlood, async (req, res) => {
       ip: req.ip,
     });
   } catch (e) {
-    if (e instanceof HttpError && e.status === 401) await failed(req, "staff", e);
+    if (e instanceof HttpError && e.status === 401) {
+      const account = await recordAccountFailure(body.email);
+      if (account.blocked) throw accountBlockedError(account);
+      await failed(req, "staff", e);
+    }
     throw e;
   }
+  await clearAccountFailures(body.email);
 
   res.cookie(SESSION_COOKIE, result.token, {
     httpOnly: true,

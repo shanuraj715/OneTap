@@ -11,6 +11,7 @@ import {
   sendCoinsCode,
   staffQuote,
 } from "./staff-orders.service.js";
+import { limiter } from "../../middleware/rate-limit.js";
 
 /**
  * The staff "Take order" screen. Every route needs `order:create` — owners,
@@ -22,13 +23,13 @@ export const staffOrdersRouter = Router();
 const phoneParam = z.string().min(8).max(20);
 
 /** Who a mobile number belongs to, and whether their coins can be used. */
-staffOrdersRouter.get("/customer", async (req, res) => {
+staffOrdersRouter.get("/customer", limiter("pii-read"), async (req, res) => {
   const ctx = await requireOutletContext(req, "order:create");
   res.json(await lookupCustomer(ctx, phoneParam.parse(req.query.phone)));
 });
 
 /** Customers matching the digits typed so far — for the dropdown under the mobile field. */
-staffOrdersRouter.get("/customers", async (req, res) => {
+staffOrdersRouter.get("/customers", limiter("pii-read"), async (req, res) => {
   const ctx = await requireOutletContext(req, "order:create");
   const q = z.string().max(20).parse(req.query.q ?? "");
   res.json({ customers: await searchCustomers(ctx, q) });
@@ -47,13 +48,13 @@ staffOrdersRouter.post("/quote", async (req, res) => {
 });
 
 /** Text the customer a code before their coins are spent (only when the store sends SMS codes). */
-staffOrdersRouter.post("/coins-code", async (req, res) => {
+staffOrdersRouter.post("/coins-code", limiter("coins-code"), async (req, res) => {
   const ctx = await requireOutletContext(req, "order:create");
   const { phone } = z.object({ phone: phoneParam }).parse(req.body);
   res.json(await sendCoinsCode(ctx, phone));
 });
 
-staffOrdersRouter.post("/coins-code/verify", async (req, res) => {
+staffOrdersRouter.post("/coins-code/verify", limiter("coins-code"), async (req, res) => {
   const ctx = await requireOutletContext(req, "order:create");
   const { phone, code } = z.object({ phone: phoneParam, code: z.string().min(4).max(8) }).parse(req.body);
   res.json(await confirmCoinsCode(ctx, phone, code));

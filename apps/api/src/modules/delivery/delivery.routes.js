@@ -4,6 +4,7 @@ import { checkDelivery } from "@onetap/config-schema";
 import { outletBrand } from "../outlets/outlet-cache.js";
 import { HttpError } from "../../middleware/error.js";
 import { outletConfigFor } from "../orders/orders.service.js";
+import { limiter } from "../../middleware/rate-limit.js";
 
 export const deliveryRouter         = Router();
 
@@ -22,7 +23,7 @@ const checkBody = z.object({
  * straight-line distance, whether it's inside the delivery radius, the fee, and
  * an ETA — all from the outlet's own settings, with no external API.
  */
-deliveryRouter.post("/check", async (req, res) => {
+deliveryRouter.post("/check", limiter("public-compute"), async (req, res) => {
   const body = checkBody.parse(req.body);
 
   const ref = await outletBrand(body.outletId);

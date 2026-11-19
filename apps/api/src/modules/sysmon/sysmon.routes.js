@@ -1,12 +1,15 @@
 import { Router } from "express";
 import { z } from "zod";
 import { folderScanState, processSnapshot, serverHistory, serverSnapshot, startFolderScan } from "./monitor.js";
+import { limiter } from "../../middleware/rate-limit.js";
 
 /**
  * The Server page's data. Mounted by the platform router, so only the platform
  * owner can read it. Nothing here is cached by browsers or proxies.
  */
 export const sysmonRouter = Router();
+// reading the machine (processes, disk) costs the machine something: a person watching the page stays far below this
+sysmonRouter.use(limiter("report"));
 
 sysmonRouter.use((_req, res, next) => {
   res.set("Cache-Control", "no-store");
@@ -41,6 +44,6 @@ sysmonRouter.get("/folders", (_req, res) => {
 });
 
 /** Start a scan in the background (it can take a while); poll GET /folders. */
-sysmonRouter.post("/folders/scan", (_req, res) => {
+sysmonRouter.post("/folders/scan", limiter("export"), (_req, res) => {
   res.status(202).json(startFolderScan());
 });

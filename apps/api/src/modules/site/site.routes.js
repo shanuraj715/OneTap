@@ -3,8 +3,9 @@ import { z } from "zod";
 import { IMAGE_RULES, LEAD_STATUSES } from "@onetap/config-schema";
 import { requireSuperAdmin, requireUser } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
-import { clientIp, issueChallenge, tooMany } from "./guard.js";
+import { clientIp, issueChallenge } from "./guard.js";
 import * as site from "./site.service.js";
+import { limiter } from "../../middleware/rate-limit.js";
 
 /* ===================================================================== public */
 
@@ -50,14 +51,13 @@ siteRouter.get("/preview/:id", async (req, res) => {
 });
 
 /** A fresh spam-guard challenge for the contact form to solve before it sends. Never cached. */
-siteRouter.get("/challenge", (req, res) => {
+siteRouter.get("/challenge", limiter("site-challenge"), (req, res) => {
   res.set("Cache-Control", "no-store");
-  if (tooMany(`challenge:${clientIp(req)}`, 40, 10 * 60 * 1000)) throw new HttpError(429, "Too many requests — please wait a moment.");
   res.json(issueChallenge());
 });
 
 /** The contact form. */
-siteRouter.post("/leads", async (req, res) => {
+siteRouter.post("/leads", limiter("site-lead"), async (req, res) => {
   res.status(201).json(await site.createLead(req.body ?? {}, { ip: clientIp(req) }));
 });
 
@@ -108,7 +108,7 @@ platformSiteRouter.get("/pages/:id/preview-link", async (req, res) => {
 });
 
 /** Raw image bytes, as the store dashboard's uploads do. */
-platformSiteRouter.post("/upload", raw({ type: () => true, limit: IMAGE_RULES.maxUploadBytes + 4096 }), async (req, res) => {
+platformSiteRouter.post("/upload", limiter("upload"), raw({ type: () => true, limit: IMAGE_RULES.maxUploadBytes + 4096 }), async (req, res) => {
   const body = Buffer.isBuffer(req.body) ? req.body : null;
   if (!body?.length) throw new HttpError(400, "Send the image bytes as the request body.");
   res.status(201).json(await site.uploadSiteImage(body));

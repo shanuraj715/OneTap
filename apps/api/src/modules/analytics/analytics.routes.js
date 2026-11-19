@@ -7,6 +7,7 @@ import { HttpError } from "../../middleware/error.js";
 import { requireFeature } from "../platform/plan.service.js";
 import { buildReport, toCsv, toJson, toPdf, toXlsx } from "./analytics.export.js";
 import * as svc from "./analytics.service.js";
+import { limiter } from "../../middleware/rate-limit.js";
 
 /**
  * Analytics for the store dashboard. Needs the "Analytics & reports" plan feature and a role with analytics:read
@@ -14,6 +15,8 @@ import * as svc from "./analytics.service.js";
  * need analytics:finance (owner, accountant); files need analytics:export (owner, accountant).
  */
 export const analyticsRouter = Router();
+// every report runs aggregations over the store's order history
+analyticsRouter.use(limiter("report"));
 
 /** the signed-in person's role in this store */
 const roleOf = (user, brandId) => (user.isSuperAdmin ? "super_admin" : (user.memberships?.find((m) => m.brandId === brandId)?.role ?? ""));
@@ -106,7 +109,7 @@ analyticsRouter.put("/profile", async (req, res) => {
 });
 
 /* ---- files */
-analyticsRouter.post("/export", async (req, res) => {
+analyticsRouter.post("/export", limiter("export"), async (req, res) => {
   const input = exportRequestSchema.parse(req.body);
   const range = analyticsRangeSchema.parse({ from: input.from, to: input.to });
   const { ctx, ids, outlets, role } = await access(req, "analytics:export", input.outletIds.join(",") || "all");

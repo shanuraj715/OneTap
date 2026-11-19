@@ -3,11 +3,12 @@ import { currentAge } from "@onetap/config-schema";
 import { CustomerModel } from "@onetap/db";
 import { requireOutletContext } from "../../middleware/auth.js";
 import { ledgerFor } from "../wallet/wallet.service.js";
+import { limiter } from "../../middleware/rate-limit.js";
 
 export const customersRouter         = Router();
 
 /** Admin: everyone who has ever ordered at this outlet, name/email/mobile + wallet. */
-customersRouter.get("/", async (req, res) => {
+customersRouter.get("/", limiter("pii-read"), async (req, res) => {
   const ctx = await requireOutletContext(req, "customer:read");
   const q = typeof req.query.q === "string" ? req.query.q.trim() : "";
 
@@ -41,7 +42,7 @@ customersRouter.get("/", async (req, res) => {
 });
 
 /** A customer's coin ledger — how they earned and spent what they have now. */
-customersRouter.get("/:id/wallet", async (req, res) => {
+customersRouter.get("/:id/wallet", limiter("pii-read"), async (req, res) => {
   const ctx = await requireOutletContext(req, "customer:read");
   const customer = await CustomerModel.findOne({ _id: req.params.id, brandId: ctx.brandId }).lean();
   const entries = await ledgerFor(ctx, req.params.id);

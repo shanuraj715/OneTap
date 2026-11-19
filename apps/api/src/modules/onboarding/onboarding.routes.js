@@ -7,6 +7,7 @@ import { resolveMapsLink } from "./maps-resolve.js";
 import { renderOnboardingPdf } from "./onboarding.pdf.js";
 import { publishForm } from "./onboarding.publish.js";
 import { checkForm, deleteForm, getForm, getPricing, listForms, planOf, savePricing, saveForm } from "./onboarding.service.js";
+import { limiter } from "../../middleware/rate-limit.js";
 
 /** The client onboarding forms. Mounted inside the platform console's router, so it is super-admin only. */
 export const onboardingRouter = Router();
@@ -35,7 +36,7 @@ onboardingRouter.put("/pricing", async (req, res) => {
 });
 
 /** Which map point a pasted link means (short Google links are opened by the server). */
-onboardingRouter.post("/resolve-map", async (req, res) => {
+onboardingRouter.post("/resolve-map", limiter("outbound-fetch"), async (req, res) => {
   const { link } = z.object({ link: z.string().min(1).max(600) }).parse(req.body);
   res.json(await resolveMapsLink(link));
 });
@@ -60,14 +61,14 @@ onboardingRouter.get("/:id/check", async (req, res) => {
   res.json(await checkForm(req.params.id));
 });
 
-onboardingRouter.post("/:id/publish", async (req, res) => {
+onboardingRouter.post("/:id/publish", limiter("destructive"), async (req, res) => {
   const user = requireUser(req);
   const { ownerPassword } = z.object({ ownerPassword: z.string().min(1).max(200) }).parse(req.body);
   res.status(201).json(await publishForm(req.params.id, { ownerPassword }, String(user._id)));
 });
 
 /** The form as a PDF. `?inline=1` shows it in the browser (the Print button) instead of downloading it. */
-onboardingRouter.get("/:id/pdf", async (req, res) => {
+onboardingRouter.get("/:id/pdf", limiter("export"), async (req, res) => {
   const form = await getForm(req.params.id);
   const plan = await planOf(form.data);
   const file = await renderOnboardingPdf({ form, data: onboardingSchema.parse(form.data), plan });

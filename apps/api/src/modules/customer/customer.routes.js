@@ -6,6 +6,7 @@ import { isProd } from "../../env.js";
 import { HttpError } from "../../middleware/error.js";
 import { assertNotBlocked, blockInfo, failed, floodLimiter } from "../security/login-guard.js";
 import { completeProfile, customerFromToken, endCustomerSession, requestOtp, verifyOtp } from "./customer.service.js";
+import { limiter, usesPolicy } from "../../middleware/rate-limit.js";
 
 export const CUSTOMER_COOKIE = "onetap_customer";
 
@@ -59,7 +60,7 @@ customerRouter.get("/guard", async (req, res) => {
   res.json(await blockInfo(req, "customer"));
 });
 
-customerRouter.post("/otp/request", otpFlood, async (req, res) => {
+customerRouter.post("/otp/request", limiter("otp-send-ip"), limiter("otp-send-store"), usesPolicy("otp-resend-number"), otpFlood, async (req, res) => {
   await assertNotBlocked(req, "customer");
   const body = requestBody.parse(req.body);
   const outlet = await outletOf(body.outletId);
@@ -143,7 +144,7 @@ const completeProfileBody = z.object({
  * gender/age existed — to finish their profile without going through OTP
  * again. Owning the session cookie already proves who they are.
  */
-customerRouter.patch("/profile", async (req, res) => {
+customerRouter.patch("/profile", limiter("customer-account"), async (req, res) => {
   const customer = await currentCustomer(req);
   if (!customer) throw new HttpError(401, "Sign in first");
   const body = completeProfileBody.parse(req.body);
@@ -151,7 +152,7 @@ customerRouter.patch("/profile", async (req, res) => {
   res.json({ customer: shapeCustomer(updated) });
 });
 
-customerRouter.post("/logout", async (req, res) => {
+customerRouter.post("/logout", limiter("customer-account"), async (req, res) => {
   await endCustomerSession((req.cookies                                      )?.[CUSTOMER_COOKIE]);
   res.clearCookie(CUSTOMER_COOKIE, { path: "/" });
   res.status(204).end();

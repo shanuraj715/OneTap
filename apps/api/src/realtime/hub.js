@@ -3,6 +3,7 @@ import { WebSocket, WebSocketServer } from "ws";
 import { OutletModel,              } from "@onetap/db";
 import { logger } from "../logger.js";
 import { SESSION_COOKIE } from "../middleware/auth.js";
+import { allowUpgrade, refuseUpgrade } from "../middleware/rate-limit.js";
 import { userFromToken } from "../modules/auth/auth.service.js";
 import { storePlan } from "../modules/platform/plan.service.js";
 
@@ -78,11 +79,15 @@ async function authorize(
 export function attachRealtime(server        )       {
   // noServer so we can reject an unauthorised upgrade before the handshake
   // completes, rather than accepting a socket and closing it afterwards.
-  const wss = new WebSocketServer({ noServer: true });
+  // nothing useful is ever SENT to this hub by a browser — the pings are tiny — so no big message is ever accepted
+  const wss = new WebSocketServer({ noServer: true, maxPayload: 4 * 1024 });
 
   server.on("upgrade", (req, socket, head) => {
     const url = new URL(req.url ?? "/", "http://localhost");
     if (url.pathname !== "/realtime") return; // leave other upgrades alone
+
+    const gate = allowUpgrade(req);
+    if (!gate.ok) return refuseUpgrade(socket, gate.retryAfterSec);
 
     void authorize(req)
       .then((auth) => {

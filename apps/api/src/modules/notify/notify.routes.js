@@ -10,6 +10,7 @@ import {
   saveMessaging,
   saveNotifyCredentials,
 } from "./notify.service.js";
+import { limiter } from "../../middleware/rate-limit.js";
 
 export const notifyRouter         = Router();
 
@@ -22,7 +23,7 @@ notifyRouter.get("/config", async (req, res) => {
 
 const saveBody = z.object({ values: z.record(z.string(), z.string()) });
 
-notifyRouter.put("/config/:channel", async (req, res) => {
+notifyRouter.put("/config/:channel", limiter("secrets"), async (req, res) => {
   const ctx = await requireOutletContext(req, "notification-config:manage");
   const user = requireUser(req);
   const channel = notifyChannelSchema.parse(req.params.channel);
@@ -31,7 +32,7 @@ notifyRouter.put("/config/:channel", async (req, res) => {
   res.json({ channels: await listNotifyConfig(ctx) });
 });
 
-notifyRouter.delete("/config/:channel", async (req, res) => {
+notifyRouter.delete("/config/:channel", limiter("secrets"), async (req, res) => {
   const ctx = await requireOutletContext(req, "notification-config:manage");
   await clearNotifyCredentials(ctx, notifyChannelSchema.parse(req.params.channel));
   res.json({ channels: await listNotifyConfig(ctx) });
@@ -45,7 +46,7 @@ notifyRouter.get("/messaging", async (req, res) => {
   res.json(await getMessaging(ctx));
 });
 
-notifyRouter.put("/messaging", async (req, res) => {
+notifyRouter.put("/messaging", limiter("secrets"), async (req, res) => {
   const ctx = await requireOutletContext(req, "notification-config:manage");
   res.json(await saveMessaging(ctx, req.body));
 });

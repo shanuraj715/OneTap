@@ -58,6 +58,14 @@ const schema = z.object({
   LOGIN_BLOCK_STEPS_SECONDS: z.string().default("300,900,3600,21600,86400"),
   LOGIN_STRIKE_FORGET_SECONDS: z.coerce.number().int().min(1).default(86400),
   LOGIN_FLOOD_PER_MINUTE: z.coerce.number().int().min(1).default(30),
+  /**
+   * Request limits for the whole API (middleware/rate-limit.js; docs/api-rate-limiting.md lists what is limited and why).
+   * "off" switches them all off. RATE_LIMIT_SCALE multiplies every limit: 0.5 is twice as strict, 2 twice as loose.
+   * Requests from our own network (loopback, private ranges — the storefront's and website's servers, health checks)
+   * are never limited by address; the sign-in guard above is separate and has its own switch.
+   */
+  RATE_LIMITS: z.enum(["on", "off"]).default("on"),
+  RATE_LIMIT_SCALE: z.coerce.number().positive().default(1),
   /** the ONE process that sends queued SMS / WhatsApp Business API marketing messages (same rule as WHATSAPP_WORKER) */
   MARKETING_WORKER: z.enum(["on", "off"]).default("off"),
   /** Meta's WhatsApp Cloud API address. Only ever changed to point a test at a stand-in — leave it alone. */

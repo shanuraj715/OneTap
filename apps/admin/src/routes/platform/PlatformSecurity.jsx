@@ -29,13 +29,13 @@ export function PlatformSecurity() {
         {blocks.length ? (
           <Table minWidth={720}>
             <thead>
-              <tr><Th>Network address</Th><Th>For</Th><Th>Status</Th><Th>Failed in window</Th><Th>Times blocked</Th><Th>Last attempt</Th><Th> </Th></tr>
+              <tr><Th>Network address / account</Th><Th>For</Th><Th>Status</Th><Th>Failed in window</Th><Th>Times blocked</Th><Th>Last attempt</Th><Th> </Th></tr>
             </thead>
             <tbody>
               {blocks.map((b) => (
                 <tr key={b.id} data-ip={b.ip}>
                   <Td>{b.ip}</Td>
-                  <Td>{b.scope === "staff" ? "Dashboards" : "Customer codes"}</Td>
+                  <Td>{b.scope === "staff" ? "Dashboards" : b.scope === "staff-account" ? "One account (any address)" : "Customer codes"}</Td>
                   <Td>{b.blocked ? <Pill tone="error">Blocked · {secs(left(b.blockedUntil))} left</Pill> : <Pill tone="neutral">Watching</Pill>}</Td>
                   <Td>{b.failures}</Td>
                   <Td>{b.strikes}</Td>
