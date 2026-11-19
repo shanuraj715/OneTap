@@ -2129,8 +2129,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T06:54:06.746Z",
-    "durationMs": 3153,
+    "at": "2026-11-19T11:00:36.489Z",
+    "durationMs": 3493,
     "steps": [
       {
         "n": 1,
@@ -9380,8 +9380,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T10:20:33.226Z",
-    "durationMs": 8553,
+    "at": "2026-11-19T11:00:45.699Z",
+    "durationMs": 9156,
     "steps": [
       {
         "n": 1,
@@ -11705,8 +11705,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T10:22:22.377Z",
-    "durationMs": 45231,
+    "at": "2026-11-19T11:01:37.672Z",
+    "durationMs": 47780,
     "steps": [
       {
         "n": 1,
@@ -12206,6 +12206,255 @@
           },
           {
             "label": "the old comma-separated box is gone: the quick 'New category' box adds exactly what is typed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t34-image-compression-api": {
+    "id": "t34-image-compression-api",
+    "title": "Pictures are compressed and optimised on the server when uploaded — size, shape, rotation, privacy, limits and settings",
+    "status": "pass",
+    "pass": 32,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-19T11:01:47.898Z",
+    "durationMs": 10202,
+    "steps": [
+      {
+        "n": 1,
+        "title": "a very high-quality photo is made small",
+        "checks": [
+          {
+            "label": "a 24-megapixel JPEG at quality 95 (about 19 MB) is accepted",
+            "ok": true,
+            "detail": "201 19860 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "the stored file is WebP and can be fetched from its address",
+            "ok": true,
+            "detail": "200 image/webp",
+            "kind": "expect"
+          },
+          {
+            "label": "it is now 282 KB — under the 400 KB target and at least 20 times smaller than the original",
+            "ok": true,
+            "detail": "19860 KB → 282 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "scaled down to 1600 px on the long side, keeping the shape",
+            "ok": true,
+            "detail": "1600x1067",
+            "kind": "expect"
+          },
+          {
+            "label": "the answer reports the real final size, bytes and the original's bytes",
+            "ok": true,
+            "detail": "{\"w\":1600,\"h\":1067,\"bytes\":289134}",
+            "kind": "expect"
+          },
+          {
+            "label": "it is stored inside this store's own folder, with a name the uploader doesn't control",
+            "ok": true,
+            "detail": "6afed714c0cc33318828dcd7/6afed714c0cc33318828dcdb/menu-items/b629961e-1b9b-4712-ae12-6e4377efcb20.webp",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "phone photos: rotation and private metadata",
+        "checks": [
+          {
+            "label": "a photo the phone saved sideways (orientation tag 6) comes out upright (400 wide, 800 tall)",
+            "ok": true,
+            "detail": "400x800",
+            "kind": "expect"
+          },
+          {
+            "label": "(the test picture really carries hidden text in its metadata)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the hidden metadata (author, camera, location…) is gone from the stored file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "small pictures and transparent logos",
+        "checks": [
+          {
+            "label": "a small picture is never blown up",
+            "ok": true,
+            "detail": "300x200",
+            "kind": "expect"
+          },
+          {
+            "label": "a logo with a see-through background stays see-through (corner transparent, centre solid)",
+            "ok": true,
+            "detail": "image/webp, alpha corner 0 / centre 255",
+            "kind": "expect"
+          },
+          {
+            "label": "the kind of picture (logo) decides the folder",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "detail that quality alone can't shrink: the picture itself is made smaller to fit",
+        "checks": [
+          {
+            "label": "very grainy detail still ends up under the 400 KB target",
+            "ok": true,
+            "detail": "12369 KB → 284 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "…by reducing its size (not below 640 px), not by turning it into mush",
+            "ok": true,
+            "detail": "1218x913, q?",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the shape is kept",
+            "ok": true,
+            "detail": "1.334 vs 1.333",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "things that must be refused, or survived",
+        "checks": [
+          {
+            "label": "a \"pixel bomb\" (225 megapixels, only 672 KB on disk) is shrunk safely and quickly",
+            "ok": true,
+            "detail": "201 in 388 ms",
+            "kind": "expect"
+          },
+          {
+            "label": "the server is still healthy afterwards",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a picture over the 268-megapixel ceiling is refused with a clear message",
+            "ok": true,
+            "detail": "413 That picture has too many pixels (over 268 megapixels). Make it smaller and try again.",
+            "kind": "expect"
+          },
+          {
+            "label": "a file that isn't a picture is refused (415)",
+            "ok": true,
+            "detail": "415 That file isn't an image we can read. Try JPEG, PNG, WebP, AVIF or HEIC.",
+            "kind": "expect"
+          },
+          {
+            "label": "an empty upload is a 400",
+            "ok": true,
+            "detail": "400",
+            "kind": "expect"
+          },
+          {
+            "label": "a file over 30 MB is refused before any work is done (413)",
+            "ok": true,
+            "detail": "413",
+            "kind": "expect"
+          },
+          {
+            "label": "someone not signed in can't upload",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a role without menu rights (kitchen) can't upload",
+            "ok": true,
+            "detail": "403",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "several big pictures at once",
+        "checks": [
+          {
+            "label": "five 19 MB photos uploaded at the same moment all succeed",
+            "ok": true,
+            "detail": "201,201,201,201,201",
+            "kind": "expect"
+          },
+          {
+            "label": "…in a reasonable time",
+            "ok": true,
+            "detail": "812 ms",
+            "kind": "expect"
+          },
+          {
+            "label": "…each stored under its own name",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the server is still healthy afterwards",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "the platform's compression settings are what is applied",
+        "checks": [
+          {
+            "label": "the platform owner can change the compression settings",
+            "ok": true,
+            "detail": "200 {\"provider\":\"local\",\"updatedAt\":\"2026-11-19T11:01:47.108Z\",\"limits\":{\"maxPerItem",
+            "kind": "expect"
+          },
+          {
+            "label": "the next upload follows them: JPEG, 800 px, under 100 KB",
+            "ok": true,
+            "detail": "image/jpeg 800x533 3 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "a store owner can't change them",
+            "ok": true,
+            "detail": "403",
+            "kind": "expect"
+          },
+          {
+            "label": "settings outside the allowed ranges (300 px minimum, quality 30–100) are refused",
+            "ok": true,
+            "detail": "400",
+            "kind": "expect"
+          },
+          {
+            "label": "putting the defaults back works",
             "ok": true,
             "detail": "",
             "kind": "expect"

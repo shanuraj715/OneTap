@@ -439,3 +439,11 @@
 {"id":"t31-store-name-header","status":"pass","pass":12,"fail":0,"mode":"headless","at":"2026-11-19T10:21:28.824Z","durationMs":3033}
 {"id":"t32-menu-tree-api","status":"pass","pass":91,"fail":0,"mode":"headless","at":"2026-11-19T10:21:31.956Z","durationMs":3115}
 {"id":"t33-menu-tree","status":"pass","pass":71,"fail":0,"mode":"headless","at":"2026-11-19T10:22:22.377Z","durationMs":45231}
+{"id":"t34-image-compression-api","status":"error","pass":17,"fail":0,"mode":"headless","at":"2026-11-19T10:59:18.288Z","durationMs":7483,"error":"image-compression.mjs exited with code 1.     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)  Node.js v22.17.0"}
+{"id":"t34-image-compression-api","status":"error","pass":17,"fail":0,"mode":"headless","at":"2026-11-19T10:59:31.133Z","durationMs":7939,"error":"image-compression.mjs exited with code 1.     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)  Node.js v22.17.0"}
+{"id":"t34-image-compression-api","status":"error","pass":17,"fail":0,"mode":"headless","at":"2026-11-19T10:59:42.658Z","durationMs":7918,"error":"image-compression.mjs exited with code 1.     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)  Node.js v22.17.0"}
+{"id":"t34-image-compression-api","status":"pass","pass":32,"fail":0,"mode":"headless","at":"2026-11-19T11:00:18.872Z","durationMs":10202}
+{"id":"t07-favicon-plan-rules","status":"pass","pass":8,"fail":0,"mode":"headless","at":"2026-11-19T11:00:36.489Z","durationMs":3493}
+{"id":"t28-rate-limits-api","status":"pass","pass":124,"fail":0,"mode":"headless","at":"2026-11-19T11:00:45.699Z","durationMs":9156}
+{"id":"t33-menu-tree","status":"pass","pass":71,"fail":0,"mode":"headless","at":"2026-11-19T11:01:37.672Z","durationMs":47780}
+{"id":"t34-image-compression-api","status":"pass","pass":32,"fail":0,"mode":"headless","at":"2026-11-19T11:01:47.898Z","durationMs":10202}

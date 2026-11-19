@@ -1,6 +1,6 @@
 # T28 — Request limits — every protected API stops at its limit with a clear 429, per account sign-in guard, live connections, and nothing that changes data is left unprotected
 
-**Area:** security · **Last result:** ✅ PASSED (124 passed, 0 failed · 2026-11-19 15:50 · headless · 8.6 s)
+**Area:** security · **Last result:** ✅ PASSED (124 passed, 0 failed · 2026-11-19 16:30 · headless · 9.2 s)
 
 **Run it alone:** `node run.mjs --only t28` (add `--visible` to watch it)
 
@@ -205,6 +205,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-19 16:30 | pass | 124 | 0 | headless | 9.2 s |
 | 2026-11-19 15:50 | pass | 124 | 0 | headless | 8.6 s |
 | 2026-11-19 13:35 | pass | 124 | 0 | headless | 9.1 s |
 | 2026-11-19 13:27 | pass | 124 | 0 | headless | 8.8 s |
