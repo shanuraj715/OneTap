@@ -80,7 +80,8 @@ export const WA_MESSAGE_STATUSES = ["queued", "sending", "sent", "delivered", "r
 export const WA_MESSAGE_SOURCES = ["chat", "order", "broadcast", "phone", "code"];
 
 export const waMediaSchema = z.object({
-  url: z.string().url().max(1000),
+  // our own uploads are kept without a domain ("/uploads/<key>"); anything else must be a full web address
+  url: z.string().max(1000).refine((v) => v.startsWith("/uploads/") || z.string().url().safeParse(v).success, "Not a valid address"),
   key: z.string().max(300).default(""),
   mime: z.string().max(120),
   fileName: z.string().max(200).default(""),
