@@ -215,7 +215,7 @@ export const NOTIFY_FIELDS                                                = {
       label: "Code message",
       secret: false,
       multiline: true,
-      hint: "Use {{code}} for the code and {{store}} for your store's name",
+      hint: "Use {{code}} for the code and {{store}} for your store's name. More variables — {{name}}, {{outlet}}, {{minutes}} and others — are listed under Settings → Message sending → Variables.",
       info: "Used when verification codes are sent by SMS (choose that under Settings → Message sending). Indian gateways only deliver messages that match a DLT-registered template — paste your registered OTP template here, with {{code}} where the number goes.",
       placeholder: DEFAULT_OTP_TEMPLATE,
     },

@@ -7,6 +7,7 @@ import {
   messagingSchema,
   NOTIFY_CHANNELS,
   NOTIFY_FIELDS,
+  OTP_VALID_MINUTES,
   ORDER_STATUS_LABELS,
   renderCodeMessage,
   renderTemplate,
@@ -17,6 +18,7 @@ import {
 import {
   BrandModel,
   brandFilter,
+  CustomerModel,
   NotificationCredentialModel,
   NotificationLogModel,
   OutletModel,
@@ -165,9 +167,9 @@ export async function codeSender(brandId        ) {
   return {
     method: settings.method,
     /** → { ok, reason?, userMessage? } — never throws */
-    async send(to        , code        ) {
+    async send(to, code, context = {}) {
       try {
-        const result = await sendCodeBy(settings, ctx, to, code);
+        const result = await sendCodeBy(settings, ctx, to, code, context);
         if (!result.ok) logger.error({ brandId: ctx.brandId, method: settings.method, reason: result.reason }, "verification code could not be sent");
         return result;
       } catch (e) {
@@ -180,9 +182,39 @@ export async function codeSender(brandId        ) {
 
 const CODE_UNAVAILABLE = "We can't send the code right now. Please try again in a few minutes.";
 
-async function sendCodeBy(settings, ctx, to        , code        ) {
+/** a customer's first name, if what we were given looks like one (letters only — it ends up in a message to that number) */
+export function firstNameOf(raw) {
+  const first = String(raw ?? "").trim().split(/\s+/)[0] ?? "";
+  return /^[\p{L}\p{M}][\p{L}\p{M}'’.-]{0,29}$/u.test(first) ? first : "";
+}
+
+/**
+ * What each {{variable}} of a code message stands for, for this customer (see CODE_MESSAGE_VARIABLES).
+ * The name on file wins over the one typed into the sign-in form — anybody can type anything there.
+ */
+async function codeValues(settings, ctx, to, code, context) {
+  const [outlet, customer] = await Promise.all([
+    context.outletId ? OutletModel.findOne({ _id: context.outletId, brandId: ctx.brandId }).select("name config.identity.phone").lean() : null,
+    CustomerModel.findOne({ brandId: ctx.brandId, phone: to }).select("name").lean(),
+  ]);
+  const now = new Date();
+  const IST = "Asia/Kolkata";
+  return {
+    code,
+    store: settings.storeName,
+    outlet: outlet?.name ?? settings.storeName,
+    name: firstNameOf(customer?.name) || firstNameOf(context.name) || "there",
+    phone: /^\d{10}$/.test(to) ? `${to.slice(0, 5)} ${to.slice(5)}` : to,
+    minutes: String(OTP_VALID_MINUTES),
+    date: now.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric", timeZone: IST }),
+    time: now.toLocaleTimeString("en-IN", { hour: "numeric", minute: "2-digit", hour12: true, timeZone: IST }),
+    store_phone: outlet?.config?.identity?.phone ?? "",
+  };
+}
+
+async function sendCodeBy(settings, ctx, to, code, context) {
   if (settings.method === "linked") {
-    return sendCodeLinked(ctx.brandId, to, renderCodeMessage(settings.linkedMessage, { code, store: settings.storeName }));
+    return sendCodeLinked(ctx.brandId, to, renderCodeMessage(settings.linkedMessage, await codeValues(settings, ctx, to, code, context)));
   }
 
   if (settings.method === "whatsapp") {
@@ -206,8 +238,7 @@ async function sendCodeBy(settings, ctx, to        , code        ) {
   const provider = providerFor("sms");
   const missing = provider.requiredFields.filter((f) => !creds[f]);
   if (missing.length) return { ok: false, reason: `SMS isn't fully set up (missing ${missing.join(", ")})`, userMessage: CODE_UNAVAILABLE };
-  const template = creds.otpTemplate?.trim() || DEFAULT_OTP_TEMPLATE;
-  const message = template.replaceAll("{{code}}", code).replaceAll("{{store}}", settings.storeName);
+  const message = renderCodeMessage(creds.otpTemplate, await codeValues(settings, ctx, to, code, context), DEFAULT_OTP_TEMPLATE);
   const result = await provider.send(creds, { to, event: "otp", values: {}, message });
   return result.ok ? result : { ...result, userMessage: "Couldn't send the code. Check the number and try again." };
 }

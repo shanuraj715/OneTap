@@ -1,5 +1,5 @@
 import { createHash, randomBytes, randomInt } from "node:crypto";
-import { otpResendWait } from "@onetap/config-schema";
+import { OTP_VALID_MINUTES, otpResendWait } from "@onetap/config-schema";
 import {
   CustomerModel,
   CustomerSessionModel,
@@ -11,7 +11,6 @@ import { sendOtp } from "../notifications/notify.js";
 import { codeSender } from "../notify/notify.service.js";
 import { clearThrottle, livePurposeFilter, noteSent, releaseSend, reserveSend } from "./otp-throttle.js";
 
-const OTP_TTL_MIN = 10;
 const MAX_ATTEMPTS = 5;
 const SESSION_DAYS = 30;
 
@@ -59,12 +58,12 @@ export async function requestOtp(input) {
     channel,
     purpose,
     codeHash: sha(code),
-    expiresAt: new Date(Date.now() + OTP_TTL_MIN * 60 * 1000),
+    expiresAt: new Date(Date.now() + OTP_VALID_MINUTES * 60 * 1000),
   });
 
   const sender = channel === "sms" ? await codeSender(input.brandId) : null;
   if (sender) {
-    const sent = await sender.send(destination, code);
+    const sent = await sender.send(destination, code, { outletId: input.outletId, name: input.name });
     if (!sent.ok) {
       // nobody has this code — drop it, so it can't replace the one the customer may still be holding,
       // and give the send back (the number can try again after the shortest wait)

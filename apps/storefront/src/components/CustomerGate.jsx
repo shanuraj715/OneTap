@@ -160,7 +160,7 @@ export function CustomerGate({ customer, outletId, onSuccess, onStepChange }) {
   const requestCode = () =>
     run(async () => {
       if (!detailsValid) throw new Error("Enter your name and a 10-digit mobile number");
-      const r = await api("/api/customer/otp/request", { outletId, destination });
+      const r = await api("/api/customer/otp/request", { outletId, destination, name: name.trim() });
       setSent(true);
       setCode("");
       setNotice(null);

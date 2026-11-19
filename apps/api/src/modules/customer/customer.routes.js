@@ -44,6 +44,8 @@ function shapeCustomer(customer) {
 const requestBody = z.object({
   outletId: z.string().min(1),
   destination: z.string().min(3),
+  /** what they typed as their name — may appear in the code message ({{name}}) when we don't already know them */
+  name: z.string().max(80).optional(),
 });
 
 /**
@@ -65,6 +67,7 @@ customerRouter.post("/otp/request", otpFlood, async (req, res) => {
     brandId: outlet.brandId,
     outletId: String(outlet._id),
     destination: body.destination,
+    name: body.name,
   });
   res.json(result);
 });

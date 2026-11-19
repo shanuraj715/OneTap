@@ -43,3 +43,6 @@ export function formatCountdown(totalSec) {
   const r = String(s % 60).padStart(2, "0");
   return h ? `${h}:${String(m).padStart(2, "0")}:${r}` : `${m}:${r}`;
 }
+
+/** how long a code can be typed after it was sent (the {{minutes}} variable of a code message) */
+export const OTP_VALID_MINUTES = 10;
