@@ -1,6 +1,6 @@
 # T37 — Storefront — page side padding is smaller on phones and tablets (desktop unchanged); on phones a path title is two lines with a smaller View all button
 
-**Area:** storefront · **Last result:** ✅ PASSED (37 passed, 0 failed · 2026-11-19 18:14 · headless · 5.0 s)
+**Area:** storefront · **Last result:** ✅ PASSED (43 passed, 0 failed · 2026-11-19 18:18 · headless · 5.0 s)
 
 **Run it alone:** `node run.mjs --only t37` (add `--visible` to watch it)
 
@@ -34,7 +34,7 @@ Runs suites/storefront-mobile-layout.mjs: through the bench API it makes a categ
 
 _Nothing failed._
 
-### ✅ Passed (37)
+### ✅ Passed (43)
 
 **Step 1 — desktop 1280px**
 
@@ -57,6 +57,9 @@ _Nothing failed._
 - tablet: the first category starts 14px from the left edge
 - tablet: the title stays on ONE line at the normal size — _22px / 22px_
 - tablet: the View all button keeps its size — _12.8px_
+- tablet: the filter has all four chips (All, Veg, Egg, Non-veg) — _4_
+- tablet: filter chips and the Categories button are ONE row — _59px high_
+- tablet: nothing is cut off or pushed off screen — _{"h":59,"n":4,"tops":1,"fits":true,"btnRight":806,"barRight":806}_
 - tablet: a plain heading is unchanged (22px)
 - tablet: the bottom View all button keeps its size — _13.6px_
 - tablet: View all still shows all 5 dishes
@@ -68,13 +71,16 @@ _Nothing failed._
 - phone: every page-width block (hero, offers, order bar, menu, footer…) uses the same 14px edge — _[["div",14],["section",14],["section",14],["div",14]]_
 - phone: the header lines up with them (14px) — _14_
 - phone: the first category starts 14px from the left edge
-- phone: the title is on TWO lines — parent first, then the name — _887 / 903_
+- phone: the title is on TWO lines — parent first, then the name — _884 / 899_
 - phone: line one is the parent, line two is the category — _"Mob South Indian ›" / "Mob Idli & Vada"_
 - phone: the parent is small — _11.88px_
 - phone: the category name is a little smaller than a normal heading — _18.92px of 22px_
 - phone: the View all button is smaller — _11.52px text, 28px high_
 - phone: the title and the button fit on one row without overlapping — _149 <= 261_
 - phone: the button is fully on screen — _376 of 390_
+- phone: the filter has all four chips (All, Veg, Egg, Non-veg) — _4_
+- phone: filter chips and the Categories button are ONE row — _55px high_
+- phone: nothing is cut off or pushed off screen — _{"h":55,"n":4,"tops":1,"fits":true,"btnRight":376,"barRight":376}_
 - phone: a plain heading is unchanged (22px)
 - phone: the bottom View all button is smaller too — _12.48px_
 - phone: View all still shows all 5 dishes
@@ -86,6 +92,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-19 18:18 | pass | 43 | 0 | headless | 5.0 s |
 | 2026-11-19 18:14 | pass | 37 | 0 | headless | 5.0 s |
 | 2026-11-19 18:09 | pass | 37 | 0 | headless | 5.0 s |
 

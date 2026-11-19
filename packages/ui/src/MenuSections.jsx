@@ -478,7 +478,7 @@ function FilterChip({ active, onClick, children }                               
     <button
       type="button"
       onClick={onClick}
-      className="ot-press ot-fx-chip"
+      className="ot-press ot-fx-chip ot-filter-chip"
       data-active={active}
       style={fx("chip", {
         ...chip,

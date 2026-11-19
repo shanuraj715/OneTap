@@ -1934,8 +1934,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T12:40:58.834Z",
-    "durationMs": 36840,
+    "at": "2026-11-19T12:48:32.314Z",
+    "durationMs": 37062,
     "steps": [
       {
         "n": 1,
@@ -2022,7 +2022,7 @@
           {
             "label": "the sheet lists every category (+ close)",
             "ok": true,
-            "detail": "6",
+            "detail": "7",
             "kind": "expect"
           },
           {
@@ -2040,7 +2040,7 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "0,0,0,1,70,388,857,1123,1169,1170,1170,1170,1170,1170",
+            "detail": "0,0,0,1,67,302,849,1096,1169,1170,1170,1170,1170,1170",
             "kind": "expect"
           },
           {
@@ -2082,13 +2082,13 @@
           {
             "label": "phone: the filter bar stays short",
             "ok": true,
-            "detail": "59px",
+            "detail": "55px",
             "kind": "expect"
           },
           {
             "label": "the sheet lists every category (+ close)",
             "ok": true,
-            "detail": "6",
+            "detail": "7",
             "kind": "expect"
           },
           {
@@ -2106,13 +2106,13 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "20,20,20,20,62,209,625,1168,1396,1488,1494,1494,1494,1494",
+            "detail": "17,17,17,17,59,207,625,1167,1396,1487,1494,1494,1494,1494",
             "kind": "expect"
           },
           {
             "label": "phone: 'Kurkure Momos' lands just below the sticky bar",
             "ok": true,
-            "detail": "{\"top\":71,\"bar\":59}",
+            "detail": "{\"top\":67,\"bar\":55}",
             "kind": "expect"
           },
           {
@@ -12716,8 +12716,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T12:44:45.791Z",
-    "durationMs": 20214,
+    "at": "2026-11-19T12:48:52.368Z",
+    "durationMs": 20030,
     "steps": [
       {
         "n": 1,
@@ -12882,7 +12882,7 @@
           {
             "label": "phone: the bar is one short row",
             "ok": true,
-            "detail": "59px",
+            "detail": "55px",
             "kind": "expect"
           },
           {
@@ -12894,7 +12894,7 @@
           {
             "label": "phone: the Veg/Egg/Non-veg filter and the Categories button share the row",
             "ok": true,
-            "detail": "{\"barH\":58.75,\"btnRight\":376,\"barRight\":376,\"filterBottom\":866,\"btnTop\":827,\"filterTop\":825}",
+            "detail": "{\"barH\":54.96875,\"btnRight\":376,\"barRight\":376,\"filterBottom\":863,\"btnTop\":827,\"filterTop\":824}",
             "kind": "expect"
           },
           {
@@ -12918,7 +12918,7 @@
           {
             "label": "phone: a category picked in the sheet lands just under the bar",
             "ok": true,
-            "detail": "{\"top\":71,\"bar\":59}",
+            "detail": "{\"top\":67,\"bar\":55}",
             "kind": "expect"
           },
           {
@@ -12949,12 +12949,12 @@
     "id": "t37-storefront-mobile-layout",
     "title": "Storefront — page side padding is smaller on phones and tablets (desktop unchanged); on phones a path title is two lines with a smaller View all button",
     "status": "pass",
-    "pass": 37,
+    "pass": 43,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T12:44:50.845Z",
-    "durationMs": 5036,
+    "at": "2026-11-19T12:48:57.425Z",
+    "durationMs": 5038,
     "steps": [
       {
         "n": 1,
@@ -13063,6 +13063,24 @@
             "kind": "expect"
           },
           {
+            "label": "tablet: the filter has all four chips (All, Veg, Egg, Non-veg)",
+            "ok": true,
+            "detail": "4",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet: filter chips and the Categories button are ONE row",
+            "ok": true,
+            "detail": "59px high",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet: nothing is cut off or pushed off screen",
+            "ok": true,
+            "detail": "{\"h\":59,\"n\":4,\"tops\":1,\"fits\":true,\"btnRight\":806,\"barRight\":806}",
+            "kind": "expect"
+          },
+          {
             "label": "tablet: a plain heading is unchanged (22px)",
             "ok": true,
             "detail": "",
@@ -13119,7 +13137,7 @@
           {
             "label": "phone: the title is on TWO lines — parent first, then the name",
             "ok": true,
-            "detail": "887 / 903",
+            "detail": "884 / 899",
             "kind": "expect"
           },
           {
@@ -13156,6 +13174,24 @@
             "label": "phone: the button is fully on screen",
             "ok": true,
             "detail": "376 of 390",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: the filter has all four chips (All, Veg, Egg, Non-veg)",
+            "ok": true,
+            "detail": "4",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: filter chips and the Categories button are ONE row",
+            "ok": true,
+            "detail": "55px high",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: nothing is cut off or pushed off screen",
+            "ok": true,
+            "detail": "{\"h\":55,\"n\":4,\"tops\":1,\"fits\":true,\"btnRight\":376,\"barRight\":376}",
             "kind": "expect"
           },
           {

@@ -269,6 +269,19 @@
 }
 
 /*
+ * The sticky filter bar on phones and tablets stays ONE row: the Veg/Egg/Non-veg filter takes whatever width the
+ * Categories button leaves (basis 0, so it can never push the button onto a second row) and scrolls if it must.
+ */
+@media (max-width: 1023px) {
+  .ot-chip-row { flex: 1 1 0 !important; }
+}
+@media (max-width: 640px) {
+  .ot-chip-row { gap: 5px !important; }
+  .ot-filter-chip { font-size: 0.76rem !important; padding: 5px 10px !important; }
+  .ot-cat-button { font-size: 0.78rem !important; padding: 6px 11px !important; gap: 5px !important; }
+}
+
+/*
  * Phones only: a section title that is a path ("South Indian › Idli & Vada") is written on two lines — the parent small
  * and muted, the name a little smaller than the normal heading — and the View all buttons are smaller, so the heading
  * and the button fit on one row of a narrow screen.

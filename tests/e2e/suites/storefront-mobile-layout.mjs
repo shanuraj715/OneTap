@@ -27,6 +27,9 @@ const mk = async (name, parentId = null) => { const c = must(await call("POST", 
 const parent = await mk("Mob South Indian");
 const child = await mk("Mob Idli & Vada", parent);
 const plain = await mk("Mob Plain Heading");
+// an egg dish too, so the filter has all four chips (All / Veg / Egg / Non-veg) like a real store's
+must(await call("POST", "/api/menu/items", { categoryId: plain, name: "Egg dish", basePrice: 8000, foodType: "egg" }), "egg item");
+must(await call("POST", "/api/menu/items", { categoryId: plain, name: "Non-veg dish", basePrice: 12000, foodType: "non-veg" }), "non-veg item");
 for (const [cat, base] of [[child, "Idli"], [plain, "Plain"]]) {
   for (let i = 1; i <= 5; i++) must(await call("POST", "/api/menu/items", { categoryId: cat, name: `${base} dish ${i}`, basePrice: 9900 + i * 100, foodType: "veg" }), "item");
 }
@@ -86,6 +89,19 @@ try {
     } else {
       ok(Math.abs(cb.y - nb.y) < 4 && crumbSize === nameSize, `${label}: the title stays on ONE line at the normal size`, `${crumbSize}px / ${nameSize}px`);
       ok(btnSize >= 12.5, `${label}: the View all button keeps its size`, `${btnSize}px`);
+    }
+    // the sticky filter bar: ONE row with all four filter chips and the Categories button
+    if (small) {
+      const bar = await page.evaluate(() => {
+        const b = document.querySelector("[data-fx-toolbar]").getBoundingClientRect();
+        const row = document.querySelector(".ot-chip-row");
+        const btn = document.querySelector(".ot-cat-button").getBoundingClientRect();
+        const chips = [...row.querySelectorAll(".ot-filter-chip")].map((c) => c.getBoundingClientRect());
+        return { h: Math.round(b.height), n: chips.length, tops: [...new Set([...chips.map((c) => Math.round(c.top)), Math.round(btn.top)].map((t) => Math.round(t / 6)))].length, fits: row.scrollWidth <= row.clientWidth + 1, btnRight: Math.round(btn.right), barRight: Math.round(b.right) };
+      });
+      ok(bar.n === 4, `${label}: the filter has all four chips (All, Veg, Egg, Non-veg)`, String(bar.n));
+      ok(bar.h < 70 && bar.tops === 1, `${label}: filter chips and the Categories button are ONE row`, `${bar.h}px high`);
+      ok(bar.fits && bar.btnRight <= bar.barRight + 1, `${label}: nothing is cut off or pushed off screen`, JSON.stringify(bar));
     }
     // a plain heading and the bottom View all button
     ok((await px(page, "#sec-mob-2 .ot-sec-title", "fontSize")) === 22, `${label}: a plain heading is unchanged (22px)`);

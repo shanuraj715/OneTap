@@ -1,6 +1,6 @@
 # T35 — Storefront — with 30+ categories the sticky category bar stays ONE short row that scrolls sideways, and phones keep one short bar with a Categories sheet
 
-**Area:** storefront · **Last result:** ✅ PASSED (34 passed, 0 failed · 2026-11-19 18:14 · headless · 20.2 s)
+**Area:** storefront · **Last result:** ✅ PASSED (34 passed, 0 failed · 2026-11-19 18:18 · headless · 20.0 s)
 
 **Run it alone:** `node run.mjs --only t35` (add `--visible` to watch it)
 
@@ -68,13 +68,13 @@ _Nothing failed._
 
 **Step 3 — phone 390px**
 
-- phone: the bar is one short row — _59px_
+- phone: the bar is one short row — _55px_
 - phone: one Categories button
 - phone: the Veg/Egg/Non-veg filter and the Categories button share the row
 - phone: the Categories button is fully on screen
 - phone: the sheet fits the screen and lists every category — _608px of 844px, 37 buttons_
 - phone: the list inside it scrolls (there are more categories than fit)
-- phone: a category picked in the sheet lands just under the bar — _{"top":71,"bar":59}_
+- phone: a category picked in the sheet lands just under the bar — _{"top":67,"bar":55}_
 - phone: no sideways scroll
 - the 30 extra categories and their dishes are removed again — _200_
 - the browser logged no errors or warnings
@@ -83,6 +83,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-19 18:18 | pass | 34 | 0 | headless | 20.0 s |
 | 2026-11-19 18:14 | pass | 34 | 0 | headless | 20.2 s |
 | 2026-11-19 18:09 | pass | 34 | 0 | headless | 20.2 s |
 | 2026-11-19 17:51 | pass | 34 | 0 | headless | 26.4 s |
