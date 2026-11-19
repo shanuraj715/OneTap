@@ -1,6 +1,6 @@
 # T24 — Message sending — API rules: codes by linked WhatsApp / WhatsApp Business / SMS, never stored, never shown, capped, plan-gated
 
-**Area:** notifications · **Last result:** ✅ PASSED (61 passed, 0 failed · 2026-11-19 11:19 · headless · 32.9 s)
+**Area:** notifications · **Last result:** ✅ PASSED (61 passed, 0 failed · 2026-11-19 12:43 · headless · 30.2 s)
 
 **Run it alone:** `node run.mjs --only t24` (add `--visible` to watch it)
 
@@ -70,8 +70,8 @@ _Nothing failed._
 - linked WhatsApp can be chosen once a number is online
 - the request is answered 'sent' and the code is NOT returned — _{"channel":"sms","sent":true,"via":"linked","resendAfterSec":30}_
 - the code went out over the linked number, to the right person — _919876543210@s.whatsapp.net_
-- …in the store's own words — _Your Acme code: 887331_
-- …within seconds — _1258 ms_
+- …in the store's own words — _Your Acme code: 459479_
+- …within seconds — _830 ms_
 - the stored message says a code was sent — never the code itself — _🔒 Verification code_
 - the code is nowhere in any stored WhatsApp message
 - the stranger's chat is hidden, and sending the code didn't count as a conversation — _{"hidden":true}_
@@ -93,10 +93,10 @@ _Nothing failed._
 - spaces and capitals inside the brackets are fine, blank lines too — _200_
 - a message longer than 1000 characters is refused — _400_
 - (the earlier wording is put back for the checks below)
-- a code goes out at once even with 30 broadcast messages queued ahead of it — _200 in 2051 ms_
+- a code goes out at once even with 30 broadcast messages queued ahead of it — _200 in 2028 ms_
 - …while the broadcast keeps waiting for its own slow pace
 - 16 customers ask for a code at once with two numbers online — all are sent — _200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200_
-- the codes were spread over BOTH connected numbers (picked at random) — _{"919000000002":8,"919000000001":10}_
+- the codes were spread over BOTH connected numbers (picked at random) — _{"919000000002":8,"919000000001":9}_
 - …and each customer got exactly one code
 - a number that is offline is never picked — _919000000001_
 
@@ -112,8 +112,8 @@ _Nothing failed._
 
 - the owner sets up the SMS gateway
 - SMS can now be chosen
-- the code goes through the gateway in the 'Code message' wording — _200 Code 457116 for Acme_
-- an SMS 'Code message' can use the same variables — _466708 is your Acme code, there (Main)_
+- the code goes through the gateway in the 'Code message' wording — _200 Code 888244 for Acme_
+- an SMS 'Code message' can use the same variables — _491894 is your Acme code, there (Main)_
 
 **Step 7 — WhatsApp Business**
 
@@ -141,6 +141,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-19 12:43 | pass | 61 | 0 | headless | 30.2 s |
 | 2026-11-19 11:19 | pass | 61 | 0 | headless | 32.9 s |
 | 2026-11-19 01:23 | pass | 47 | 0 | headless | 8.9 s |
 | 2026-11-19 01:21 | pass | 47 | 0 | headless | 7.9 s |

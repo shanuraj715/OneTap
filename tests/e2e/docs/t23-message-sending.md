@@ -1,6 +1,6 @@
 # T23 — Message sending — codes by linked WhatsApp / WhatsApp Business / SMS, chosen by the owner
 
-**Area:** notifications · **Last result:** ✅ PASSED (81 passed, 0 failed · 2026-11-19 11:22 · headless · 56.3 s)
+**Area:** notifications · **Last result:** ✅ PASSED (81 passed, 0 failed · 2026-11-19 13:19 · headless · 55.4 s)
 
 **Run it alone:** `node run.mjs --only t23` (add `--visible` to watch it) · starts from fresh fake data
 
@@ -117,7 +117,7 @@ _Nothing failed._
 - the screen says the code was sent on WhatsApp — _We sent a 6-digit code to 9811200002 on WhatsApp._
 - did not happen: the code is shown on screen ('dev code')
 - the store's number sent exactly one message, to the customer's number — _["919811200002@s.whatsapp.net"]_
-- …in the store's own words: three lines, with the customer's first name, the outlet, the store, the code and the minutes filled in — _"Hi Linked, welcome to Main\n579223 is your Acme Momos code.\nValid for 10 minutes."_
+- …in the store's own words: three lines, with the customer's first name, the outlet, the store, the code and the minutes filled in — _"Hi Linked, welcome to Main\n664555 is your Acme Momos code.\nValid for 10 minutes."_
 - the test code 123456 is refused
 - the real code signs the customer up
 
@@ -141,7 +141,7 @@ _Nothing failed._
 **Step 11 — Staff asking for a coin code use the same chosen way**
 
 - the coin code request is accepted — _200 {"sent":true}_
-- the customer (Asha) got the code on WhatsApp from the store's number — _047210_
+- the customer (Asha) got the code on WhatsApp from the store's number — _774621_
 - 123456 is refused for coins too — _400_
 - the code that was sent is accepted — _200_
 
@@ -154,7 +154,7 @@ _Nothing failed._
 - the screen says the code was sent by SMS — _We sent a 6-digit code to 9811200004 by SMS._
 - did not happen: the code is shown on screen
 - the gateway was asked to text exactly that customer, with the store's key — _1 request(s)_
-- …in the 'Code message' wording — _Code 436116 for Acme Momos_
+- …in the 'Code message' wording — _Code 797056 for Acme Momos_
 - nothing went out over WhatsApp
 - 123456 is refused
 - the code from the SMS signs them up
@@ -168,7 +168,7 @@ _Nothing failed._
 - did not happen: the code is shown on screen
 - Meta was called once, on the store's phone-number ID, with the store's token — _1 call(s) /v20.0/109876543/messages_
 - …to the customer's number, with the approved template and language — _"919811200005"_
-- …the code fills {{1}} — _588359_
+- …the code fills {{1}} — _574327_
 - …and also goes to the Copy-code button
 - nothing went out over SMS or the linked number for this customer
 - the code sent through Meta signs them up
@@ -190,6 +190,9 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-19 13:19 | pass | 81 | 0 | headless | 55.4 s |
+| 2026-11-19 13:01 | pass | 81 | 0 | headless | 53.9 s |
+| 2026-11-19 12:42 | pass | 81 | 0 | headless | 56.1 s |
 | 2026-11-19 11:22 | pass | 81 | 0 | headless | 56.3 s |
 | 2026-11-19 11:19 | fail | 79 | 2 | headless | 54.2 s |
 | 2026-11-19 01:23 | pass | 67 | 0 | headless | 51.7 s |

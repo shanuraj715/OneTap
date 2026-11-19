@@ -72,7 +72,7 @@ export async function run(d, h) {
   d.check(`"${W.label}" is available for another store again (${SUB_HOST} is free)`, new RegExp(`${W.label}\\.localhost:3170 is free`).test(free), free.match(/localhost:3170[^]{0,30}/)?.[0]);
 
   await d.step("Every other store is untouched");
-  for (const [label, url, needle] of [["Acme Momos", `${BENCH.storefront}/main`, "Acme Momos"], ["Beta Bites", `${BENCH.betaStorefront}/only`, "Beta Bites"], ["Pro Direct Co", "http://prodirect.localhost:3170/central", "Central"]]) {
+  for (const [label, url, needle] of [["Acme Momos", `${BENCH.storefront}/main`, "Acme Momos"], ["Beta Bites", `${BENCH.betaStorefront}/only`, "Beta Bites"], ["Pro Direct Co", "http://prodirect.localhost:3170/central", "Pro Direct Co"]]) {
     const r = await customer(url);
     d.check(`${label} still opens`, r.status === 200 && r.text.includes(needle), `HTTP ${r.status}`);
   }

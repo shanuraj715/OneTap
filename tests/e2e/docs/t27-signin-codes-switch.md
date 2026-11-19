@@ -1,6 +1,6 @@
 # T27 — WhatsApp → Numbers has a 'Send sign-in codes from my WhatsApp numbers' switch; with several numbers each code leaves from a random one
 
-**Area:** notifications · **Last result:** ✅ PASSED (21 passed, 0 failed · 2026-11-19 11:21 · headless · 29.6 s)
+**Area:** notifications · **Last result:** ✅ PASSED (21 passed, 0 failed · 2026-11-19 13:03 · headless · 29.8 s)
 
 **Run it alone:** `node run.mjs --only t27` (add `--visible` to watch it) · starts from fresh fake data
 
@@ -94,6 +94,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-19 13:03 | pass | 21 | 0 | headless | 29.8 s |
+| 2026-11-19 12:44 | pass | 21 | 0 | headless | 33.5 s |
 | 2026-11-19 11:21 | pass | 21 | 0 | headless | 29.6 s |
 | 2026-11-19 11:01 | pass | 21 | 0 | headless | 30.7 s |
 | 2026-11-19 10:59 | fail | 19 | 2 | headless | 31.6 s |
