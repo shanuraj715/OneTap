@@ -282,12 +282,13 @@
 }
 
 /*
- * "View all": a wide screen shows the button where the store configured it. On a PHONE or a TABLET — a small screen, or a
- * touch tablet even in landscape (up to ~1400px) — it is always under the cards, in the middle: a button beside the
- * title is hidden there and the one under the cards shown instead, and a left/right one is centred.
+ * "View all": from 720px up the button is where the store configured it (beside the title, bottom-left, -centre or
+ * -right). Under 720px — a phone — it is always under the cards, in the middle: a button beside the title is hidden
+ * there and the one under the cards shown instead, and a left/right one is centred. (The window's WIDTH decides, not
+ * the kind of device: a tablet or a touch laptop that is 720px or wider shows it where it was configured.)
  */
 .ot-viewall-sm-only { display: none !important; }
-@media (max-width: 1023px), (hover: none) and (pointer: coarse) and (max-width: 1400px) {
+@media (max-width: 719.98px) {
   .ot-viewall-lg-only { display: none !important; }
   .ot-viewall-sm-only { display: flex !important; }
   .ot-viewall-row,

@@ -86,16 +86,17 @@ try {
     } else {
       ok(Math.abs(cb.y - nb.y) < 4 && crumbSize === nameSize, `${label}: the title stays on ONE line at the normal size`, `${crumbSize}px / ${nameSize}px`);
     }
-    // View all: as configured on a wide screen; on a phone or tablet ALWAYS under the cards, in the middle (see t41 for every placement)
+    // View all: as configured from 720px wide up; under 720px (a phone) ALWAYS under the cards, in the middle (see t41 for every placement)
     const titleBtnShown = await btn.isVisible();
     const bottom1 = page.locator("#sec-mob-1 .ot-viewall");
-    if (small) {
+    const viewAllUnder = w < 720;
+    if (viewAllUnder) {
       ok(!titleBtnShown && (await bottom1.isVisible()), `${label}: the button configured beside the title is NOT there — it is under the cards instead`);
       const c = await page.evaluate(() => { const sec = document.querySelector("#sec-mob-1").getBoundingClientRect(); const b = document.querySelector("#sec-mob-1 .ot-viewall").getBoundingClientRect(); const cards = [...document.querySelectorAll("#sec-mob-1 [aria-label^='Add']")].map((x) => x.getBoundingClientRect().bottom); return { off: Math.abs(b.left + b.width / 2 - (sec.left + sec.width / 2)), below: b.top >= Math.max(...cards) - 1 }; });
       ok(c.off <= 2 && c.below, `${label}: it sits below the cards, centred on the screen`, `${c.off.toFixed(1)}px off centre`);
     } else {
-      ok(titleBtnShown && !(await bottom1.isVisible()), "desktop: the button stays beside the title, as configured");
-      ok((await px(page, "#sec-mob-1 .ot-viewall-title", "fontSize")) >= 12.5, "desktop: and keeps its size");
+      ok(titleBtnShown && !(await bottom1.isVisible()), `${label}: the button stays beside the title, as configured`);
+      ok((await px(page, "#sec-mob-1 .ot-viewall-title", "fontSize")) >= 12.5, `${label}: and keeps its size`);
     }
     // the sticky filter bar: ONE row with all four filter chips and the Categories button
     if (small) {
@@ -104,7 +105,7 @@ try {
         const row = document.querySelector(".ot-chip-row");
         const btn = document.querySelector(".ot-cat-button").getBoundingClientRect();
         const chips = [...row.querySelectorAll(".ot-filter-chip")].map((c) => c.getBoundingClientRect());
-        return { h: Math.round(b.height), n: chips.length, tops: [...new Set([...chips.map((c) => Math.round(c.top)), Math.round(btn.top)].map((t) => Math.round(t / 6)))].length, fits: row.scrollWidth <= row.clientWidth + 1, btnRight: Math.round(btn.right), barRight: Math.round(b.right) };
+        return { h: Math.round(b.height), n: chips.length, tops: Math.max(...chips.map((c) => Math.abs(c.top + c.height / 2 - (btn.top + btn.height / 2)))) < 6 ? 1 : 2, fits: row.scrollWidth <= row.clientWidth + 1, btnRight: Math.round(btn.right), barRight: Math.round(b.right) };
       });
       ok(bar.n === 4, `${label}: the filter has all four chips (All, Veg, Egg, Non-veg)`, String(bar.n));
       ok(bar.h < 70 && bar.tops === 1, `${label}: filter chips and the Categories button are ONE row`, `${bar.h}px high`);
@@ -115,7 +116,7 @@ try {
     const bottomBtn = await px(page, "#sec-mob-2 .ot-viewall", "fontSize");
     ok(w <= 640 ? bottomBtn <= 12.6 : bottomBtn >= 13.5, w <= 640 ? "phone: the bottom View all button is smaller too" : `${label}: the bottom View all button keeps its size`, `${bottomBtn}px`);
     // it still works
-    await (small ? bottom1 : btn).click();
+    await (viewAllUnder ? bottom1 : btn).click();
     await page.waitForTimeout(700); // the extra cards slide open
     ok((await page.locator("#sec-mob-1 [aria-label^='Add']").count()) === 5, `${label}: View all still shows all 5 dishes`);
     ok((await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)) <= 1, `${label}: no sideways scroll`);

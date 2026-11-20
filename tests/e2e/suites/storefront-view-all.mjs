@@ -1,6 +1,7 @@
 // "View all" on the storefront menu: where the button is, and how a section opens and closes.
-//  - a wide screen shows it where the store configured it (left / centre / right / beside the title);
-//  - a phone, a tablet (portrait OR landscape, touch) or any narrow window ALWAYS shows it under the cards, in the middle;
+//  - from 720px wide up it is where the store configured it (left / centre / right / beside the title) — whatever the device
+//    (desktop, tablet in portrait or landscape, touch laptop);
+//  - under 720px wide (a phone) it is ALWAYS under the cards, in the middle;
 //  - the extra cards slide open and shut (a height animation), instead of appearing and vanishing.
 // A custom menu layout with five sections is set up through the bench API, checked in Chrome, then put back.
 import { chromium } from "playwright";
@@ -83,13 +84,11 @@ try {
     await ctx.close();
   }
 
-  /* ------------------------------------------------------------ 2. phones and tablets: always under the cards, centred */
+  /* ------------------------------------------------------------ 2. under 720px: always under the cards, centred */
   for (const [w, h, label, extra] of [
     [390, 844, "phone", { isMobile: true, hasTouch: true, deviceScaleFactor: 2 }],
-    [820, 1100, "tablet, portrait", { isMobile: true, hasTouch: true, deviceScaleFactor: 2 }],
-    [1180, 820, "tablet, landscape", { isMobile: true, hasTouch: true, deviceScaleFactor: 2 }],
-    [1366, 1024, "large tablet, landscape", { isMobile: true, hasTouch: true, deviceScaleFactor: 2 }],
-    [900, 700, "a narrow desktop window (mouse)", {}],
+    [360, 780, "small phone", { isMobile: true, hasTouch: true, deviceScaleFactor: 2 }],
+    [719, 900, "719px — one pixel under the line (mouse)", {}],
   ]) {
     console.log(`== ${label} ${w}px`);
     const { ctx, page } = await open({ width: w, height: h }, extra);
@@ -97,7 +96,27 @@ try {
       const p = await where(page, id);
       ok(p.count === 1 && p.below && p.off <= 2 && !p.besideTitle, `${label}: ${what} → ONE button, under the cards, in the middle`, `${p.off?.toFixed(1)}px off centre, below=${p.below}, beside title=${p.besideTitle}`);
     }
-    if (w === 390 || w === 1180) await page.locator("#sec-va-title").screenshot({ path: `view-all-${w === 390 ? "phone" : "tablet-landscape"}.png` });
+    if (w === 390) await page.locator("#sec-va-title").screenshot({ path: "view-all-phone.png" });
+    await ctx.close();
+  }
+
+  /* ------------------------------------------------------------ 2b. 720px and wider: as configured, on any device */
+  for (const [w, h, label, extra] of [
+    [720, 900, "720px — exactly on the line (mouse)", {}],
+    [820, 1100, "tablet, portrait", { isMobile: true, hasTouch: true, deviceScaleFactor: 2 }],
+    [900, 700, "a narrow desktop window (mouse)", {}],
+    [1180, 820, "tablet, landscape", { isMobile: true, hasTouch: true, deviceScaleFactor: 2 }],
+    [1366, 1024, "large tablet, landscape", { isMobile: true, hasTouch: true, deviceScaleFactor: 2 }],
+  ]) {
+    console.log(`== ${label} ${w}px`);
+    const { ctx, page } = await open({ width: w, height: h }, extra);
+    const L = await where(page, "va-left"), C = await where(page, "va-center"), R = await where(page, "va-right"), T = await where(page, "va-title"), G = await where(page, "va-grid");
+    ok(L.count === 1 && L.below && L.left <= 2, `${label}: 'Bottom — left' stays at the left edge, under the cards`, JSON.stringify(L));
+    ok(C.count === 1 && C.below && C.off <= 2, `${label}: 'Bottom — centred' is in the middle`, `${C.off?.toFixed(1)}px off`);
+    ok(R.count === 1 && R.below && R.right <= 2, `${label}: 'Bottom — right' stays at the right edge`, JSON.stringify(R));
+    ok(T.count === 1 && T.besideTitle && !T.below, `${label}: 'Right side of the title' stays beside the title, with no second button under the cards`, JSON.stringify(T));
+    ok(G.count === 1 && G.below && G.left <= 2, `${label}: a grid of cards, configured left, keeps its button at the left`, JSON.stringify(G));
+    if (w === 820) await page.locator("#sec-va-title").screenshot({ path: "view-all-tablet.png" });
     await ctx.close();
   }
 
