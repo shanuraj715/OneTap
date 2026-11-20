@@ -6,6 +6,7 @@ import { useMenu } from "../lib/useMenu";
 import { useOutlet, usePatchConfig } from "../lib/useOutlet";
 import { StorePreviewFrame } from "../lib/storePreview";
 import { Button, Card, Field, InfoHint, PageHeader, STICKY_HEADER_CLEARANCE, TextInput, Toast } from "../ui";
+import { PictureShape } from "../components/PictureShape";
 import { StorefrontNav } from "../components/SubNav";
 
 const MAX_NAV_LINKS = 8;
@@ -177,7 +178,12 @@ export function Appearance() {
                 <button
                   key={opt.id}
                   type="button"
-                  onClick={() => setLayout({ ...(layout          ), [slot.key]: opt.id }          )}
+                  onClick={() =>
+                    setLayout(
+                      // choosing another card style puts its own picture shape back (the owner can override it again below)
+                      { ...(layout          ), [slot.key]: opt.id, ...(slot.key === "itemCardVariant" && opt.id !== values.itemCardVariant ? { itemImageRatio: "" } : null) }          ,
+                    )
+                  }
                   style={{
                     ...option,
                     borderColor: selected ? "var(--color-primary)" : "var(--color-border)",
@@ -197,11 +203,12 @@ export function Appearance() {
               );
             })}
           </div>
+          {slot.key === "itemCardVariant" ? <PictureShape variantId={values.itemCardVariant} value={values.itemImageRatio} style={{ marginTop: 16 }} onChange={(itemImageRatio) => setLayout({ ...(layout          ), itemImageRatio }          )} /> : null}
           <SlotPreview
             slot={slot}
             selectedId={values[slot.key]}
             savedId={outlet.config.layout?.[slot.key]}
-            ctx={previewCtx}
+            ctx={slot.key === "itemCardVariant" ? { ...previewCtx, imageRatio: values.itemImageRatio ?? "" } : previewCtx}
             config={outlet.config}
             navLinks={navLinks}
           />

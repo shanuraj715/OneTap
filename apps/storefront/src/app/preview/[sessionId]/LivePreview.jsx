@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { menuLayoutSchema } from "@onetap/config-schema";
+import { menuLayoutSchema, storefrontMenuLayout } from "@onetap/config-schema";
 import { MenuSections } from "@onetap/ui";
 
 const BACKOFF = [1_000, 2_000, 5_000, 10_000, 20_000];
@@ -13,9 +13,10 @@ const BACKOFF = [1_000, 2_000, 5_000, 10_000, 20_000];
  * @param {string} props.outletName
  * @param {import("@onetap/config-schema").Menu} props.menu
  * @param {string} props.fallbackCardVariant
+ * @param {string} [props.fallbackImageRatio]
  * @param {import("@onetap/config-schema").MenuLayout} props.initialLayout
  */
-export function LivePreview({ sessionId, apiBase, outletName, menu, fallbackCardVariant, initialLayout }) {
+export function LivePreview({ sessionId, apiBase, outletName, menu, fallbackCardVariant, fallbackImageRatio = "", initialLayout }) {
   const [layout, setLayout] = useState(initialLayout);
   const [status, setStatus] = useState("connecting");
   const [updatedAt, setUpdatedAt] = useState(null);
@@ -89,16 +90,13 @@ export function LivePreview({ sessionId, apiBase, outletName, menu, fallbackCard
   }, [sessionId, apiBase]);
 
   const resolvedLayout = useMemo(() => {
-    const l =
-      layout.mode === "auto" && layout.sections.length === 0
-        ? { ...layout, defaultCardVariant: layout.defaultCardVariant || fallbackCardVariant }
-        : layout;
+    const l = storefrontMenuLayout(layout, { itemCardVariant: fallbackCardVariant, itemImageRatio: fallbackImageRatio });
     try {
       return menuLayoutSchema.parse(l);
     } catch {
       return menuLayoutSchema.parse({});
     }
-  }, [layout, fallbackCardVariant]);
+  }, [layout, fallbackCardVariant, fallbackImageRatio]);
 
   return (
     <main style={{ minHeight: "100vh", background: "var(--color-bg)", color: "var(--color-text)" }}>

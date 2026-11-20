@@ -82,6 +82,8 @@ export const menuSectionSchema = z.object({
   itemIds: z.array(z.string()).default([]),
   /** item card variant id from the registry, e.g. "card.image-top" */
   cardVariant: z.string().default("card.row-compact"),
+  /** the picture shape this section's cards ask each dish for ("" = the card style's own, or the default's override) */
+  imageRatio: z.enum(["", "1:1", "4:3", "16:9", "3:4"]).default(""),
   /**
    * How many cards sit side by side on a wide screen. 0 = automatic — the
    * card variant picks its own natural width and the row fills with however
@@ -121,6 +123,8 @@ export const menuLayoutSchema = z.object({
   mode: menuLayoutModeSchema.default("auto"),
   /** the card style used in "auto" mode and as the default for new sections */
   defaultCardVariant: z.string().default("card.row-compact"),
+  /** the picture shape the default card style is overridden to ("" = the card's own) */
+  defaultImageRatio: z.enum(["", "1:1", "4:3", "16:9", "3:4"]).default(""),
   sections: z.array(menuSectionSchema).default([]),
   /** show the little veg/non-veg filter above the menu */
   showFoodTypeFilter: z.boolean().default(true),
@@ -137,6 +141,7 @@ export const menuLayoutSchema = z.object({
  * @property {string} title
  * @property {string} subtitle
  * @property {string} cardVariant
+ * @property {string} imageRatio "" = the card's own picture shape, else the shape the store chose for it
  * @property {number} columns 0 = automatic, else the desktop column count
  * @property {import("./menu.js").MenuItem[]} items every item in the section, in display order
  * @property {boolean} hideTitle
@@ -158,6 +163,7 @@ function sectionFor(cat, items, layout, extra = {}) {
     title: cat.name,
     subtitle: "",
     cardVariant: layout.defaultCardVariant,
+    imageRatio: layout.defaultImageRatio ?? "",
     columns: 0,
     items,
     hideTitle: false,
@@ -299,6 +305,8 @@ export function resolveMenuSections(menu, layout) {
       title: section.title || sectionFallbackTitle(section, menu),
       subtitle: section.subtitle,
       cardVariant: section.cardVariant || layout.defaultCardVariant,
+      // the store's picture-shape override belongs to the store's chosen card style only
+      imageRatio: section.imageRatio || ((section.cardVariant || layout.defaultCardVariant) === layout.defaultCardVariant ? (layout.defaultImageRatio ?? "") : ""),
       columns: section.columns,
       items,
       hideTitle: section.hideTitle,
@@ -332,6 +340,18 @@ function sectionFallbackTitle(section, menu) {
   }
   if (section.source === "picks") return "Featured";
   return "More on the menu";
+}
+
+/**
+ * The menu layout the storefront draws: while the menu layout hasn't been touched (auto, no sections) the card style chosen in
+ * Appearance is used, and the picture shape chosen there for it travels along (only for that style).
+ */
+export function storefrontMenuLayout(menuLayout, layout) {
+  const untouched = menuLayout.mode === "auto" && (menuLayout.sections ?? []).length === 0;
+  const base = untouched ? { ...menuLayout, defaultCardVariant: menuLayout.defaultCardVariant || layout.itemCardVariant } : menuLayout;
+  // the Menu layout page's own default shape wins; else the one chosen in Appearance, for the card style it was chosen for
+  const ratio = base.defaultImageRatio || (base.defaultCardVariant === layout.itemCardVariant ? (layout.itemImageRatio ?? "") : "");
+  return ratio === (base.defaultImageRatio ?? "") ? base : { ...base, defaultImageRatio: ratio };
 }
 
 /** A blank section for the admin's "add section" button. */

@@ -290,10 +290,10 @@ export function MenuSections({
                     }}
                     style={clickable}
                   >
-                    <Card item={item} />
+                    <Card item={item} imageRatio={section.imageRatio} />
                   </div>
                 ) : (
-                  <Card key={item.id} item={item} />
+                  <Card key={item.id} item={item} imageRatio={section.imageRatio} />
                 ),
               );
               // a long section shows its first few cards and slides the rest open (and shut) — see CollapsibleCards

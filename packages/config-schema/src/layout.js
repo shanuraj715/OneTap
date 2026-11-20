@@ -21,6 +21,11 @@ export const layoutSchema = z.object({
   navLinks: z.array(navLinkSchema).max(8).default([]),
   footerVariant: z.string().default("footer.two-column"),
   itemCardVariant: z.string().default("card.row-compact"),
+  /**
+   * The picture shape the menu cards ask each dish for. "" = the card's own default (see CARD_IMAGE_RATIO); the Appearance
+   * page resets it to "" whenever another card style is picked, and the owner can override it for the chosen style.
+   */
+  itemImageRatio: z.enum(["", "1:1", "4:3", "16:9", "3:4"]).default(""),
   buttonVariant: z.string().default("button.solid"),
   badgeVariant: z.string().default("badge.solid"),
   chipVariant: z.string().default("chip.solid"),

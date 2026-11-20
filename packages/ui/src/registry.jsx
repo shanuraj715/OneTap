@@ -464,7 +464,7 @@ export const VARIANT_SLOTS                = [
       return (
         <div style={style}>
           {ctx.items.map((item) => (
-            <C key={item.id} item={item} />
+            <C key={item.id} item={item} imageRatio={ctx.imageRatio} />
           ))}
         </div>
       );

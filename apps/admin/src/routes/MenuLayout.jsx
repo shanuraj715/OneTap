@@ -40,6 +40,7 @@ import { useOutlet, usePatchConfig } from "../lib/useOutlet";
 import { usePreviewSession } from "../lib/usePreviewSession";
 import { Button, Card, Checkbox, Empty, Field, Modal, Note, PageHeader, Pill, Select, STICKY_HEADER_CLEARANCE, TextInput, Toast } from "../ui";
 import { StorefrontNav } from "../components/SubNav";
+import { PictureShape } from "../components/PictureShape";
 
 const ITEM_SELECTION_LABELS = { auto: "Automatic — every item", manual: "Hand-picked items" };
 const TITLE_ALIGN_LABELS = { left: "Left", center: "Centred" };
@@ -175,8 +176,9 @@ export function MenuLayout() {
               label="Default card style"
               info="Used in automatic mode, and as the starting style for a new custom section. See the Appearance page for what each one looks like."
             >
-              <CardVariantSelect value={layout.defaultCardVariant} onChange={(v) => set({ defaultCardVariant: v })} />
+              <CardVariantSelect value={layout.defaultCardVariant} onChange={(v) => set({ defaultCardVariant: v, defaultImageRatio: "" })} />
             </Field>
+            <PictureShape testid="default-picture-shape" variantId={layout.defaultCardVariant} value={layout.defaultImageRatio} style={{ marginBottom: 6 }} onChange={(v) => set({ defaultImageRatio: v })} />
 
             <div style={{ display: "flex", gap: 18, flexWrap: "wrap", marginTop: 8 }}>
               <Checkbox
@@ -558,8 +560,9 @@ function SectionRow({ section, index, total, categories, items, onChange, onMove
           {/* display */}
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 8 }}>
             <Field label="Card style" style={fieldMed} info="How each item in this section is drawn. Different sections can use different styles.">
-              <CardVariantSelect value={section.cardVariant} onChange={(v) => onChange({ cardVariant: v })} />
+              <CardVariantSelect value={section.cardVariant} onChange={(v) => onChange({ cardVariant: v, imageRatio: "" })} />
             </Field>
+            <PictureShape testid="section-picture-shape" variantId={section.cardVariant} value={section.imageRatio} onChange={(v) => onChange({ imageRatio: v })} />
             <Field
               label="Columns"
               style={{ maxWidth: 150 }}

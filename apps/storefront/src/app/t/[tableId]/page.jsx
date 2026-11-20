@@ -4,6 +4,7 @@ import { Ordering } from "@/components/Ordering";
 import { OutletUnavailable } from "@/components/OutletUnavailable";
 import { ThemeStyle } from "@/components/ThemeStyle";
 import { getMenu } from "@/lib/menu";
+import { storefrontMenuLayout } from "@onetap/config-schema";
 import { visitorHeaders } from "@/lib/visitor";
 import { getOutletById, getPageLinks, storeName } from "@/lib/outlet";
 
@@ -135,11 +136,7 @@ export default async function TablePage({
         <Ordering
           outletId={outlet.id}
           menu={menu}
-          menuLayout={
-            outlet.config.menuLayout.mode === "auto" && outlet.config.menuLayout.sections.length === 0
-              ? { ...outlet.config.menuLayout, defaultCardVariant: outlet.config.menuLayout.defaultCardVariant || layout.itemCardVariant }
-              : outlet.config.menuLayout
-          }
+          menuLayout={storefrontMenuLayout(outlet.config.menuLayout, layout)}
           popupCarouselVariant={layout?.popupCarouselVariant || layout?.carouselVariant || "carousel.slider"}
           toastVariant={layout?.toastVariant || "toast.solid"}
           dineIn={{ tableId: scan.table.id, tableNumber: scan.table.number, token: k }}

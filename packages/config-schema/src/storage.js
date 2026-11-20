@@ -193,11 +193,14 @@ export const CARD_IMAGE_RATIO = {
   "card.image-top": "4:3", // C04
   "card.image-top-badge": "4:3", // C05 (a 3:2 box — the 4:3 picture is trimmed a little)
   "card.text-above-image": "16:9", // C06
-  "card.image-overlay": "4:3", // C07
+  "card.image-overlay": "16:9", // C07
   "card.portrait": "3:4", // C08
   "card.circle": "1:1", // C09
   "card.featured-wide": "16:9", // C11
 };
+
+/** The shape a card variant uses unless the store overrides it ("" if the card shows no photo). */
+export const defaultCardImageRatio = (variantId) => CARD_IMAGE_RATIO[variantId] ?? "";
 
 /**
  * Upload limits. The server accepts anything its image library (sharp/libvips)

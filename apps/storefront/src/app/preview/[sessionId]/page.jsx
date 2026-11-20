@@ -53,6 +53,7 @@ export default async function PreviewPage({ params }) {
         outletName={outletName}
         menu={menu}
         fallbackCardVariant={config.layout.itemCardVariant}
+        fallbackImageRatio={config.layout.itemImageRatio ?? ""}
         initialLayout={menuLayoutSchema.parse(snapshot.layout ?? {})}
       />
     </>

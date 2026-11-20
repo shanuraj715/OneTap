@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { menuForNow } from "@onetap/config-schema";
+import { menuForNow, storefrontMenuLayout } from "@onetap/config-schema";
 import { getVariant, Hero, MenuSections } from "@onetap/ui";
 import { StoreBottom, StoreTop } from "@/components/Chrome";
 import { Ordering } from "@/components/Ordering";
@@ -23,10 +23,7 @@ export default async function OutletHomePage({ params }) {
   const [menu, pages, store] = await Promise.all([getMenu(outlet.id), getPageLinks(outlet.id), getOutletsForHost()]);
   const { identity, theme, typography, features, layout, menuLayout, carousel } = outlet.config;
   // Fall back to the single card style if the menu layout hasn't been touched.
-  const resolvedMenuLayout =
-    menuLayout.mode === "auto" && menuLayout.sections.length === 0
-      ? { ...menuLayout, defaultCardVariant: menuLayout.defaultCardVariant || layout.itemCardVariant }
-      : menuLayout;
+  const resolvedMenuLayout = storefrontMenuLayout(menuLayout, layout);
   // Anyone can order online if any online channel is on.
   const onlineOrdering =
     features.ordering.takeaway || features.ordering.delivery || features.ordering.dineInQr;
