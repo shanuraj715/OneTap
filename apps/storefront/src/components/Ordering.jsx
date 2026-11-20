@@ -2,8 +2,9 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { formatINR, menuLayoutSchema } from "@onetap/config-schema";
-import { MenuSections, fx, getCarouselVariant, getVariant, Photo } from "@onetap/ui";
+import { formatINR, itemFromPrice, menuLayoutSchema } from "@onetap/config-schema";
+import { FoodMark, MenuSections, fx, getCarouselVariant, getVariant, Photo } from "@onetap/ui";
+import { X } from "lucide-react";
 import { api } from "@/lib/clientApi";
 import { useCartLines } from "@/lib/useCartLines";
 import { useDineInSession } from "@/lib/useDineInSession";
@@ -259,55 +260,95 @@ function Customiser({ item, menu, popupCarouselVariant, onCancel, onAdd }) {
 
   return (
     <div style={currentOverlay} onClick={handleCancel} role="presentation">
-      <div className="ot-fx-modal" style={currentModal} onClick={(e) => e.stopPropagation()} role="dialog" aria-label={item.name}>
-        <ItemImageSection item={item} carouselVariantId={popupCarouselVariant} />
-        <h3 style={{ margin: "0 0 4px", fontFamily: "var(--font-heading)", fontSize: 20 }}>{item.name}</h3>
-        {item.description ? <p style={muted}>{item.description}</p> : null}
+      <div className="ot-fx-modal" style={currentModal} onClick={(e) => e.stopPropagation()} role="dialog" aria-label={item.name} data-testid="item-modal">
+        {/* what scrolls: the picture (set in from the edges, rounded), the name and price, the description, the choices */}
+        <div style={modalBody}>
+          <div style={{ position: "relative" }}>
+            <ItemImageSection item={item} carouselVariantId={popupCarouselVariant} />
+            <button type="button" onClick={handleCancel} aria-label="Close" data-testid="item-modal-close" style={closeBtn}>
+              <X size={18} aria-hidden="true" />
+            </button>
+          </div>
 
-        {item.variants.length > 0 ? (
-          <fieldset style={fieldset}>
-            <legend style={legend}>Choose a size</legend>
-            {item.variants.map((v) => (
-              <label key={v.id} style={choice}>
-                <input type="radio" name="variant" checked={variantId === v.id} onChange={() => setVariantId(v.id)} />
-                <span style={{ flex: 1 }}>{v.label}</span>
-                <span>{formatINR(v.price)}</span>
-              </label>
-            ))}
-          </fieldset>
-        ) : null}
+          <div style={titleRow}>
+            <h3 style={title}>
+              <span style={{ marginTop: 6, display: "inline-flex" }}>
+                <FoodMark type={item.foodType} size={16} />
+              </span>
+              <span>{item.name}</span>
+            </h3>
+            <span style={fromPrice}>
+              {item.variants.length > 1 ? "from " : ""}
+              {formatINR(itemFromPrice(item))}
+            </span>
+          </div>
+          {item.description ? <p style={description}>{item.description}</p> : null}
 
-        {groups.map((g) => (
-          <fieldset key={g.id} style={fieldset}>
-            <legend style={legend}>{g.name}</legend>
-            {g.options.map((o) => (
-              <label key={o.id} style={choice}>
-                <input
-                  type="checkbox"
-                  checked={options.includes(o.id)}
-                  onChange={(e) => setOptions((prev) => (e.target.checked ? [...prev, o.id] : prev.filter((x) => x !== o.id)))}
-                />
-                <span style={{ flex: 1 }}>{o.label}</span>
-                <span>+{formatINR(o.priceDelta)}</span>
-              </label>
-            ))}
-          </fieldset>
-        ))}
+          {item.variants.length > 0 ? (
+            <div role="group" aria-labelledby="item-modal-size" style={section}>
+              <div style={sectionHead}>
+                <span id="item-modal-size" style={legend}>Choose a size</span>
+                <span style={pillRequired}>Required</span>
+              </div>
+              <div style={tileList}>
+                {item.variants.map((v) => {
+                  const on = variantId === v.id;
+                  return (
+                    <label key={v.id} style={{ ...tile, ...(on ? tileOn : null) }}>
+                      <input type="radio" name="variant" style={tileInput} checked={on} onChange={() => setVariantId(v.id)} />
+                      <span style={{ flex: 1, fontWeight: on ? 700 : 500 }}>{v.label}</span>
+                      <span style={{ ...tilePrice, ...(on ? { color: "var(--color-primary)" } : null) }}>{formatINR(v.price)}</span>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+          ) : null}
 
-        <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 18 }}>
-          <Stepper value={quantity} onChange={setQuantity} />
-          <button
-            type="button"
-            className="ot-fx-btn"
-            style={{ ...fx("btn", primaryBtn), flex: 1, marginTop: 0 }}
-            onClick={() => handleAdd({ itemId: item.id, variantId, modifierOptionIds: options, quantity })}
-          >
-            Add · {formatINR(unit * quantity)}
+          {groups.map((g) => (
+            <div key={g.id} role="group" aria-labelledby={`item-modal-group-${g.id}`} style={section}>
+              <div style={sectionHead}>
+                <span id={`item-modal-group-${g.id}`} style={legend}>{g.name}</span>
+                <span style={pillOptional}>Optional</span>
+              </div>
+              <div style={tileList}>
+                {g.options.map((o) => {
+                  const on = options.includes(o.id);
+                  return (
+                    <label key={o.id} style={{ ...tile, ...(on ? tileOn : null) }}>
+                      <input
+                        type="checkbox"
+                        style={tileInput}
+                        checked={on}
+                        onChange={(e) => setOptions((prev) => (e.target.checked ? [...prev, o.id] : prev.filter((x) => x !== o.id)))}
+                      />
+                      <span style={{ flex: 1, fontWeight: on ? 700 : 500 }}>{o.label}</span>
+                      <span style={{ ...tilePrice, ...(on ? { color: "var(--color-primary)" } : null) }}>{o.priceDelta ? `+${formatINR(o.priceDelta)}` : "Free"}</span>
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* stays at the bottom of the pop-up while the choices scroll */}
+        <div style={modalFoot}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <Stepper value={quantity} onChange={setQuantity} />
+            <button
+              type="button"
+              className="ot-fx-btn"
+              style={{ ...fx("btn", primaryBtn), flex: 1, marginTop: 0 }}
+              onClick={() => handleAdd({ itemId: item.id, variantId, modifierOptionIds: options, quantity })}
+            >
+              Add · {formatINR(unit * quantity)}
+            </button>
+          </div>
+          <button type="button" style={linkBtn} onClick={handleCancel}>
+            Cancel
           </button>
         </div>
-        <button type="button" style={linkBtn} onClick={handleCancel}>
-          Cancel
-        </button>
       </div>
     </div>
   );
@@ -330,35 +371,67 @@ const modal = {
   background: "var(--color-bg)",
   color: "var(--color-text)",
   border: "1px solid var(--color-border)",
-  borderRadius: 14,
-  padding: 22,
+  borderRadius: 22,
+  padding: 0,
   width: "100%",
-  maxWidth: 420,
-  maxHeight: "88vh",
-  overflowY: "auto",
-  boxShadow: "0 24px 54px -12px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(0, 0, 0, 0.08), 0 10px 24px -5px rgba(0, 0, 0, 0.25)",
+  maxWidth: 440,
+  maxHeight: "min(90vh, 820px)",
+  display: "flex",
+  flexDirection: "column",
+  overflow: "hidden",
+  boxShadow: "0 28px 60px -14px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(0, 0, 0, 0.06), 0 12px 28px -6px rgba(0, 0, 0, 0.28)",
 };
-const popupImageWrap = { margin: "-22px -22px 16px", borderRadius: "14px 14px 0 0", overflow: "hidden" };
-const muted = { color: "var(--color-text-muted)", fontSize: 13.5, margin: "0 0 12px", lineHeight: 1.5 };
-const fieldset = { border: "none", padding: 0, margin: "16px 0 0" };
-const legend = { fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em", color: "var(--color-text-muted)", padding: 0 };
-const choice = { display: "flex", alignItems: "center", gap: 10, padding: "8px 0", fontSize: 14, cursor: "pointer" };
+// the part that scrolls; the picture sits inside its padding, so it never touches the pop-up's edge
+const modalBody = { flex: "1 1 auto", minHeight: 0, overflowY: "auto", padding: "16px 18px 6px", overscrollBehavior: "contain" };
+const modalFoot = { flex: "0 0 auto", padding: "12px 18px 12px", borderTop: "1px solid var(--color-border)", background: "var(--color-bg)" };
+const popupImageWrap = { margin: "0 0 16px", borderRadius: 16, overflow: "hidden", boxShadow: "0 8px 22px -10px rgba(0, 0, 0, 0.45)", background: "var(--color-surface)" };
+const closeBtn = {
+  position: "absolute",
+  top: 10,
+  right: 10,
+  zIndex: 6,
+  width: 34,
+  height: 34,
+  display: "grid",
+  placeItems: "center",
+  borderRadius: 999,
+  border: "none",
+  background: "rgba(255, 255, 255, 0.94)",
+  color: "#1a1a1a",
+  boxShadow: "0 2px 10px rgba(0, 0, 0, 0.28)",
+  cursor: "pointer",
+};
+const titleRow = { display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 14 };
+const title = { margin: 0, display: "flex", gap: 9, alignItems: "flex-start", fontFamily: "var(--font-heading)", fontSize: 22, fontWeight: 800, lineHeight: 1.25, letterSpacing: "-0.01em" };
+const fromPrice = { flexShrink: 0, paddingTop: 3, fontSize: 17, fontWeight: 800, color: "var(--color-primary)", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap" };
+const description = { color: "var(--color-text-muted)", fontSize: 14.5, lineHeight: 1.55, margin: "8px 0 0" };
+const section = { margin: "20px 0 0" };
+const sectionHead = { display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, marginBottom: 10 };
+const legend = { fontSize: 12, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.07em", color: "var(--color-text-muted)" };
+const pillRequired = { fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 999, background: "color-mix(in srgb, var(--color-primary) 12%, var(--color-bg))", color: "var(--color-primary)" };
+const pillOptional = { fontSize: 11, fontWeight: 600, padding: "3px 10px", borderRadius: 999, background: "var(--color-surface)", color: "var(--color-text-muted)", border: "1px solid var(--color-border)" };
+const tileList = { display: "flex", flexDirection: "column", gap: 8 };
+const tile = { display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", fontSize: 14.5, cursor: "pointer", borderRadius: 14, borderWidth: "1.5px", borderStyle: "solid", borderColor: "var(--color-border)", background: "var(--color-bg)", transition: "border-color 140ms, background 140ms" };
+const tileOn = { borderColor: "var(--color-primary)", background: "color-mix(in srgb, var(--color-primary) 7%, var(--color-bg))" };
+const tileInput = { width: 18, height: 18, margin: 0, flexShrink: 0, accentColor: "var(--color-primary)", cursor: "pointer" };
+const tilePrice = { fontVariantNumeric: "tabular-nums", fontWeight: 700, whiteSpace: "nowrap", color: "var(--color-text)" };
 const primaryBtn = {
   width: "100%",
   marginTop: 16,
   font: "inherit",
-  fontWeight: 600,
-  fontSize: 15,
-  padding: "12px 18px",
+  fontWeight: 700,
+  fontSize: 16,
+  padding: "14px 18px",
   borderRadius: "var(--radius-card)",
   background: "var(--color-primary)",
   color: "var(--color-on-primary)",
   border: "none",
   cursor: "pointer",
+  boxShadow: "0 8px 20px -8px color-mix(in srgb, var(--color-primary) 70%, transparent)",
 };
 const linkBtn = {
   width: "100%",
-  marginTop: 8,
+  marginTop: 4,
   font: "inherit",
   fontSize: 13.5,
   padding: 8,
