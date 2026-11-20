@@ -135,11 +135,23 @@ export const nameStyle                = {
   lineHeight: 1.3,
 };
 
+/** ONE line of text, then an ellipsis (…) — the rest is cut off, not wrapped onto a second line. */
+export const clampOneLine = {
+  display: "-webkit-box",
+  WebkitBoxOrient: "vertical",
+  WebkitLineClamp: 1,
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  overflowWrap: "anywhere",
+};
+
+/** A dish's description on every item card: one line, then an ellipsis. */
 export const descStyle                = {
   fontSize: 13,
   color: "var(--color-text-muted)",
   marginTop: 4,
   lineHeight: 1.45,
+  ...clampOneLine,
 };
 
 export const priceStyle                = {

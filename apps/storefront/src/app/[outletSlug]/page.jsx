@@ -43,12 +43,7 @@ export default async function OutletHomePage({ params }) {
       {/* Takeaway or Delivery, and which outlet — only where there is something to choose */}
       {features.ordering.takeaway || features.ordering.delivery ? <OrderBar current={{ id: outlet.id, slug: outlet.slug }} outlets={store?.outlets ?? []} /> : null}
 
-      <Hero
-        title={name}
-        subtitle={identity.tagline || undefined}
-        ctaLabel={features.ordering.takeaway ? "Order takeaway" : undefined}
-        ctaHref={features.ordering.takeaway ? "#menu" : undefined}
-      />
+      <Hero title={name} subtitle={identity.tagline || undefined} />
 
       {slides.length > 0 ? (
         <section aria-label="Offers and news" className="ot-page-px" style={{ maxWidth: 1080, margin: "0 auto", padding: "0 18px 18px", boxSizing: "border-box" }}>
