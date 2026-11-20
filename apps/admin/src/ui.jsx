@@ -43,6 +43,8 @@ export function Modal({
   children,
   width = 640,
   ariaLabel,
+  closeOnOverlay = true,
+  panelStyle,
 }   
                       
                       
@@ -60,10 +62,10 @@ export function Modal({
   }, [onClose]);
 
   return createPortal(
-    <div style={modalOverlay} onClick={onClose} role="presentation">
+    <div style={modalOverlay} onClick={closeOnOverlay ? onClose : undefined} role="presentation">
       <div
         className="ot-anim-pop"
-        style={{ ...modalPanel, maxWidth: width }}
+        style={{ ...modalPanel, maxWidth: width, ...panelStyle }}
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"

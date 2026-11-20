@@ -19,7 +19,7 @@ import { CategoriesPanel } from "./menu/CategoriesPanel";
 import { ItemsPanel } from "./menu/ItemsPanel";
 import { ComboEditor, ItemHours, PairsEditor, StockEditor } from "./menu/ItemExtras";
 import { useSelection } from "./menu/shared";
-import { AwesomeLoader, Button, Card, Field, PageHeader, TextInput, Toast } from "../ui";
+import { AwesomeLoader, Button, Card, Field, Modal, PageHeader, TextInput, Toast } from "../ui";
 
 const toPaise = (rupees        ) => Math.round(Number(rupees || 0) * 100);
 const toRupees = (paise        ) => String(paise / 100);
@@ -105,27 +105,29 @@ export function MenuEditor() {
         />
 
         <div>
-          {editing ? (
-            <ItemForm
-              outlet={outlet}
-              menu={menu}
-              categoryId={categoryId ?? ""}
-              item={editing === "new" ? null : editing}
-              onDone={() => setEditing(null)}
-            />
-          ) : (
-            <ItemsPanel
-              outlet={outlet}
-              menu={menu}
-              categoryId={categoryId}
-              onNew={() => setEditing("new")}
-              onEdit={setEditing}
-              onImport={() => setImportModal({ targetCategoryId: categoryId })}
-              selection={itemSel}
-            />
-          )}
+          <ItemsPanel
+            outlet={outlet}
+            menu={menu}
+            categoryId={categoryId}
+            onNew={() => setEditing("new")}
+            onEdit={setEditing}
+            onImport={() => setImportModal({ targetCategoryId: categoryId })}
+            selection={itemSel}
+          />
         </div>
       </div>
+
+      {/* the item form is a pop-up: its header and its Save / Cancel buttons stay put while the form scrolls; Esc closes it */}
+      {editing ? (
+        <ItemForm
+          key={editing === "new" ? "new" : editing.id}
+          outlet={outlet}
+          menu={menu}
+          categoryId={categoryId ?? ""}
+          item={editing === "new" ? null : editing}
+          onDone={() => setEditing(null)}
+        />
+      ) : null}
 
       <ModifierGroups outlet={outlet} menu={menu} />
 
@@ -186,6 +188,46 @@ function ItemForm({
   const pending = create.isPending || update.isPending;
   const error = (create.error ?? update.error)                ;
 
+  /*
+   * Photos are saved the moment they change — an upload, a paste, a replace, a removal, a new order — without pressing
+   * Save (that is for the other fields). A dish that doesn't exist yet has nothing to save them to, so a NEW dish keeps
+   * its photos in the form and saves them with "Create item".
+   */
+  const photoSave = useUpdateItem(outlet);
+  const imagesBody = (list) => list.map((im) => ({ url: im.url, key: im.key ?? "", width: im.width, height: im.height, ratio: imageRatioOf(im) }));
+  const savedImages = useRef(item?.images ?? []); // what the server has
+  const photoQueue = useRef(Promise.resolve()); // saves go one after another, in the order they were made
+  const [photoState, setPhotoState] = useState("idle"); // idle | saving | saved | error
+  const [photoError, setPhotoError] = useState(null);
+  const photoJobs = useRef(0); // saves still waiting or running
+  const changeImages = (next) => {
+    setImages(next);
+    if (!item) return;
+    photoJobs.current += 1;
+    setPhotoState("saving");
+    setPhotoError(null);
+    photoQueue.current = photoQueue.current.then(async () => {
+      try {
+        const r = await photoSave.mutateAsync({ id: item.id, body: { images: imagesBody(next) } });
+        savedImages.current = r?.item?.images ?? next;
+        photoJobs.current -= 1;
+        if (photoJobs.current === 0) setPhotoState((st) => (st === "error" ? st : "saved"));
+      } catch (e) {
+        photoJobs.current -= 1;
+        // put the photos back to what is really saved, and say so
+        setImages(savedImages.current);
+        setPhotoError(e instanceof Error ? e.message : "The photos couldn't be saved.");
+        setPhotoState("error");
+      }
+    });
+  };
+
+  // Closing a NEW dish throws away the photos it uploaded (nothing else holds them); an existing dish's photos are already saved.
+  const close = () => {
+    if (!item) for (const im of images) if (im.key) void api.deleteStorageObject(outlet, im.key);
+    onDone();
+  };
+
   const save = () => {
     if (!name.trim()) return;
     const body = {
@@ -193,7 +235,8 @@ function ItemForm({
       name: name.trim(),
       description: description.trim(),
       foodType,
-      images: images.map((im) => ({ url: im.url, key: im.key ?? "", width: im.width, height: im.height, ratio: imageRatioOf(im) })),
+      // an existing dish's photos are saved as they change; only a new dish sends them here
+      ...(item ? {} : { images: imagesBody(images) }),
       tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
       basePrice: variants.length ? 0 : toPaise(basePrice),
       variants: variants
@@ -208,18 +251,18 @@ function ItemForm({
       ...(JSON.stringify(stock) !== JSON.stringify(item?.stock ?? null) ? { stock } : {}),
     };
     if (item) update.mutate({ id: item.id, body }, { onSuccess: onDone });
-    else create.mutate(body, { onSuccess: onDone });
+    else create.mutate(body, { onSuccess: onDone }); // (its photos go with it, so they are NOT thrown away by close())
   };
 
   return (
-    <Card
-      title={item ? "Edit item" : "New item"}
-      action={
-        <Button variant="outline" onClick={onDone}>
-          Back
-        </Button>
-      }
-    >
+    <Modal onClose={close} width={1200} panelStyle={{ height: "min(92vh, 820px)", maxHeight: "92vh" }} ariaLabel={item ? "Edit item" : "New item"} closeOnOverlay={false}>
+      <header style={formHead}>
+        <h2 style={{ margin: 0, fontSize: 18, fontFamily: "var(--font-heading)" }}>{item ? `Edit ${item.name}` : "New item"}</h2>
+        <button type="button" onClick={close} aria-label="Close" title="Close (Esc)" style={formX} data-testid="item-form-close">
+          <X size={16} />
+        </button>
+      </header>
+      <div style={formBody} data-testid="item-form-body">
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 14 }}>
         <Field label="Name" info="What diners see on the menu and what the kitchen reads on the ticket. Keep it short — long names wrap awkwardly on a 58 mm receipt roll." style={{ maxWidth: "none" }}>
           <TextInput value={name} onChange={(e) => setName(e.target.value)} autoFocus />
@@ -265,14 +308,23 @@ function ItemForm({
       </div>
 
       <div style={{ borderTop: "1px solid var(--color-border)", margin: "6px 0 14px", paddingTop: 14 }}>
-        <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 3 }}>Photos</div>
+        <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 3, display: "flex", alignItems: "center", gap: 10 }}>
+          Photos
+          {item ? (
+            <span style={{ fontSize: 12, fontWeight: 600, color: photoState === "error" ? "var(--tone-danger)" : "var(--color-text-muted)" }} data-testid="photos-status" role="status">
+              {photoState === "saving" ? "Saving…" : photoState === "saved" ? "Saved" : photoState === "error" ? "Not saved" : ""}
+            </span>
+          ) : null}
+        </div>
         <div style={{ fontSize: 12, color: "var(--color-text-muted)", marginBottom: 10, lineHeight: 1.5 }}>
           Menu cards come in different shapes, so a dish can have a picture for each: <strong>square</strong>, <strong>landscape 4:3</strong>,{" "}
           <strong>wide 16:9</strong> and <strong>portrait 3:4</strong>. A card shows the picture of its own shape; if the dish has none for it, the
           square one is used. Any format (JPEG, PNG, WebP, AVIF, HEIC…) — compressed automatically. TablePe sets where photos are kept and how
-          small they are made. Copied a picture? Press Ctrl+V (⌘V on a Mac) here, or use Paste.
+          small they are made. Copied a picture? Press Ctrl+V (⌘V on a Mac) here, or use Paste.{" "}
+          <strong>{item ? "Photos are saved as soon as you add, change or remove them — you don't need to press Save for them." : "Photos are saved when you create the item."}</strong>
         </div>
-        <ItemPhotos outlet={outlet} images={images} originalKeys={item?.images ?? []} onChange={setImages} />
+        <ItemPhotos outlet={outlet} images={images} persisted={Boolean(item)} onChange={changeImages} />
+        {photoError ? <Toast kind="error">{photoError}</Toast> : null}
       </div>
 
       <div style={{ borderTop: "1px solid var(--color-border)", margin: "6px 0 14px", paddingTop: 14 }}>
@@ -358,22 +410,29 @@ function ItemForm({
       <ComboEditor menu={menu} itemId={item?.id} value={combo} onChange={setCombo} price={variants.length ? Math.min(...variants.map((v) => toPaise(v.price))) : toPaise(basePrice)} />
       <PairsEditor menu={menu} itemId={item?.id} value={pairsWith} onChange={setPairsWith} />
 
-      <div style={{ display: "flex", gap: 10 }}>
-        <Button onClick={save} disabled={pending}>
-          {pending ? "Saving…" : item ? "Save changes" : "Create item"}
-        </Button>
-        <Button variant="outline" onClick={onDone}>
+      </div>
+      {/* the buttons stay put while the form above scrolls */}
+      <footer style={formFoot} data-testid="item-form-footer">
+        <span style={{ flex: 1, minWidth: 0 }}>{error ? <Toast kind="error">{error.message}</Toast> : null}</span>
+        <Button variant="outline" onClick={close} data-testid="item-form-cancel">
           Cancel
         </Button>
-      </div>
-      {error ? <Toast kind="error">{error.message}</Toast> : null}
-    </Card>
+        <Button onClick={save} disabled={pending || !name.trim()} data-testid="item-form-save">
+          {pending ? "Saving…" : item ? "Save changes" : "Create item"}
+        </Button>
+      </footer>
+    </Modal>
   );
 }
 
+const formHead = { display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, padding: "14px 22px", borderBottom: "1px solid var(--color-border)", flex: "0 0 auto" };
+const formBody = { flex: "1 1 auto", minHeight: 0, overflowY: "auto", padding: "18px 22px 8px", overscrollBehavior: "contain" };
+const formFoot = { display: "flex", alignItems: "center", gap: 10, padding: "12px 22px", borderTop: "1px solid var(--color-border)", background: "var(--color-bg)", flex: "0 0 auto" };
+const formX = { display: "inline-grid", placeItems: "center", width: 30, height: 30, borderRadius: 8, border: "1px solid var(--color-border)", background: "var(--color-surface)", color: "var(--color-text-muted)", cursor: "pointer" };
+
 /* --------------------------------------------------------------- item photos */
 
-function ItemPhotos({ outlet, images, originalKeys, onChange }) {
+function ItemPhotos({ outlet, images, persisted, onChange }) {
   const { upload, busy, error, clearError } = useImageUpload(outlet);
   const inputs = useRef({});
   const [dragOver, setDragOver] = useState(null);
@@ -382,14 +441,13 @@ function ItemPhotos({ outlet, images, originalKeys, onChange }) {
   // what to tell the person after a paste that couldn't be used (the upload hook reports its own errors)
   const [pasteNote, setPasteNote] = useState(null);
 
-  const originalKeySet = new Set((originalKeys ?? []).map((im) => im.key).filter(Boolean));
   const of = (ratio) => images.filter((im) => imageRatioOf(im) === ratio);
   const others = (ratio) => images.filter((im) => imageRatioOf(im) !== ratio);
 
-  // A photo added in this editing session (not yet saved) is safe to delete now; an original one is left for the
-  // server to clean up on save.
+  // A dish that exists saves its photos as they change, and the server deletes the file of one that is taken off. A
+  // NEW dish has saved nothing yet, so a photo taken off it is deleted from storage here.
   const discard = (img) => {
-    if (img?.key && !originalKeySet.has(img.key)) void api.deleteStorageObject(outlet, img.key);
+    if (!persisted && img?.key) void api.deleteStorageObject(outlet, img.key);
   };
 
   /** Add pictures to one shape. A shape that holds one picture swaps it for the new one; squares add up to six. */
