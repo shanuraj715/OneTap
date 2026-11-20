@@ -1,12 +1,12 @@
 # T63 — C07 uses the wide 16:9 picture — and Appearance has a Picture shape field per card style that resets on a new card and can be overridden
 
-**Area:** storefront · **Last result:** ✅ PASSED (29 passed, 0 failed · 2026-11-21 01:10 · headless · 3.3 s)
+**Area:** storefront · **Last result:** ✅ PASSED (30 passed, 0 failed · 2026-11-21 01:22 · headless · 3.3 s)
 
 **Run it alone:** `node run.mjs --only t63` (add `--visible` to watch it)
 
 ## What this test does
 
-Runs suites/card-picture-shape-ui.mjs in Chrome on the bench store. A dish with all four picture shapes: C07 (Image overlay) shows the wide 16:9 picture in a 16:9 card. Dashboard → Appearance → Menu item cards has a 'Picture shape' field: it shows the chosen card's own shape (C07 Wide 16:9, C08 Portrait 3:4, C04 Landscape 4:3, C09 Square 1:1), changes by itself when another card is picked, can be overridden (saved, shown again after a reload, and the storefront then shows that picture — and a 4:3 box for C07), has a 'Back to the card's own' link while overridden, resets after picking another card, and says there is nothing to choose for C01 (no picture). The bench layout is put back.
+Runs suites/card-picture-shape-ui.mjs in Chrome on the bench store. A dish with all four picture shapes: C07 (Image overlay) shows the wide 16:9 picture in a 16:9 card. Dashboard → Appearance → Menu item cards has a 'Picture shape' field: it shows the chosen card's own shape (C07 Wide 16:9, C08 Portrait 3:4, C04 Landscape 4:3, C09 Square 1:1), changes by itself when another card is picked, can be overridden (saved, shown again after a reload, and the storefront then shows that picture — and a 4:3 box for C07), keeps one fixed width whichever card or shape is chosen, resets after picking another card, and says there is nothing to choose for C01 (no picture). The bench layout is put back.
 
 ## Steps
 
@@ -21,7 +21,7 @@ Runs suites/card-picture-shape-ui.mjs in Chrome on the bench store. A dish with 
 
 - C07 shows the 16:9 picture; its Picture shape reads Wide (16:9).
 - Picking another card changes the field to that card's own shape and drops any override.
-- An override is saved and the storefront shows the matching picture; the 'back' link clears it.
+- An override is saved and the storefront shows the matching picture; the dropdown keeps a fixed width and shows no extra message.
 
 ## What must NOT happen
 
@@ -35,7 +35,7 @@ Runs suites/card-picture-shape-ui.mjs in Chrome on the bench store. A dish with 
 
 _Nothing failed._
 
-### ✅ Passed (29)
+### ✅ Passed (30)
 
 **Step 1 — C07 uses the wide 16:9 picture**
 
@@ -46,16 +46,17 @@ _Nothing failed._
 
 - with C07 selected, Picture shape shows Wide (16:9) — _16:9_
 - …marked as the card's own
-- no 'Back to the card's own' link while it is the card's own
+- there is no 'back to the card's own' link (the dropdown itself shows which one is the card's own)
 - all four shapes can be chosen — _Square (1:1) \| Landscape (4:3) \| Wide (16:9) — this card's own \| Portrait (3:4)_
 - picking another card (C08) changes the field to that card's own shape — Portrait (3:4) — _3:4_
 - …C04 → Landscape (4:3) — _4:3_
 - …C09 → Square (1:1) — _1:1_
 - …back to C07 → Wide (16:9)
+- the dropdown keeps the same width whichever card or shape is chosen — _320, 320, 320, 320, 320, 320_
 
 **Step 3 — Overriding it**
 
-- an override shows 'Back to the card's own (16:9)' — _Back to the card's own (16:9)_
+- an override is just the dropdown set to another shape — no extra message
 - saved: C07 with picture shape 4:3 — _card.image-overlay / 4:3_
 - the storefront's C07 card now shows the landscape picture — _https://img.test/cs-land.png_
 - …in a 4:3 box — _4 / 3_
@@ -66,13 +67,13 @@ _Nothing failed._
 
 - choosing C08 after an override resets the field to C08's own (Portrait), with no override left
 - saved: C08 with no override (empty = its own) — _card.portrait / ""_
-- 'Back to the card's own' puts the card's own shape back
+- choosing the card's own shape again puts it back
 
 **Step 5 — Menu layout: the same field for the default card and for each section**
 
 - Menu layout → Default card style C07 shows Picture shape Wide (16:9) — _16:9_
 - choosing C04 as the default card changes it to Landscape (4:3) — _4:3_
-- …and it can be overridden (a 'back to the card's own' link appears)
+- …and it can be overridden
 - the storefront's C04 cards now show the wide picture (override on the default card) — _https://img.test/cs-wide.png_
 - …in a 16:9 photo box — _16 / 9_
 - a custom section can override its own picture shape (C04 + Portrait → the portrait picture) — _https://img.test/cs-tall.png_
@@ -88,6 +89,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-21 01:22 | pass | 30 | 0 | headless | 3.3 s |
 | 2026-11-21 01:10 | pass | 29 | 0 | headless | 3.3 s |
 | 2026-11-21 01:10 | error | 27 | 0 | headless | 33.4 s |
 | 2026-11-21 01:07 | error | 0 | 0 | headless | 31.5 s |

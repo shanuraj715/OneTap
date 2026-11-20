@@ -953,3 +953,4 @@
 {"id":"t35-storefront-category-bar","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-20T19:43:17.490Z","durationMs":21433}
 {"id":"t58-item-image-shapes-api","status":"pass","pass":31,"fail":0,"mode":"headless","at":"2026-11-20T19:43:29.833Z","durationMs":4145}
 {"id":"t07-favicon-plan-rules","status":"pass","pass":8,"fail":0,"mode":"headless","at":"2026-11-20T19:43:40.757Z","durationMs":3982}
+{"id":"t63-card-picture-shape","status":"pass","pass":30,"fail":0,"mode":"headless","at":"2026-11-20T19:52:18.766Z","durationMs":3258}

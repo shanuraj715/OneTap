@@ -7,11 +7,11 @@ export const meta = {
   area: "storefront",
   browser: true,
   fresh: false,
-  summary: "Runs suites/card-picture-shape-ui.mjs in Chrome on the bench store. A dish with all four picture shapes: C07 (Image overlay) shows the wide 16:9 picture in a 16:9 card. Dashboard → Appearance → Menu item cards has a 'Picture shape' field: it shows the chosen card's own shape (C07 Wide 16:9, C08 Portrait 3:4, C04 Landscape 4:3, C09 Square 1:1), changes by itself when another card is picked, can be overridden (saved, shown again after a reload, and the storefront then shows that picture — and a 4:3 box for C07), has a 'Back to the card's own' link while overridden, resets after picking another card, and says there is nothing to choose for C01 (no picture). The bench layout is put back.",
+  summary: "Runs suites/card-picture-shape-ui.mjs in Chrome on the bench store. A dish with all four picture shapes: C07 (Image overlay) shows the wide 16:9 picture in a 16:9 card. Dashboard → Appearance → Menu item cards has a 'Picture shape' field: it shows the chosen card's own shape (C07 Wide 16:9, C08 Portrait 3:4, C04 Landscape 4:3, C09 Square 1:1), changes by itself when another card is picked, can be overridden (saved, shown again after a reload, and the storefront then shows that picture — and a 4:3 box for C07), keeps one fixed width whichever card or shape is chosen, resets after picking another card, and says there is nothing to choose for C01 (no picture). The bench layout is put back.",
   expect: [
     "C07 shows the 16:9 picture; its Picture shape reads Wide (16:9).",
     "Picking another card changes the field to that card's own shape and drops any override.",
-    "An override is saved and the storefront shows the matching picture; the 'back' link clears it.",
+    "An override is saved and the storefront shows the matching picture; the dropdown keeps a fixed width and shows no extra message.",
   ],
   expectNot: [
     "A card with no picture (C01) must NOT offer a shape.",

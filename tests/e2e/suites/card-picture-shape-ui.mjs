@@ -66,22 +66,28 @@ try {
   await shape.waitFor({ timeout: 15000 });
   ok(await shape.inputValue() === "16:9", "with C07 selected, Picture shape shows Wide (16:9)", await shape.inputValue());
   ok(/this card's own/.test(await shape.locator("option:checked").innerText()), "…marked as the card's own");
-  ok(await page.getByTestId("picture-shape-reset").count() === 0, "no 'Back to the card's own' link while it is the card's own");
+  const widthOf = async () => Math.round((await shape.boundingBox()).width);
+  const w0 = await widthOf();
+  ok(await page.getByTestId("picture-shape-reset").count() === 0, "there is no 'back to the card's own' link (the dropdown itself shows which one is the card's own)");
   const options = await shape.locator("option").allInnerTexts();
   ok(options.length === 4 && options.some((o) => /Square/.test(o)) && options.some((o) => /Portrait/.test(o)), "all four shapes can be chosen", options.join(" | "));
 
   await pickCard("C08");
+  const widths = [await widthOf()];
   ok(await shape.inputValue() === "3:4", "picking another card (C08) changes the field to that card's own shape — Portrait (3:4)", await shape.inputValue());
   await pickCard("C04");
   ok(await shape.inputValue() === "4:3", "…C04 → Landscape (4:3)", await shape.inputValue());
   await pickCard("C09");
   ok(await shape.inputValue() === "1:1", "…C09 → Square (1:1)", await shape.inputValue());
+  widths.push(await widthOf());
   await pickCard("C07");
   ok(await shape.inputValue() === "16:9", "…back to C07 → Wide (16:9)");
+  await shape.selectOption("1:1"); widths.push(await widthOf()); await shape.selectOption("3:4"); widths.push(await widthOf()); await shape.selectOption("16:9"); widths.push(await widthOf());
+  ok([w0, ...widths].every((w) => w === w0) && w0 >= 300, "the dropdown keeps the same width whichever card or shape is chosen", [w0, ...widths].join(", "));
 
   console.log("== Overriding it");
   await shape.selectOption("4:3");
-  ok(await page.getByTestId("picture-shape-reset").isVisible(), "an override shows 'Back to the card's own (16:9)'", await page.getByTestId("picture-shape-reset").innerText());
+  ok(await shape.inputValue() === "4:3" && await page.getByTestId("picture-shape-reset").count() === 0, "an override is just the dropdown set to another shape — no extra message");
   await page.getByRole("button", { name: "Save appearance" }).click();
   await page.getByText(/Saved\./).waitFor({ timeout: 10000 });
   let saved = await savedLayout();
@@ -101,16 +107,16 @@ try {
   r = await shown();
   ok(r.src === "https://img.test/cs-sq.png", "overriding to Square shows the square picture", r.src);
 
-  console.log("== Another card resets it; 'back to the card's own' clears it");
+  console.log("== Another card resets it");
   await pickCard("C08");
-  ok(await page.getByTestId("picture-shape").inputValue() === "3:4" && await page.getByTestId("picture-shape-reset").count() === 0, "choosing C08 after an override resets the field to C08's own (Portrait), with no override left");
+  ok(await page.getByTestId("picture-shape").inputValue() === "3:4", "choosing C08 after an override resets the field to C08's own (Portrait), with no override left");
   await page.getByRole("button", { name: "Save appearance" }).click();
   await page.getByText(/Saved\./).waitFor({ timeout: 10000 });
   saved = await savedLayout();
   ok(saved.itemCardVariant === "card.portrait" && saved.itemImageRatio === "", "saved: C08 with no override (empty = its own)", `${saved.itemCardVariant} / "${saved.itemImageRatio}"`);
   await page.getByTestId("picture-shape").selectOption("16:9");
-  await page.getByTestId("picture-shape-reset").click();
-  ok(await page.getByTestId("picture-shape").inputValue() === "3:4", "'Back to the card's own' puts the card's own shape back");
+  await page.getByTestId("picture-shape").selectOption("3:4");
+  ok(await page.getByTestId("picture-shape").inputValue() === "3:4", "choosing the card's own shape again puts it back");
 
   console.log("== Menu layout: the same field for the default card and for each section");
   await setCard("image-overlay");
@@ -121,7 +127,7 @@ try {
   await page.locator("select").filter({ has: page.locator("option", { hasText: "C04 ·" }) }).first().selectOption("card.image-top");
   ok(await dshape.inputValue() === "4:3", "choosing C04 as the default card changes it to Landscape (4:3)", await dshape.inputValue());
   await dshape.selectOption("16:9");
-  ok(await page.getByTestId("default-picture-shape-reset").isVisible(), "…and it can be overridden (a 'back to the card's own' link appears)");
+  ok(await dshape.inputValue() === "16:9", "…and it can be overridden");
   await page.getByRole("button", { name: /Save layout/ }).click();
   await page.getByText(/Saved\./).first().waitFor({ timeout: 10000 });
   r = await shown();

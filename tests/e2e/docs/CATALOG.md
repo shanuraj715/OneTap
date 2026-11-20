@@ -67,7 +67,7 @@
 | [t60-store-address](t60-store-address.md) — Super admin inside a store — every page is at /store/<store-name>/<store-id>/…; the store owner keeps the plain addresses | platform | ✅ PASSED | 18/18 | 2026-11-21 00:27 |
 | [t61-item-form-modal](t61-item-form-modal.md) — Edit / New item is a pop-up — fixed Save and Cancel footer, scrolling body, Esc closes — and photos are saved as they change | menu | ✅ PASSED | 33/33 | 2026-11-21 00:46 |
 | [t62-food-mark](t62-food-mark.md) — The veg / non-veg mark — the dot is exactly centred in its frame on the storefront and in Take order | storefront | ✅ PASSED | 9/9 | 2026-11-21 00:56 |
-| [t63-card-picture-shape](t63-card-picture-shape.md) — C07 uses the wide 16:9 picture — and Appearance has a Picture shape field per card style that resets on a new card and can be overridden | storefront | ✅ PASSED | 29/29 | 2026-11-21 01:10 |
+| [t63-card-picture-shape](t63-card-picture-shape.md) — C07 uses the wide 16:9 picture — and Appearance has a Picture shape field per card style that resets on a new card and can be overridden | storefront | ✅ PASSED | 30/30 | 2026-11-21 01:22 |
 
 ## Open findings (noticed during tests, not yet fixed)
 

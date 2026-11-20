@@ -21079,12 +21079,12 @@
     "id": "t63-card-picture-shape",
     "title": "C07 uses the wide 16:9 picture — and Appearance has a Picture shape field per card style that resets on a new card and can be overridden",
     "status": "pass",
-    "pass": 29,
+    "pass": 30,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T19:40:31.959Z",
-    "durationMs": 3285,
+    "at": "2026-11-20T19:52:18.766Z",
+    "durationMs": 3258,
     "steps": [
       {
         "n": 1,
@@ -21121,7 +21121,7 @@
             "kind": "expect"
           },
           {
-            "label": "no 'Back to the card's own' link while it is the card's own",
+            "label": "there is no 'back to the card's own' link (the dropdown itself shows which one is the card's own)",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -21155,6 +21155,12 @@
             "ok": true,
             "detail": "",
             "kind": "expect"
+          },
+          {
+            "label": "the dropdown keeps the same width whichever card or shape is chosen",
+            "ok": true,
+            "detail": "320, 320, 320, 320, 320, 320",
+            "kind": "expect"
           }
         ]
       },
@@ -21163,9 +21169,9 @@
         "title": "Overriding it",
         "checks": [
           {
-            "label": "an override shows 'Back to the card's own (16:9)'",
+            "label": "an override is just the dropdown set to another shape — no extra message",
             "ok": true,
-            "detail": "Back to the card's own (16:9)",
+            "detail": "",
             "kind": "expect"
           },
           {
@@ -21217,7 +21223,7 @@
             "kind": "expect"
           },
           {
-            "label": "'Back to the card's own' puts the card's own shape back",
+            "label": "choosing the card's own shape again puts it back",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -21241,7 +21247,7 @@
             "kind": "expect"
           },
           {
-            "label": "…and it can be overridden (a 'back to the card's own' link appears)",
+            "label": "…and it can be overridden",
             "ok": true,
             "detail": "",
             "kind": "expect"
