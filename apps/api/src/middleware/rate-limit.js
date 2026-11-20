@@ -148,6 +148,27 @@ export const POLICIES = {
     why: "A customer's Account page (their order history). It refreshes every 20 seconds or so while an order is being prepared, which is far under this; a higher rate is a script copying history or loading the database.",
     message: "Too many requests. Please wait {wait}.",
   },
+  "cart-sync": {
+    windowMs: 10 * MINUTE,
+    limit: 120,
+    key: "identity",
+    why: "A signed-in customer's cart is saved (for abandoned-cart reminders) a moment after each change. A busy customer changes it a few dozen times; more than this is a script writing to the database.",
+    message: "Too many requests. Please wait {wait}.",
+  },
+  "customer-feedback": {
+    windowMs: 10 * MINUTE,
+    limit: 20,
+    key: "identity",
+    why: "Rating an order: a customer rates a handful of orders at most; this stops a script filling the store's ratings.",
+    message: "Too many ratings at once. Please wait {wait}.",
+  },
+  "reservation-request": {
+    windowMs: 60 * MINUTE,
+    limit: 10,
+    key: "identity",
+    why: "Booking a table holds seats for everybody else: a few requests an hour is plenty for a real guest, and a script must not be able to fill a restaurant's evening with fake bookings.",
+    message: "Too many booking requests. Please wait {wait} or call the restaurant.",
+  },
   "order-place": {
     windowMs: 10 * MINUTE,
     limit: (req) => (req.header("x-onetap-outlet") ? 150 : 12),

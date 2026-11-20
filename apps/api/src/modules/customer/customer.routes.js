@@ -1,12 +1,15 @@
 import { Router } from "express";
 import { z } from "zod";
-import { coinsValuePaise, currentAge, customerAgeSchema, customerEmailSchema, customerGenderSchema, customerNameSchema, isProfileComplete } from "@onetap/config-schema";
+import { coinsValuePaise, currentAge, customerAgeSchema, customerEmailSchema, customerGenderSchema, customerNameSchema, feedbackInputSchema, isProfileComplete } from "@onetap/config-schema";
 import { OutletModel } from "@onetap/db";
 import { isProd } from "../../env.js";
 import { HttpError } from "../../middleware/error.js";
 import { assertNotBlocked, blockInfo, failed, floodLimiter } from "../security/login-guard.js";
 import { effectiveOutletConfig } from "../outlets/config.service.js";
+import { cartLinesById, saveCart } from "../carts/carts.service.js";
+import { rateOrder } from "../feedback/feedback.service.js";
 import { customerOrderHistory, hideOrderFromCustomer } from "../orders/orders.service.js";
+import { reorderLines } from "../orders/reorder.service.js";
 import { storePlan } from "../platform/plan.service.js";
 import { completeProfile, customerFromToken, endCustomerSession, requestOtp, verifyOtp } from "./customer.service.js";
 import { limiter, usesPolicy } from "../../middleware/rate-limit.js";
@@ -139,17 +142,71 @@ customerRouter.get("/orders", limiter("customer-orders"), async (req, res) => {
 
   const before = typeof req.query.before === "string" ? new Date(req.query.before) : undefined;
   if (before && Number.isNaN(before.getTime())) throw new HttpError(400, "That isn't a valid date");
-  const history = await customerOrderHistory({ brandId: outlet.brandId, customerId: String(customer._id), before, limit: Number(req.query.limit) || 15 });
-
   // coins are shown only when the store has them: the plan includes the feature AND the outlet has switched them on
   const [config, plan] = await Promise.all([effectiveOutletConfig({ brandId: outlet.brandId, outletId: String(outlet._id) }), storePlan(outlet.brandId)]);
+  // ratings: the plan includes them AND this outlet asks for them (effectiveOutletConfig already applies the plan)
+  const feedback = config.feedback ?? { enabled: false, googleReviewUrl: "", googleMinStars: 4 };
+  const history = await customerOrderHistory({ brandId: outlet.brandId, customerId: String(customer._id), before, limit: Number(req.query.limit) || 15, feedbackEnabled: Boolean(feedback.enabled) });
   const enabled = plan.entitlements.features.includes("wallet") && Boolean(config.wallet?.enabled);
   const balance = customer.walletBalance ?? 0;
   res.json({
     ...history,
     customer: shapeCustomer(customer),
     coins: { enabled, balance: enabled ? balance : 0, valuePaise: enabled ? coinsValuePaise(balance, config.wallet) : 0 },
+    feedback: { enabled: Boolean(feedback.enabled), googleReviewUrl: feedback.enabled ? feedback.googleReviewUrl : "", googleMinStars: feedback.googleMinStars },
   });
+});
+
+/** The signed-in customer, and the outlet they are at — refused when the two belong to different stores. */
+async function customerAt(req, outletId, { signInMessage = "Sign in first" } = {}) {
+  const customer = await currentCustomer(req);
+  if (!customer) throw new HttpError(401, signInMessage);
+  const outlet = await outletOf(outletId);
+  if (customer.brandId !== outlet.brandId) throw new HttpError(403, "Sign in again for this restaurant");
+  return { customer, outlet, ctx: { brandId: outlet.brandId, outletId: String(outlet._id) } };
+}
+
+/** Rate a completed order (1–5 stars, an optional comment and quick tags). Rating again within a week changes it. */
+customerRouter.post("/orders/:id/feedback", limiter("customer-feedback"), async (req, res) => {
+  const body = feedbackInputSchema.parse(req.body);
+  const { customer, outlet } = await customerAt(req, body.outletId, { signInMessage: "Sign in to rate your order" });
+  res.json(await rateOrder({ brandId: outlet.brandId, customer, orderId: req.params.id, input: body }));
+});
+
+/**
+ * "Order again": the dishes of one of the customer's past orders, rebuilt against the outlet's menu as it is NOW —
+ * what's gone, sold out or out of its hours is left out (and listed), changed add-ons are dropped. The storefront puts
+ * the lines in the cart; prices are worked out fresh at checkout.
+ */
+customerRouter.post("/orders/:id/reorder", limiter("customer-orders"), async (req, res) => {
+  const body = z.object({ outletId: z.string().min(1) }).parse(req.body);
+  const { customer, outlet } = await customerAt(req, body.outletId, { signInMessage: "Sign in to order again" });
+  res.json(await reorderLines({ brandId: outlet.brandId, customerId: String(customer._id), orderId: req.params.id }));
+});
+
+/* ----------------------------------------------------------- the cart's saved copy */
+
+const cartLineBody = z.object({
+  itemId: z.string().min(1).max(40),
+  variantId: z.string().max(80).optional(),
+  modifierOptionIds: z.array(z.string().max(80)).max(30).default([]),
+  quantity: z.number().int().min(1).max(99),
+});
+
+/**
+ * A signed-in customer's cart, saved whenever it changes — only kept while the store has abandoned-cart reminders on
+ * (otherwise this answers `{ saved: false }` and stores nothing). An empty list removes it.
+ */
+customerRouter.put("/cart", limiter("cart-sync"), async (req, res) => {
+  const body = z.object({ outletId: z.string().min(1), lines: z.array(cartLineBody).max(60) }).parse(req.body);
+  const { customer, ctx } = await customerAt(req, body.outletId);
+  res.json(await saveCart(ctx, customer, body.lines));
+});
+
+/** Public: the dishes in a saved cart, for the reminder's link opened on another phone. No personal details. */
+customerRouter.get("/cart/:id", limiter("public-compute"), async (req, res) => {
+  const outlet = await outletOf(typeof req.query.outletId === "string" ? req.query.outletId : "");
+  res.json(await cartLinesById({ brandId: outlet.brandId, outletId: String(outlet._id) }, req.params.id));
 });
 
 /**

@@ -38,7 +38,7 @@ import { broadcast } from "../../realtime/hub.js";
 import { storePlan } from "../platform/plan.service.js";
 import { toEscPos } from "./escpos.js";
 import { providerFor } from "./providers/index.js";
-import { activeKotPrinters, diffLines, entriesForPrinter, stationsForItems } from "./kot.js";
+import { activeKotPrinters, diffLines, entriesForPrinter, expandCombos, stationsForItems } from "./kot.js";
 import { renderHtml, renderText,                                                       } from "./render.js";
 
 /* ------------------------------------------------------------------ shaping */
@@ -293,7 +293,10 @@ async function toRenderOrder(ctx               , order          )               
       unitPrice: l.unitPrice,
       lineTotal: l.lineTotal,
       note: l.note,
+      ...(l.includes?.length ? { includes: l.includes } : {}),
     })),
+    // a pre-order: the kitchen ticket says when it is wanted
+    scheduledFor: order.scheduledFor ?? null,
     totals: order.totals,
     pricesIncludeTax: order.pricesIncludeTax,
     payment: { gateway: order.payment.gateway, status: order.payment.status },
@@ -382,8 +385,10 @@ export async function enqueueJob(args             )                             
       ticket = { ...ticket, changes: mine };
       if (!mine.length && !ticket.noteChanged) return null;
     } else {
-      const stations = await stationsForItems(ctx, renderOrder.lines.map((l) => l.itemId));
-      const tagged = renderOrder.lines.map((l) => ({ ...l, station: stations.get(String(l.itemId)) ?? "kitchen" }));
+      // a combo is cooked as its parts — each part goes to the printer that makes it
+      const cooked = expandCombos(renderOrder.lines);
+      const stations = await stationsForItems(ctx, cooked.map((l) => l.itemId));
+      const tagged = cooked.map((l) => ({ ...l, station: stations.get(String(l.itemId)) ?? "kitchen" }));
       let mine = entriesForPrinter(printer, tagged, kotPrinters);
       if (!mine.length) {
         if (!args.keepIfEmpty) return null;
@@ -488,7 +493,8 @@ export async function autoPrintForOrder(ctx               , order          , sta
 export async function printOrderChange(ctx               , before                                          , after          )                  {
   if (!(await storePlan(ctx.brandId)).entitlements.features.includes("printing")) return 0;
 
-  const changes = diffLines(before.lines ?? [], after.lines ?? []);
+  // combos are compared as their parts, the way the kitchen sees them
+  const changes = diffLines(expandCombos(before.lines ?? []), expandCombos(after.lines ?? []));
   const noteChanged = (before.note ?? "") !== (after.note ?? "");
   if (!changes.length && !noteChanged) return 0;
 

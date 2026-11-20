@@ -68,6 +68,26 @@ export function entriesForPrinter(printer, entries, kotPrinters) {
   });
 }
 
+/**
+ * A combo is cooked as its parts: on a kitchen ticket every combo line becomes the dishes it is made of (each going to
+ * the printer that makes it), labelled with the combo's name. The combo's own add-ons and note go with its first part.
+ */
+export function expandCombos(lines) {
+  return (lines ?? []).flatMap((l) => {
+    if (!l.includes?.length) return [l];
+    return l.includes.map((p, i) => ({
+      itemId: p.itemId,
+      name: p.name,
+      variantLabel: [p.variantLabel, `in ${l.name}`].filter(Boolean).join(" · "),
+      modifiers: i === 0 ? (l.modifiers ?? []) : [],
+      quantity: (p.quantity ?? 1) * l.quantity,
+      unitPrice: 0,
+      lineTotal: 0,
+      note: i === 0 ? l.note : undefined,
+    }));
+  });
+}
+
 /* ------------------------------------------------------------ what changed */
 
 /**

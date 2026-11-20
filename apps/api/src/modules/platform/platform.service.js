@@ -284,7 +284,7 @@ const OBJECT_ID = /^[0-9a-f]{24}$/i;
 
 /** Orders a kitchen would still be working on: not finished, not cancelled, and not an online order still waiting for its payment. */
 const IN_PROGRESS = {
-  status: { $in: ["placed", "accepted", "preparing", "ready"] },
+  status: { $in: ["placed", "accepted", "preparing", "ready", "out_for_delivery"] },
   $or: [{ "payment.gateway": "cod" }, { "payment.status": { $ne: "pending" } }],
 };
 

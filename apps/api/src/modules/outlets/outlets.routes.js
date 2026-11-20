@@ -125,6 +125,11 @@ const AREA_PERMISSIONS                             = {
   wallet: "settings:update",
   orderNotify: "notification-config:manage",
   capacity: "settings:update",
+  // table bookings, ratings, "goes well with" suggestions and dishes with hours — how the outlet runs
+  reservations: "settings:update",
+  feedback: "settings:update",
+  upsell: "settings:update",
+  menuTimes: "settings:update",
   dashboard: "dashboard:configure",
 };
 

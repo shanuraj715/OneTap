@@ -7,11 +7,13 @@ import { requireOutletContext, requireUser } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import { currentCustomer } from "../customer/customer.routes.js";
 import {
+  assignRider,
   deleteOrder,
   editOrder,
   getCapacityStatus,
   getOrder,
   listOrders,
+  pickupSlotsFor,
   placeOrder,
   quote,
   setStatusManual,
@@ -28,6 +30,12 @@ async function publicContext(outletId        )                         {
   return { brandId: ref.brandId, outletId: ref.outletId };
 }
 
+/** A pre-order's pickup time as an instant to check dish hours against — anything unreadable is "now". */
+function whenWanted(iso) {
+  const at = iso ? new Date(iso) : null;
+  return at && !Number.isNaN(at.getTime()) ? at : undefined;
+}
+
 /* -------------------------------------------------------------------- quote */
 
 const quoteBody = z.object({
@@ -36,6 +44,8 @@ const quoteBody = z.object({
   channel: orderChannelSchema.optional(),
   /** for a delivery quote — the fee is computed from this */
   deliveryPoint: z.object({ lat: z.number(), lng: z.number() }).optional(),
+  /** a pre-order's pickup time — dishes with hours are checked against it, not against now */
+  scheduledFor: z.string().max(40).optional(),
 });
 
 ordersRouter.post("/quote", limiter("public-compute"), async (req, res) => {
@@ -47,6 +57,7 @@ ordersRouter.post("/quote", limiter("public-compute"), async (req, res) => {
       channel: body.channel,
       customerId: customer ? String(customer._id) : null,
       deliveryPoint: body.deliveryPoint,
+      at: whenWanted(body.scheduledFor),
     }),
   );
 });
@@ -83,6 +94,15 @@ const placeBody = z.object({
   gateway: gatewaySchema.default("cod"),
   sessionId: z.string().optional(),
   deliveryAddress: deliveryAddressBody.optional(),
+  /** a pre-order: the pickup time chosen from GET /pickup-slots (ISO); left out = as soon as possible */
+  scheduledFor: z.string().max(40).optional(),
+});
+
+/** Public: the pickup times a takeaway customer can choose for a pre-order (empty when the outlet doesn't take them). */
+ordersRouter.get("/pickup-slots", limiter("public-compute"), async (req, res) => {
+  const outletId = typeof req.query.outletId === "string" ? req.query.outletId : "";
+  if (!outletId) throw new HttpError(400, "outletId is required");
+  res.json(await pickupSlotsFor(await publicContext(outletId)));
 });
 
 /**
@@ -107,6 +127,7 @@ ordersRouter.post("/", limiter("order-place"), async (req, res) => {
       note: body.note,
       gateway: body.gateway,
       deliveryAddress: body.channel === "delivery" ? body.deliveryAddress : undefined,
+      scheduledFor: body.scheduledFor,
       placedBy: "staff",
       staffId: String(user._id),
       staffName: user.name,
@@ -134,6 +155,7 @@ ordersRouter.post("/", limiter("order-place"), async (req, res) => {
     note: body.note,
     gateway: body.gateway,
     deliveryAddress: body.channel === "delivery" ? body.deliveryAddress : undefined,
+    scheduledFor: body.scheduledFor,
     placedBy: "customer",
     ...(await dineInContext(ctx, body, customer)),
   });
@@ -241,6 +263,23 @@ ordersRouter.patch("/:id/status/manual", async (req, res) => {
   res.json({ order: shape(order, true) });
 });
 
+/**
+ * Who is taking a delivery order: a rider from the outlet's list, or a name + number typed in once — and with
+ * `sendOut`, mark it "out for delivery" at the same time. `riderId: null` and no name takes the rider off.
+ */
+const riderBody = z.object({
+  riderId: z.string().nullable().optional(),
+  name: z.string().max(60).optional(),
+  phone: z.string().max(20).optional(),
+  sendOut: z.boolean().optional(),
+});
+
+ordersRouter.patch("/:id/rider", async (req, res) => {
+  const ctx = await requireOutletContext(req, "order:update");
+  const order = await assignRider(ctx, req.params.id, riderBody.parse(req.body), requireUser(req));
+  res.json({ order: shape(order, true) });
+});
+
 /* --------------------------------------------------------------- edit order */
 
 const editBody = z.object({
@@ -251,7 +290,7 @@ const editBody = z.object({
 });
 
 /**
- * Delete an order from the Orders page. Owners and managers (`order:delete`). The order is hidden everywhere rather
+ * Delete an order from the Orders page. The store owner and the platform super admin only (`order:delete`) — not managers, staff or kitchen. The order is hidden everywhere rather
  * than erased; coins it used or earned are put right; an order paid online must be refunded first.
  */
 ordersRouter.delete("/:id", limiter("destructive"), async (req, res) => {
@@ -323,6 +362,8 @@ function shape(o                     , includeCustomer         ) {
     couponCode: o.couponCode ?? null,
     deliveryAddress: o.deliveryAddress ?? null,
     etaMinutes: o.etaMinutes ?? null,
+    scheduledFor: o.scheduledFor ?? null,
+    rider: o.rider?.name ? { riderId: o.rider.riderId ?? null, name: o.rider.name, phone: o.rider.phone ?? "", assignedAt: o.rider.assignedAt ?? null } : null,
     // The admin's SLA clock measures from the last status change, not from when
     // the order was created, so the history has to travel with the order.
     statusHistory: o.statusHistory ?? [],

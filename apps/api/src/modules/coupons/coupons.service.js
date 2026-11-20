@@ -1,6 +1,7 @@
 import {
   couponInputSchema,
   couponSchema,
+  eligibleUnitPrices,
   evaluateCoupon,
               
                      
@@ -16,6 +17,7 @@ import {
                      
 } from "@onetap/db";
 import { HttpError } from "../../middleware/error.js";
+import { getMenu } from "../menu/menu.service.js";
 import { storePlan } from "../platform/plan.service.js";
 
 const entitled = async (brandId, key) => (await storePlan(brandId)).entitlements.features.includes(key);
@@ -39,6 +41,11 @@ export function shapeCoupon(d           )         {
     channels: d.channels,
     active: d.active,
     redemptionCount: d.redemptionCount,
+    buyQty: d.buyQty ?? 1,
+    getQty: d.getQty ?? 1,
+    itemIds: d.itemIds ?? [],
+    categoryIds: d.categoryIds ?? [],
+    maxFreeUnits: d.maxFreeUnits ?? 0,
   });
 }
 
@@ -96,6 +103,9 @@ function validateCouponShape(c             )       {
   if (c.discountType === "percent" && c.value > 100) {
     throw new HttpError(400, "A percentage discount can't be more than 100%.");
   }
+  if (c.discountType === "bogo") {
+    if (!(c.buyQty >= 1) || !(c.getQty >= 1)) throw new HttpError(400, "Say how many to buy and how many come free (1 or more each).");
+  }
   if (c.validFrom && c.validUntil && Date.parse(c.validFrom) > Date.parse(c.validUntil)) {
     throw new HttpError(400, "The 'valid from' date is after the 'valid until' date.");
   }
@@ -136,6 +146,11 @@ export async function checkCoupon(input                  )                      
   if (!doc) return { ok: false, discount: 0, code, reason: "That coupon code isn't recognised." };
 
   const context                = { subtotal, channel };
+  // "buy X get Y free" works on the dishes themselves: the price of every covered dish in the cart
+  if (doc.discountType === "bogo") {
+    const menu = input.menu ?? (await getMenu(ctx));
+    context.eligibleUnitPrices = eligibleUnitPrices(shapeCoupon(doc), input.lines ?? [], menu);
+  }
 
   if (customerId) {
     const [customerRedemptions, completedOrders] = await Promise.all([

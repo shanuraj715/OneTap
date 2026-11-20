@@ -63,7 +63,7 @@ export async function getDashboardStats(ctx               )                     
       { $group: { _id: null, revenue: { $sum: "$totals.grandTotal" }, n: { $sum: 1 } } },
     ]),
     OrderModel.find(tenantFilter(ctx, { status: { $in: QUEUE_STATUSES } }))
-      .select("orderNumber status createdAt statusHistory")
+      .select("orderNumber status createdAt statusHistory scheduledFor")
       .lean(),
     OrderModel.countDocuments(tenantFilter(ctx, { ...UNPAID_PREPAID })),
     CustomerModel.countDocuments({ brandId: ctx.brandId, createdAt: { $gte: today0 } }),

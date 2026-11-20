@@ -1,5 +1,6 @@
 import { randomUUID } from "node:crypto";
-import { categoryHeight, cleanCategoryName, duplicateCategoryName, categoryLevel, categorySubtreeIds, MAX_CATEGORIES_AT_ONCE, MAX_CATEGORY_DEPTH, planCategoryMove } from "@onetap/config-schema";
+import { availabilitySchema, categoryHeight, cleanCategoryName, comboSchema, duplicateCategoryName, categoryLevel, categorySubtreeIds, istDayKey, itemStockSchema, MAX_CATEGORIES_AT_ONCE, MAX_CATEGORY_DEPTH, planCategoryMove } from "@onetap/config-schema";
+import { refillDailyStock } from "./stock.service.js";
 import {
   MenuCategoryModel,
   MenuItemModel,
@@ -27,7 +28,11 @@ const toCategory = (d) => ({
   sortOrder: d.sortOrder,
   isActive: d.isActive,
   prepStation: d.prepStation ?? null,
+  availability: d.availability?.windows?.length ? { windows: d.availability.windows } : null,
 });
+
+const toStock = (s) =>
+  s?.tracked ? { tracked: true, left: Math.max(0, s.left ?? 0), daily: s.daily ?? null, lowAt: s.lowAt ?? 5 } : null;
 
 const toItem = (d                     )           => ({
   id: String(d._id),
@@ -49,6 +54,10 @@ const toItem = (d                     )           => ({
   isAvailable: d.isAvailable ?? true,
   sortOrder: d.sortOrder ?? 0,
   prepStation: d.prepStation ?? null,
+  stock: toStock(d.stock),
+  availability: d.availability?.windows?.length ? { windows: d.availability.windows } : null,
+  combo: d.combo?.items?.length ? { items: d.combo.items.map((p) => ({ itemId: String(p.itemId), variantId: p.variantId ?? null, quantity: p.quantity ?? 1 })) } : null,
+  pairsWith: (d.pairsWith ?? []).map(String),
 });
 
 const toGroup = (d                     )                => ({
@@ -69,6 +78,8 @@ const toGroup = (d                     )                => ({
  * must pass `fresh: true` and read the prices straight from the database.
  */
 export async function getMenu(ctx               , { fresh = false } = {}) {
+  // a new day (India time) refills the dishes counted per day — before anything reads how many are left
+  await refillDailyStock(ctx);
   const load = async () => {
     const [categories, items, modifierGroups] = await Promise.all([
       MenuCategoryModel.find(tenantFilter(ctx)).sort({ sortOrder: 1, name: 1 }).lean(),
@@ -99,6 +110,60 @@ function normalizeCategoryImage(image) {
     ...(Number(image.width) > 0 ? { width: Math.round(Number(image.width)) } : {}),
     ...(Number(image.height) > 0 ? { height: Math.round(Number(image.height)) } : {}),
   };
+}
+
+/** Hours for a dish or category: null clears them (any time / same as the parent); undefined leaves them alone. */
+function normalizeAvailability(value) {
+  if (value === undefined) return undefined;
+  if (!value || !value.windows?.length) return null;
+  const parsed = availabilitySchema.safeParse(value);
+  if (!parsed.success) throw new HttpError(400, `Hours: ${parsed.error.issues[0]?.message ?? "check the days and times"}`);
+  for (const w of parsed.data.windows) if (w.from === w.to) throw new HttpError(400, "Hours: a time window can't start and end at the same time.");
+  return { windows: parsed.data.windows.map((w) => ({ days: [...new Set(w.days)].sort((a, b) => a - b), from: w.from, to: w.to })) };
+}
+
+/**
+ * Counted stock as the editor sends it. Turning counting on (or typing a new number) stamps today as the refill day,
+ * so the morning refill doesn't overwrite a count the owner just set.
+ */
+function normalizeStock(value) {
+  if (value === undefined) return undefined;
+  if (!value || value.tracked === false) return null;
+  const parsed = itemStockSchema.safeParse(value);
+  if (!parsed.success) throw new HttpError(400, `Stock: ${parsed.error.issues[0]?.message ?? "check the numbers"}`);
+  return { tracked: true, left: parsed.data.left, daily: parsed.data.daily, lowAt: parsed.data.lowAt, resetDay: istDayKey() };
+}
+
+/**
+ * A combo's parts: dishes of this outlet, not the combo itself, not other combos (no combos inside combos), and a
+ * size that dish really has. Null = not a combo.
+ */
+async function normalizeCombo(ctx, value, selfId = null) {
+  if (value === undefined) return undefined;
+  if (!value || !value.items?.length) return null;
+  const parsed = comboSchema.safeParse(value);
+  if (!parsed.success) throw new HttpError(400, `Combo: ${parsed.error.issues[0]?.message ?? "check the dishes"}`);
+  const ids = [...new Set(parsed.data.items.map((p) => p.itemId))];
+  if (selfId && ids.includes(String(selfId))) throw new HttpError(400, "A combo can't contain itself.");
+  const docs = await MenuItemModel.find(tenantFilter(ctx, { _id: { $in: ids.filter((id) => /^[a-f\d]{24}$/i.test(id)) } })).select("name variants combo").lean();
+  const byId = new Map(docs.map((d) => [String(d._id), d]));
+  for (const p of parsed.data.items) {
+    const it = byId.get(p.itemId);
+    if (!it) throw new HttpError(400, "Combo: one of its dishes isn't on this outlet's menu.");
+    if (it.combo?.items?.length) throw new HttpError(400, `Combo: “${it.name}” is a combo itself — a combo can only hold plain dishes.`);
+    if (p.variantId && !(it.variants ?? []).some((v) => v.id === p.variantId)) throw new HttpError(400, `Combo: “${it.name}” doesn't have that size any more.`);
+  }
+  return { items: parsed.data.items.map((p) => ({ itemId: p.itemId, variantId: p.variantId ?? null, quantity: p.quantity })) };
+}
+
+/** "Goes well with": other dishes of this outlet (unknown ones are dropped, not refused — a dish may have been deleted). */
+async function normalizePairs(ctx, value, selfId = null) {
+  if (value === undefined) return undefined;
+  const ids = [...new Set((value ?? []).map(String))].filter((id) => /^[a-f\d]{24}$/i.test(id) && id !== String(selfId ?? ""));
+  if (!ids.length) return [];
+  const docs = await MenuItemModel.find(tenantFilter(ctx, { _id: { $in: ids } })).select("_id").lean();
+  const known = new Set(docs.map((d) => String(d._id)));
+  return ids.filter((id) => known.has(id)).slice(0, 8);
 }
 
 /** The outlet's categories as the tree helpers want them (id / parentId only). */
@@ -140,6 +205,7 @@ export async function createCategory(ctx, input) {
     sortOrder: input.sortOrder ?? all.filter((c) => c.parentId === parentId).length,
     ...(input.isActive === undefined ? {} : { isActive: input.isActive }),
     prepStation: input.prepStation ?? null,
+    availability: normalizeAvailability(input.availability) ?? null,
   });
   return toCategory(doc.toObject());
 }
@@ -183,6 +249,7 @@ export async function createCategories(ctx, { parentId = null, categories: wante
 
 export async function updateCategory(ctx, id, patch) {
   const update = { ...patch };
+  if (patch.availability !== undefined) update.availability = normalizeAvailability(patch.availability);
   const before = await MenuCategoryModel.findOne(tenantFilter(ctx, { _id: id })).lean();
   if (!before) throw new HttpError(404, "Category not found");
 
@@ -318,6 +385,10 @@ export async function createItem(ctx               , input                      
     isAvailable: input.isAvailable ?? true,
     sortOrder: input.sortOrder ?? 0,
     prepStation: input.prepStation ?? null,
+    stock: normalizeStock(input.stock) ?? null,
+    availability: normalizeAvailability(input.availability) ?? null,
+    combo: (await normalizeCombo(ctx, input.combo)) ?? null,
+    pairsWith: (await normalizePairs(ctx, input.pairsWith)) ?? [],
   });
   return toItem(doc.toObject());
 }
@@ -325,6 +396,15 @@ export async function createItem(ctx               , input                      
 export async function updateItem(ctx               , id        , patch           ) {
   const update                          = { ...patch };
   if (patch.variants) update.variants = normalizeVariants(patch.variants);
+  if (patch.stock !== undefined) update.stock = normalizeStock(patch.stock);
+  if (patch.availability !== undefined) update.availability = normalizeAvailability(patch.availability);
+  if (patch.combo !== undefined) update.combo = await normalizeCombo(ctx, patch.combo, id);
+  if (patch.pairsWith !== undefined) update.pairsWith = await normalizePairs(ctx, patch.pairsWith, id);
+  // a dish that other combos are made of can't become a combo itself
+  if (update.combo) {
+    const usedIn = await MenuItemModel.findOne(tenantFilter(ctx, { "combo.items.itemId": String(id) })).select("name").lean();
+    if (usedIn) throw new HttpError(400, `This dish is part of the combo “${usedIn.name}”, so it can't be a combo itself.`);
+  }
 
   let removedImageKeys           = [];
   if (patch.images !== undefined) {
@@ -350,7 +430,13 @@ export async function deleteItem(ctx               , id        ) {
   const doc = await MenuItemModel.findOne(tenantFilter(ctx, { _id: id }), { images: 1 }).lean();
   const res = await MenuItemModel.deleteOne(tenantFilter(ctx, { _id: id }));
   if (res.deletedCount === 0) throw new HttpError(404, "Item not found");
+  await forgetItems(ctx, [String(id)]);
   for (const im of doc?.images ?? []) if (im.key) void removeObject(ctx, im.key);
+}
+
+/** Deleted dishes stop being suggested with others. (A combo that held one shows "not available" until it is edited.) */
+async function forgetItems(ctx, ids) {
+  await MenuItemModel.updateMany(tenantFilter(ctx, { pairsWith: { $in: ids } }), { $pull: { pairsWith: { $in: ids } } });
 }
 
 /** Delete several items at once (with their pictures). Returns how many went. */
@@ -359,6 +445,7 @@ export async function deleteItems(ctx, ids) {
   const docs = await MenuItemModel.find(tenantFilter(ctx, { _id: { $in: wanted } })).select("images").lean();
   if (docs.length !== wanted.length) throw new HttpError(404, "Item not found");
   await MenuItemModel.deleteMany(tenantFilter(ctx, { _id: { $in: wanted } }));
+  await forgetItems(ctx, wanted.map(String));
   for (const key of new Set(docs.flatMap((d) => (d.images ?? []).map((im) => im.key)).filter(Boolean))) await removeImageIfUnused(ctx, key);
   return { deletedItems: docs.length };
 }
@@ -484,6 +571,7 @@ export async function importMenu(ctx, input) {
       sortOrder: siblingCount.get(parentTargetId) ?? 0,
       isActive: srcCat.isActive ?? true,
       prepStation: srcCat.prepStation ?? null,
+      availability: srcCat.availability ?? null,
     });
     siblingCount.set(parentTargetId, (siblingCount.get(parentTargetId) ?? 0) + 1);
     const newId = String(newCat._id);
@@ -571,6 +659,8 @@ export async function importMenu(ctx, input) {
       isAvailable: srcItem.isAvailable ?? true,
       sortOrder: nextItemSortOrder++,
       prepStation: srcItem.prepStation ?? null,
+      // hours travel with the dish; its stock count, combo parts and pairings belong to the other outlet
+      availability: srcItem.availability ?? null,
     });
     importedItemsCount++;
   }

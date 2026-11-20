@@ -38,12 +38,17 @@ import { qrCardsRouter } from "./modules/qr-cards/qr-cards.routes.js";
 import { storageRouter } from "./modules/storage/storage.routes.js";
 import { tablesRouter } from "./modules/tables/tables.routes.js";
 import { usersRouter } from "./modules/users/users.routes.js";
+import { ridersRouter } from "./modules/riders/riders.routes.js";
+import { reservationsRouter } from "./modules/reservations/reservations.routes.js";
+import { feedbackRouter } from "./modules/feedback/feedback.routes.js";
+import { cartRemindersRouter } from "./modules/carts/carts.routes.js";
 
 /** The dashboard's own routers: what a signed-in team member changes (each gets the "team-write" limit). */
 const TEAM_ROUTES = [
   "/api/brands", "/api/platform", "/api/store", "/api/users", "/api/outlets", "/api/menu", "/api/orders", "/api/coupons",
   "/api/pages", "/api/whatsapp", "/api/marketing", "/api/analytics", "/api/tables", "/api/qr-cards", "/api/printing",
-  "/api/preview", "/api/storage", "/api/customers", "/api/notify", "/api/dashboard",
+  "/api/preview", "/api/storage", "/api/customers", "/api/notify", "/api/dashboard", "/api/riders", "/api/reservations",
+  "/api/feedback", "/api/cart-reminders",
 ];
 
 export function createApp()          {
@@ -145,6 +150,10 @@ export function createApp()          {
   app.use("/api/customers", customersRouter);
   app.use("/api/notify", notifyRouter);
   app.use("/api/dashboard", dashboardRouter);
+  app.use("/api/riders", ridersRouter);
+  app.use("/api/reservations", reservationsRouter);
+  app.use("/api/feedback", feedbackRouter);
+  app.use("/api/cart-reminders", cartRemindersRouter);
 
   app.use(notFound);
   app.use(errorHandler);

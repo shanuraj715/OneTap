@@ -1,6 +1,9 @@
 import { toPublicUrl } from "../storage/upload-urls.js";
 import {
   charsFor,
+  formatClock,
+  formatDay,
+  istParts,
   isThermal,
   PAPER,
                    
@@ -327,11 +330,18 @@ function bannerBlocks(input) {
   const kind = input.ticket?.kind;
   const make = (text, size, rule) => ({ key: "message", enabled: true, align: "center", size, bold: true, rule, text });
   if (kind === "cancel") return [make("*** ORDER CANCELLED ***", "lg", false), make("DO NOT COOK", "lg", true)];
+  const out = [];
   if (kind === "change") {
     const dishes = (input.ticket.changes ?? []).length > 0;
-    return [make("*** ORDER CHANGED ***", "lg", false), make(dishes ? "See ADD / REMOVE below" : "Only the kitchen note changed", "md", true)];
+    out.push(make("*** ORDER CHANGED ***", "lg", false), make(dishes ? "See ADD / REMOVE below" : "Only the kitchen note changed", "md", true));
   }
-  return [];
+  // a pre-order says when it is wanted, in full (a ticket printed tonight for tomorrow must not say "today")
+  const when = input.order?.scheduledFor;
+  if (when) {
+    const p = istParts(when);
+    out.push(make("PRE-ORDER", "lg", false), make(`Pickup ${formatClock(p.minutes)}, ${formatDay(p.dayKey)}`, "md", true));
+  }
+  return out;
 }
 
 /** The blocks of a document, in order: the banner (if any), then the template's own. */

@@ -1,10 +1,15 @@
                                                  
 import {
   checkDelivery,
+  checkPickupTime,
+  pickupSlots,
   evaluateCapacity,
-  NEXT_STATUSES,
+  FEEDBACK_EDIT_DAYS,
+  FEEDBACK_WINDOW_DAYS,
+  nextStatusesFor,
   priceCart,
   PricingError,
+  stockNeeds,
                       
             
                     
@@ -18,10 +23,12 @@ import {
 import {
   brandFilter,
   CustomerModel,
+  FeedbackModel,
   nextSequence,
   OrderModel,
   OutletModel,
   PrintJobModel,
+  RiderModel,
   tenantFilter,
                 
                      
@@ -32,6 +39,8 @@ import { broadcast } from "../../realtime/hub.js";
 import { checkCoupon, recordRedemption } from "../coupons/coupons.service.js";
 import { cache } from "../cache/cache.js";
 import { getMenu } from "../menu/menu.service.js";
+import { holdStock, reholdStock, releaseStock, returnStock } from "../menu/stock.service.js";
+import { markCartOrdered } from "../carts/carts.service.js";
 import { assertOutletOpen, effectiveOutletConfig } from "../outlets/config.service.js";
 import { publicOutletById } from "../outlets/outlet-cache.js";
 import { fireOrderNotifications } from "../notify/notify.service.js";
@@ -60,9 +69,20 @@ export function wire(o          ) {
     couponCode: o.couponCode ?? null,
     deliveryAddress: o.deliveryAddress ?? null,
     etaMinutes: o.etaMinutes ?? null,
+    scheduledFor: o.scheduledFor ?? null,
+    rider: o.rider?.name ? { riderId: o.rider.riderId ?? null, name: o.rider.name, phone: o.rider.phone ?? "", assignedAt: o.rider.assignedAt ?? null } : null,
     statusHistory: o.statusHistory ?? [],
     createdAt: o.createdAt,
   };
+}
+
+/** Give an order's counted stock back, never failing the caller (an order must still be cancellable if this fails). */
+async function giveStockBack(ctx, order) {
+  try {
+    await releaseStock(ctx, order);
+  } catch (err) {
+    logger.error({ err, orderId: String(order._id) }, "stock: couldn't give an order's stock back");
+  }
 }
 
 /**
@@ -155,18 +175,22 @@ export async function getCapacityStatus(ctx               , { cached = false } =
 export async function quote(ctx               , cart      , opts               = {})                       {
   // what the customer pays comes from the database, never from the cache
   const [menu, config] = await Promise.all([getMenu(ctx, { fresh: true }), outletConfigFor(ctx)]);
+  // `at`: when the food is wanted (a pre-order's pickup time) — what a dish's hours are checked against.
+  // `ignoreTimes`: staff at the till may sell a dish outside its hours. `stockCredit`: an edit's own held stock.
+  const pricing = { at: opts.at, ignoreTimes: opts.ignoreTimes, stockCredit: opts.stockCredit };
 
-  let bareSubtotal                = null;
-  const subtotalOf = ()         => {
-    if (bareSubtotal !== null) return bareSubtotal;
+  let bare = null;
+  const bareOf = () => {
+    if (bare) return bare;
     try {
-      bareSubtotal = priceCart({ lines: cart.lines }, menu, config.tax).totals.subtotal;
+      bare = priceCart({ lines: cart.lines }, menu, config.tax, {}, pricing);
     } catch (e) {
       if (e instanceof PricingError) throw new HttpError(409, e.message);
       throw e;
     }
-    return bareSubtotal;
+    return bare;
   };
+  const subtotalOf = ()         => bareOf().totals.subtotal;
 
   const extras              = { deliveryFee: opts.deliveryFee };
 
@@ -198,6 +222,9 @@ export async function quote(ctx               , cart      , opts               =
       subtotal: subtotalOf(),
       channel: opts.channel,
       customerId: opts.customerId ?? null,
+      // a "buy X get Y free" coupon needs to see the dishes, not just the total
+      lines: bareOf().lines,
+      menu,
     });
 
     if (check.ok) {
@@ -220,13 +247,34 @@ export async function quote(ctx               , cart      , opts               =
   }
 
   try {
-    const priced = priceCart(cart, menu, config.tax, extras);
+    const priced = priceCart(cart, menu, config.tax, extras, pricing);
     if (coinsError) priced.coinsError = coinsError;
+    // the counted stock this cart takes — for order placement; not part of what a quote sends back
+    Object.defineProperty(priced, "stockNeeds", { value: stockNeeds(cart.lines, menu), enumerable: false });
     return priced;
   } catch (e) {
     if (e instanceof PricingError) throw new HttpError(409, e.message);
     throw e;
   }
+}
+
+/** How many pre-orders already have each upcoming pickup time (only counted when the outlet caps a time). */
+async function takenPickupSlots(ctx, config) {
+  const taken = new Map();
+  if (!(config.operations.scheduling?.maxPerSlot > 0)) return taken;
+  const rows = await OrderModel.find(tenantFilter(ctx, { scheduledFor: { $gte: new Date() }, status: { $ne: "cancelled" } })).select("scheduledFor").lean();
+  for (const r of rows) {
+    const key = new Date(r.scheduledFor).toISOString();
+    taken.set(key, (taken.get(key) ?? 0) + 1);
+  }
+  return taken;
+}
+
+/** The pickup times a takeaway customer can choose right now (empty when the outlet doesn't take pre-orders). */
+export async function pickupSlotsFor(ctx) {
+  const config = await outletConfigFor(ctx);
+  if (!config.operations.scheduling?.enabled) return { enabled: false, days: [] };
+  return { enabled: true, days: pickupSlots(config, { taken: await takenPickupSlots(ctx, config) }) };
 }
 
 ;                                 
@@ -309,6 +357,17 @@ export async function placeOrder(input
     throw new HttpError(409, `${input.channel} ordering is switched off for this outlet`);
   }
 
+  // A pre-order: a takeaway for a later pickup time, which must be one of the times the outlet offers right now.
+  let scheduledFor = null;
+  if (input.scheduledFor) {
+    if (input.channel !== "takeaway") throw new HttpError(409, "Only takeaway orders can be placed for a later time.");
+    const check = checkPickupTime(config, input.scheduledFor, { taken: await takenPickupSlots(ctx, config) });
+    if (!check.ok) throw new HttpError(409, check.reason, { code: "pickup_time" });
+    scheduledFor = new Date(input.scheduledFor);
+  }
+  // A dish's hours are checked against when the food is wanted; staff at the till may sell outside them.
+  const pricing = { at: scheduledFor ?? undefined, ignoreTimes: placedBy === "staff" };
+
   // Delivery: an address is mandatory, must be inside the delivery area, and
   // the order must be paid online — a rider shouldn't be collecting cash.
   let deliveryFee = 0;
@@ -330,7 +389,7 @@ export async function placeOrder(input
       }
     }
     if (!input.deliveryAddress) throw new HttpError(400, "A delivery order needs an address.");
-    const bare = await quote(ctx, { lines: input.cart.lines });
+    const bare = await quote(ctx, { lines: input.cart.lines }, pricing);
     const check = await resolveDelivery(ctx, input.deliveryAddress, bare.totals.subtotal);
     deliveryFee = check.fee;
     etaMinutes = check.etaMinutes;
@@ -349,7 +408,7 @@ export async function placeOrder(input
   // Minimum order value — a customer self-serving online, not a staff member
   // billing whoever is standing in front of them.
   if (placedBy !== "staff" && config.operations.limits.minOrderValue > 0) {
-    const bare = await quote(ctx, { lines: input.cart.lines });
+    const bare = await quote(ctx, { lines: input.cart.lines }, pricing);
     if (bare.totals.subtotal < config.operations.limits.minOrderValue) {
       const short = (config.operations.limits.minOrderValue - bare.totals.subtotal) / 100;
       throw new HttpError(409, `Minimum order is ₹${(config.operations.limits.minOrderValue / 100).toFixed(0)} — add ₹${short.toFixed(0)} more.`);
@@ -360,6 +419,7 @@ export async function placeOrder(input
     channel: input.channel,
     customerId: input.customer.customerId ?? null,
     deliveryFee,
+    ...pricing,
   });
 
   // A coupon the customer typed that turned out not to apply is a hard error at
@@ -372,32 +432,42 @@ export async function placeOrder(input
     throw new HttpError(409, priced.coinsError);
   }
 
-  const day = orderDay();
-  const seq = await nextSequence(orderNumberKey(ctx.outletId , day));
+  // Counted stock comes off the menu now — all of it or none (two people can't both get the last plate).
+  const held = priced.stockNeeds?.size ? await holdStock(ctx, priced.stockNeeds) : [];
 
-  const order = await OrderModel.create({
-    brandId: ctx.brandId,
-    outletId: ctx.outletId,
-    orderNumber: String(seq).padStart(4, "0"),
-    orderDay: day,
-    channel: input.channel,
-    placedBy,
-    staffId: input.staffId,
-    staffName: input.staffName,
-    status: "placed",
-    customer: input.customer,
-    lines: priced.lines,
-    totals: priced.totals,
-    pricesIncludeTax: priced.pricesIncludeTax,
-    payment: { gateway: input.gateway ?? "cod", status: "pending" },
-    tableId: input.tableId,
-    sessionId: input.sessionId,
-    couponCode: priced.coupon?.code,
-    deliveryAddress: deliveryRecord,
-    etaMinutes,
-    note: input.note,
-    statusHistory: [{ status: "placed", at: new Date() }],
-  });
+  const day = orderDay();
+  let order;
+  try {
+    const seq = await nextSequence(orderNumberKey(ctx.outletId , day));
+    order = await OrderModel.create({
+      brandId: ctx.brandId,
+      outletId: ctx.outletId,
+      orderNumber: String(seq).padStart(4, "0"),
+      orderDay: day,
+      channel: input.channel,
+      placedBy,
+      staffId: input.staffId,
+      staffName: input.staffName,
+      status: "placed",
+      customer: input.customer,
+      lines: priced.lines,
+      totals: priced.totals,
+      pricesIncludeTax: priced.pricesIncludeTax,
+      payment: { gateway: input.gateway ?? "cod", status: "pending" },
+      tableId: input.tableId,
+      sessionId: input.sessionId,
+      couponCode: priced.coupon?.code,
+      deliveryAddress: deliveryRecord,
+      etaMinutes,
+      scheduledFor,
+      stockHold: held.length ? { held: true, lines: held } : undefined,
+      note: input.note,
+      statusHistory: [{ status: "placed", at: new Date() }],
+    });
+  } catch (e) {
+    await returnStock(ctx, held);
+    throw e;
+  }
 
   if (priced.coupon) {
     await recordRedemption({
@@ -425,6 +495,8 @@ export async function placeOrder(input
       { _id: input.customer.customerId },
       { $inc: { orderCount: 1 }, $set: { lastOrderAt: new Date() } },
     );
+    // their saved cart is done with (and if a reminder brought them back, it counts as won back)
+    void markCartOrdered(ctx, input.customer.customerId, order).catch((err) => logger.error({ err }, "cart: couldn't mark ordered"));
   }
 
   const placed = order.toObject();
@@ -507,8 +579,13 @@ export async function updateStatus(
   const order = await OrderModel.findOne(tenantFilter(ctx, { _id: id }));
   if (!order) throw new HttpError(404, "Order not found");
 
-  if (!NEXT_STATUSES[order.status].includes(status)) {
-    throw new HttpError(409, `An order that's ${order.status} can't move to ${status}`);
+  if (!nextStatusesFor(order.status, order.channel).includes(status)) {
+    throw new HttpError(
+      409,
+      status === "out_for_delivery" && order.channel !== "delivery"
+        ? "Only a delivery order can go out for delivery."
+        : `An order that's ${order.status} can't move to ${status}`,
+    );
   }
 
   order.status = status;
@@ -517,6 +594,7 @@ export async function updateStatus(
     order.payment.status = "paid";
   }
   await settleWallet(ctx, order, status);
+  if (status === "cancelled") await giveStockBack(ctx, order);
   await order.save();
 
   const updated = order.toObject();
@@ -547,7 +625,8 @@ export async function setStatusManual(
   if (!order) throw new HttpError(404, "Order not found");
 
   const config = await outletConfigFor(ctx);
-  const isRewind = !NEXT_STATUSES[order.status].includes(status);
+  if (status === "out_for_delivery" && order.channel !== "delivery") throw new HttpError(409, "Only a delivery order can go out for delivery.");
+  const isRewind = !nextStatusesFor(order.status, order.channel).includes(status);
   if (isRewind && !config.operations.orders.allowStatusRewind) {
     throw new HttpError(409, "Manually changing an order's status is switched off for this outlet");
   }
@@ -567,6 +646,7 @@ export async function setStatusManual(
     order.payment.status = "paid";
   }
   await settleWallet(ctx, order, status);
+  if (status === "cancelled") await giveStockBack(ctx, order);
   await order.save();
 
   const updated = order.toObject();
@@ -594,6 +674,7 @@ export async function cancelOrdersForSession(
     order.status = "cancelled";
     order.statusHistory.push({ status: "cancelled", at: new Date(), by: byUserId, manual: true, from, reason: reason?.slice(0, 200) ?? "Table voided" });
     await settleWallet(ctx, order, "cancelled");
+    await giveStockBack(ctx, order);
     await order.save();
 
     const updated = order.toObject();
@@ -624,7 +705,7 @@ export async function editOrder(
   const ops = config.operations.orders;
   if (!ops.allowOrderEdit) throw new HttpError(409, "Editing orders is switched off for this outlet");
 
-  const LOCK_ORDER                = ["placed", "accepted", "preparing", "ready", "completed"];
+  const LOCK_ORDER                = ["placed", "accepted", "preparing", "ready", "out_for_delivery", "completed"];
   if (ops.editLockAfter !== "never") {
     const lockAt = LOCK_ORDER.indexOf(ops.editLockAfter               );
     if (lockAt >= 0 && LOCK_ORDER.indexOf(order.status) >= lockAt) {
@@ -639,6 +720,9 @@ export async function editOrder(
 
   if (input.cart) {
     if (!input.cart.lines.length) throw new HttpError(400, "An order needs at least one item");
+    // The stock this order already holds counts as still there for its own edit.
+    const credit = new Map();
+    if (order.stockHold?.held) for (const l of order.stockHold.lines ?? []) credit.set(l.itemId, (credit.get(l.itemId) ?? 0) + l.quantity);
     // Re-priced server-side; the client never states what anything costs. The
     // coupon and delivery fee already on the order are carried through.
     const priced = await quote(
@@ -648,8 +732,15 @@ export async function editOrder(
         channel: order.channel,
         customerId: order.customer.customerId ?? null,
         deliveryFee: order.totals.deliveryFee ?? 0,
+        ignoreTimes: true,
+        stockCredit: credit,
       },
     );
+    // take what the edited order needs and give back what it no longer does — all or nothing
+    if (priced.stockNeeds.size || order.stockHold?.held) {
+      const lines = await reholdStock(ctx, order, priced.stockNeeds);
+      order.stockHold = lines.length ? { held: true, lines } : { held: false, lines: [] };
+    }
     order.lines = priced.lines;
     order.totals = priced.totals;
     order.pricesIncludeTax = priced.pricesIncludeTax;
@@ -679,6 +770,48 @@ export async function editOrder(
   return updated;
 }
 
+/* ------------------------------------------------------------ delivery riders */
+
+/**
+ * Hand a delivery order to a rider — one from the outlet's list (`riderId`), or a name and number typed in for a one-off
+ * — and, with `sendOut`, mark it "out for delivery" in the same step (the customer's update then names the rider).
+ * Without `sendOut` it only changes who is taking it; `riderId: null` with no name takes the rider off.
+ */
+export async function assignRider(ctx, id, { riderId, name, phone, sendOut = false }, user) {
+  const order = await OrderModel.findOne(tenantFilter(ctx, { _id: id }));
+  if (!order) throw new HttpError(404, "Order not found");
+  if (order.channel !== "delivery") throw new HttpError(409, "Only a delivery order has a rider.");
+  if (["completed", "cancelled"].includes(order.status)) throw new HttpError(409, `This order is already ${order.status}.`);
+
+  let rider = null;
+  if (riderId) {
+    const found = /^[a-f\d]{24}$/i.test(String(riderId)) ? await RiderModel.findOne(tenantFilter(ctx, { _id: riderId })).lean() : null;
+    if (!found) throw new HttpError(404, "That rider isn't on this outlet's list any more.");
+    if (!found.isActive) throw new HttpError(409, `${found.name} is switched off in the rider list.`);
+    rider = { riderId: String(found._id), name: found.name, phone: found.phone ?? "" };
+  } else if (name?.trim()) {
+    rider = { riderId: null, name: name.trim().slice(0, 60), phone: String(phone ?? "").trim().slice(0, 20) };
+  }
+
+  if (sendOut) {
+    if (!nextStatusesFor(order.status, order.channel).includes("out_for_delivery")) {
+      throw new HttpError(409, order.status === "out_for_delivery" ? "This order is already out for delivery." : "Mark the order Ready before it goes out for delivery.");
+    }
+    order.status = "out_for_delivery";
+    order.statusHistory.push({ status: "out_for_delivery", at: new Date(), by: String(user._id), reason: rider ? `with ${rider.name}` : undefined });
+  }
+  order.rider = rider ? { ...rider, assignedAt: new Date(), assignedBy: String(user._id) } : undefined;
+  await order.save();
+
+  const updated = order.toObject();
+  broadcast(ctx.outletId, { type: "order.updated", order: wire(updated) });
+  if (sendOut) {
+    firePrinters(ctx, updated, "out_for_delivery");
+    fireNotifications(ctx, updated, "out_for_delivery");
+  }
+  return updated;
+}
+
 /* ----------------------------------------------------------------- delete an order */
 
 /**
@@ -700,6 +833,8 @@ export async function deleteOrder(ctx, id, user) {
 
   await reverseRedeemForOrder(ctx, order);
   await revokeEarnForOrder(ctx, order);
+  // food that was never handed over goes back on the menu
+  if (order.status !== "completed") await giveStockBack(ctx, order);
   await PrintJobModel.updateMany(tenantFilter(ctx, { orderId: String(order._id), status: "queued" }), { $set: { status: "cancelled", lastError: "The order was deleted" } });
 
   order.deletedAt = new Date();
@@ -720,7 +855,7 @@ export async function deleteOrder(ctx, id, user) {
  * storefront's Account page shows: status, how it is paid and whether it has been, the items and the money.
  * `before` is the placed-at time of the last order already shown (paging); `limit` is capped at 30.
  */
-export async function customerOrderHistory({ brandId, customerId, before, limit = 15 }) {
+export async function customerOrderHistory({ brandId, customerId, before, limit = 15, feedbackEnabled = false }) {
   const take = Math.min(Math.max(Math.floor(limit) || 15, 1), 30);
   // (orders the customer removed from their own account are left out — the store still has them)
   const filter = { "customer.customerId": String(customerId), customerHiddenAt: null };
@@ -729,24 +864,38 @@ export async function customerOrderHistory({ brandId, customerId, before, limit 
   const page = rows.slice(0, take);
 
   const outletIds = [...new Set(page.map((o) => o.outletId))];
-  const outlets = outletIds.length ? await OutletModel.find({ brandId, _id: { $in: outletIds } }).select("name slug config.identity.name").lean() : [];
+  const [outlets, ratings] = await Promise.all([
+    outletIds.length ? OutletModel.find({ brandId, _id: { $in: outletIds } }).select("name slug config.identity.name").lean() : [],
+    page.length ? FeedbackModel.find(brandFilter({ brandId }, { orderId: { $in: page.map((o) => String(o._id)) } })).lean() : [],
+  ]);
   const byId = new Map(outlets.map((o) => [String(o._id), { id: String(o._id), name: o.config?.identity?.name || o.name, slug: o.slug }]));
+  const ratingOf = new Map(ratings.map((f) => [f.orderId, f]));
+  const now = Date.now();
 
   return {
-    orders: page.map((o) => ({
-      id: String(o._id),
-      orderNumber: o.orderNumber,
-      placedAt: o.createdAt,
-      channel: o.channel,
-      status: o.status,
-      payment: { gateway: o.payment?.gateway ?? "cod", status: o.payment?.status ?? "pending" },
-      outlet: byId.get(o.outletId) ?? { id: o.outletId, name: "", slug: "" },
-      items: (o.lines ?? []).map((l) => ({ name: l.name, variantLabel: l.variantLabel ?? null, quantity: l.quantity, lineTotal: l.lineTotal, modifiers: (l.modifiers ?? []).map((m) => m.name ?? m.label ?? "").filter(Boolean) })),
-      totals: o.totals,
-      couponCode: o.couponCode ?? null,
-      deliveryAddress: o.deliveryAddress?.text ?? null,
-      etaMinutes: o.etaMinutes ?? null,
-    })),
+    orders: page.map((o) => {
+      const f = ratingOf.get(String(o._id));
+      const recent = now - new Date(o.createdAt).getTime() < FEEDBACK_WINDOW_DAYS * 86_400_000;
+      return {
+        id: String(o._id),
+        orderNumber: o.orderNumber,
+        placedAt: o.createdAt,
+        channel: o.channel,
+        status: o.status,
+        payment: { gateway: o.payment?.gateway ?? "cod", status: o.payment?.status ?? "pending" },
+        outlet: byId.get(o.outletId) ?? { id: o.outletId, name: "", slug: "" },
+        items: (o.lines ?? []).map((l) => ({ name: l.name, variantLabel: l.variantLabel ?? null, quantity: l.quantity, lineTotal: l.lineTotal, modifiers: (l.modifiers ?? []).map((m) => m.name ?? m.label ?? "").filter(Boolean) })),
+        totals: o.totals,
+        couponCode: o.couponCode ?? null,
+        deliveryAddress: o.deliveryAddress?.text ?? null,
+        etaMinutes: o.etaMinutes ?? null,
+        scheduledFor: o.scheduledFor ?? null,
+        // the rider's name and number only while they are on the way — not for ever after
+        rider: o.status === "out_for_delivery" && o.rider?.name ? { name: o.rider.name, phone: o.rider.phone ?? "" } : null,
+        feedback: f ? { rating: f.rating, comment: f.comment ?? "", tags: f.tags ?? [], editable: now - new Date(f.createdAt).getTime() < FEEDBACK_EDIT_DAYS * 86_400_000 } : null,
+        canRate: feedbackEnabled && o.status === "completed" && recent && !f,
+      };
+    }),
     nextBefore: rows.length > take ? page.at(-1).createdAt : null,
   };
 }

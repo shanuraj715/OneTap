@@ -68,6 +68,8 @@ const applyBody = z.object({
   code: z.string().min(1).max(24),
   cart: cartSchema,
   channel: orderChannelSchema.default("takeaway"),
+  /** a pre-order's pickup time (dishes with hours are checked against it) */
+  scheduledFor: z.string().max(40).optional(),
 });
 
 /**
@@ -81,13 +83,15 @@ couponsRouter.post("/apply", limiter("coupon-guess"), async (req, res) => {
   const ctx = await publicContext(body.outletId);
   const customer = await currentCustomer(req);
 
-  const bare = await quote(ctx, { lines: body.cart.lines });
+  const at = body.scheduledFor && !Number.isNaN(Date.parse(body.scheduledFor)) ? new Date(body.scheduledFor) : undefined;
+  const bare = await quote(ctx, { lines: body.cart.lines }, { at });
   const check = await checkCoupon({
     ctx,
     code: body.code,
     subtotal: bare.totals.subtotal,
     channel: body.channel,
     customerId: customer ? String(customer._id) : null,
+    lines: bare.lines,
   });
 
   if (!check.ok) {
@@ -95,7 +99,7 @@ couponsRouter.post("/apply", limiter("coupon-guess"), async (req, res) => {
     return;
   }
 
-  const priced = await quote(ctx, { lines: body.cart.lines, couponCode: check.code }, { channel: body.channel });
+  const priced = await quote(ctx, { lines: body.cart.lines, couponCode: check.code }, { channel: body.channel, at });
   res.json({
     ok: true,
     code: check.code,

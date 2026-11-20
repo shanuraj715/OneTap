@@ -1,6 +1,7 @@
 import { randomInt } from "node:crypto";
 import {
   formatINR,
+  formatWhen,
   normalizeWaPhone,
   ORDER_STATUS_LABELS,
   renderTemplate,
@@ -575,14 +576,21 @@ export async function queueOrderUpdate(ctx, order, status, config) {
       accountId = String(a._id);
       await WaChatModel.updateOne({ _id: chat._id, brandId: ctx.brandId }, { $set: { accountId } });
     }
-    const body = settings.templates?.[status]?.body?.trim() || WA_ORDER_DEFAULT_BODY;
-    const text = renderTemplate(body, {
+    const own = settings.templates?.[status]?.body?.trim();
+    const values = {
       customerName: order.customer?.name || "there",
       orderNumber: order.orderNumber,
       statusLabel: ORDER_STATUS_LABELS[status],
       amount: formatINR(order.totals?.grandTotal ?? 0),
       outletName: config.identity?.name ?? "",
-    });
+      riderName: order.rider?.name ?? "",
+      riderPhone: order.rider?.phone ?? "",
+      pickupTime: order.scheduledFor ? formatWhen(order.scheduledFor) : "",
+    };
+    let text = renderTemplate(own || WA_ORDER_DEFAULT_BODY, values);
+    // the built-in message also says who is bringing it, and when a pre-order will be ready
+    if (!own && status === "out_for_delivery" && values.riderName) text += ` ${values.riderName} is bringing it${values.riderPhone ? ` (${values.riderPhone})` : ""}.`;
+    if (!own && values.pickupTime && ["placed", "accepted"].includes(status)) text += ` Pickup: ${values.pickupTime}.`;
     await WaMessageModel.create({
       brandId: ctx.brandId,
       chatId: String(chat._id),
@@ -597,6 +605,48 @@ export async function queueOrderUpdate(ctx, order, status, config) {
     });
   } catch (err) {
     logger.error({ err, orderId: String(order?._id) }, "whatsapp: couldn't queue an order update");
+  }
+}
+
+/**
+ * Queue a plain message to a customer from the store's linked number (a booking update, a cart reminder). `source`
+ * decides its pacing: "order" (expected by the customer — its own budget, no quiet hours) or "broadcast" (unasked for —
+ * first-contact spacing, quiet hours and the daily budget). Never throws.
+ * @returns {Promise<{ ok: boolean, reason?: string }>}
+ */
+export async function queueCustomerText(ctx, { phone: rawPhone, name = "", text, source = "order" }) {
+  try {
+    if (!(await storePlan(ctx.brandId)).entitlements.features.includes("whatsappChat")) return { ok: false, reason: "WhatsApp chat isn't in the store's plan" };
+    const phone = normalizeWaPhone(rawPhone);
+    if (!phone) return { ok: false, reason: "No WhatsApp number for this customer" };
+    if (!(await WaAccountModel.exists({ brandId: ctx.brandId, status: { $in: ["connected", "disconnected"] } }))) return { ok: false, reason: "No WhatsApp number is linked" };
+    const chat = await WaChatModel.findOneAndUpdate(
+      { brandId: ctx.brandId, phone },
+      { $setOnInsert: { brandId: ctx.brandId, phone, name: String(name).slice(0, 80) } },
+      { upsert: true, new: true },
+    ).lean();
+    let accountId = chat.accountId;
+    if (!accountId) {
+      const a = await pickOnlineAccount(ctx);
+      if (!a) return { ok: false, reason: "No linked WhatsApp number is online" };
+      accountId = String(a._id);
+      await WaChatModel.updateOne({ _id: chat._id, brandId: ctx.brandId }, { $set: { accountId } });
+    }
+    await WaMessageModel.create({
+      brandId: ctx.brandId,
+      chatId: String(chat._id),
+      accountId,
+      direction: "out",
+      type: "text",
+      text: String(text).slice(0, 4000),
+      status: "queued",
+      source,
+      pace: paceFor({ ...chat, accountId }, source, accountId),
+    });
+    return { ok: true };
+  } catch (err) {
+    logger.error({ err }, "whatsapp: couldn't queue a customer message");
+    return { ok: false, reason: err?.message || "Couldn't queue the message" };
   }
 }
 

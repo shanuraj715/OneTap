@@ -9,6 +9,8 @@ import { attachRealtime } from "./realtime/hub.js";
 import { attachPreview } from "./realtime/preview.js";
 import { startMarketingWorker } from "./modules/marketing/worker.js";
 import { startWhatsAppWorker } from "./modules/whatsapp/worker.js";
+import { startCartReminderWorker } from "./modules/carts/carts.service.js";
+import { startStockSweeper } from "./modules/menu/stock.service.js";
 
 const DISPATCH_INTERVAL_MS = 5_000;
 let printTimer                        = null;
@@ -40,6 +42,10 @@ function main()       {
   startWhatsAppWorker();
   // only where MARKETING_WORKER=on — see env.js
   startMarketingWorker();
+  // abandoned-cart reminders — only where one of the two senders above runs
+  startCartReminderWorker();
+  // gives back the counted stock of online orders nobody paid for (safe in every process)
+  startStockSweeper();
 
   const server = app.listen(env.API_PORT);
 

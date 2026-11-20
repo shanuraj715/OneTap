@@ -3,6 +3,7 @@ import {
   DEFAULT_OTP_TEMPLATE,
   DEFAULT_WA_CODE_TEMPLATE,
   formatINR,
+  formatWhen,
   MESSAGE_METHOD_FEATURE,
   messagingSchema,
   NOTIFY_CHANNELS,
@@ -398,6 +399,10 @@ export async function fireOrderNotifications(ctx               , order          
         statusLabel: ORDER_STATUS_LABELS[status],
         amount: formatINR(order.totals.grandTotal),
         outletName: config.identity.name,
+        // SMS bodies may also use these (WhatsApp Business templates only get the five above, in order)
+        riderName: order.rider?.name ?? "",
+        riderPhone: order.rider?.phone ?? "",
+        pickupTime: order.scheduledFor ? formatWhen(order.scheduledFor) : "",
       };
 
       const template = settings.templates[status];

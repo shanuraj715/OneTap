@@ -24,6 +24,7 @@ import {
 } from "./menu.service.js";
 import { limiter } from "../../middleware/rate-limit.js";
 import { AI_ASPECT_RATIO_IDS, AI_MAX_IMAGES_AT_ONCE, AI_MAX_PROMPT_LENGTH } from "@onetap/config-schema";
+import { suggestionsFor } from "./suggestions.service.js";
 
 export const menuRouter         = Router();
 
@@ -73,6 +74,8 @@ const categoryBody = z.object({
   isActive: z.boolean().optional(),
   /** where everything in it is made (kitchen / bar); null = follow the category it is inside */
   prepStation: z.enum(["kitchen", "bar"]).nullable().optional(),
+  /** the hours everything in it can be ordered; null = same as the category it is inside */
+  availability: z.any().optional(),
 });
 
 menuRouter.post("/categories", async (req, res) => {
@@ -151,6 +154,25 @@ const itemBody = z.object({
   sortOrder: z.number().int().optional(),
   /** where this dish is made (kitchen / bar); null = same as its category */
   prepStation: z.enum(["kitchen", "bar"]).nullable().optional(),
+  /** counted stock ({ tracked, left, daily, lowAt }); null = not counted — checked in the service */
+  stock: z.any().optional(),
+  /** its own hours ({ windows }); null = its category's */
+  availability: z.any().optional(),
+  /** the dishes a combo is made of ({ items }); null = a plain dish */
+  combo: z.any().optional(),
+  /** dishes suggested alongside it */
+  pairsWith: z.array(z.string()).max(20).optional(),
+});
+
+/**
+ * Public: what to suggest to someone with these dishes in their cart ("goes well with your order") — the dishes the
+ * owner chose, then what other customers often ordered with them. Only dishes that can be ordered right now.
+ */
+menuRouter.post("/suggestions", limiter("public-compute"), async (req, res) => {
+  const body = z.object({ outletId: z.string().min(1), itemIds: z.array(z.string()).max(60).default([]) }).parse(req.body);
+  const ref = await outletBrand(body.outletId);
+  if (!ref) throw new HttpError(404, "Outlet not found");
+  res.json(await suggestionsFor({ brandId: ref.brandId, outletId: ref.outletId }, body.itemIds));
 });
 
 menuRouter.post("/items", async (req, res) => {

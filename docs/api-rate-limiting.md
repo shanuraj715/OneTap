@@ -47,16 +47,19 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | `coins-code` | signed-in user (else address) | 40 per 10 min | Staff asking a customer for a coin-spending code, and typing it in: stops a signed-in account (or a stolen one) trying numbers and codes at speed. | `POST /api/orders/staff/coins-code`<br>`POST /api/orders/staff/coins-code/verify` |
 | `site-challenge` | visitor's address | 40 per 10 min | The enquiry form's spam-guard puzzle is cheap to hand out but not free; this stops it being farmed. | `GET /api/site/challenge` |
 | `site-lead` | visitor's address | 8 per 10 min | The enquiry form writes to the database and notifies the team. A cheap per-address cap in front of the spam guard's other checks (puzzle, hidden field, per-phone and site-wide caps). | `POST /api/site/leads` |
-| `public-compute` | visitor's address | 90 per min | Price quotes, delivery checks and capacity lookups are open to visitors and each runs several database reads — they must stay fast for real customers, not be a way to load the database. | `POST /api/delivery/check`<br>`GET /api/orders/capacity`<br>`POST /api/orders/quote` |
+| `public-compute` | visitor's address | 90 per min | Price quotes, delivery checks and capacity lookups are open to visitors and each runs several database reads — they must stay fast for real customers, not be a way to load the database. | `GET /api/customer/cart/:id`<br>`POST /api/delivery/check`<br>`POST /api/menu/suggestions`<br>`GET /api/orders/capacity`<br>`GET /api/orders/pickup-slots`<br>`POST /api/orders/quote`<br>`GET /api/reservations/availability` |
 | `coupon-guess` | visitor's address | 20 per 5 min | Coupon codes are short; without a limit a script can try thousands to find a valid one. | `POST /api/coupons/apply` |
 | `table-scan` | visitor's address | 60 per min | QR scans and table lookups are open to anyone with a link; this stops table ids or tokens being guessed at speed. A dining room's Wi-Fi scanning at once still fits. | `POST /api/tables/claim`<br>`GET /api/tables/public`<br>`GET /api/tables/scan/:tableId`<br>`POST /api/tables/scan/:tableId/session`<br>`GET /api/tables/sessions/:id/tab` |
-| `customer-account` | user, else customer, else address | 30 per 10 min | A customer saving their profile or signing out: a few a day is normal, so a high rate means a script. | `POST /api/customer/logout`<br>`DELETE /api/customer/orders/:id`<br>`PATCH /api/customer/profile` |
-| `customer-orders` | user, else customer, else address | 90 per 10 min | A customer's Account page (their order history). It refreshes every 20 seconds or so while an order is being prepared, which is far under this; a higher rate is a script copying history or loading the database. | `GET /api/customer/orders` |
+| `customer-account` | user, else customer, else address | 30 per 10 min | A customer saving their profile or signing out: a few a day is normal, so a high rate means a script. | `POST /api/customer/logout`<br>`DELETE /api/customer/orders/:id`<br>`PATCH /api/customer/profile`<br>`POST /api/reservations/:id/cancel` |
+| `customer-orders` | user, else customer, else address | 90 per 10 min | A customer's Account page (their order history). It refreshes every 20 seconds or so while an order is being prepared, which is far under this; a higher rate is a script copying history or loading the database. | `GET /api/customer/orders`<br>`POST /api/customer/orders/:id/reorder`<br>`GET /api/reservations/mine` |
+| `cart-sync` | user, else customer, else address | 120 per 10 min | A signed-in customer's cart is saved (for abandoned-cart reminders) a moment after each change. A busy customer changes it a few dozen times; more than this is a script writing to the database. | `PUT /api/customer/cart` |
+| `customer-feedback` | user, else customer, else address | 20 per 10 min | Rating an order: a customer rates a handful of orders at most; this stops a script filling the store's ratings. | `POST /api/customer/orders/:id/feedback` |
+| `reservation-request` | user, else customer, else address | 10 per hour | Booking a table holds seats for everybody else: a few requests an hour is plenty for a real guest, and a script must not be able to fill a restaurant's evening with fake bookings. | `POST /api/reservations` |
 | `order-place` | user, else customer, else address | 12 per 10 min for a customer · 150 per 10 min for staff at the till | A customer placing orders: a dozen in ten minutes is generous, more is a script flooding the kitchen. Staff at the till (who send the outlet header) get a much bigger budget. | `POST /api/orders` |
 | `payment` | user, else customer, else address | 40 per 10 min | Starting and confirming a payment calls the payment gateway; this stops a script burning the store's gateway quota. | `POST /api/payments/intent`<br>`POST /api/payments/verify` |
 | `webhook` | visitor's address | 240 per min | Payment gateways call this with a signature we check — but a flood of forged calls would still cost a signature check and a database read each. A gateway's servers speak for every merchant it has, so the ceiling is generous (4 a second per address) — raise RATE_LIMIT_SCALE if the platform grows to many busy stores. | `POST /api/payments/webhook/:gateway` |
 | `print-agent` | visitor's address | 300 per min | The little program at a restaurant's printer asks for jobs every second or two with its own token. 300 a minute leaves room for several printers; it stops a leaked token being used to hammer the queue. | `GET /api/printing/agent/jobs`<br>`POST /api/printing/agent/jobs/:id/result` |
-| `team-write` | signed-in user (else address) | 240 per min | Every change a team member makes to the dashboard (menu, outlets, orders, tables, pages, settings…). 240 a minute is four a second — more than any person — so a stolen session can't mass-delete or mass-edit in a blink. | 153 routes (see the full list below) |
+| `team-write` | signed-in user (else address) | 240 per min | Every change a team member makes to the dashboard (menu, outlets, orders, tables, pages, settings…). 240 a minute is four a second — more than any person — so a stolen session can't mass-delete or mass-edit in a blink. | 164 routes (see the full list below) |
 | `account-write` | signed-in user (else address) | 30 per 10 min | Creating team members, changing roles and resetting passwords. Takeover of accounts is the worst thing that can happen to a store, so it is slow on purpose. | `POST /api/platform/stores/:id/owners`<br>`DELETE /api/platform/stores/:id/owners/:userId`<br>`PATCH /api/platform/stores/:id/owners/:userId`<br>`DELETE /api/platform/stores/:id/people/:userId`<br>`POST /api/platform/stores/:id/people/:userId/block`<br>`POST /api/platform/stores/:id/people/:userId/unblock`<br>`POST /api/users`<br>`DELETE /api/users/:id`<br>`PATCH /api/users/:id` |
 | `ai-images` | signed-in user (else address) | 15 per 10 min | Making dish pictures with Gemini. Every picture is a paid call to Google, one request can make up to four, and only the platform's super admin can start one — this is a brake on a stuck button or a script, not on normal use. | `POST /api/menu/items/:id/generate-images` |
 | `secrets` | signed-in user (else address) | 30 per 10 min | Saving or revealing payment-gateway keys, SMS / WhatsApp connections, storage credentials and printer-agent tokens. They are rarely touched; a flood means something is wrong. | 15 routes (see the full list below) |
@@ -97,17 +100,23 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | GET | `/api/auth/me` | `api` |
 | GET | `/api/brands` | `api` |
 | POST | `/api/brands` | `api`, `team-write`, `destructive` |
+| GET | `/api/cart-reminders` | `api` |
+| PUT | `/api/cart-reminders` | `api`, `team-write` |
 | GET | `/api/coupons` | `api` |
 | POST | `/api/coupons` | `api`, `team-write` |
 | DELETE | `/api/coupons/:id` | `api`, `team-write` |
 | PATCH | `/api/coupons/:id` | `api`, `team-write` |
 | POST | `/api/coupons/apply` | `api`, `team-write`, `coupon-guess` |
 | GET | `/api/coupons/public` | `api` |
+| PUT | `/api/customer/cart` | `api`, `cart-sync` |
+| GET | `/api/customer/cart/:id` | `api`, `public-compute` |
 | GET | `/api/customer/guard` | `api` |
 | POST | `/api/customer/logout` | `api`, `customer-account` |
 | GET | `/api/customer/me` | `api` |
 | GET | `/api/customer/orders` | `api`, `customer-orders` |
 | DELETE | `/api/customer/orders/:id` | `api`, `customer-account` |
+| POST | `/api/customer/orders/:id/feedback` | `api`, `customer-feedback` |
+| POST | `/api/customer/orders/:id/reorder` | `api`, `customer-orders` |
 | POST | `/api/customer/otp/request` | `api`, `otp-send-ip`, `otp-send-store`, `otp-resend-number`, `otp-flood` |
 | POST | `/api/customer/otp/verify` | `api`, `otp-flood` |
 | PATCH | `/api/customer/profile` | `api`, `customer-account` |
@@ -116,6 +125,7 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | GET | `/api/dashboard/stats` | `api` |
 | POST | `/api/delivery/check` | `api`, `public-compute` |
 | GET | `/api/delivery/origin` | `api` |
+| GET | `/api/feedback` | `api` |
 | POST | `/api/marketing/audience/preview` | `api`, `team-write` |
 | GET | `/api/marketing/campaigns` | `api` |
 | POST | `/api/marketing/campaigns` | `api`, `team-write`, `bulk-send` |
@@ -147,6 +157,7 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | POST | `/api/menu/modifier-groups` | `api`, `team-write` |
 | DELETE | `/api/menu/modifier-groups/:id` | `api`, `team-write` |
 | PATCH | `/api/menu/modifier-groups/:id` | `api`, `team-write` |
+| POST | `/api/menu/suggestions` | `api`, `team-write`, `public-compute` |
 | GET | `/api/notify/config` | `api` |
 | DELETE | `/api/notify/config/:channel` | `api`, `team-write`, `secrets` |
 | PUT | `/api/notify/config/:channel` | `api`, `team-write`, `secrets` |
@@ -158,9 +169,11 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | DELETE | `/api/orders/:id` | `api`, `team-write`, `destructive` |
 | GET | `/api/orders/:id` | `api` |
 | PATCH | `/api/orders/:id` | `api`, `team-write` |
+| PATCH | `/api/orders/:id/rider` | `api`, `team-write` |
 | PATCH | `/api/orders/:id/status` | `api`, `team-write` |
 | PATCH | `/api/orders/:id/status/manual` | `api`, `team-write` |
 | GET | `/api/orders/capacity` | `api`, `public-compute` |
+| GET | `/api/orders/pickup-slots` | `api`, `public-compute` |
 | POST | `/api/orders/quote` | `api`, `team-write`, `public-compute` |
 | POST | `/api/orders/staff` | `api`, `team-write` |
 | POST | `/api/orders/staff/coins-code` | `api`, `team-write`, `coins-code` |
@@ -251,6 +264,7 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | GET | `/api/platform/stores` | `api` |
 | DELETE | `/api/platform/stores/:id` | `api`, `team-write`, `destructive` |
 | GET | `/api/platform/stores/:id` | `api` |
+| PATCH | `/api/platform/stores/:id` | `api`, `team-write` |
 | GET | `/api/platform/stores/:id/cache` | `api` |
 | GET | `/api/platform/stores/:id/deletion-summary` | `api` |
 | POST | `/api/platform/stores/:id/disable` | `api`, `team-write`, `destructive` |
@@ -301,6 +315,18 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | GET | `/api/qr-cards/design` | `api` |
 | PUT | `/api/qr-cards/design` | `api`, `team-write`, `upload` |
 | POST | `/api/qr-cards/design/reset` | `api`, `team-write` |
+| GET | `/api/reservations` | `api` |
+| POST | `/api/reservations` | `api`, `team-write`, `reservation-request` |
+| PATCH | `/api/reservations/:id` | `api`, `team-write` |
+| POST | `/api/reservations/:id/cancel` | `api`, `team-write`, `customer-account` |
+| GET | `/api/reservations/availability` | `api`, `public-compute` |
+| GET | `/api/reservations/mine` | `api`, `customer-orders` |
+| POST | `/api/reservations/staff` | `api`, `team-write` |
+| GET | `/api/reservations/summary` | `api` |
+| GET | `/api/riders` | `api` |
+| POST | `/api/riders` | `api`, `team-write` |
+| DELETE | `/api/riders/:id` | `api`, `team-write` |
+| PATCH | `/api/riders/:id` | `api`, `team-write` |
 | GET | `/api/site/challenge` | `api`, `site-challenge` |
 | POST | `/api/site/leads` | `api`, `site-lead` |
 | GET | `/api/site/links` | `api` |
