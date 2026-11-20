@@ -2141,12 +2141,12 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:09:15.815Z",
-    "durationMs": 2797,
+    "at": "2026-11-20T19:43:40.757Z",
+    "durationMs": 3982,
     "steps": [
       {
-        "n": 0,
-        "title": "Setup",
+        "n": 1,
+        "title": "favicon",
         "checks": [
           {
             "label": "a store whose plan includes it can set a favicon",
@@ -12770,8 +12770,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:31:41.764Z",
-    "durationMs": 20006,
+    "at": "2026-11-20T19:43:17.490Z",
+    "durationMs": 21433,
     "steps": [
       {
         "n": 1,
@@ -12780,7 +12780,7 @@
           {
             "label": "all 30+ categories are in the bar",
             "ok": true,
-            "detail": "36",
+            "detail": "35",
             "kind": "expect"
           },
           {
@@ -12798,7 +12798,7 @@
           {
             "label": "more chips than fit: the row scrolls sideways instead of wrapping",
             "ok": true,
-            "detail": "5282px of chips in 768px",
+            "detail": "5177px of chips in 768px",
             "kind": "expect"
           },
           {
@@ -12828,7 +12828,7 @@
           {
             "label": "choosing it scrolls the menu to that category, just under the (short) bar",
             "ok": true,
-            "detail": "{\"top\":239,\"bar\":227}",
+            "detail": "{\"top\":238,\"bar\":227}",
             "kind": "expect"
           },
           {
@@ -12906,7 +12906,7 @@
           {
             "label": "tablet: the sheet fits the screen and lists every category",
             "ok": true,
-            "detail": "792px of 1100px, 37 buttons",
+            "detail": "792px of 1100px, 36 buttons",
             "kind": "expect"
           },
           {
@@ -12918,7 +12918,7 @@
           {
             "label": "tablet: a category picked in the sheet lands just under the bar",
             "ok": true,
-            "detail": "{\"top\":245,\"bar\":232}",
+            "detail": "{\"top\":244,\"bar\":232}",
             "kind": "expect"
           },
           {
@@ -12960,7 +12960,7 @@
           {
             "label": "phone: the sheet fits the screen and lists every category",
             "ok": true,
-            "detail": "608px of 844px, 37 buttons",
+            "detail": "608px of 844px, 36 buttons",
             "kind": "expect"
           },
           {
@@ -16151,8 +16151,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T18:45:55.660Z",
-    "durationMs": 82447,
+    "at": "2026-11-20T19:42:09.191Z",
+    "durationMs": 83151,
     "steps": [
       {
         "n": 1,
@@ -16820,8 +16820,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T18:46:21.336Z",
-    "durationMs": 25656,
+    "at": "2026-11-20T19:42:36.669Z",
+    "durationMs": 26563,
     "steps": [
       {
         "n": 1,
@@ -17285,8 +17285,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T18:46:38.835Z",
-    "durationMs": 17479,
+    "at": "2026-11-20T19:42:55.099Z",
+    "durationMs": 17608,
     "steps": [
       {
         "n": 1,
@@ -20032,12 +20032,12 @@
     "id": "t58-item-image-shapes-api",
     "title": "Dish pictures in four shapes — square (default), landscape 4:3, wide 16:9, portrait 3:4 — stored, limited and chosen per card; existing square pictures untouched",
     "status": "pass",
-    "pass": 30,
+    "pass": 31,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T18:50:56.904Z",
-    "durationMs": 3584,
+    "at": "2026-11-20T19:43:29.833Z",
+    "durationMs": 4145,
     "steps": [
       {
         "n": 1,
@@ -20224,7 +20224,13 @@
         "title": "the card variants ask for the right shape",
         "checks": [
           {
-            "label": "photo-on-top and overlay cards use landscape 4:3",
+            "label": "photo-on-top cards (C04, C05) use landscape 4:3",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the overlay card (C07) uses wide 16:9; a card without a photo has no shape",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -20267,8 +20273,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T19:14:32.579Z",
-    "durationMs": 5211,
+    "at": "2026-11-20T19:40:40.827Z",
+    "durationMs": 5236,
     "steps": [
       {
         "n": 1,
@@ -20503,9 +20509,9 @@
             "kind": "expect"
           },
           {
-            "label": "C07 (image-overlay) shows the land picture of a dish that has all four",
+            "label": "C07 (image-overlay) shows the wide picture of a dish that has all four",
             "ok": true,
-            "detail": "https://img.test/full-land.png",
+            "detail": "https://img.test/full-wide.png",
             "kind": "expect"
           },
           {
@@ -21055,6 +21061,231 @@
             "label": "…each with its dot exactly centred in a square frame",
             "ok": true,
             "detail": "worst off-centre 0.000px",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t63-card-picture-shape": {
+    "id": "t63-card-picture-shape",
+    "title": "C07 uses the wide 16:9 picture — and Appearance has a Picture shape field per card style that resets on a new card and can be overridden",
+    "status": "pass",
+    "pass": 29,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-20T19:40:31.959Z",
+    "durationMs": 3285,
+    "steps": [
+      {
+        "n": 1,
+        "title": "C07 uses the wide 16:9 picture",
+        "checks": [
+          {
+            "label": "C07 shows the wide (16:9) picture of a dish that has all four shapes",
+            "ok": true,
+            "detail": "https://img.test/cs-wide.png",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the card itself is a 16:9 box",
+            "ok": true,
+            "detail": "16 / 9",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Appearance: Picture shape field",
+        "checks": [
+          {
+            "label": "with C07 selected, Picture shape shows Wide (16:9)",
+            "ok": true,
+            "detail": "16:9",
+            "kind": "expect"
+          },
+          {
+            "label": "…marked as the card's own",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no 'Back to the card's own' link while it is the card's own",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "all four shapes can be chosen",
+            "ok": true,
+            "detail": "Square (1:1) | Landscape (4:3) | Wide (16:9) — this card's own | Portrait (3:4)",
+            "kind": "expect"
+          },
+          {
+            "label": "picking another card (C08) changes the field to that card's own shape — Portrait (3:4)",
+            "ok": true,
+            "detail": "3:4",
+            "kind": "expect"
+          },
+          {
+            "label": "…C04 → Landscape (4:3)",
+            "ok": true,
+            "detail": "4:3",
+            "kind": "expect"
+          },
+          {
+            "label": "…C09 → Square (1:1)",
+            "ok": true,
+            "detail": "1:1",
+            "kind": "expect"
+          },
+          {
+            "label": "…back to C07 → Wide (16:9)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Overriding it",
+        "checks": [
+          {
+            "label": "an override shows 'Back to the card's own (16:9)'",
+            "ok": true,
+            "detail": "Back to the card's own (16:9)",
+            "kind": "expect"
+          },
+          {
+            "label": "saved: C07 with picture shape 4:3",
+            "ok": true,
+            "detail": "card.image-overlay / 4:3",
+            "kind": "expect"
+          },
+          {
+            "label": "the storefront's C07 card now shows the landscape picture",
+            "ok": true,
+            "detail": "https://img.test/cs-land.png",
+            "kind": "expect"
+          },
+          {
+            "label": "…in a 4:3 box",
+            "ok": true,
+            "detail": "4 / 3",
+            "kind": "expect"
+          },
+          {
+            "label": "after reloading Appearance the override is still 4:3",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "overriding to Square shows the square picture",
+            "ok": true,
+            "detail": "https://img.test/cs-sq.png",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Another card resets it; 'back to the card's own' clears it",
+        "checks": [
+          {
+            "label": "choosing C08 after an override resets the field to C08's own (Portrait), with no override left",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "saved: C08 with no override (empty = its own)",
+            "ok": true,
+            "detail": "card.portrait / \"\"",
+            "kind": "expect"
+          },
+          {
+            "label": "'Back to the card's own' puts the card's own shape back",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Menu layout: the same field for the default card and for each section",
+        "checks": [
+          {
+            "label": "Menu layout → Default card style C07 shows Picture shape Wide (16:9)",
+            "ok": true,
+            "detail": "16:9",
+            "kind": "expect"
+          },
+          {
+            "label": "choosing C04 as the default card changes it to Landscape (4:3)",
+            "ok": true,
+            "detail": "4:3",
+            "kind": "expect"
+          },
+          {
+            "label": "…and it can be overridden (a 'back to the card's own' link appears)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the storefront's C04 cards now show the wide picture (override on the default card)",
+            "ok": true,
+            "detail": "https://img.test/cs-wide.png",
+            "kind": "expect"
+          },
+          {
+            "label": "…in a 16:9 photo box",
+            "ok": true,
+            "detail": "16 / 9",
+            "kind": "expect"
+          },
+          {
+            "label": "a custom section can override its own picture shape (C04 + Portrait → the portrait picture)",
+            "ok": true,
+            "detail": "https://img.test/cs-tall.png",
+            "kind": "expect"
+          },
+          {
+            "label": "the section's Picture shape field shows 3:4",
+            "ok": true,
+            "detail": "3:4",
+            "kind": "expect"
+          },
+          {
+            "label": "changing that section's card to C07 resets its shape to Wide (16:9)",
+            "ok": true,
+            "detail": "16:9",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "A card with no picture",
+        "checks": [
+          {
+            "label": "C01 (no picture) says there is no picture shape to choose",
+            "ok": true,
+            "detail": "",
             "kind": "expect"
           },
           {

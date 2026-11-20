@@ -1,6 +1,6 @@
 # TablePe end-to-end tests — catalog
 
-**63 tests** · 63 passing · 0 failing/error · 0 not run yet
+**64 tests** · 64 passing · 0 failing/error · 0 not run yet
 
 | Test | Area | Result | Checks | Last run |
 |---|---|---|---|---|
@@ -11,7 +11,7 @@
 | [t04-whatsapp-manage](t04-whatsapp-manage.md) — WhatsApp management — colours, chat stats and sharing out, clean-up by date, delete a message | whatsapp | ✅ PASSED | 20/20 | 2026-11-20 05:38 |
 | [t05-whatsapp-chat-filters](t05-whatsapp-chat-filters.md) — WhatsApp chat list — 'via' chips and filters (All, Unread, Needs reply, New, No offers, by number) | whatsapp | ✅ PASSED | 12/12 | 2026-11-20 05:38 |
 | [t06-storefront-header-categories](t06-storefront-header-categories.md) — Storefront — favicon, steady message bar, Categories sheet on phone/tablet, delayed smooth scroll | storefront | ✅ PASSED | 28/28 | 2026-11-21 00:12 |
-| [t07-favicon-plan-rules](t07-favicon-plan-rules.md) — Favicon — one per store, only when the plan (or a per-store override) includes it | plans | ✅ PASSED | 8/8 | 2026-11-20 05:39 |
+| [t07-favicon-plan-rules](t07-favicon-plan-rules.md) — Favicon — one per store, only when the plan (or a per-store override) includes it | plans | ✅ PASSED | 8/8 | 2026-11-21 01:13 |
 | [t08-plans-outlets-settings](t08-plans-outlets-settings.md) — Plans & outlets — Basic → Pro upgrade, outlets 1-3 with menus, all outlet settings, delivery distance, load management | plans | ✅ PASSED | 44/44 | 2026-11-21 00:31 |
 | [t09-store-subdomain](t09-store-subdomain.md) — Store subdomain — remove, create lifecycle.<base>, open every outlet on it, unknown addresses, rename | domains | ✅ PASSED | 36/36 | 2026-11-20 05:43 |
 | [t10-plan-downgrade](t10-plan-downgrade.md) — Plan downgrade Pro → Basic — what stops, what keeps working, grace period, after the grace period, a manually disabled outlet | plans | ✅ PASSED | 38/38 | 2026-11-20 05:44 |
@@ -39,7 +39,7 @@
 | [t32-menu-tree-api](t32-menu-tree-api.md) — Menu categories inside categories — depth, moving, pictures, ordering, bulk delete of categories and items, import, and how the storefront builds its sections | menu | ✅ PASSED | 93/93 | 2026-11-21 00:47 |
 | [t33-menu-tree](t33-menu-tree.md) — Menu — categories inside categories, category pictures, and multi-select delete for categories and items | menu | ✅ PASSED | 71/71 | 2026-11-21 00:47 |
 | [t34-image-compression-api](t34-image-compression-api.md) — Pictures are compressed and optimised on the server when uploaded — size, shape, rotation, privacy, limits and settings | storage | ✅ PASSED | 32/32 | 2026-11-20 06:01 |
-| [t35-storefront-category-bar](t35-storefront-category-bar.md) — Storefront — with 30+ categories the sticky category bar stays ONE short row that scrolls sideways, and phones keep one short bar with a Categories sheet | storefront | ✅ PASSED | 34/34 | 2026-11-20 06:01 |
+| [t35-storefront-category-bar](t35-storefront-category-bar.md) — Storefront — with 30+ categories the sticky category bar stays ONE short row that scrolls sideways, and phones keep one short bar with a Categories sheet | storefront | ✅ PASSED | 34/34 | 2026-11-21 01:13 |
 | [t36-upload-urls-api](t36-upload-urls-api.md) — Pictures are stored without a domain and get the current domain when sent out — so a new domain or machine never breaks them | storage | ✅ PASSED | 28/28 | 2026-11-20 06:01 |
 | [t37-storefront-mobile-layout](t37-storefront-mobile-layout.md) — Storefront — page side padding is smaller on phones and tablets (desktop unchanged); on phones a path title is two lines with a smaller View all button | storefront | ✅ PASSED | 45/45 | 2026-11-21 00:12 |
 | [t38-ai-images-api](t38-ai-images-api.md) — AI dish pictures — several Gemini keys used in turn, only the super admin can use them, and what is made is saved to the dish | menu | ✅ PASSED | 88/88 | 2026-11-21 00:45 |
@@ -51,9 +51,9 @@
 | [t44-website-product-menu](t44-website-product-menu.md) — Website header — the Product dropdown is wide, fits the window, and its hovered item is a soft rounded tile with a brand-filled icon (not a grey pill), in light and dark | website | ✅ PASSED | 53/53 | 2026-11-20 06:04 |
 | [t45-paste-item-photo](t45-paste-item-photo.md) — Dish photos — a picture copied to the clipboard can be pasted (Ctrl/⌘+V or the 'Paste photo' button) instead of choosing a file | menu | ✅ PASSED | 21/21 | 2026-11-21 00:46 |
 | [t46-addon-groups](t46-addon-groups.md) — Add-on groups — the list is multi-column (dish editor and the groups list) and a group can be edited after creation (name, option names and prices, add/remove options) | menu | ✅ PASSED | 50/50 | 2026-11-21 00:44 |
-| [t47-storefront-pinned-bars](t47-storefront-pinned-bars.md) — Storefront — the header, the order bar (Takeaway/Delivery + outlet) and the category/filter bar stay pinned to the top while scrolling, on phone, tablet and desktop, with every header style | storefront | ✅ PASSED | 101/101 | 2026-11-21 00:15 |
-| [t48-hero-button-card-c02](t48-hero-button-card-c02.md) — Storefront — no 'Order takeaway' button at the top; card C02 (Thumbnail left) shows the price right after the veg / non-veg mark with full-width title and description; every item card cuts its description at one line with an ellipsis | storefront | ✅ PASSED | 69/69 | 2026-11-21 00:16 |
-| [t49-storefront-item-popup](t49-storefront-item-popup.md) — Storefront item pop-up — the picture is set in from the edges with rounded corners and has a close button; the name has the veg mark and the price; sizes and extras are tiles that light up; the Add row stays at the bottom while the choices scroll | storefront | ✅ PASSED | 42/42 | 2026-11-21 00:16 |
+| [t47-storefront-pinned-bars](t47-storefront-pinned-bars.md) — Storefront — the header, the order bar (Takeaway/Delivery + outlet) and the category/filter bar stay pinned to the top while scrolling, on phone, tablet and desktop, with every header style | storefront | ✅ PASSED | 101/101 | 2026-11-21 01:12 |
+| [t48-hero-button-card-c02](t48-hero-button-card-c02.md) — Storefront — no 'Order takeaway' button at the top; card C02 (Thumbnail left) shows the price right after the veg / non-veg mark with full-width title and description; every item card cuts its description at one line with an ellipsis | storefront | ✅ PASSED | 69/69 | 2026-11-21 01:12 |
+| [t49-storefront-item-popup](t49-storefront-item-popup.md) — Storefront item pop-up — the picture is set in from the edges with rounded corners and has a close button; the name has the veg mark and the price; sizes and extras are tiles that light up; the Add row stays at the bottom while the choices scroll | storefront | ✅ PASSED | 42/42 | 2026-11-21 01:12 |
 | [t50-store-name](t50-store-name.md) — Store name — the dashboard's Business identity shows the STORE name, always disabled, with a note to contact the TablePe admin; only the platform admin can rename the store (console → Stores → the store); renaming an outlet changes its display name | settings | ✅ PASSED | 31/31 | 2026-11-21 00:36 |
 | [t51-kot-tickets](t51-kot-tickets.md) — Kitchen tickets (KOT) — each dish goes to the right printer (kitchen / bar); an order edited after its ticket went out sends an 'ORDER CHANGED' ticket with only the difference; a cancelled order withdraws a waiting ticket or sends 'ORDER CANCELLED — DO NOT COOK' | printing | ✅ PASSED | 62/62 | 2026-11-21 00:45 |
 | [t52-print-station-any-page](t52-print-station-any-page.md) — Print station — a computer switched on as a print station prints tickets from ANY dashboard page (Orders, Menu, Dashboard…), once, and only when it is switched on and the plan has Printing | printing | ✅ PASSED | 14/14 | 2026-11-20 12:11 |
@@ -62,11 +62,12 @@
 | [t55-growth-dashboard](t55-growth-dashboard.md) — Dashboard: pre-orders & bookings settings, riders, out for delivery, stock / combo / hours in the menu, buy-X-get-Y coupons, bookings, ratings and cart reminders | dashboard | ✅ PASSED | 26/26 | 2026-11-21 00:49 |
 | [t56-growth-storefront](t56-growth-storefront.md) — Storefront: only N left, combos and dish hours on the menu, suggestions, a pre-order for later, rating an order, order again and booking a table | storefront | ✅ PASSED | 22/22 | 2026-11-20 16:15 |
 | [t57-policy-pages](t57-policy-pages.md) — Pages for payment-gateway activation — About, Contact, Pricing, Privacy, Terms, Refunds, Delivery — and their links on the outlet picker | storefront | ✅ PASSED | 13/13 | 2026-11-20 16:45 |
-| [t58-item-image-shapes-api](t58-item-image-shapes-api.md) — Dish pictures in four shapes — square (default), landscape 4:3, wide 16:9, portrait 3:4 — stored, limited and chosen per card; existing square pictures untouched | menu | ✅ PASSED | 30/30 | 2026-11-21 00:20 |
-| [t59-item-image-shapes-ui](t59-item-image-shapes-ui.md) — Dish photos in four shapes — the dish form's four sections (upload, replace, trim warning, paste into the chosen one, remove) and the picture each card style shows | menu | ✅ PASSED | 45/45 | 2026-11-21 00:44 |
+| [t58-item-image-shapes-api](t58-item-image-shapes-api.md) — Dish pictures in four shapes — square (default), landscape 4:3, wide 16:9, portrait 3:4 — stored, limited and chosen per card; existing square pictures untouched | menu | ✅ PASSED | 31/31 | 2026-11-21 01:13 |
+| [t59-item-image-shapes-ui](t59-item-image-shapes-ui.md) — Dish photos in four shapes — the dish form's four sections (upload, replace, trim warning, paste into the chosen one, remove) and the picture each card style shows | menu | ✅ PASSED | 45/45 | 2026-11-21 01:10 |
 | [t60-store-address](t60-store-address.md) — Super admin inside a store — every page is at /store/<store-name>/<store-id>/…; the store owner keeps the plain addresses | platform | ✅ PASSED | 18/18 | 2026-11-21 00:27 |
 | [t61-item-form-modal](t61-item-form-modal.md) — Edit / New item is a pop-up — fixed Save and Cancel footer, scrolling body, Esc closes — and photos are saved as they change | menu | ✅ PASSED | 33/33 | 2026-11-21 00:46 |
 | [t62-food-mark](t62-food-mark.md) — The veg / non-veg mark — the dot is exactly centred in its frame on the storefront and in Take order | storefront | ✅ PASSED | 9/9 | 2026-11-21 00:56 |
+| [t63-card-picture-shape](t63-card-picture-shape.md) — C07 uses the wide 16:9 picture — and Appearance has a Picture shape field per card style that resets on a new card and can be overridden | storefront | ✅ PASSED | 29/29 | 2026-11-21 01:10 |
 
 ## Open findings (noticed during tests, not yet fixed)
 

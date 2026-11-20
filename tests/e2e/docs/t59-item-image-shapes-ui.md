@@ -1,6 +1,6 @@
 # T59 — Dish photos in four shapes — the dish form's four sections (upload, replace, trim warning, paste into the chosen one, remove) and the picture each card style shows
 
-**Area:** menu · **Last result:** ✅ PASSED (45 passed, 0 failed · 2026-11-21 00:44 · headless · 5.2 s)
+**Area:** menu · **Last result:** ✅ PASSED (45 passed, 0 failed · 2026-11-21 01:10 · headless · 5.2 s)
 
 **Run it alone:** `node run.mjs --only t59` (add `--visible` to watch it)
 
@@ -88,7 +88,7 @@ _Nothing failed._
 - C05: a dish with only a square picture shows the square one — _https://img.test/only-sq.png_
 - C06 (text-above-image) shows the wide picture of a dish that has all four — _https://img.test/full-wide.png_
 - C06: a dish with only a square picture shows the square one — _https://img.test/only-sq.png_
-- C07 (image-overlay) shows the land picture of a dish that has all four — _https://img.test/full-land.png_
+- C07 (image-overlay) shows the wide picture of a dish that has all four — _https://img.test/full-wide.png_
 - C07: a dish with only a square picture shows the square one — _https://img.test/only-sq.png_
 - C08 (portrait) shows the tall picture of a dish that has all four — _https://img.test/full-tall.png_
 - C08: a dish with only a square picture shows the square one — _https://img.test/only-sq.png_
@@ -108,6 +108,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-21 01:10 | pass | 45 | 0 | headless | 5.2 s |
 | 2026-11-21 00:44 | pass | 45 | 0 | headless | 5.2 s |
 | 2026-11-21 00:21 | pass | 45 | 0 | headless | 4.6 s |
 | 2026-11-21 00:20 | pass | 45 | 0 | headless | 4.5 s |

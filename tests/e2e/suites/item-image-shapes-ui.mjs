@@ -168,7 +168,7 @@ try {
     ["image-top", "C04", "full-land"],
     ["image-top-badge", "C05", "full-land"],
     ["text-above-image", "C06", "full-wide"],
-    ["image-overlay", "C07", "full-land"],
+    ["image-overlay", "C07", "full-wide"],
     ["portrait", "C08", "full-tall"],
     ["circle", "C09", "full-sq"],
     ["featured-wide", "C11", "full-wide"],

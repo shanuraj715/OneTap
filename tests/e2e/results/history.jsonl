@@ -941,3 +941,15 @@
 {"id":"t55-growth-dashboard","status":"pass","pass":26,"fail":0,"mode":"headless","at":"2026-11-20T19:19:22.508Z","durationMs":5065}
 {"id":"t62-food-mark","status":"error","pass":6,"fail":0,"mode":"headless","at":"2026-11-20T19:25:23.255Z","durationMs":18369,"error":"food-mark-ui.mjs exited with code 1. }  Node.js v24.3.0"}
 {"id":"t62-food-mark","status":"pass","pass":9,"fail":0,"mode":"headless","at":"2026-11-20T19:26:07.499Z","durationMs":3636}
+{"id":"t63-card-picture-shape","status":"fail","pass":21,"fail":1,"mode":"headless","at":"2026-11-20T19:37:17.877Z","durationMs":3125}
+{"id":"t63-card-picture-shape","status":"error","pass":0,"fail":0,"mode":"headless","at":"2026-11-20T19:37:57.293Z","durationMs":31504,"error":"card-picture-shape-ui.mjs exited with code 1. }  Node.js v24.3.0"}
+{"id":"t63-card-picture-shape","status":"error","pass":27,"fail":0,"mode":"headless","at":"2026-11-20T19:40:23.265Z","durationMs":33448,"error":"card-picture-shape-ui.mjs exited with code 1. }  Node.js v24.3.0"}
+{"id":"t63-card-picture-shape","status":"pass","pass":29,"fail":0,"mode":"headless","at":"2026-11-20T19:40:31.959Z","durationMs":3285}
+{"id":"t59-item-image-shapes-ui","status":"pass","pass":45,"fail":0,"mode":"headless","at":"2026-11-20T19:40:40.827Z","durationMs":5236}
+{"id":"t58-item-image-shapes-api","status":"fail","pass":29,"fail":1,"mode":"headless","at":"2026-11-20T19:40:45.350Z","durationMs":3719}
+{"id":"t47-storefront-pinned-bars","status":"pass","pass":101,"fail":0,"mode":"headless","at":"2026-11-20T19:42:09.191Z","durationMs":83151}
+{"id":"t48-hero-button-card-c02","status":"pass","pass":69,"fail":0,"mode":"headless","at":"2026-11-20T19:42:36.669Z","durationMs":26563}
+{"id":"t49-storefront-item-popup","status":"pass","pass":42,"fail":0,"mode":"headless","at":"2026-11-20T19:42:55.099Z","durationMs":17608}
+{"id":"t35-storefront-category-bar","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-20T19:43:17.490Z","durationMs":21433}
+{"id":"t58-item-image-shapes-api","status":"pass","pass":31,"fail":0,"mode":"headless","at":"2026-11-20T19:43:29.833Z","durationMs":4145}
+{"id":"t07-favicon-plan-rules","status":"pass","pass":8,"fail":0,"mode":"headless","at":"2026-11-20T19:43:40.757Z","durationMs":3982}

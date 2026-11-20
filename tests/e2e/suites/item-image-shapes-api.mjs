@@ -137,7 +137,8 @@ say("5. importing a menu from another outlet brings the shapes along");
 say("6. the card variants ask for the right shape");
 {
   const map = schema.CARD_IMAGE_RATIO;
-  ok(map["card.image-top"] === "4:3" && map["card.image-top-badge"] === "4:3" && map["card.image-overlay"] === "4:3", "photo-on-top and overlay cards use landscape 4:3");
+  ok(map["card.image-top"] === "4:3" && map["card.image-top-badge"] === "4:3", "photo-on-top cards (C04, C05) use landscape 4:3");
+  ok(map["card.image-overlay"] === "16:9" && schema.defaultCardImageRatio("card.image-overlay") === "16:9" && schema.defaultCardImageRatio("card.row-compact") === "", "the overlay card (C07) uses wide 16:9; a card without a photo has no shape");
   ok(map["card.text-above-image"] === "16:9" && map["card.featured-wide"] === "16:9", "the wide cards use 16:9");
   ok(map["card.portrait"] === "3:4", "the tall card uses portrait 3:4");
   ok(map["card.row-thumb-left"] === "1:1" && map["card.row-thumb-right"] === "1:1" && map["card.circle"] === "1:1", "thumbnail and round cards use the square picture");
