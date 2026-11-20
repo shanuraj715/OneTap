@@ -36,6 +36,7 @@ export const FEATURES = [
     label: "Analytics & reports",
     description: "Sales, items, customers and outlets analysed on charts, a profit & loss calculator, stock suggestions, and reports to export (Excel, CSV, PDF).",
   },
+  { key: "kitchenDisplay", label: "Kitchen display (KDS)", description: "A screen for the kitchen and the bar at /kitchen: new orders as cards by station, Start and Ready taps, late-order colours, and an optional bell for the waiter." },
   { key: "reservations", label: "Table reservations", description: "Customers book a table online; the team confirms, seats and tracks every booking." },
   { key: "scheduledOrders", label: "Pre-orders", description: "Takeaway customers choose a later pickup time — later today or the coming days." },
   { key: "feedback", label: "Ratings & feedback", description: "Customers rate completed orders; the store sees every rating and comment, and happy customers are pointed to its Google reviews." },

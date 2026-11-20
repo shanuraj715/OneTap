@@ -42,4 +42,5 @@ export * from "./ai.js";
 export * from "./clock.js";
 export * from "./scheduling.js";
 export * from "./reservations.js";
+export * from "./kitchen-display.js";
 export * from "./growth.js";

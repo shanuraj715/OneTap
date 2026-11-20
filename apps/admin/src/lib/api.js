@@ -389,6 +389,13 @@ export const verifyStaffCoinsCode = (o, phone, code) =>
 export const placeStaffOrder = (o, body) =>
   req("/api/orders/staff", { method: "POST", body: JSON.stringify(body), outletId: o._id });
 
+/* ------------------------------------------------------------ kitchen display */
+
+export const listKitchenOrders = (o, screen = "all") => req(`/api/kitchen/orders?screen=${encodeURIComponent(screen)}`, { outletId: o._id });
+
+export const setKitchenStage = (o, id, screen, stage) =>
+  req(`/api/kitchen/orders/${id}/stage`, { method: "POST", body: JSON.stringify({ screen, stage }), outletId: o._id });
+
 /* ------------------------------------------------------------------ payments */
 
                                

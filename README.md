@@ -92,7 +92,7 @@ password is lost), `route-inventory.js` (every API route with its limits), `norm
 
 ### Store dashboard (apps/admin)
 
-Take order (counter billing) · Dashboard · Orders (with missed-order alerts, takeaway pre-orders for a later pickup
+Take order (counter billing; refuses a table another waiter took first and offers a free one) · Kitchen display at `/kitchen` (orders as cards by kitchen / bar station, Start and Ready taps, amber and red when late, optional bell for the waiter) · Dashboard · Orders (with missed-order alerts, takeaway pre-orders for a later pickup
 time, and "out for delivery" with the rider who took it) · Table bookings (confirm, seat, no-show; phone bookings) ·
 Menu (nested categories, sizes, add-on groups, combos, "goes well with" suggestions, counted stock with a daily refill,
 dish and category hours like a breakfast menu, photos in four shapes — square, landscape, wide and portrait — so every

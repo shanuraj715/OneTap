@@ -143,6 +143,7 @@ export function Settings() {
           wallet: draft.wallet,
           capacity: draft.capacity,
           reservations: draft.reservations,
+          kitchenDisplay: draft.kitchenDisplay,
           feedback: draft.feedback,
           upsell: draft.upsell,
           menuTimes: draft.menuTimes,
@@ -452,6 +453,32 @@ export function Settings() {
 
       {tab === "kitchen" ? (
         <>
+          <Card title="Kitchen display" subtitle="A screen for the kitchen and the bar at /kitchen — orders as cards, Start and Ready taps." icon={<ChefHat size={15} />}>
+            {hasFeature("kitchenDisplay") ? (
+              <div style={{ display: "flex", flexDirection: "column", gap: 14 }} data-testid="settings-kitchen-display">
+                <Checkbox
+                  checked={draft.kitchenDisplay.notifyWaiter}
+                  onChange={(v) => setArea("kitchenDisplay", { notifyWaiter: v })}
+                  label="Tell the waiter when the kitchen marks something ready"
+                  info="A bell with a short sound shows on the waiter's screen (Take order and the dashboard): “Table 4 — Order #123: Kitchen ready”. Off by default."
+                />
+                <Row>
+                  <Field label="Turn amber after (minutes)" info="A card on the kitchen screen turns amber when an order has waited this long without being ready." style={narrow}>
+                    <TextInput type="number" min={1} max={180} value={draft.kitchenDisplay.warnAfterMinutes} onChange={(e) => setArea("kitchenDisplay", { warnAfterMinutes: Math.max(1, Number(e.target.value) || 10) })} aria-label="Amber after minutes" />
+                  </Field>
+                  <Field label="Turn red after (minutes)" info="…and red after this long. It should be more than the amber time." style={narrow}>
+                    <TextInput type="number" min={2} max={240} value={draft.kitchenDisplay.lateAfterMinutes} onChange={(e) => setArea("kitchenDisplay", { lateAfterMinutes: Math.max(2, Number(e.target.value) || 20) })} aria-label="Red after minutes" />
+                  </Field>
+                </Row>
+                <p style={{ margin: 0, fontSize: 12.5, color: "var(--color-text-muted)" }}>
+                  Open <strong>/kitchen</strong> on the kitchen tablet. Add <code>?screen=bar</code> for a bar-only screen. Which dishes go to the kitchen or the bar is set with <em>Prepared at</em> on categories and dishes.
+                </p>
+              </div>
+            ) : (
+              <LockedFeature label="Kitchen display" />
+            )}
+          </Card>
+
           <Card title="Preparation time" subtitle="What you promise the customer." icon={<ChefHat size={15} />}>
             <Row>
               <Field

@@ -38,6 +38,8 @@ export function useOrderStream(outlet                    , enabled         )    
   const [status, setStatus] = useState              ("connecting");
   const [lastCreatedId, setLastCreatedId] = useState               (null);
   const [lastEventAt, setLastEventAt] = useState             (null);
+  // the kitchen marked a dish or an order ready (only sent when the store switched the waiter's bell on)
+  const [lastReady, setLastReady] = useState(null);
   const qc = useQueryClient();
 
   const socketRef = useRef                  (null);
@@ -84,7 +86,9 @@ export function useOrderStream(outlet                    , enabled         )    
 
         // Refetch rather than patching the cache by hand: the list is small, and
         // a refetch can't drift out of sync with the server's own filtering.
+        if (event.type === "kds.ready") setLastReady({ ...event, seq: Date.now() });
         if (event.type.startsWith("order.")) {
+          void qc.invalidateQueries({ queryKey: ["kitchen"] });
           void qc.invalidateQueries({ queryKey: ["orders"] });
           void qc.invalidateQueries({ queryKey: ["order-print-status"] });
         }
@@ -127,5 +131,5 @@ export function useOrderStream(outlet                    , enabled         )    
     };
   }, [outlet, enabled, qc]);
 
-  return { status, lastCreatedId, lastEventAt };
+  return { status, lastCreatedId, lastEventAt, lastReady };
 }

@@ -64,6 +64,9 @@ const orderSchema = new Schema(
       default: undefined,
     },
     note: String,
+    // Kitchen display: where each prep station is with this order, e.g. { kitchen: { stage: "preparing", at, by }, bar: {...} }.
+    // Missing = nothing started. The order's own `status` follows (first Start → preparing, every station Ready → ready).
+    kds: { type: Schema.Types.Mixed, default: undefined },
     // A deleted order is kept (so nothing is lost for good) but hidden from every read and write: see hideDeleted below.
     deletedAt: { type: Date },
     deletedBy: { type: String },

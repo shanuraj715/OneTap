@@ -17,6 +17,7 @@ import {
   Check,
   ChevronsUpDown,
   Database,
+  ChefHat,
   ConciergeBell,
   Globe,
   Inbox,
@@ -114,6 +115,8 @@ import { ThemeEditor } from "./routes/ThemeEditor";
 import { TypographyEditor } from "./routes/TypographyEditor";
 import { Users } from "./routes/Users";
 import { TakeOrder } from "./routes/take-order/TakeOrder";
+import { Kitchen } from "./routes/kitchen/Kitchen";
+import { KitchenBell } from "./components/KitchenBell";
 import { PlatformDashboard } from "./routes/platform/PlatformDashboard";
 import { PlatformCache } from "./routes/platform/PlatformCache";
 import { PlatformStorage } from "./routes/platform/PlatformStorage";
@@ -180,6 +183,7 @@ const ROUTE_META = {
   "/dashboard-config": { title: "Configure dashboard", icon: LayoutGrid },
   "/users": { title: "Users & roles", icon: UsersIcon },
   "/take-order": { title: "Take order", icon: ConciergeBell },
+  "/kitchen": { title: "Kitchen display", icon: ChefHat },
   "/platform": { title: "Dashboard", icon: LayoutDashboard },
   "/platform/stores": { title: "Stores", icon: Store },
   "/platform/onboarding": { title: "Onboarding", icon: ClipboardList },
@@ -212,6 +216,7 @@ const NAV_GROUPS = [
       { to: "/take-order", label: "Take order", icon: <ConciergeBell size={ICON} />, permission: "order:create" },
       { to: "/", label: "Dashboard", icon: <LayoutDashboard size={ICON} />, end: true },
       { to: "/orders", label: "Orders", icon: <ReceiptText size={ICON} />, permission: "order:read" },
+      { to: "/kitchen", label: "Kitchen display", icon: <ChefHat size={ICON} />, permission: "order:read", feature: "kitchenDisplay" },
       { to: "/reservations", label: "Bookings", icon: <CalendarDays size={ICON} />, permission: "reservation:read", feature: "reservations", badgeKey: "pendingBookings" },
       { to: "/menu", label: "Menu", icon: <UtensilsCrossed size={ICON} />, permission: "menu:read" },
       family("Tables", <QrCode size={ICON} />, TABLES_TABS),
@@ -299,6 +304,8 @@ export function App() {
       {/* the print station lives here, so this device prints tickets whichever page is open */}
       <PrintStationProvider>
         <Shell can={can} />
+        {/* the waiter's bell: shows on any page when the kitchen marks something ready (only if the store turned it on) */}
+        <KitchenBell />
       </PrintStationProvider>
     </OutletSelectionProvider>
   );
@@ -681,6 +688,7 @@ function StoreRoutes() {
               <Route path="/dashboard-config" element={<DashboardConfig />} />
               <Route path="/users" element={<Users />} />
               <Route path="/take-order" element={<TakeOrder />} />
+              <Route path="/kitchen" element={<Kitchen />} />
               <Route path="/whatsapp" element={<Navigate to="/whatsapp/chats" replace />} />
               <Route path="/whatsapp/chats" element={<WaGate need="read"><WhatsAppChats /></WaGate>} />
               <Route path="/whatsapp/chats/:chatId" element={<WaGate need="read"><WhatsAppChats /></WaGate>} />

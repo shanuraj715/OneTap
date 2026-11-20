@@ -66,6 +66,7 @@ export function wire(o          ) {
     customer: o.customer,
     tableId: o.tableId ?? null,
     sessionId: o.sessionId ?? null,
+    kds: o.kds ?? null,
     couponCode: o.couponCode ?? null,
     deliveryAddress: o.deliveryAddress ?? null,
     etaMinutes: o.etaMinutes ?? null,
