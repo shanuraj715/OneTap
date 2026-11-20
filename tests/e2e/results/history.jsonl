@@ -958,3 +958,9 @@
 {"id":"t61-item-form-modal","status":"pass","pass":40,"fail":0,"mode":"headless","at":"2026-11-20T20:03:12.382Z","durationMs":11869}
 {"id":"t45-paste-item-photo","status":"pass","pass":21,"fail":0,"mode":"headless","at":"2026-11-20T20:03:28.993Z","durationMs":8900}
 {"id":"t59-item-image-shapes-ui","status":"pass","pass":45,"fail":0,"mode":"headless","at":"2026-11-20T20:03:34.832Z","durationMs":5083}
+{"id":"t64-table-conflict","status":"fail","pass":2,"fail":10,"mode":"headless","at":"2026-11-20T21:48:27.353Z","durationMs":31582}
+{"id":"t64-table-conflict","status":"fail","pass":19,"fail":1,"mode":"headless","at":"2026-11-20T21:49:05.067Z","durationMs":31623}
+{"id":"t64-table-conflict","status":"pass","pass":22,"fail":0,"mode":"headless","at":"2026-11-20T21:49:39.347Z","durationMs":1924}
+{"id":"t18-tables","status":"pass","pass":54,"fail":0,"mode":"headless","at":"2026-11-20T21:50:31.791Z","durationMs":42511}
+{"id":"t19-dine-in","status":"pass","pass":55,"fail":0,"mode":"headless","at":"2026-11-20T21:51:33.203Z","durationMs":55397}
+{"id":"t53-orders-growth-api","status":"pass","pass":84,"fail":0,"mode":"headless","at":"2026-11-20T21:51:40.724Z","durationMs":6661}

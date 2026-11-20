@@ -5208,8 +5208,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T19:01:52.823Z",
-    "durationMs": 43541,
+    "at": "2026-11-20T21:50:31.791Z",
+    "durationMs": 42511,
     "steps": [
       {
         "n": 1,
@@ -5374,7 +5374,7 @@
           {
             "label": "the panel says 'Table T9' and 'Rooftop · 6 seats · Free'",
             "ok": true,
-            "detail": "Table T9 Rooftop · 6 seats · Free http://localhost:3170/t/6b0098f99c9a5eb28fef13",
+            "detail": "Table T9 Rooftop · 6 seats · Free http://localhost:3170/t/6b00c0816ab265fa847586",
             "kind": "expect"
           },
           {
@@ -5386,7 +5386,7 @@
           {
             "label": "the address printed under it is /t/<id>?k=<code> on the store's own site",
             "ok": true,
-            "detail": "http://localhost:3170/t/6b0098f99c9a5eb28fef1346?k=xgmA0fjioXoHtePSdVfTFZpf",
+            "detail": "http://localhost:3170/t/6b00c0816ab265fa847586db?k=yo8uKexE04_OWLP75KM0tE8P",
             "kind": "expect"
           },
           {
@@ -5410,7 +5410,7 @@
           {
             "label": "every table has its own address and its own code",
             "ok": true,
-            "detail": "http://localhost:3170/t/6b0098f99c9a5eb28fef1346?k=xgmA0fjioXoHtePSdVfTFZpf | http://localhost:3170/t/6b0098fa9c9a5eb28fef1358?k=7WvEvp0vUPkw-gNcE82fJ0x0 | http://localhost:3170/t/6b0098f49c9a5eb28fef0e8b?k=iK-GhraFZ2Bnua872kAmDfZ7",
+            "detail": "http://localhost:3170/t/6b00c0816ab265fa847586db?k=yo8uKexE04_OWLP75KM0tE8P | http://localhost:3170/t/6b00c0826ab265fa847586ed?k=PkmJAB0cbKplhQxUAqNGNOdA | http://localhost:3170/t/6b00c07b6ab265fa8475821d?k=HtoUPMwZe-Czfo_TuqJjfR-p",
             "kind": "expect"
           },
           {
@@ -5593,8 +5593,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T19:02:54.303Z",
-    "durationMs": 56299,
+    "at": "2026-11-20T21:51:33.203Z",
+    "durationMs": 55397,
     "steps": [
       {
         "n": 1,
@@ -5735,7 +5735,7 @@
           {
             "label": "'Seated now — 1' with 'Table D1 … 2 orders · tab ₹130'",
             "ok": true,
-            "detail": "Seated now — 1 Table D1 since 12:32 AM · 2 orders · tab ₹130 Move to… Table D2 Table D3 Table T1 Table T2 Table T3 Table T4 Table ",
+            "detail": "Seated now — 1 Table D1 since 03:20 AM · 2 orders · tab ₹130 Move to… Table D2 Table D3 Table T1 Table T2 Table T3 Table T4 Table ",
             "kind": "expect"
           },
           {
@@ -5747,7 +5747,7 @@
           {
             "label": "the Orders page lists both: '#0001 … Dina Diner 9877712345 DI Table D1 … ₹70 Placed' and '#0002 … ₹60'",
             "ok": true,
-            "detail": "#0001 12:32 AM Dina Diner 9877712345 DI Table D1 1 ₹70 Placed 0m Approve || #0002 12:32 AM Dina Diner 9877712345 DI Table D1 1 ₹60 Placed 0m Approve",
+            "detail": "#0001 03:20 AM Dina Diner 9877712345 DI Table D1 1 ₹70 Placed 0m Approve || #0002 03:20 AM Dina Diner 9877712345 DI Table D1 1 ₹60 Placed 0m Approve",
             "kind": "expect"
           },
           {
@@ -5771,7 +5771,7 @@
           {
             "label": "'Seated now' says 'Table D2 … moved: D1 → D2'",
             "ok": true,
-            "detail": "Seated now — 1 Table D2moved: D1 → D2 since 12:32 AM · 2 orders · tab ₹130 Move to… Table D1 Table D3 Table T1 Table T2 Table T3 Table T4 Table T5 Move Close Garden D1 Ne",
+            "detail": "Seated now — 1 Table D2moved: D1 → D2 since 03:20 AM · 2 orders · tab ₹130 Move to… Table D1 Table D3 Table T1 Table T2 Table T3 Table T4 Table T5 Move Close Garden D1 Ne",
             "kind": "expect"
           },
           {
@@ -5873,7 +5873,7 @@
           {
             "label": "after 'Cancel / void' the order #0003 is Cancelled",
             "ok": true,
-            "detail": "#0003 12:32 AM Rohan Other 9877799999 DI Table D3 1 ₹70 Cancelled —",
+            "detail": "#0003 03:21 AM Rohan Other 9877799999 DI Table D3 1 ₹70 Cancelled —",
             "kind": "expect"
           },
           {
@@ -5909,7 +5909,7 @@
           {
             "label": "the panel shows a new code for the same table",
             "ok": true,
-            "detail": "http://localhost:3170/t/6b00992b3baee33b09689568?k=cc2g68np8iibHNNZnjyRLxiI → http://localhost:3170/t/6b00992b3baee33b09689568?k=Xm7qGtdBoBKC1j1jUg5y1ugS",
+            "detail": "http://localhost:3170/t/6b00c0b2eaf43731315055d8?k=Qlcayufu42FWu6oNjJR4jGWC → http://localhost:3170/t/6b00c0b2eaf43731315055d8?k=5Qjgub1qzMlPAa_pWOdx1iQ6",
             "kind": "expect"
           },
           {
@@ -18377,8 +18377,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T10:45:09.684Z",
-    "durationMs": 7301,
+    "at": "2026-11-20T21:51:40.724Z",
+    "durationMs": 6661,
     "steps": [
       {
         "n": 1,
@@ -18537,7 +18537,7 @@
           {
             "label": "outside its hours a dish shows when it IS available instead of a price",
             "ok": true,
-            "detail": "Available 6:15 PM – 7:15 PM",
+            "detail": "Available 5:21 AM – 6:21 AM",
             "kind": "expect"
           },
           {
@@ -18549,7 +18549,7 @@
           {
             "label": "a customer can't order it now",
             "ok": true,
-            "detail": "409 {\"error\":\"Poha is only available 6:15 PM – 7:15 PM\"}",
+            "detail": "409 {\"error\":\"Poha is only available 5:21 AM – 6:21 AM\"}",
             "kind": "expect"
           },
           {
@@ -18591,7 +18591,7 @@
           {
             "label": "now the outlet offers pickup times, grouped by day",
             "ok": true,
-            "detail": "Today:28 Tomorrow:95",
+            "detail": "Today:80 Tomorrow:95",
             "kind": "expect"
           },
           {
@@ -18609,7 +18609,7 @@
           {
             "label": "a customer places a takeaway for a later time",
             "ok": true,
-            "detail": "201 2026-11-20T12:15:00.000Z",
+            "detail": "201 2026-11-20T23:15:00.000Z",
             "kind": "expect"
           },
           {
@@ -18639,7 +18639,7 @@
           {
             "label": "breakfast can be pre-ordered for a time when breakfast is served (hours are checked at the pickup time)",
             "ok": true,
-            "detail": "201 {\"order\":{\"id\":\"6b0024b2fd03524265602304\",\"orderNumber\":\"0007\",\"channel\":\"takeaway\",\"placedBy\":\"cust",
+            "detail": "201 {\"order\":{\"id\":\"6b00c0ea3c91af256349fc3d\",\"orderNumber\":\"0007\",\"channel\":\"takeaway\",\"placedBy\":\"cust",
             "kind": "expect"
           },
           {
@@ -18813,7 +18813,7 @@
           {
             "label": "the storefront can show what it saves (₹130 separately, ₹110 as a combo → saves ₹20)",
             "ok": true,
-            "detail": "{\"parts\":[{\"itemId\":\"6b0024b2fd035242656021a1\",\"name\":\"Veg Momos\",\"variantLabel\":null,\"quantity\":1,\"missing\":false},{\"itemId\":\"6b0024b2fd035242656021a6\",\"name\":\"Masala Chai\",\"variantLabel\":null,\"quantity\":1,\"missing\":false}],\"separately\":13000,\"saves\":2000}",
+            "detail": "{\"parts\":[{\"itemId\":\"6b00c0e93c91af256349fad2\",\"name\":\"Veg Momos\",\"variantLabel\":null,\"quantity\":1,\"missing\":false},{\"itemId\":\"6b00c0e93c91af256349fad7\",\"name\":\"Masala Chai\",\"variantLabel\":null,\"quantity\":1,\"missing\":false}],\"separately\":13000,\"saves\":2000}",
             "kind": "expect"
           },
           {
@@ -18837,7 +18837,7 @@
           {
             "label": "an ordered combo carries what it is made of",
             "ok": true,
-            "detail": "[{\"itemId\":\"6b0024b2fd035242656021a1\",\"name\":\"Veg Momos\",\"variantLabel\":null,\"quantity\":1},{\"itemId\":\"6b0024b2fd035242656021a6\",\"name\":\"Masala Chai\",\"variantLabel\":null,\"quantity\":1}]",
+            "detail": "[{\"itemId\":\"6b00c0e93c91af256349fad2\",\"name\":\"Veg Momos\",\"variantLabel\":null,\"quantity\":1},{\"itemId\":\"6b00c0e93c91af256349fad7\",\"name\":\"Masala Chai\",\"variantLabel\":null,\"quantity\":1}]",
             "kind": "expect"
           },
           {
@@ -18861,7 +18861,7 @@
           {
             "label": "a pre-order's kitchen ticket starts with PRE-ORDER and the full pickup time",
             "ok": true,
-            "detail": "PRE-ORDER |            Pickup 5:45 PM, Fri 20 Nov | ------------------------------------------------ |                  KITCHEN ORDER",
+            "detail": "PRE-ORDER |            Pickup 4:45 AM, Sat 21 Nov | ------------------------------------------------ |                  KITCHEN ORDER",
             "kind": "expect"
           }
         ]
@@ -18873,7 +18873,7 @@
           {
             "label": "a 'buy 1 get 1 free' coupon on the Food category is created",
             "ok": true,
-            "detail": "201 {\"coupon\":{\"id\":\"6b0024b4fd03524265602461\",\"code\":\"B1G1MOMO\",\"description\":\"\",\"discountType\":\"bogo\",\"value\":1,\"maxDiscou",
+            "detail": "201 {\"coupon\":{\"id\":\"6b00c0ec3c91af256349fd9b\",\"code\":\"B1G1MOMO\",\"description\":\"\",\"discountType\":\"bogo\",\"value\":1,\"maxDiscou",
             "kind": "expect"
           },
           {
@@ -21338,6 +21338,171 @@
         "checks": [
           {
             "label": "C01 (no picture) says there is no picture shape to choose",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t64-table-conflict": {
+    "id": "t64-table-conflict",
+    "title": "Two staff taking an order for the same table — the second is told the table is no longer free and can move the order to a free table",
+    "status": "pass",
+    "pass": 22,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-20T21:49:39.347Z",
+    "durationMs": 1924,
+    "steps": [
+      {
+        "n": 1,
+        "title": "API: two orders for one free table at the same moment",
+        "checks": [
+          {
+            "label": "the bench has tables T1, T2, T3",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "exactly one of the two simultaneous orders is accepted, the other refused",
+            "ok": true,
+            "detail": "409 / 201",
+            "kind": "expect"
+          },
+          {
+            "label": "the refused one says the table is taken",
+            "ok": true,
+            "detail": "Table T1 was just taken by someone else.",
+            "kind": "expect"
+          },
+          {
+            "label": "only ONE party is seated at the table (no double session)",
+            "ok": true,
+            "detail": "1",
+            "kind": "expect"
+          },
+          {
+            "label": "and only one order exists for that table",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "API: the table must still be as it was when the order was started",
+        "checks": [
+          {
+            "label": "an order started on a FREE table is refused once the table is taken (occupied: true)",
+            "ok": true,
+            "detail": "409 {\"code\":\"table_taken\",\"tableId\":\"6b00c05f2b87ab677694f96b\",\"tableNumber\":\"T1\",\"occupied\":true}",
+            "kind": "expect"
+          },
+          {
+            "label": "…nothing was added to the table",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "adding to the party that is really there still works (the screen saw that party)",
+            "ok": true,
+            "detail": "201",
+            "kind": "expect"
+          },
+          {
+            "label": "an order for a different party than the screen saw is refused",
+            "ok": true,
+            "detail": "409",
+            "kind": "expect"
+          },
+          {
+            "label": "an order started on a seated table that has since emptied is refused (occupied: false)",
+            "ok": true,
+            "detail": "409 {\"code\":\"table_taken\",\"tableId\":\"6b00c05f2b87ab677694f971\",\"tableNumber\":\"T2\",\"occupied\":false}",
+            "kind": "expect"
+          },
+          {
+            "label": "a free table that is still free takes the order",
+            "ok": true,
+            "detail": "201",
+            "kind": "expect"
+          },
+          {
+            "label": "an older screen that sends no 'expected party' still works as before",
+            "ok": true,
+            "detail": "201",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Browser: the second waiter's screen",
+        "checks": [
+          {
+            "label": "while the table is free there is no warning",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(another waiter sends an order for T4 first)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "pressing Send (or the live list) shows 'Table T4 is no longer free'",
+            "ok": true,
+            "detail": "Table T4 is no longer free Someone else just started an order for this table. This order was not sent. Move it to a free",
+            "kind": "expect"
+          },
+          {
+            "label": "it offers the free tables to move to (T5 yes, the taken T4 not)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the second order was NOT sent to T4 — still one order there",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the Send button stays off while the table is taken",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "choosing T5 moves the order there",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the customer's number typed so far went along",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the order lands on T5 and T4 keeps only the first waiter's order",
             "ok": true,
             "detail": "",
             "kind": "expect"
