@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { formatINR, itemFromPrice, menuForNow, menuLayoutSchema } from "@onetap/config-schema";
+import { formatINR, itemFromPrice, itemGallery, menuForNow, menuLayoutSchema } from "@onetap/config-schema";
 import { FoodMark, MenuSections, fx, getCarouselVariant, getVariant, Photo } from "@onetap/ui";
 import { X } from "lucide-react";
 import { api } from "@/lib/clientApi";
@@ -141,7 +141,8 @@ export function Ordering({
  */
 function ItemImageSection({ item, carouselVariantId }) {
   try {
-    const rawImages = item?.images ?? [];
+    // the pop-up's picture is wide: the dish's wide (16:9) picture if it has one, else its square gallery as always
+    const rawImages = itemGallery(item, "16:9");
     const imageUrls = rawImages
       .map((img) => (typeof img === "string" ? img : img?.url))
       .filter((url) => typeof url === "string" && url.trim().length > 0);

@@ -95,8 +95,8 @@ password is lost), `route-inventory.js` (every API route with its limits), `norm
 Take order (counter billing) · Dashboard · Orders (with missed-order alerts, takeaway pre-orders for a later pickup
 time, and "out for delivery" with the rider who took it) · Table bookings (confirm, seat, no-show; phone bookings) ·
 Menu (nested categories, sizes, add-on groups, combos, "goes well with" suggestions, counted stock with a daily refill,
-dish and category hours like a breakfast menu, photos — including paste-a-picture and AI pictures, and where each dish
-is prepared) · Tables and printable QR cards · Printing (receipts and kitchen tickets: each dish — and each part of a
+dish and category hours like a breakfast menu, photos in four shapes — square, landscape, wide and portrait — so every
+card style shows a fitting picture (including paste-a-picture and AI pictures), and where each dish is prepared) · Tables and printable QR cards · Printing (receipts and kitchen tickets: each dish — and each part of a
 combo — goes to its kitchen or bar printer, a pre-order's ticket says when it's wanted, and the kitchen gets an
 "order changed" or "order cancelled" ticket when an order is edited or cancelled; a computer switched on as a print
 station prints for browser and network printers from any dashboard page) · Coupons (including "buy X, get Y free") ·

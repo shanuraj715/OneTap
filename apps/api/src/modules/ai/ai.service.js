@@ -8,7 +8,8 @@ import {
   buildItemImagePrompt,
   categoryPathLabel,
   DEFAULT_AI_IMAGE_MODEL,
-  IMAGE_RULES,
+  imageRatioMeta,
+  imageRoom,
 } from "@onetap/config-schema";
 import { MenuCategoryModel, MenuItemModel, PlatformAiModel, tenantFilter } from "@onetap/db";
 import { logger } from "../../logger.js";
@@ -203,6 +204,9 @@ async function makeOne({ keys, model, prompt, aspectRatio, rested }) {
  * where there are several, so one key's limit isn't what holds a batch up; each then goes through the normal upload
  * pipeline (resized, compressed, kept without a domain). Pictures that worked are kept even if another one fails.
  */
+/** The place on a dish a picture of this AI shape is kept in (3:2 "Photo" has none of its own: it goes with landscape 4:3). */
+export const aiSlotFor = (aspectRatio) => (aspectRatio === "3:2" ? "4:3" : aspectRatio);
+
 export async function generateItemImages(ctx, itemId, { aspectRatio, count, prompt }, userId) {
   if (!AI_ASPECT_RATIO_IDS.includes(aspectRatio)) throw new HttpError(400, "Choose one of the offered shapes.");
   if (!Number.isInteger(count) || count < 1 || count > AI_MAX_IMAGES_AT_ONCE) {
@@ -211,9 +215,13 @@ export async function generateItemImages(ctx, itemId, { aspectRatio, count, prom
 
   const item = await MenuItemModel.findOne(tenantFilter(ctx, { _id: itemId })).lean();
   if (!item) throw new HttpError(404, "Item not found");
-  const room = IMAGE_RULES.maxPerItem - (item.images?.length ?? 0);
-  if (room <= 0) throw new HttpError(409, `This dish already has ${IMAGE_RULES.maxPerItem} pictures. Remove one first.`);
-  if (count > room) throw new HttpError(400, `Only ${room} more ${room === 1 ? "picture fits" : "pictures fit"} (a dish can have ${IMAGE_RULES.maxPerItem}).`);
+  // The picture is saved in the shape it was made in (the 3:2 "Photo" shape goes in the landscape 4:3 place), and a
+  // dish holds only so many of each shape — 6 square, one each of landscape / wide / portrait.
+  const slot = aiSlotFor(aspectRatio);
+  const meta = imageRatioMeta(slot);
+  const room = imageRoom(item.images, slot);
+  if (room <= 0) throw new HttpError(409, meta.max === 1 ? `This dish already has its ${meta.label.toLowerCase()} (${slot}) picture. Remove it first, or choose another shape.` : `This dish already has ${meta.max} ${meta.label.toLowerCase()} pictures. Remove one first.`);
+  if (count > room) throw new HttpError(400, `Only ${room} more ${meta.label.toLowerCase()} ${room === 1 ? "picture fits" : "pictures fit"} (a dish can have ${meta.max}).`);
 
   const doc = await load();
   const keys = (doc?.keys ?? []).map((k) => ({ ...k })); // this request's own copy; rests are noted on it as they happen
@@ -233,7 +241,7 @@ export async function generateItemImages(ctx, itemId, { aspectRatio, count, prom
       const angle = angleFor(i, count);
       const made = await makeOne({ keys, model, prompt: angle ? `${text} ${angle}` : text, aspectRatio, rested });
       const stored = await putImage(ctx, { body: made.buffer, kind: "menu-items" });
-      return { url: stored.url, key: stored.key, width: stored.width, height: stored.height, via: made.keyLabel };
+      return { url: stored.url, key: stored.key, width: stored.width, height: stored.height, ratio: slot, via: made.keyLabel };
     }),
   );
 

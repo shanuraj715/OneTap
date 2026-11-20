@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { availabilitySchema, categoryHeight, cleanCategoryName, comboSchema, duplicateCategoryName, categoryLevel, categorySubtreeIds, istDayKey, itemStockSchema, MAX_CATEGORIES_AT_ONCE, MAX_CATEGORY_DEPTH, planCategoryMove } from "@onetap/config-schema";
+import { availabilitySchema, imageRatioOf, limitImages, categoryHeight, cleanCategoryName, comboSchema, duplicateCategoryName, categoryLevel, categorySubtreeIds, istDayKey, itemStockSchema, MAX_CATEGORIES_AT_ONCE, MAX_CATEGORY_DEPTH, planCategoryMove } from "@onetap/config-schema";
 import { refillDailyStock } from "./stock.service.js";
 import {
   MenuCategoryModel,
@@ -46,6 +46,8 @@ const toItem = (d                     )           => ({
     key: im.key ?? "",
     ...(im.width ? { width: im.width } : {}),
     ...(im.height ? { height: im.height } : {}),
+    // a picture saved before shapes existed has none: it is a square one
+    ratio: imageRatioOf(im),
   })),
   basePrice: d.basePrice ?? 0,
   variants: (d.variants ?? []).map((v     ) => ({ id: v.id, label: v.label, price: v.price })),
@@ -356,16 +358,22 @@ function normalizeVariants(variants                       ) {
   return (variants ?? []).map((v) => ({ id: v.id ?? randomUUID(), label: v.label, price: v.price }));
 }
 
+/**
+ * A dish's pictures as they are stored: each with its shape (a picture without one is square — what every dish had
+ * before shapes), and each shape within what it can hold (6 square, 1 each of landscape / wide / portrait).
+ */
 function normalizeImages(images) {
-  return (images ?? [])
-    .filter((im) => im && typeof im.url === "string" && im.url)
-    .slice(0, 6)
-    .map((im) => ({
-      url: im.url,
-      key: typeof im.key === "string" ? im.key : "",
-      ...(Number(im.width) > 0 ? { width: Math.round(Number(im.width)) } : {}),
-      ...(Number(im.height) > 0 ? { height: Math.round(Number(im.height)) } : {}),
-    }));
+  return limitImages(
+    (images ?? [])
+      .filter((im) => im && typeof im.url === "string" && im.url)
+      .map((im) => ({
+        url: im.url,
+        key: typeof im.key === "string" ? im.key : "",
+        ...(Number(im.width) > 0 ? { width: Math.round(Number(im.width)) } : {}),
+        ...(Number(im.height) > 0 ? { height: Math.round(Number(im.height)) } : {}),
+        ratio: imageRatioOf(im),
+      })),
+  );
 }
 
 export async function createItem(ctx               , input                                                  ) {

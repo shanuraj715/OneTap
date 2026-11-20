@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from "react";
-import { activeCategoryIds, flattenCategories, formatINR, itemFromPrice } from "@onetap/config-schema";
+import { activeCategoryIds, flattenCategories, formatINR, itemFromPrice, itemImageUrl } from "@onetap/config-schema";
 import { Minus, Plus, Search, SlidersHorizontal, X } from "lucide-react";
 import { lineKey } from "./useTakeOrder";
 import { chip, chipActive, FOOD_COLOR, input, muted } from "./styles";
@@ -119,7 +119,7 @@ function ItemCard({ item, count, plainQty, onCustomise, onAddPlain, onSetPlainQt
   const custom = isCustomisable(item);
   // switched off, or counted stock at 0 (a dish outside its hours can still be sold at the counter)
   const soldOut = !item.isAvailable || (item.stock?.tracked && item.stock.left <= 0);
-  const img = item.images?.[0]?.url;
+  const img = itemImageUrl(item, "1:1");
   const price = itemFromPrice(item);
 
   return (

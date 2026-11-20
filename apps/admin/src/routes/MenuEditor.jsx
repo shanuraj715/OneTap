@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { flattenCategories, formatINR, IMAGE_RULES, modifierRuleText, PREP_STATION_LABELS } from "@onetap/config-schema";
+import { DEFAULT_IMAGE_RATIO, flattenCategories, formatINR, IMAGE_RULES, imageRatioMeta, imageRatioOf, imageRoom, ITEM_IMAGE_RATIOS, limitImages, modifierRuleText, PREP_STATION_LABELS } from "@onetap/config-schema";
 import { ClipboardPaste, Download, ImagePlus, Loader, Star, X } from "lucide-react";
 import * as api from "../lib/api";
 import { ImportMenuModal } from "../components/ImportMenuModal";
@@ -193,7 +193,7 @@ function ItemForm({
       name: name.trim(),
       description: description.trim(),
       foodType,
-      images: images.map((im) => ({ url: im.url, key: im.key ?? "", width: im.width, height: im.height })),
+      images: images.map((im) => ({ url: im.url, key: im.key ?? "", width: im.width, height: im.height, ratio: imageRatioOf(im) })),
       tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
       basePrice: variants.length ? 0 : toPaise(basePrice),
       variants: variants
@@ -267,9 +267,10 @@ function ItemForm({
       <div style={{ borderTop: "1px solid var(--color-border)", margin: "6px 0 14px", paddingTop: 14 }}>
         <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 3 }}>Photos</div>
         <div style={{ fontSize: 12, color: "var(--color-text-muted)", marginBottom: 10, lineHeight: 1.5 }}>
-          Up to {IMAGE_RULES.maxPerItem}. The first is the cover shown on menu cards. Any format (JPEG, PNG, WebP,
-          AVIF, HEIC…) — compressed automatically. TablePe sets where photos are kept and how small they are made.
-          Copied a picture? Press Ctrl+V (⌘V on a Mac) here, or use Paste.
+          Menu cards come in different shapes, so a dish can have a picture for each: <strong>square</strong>, <strong>landscape 4:3</strong>,{" "}
+          <strong>wide 16:9</strong> and <strong>portrait 3:4</strong>. A card shows the picture of its own shape; if the dish has none for it, the
+          square one is used. Any format (JPEG, PNG, WebP, AVIF, HEIC…) — compressed automatically. TablePe sets where photos are kept and how
+          small they are made. Copied a picture? Press Ctrl+V (⌘V on a Mac) here, or use Paste.
         </div>
         <ItemPhotos outlet={outlet} images={images} originalKeys={item?.images ?? []} onChange={setImages} />
       </div>
@@ -374,157 +375,235 @@ function ItemForm({
 
 function ItemPhotos({ outlet, images, originalKeys, onChange }) {
   const { upload, busy, error, clearError } = useImageUpload(outlet);
-  const inputRef = useRef(null);
-  const [dragOver, setDragOver] = useState(false);
-
-  const originalKeySet = new Set((originalKeys ?? []).map((im) => im.key).filter(Boolean));
-  const room = IMAGE_RULES.maxPerItem - images.length;
-
+  const inputs = useRef({});
+  const [dragOver, setDragOver] = useState(null);
+  // where Ctrl/⌘+V (and a slot's own Paste button) puts a picture — the last section the person clicked
+  const [target, setTarget] = useState(DEFAULT_IMAGE_RATIO);
   // what to tell the person after a paste that couldn't be used (the upload hook reports its own errors)
   const [pasteNote, setPasteNote] = useState(null);
 
-  const addFiles = async (fileList) => {
+  const originalKeySet = new Set((originalKeys ?? []).map((im) => im.key).filter(Boolean));
+  const of = (ratio) => images.filter((im) => imageRatioOf(im) === ratio);
+  const others = (ratio) => images.filter((im) => imageRatioOf(im) !== ratio);
+
+  // A photo added in this editing session (not yet saved) is safe to delete now; an original one is left for the
+  // server to clean up on save.
+  const discard = (img) => {
+    if (img?.key && !originalKeySet.has(img.key)) void api.deleteStorageObject(outlet, img.key);
+  };
+
+  /** Add pictures to one shape. A shape that holds one picture swaps it for the new one; squares add up to six. */
+  const addFiles = async (fileList, ratio) => {
     clearError();
-    const files = Array.from(fileList ?? []).slice(0, Math.max(0, room));
+    setPasteNote(null);
+    const meta = imageRatioMeta(ratio);
+    const replaces = meta.max === 1;
+    const files = Array.from(fileList ?? []).slice(0, replaces ? 1 : Math.max(0, imageRoom(images, ratio)));
     if (!files.length) return;
     try {
-      const stored = await upload(files);
-      onChange([...images, ...stored].slice(0, IMAGE_RULES.maxPerItem));
+      const stored = (await upload(files)).map((s) => ({ ...s, ratio }));
+      if (replaces) {
+        for (const old of of(ratio)) discard(old);
+        onChange(limitImages([...others(ratio), ...stored]));
+      } else onChange(limitImages([...of(ratio), ...stored, ...others(ratio)]));
     } catch {
       /* error surfaced by the hook */
     }
   };
 
-  // A picture pasted from the clipboard (Ctrl/⌘+V, or the Paste button) is added like one picked from the file box.
-  const addPasted = (files) => {
+  // A picture pasted from the clipboard (Ctrl/⌘+V, or a Paste button) is added like one picked from the file box.
+  const addPasted = (files, ratio) => {
     setPasteNote(null);
     if (busy) return;
-    if (room <= 0) {
-      setPasteNote(`This item already has ${IMAGE_RULES.maxPerItem} photos — remove one to paste another.`);
+    const meta = imageRatioMeta(ratio);
+    const room = imageRoom(images, ratio);
+    if (meta.max > 1 && room <= 0) {
+      setPasteNote(`This item already has ${meta.max} ${meta.label.toLowerCase()} photos — remove one to paste another.`);
       return;
     }
-    if (files.length > room) setPasteNote(`Only the first ${room} of ${files.length} pasted pictures fit (up to ${IMAGE_RULES.maxPerItem} per item).`);
-    void addFiles(files);
+    if (meta.max > 1 && files.length > room) setPasteNote(`Only the first ${room} of ${files.length} pasted pictures fit (up to ${meta.max} ${meta.label.toLowerCase()} per item).`);
+    if (meta.max === 1 && files.length > 1) setPasteNote("A card shows one picture of this shape, so only the first pasted picture was used.");
+    void addFiles(files, ratio);
   };
-  usePasteImages(addPasted);
+  usePasteImages((files) => addPasted(files, target));
 
-  const pasteFromButton = async () => {
+  const pasteFromButton = async (ratio) => {
     setPasteNote(null);
+    setTarget(ratio);
     const r = await readClipboardImages();
-    if (r.files) addPasted(r.files);
+    if (r.files) addPasted(r.files, ratio);
     else if (r.reason === "empty") setPasteNote("There's no picture on your clipboard. Copy a picture first, then press Paste.");
     else if (r.reason === "denied") setPasteNote("Your browser didn't allow reading the clipboard. Click on this page and press Ctrl+V (⌘V on a Mac) instead.");
     else setPasteNote("This browser can't paste from a button. Press Ctrl+V (⌘V on a Mac) instead.");
   };
 
-  const removeAt = (idx) => {
-    const img = images[idx];
-    // A photo added in this editing session (not yet saved) is safe to delete
-    // now; an original one is left for the server to clean up on save.
-    if (img?.key && !originalKeySet.has(img.key)) {
-      void api.deleteStorageObject(outlet, img.key);
-    }
-    onChange(images.filter((_, i) => i !== idx));
+  const remove = (img) => {
+    discard(img);
+    onChange(images.filter((x) => x !== img));
   };
 
-  const move = (idx, dir) => {
+  // squares are a row: the first is the cover, and they can be put in order
+  const moveSquare = (idx, dir) => {
+    const squares = of(DEFAULT_IMAGE_RATIO);
     const to = idx + dir;
-    if (to < 0 || to >= images.length) return;
-    const next = [...images];
+    if (to < 0 || to >= squares.length) return;
+    const next = [...squares];
     [next[idx], next[to]] = [next[to], next[idx]];
-    onChange(next);
+    onChange([...next, ...others(DEFAULT_IMAGE_RATIO)]);
   };
+
+  const dropProps = (ratio) => ({
+    onDragOver: (e) => {
+      e.preventDefault();
+      setDragOver(ratio);
+    },
+    onDragLeave: () => setDragOver((d) => (d === ratio ? null : d)),
+    onDrop: (e) => {
+      e.preventDefault();
+      setDragOver(null);
+      setTarget(ratio);
+      void addFiles(e.dataTransfer.files, ratio);
+    },
+  });
 
   return (
     <>
-      <div
-        onDragOver={(e) => {
-          e.preventDefault();
-          setDragOver(true);
-        }}
-        onDragLeave={() => setDragOver(false)}
-        onDrop={(e) => {
-          e.preventDefault();
-          setDragOver(false);
-          void addFiles(e.dataTransfer.files);
-        }}
-        style={{ display: "flex", flexWrap: "wrap", gap: 10 }}
-      >
-        {images.map((im, idx) => (
-          <div key={im.key || im.url} style={thumbBox} data-testid="item-photo">
-            <img src={im.url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-            {idx === 0 ? (
-              <span style={coverBadge}>
-                <Star size={9} fill="currentColor" /> Cover
-              </span>
-            ) : null}
-            <div style={thumbActions}>
-              {idx > 0 ? (
-                <button type="button" title="Make cover / move left" style={thumbBtn} onClick={() => move(idx, -1)}>
-                  ←
-                </button>
-              ) : null}
-              {idx < images.length - 1 ? (
-                <button type="button" title="Move right" style={thumbBtn} onClick={() => move(idx, 1)}>
-                  →
-                </button>
-              ) : null}
-              <button type="button" title="Remove" style={{ ...thumbBtn, marginLeft: "auto" }} onClick={() => removeAt(idx)}>
-                <X size={12} />
-              </button>
-            </div>
-          </div>
-        ))}
+      <div style={{ display: "flex", flexDirection: "column", gap: 14 }} data-testid="item-photo-slots">
+        {ITEM_IMAGE_RATIOS.map((meta) => {
+          const ratio = meta.id;
+          const list = of(ratio);
+          const isSquare = ratio === DEFAULT_IMAGE_RATIO;
+          const room = imageRoom(images, ratio);
+          const idSuffix = isSquare ? "" : `-${ratio}`;
+          const tileH = 104;
+          const tileW = Math.round(tileH * meta.aspect);
+          return (
+            <section
+              key={ratio}
+              data-testid={`photo-slot-${ratio}`}
+              data-active={target === ratio}
+              onClick={() => setTarget(ratio)}
+              style={{ ...slotBox, ...(target === ratio ? slotBoxOn : null) }}
+            >
+              <div style={{ display: "flex", alignItems: "baseline", gap: 8, flexWrap: "wrap", marginBottom: 8 }}>
+                <strong style={{ fontSize: 13 }}>
+                  {meta.label} <span style={{ color: "var(--color-text-muted)", fontWeight: 600 }}>{ratio}</span>
+                </strong>
+                {isSquare ? <span style={defaultBadge}>Default</span> : null}
+                <span style={{ fontSize: 12, color: "var(--color-text-muted)" }}>
+                  {meta.hint}
+                  {isSquare ? ` Up to ${meta.max}; the first is the cover.` : " One picture."}
+                </span>
+              </div>
 
-        {room > 0 ? (
-          <button
-            type="button"
-            onClick={() => inputRef.current?.click()}
-            disabled={busy}
-            data-testid="add-photo"
-            style={{
-              ...thumbBox,
-              ...addTile,
-              borderColor: dragOver ? "var(--color-primary)" : "var(--color-border)",
-              background: dragOver ? "color-mix(in srgb, var(--color-primary) 8%, var(--color-bg))" : "var(--color-bg)",
-            }}
-          >
-            {busy ? <Loader size={18} /> : <ImagePlus size={18} />}
-            <span style={{ fontSize: 11 }}>{busy ? "Uploading…" : "Add photo"}</span>
-          </button>
-        ) : null}
+              <div {...dropProps(ratio)} style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+                {list.map((im, idx) => {
+                  const off = im.width && im.height ? Math.abs(im.width / im.height / meta.aspect - 1) > 0.08 : false;
+                  return (
+                    <div key={im.key || im.url} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                      <div style={{ ...thumbBox, width: tileW, height: tileH }} data-testid={`item-photo${idSuffix}`}>
+                        <img src={im.url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                        {isSquare && idx === 0 ? (
+                          <span style={coverBadge}>
+                            <Star size={9} fill="currentColor" /> Cover
+                          </span>
+                        ) : null}
+                        <div style={thumbActions}>
+                          {isSquare && idx > 0 ? (
+                            <button type="button" title="Make cover / move left" style={thumbBtn} onClick={() => moveSquare(idx, -1)}>
+                              ←
+                            </button>
+                          ) : null}
+                          {isSquare && idx < list.length - 1 ? (
+                            <button type="button" title="Move right" style={thumbBtn} onClick={() => moveSquare(idx, 1)}>
+                              →
+                            </button>
+                          ) : null}
+                          {!isSquare ? (
+                            <button type="button" title="Replace with another photo" style={thumbBtn} disabled={busy} onClick={() => inputs.current[ratio]?.click()} data-testid={`replace-photo${idSuffix}`}>
+                              Replace
+                            </button>
+                          ) : null}
+                          <button type="button" title="Remove" style={{ ...thumbBtn, marginLeft: "auto" }} onClick={() => remove(im)} data-testid={`remove-photo${idSuffix}`}>
+                            <X size={12} />
+                          </button>
+                        </div>
+                      </div>
+                      {off ? (
+                        <span style={{ fontSize: 11, color: "var(--tone-warning)", maxWidth: tileW }} data-testid={`photo-trim${idSuffix}`}>
+                          This one is not {ratio} — its edges are trimmed to fit.
+                        </span>
+                      ) : null}
+                    </div>
+                  );
+                })}
 
-        {room > 0 ? (
-          <button
-            type="button"
-            onClick={() => void pasteFromButton()}
-            disabled={busy}
-            title="Add the picture you copied (or press Ctrl+V / ⌘V)"
-            data-testid="paste-photo"
-            style={{ ...thumbBox, ...addTile, background: "var(--color-bg)", borderColor: "var(--color-border)" }}
-          >
-            <ClipboardPaste size={18} />
-            <span style={{ fontSize: 11 }}>Paste photo</span>
-          </button>
-        ) : null}
+                {room > 0 ? (
+                  <button
+                    type="button"
+                    onClick={() => inputs.current[ratio]?.click()}
+                    disabled={busy}
+                    data-testid={`add-photo${idSuffix}`}
+                    style={{
+                      ...thumbBox,
+                      ...addTile,
+                      width: tileW,
+                      height: tileH,
+                      borderColor: dragOver === ratio ? "var(--color-primary)" : "var(--color-border)",
+                      background: dragOver === ratio ? "color-mix(in srgb, var(--color-primary) 8%, var(--color-bg))" : "var(--color-bg)",
+                    }}
+                  >
+                    {busy && target === ratio ? <Loader size={18} /> : <ImagePlus size={18} />}
+                    <span style={{ fontSize: 11 }}>{busy && target === ratio ? "Uploading…" : isSquare ? "Add photo" : `Add ${meta.label.toLowerCase()} photo`}</span>
+                  </button>
+                ) : null}
+
+                {room > 0 ? (
+                  <button
+                    type="button"
+                    onClick={() => void pasteFromButton(ratio)}
+                    disabled={busy}
+                    title="Add the picture you copied (or press Ctrl+V / ⌘V)"
+                    data-testid={`paste-photo${idSuffix}`}
+                    style={{ ...thumbBox, ...addTile, width: isSquare ? tileW : 96, height: tileH, background: "var(--color-bg)", borderColor: "var(--color-border)" }}
+                  >
+                    <ClipboardPaste size={18} />
+                    <span style={{ fontSize: 11 }}>Paste photo</span>
+                  </button>
+                ) : null}
+              </div>
+
+              <input
+                ref={(el) => {
+                  inputs.current[ratio] = el;
+                }}
+                type="file"
+                accept={IMAGE_RULES.acceptAttr}
+                multiple={isSquare}
+                hidden
+                data-testid={`photo-file${idSuffix}`}
+                onChange={(e) => {
+                  setTarget(ratio);
+                  void addFiles(e.target.files, ratio);
+                  e.target.value = "";
+                }}
+              />
+            </section>
+          );
+        })}
       </div>
-
-      <input
-        ref={inputRef}
-        type="file"
-        accept={IMAGE_RULES.acceptAttr}
-        multiple
-        hidden
-        onChange={(e) => {
-          void addFiles(e.target.files);
-          e.target.value = "";
-        }}
-      />
+      <p style={{ margin: "8px 0 0", fontSize: 12, color: "var(--color-text-muted)" }} data-testid="paste-target">
+        Ctrl+V (⌘V) pastes into the <strong>{imageRatioMeta(target).label.toLowerCase()} {target}</strong> section — click another section to change it.
+      </p>
       {error ? <Toast kind="error">{error}</Toast> : null}
       {pasteNote ? <Toast kind="info">{pasteNote}</Toast> : null}
     </>
   );
 }
+
+const slotBox = { padding: "10px 12px 12px", border: "1px solid var(--color-border)", borderRadius: 12, background: "var(--color-surface)" };
+const slotBoxOn = { borderColor: "var(--color-primary)", boxShadow: "0 0 0 1px var(--color-primary)" };
+const defaultBadge = { fontSize: 10, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase", padding: "2px 7px", borderRadius: 999, background: "color-mix(in srgb, var(--color-primary) 14%, var(--color-bg))", color: "var(--color-primary)" };
 
 /* ---------------------------------------------------------- modifier groups */
 

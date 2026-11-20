@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { categoryPathLabel, categorySubtreeIds, flattenCategories, itemPriceLabel } from "@onetap/config-schema";
+import { categoryPathLabel, categorySubtreeIds, flattenCategories, itemImageUrl, itemPriceLabel } from "@onetap/config-schema";
 import { Download, Sparkles, Trash2 } from "lucide-react";
 import { useAuth } from "../../lib/useAuth";
 import { useDeleteItem, useDeleteItems, useUpdateItem } from "../../lib/useMenu";
@@ -90,7 +90,7 @@ export function ItemsPanel({ outlet, menu, categoryId, onNew, onEdit, onImport, 
           {items.map((it) => (
             <div key={it.id} style={itemRow} data-item={it.name} data-testid="item-row">
               <input type="checkbox" style={checkStyle} aria-label={`Select item ${it.name}`} checked={selection.has(it.id)} onChange={() => selection.toggle(it.id)} />
-              {it.images?.[0]?.url ? <img src={it.images[0].url} alt="" style={{ width: 34, height: 34, borderRadius: 6, objectFit: "cover", flexShrink: 0 }} /> : null}
+              {itemImageUrl(it, "1:1") ? <img src={itemImageUrl(it, "1:1")} alt="" style={{ width: 34, height: 34, borderRadius: 6, objectFit: "cover", flexShrink: 0 }} /> : null}
               <Mark type={it.foodType} />
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontWeight: 600, fontSize: 14 }}>{it.name}</div>

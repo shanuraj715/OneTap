@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { flattenCategories, formatINR } from "@onetap/config-schema";
+import { flattenCategories, formatINR, itemImageUrl } from "@onetap/config-schema";
 import { useQuery } from "@tanstack/react-query";
 import {
   Check,
@@ -435,9 +435,9 @@ export function ImportMenuModal({
                                     style={{ accentColor: "var(--color-primary)", width: 15, height: 15, flexShrink: 0 }}
                                   />
 
-                                  {it.images?.[0]?.url ? (
+                                  {itemImageUrl(it, "1:1") ? (
                                     <img
-                                      src={it.images[0].url}
+                                      src={itemImageUrl(it, "1:1")}
                                       alt=""
                                       style={{ width: 32, height: 32, borderRadius: 6, objectFit: "cover", flexShrink: 0 }}
                                     />

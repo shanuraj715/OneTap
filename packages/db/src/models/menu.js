@@ -82,6 +82,8 @@ const itemSchema = new Schema(
             key: { type: String, default: "" },
             width: Number,
             height: Number,
+            // which card shape this picture is for ("1:1" | "4:3" | "16:9" | "3:4"); older pictures have none and count as square
+            ratio: { type: String, default: "1:1" },
           },
           { _id: false },
         ),

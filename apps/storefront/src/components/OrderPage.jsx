@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { formatINR, formatWhen, GATEWAY_LABELS, ORDER_TYPE_STORAGE_KEY } from "@onetap/config-schema";
+import { formatINR, formatWhen, GATEWAY_LABELS, itemImageUrl, ORDER_TYPE_STORAGE_KEY } from "@onetap/config-schema";
 import { DropdownSoft, fx, ProgressSteps } from "@onetap/ui";
 import { ArrowLeft, Check, ChevronRight, Coins, MapPin, ShoppingBag, Sparkles, Tag, Utensils, Wallet, X } from "lucide-react";
 import { api, payOnline } from "@/lib/clientApi";
@@ -931,7 +931,7 @@ function Suggestions({ outletId, lines, menu, onAdd }) {
           const price = variant ? variant.price : item.basePrice;
           return (
             <div key={item.id} style={suggestCard} data-testid="suggestion" data-item={item.name}>
-              {item.images?.[0]?.url ? <img src={item.images[0].url} alt="" style={suggestImg} loading="lazy" /> : <div style={{ ...suggestImg, display: "grid", placeItems: "center", fontWeight: 800, color: "var(--color-text-muted)" }}>{item.name.slice(0, 1)}</div>}
+              {itemImageUrl(item, "4:3") ? <img src={itemImageUrl(item, "4:3")} alt="" style={suggestImg} loading="lazy" /> : <div style={{ ...suggestImg, display: "grid", placeItems: "center", fontWeight: 800, color: "var(--color-text-muted)" }}>{item.name.slice(0, 1)}</div>}
               <div style={{ fontSize: 13, fontWeight: 700, lineHeight: 1.3, minHeight: 34 }}>{item.name}</div>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 6, marginTop: 6 }}>
                 <span style={{ fontSize: 13, fontWeight: 700, fontVariantNumeric: "tabular-nums" }}>

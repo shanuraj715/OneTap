@@ -23,7 +23,7 @@ import {
   updateModifierGroup,
 } from "./menu.service.js";
 import { limiter } from "../../middleware/rate-limit.js";
-import { AI_ASPECT_RATIO_IDS, AI_MAX_IMAGES_AT_ONCE, AI_MAX_PROMPT_LENGTH } from "@onetap/config-schema";
+import { AI_ASPECT_RATIO_IDS, AI_MAX_IMAGES_AT_ONCE, AI_MAX_PROMPT_LENGTH, ITEM_IMAGE_RATIO_IDS, MAX_IMAGES_PER_ITEM } from "@onetap/config-schema";
 import { suggestionsFor } from "./suggestions.service.js";
 
 export const menuRouter         = Router();
@@ -137,6 +137,8 @@ const imageBody = z.object({
   key: z.string().optional(),
   width: z.number().int().positive().optional(),
   height: z.number().int().positive().optional(),
+  /** which card shape it is for; left out = square (the default) */
+  ratio: z.enum(ITEM_IMAGE_RATIO_IDS).optional(),
 });
 
 const itemBody = z.object({
@@ -145,7 +147,7 @@ const itemBody = z.object({
   description: z.string().optional(),
   foodType: z.enum(["veg", "non-veg", "egg"]).optional(),
   tags: z.array(z.string()).optional(),
-  images: z.array(imageBody).max(6).optional(),
+  images: z.array(imageBody).max(MAX_IMAGES_PER_ITEM).optional(),
   basePrice: z.number().int().nonnegative().optional(),
   variants: z.array(variantBody).optional(),
   modifierGroupIds: z.array(z.string()).optional(),

@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { AI_ASPECT_RATIOS, AI_MAX_IMAGES_AT_ONCE, buildItemImagePrompt, categoryPathLabel, IMAGE_RULES } from "@onetap/config-schema";
+import { AI_ASPECT_RATIOS, AI_MAX_IMAGES_AT_ONCE, buildItemImagePrompt, categoryPathLabel, imageRatioMeta, imageRoom } from "@onetap/config-schema";
 import { Loader, RotateCcw, Sparkles } from "lucide-react";
 import { useGenerateItemImages } from "../../lib/useMenu";
 import { Button, Modal, Toast } from "../../ui";
@@ -11,14 +11,18 @@ import { Button, Modal, Toast } from "../../ui";
  */
 export function GenerateImagesDialog({ outlet, menu, item, onClose }) {
   const generate = useGenerateItemImages(outlet);
-  const room = Math.max(0, IMAGE_RULES.maxPerItem - item.images.length);
+  const [ratio, setRatio] = useState("1:1");
+  // a picture is kept in the shape it is made in (the 3:2 "Photo" shape goes with landscape 4:3), and a dish holds only
+  // so many of each shape: 6 square, one each of landscape / wide / portrait
+  const slot = ratio === "3:2" ? "4:3" : ratio;
+  const slotMeta = imageRatioMeta(slot);
+  const room = imageRoom(item.images, slot);
   const maxCount = Math.min(AI_MAX_IMAGES_AT_ONCE, room);
 
   const defaultPrompt = useMemo(
     () => buildItemImagePrompt({ name: item.name, description: item.description, foodType: item.foodType, category: categoryPathLabel(menu.categories, item.categoryId) }),
     [item, menu.categories],
   );
-  const [ratio, setRatio] = useState("4:3");
   const [count, setCount] = useState(Math.min(2, Math.max(1, maxCount)));
   const [prompt, setPrompt] = useState(defaultPrompt);
   const [result, setResult] = useState(null);
@@ -43,7 +47,7 @@ export function GenerateImagesDialog({ outlet, menu, item, onClose }) {
             <Sparkles size={18} style={{ color: "var(--color-primary)" }} /> Make pictures with AI
           </h2>
           <p style={{ margin: "4px 0 0", fontSize: 13.5, color: "var(--color-text-muted)" }}>
-            <strong style={{ color: "var(--color-text)" }}>{item.name}</strong> · {item.images.length} of {IMAGE_RULES.maxPerItem} pictures used
+            <strong style={{ color: "var(--color-text)" }}>{item.name}</strong> · {slotMeta.max - room} of {slotMeta.max} {slotMeta.label.toLowerCase()} {slotMeta.max === 1 ? "picture" : "pictures"} used
           </p>
         </div>
 
@@ -129,8 +133,10 @@ export function GenerateImagesDialog({ outlet, menu, item, onClose }) {
               </div>
               <p style={hint}>
                 {room === 0
-                  ? "This dish already has the most pictures it can hold. Remove one first."
-                  : `Up to ${room} more fit on this dish. Each picture is a paid call to Google, and several are asked for from different angles.`}
+                  ? slotMeta.max === 1
+                    ? `This dish already has its ${slotMeta.label.toLowerCase()} (${slot}) picture. Remove it first, or choose another shape.`
+                    : "This dish already has the most pictures of this shape it can hold. Remove one first."
+                  : `Up to ${room} more fit${slotMeta.max === 1 ? " (a dish has one picture of this shape)" : ""} — saved as its ${slotMeta.label.toLowerCase()} ${slot} picture. Each picture is a paid call to Google, and several are asked for from different angles.`}
               </p>
             </fieldset>
 
