@@ -964,3 +964,12 @@
 {"id":"t18-tables","status":"pass","pass":54,"fail":0,"mode":"headless","at":"2026-11-20T21:50:31.791Z","durationMs":42511}
 {"id":"t19-dine-in","status":"pass","pass":55,"fail":0,"mode":"headless","at":"2026-11-20T21:51:33.203Z","durationMs":55397}
 {"id":"t53-orders-growth-api","status":"pass","pass":84,"fail":0,"mode":"headless","at":"2026-11-20T21:51:40.724Z","durationMs":6661}
+{"id":"t65-kitchen-display","status":"fail","pass":18,"fail":5,"mode":"headless","at":"2026-11-20T22:02:18.410Z","durationMs":2110}
+{"id":"t65-kitchen-display","status":"pass","pass":43,"fail":0,"mode":"headless","at":"2026-11-20T22:02:38.291Z","durationMs":9306}
+{"id":"t65-kitchen-display","status":"pass","pass":43,"fail":0,"mode":"headless","at":"2026-11-20T22:03:18.012Z","durationMs":9764}
+{"id":"t08-plans-outlets-settings","status":"pass","pass":44,"fail":0,"mode":"headless","at":"2026-11-20T22:06:32.883Z","durationMs":188894}
+{"id":"t10-plan-downgrade","status":"pass","pass":38,"fail":0,"mode":"headless","at":"2026-11-20T22:07:26.006Z","durationMs":52243}
+{"id":"t28-rate-limits-api","status":"pass","pass":124,"fail":0,"mode":"headless","at":"2026-11-20T22:07:36.213Z","durationMs":9375}
+{"id":"t52-print-station-any-page","status":"pass","pass":14,"fail":0,"mode":"headless","at":"2026-11-20T22:08:25.542Z","durationMs":48488}
+{"id":"t55-growth-dashboard","status":"pass","pass":26,"fail":0,"mode":"headless","at":"2026-11-20T22:08:31.649Z","durationMs":5186}
+{"id":"t20-missed-order-alerts","status":"pass","pass":75,"fail":0,"mode":"headless","at":"2026-11-20T22:11:33.141Z","durationMs":175414}

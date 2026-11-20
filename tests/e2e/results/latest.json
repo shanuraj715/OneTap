@@ -2210,8 +2210,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T19:01:04.083Z",
-    "durationMs": 192548,
+    "at": "2026-11-20T22:06:32.883Z",
+    "durationMs": 188894,
     "steps": [
       {
         "n": 1,
@@ -2226,13 +2226,13 @@
           {
             "label": "Basic shows 3 people · 1 outlet",
             "ok": true,
-            "detail": "Lifecycle Basic One outlet — takeaway and dine-in QR 0 stores 3 people · 1 outlet (multi-outlet off) Not on the website 6/17 features · 6/6 ",
+            "detail": "Lifecycle Basic One outlet — takeaway and dine-in QR 0 stores 3 people · 1 outlet (multi-outlet off) Not on the website 7/18 features · 6/6 ",
             "kind": "expect"
           },
           {
             "label": "Pro shows 10 people · 3 outlets",
             "ok": true,
-            "detail": "Lifecycle Pro Up to 3 outlets, everything unlocked 0 stores 10 people · 3 outlets Not on the website 17/17 features · 6/6 effects · 9/9 card",
+            "detail": "Lifecycle Pro Up to 3 outlets, everything unlocked 0 stores 10 people · 3 outlets Not on the website 18/18 features · 6/6 effects · 9/9 card",
             "kind": "expect"
           },
           {
@@ -2815,8 +2815,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:14:00.248Z",
-    "durationMs": 53451,
+    "at": "2026-11-20T22:07:26.006Z",
+    "durationMs": 52243,
     "steps": [
       {
         "n": 1,
@@ -2849,13 +2849,13 @@
           {
             "label": "the platform page now shows Basic with 3 outlets against a limit of 1",
             "ok": true,
-            "detail": "Over its limits since Nov 20, 2026. Everything keeps working until Nov 27, 2026; aft",
+            "detail": "Over its limits since Nov 21, 2026. Everything keeps working until Nov 28, 2026; aft",
             "kind": "expect"
           },
           {
             "label": "…and says the store is over its limits, with the 7-day grace deadline",
             "ok": true,
-            "detail": "Over its limits since Nov 20, 2026. Everything keeps working until Nov 27, 2026; after that you'll be asked to choose what to block.",
+            "detail": "Over its limits since Nov 21, 2026. Everything keeps working until Nov 28, 2026; after that you'll be asked to choose what to block.",
             "kind": "expect"
           },
           {
@@ -2873,7 +2873,7 @@
           {
             "label": "the owner's dashboard shows 'Your store has 3 outlets (plan allows 1)' and 'Everything keeps working until …'",
             "ok": true,
-            "detail": "Your store has 3 outlets (plan allows 1). Everything keeps working until Nov 27, 2026. Remove the extras, or contact TablePe to upgrade your plan. Dashboard Lifecycle Central",
+            "detail": "Your store has 3 outlets (plan allows 1). Everything keeps working until Nov 28, 2026. Remove the extras, or contact TablePe to upgrade your plan. Dashboard Lifecycle Central",
             "kind": "expect"
           },
           {
@@ -2975,7 +2975,7 @@
           {
             "label": "the platform page says the grace period has ended",
             "ok": true,
-            "detail": "This store went over its limits on Nov 20, 2026 and its 0-day grace period ended on Nov 20, 2026. Choose what to block on the Outlets and People tabs — or raise its limits.",
+            "detail": "This store went over its limits on Nov 21, 2026 and its 0-day grace period ended on Nov 21, 2026. Choose what to block on the Outlets and People tabs — or raise its limits.",
             "kind": "expect"
           },
           {
@@ -5998,8 +5998,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T10:33:33.740Z",
-    "durationMs": 175952,
+    "at": "2026-11-20T22:11:33.141Z",
+    "durationMs": 175414,
     "steps": [
       {
         "n": 1,
@@ -6092,7 +6092,7 @@
           {
             "label": "the counter's Orders screen has order A as 'Placed' with its wait running ('0m')",
             "ok": true,
-            "detail": "#0001 04:00 PM Meera Late 9877700077 TA 1 ₹70 Placed 0m Accepted",
+            "detail": "#0001 03:38 AM Meera Late 9877700077 TA 1 ₹70 Placed 0m Accepted",
             "kind": "expect"
           },
           {
@@ -6104,7 +6104,7 @@
           {
             "label": "over a minute later the status still says 'Placed' and the wait shows 1m or more",
             "ok": true,
-            "detail": "#0001 04:00 PM Meera Late 9877700077 TA 1 ₹70 Placed 1m Accepted",
+            "detail": "#0001 03:38 AM Meera Late 9877700077 TA 1 ₹70 Placed 1m Accepted",
             "kind": "expect"
           },
           {
@@ -6392,7 +6392,7 @@
           {
             "label": "completed: order A has no timer and no warning",
             "ok": true,
-            "detail": "Completed · #0001 04:00 PM Meera Late 9877700077 TA 1 ₹70 Completed —",
+            "detail": "Completed · #0001 03:38 AM Meera Late 9877700077 TA 1 ₹70 Completed —",
             "kind": "expect"
           },
           {
@@ -9416,8 +9416,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T10:41:16.555Z",
-    "durationMs": 8160,
+    "at": "2026-11-20T22:07:36.213Z",
+    "durationMs": 9375,
     "steps": [
       {
         "n": 1,
@@ -10134,7 +10134,7 @@
           {
             "label": "the inventory sees the whole API",
             "ok": true,
-            "detail": "310 routes, 181 change data",
+            "detail": "312 routes, 182 change data",
             "kind": "expect"
           },
           {
@@ -18242,8 +18242,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T06:41:10.421Z",
-    "durationMs": 48350,
+    "at": "2026-11-20T22:08:25.542Z",
+    "durationMs": 48488,
     "steps": [
       {
         "n": 1,
@@ -19523,8 +19523,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T19:19:22.508Z",
-    "durationMs": 5065,
+    "at": "2026-11-20T22:08:31.649Z",
+    "durationMs": 5186,
     "steps": [
       {
         "n": 1,
@@ -19533,7 +19533,7 @@
           {
             "label": "the store's sidebar shows Bookings (under Store & orders) and Ratings (under Customers & growth)",
             "ok": true,
-            "detail": "STORE & ORDERS Take order Dashboard Orders Bookings Menu Tables Printing CUSTOMERS & GROWTH Analytics Customers Ratings Marketing WhatsApp 1 Coupons SETUP Storefront Settings",
+            "detail": "STORE & ORDERS Take order Dashboard Orders Kitchen display Bookings Menu Tables Printing CUSTOMERS & GROWTH Analytics Customers Ratings Marketing WhatsApp 1 Coupons SETUP Storefront Settings",
             "kind": "expect"
           }
         ]
@@ -19581,7 +19581,7 @@
           {
             "label": "a rider is added from the Delivery riders tab",
             "ok": true,
-            "detail": "[{\"id\":\"6b009d3615103ab003b26ada\",\"name\":\"Ramesh\",\"phone\":\"98765 43210\",\"isActive\":true,\"createdAt\":\"2026-11-20T19:19:18.920Z\"}]",
+            "detail": "[{\"id\":\"6b00c4dc3c7828da1c8662e3\",\"name\":\"Ramesh\",\"phone\":\"98765 43210\",\"isActive\":true,\"createdAt\":\"2026-11-20T22:08:28.085Z\"}]",
             "kind": "expect"
           },
           {
@@ -19611,7 +19611,7 @@
           {
             "label": "the row now says Out for delivery — with Ramesh",
             "ok": true,
-            "detail": "#0005 12:49 AM UI Tester Del 1 ₹90 Out for delivery with Ramesh 0m Delivered",
+            "detail": "#0005 03:38 AM UI Tester Del 1 ₹90 Out for delivery with Ramesh 0m Delivered",
             "kind": "expect"
           },
           {
@@ -19665,7 +19665,7 @@
           {
             "label": "a combo is created from the dish form",
             "ok": true,
-            "detail": "{\"items\":[{\"itemId\":\"6b009cb115103ab003b25efa\",\"variantId\":null,\"quantity\":1}]}",
+            "detail": "{\"items\":[{\"itemId\":\"6b00c3aa3c7828da1c8641f0\",\"variantId\":null,\"quantity\":1}]}",
             "kind": "expect"
           },
           {
@@ -21505,6 +21505,309 @@
             "label": "the order lands on T5 and T4 keeps only the first waiter's order",
             "ok": true,
             "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t65-kitchen-display": {
+    "id": "t65-kitchen-display",
+    "title": "Kitchen display (/kitchen) — orders by station, Start / Ready, late colours, and the waiter's bell (off by default)",
+    "status": "pass",
+    "pass": 43,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-20T22:03:18.012Z",
+    "durationMs": 9764,
+    "steps": [
+      {
+        "n": 1,
+        "title": "API: the board",
+        "checks": [
+          {
+            "label": "the waiter's bell is OFF by default",
+            "ok": true,
+            "detail": "{\"notifyWaiter\":false,\"warnAfterMinutes\":10,\"lateAfterMinutes\":20}",
+            "kind": "expect"
+          },
+          {
+            "label": "a staff order is accepted and goes to the kitchen",
+            "ok": true,
+            "detail": "accepted",
+            "kind": "expect"
+          },
+          {
+            "label": "the order is on the board as a NEW card with its table and both dishes",
+            "ok": true,
+            "detail": "{\"stage\":\"new\",\"table\":\"T2\",\"n\":2}",
+            "kind": "expect"
+          },
+          {
+            "label": "it needs two stations: kitchen and bar",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the Kitchen screen shows only the kitchen dish (and its quantity)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the Bar screen shows only the bar dish",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "waiting thresholds default to amber 10 / red 20 minutes",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "API: stations move on their own; the order follows",
+        "checks": [
+          {
+            "label": "the kitchen taps Start → the order becomes 'preparing'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "kitchen shows Preparing, the bar still New, and 'All' shows the slowest (New)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the bar finishes first — the order is NOT ready yet (the kitchen still cooks)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "when the kitchen is ready too, the order becomes 'ready'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and sits in the Ready lane",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Recall: the kitchen taking it back puts the order back to 'preparing'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the 'All' screen's Ready marks every station at once",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "pressing Ready twice is harmless",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "API: rules",
+        "checks": [
+          {
+            "label": "the kitchen can't mark an order that has nothing to make there",
+            "ok": true,
+            "detail": "409 This order has nothing to make at that station.",
+            "kind": "expect"
+          },
+          {
+            "label": "such an order isn't on the Kitchen screen, only on the Bar's",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an unknown stage is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a completed order leaves the board",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a finished order can't be moved from the kitchen screen",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a cancelled order leaves the board too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the kitchen role can open the board",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a store whose plan has no Kitchen display is refused (403)",
+            "ok": true,
+            "detail": "403 Kitchen display isn't included in your plan.",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Browser: the /kitchen screen",
+        "checks": [
+          {
+            "label": "Settings → Kitchen & delivery → Kitchen display: the waiter's bell switch is off",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "ticking it and saving turns the bell on for the store",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the kitchen user sees the new order in the NEW lane, with its table",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the card shows the table, both dishes and which station makes each",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the Bar tab is in the address (/kitchen?screen=bar), so a bar tablet can open it directly",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the Bar screen shows only the bar dish",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Start moves the card to PREPARING",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the order's status is 'preparing'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Ready moves the card to the READY lane",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "with the bell OFF the waiter's screen shows nothing when the kitchen is ready",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Recall brings it back to PREPARING",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "bell ON: the waiter's screen shows 'Table T4 — Order #… Everything is ready'",
+            "ok": true,
+            "detail": "Table T4 — Order #0011 Everything is ready — take it out.",
+            "kind": "expect"
+          },
+          {
+            "label": "the waiter can dismiss it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the new-order sound is on by default",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "switching it off is remembered on this device after a reload",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Browser: late orders turn amber, then red",
+        "checks": [
+          {
+            "label": "a fresh order is neutral (not amber, not red)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "after the amber time it turns amber",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "after the red time it turns red",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "its waiting time is shown in minutes",
+            "ok": true,
+            "detail": "2 min",
             "kind": "expect"
           },
           {

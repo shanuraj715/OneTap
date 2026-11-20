@@ -1,6 +1,6 @@
 # T55 — Dashboard: pre-orders & bookings settings, riders, out for delivery, stock / combo / hours in the menu, buy-X-get-Y coupons, bookings, ratings and cart reminders
 
-**Area:** dashboard · **Last result:** ✅ PASSED (26 passed, 0 failed · 2026-11-21 00:49 · headless · 5.1 s)
+**Area:** dashboard · **Last result:** ✅ PASSED (26 passed, 0 failed · 2026-11-21 03:38 · headless · 5.2 s)
 
 **Run it alone:** `node run.mjs --only t55` (add `--visible` to watch it)
 
@@ -66,7 +66,7 @@ _Nothing failed._
 
 - a Ready delivery order's next step is 'Out for delivery'
 - it asks who is taking it — Ramesh is on the list
-- the row now says Out for delivery — with Ramesh — _#0005 12:49 AM UI Tester Del 1 ₹90 Out for delivery with Ramesh 0m Delivered_
+- the row now says Out for delivery — with Ramesh — _#0005 03:38 AM UI Tester Del 1 ₹90 Out for delivery with Ramesh 0m Delivered_
 - …and its next step is 'Delivered'
 
 **Step 6 — Orders → a pre-order shows its pickup time**
@@ -79,7 +79,7 @@ _Nothing failed._
 - after saving, the dish row says '3 left'
 - …and the menu counts 3
 - choosing the dishes shows what they cost separately
-- a combo is created from the dish form — _{"items":[{"itemId":"6b009cb115103ab003b25efa","variantId":null,"quantity":1}]}_
+- a combo is created from the dish form — _{"items":[{"itemId":"6b00c3aa3c7828da1c8641f0","variantId":null,"quantity":1}]}_
 - a category's Edit window has Hours
 
 **Step 8 — Coupons → buy 1 get 1 free**
@@ -103,6 +103,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-21 03:38 | pass | 26 | 0 | headless | 5.2 s |
 | 2026-11-21 00:49 | pass | 26 | 0 | headless | 5.1 s |
 | 2026-11-21 00:47 | error | 16 | 0 | headless | 33.0 s |
 | 2026-11-21 00:36 | pass | 26 | 0 | headless | 4.4 s |
