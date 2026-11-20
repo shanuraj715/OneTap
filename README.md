@@ -93,7 +93,9 @@ password is lost), `route-inventory.js` (every API route with its limits), `norm
 ### Store dashboard (apps/admin)
 
 Take order (counter billing) · Dashboard · Orders (with missed-order alerts) · Menu (nested categories, sizes, add-on
-groups, photos — including paste-a-picture and AI pictures) · Tables and printable QR cards · Printing · Coupons ·
+groups, photos — including paste-a-picture and AI pictures, and where each dish is prepared) · Tables and printable QR
+cards · Printing (receipts and kitchen tickets: each dish goes to its kitchen or bar printer, and the kitchen gets an
+"order changed" or "order cancelled" ticket when an order is edited or cancelled) · Coupons ·
 Customers and coin wallet · Analytics (sales, items, customers, outlet comparison, profit & loss, exports) ·
 Marketing (WhatsApp, SMS, WhatsApp Business API with filters and lists) · WhatsApp chat on the store's own numbers ·
 Storefront builder (headers, banners and carousels, store pages, theme, typography) · Settings (business identity,

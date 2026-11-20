@@ -38,6 +38,7 @@ import { broadcast } from "../../realtime/hub.js";
 import { storePlan } from "../platform/plan.service.js";
 import { toEscPos } from "./escpos.js";
 import { providerFor } from "./providers/index.js";
+import { activeKotPrinters, diffLines, entriesForPrinter, stationsForItems } from "./kot.js";
 import { renderHtml, renderText,                                                       } from "./render.js";
 
 /* ------------------------------------------------------------------ shaping */
@@ -103,6 +104,8 @@ export function shapeJob(j             )               {
     nextAttemptAt: j.nextAttemptAt ? j.nextAttemptAt.toISOString() : null,
     isReprint: j.isReprint,
     reprintOf: j.reprintOf,
+    /** "kot" (the normal ticket), "change" (the order was edited) or "cancel" (the order was cancelled) */
+    ticketKind: j.ticket?.kind ?? "kot",
     copies: j.copies,
     createdAt: j.createdAt.toISOString(),
     printedAt: j.printedAt ? j.printedAt.toISOString() : null,
@@ -282,6 +285,7 @@ async function toRenderOrder(ctx               , order          )               
     customer: order.customer ? { name: order.customer.name, phone: order.customer.phone } : undefined,
     note: order.note,
     lines: order.lines.map((l) => ({
+      itemId: l.itemId ? String(l.itemId) : undefined,
       name: l.name,
       variantLabel: l.variantLabel,
       modifiers: l.modifiers ?? [],
@@ -366,10 +370,33 @@ export async function enqueueJob(args             )                             
   const { ctx, printer, order, trigger } = args;
 
   const template = await templateForPrinter(ctx, printer);
-  const renderOrder = order ? await toRenderOrder(ctx, order) : sampleOrder();
+  let renderOrder = order ? await toRenderOrder(ctx, order) : sampleOrder();
+  let ticket = args.ticket ?? null;
+
+  // A kitchen ticket carries only what THIS printer's station makes (see kot.js). A kitchen ticket that would be empty
+  // is not printed at all — except when a person asked for it by hand, which always gets something.
+  if (order && printer.docType === "kot" && args.route !== false) {
+    const kotPrinters = args.kotPrinters ?? (await activeKotPrinters(ctx, order.channel));
+    if (ticket?.kind === "change") {
+      const mine = entriesForPrinter(printer, ticket.changes ?? [], kotPrinters);
+      ticket = { ...ticket, changes: mine };
+      if (!mine.length && !ticket.noteChanged) return null;
+    } else {
+      const stations = await stationsForItems(ctx, renderOrder.lines.map((l) => l.itemId));
+      const tagged = renderOrder.lines.map((l) => ({ ...l, station: stations.get(String(l.itemId)) ?? "kitchen" }));
+      let mine = entriesForPrinter(printer, tagged, kotPrinters);
+      if (!mine.length) {
+        if (!args.keepIfEmpty) return null;
+        mine = tagged;
+      }
+      renderOrder = { ...renderOrder, lines: mine };
+    }
+  }
+
   const input = await buildRenderInput(ctx, template, renderOrder, {
     isReprint: args.isReprint,
     copies: printer.copies,
+    ticket,
   });
 
   const payload                         = {
@@ -405,6 +432,7 @@ export async function enqueueJob(args             )                             
       idempotencyKey,
       isReprint: Boolean(args.isReprint),
       reprintOf: null,
+      ticket: ticket ? { kind: ticket.kind, changes: ticket.changes, noteChanged: ticket.noteChanged } : null,
       requestedBy: args.requestedBy ?? null,
     });
     return shapeJob(job);
@@ -423,21 +451,106 @@ export async function enqueueJob(args             )                             
  *
  * This is what makes a kitchen ticket and a counter receipt appear together the
  * moment staff accept an order, with nobody pressing print.
+ *
+ * When the status is "cancelled" the kitchen is told differently: see {@link printOrderCancelled}.
  */
 export async function autoPrintForOrder(ctx               , order          , status             )                  {
   if (!(await storePlan(ctx.brandId)).entitlements.features.includes("printing")) return 0;
-  const printers = await PrinterModel.find(tenantFilter(ctx, { isActive: true, autoPrintOn: status }));
 
   let queued = 0;
+  if (status === "cancelled") queued += await printOrderCancelled(ctx, order);
+
+  const printers = await PrinterModel.find(tenantFilter(ctx, { isActive: true, autoPrintOn: status }));
+  const kotPrinters = await activeKotPrinters(ctx, order.channel);
   for (const printer of printers) {
     // An empty channel list means the printer takes every channel.
     if (printer.channels?.length && !printer.channels.includes(order.channel)) continue;
+    // a cancelled order's kitchen ticket is the special CANCELLED one above, never the ordinary ticket
+    if (status === "cancelled" && printer.docType === "kot") continue;
     try {
-      const job = await enqueueJob({ ctx, printer, order, trigger: `auto:${status}` });
+      const job = await enqueueJob({ ctx, printer, order, trigger: `auto:${status}`, kotPrinters });
       if (job) queued++;
     } catch (e) {
       // One misconfigured printer must never block the others, or the order.
       logger.error({ err: e, printerId: String(printer._id), orderId: String(order._id) }, "auto-print enqueue failed");
+    }
+  }
+  return queued;
+}
+
+/**
+ * An order was edited AFTER its kitchen ticket went out (a dish added, one taken off, a quantity or a note changed).
+ * Every kitchen printer that makes a changed dish gets a short "ORDER CHANGED" ticket with only the difference —
+ * ADD 1 x Veg Momos, REMOVE 1 x Paneer Roll — even a printer that had nothing in the original order (a chai added to a
+ * kitchen-only order must reach the bar). Before any ticket has gone out there is nothing to correct: when the ticket
+ * does print it shows the up-to-date order.
+ */
+export async function printOrderChange(ctx               , before                                          , after          )                  {
+  if (!(await storePlan(ctx.brandId)).entitlements.features.includes("printing")) return 0;
+
+  const changes = diffLines(before.lines ?? [], after.lines ?? []);
+  const noteChanged = (before.note ?? "") !== (after.note ?? "");
+  if (!changes.length && !noteChanged) return 0;
+
+  // has this order's kitchen ticket gone out (or is it waiting to) anywhere yet?
+  const wasSent = await PrintJobModel.exists(
+    tenantFilter(ctx, { orderId: String(after._id), docType: "kot", status: { $in: ["queued", "printing", "printed"] } }),
+  );
+  if (!wasSent) return 0;
+
+  // which printer makes each changed dish
+  const stations = await stationsForItems(ctx, changes.map((c) => c.itemId));
+  const tagged = changes.map((c) => ({ ...c, station: stations.get(String(c.itemId)) ?? "kitchen" }));
+  const kotPrinters = await activeKotPrinters(ctx, after.channel);
+  // every edit is its own ticket: the number of entries in the order's history changes with each one
+  const revision = (after.statusHistory ?? []).length;
+
+  let queued = 0;
+  for (const printer of kotPrinters) {
+    try {
+      const job = await enqueueJob({
+        ctx,
+        printer,
+        order: after,
+        trigger: `change:${revision}`,
+        ticket: { kind: "change", changes: tagged, noteChanged },
+        kotPrinters,
+      });
+      if (job) queued++;
+    } catch (e) {
+      logger.error({ err: e, printerId: String(printer._id), orderId: String(after._id) }, "change-ticket enqueue failed");
+    }
+  }
+  return queued;
+}
+
+/**
+ * An order was cancelled. Two things happen, per kitchen printer:
+ *  - a ticket still waiting in the queue is simply withdrawn (the kitchen never sees it);
+ *  - a ticket that was already printed gets a big "ORDER CANCELLED — DO NOT COOK" ticket after it.
+ * A printer that never printed the order is left alone.
+ */
+export async function printOrderCancelled(ctx               , order          )                  {
+  const orderId = String(order._id);
+  const jobs = await PrintJobModel.find(tenantFilter(ctx, { orderId, docType: "kot" })).select("printerId status ticket").lean();
+  if (!jobs.length) return 0;
+
+  await PrintJobModel.updateMany(tenantFilter(ctx, { orderId, docType: "kot", status: "queued" }), {
+    $set: { status: "cancelled", lastError: "The order was cancelled", nextAttemptAt: null },
+  });
+
+  const printedOn = new Set(jobs.filter((j) => (j.status === "printed" || j.status === "printing") && j.ticket?.kind !== "cancel").map((j) => j.printerId));
+  if (!printedOn.size) return 0;
+
+  const kotPrinters = await activeKotPrinters(ctx, order.channel);
+  let queued = 0;
+  for (const printer of kotPrinters) {
+    if (!printedOn.has(String(printer._id))) continue;
+    try {
+      const job = await enqueueJob({ ctx, printer, order, trigger: "cancel", ticket: { kind: "cancel" }, kotPrinters });
+      if (job) queued++;
+    } catch (e) {
+      logger.error({ err: e, printerId: String(printer._id), orderId }, "cancel-ticket enqueue failed");
     }
   }
   return queued;
@@ -635,6 +748,10 @@ export async function reprintJob(ctx               , id        , by         )   
     order: order ? (order.toObject()            ) : null,
     trigger: "reprint",
     isReprint: true,
+    // a reprint of an "order changed" / "cancelled" ticket is that same ticket again, not the whole order
+    ticket: original.ticket ?? null,
+    route: original.ticket?.kind !== "change",
+    keepIfEmpty: true,
     requestedBy: by,
   });
   if (!job) throw new HttpError(500, "Could not queue the reprint");
@@ -660,6 +777,8 @@ export async function printOrder(
     order: order.toObject()            ,
     // A manual print is always allowed, even if this order already auto-printed.
     trigger: `manual:${randomUUID()}`,
+    // …and always prints something: if routing would leave this printer with nothing, it gets the whole order
+    keepIfEmpty: true,
     requestedBy: by,
   });
   if (!job) throw new HttpError(500, "Could not queue the job");

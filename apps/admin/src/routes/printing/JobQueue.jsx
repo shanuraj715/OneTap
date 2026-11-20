@@ -139,6 +139,8 @@ function JobRow({
             {JOB_STATUS_LABELS[job.status]}
           </Pill>
           <strong style={{ fontSize: 13.5 }}>{DOC_LABELS[job.docType]}</strong>
+          {job.ticketKind === "change" ? <Pill tone="warn">order changed</Pill> : null}
+          {job.ticketKind === "cancel" ? <Pill tone="error">order cancelled</Pill> : null}
           {job.orderNumber ? <span style={{ fontSize: 13 }}>· Order #{job.orderNumber}</span> : <Pill>Test slip</Pill>}
           {job.isReprint ? <Pill tone="info">Reprint</Pill> : null}
           {job.copies > 1 ? <Pill>{job.copies} copies</Pill> : null}

@@ -217,6 +217,25 @@ function blockLines(block             , ctx     )           {
     case "items": {
       if (!order) return [];
       const out           = [];
+
+      // An "order changed" ticket lists only what is different: the dishes to ADD and the ones to take OFF.
+      if (input.ticket?.kind === "change") {
+        const part = (op, heading) => {
+          const mine = (input.ticket.changes ?? []).filter((c) => c.op === op);
+          if (!mine.length) return;
+          out.push(heading);
+          for (const c of mine) {
+            const label = c.variantLabel ? `${c.name} (${c.variantLabel})` : c.name;
+            for (const l of wrap(`${c.quantity} x ${label}`, cols)) out.push(` ${l}`);
+            for (const m of c.modifiers ?? []) for (const l of wrap(`   + ${m.label}`, cols)) out.push(l);
+            if (c.note) for (const l of wrap(`   ! ${c.note}`, cols)) out.push(l);
+          }
+        };
+        part("add", "ADD:");
+        part("remove", "REMOVE (do not make):");
+        return out;
+      }
+
       for (const line of order.lines) {
         const label = line.variantLabel ? `${line.name} (${line.variantLabel})` : line.name;
 
@@ -272,6 +291,8 @@ function blockLines(block             , ctx     )           {
     }
 
     case "note":
+      // on an "order changed" ticket the note is only repeated when it is what changed
+      if (input.ticket?.kind === "change") return input.ticket.noteChanged ? wrap(`Note is now: ${order?.note || "(none)"}`, cols) : [];
       return order?.note ? wrap(`Note: ${order.note}`, cols) : [];
 
     case "qr":
@@ -298,6 +319,25 @@ function blockLines(block             , ctx     )           {
  
 
 /**
+ * A kitchen ticket that is not the normal one starts with a banner nobody can miss: "ORDER CANCELLED — DO NOT COOK", or
+ * "ORDER CHANGED" above the ADD / REMOVE lines. It is added here, in front of whatever the template has, so a template
+ * that hid its title or header can never hide it.
+ */
+function bannerBlocks(input) {
+  const kind = input.ticket?.kind;
+  const make = (text, size, rule) => ({ key: "message", enabled: true, align: "center", size, bold: true, rule, text });
+  if (kind === "cancel") return [make("*** ORDER CANCELLED ***", "lg", false), make("DO NOT COOK", "lg", true)];
+  if (kind === "change") {
+    const dishes = (input.ticket.changes ?? []).length > 0;
+    return [make("*** ORDER CHANGED ***", "lg", false), make(dishes ? "See ADD / REMOVE below" : "Only the kitchen note changed", "md", true)];
+  }
+  return [];
+}
+
+/** The blocks of a document, in order: the banner (if any), then the template's own. */
+const blocksOf = (input) => [...bannerBlocks(input), ...input.template.blocks];
+
+/**
  * The one place blocks turn into content. Text, HTML and ESC/POS all consume
  * this, so a template renders the same document down every path.
  */
@@ -306,7 +346,7 @@ export function renderBlocks(input             , unicode         )              
   const ctx      = { input, cols, unicode, docType: input.template.docType };
   const out                  = [];
 
-  for (const block of input.template.blocks) {
+  for (const block of blocksOf(input)) {
     if (!block.enabled) continue;
     const lines = blockLines(block, ctx);
     if (!lines.length && block.key !== "spacer" && !(block.key === "qr" && block.text)) continue;
@@ -354,7 +394,7 @@ export function renderHtml(input             )         {
 
   const body           = [];
 
-  for (const block of template.blocks) {
+  for (const block of blocksOf(input)) {
     if (!block.enabled) continue;
 
     if (block.key === "logo" && template.logoUrl) {

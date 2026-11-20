@@ -11104,12 +11104,12 @@
     "id": "t32-menu-tree-api",
     "title": "Menu categories inside categories — depth, moving, pictures, ordering, bulk delete of categories and items, import, and how the storefront builds its sections",
     "status": "pass",
-    "pass": 93,
+    "pass": 92,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:30:21.812Z",
-    "durationMs": 3195,
+    "at": "2026-11-20T05:43:36.817Z",
+    "durationMs": 3530,
     "steps": [
       {
         "n": 1,
@@ -11308,12 +11308,6 @@
             "kind": "expect"
           },
           {
-            "label": "a parent with no dishes of its own still gets a heading, because dishes sit inside it",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
             "label": "switching a category off hides it AND everything inside it",
             "ok": true,
             "detail": "Starters",
@@ -11484,7 +11478,7 @@
           {
             "label": "three categories are made in one request (201)",
             "ok": true,
-            "detail": "201 {\"categories\":[{\"id\":\"6aff949dea6c197f9dc0b393\",\"name\":\"Bulk Dosa\",\"parentId\":\"6aff949dea6c197f9dc0b38c\",\"image\":{\"url\":",
+            "detail": "201 {\"categories\":[{\"id\":\"6affde08f3756b13a513dde9\",\"name\":\"Bulk Dosa\",\"parentId\":\"6affde08f3756b13a513dde3\",\"image\":{\"url\":",
             "kind": "expect"
           },
           {
@@ -11747,8 +11741,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:31:11.904Z",
-    "durationMs": 45901,
+    "at": "2026-11-20T05:44:27.734Z",
+    "durationMs": 46722,
     "steps": [
       {
         "n": 1,
@@ -13871,8 +13865,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:32:19.967Z",
-    "durationMs": 19267,
+    "at": "2026-11-20T05:44:50.821Z",
+    "durationMs": 18904,
     "steps": [
       {
         "n": 1,
@@ -15539,8 +15533,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:34:52.156Z",
-    "durationMs": 9014,
+    "at": "2026-11-20T05:44:59.638Z",
+    "durationMs": 8793,
     "steps": [
       {
         "n": 1,
@@ -15585,7 +15579,7 @@
           {
             "label": "it is a stored picture (not a data: link)",
             "ok": true,
-            "detail": "http://localhost:3097/uploads/6aff94ff999161827cf89d00/6aff94ff999161827cf89d03/",
+            "detail": "http://localhost:3097/uploads/6affde3e9552ccde3f96c76f/6affde3e9552ccde3f96c772/",
             "kind": "expect"
           }
         ]
@@ -15722,8 +15716,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:35:10.090Z",
-    "durationMs": 17917,
+    "at": "2026-11-20T05:45:17.306Z",
+    "durationMs": 17650,
     "steps": [
       {
         "n": 1,
@@ -17693,6 +17687,459 @@
           },
           {
             "label": "the store and outlet names are put back",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser logged no errors or warnings",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t51-kot-tickets": {
+    "id": "t51-kot-tickets",
+    "title": "Kitchen tickets (KOT) — each dish goes to the right printer (kitchen / bar); an order edited after its ticket went out sends an 'ORDER CHANGED' ticket with only the difference; a cancelled order withdraws a waiting ticket or sends 'ORDER CANCELLED — DO NOT COOK'",
+    "status": "pass",
+    "pass": 62,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-20T05:45:41.695Z",
+    "durationMs": 24368,
+    "steps": [
+      {
+        "n": 1,
+        "title": "every dish goes to the printer of the station that makes it",
+        "checks": [
+          {
+            "label": "accepting an order queues a ticket for the kitchen printer, one for the bar printer and the counter receipt",
+            "ok": true,
+            "detail": "3 jobs",
+            "kind": "expect"
+          },
+          {
+            "label": "the KITCHEN ticket has the kitchen dishes (Veg Momos, and Sweet Lassi — the dish says kitchen although its category says bar)",
+            "ok": true,
+            "detail": "KITCHEN ORDER | ------------------------------------------------ |                   Order #0001 |                     Takeaway |",
+            "kind": "expect"
+          },
+          {
+            "label": "…and none of the bar's dishes",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the BAR ticket has the bar dishes (Masala Chai — through Hot Drinks inside Drinks — and Cold Coffee — the dish says bar although its category says nothing)",
+            "ok": true,
+            "detail": "KITCHEN ORDER | ------------------------------------------------ |                   Order #0001 |                     Takeaway |",
+            "kind": "expect"
+          },
+          {
+            "label": "…and none of the kitchen's dishes",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "quantities are on the tickets ('2 x Veg Momos')",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "kitchen tickets never show a price",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the counter receipt still has the whole order, with prices",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "no empty tickets",
+        "checks": [
+          {
+            "label": "an order with only kitchen dishes sends nothing to the bar printer",
+            "ok": true,
+            "detail": "kitchen 1, bar 0",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the counter receipt still prints",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "a dish is never left without a ticket",
+        "checks": [
+          {
+            "label": "with the bar printer switched off, the bar's dish comes out on the kitchen ticket",
+            "ok": true,
+            "detail": "KITCHEN ORDER | ------------------------------------------------ |                   Order #0003 |",
+            "kind": "expect"
+          },
+          {
+            "label": "with ONLY a bar printer left, a kitchen dish still prints (on the bar printer)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a KOT printer at any other station (here: counter) is a master copy with every dish",
+            "ok": true,
+            "detail": "KITCHEN ORDER | ------------------------------------------------ |                   Order #0005 |",
+            "kind": "expect"
+          },
+          {
+            "label": "…while the kitchen and bar printers still split as before",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "an order edited after its ticket went out sends a CHANGE ticket",
+        "checks": [
+          {
+            "label": "(setup) the first tickets were sent and printed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "both printers that make a changed dish get a change ticket",
+            "ok": true,
+            "detail": "5 jobs",
+            "kind": "expect"
+          },
+          {
+            "label": "each change ticket says ORDER CHANGED at the top",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "kitchen: ADD 1 x Veg Momos (it went from 2 to 3) and ADD 1 x Paneer Roll",
+            "ok": true,
+            "detail": "*** ORDER CHANGED *** |              See ADD / REMOVE below | ------------------------------------------------ |                  KITCHEN ORDER | -----------",
+            "kind": "expect"
+          },
+          {
+            "label": "…and nothing about what did not change (Sweet Lassi), nor the whole quantity",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and nothing about the bar's dish",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "bar: REMOVE 1 x Masala Chai, nothing to add",
+            "ok": true,
+            "detail": "*** ORDER CHANGED *** |              See ADD / REMOVE below | ------------------------------------------------ |                  KITCHEN ORDER | -----------",
+            "kind": "expect"
+          },
+          {
+            "label": "…and none of the kitchen's dishes",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "adding a bar dish sends a change ticket to the bar only — the kitchen is not disturbed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an edit that changes nothing sends no ticket",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "changing only the kitchen note sends a ticket that says what the note is now",
+            "ok": true,
+            "detail": "*** ORDER CHANGED *** | Only the kitchen note changed | ------------------------------------------------ | KITCHEN ORDER | ------------------------------------------------ | Order #0006 | Takeaway | 20 Nov 2026, 11:15 am | ------------------------------------------------ | Note is now: less spicy please | ------------------------------------------------ |",
+            "kind": "expect"
+          },
+          {
+            "label": "(setup) an order that started with only a kitchen dish: the bar printer got nothing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and when a chai is added later, the bar printer gets it",
+            "ok": true,
+            "detail": "*** ORDER CHANGED *** |              See ADD / REMOVE below | ---------------------------------------------",
+            "kind": "expect"
+          },
+          {
+            "label": "an order edited before its kitchen ticket was sent sends no change ticket",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…the ticket that is sent later simply shows the new order (4 x Veg Momos)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "a cancelled order: withdraw a waiting ticket, or send a CANCELLED one",
+        "checks": [
+          {
+            "label": "both printers that had printed the order get one CANCELLED ticket (even though the kitchen printer is also set to fire on 'cancelled' — no second ticket)",
+            "ok": true,
+            "detail": "kitchen 1, bar 1, total 5",
+            "kind": "expect"
+          },
+          {
+            "label": "the kitchen's says ORDER CANCELLED / DO NOT COOK and names the order and ITS dishes only",
+            "ok": true,
+            "detail": "*** ORDER CANCELLED *** |                   DO NOT COOK | ------------------------------------------------ |                  KITCHEN ORDER | ------",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the bar's names the bar's dish",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the counter receipt is not turned into a cancelled ticket",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "tickets still waiting to print are withdrawn when the order is cancelled",
+            "ok": true,
+            "detail": "cancelled,cancelled",
+            "kind": "expect"
+          },
+          {
+            "label": "…and no CANCELLED ticket is printed for something the kitchen never saw",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "kitchen already printed → it gets the CANCELLED ticket; bar still waiting → its ticket is just withdrawn",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "reprints, hand printing and the print log",
+        "checks": [
+          {
+            "label": "reprinting a change ticket prints that same change ticket again (marked REPRINT)",
+            "ok": true,
+            "detail": "*** ORDER CHANGED *** |              See ADD / REMOVE below | ------------------------------------------------ |",
+            "kind": "expect"
+          },
+          {
+            "label": "reprinting the bar's ticket still has only the bar's dishes",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "printing an order by hand on a printer that would otherwise get nothing still prints (the whole order) — a person asked for it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the print log says which tickets are normal, changed or cancelled",
+            "ok": true,
+            "detail": "kot,change,cancel",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "setting where a dish or category is prepared",
+        "checks": [
+          {
+            "label": "a dish can be set to 'bar'",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "…and set back to 'same as its category'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "any other place is refused",
+            "ok": true,
+            "detail": "400",
+            "kind": "expect"
+          },
+          {
+            "label": "a category can be set too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the menu carries each category's and dish's setting",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "a store without the Printing feature",
+        "checks": [
+          {
+            "label": "no tickets of any kind are queued",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 9,
+        "title": "Menu → a category → Edit… → Prepared at",
+        "checks": [
+          {
+            "label": "the category's Edit window has a 'Prepared at' choice",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…offering 'Same as the category it is inside', 'Kitchen' and 'Bar / beverages'",
+            "ok": true,
+            "detail": "Same as the category it is inside | Kitchen | Bar / beverages",
+            "kind": "expect"
+          },
+          {
+            "label": "a category that was never set starts on 'Same as the category it is inside'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a line explains what it decides",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Save keeps it: Beverages is now made at the Bar",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "opening it again still shows 'Bar / beverages'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "choosing 'Same as the category it is inside' clears it again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 10,
+        "title": "Menu → a dish → Edit → Prepared at",
+        "checks": [
+          {
+            "label": "the dish form has 'Prepared at', starting on 'Same as its category'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…with Kitchen and Bar / beverages to pick from",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Save keeps it on the dish",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the form shows it when reopened",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and goes back to 'same as its category'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 11,
+        "title": "Printing → Queue labels the tickets",
+        "checks": [
+          {
+            "label": "(setup) the order has its ticket and a change ticket",
+            "ok": true,
+            "detail": "cancel,change,kot",
+            "kind": "expect"
+          },
+          {
+            "label": "the Queue marks the change ticket 'order changed'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the ticket that tells the kitchen 'order cancelled'",
             "ok": true,
             "detail": "",
             "kind": "expect"

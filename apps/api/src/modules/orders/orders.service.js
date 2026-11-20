@@ -35,7 +35,7 @@ import { getMenu } from "../menu/menu.service.js";
 import { assertOutletOpen, effectiveOutletConfig } from "../outlets/config.service.js";
 import { publicOutletById } from "../outlets/outlet-cache.js";
 import { fireOrderNotifications } from "../notify/notify.service.js";
-import { autoPrintForOrder } from "../printing/printing.service.js";
+import { autoPrintForOrder, printOrderChange } from "../printing/printing.service.js";
 import { earnForOrder, previewRedeem, redeemForOrder, reverseRedeemForOrder, revokeEarnForOrder } from "../wallet/wallet.service.js";
 
 /** Shape an order for the wire the same way the REST routes do. */
@@ -74,6 +74,16 @@ export function wire(o          ) {
 function firePrinters(ctx               , order          , status             )       {
   void autoPrintForOrder(ctx, order, status).catch((err) => {
     logger.error({ err, orderId: String(order._id), status }, "auto-print failed");
+  });
+}
+
+/**
+ * The order was edited after its kitchen ticket went out: the kitchen gets a short "ORDER CHANGED" ticket with only
+ * what is different. Same fire-and-forget contract as {@link firePrinters}.
+ */
+function firePrintChange(ctx               , before                                          , after          )       {
+  void printOrderChange(ctx, before, after).catch((err) => {
+    logger.error({ err, orderId: String(after._id) }, "change-ticket print failed");
   });
 }
 
@@ -624,6 +634,8 @@ export async function editOrder(
   if (order.status === "cancelled") throw new HttpError(409, "A cancelled order can't be edited");
 
   const before = order.totals.grandTotal;
+  // what the kitchen was told, kept to work out what an edit changes
+  const wasOrdered = { lines: order.toObject().lines, note: order.note };
 
   if (input.cart) {
     if (!input.cart.lines.length) throw new HttpError(400, "An order needs at least one item");
@@ -663,6 +675,7 @@ export async function editOrder(
 
   const updated = order.toObject();
   broadcast(ctx.outletId , { type: "order.updated", order: wire(updated) });
+  firePrintChange(ctx, wasOrdered, updated);
   return updated;
 }
 

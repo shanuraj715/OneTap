@@ -133,6 +133,8 @@ const jobSchema = new Schema(
     idempotencyKey: { type: String, required: true },
     isReprint: { type: Boolean, default: false },
     reprintOf: { type: String, default: null },
+    // what kind of kitchen ticket this is: null = the normal one, else { kind: "change" | "cancel", … } (what changed) — kept so a reprint is the same ticket
+    ticket: { type: Schema.Types.Mixed, default: null },
     requestedBy: { type: String, default: null },
     claimedBy: { type: String, default: null },
     claimedAt: { type: Date, default: null },
