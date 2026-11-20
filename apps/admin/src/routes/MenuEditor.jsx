@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { flattenCategories, formatINR, IMAGE_RULES, modifierRuleText } from "@onetap/config-schema";
+import { flattenCategories, formatINR, IMAGE_RULES, modifierRuleText, PREP_STATION_LABELS } from "@onetap/config-schema";
 import { ClipboardPaste, Download, ImagePlus, Loader, Star, X } from "lucide-react";
 import * as api from "../lib/api";
 import { ImportMenuModal } from "../components/ImportMenuModal";
@@ -168,6 +168,8 @@ function ItemForm({
   );
   const [groupIds, setGroupIds] = useState          (item?.modifierGroupIds ?? []);
   const [tags, setTags] = useState((item?.tags ?? []).join(", "));
+  // which kitchen-ticket printer makes it: "" = the same as its category
+  const [prepStation, setPrepStation] = useState(item?.prepStation ?? "");
   // where the dish lives — any category in the tree, so a dish can be placed or moved
   const [catId, setCatId] = useState(item?.categoryId ?? categoryId);
   const categoryChoices = useMemo(
@@ -192,6 +194,7 @@ function ItemForm({
         .filter((v) => v.label.trim())
         .map((v) => ({ id: v.id, label: v.label.trim(), price: toPaise(v.price) })),
       modifierGroupIds: groupIds,
+      prepStation: prepStation || null,
     };
     if (item) update.mutate({ id: item.id, body }, { onSuccess: onDone });
     else create.mutate(body, { onSuccess: onDone });
@@ -235,6 +238,18 @@ function ItemForm({
         </Field>
         <Field label="Tags" hint="Comma separated, e.g. bestseller, spicy" info="Short labels shown as chips on the item card. Use them for the things people choose by — bestseller, spicy, jain — not for a second description." style={{ maxWidth: "none" }}>
           <TextInput value={tags} onChange={(e) => setTags(e.target.value)} />
+        </Field>
+        <Field
+          label="Prepared at"
+          hint="Which kitchen-ticket printer gets this dish"
+          info="Decides where this dish's kitchen ticket (KOT) prints. “Same as its category” follows the category it is in (and the one above that…); if none says otherwise it is made in the Kitchen. Pick Bar for drinks so the bar printer — not the kitchen — gets them."
+        >
+          <select value={prepStation} onChange={(e) => setPrepStation(e.target.value)} style={selectStyle} aria-label="Prepared at" data-testid="item-prep-station">
+            <option value="">Same as its category</option>
+            {Object.entries(PREP_STATION_LABELS).map(([id, label]) => (
+              <option key={id} value={id}>{label}</option>
+            ))}
+          </select>
         </Field>
       </div>
 

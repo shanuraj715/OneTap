@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { prepStationSchema } from "./printing.js";
 import { menuImageSchema } from "./storage.js";
 
 /** Money is always integer paise. ₹110.00 => 11000. */
@@ -48,6 +49,8 @@ export const menuItemSchema = z.object({
   basePrice: z.number().int().nonnegative().default(0),
   variants: z.array(variantSchema).default([]),
   modifierGroupIds: z.array(z.string()).default([]),
+  /** where this dish is made (which kitchen-ticket printer gets it); null = same as its category, else the kitchen */
+  prepStation: prepStationSchema.nullable().default(null),
   gstRatePct: z.number().nonnegative().default(5),
   isAvailable: z.boolean().default(true),
   sortOrder: z.number().int().default(0),
@@ -64,6 +67,8 @@ export const menuCategorySchema = z.object({
   image: menuImageSchema.nullable().default(null),
   sortOrder: z.number().int().default(0),
   isActive: z.boolean().default(true),
+  /** where everything inside this category is made, unless a dish says otherwise; null = same as the category it is inside, else the kitchen */
+  prepStation: prepStationSchema.nullable().default(null),
 });
                                                               
 

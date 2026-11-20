@@ -76,11 +76,24 @@ export const STATION_LABELS                               = {
 
 export const STATION_HINTS                               = {
   counter: "The printer at the billing desk. Customer receipts and bills print here.",
-  kitchen: "The printer the cooks read. Gets the KOT — item names and quantities, never prices.",
-  bar: "A second kitchen-style printer for drinks, so the bar doesn't wait on the food ticket.",
+  kitchen: "The printer the cooks read. Gets the KOT for dishes made in the kitchen — item names and quantities, never prices.",
+  bar: "A second kitchen-style printer for drinks: it gets only the dishes set to “Prepared at: Bar”, so the bar doesn't wait on the food ticket.",
   packing: "For takeaway and delivery — the packing slip that goes on the bag.",
   manager: "Back-office printer for day-end and refund paperwork.",
 };
+
+/* ---------------------------------------------------- where a dish is made */
+
+/**
+ * Where a dish is prepared — decides which kitchen-ticket (KOT) printer gets it. Set on a category (covers everything
+ * inside it, sub-categories too) and/or on a single dish; a dish with nothing set anywhere is made in the kitchen.
+ */
+export const PREP_STATIONS = ["kitchen", "bar"];
+export const prepStationSchema = z.enum(PREP_STATIONS);
+export const PREP_STATION_LABELS = { kitchen: "Kitchen", bar: "Bar / beverages" };
+
+/** The kinds of kitchen ticket: the normal one, one sent when an order is edited after it was sent, one when it is cancelled. */
+export const TICKET_KINDS = ["kot", "change", "cancel"];
 
 /* --------------------------------------------------------------- documents */
 

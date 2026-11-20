@@ -71,6 +71,8 @@ const categoryBody = z.object({
   image: categoryImageBody.nullable().optional(),
   sortOrder: z.number().int().optional(),
   isActive: z.boolean().optional(),
+  /** where everything in it is made (kitchen / bar); null = follow the category it is inside */
+  prepStation: z.enum(["kitchen", "bar"]).nullable().optional(),
 });
 
 menuRouter.post("/categories", async (req, res) => {
@@ -147,6 +149,8 @@ const itemBody = z.object({
   gstRatePct: z.number().nonnegative().optional(),
   isAvailable: z.boolean().optional(),
   sortOrder: z.number().int().optional(),
+  /** where this dish is made (kitchen / bar); null = same as its category */
+  prepStation: z.enum(["kitchen", "bar"]).nullable().optional(),
 });
 
 menuRouter.post("/items", async (req, res) => {

@@ -18,6 +18,8 @@ const categorySchema = new Schema(
     },
     sortOrder: { type: Number, default: 0 },
     isActive: { type: Boolean, default: true },
+    // where everything in this category is made ("kitchen" | "bar"); null = same as its parent category, else the kitchen
+    prepStation: { type: String, default: null },
   },
   { timestamps: true },
 );
@@ -68,6 +70,8 @@ const itemSchema = new Schema(
     description: { type: String, default: "" },
     foodType: { type: String, enum: ["veg", "non-veg", "egg"], default: "veg" },
     tags: { type: [String], default: [] },
+    // where this dish is made ("kitchen" | "bar"); null = same as its category
+    prepStation: { type: String, default: null },
     images: {
       type: [
         new Schema(

@@ -26,6 +26,7 @@ const toCategory = (d) => ({
   image: d.image?.url ? { url: d.image.url, key: d.image.key ?? "", ...(d.image.width ? { width: d.image.width } : {}), ...(d.image.height ? { height: d.image.height } : {}) } : null,
   sortOrder: d.sortOrder,
   isActive: d.isActive,
+  prepStation: d.prepStation ?? null,
 });
 
 const toItem = (d                     )           => ({
@@ -47,6 +48,7 @@ const toItem = (d                     )           => ({
   gstRatePct: d.gstRatePct ?? 5,
   isAvailable: d.isAvailable ?? true,
   sortOrder: d.sortOrder ?? 0,
+  prepStation: d.prepStation ?? null,
 });
 
 const toGroup = (d                     )                => ({
@@ -137,6 +139,7 @@ export async function createCategory(ctx, input) {
     // new ones go to the end of their own level
     sortOrder: input.sortOrder ?? all.filter((c) => c.parentId === parentId).length,
     ...(input.isActive === undefined ? {} : { isActive: input.isActive }),
+    prepStation: input.prepStation ?? null,
   });
   return toCategory(doc.toObject());
 }
@@ -314,6 +317,7 @@ export async function createItem(ctx               , input                      
     gstRatePct: input.gstRatePct ?? 5,
     isAvailable: input.isAvailable ?? true,
     sortOrder: input.sortOrder ?? 0,
+    prepStation: input.prepStation ?? null,
   });
   return toItem(doc.toObject());
 }
@@ -479,6 +483,7 @@ export async function importMenu(ctx, input) {
       ...(image ? { image } : {}),
       sortOrder: siblingCount.get(parentTargetId) ?? 0,
       isActive: srcCat.isActive ?? true,
+      prepStation: srcCat.prepStation ?? null,
     });
     siblingCount.set(parentTargetId, (siblingCount.get(parentTargetId) ?? 0) + 1);
     const newId = String(newCat._id);
@@ -565,6 +570,7 @@ export async function importMenu(ctx, input) {
       gstRatePct: srcItem.gstRatePct ?? 5,
       isAvailable: srcItem.isAvailable ?? true,
       sortOrder: nextItemSortOrder++,
+      prepStation: srcItem.prepStation ?? null,
     });
     importedItemsCount++;
   }

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { categoryHeight, categoryLevel, categorySubtreeIds, flattenCategories, cleanCategoryName, duplicateCategoryName, IMAGE_RULES, MAX_CATEGORIES_AT_ONCE, MAX_CATEGORY_DEPTH, planCategoryMove } from "@onetap/config-schema";
+import { categoryHeight, categoryLevel, categorySubtreeIds, flattenCategories, cleanCategoryName, duplicateCategoryName, IMAGE_RULES, MAX_CATEGORIES_AT_ONCE, MAX_CATEGORY_DEPTH, planCategoryMove, PREP_STATION_LABELS } from "@onetap/config-schema";
 import { ArrowDown, ArrowUp, Download, FolderPlus, GripVertical, ImagePlus, Loader, Minus, MoreHorizontal, Pencil, Plus, Trash2, X } from "lucide-react";
 import * as api from "../../lib/api";
 import { useCreateCategories, useCreateCategory, useDeleteCategories, useMoveCategory, useReorderCategories, useUpdateCategory } from "../../lib/useMenu";
@@ -259,7 +259,7 @@ export function CategoriesPanel({ outlet, menu, selected, onSelect, onImport, se
                 width={220}
                 options={[
                   { value: "add", label: "Add sub-category", icon: <FolderPlus size={13} />, disabled: categoryLevel(categories, c.id) >= MAX_CATEGORY_DEPTH },
-                  { value: "edit", label: "Edit…", description: "Name, picture, where it sits", icon: <Pencil size={13} /> },
+                  { value: "edit", label: "Edit…", description: "Name, picture, where it sits, where it is made", icon: <Pencil size={13} /> },
                   { value: "up", label: "Move up", icon: <ArrowUp size={13} /> },
                   { value: "down", label: "Move down", icon: <ArrowDown size={13} /> },
                   { value: "delete", label: "Delete…", icon: <Trash2 size={13} />, danger: true },
@@ -367,6 +367,8 @@ function CategoryDialog({ outlet, menu, dialog, onClose }) {
   const [parentId, setParentId] = useState(editing.parentId ?? "");
   const [image, setImage] = useState(editing.image ?? null);
   const [isActive, setIsActive] = useState(editing.isActive ?? true);
+  // which kitchen-ticket printer makes what is in here: "" = the same as the category it is inside (else the kitchen)
+  const [prepStation, setPrepStation] = useState(editing.prepStation ?? "");
   const [uploaded, setUploaded] = useState([]); // pictures uploaded in this dialog (cleaned up if not saved)
   const update = useUpdateCategory(outlet);
   const { upload, busy, error: uploadError, clearError } = useImageUpload(outlet, { kind: "menu-categories" });
@@ -414,7 +416,7 @@ function CategoryDialog({ outlet, menu, dialog, onClose }) {
 
   const save = () => {
     if (!name.trim()) return;
-    const body = { name: cleanCategoryName(name), parentId: parentId || null, image: image ? { url: image.url, key: image.key ?? "", width: image.width, height: image.height } : null, isActive };
+    const body = { name: cleanCategoryName(name), parentId: parentId || null, image: image ? { url: image.url, key: image.key ?? "", width: image.width, height: image.height } : null, isActive, prepStation: prepStation || null };
     update.mutate({ id: editing.id, body }, { onSuccess: onClose });
   };
 
@@ -434,6 +436,20 @@ function CategoryDialog({ outlet, menu, dialog, onClose }) {
               <option key={o.id} value={o.id} disabled={o.disabled}>
                 {o.label}
               </option>
+            ))}
+          </select>
+        </Field>
+
+        <Field
+          label="Prepared at"
+          hint="Which kitchen-ticket printer gets what is in here"
+          info="Everything in this category (and in the categories inside it) goes to this printer's kitchen ticket. Pick Bar for a Drinks category. A single dish can still be set differently on its own page. If nothing is set anywhere, it is made in the Kitchen."
+          style={{ maxWidth: "none" }}
+        >
+          <select value={prepStation} onChange={(e) => setPrepStation(e.target.value)} style={selectStyle} aria-label="Prepared at" data-testid="category-prep-station">
+            <option value="">Same as the category it is inside</option>
+            {Object.entries(PREP_STATION_LABELS).map(([id, label]) => (
+              <option key={id} value={id}>{label}</option>
             ))}
           </select>
         </Field>
