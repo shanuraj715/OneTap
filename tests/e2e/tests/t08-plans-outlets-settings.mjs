@@ -118,7 +118,7 @@ export async function run(d, h) {
   const specFor = (slug, i) => {
     const o = OUTLETS[slug];
     return [
-      { tab: "Business", text: { "Restaurant name": o.title, "Tagline": `Outlet ${i + 1} tagline`, "FSSAI licence number": `1234567890${100 + i}`, "GSTIN": `07AAAAA0000A1Z${i + 1}`, "Phone": `+91 98000 0000${i}`, "Email": `${slug}@lifecycle.test`, "Address": `${o.name} address, Delhi NCR`, "Latitude": String(o.lat), "Longitude": String(o.lng), "Address shown to customers": `${o.name} address, Delhi NCR` } },
+      { tab: "Business", text: { "Tagline": `Outlet ${i + 1} tagline`, "FSSAI licence number": `1234567890${100 + i}`, "GSTIN": `07AAAAA0000A1Z${i + 1}`, "Phone": `+91 98000 0000${i}`, "Email": `${slug}@lifecycle.test`, "Address": `${o.name} address, Delhi NCR`, "Latitude": String(o.lat), "Longitude": String(o.lng), "Address shown to customers": `${o.name} address, Delhi NCR` } },
       { tab: "Opening hours", ticks: { "Enforce opening hours": true }, text: { "Opens at": o.hours[0], "Closes at": o.hours[1], "Stop taking orders early (minutes)": String(15 + i * 5), "Closed message": `${o.name} is closed right now.` } },
       { tab: "Missed-order alerts", ticks: { "Warn me about slow orders": true, "Play a sound": i !== 1, "Keep reminding me": i === 0 }, text: { "Accept within (minutes)": String(3 + i), "Start cooking within (minutes)": String(6 + i), "Finish cooking within (minutes)": String(25 + i), "Hand over within (minutes)": String(12 + i) } },
       { tab: "Order handling", ticks: { "Show the oldest order first": i === 1, "Allow staff to correct a status": i !== 2, "Accept incoming orders automatically": false }, picks: { "Lock editing after": ["Once cooking starts", "Once the food is ready", "Once completed"][i] }, text: { "Fallback refresh (seconds)": String(10 + i) } },
@@ -145,6 +145,11 @@ export async function run(d, h) {
     d.check(`${OUTLETS[slug].name}: all ${n} settings across 10 tabs read back exactly as saved`, bad.length === 0, bad.slice(0, 3).join(" · "));
   }
   await d.shot("settings-readback");
+
+  await d.step("Give each outlet the name customers see — Settings → Outlets → ✎ (the Store name in Settings is the whole store's and can't be edited there)");
+  for (const slug of Object.keys(OUTLETS)) await ui.renameOutlet(d, OUTLETS[slug].name, OUTLETS[slug].title);
+  const outletsPage = await ui.text(d);
+  d.check("each outlet is listed under the name customers see", Object.values(OUTLETS).every((o) => outletsPage.includes(o.title)));
 
   /* ------------------------------------------------------------ delivery distance */
   await d.tab("customer", "Customer · storefront");
@@ -202,7 +207,7 @@ export async function run(d, h) {
   d.check("Central (busy only at 5 orders) shows no load message", await (async () => { await d.goto(`${SUB_URL}/central`, 300); await ui.addToCart(d, "Veg Burger"); await d.click(d.page.getByRole("link", { name: /View cart/ }), { after: 600 }); return !/busy right now|not taking orders/.test(await ui.text(d)); })());
 
   await Owner();
-  await ui.switchOutlet(d, "Second");
+  await ui.switchOutlet(d, OUTLETS.second.title); // renamed to the name customers see, earlier in this test
   await d.goto(`${BENCH.admin}/orders`, 800);
   const bar = await ui.text(d);
   d.check("the dashboard's Orders screen lists the four orders", placed.every((n) => bar.includes(`#${n}`)), placed.join(", "));

@@ -79,13 +79,14 @@ export function Outlets() {
                   /{o.slug}
                 </div>
               </div>
-              <button type="button" style={iconBtn} title="Edit" onClick={() => setModal(o)}>
+              <button type="button" style={iconBtn} title="Edit" aria-label={`Edit ${o.name}`} onClick={() => setModal(o)}>
                 <Pencil size={13} />
               </button>
               <button
                 type="button"
                 style={iconBtn}
                 title={siblings.length <= 1 ? "A brand needs at least one outlet" : "Delete"}
+                aria-label={`Delete ${o.name}`}
                 disabled={siblings.length <= 1}
                 onClick={() => askDelete(o)}
               >

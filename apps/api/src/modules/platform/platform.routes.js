@@ -253,6 +253,13 @@ platformRouter.post("/stores/:id/enable", limiter("destructive"), async (req, re
   res.json({ store: await platform.setStoreDisabled(req.params.id, false) });
 });
 
+const renameBody = z.object({ name: z.string().trim().min(1, "Give the store a name").max(80, "The store name can be at most 80 characters") });
+
+/** Change a store's name — the platform admin only (this router is), never the store's own owner. */
+platformRouter.patch("/stores/:id", async (req, res) => {
+  res.json({ store: await platform.renameStore(req.params.id, renameBody.parse(req.body).name) });
+});
+
 const planBody = z.object({
   planId: z.string().min(1).nullable().optional(),
   overrides: z.record(z.string(), z.unknown()).optional(),

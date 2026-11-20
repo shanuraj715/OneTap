@@ -41,8 +41,12 @@ async function forOwner(outlet) {
 
 /** Outlets for one brand — tenant-scoped. */
 export async function listOutlets(ctx               ) {
-  const outlets = await OutletModel.find(byBrand(ctx)).sort({ createdAt: 1 }).lean();
-  return Promise.all(outlets.map(forOwner));
+  const [outlets, brand] = await Promise.all([
+    OutletModel.find(byBrand(ctx)).sort({ createdAt: 1 }).lean(),
+    BrandModel.findOne({ _id: ctx.brandId }).select("name").lean(),
+  ]);
+  // the STORE's name rides along: the dashboard shows it (read-only) in Settings; only the platform admin can change it
+  return Promise.all(outlets.map(async (o) => ({ ...(await forOwner(o)), brandName: brand?.name ?? "" })));
 }
 
 /** Dev / super-admin view across all tenants — deliberately global. */
@@ -140,9 +144,10 @@ export async function updateOutlet(ctx               , id        , input) {
 
   if (input.name !== undefined) {
     outlet.name = input.name;
-    // The outlet's own name is what the picker/switcher fall back to when
-    // the config hasn't set a storefront-facing name of its own.
-    if (!outlet.config.identity.name) outlet.config.identity.name = input.name;
+    // The outlet's name is the one name the picker, receipts and messages show (Settings no longer has a second box for
+    // it — "Store name" there is the whole store's), so renaming the outlet renames that display name too.
+    outlet.config.identity.name = input.name;
+    outlet.markModified("config");
   }
 
   if (input.hostnames !== undefined) {

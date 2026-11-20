@@ -66,7 +66,7 @@ export async function run(d, h) {
   const coupon = await ui.createCoupon(d, "AFTER10");
   d.never("a coupon is created on Basic", /Delete AFTER10/.test(coupon));
   d.check("…with the plan message", /isn't included in your plan/i.test(coupon));
-  await ui.switchOutlet(d, "Central");
+  await ui.switchOutlet(d, OUTLETS.central.title);
   await d.goto(`${BENCH.admin}/settings`, 400);
   await d.click(d.page.getByRole("tab", { name: "Features" }), { after: 300 });
   const features = await ui.text(d);

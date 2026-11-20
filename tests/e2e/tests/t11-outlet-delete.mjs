@@ -36,7 +36,7 @@ export async function run(d, h) {
 
   await d.step("The owner tries to delete outlet 2, which has orders");
   await as("owner", OWNER, "Store dashboard · owner of Lifecycle Foods");
-  const refused = await ui.deleteOutletRow(d, "Second");
+  const refused = await ui.deleteOutletRow(d, OUTLETS.second.title);
   d.never("an outlet with order history is deleted", !/order history/i.test(refused) && !/Second\s*second/.test(refused), refused.slice(-200));
   d.check("…the owner is told it has order history and can't be deleted", /order history/i.test(refused), refused.match(/[^.]*order history[^.]*\./i)?.[0]);
   await d.shot("delete-refused");
@@ -46,7 +46,7 @@ export async function run(d, h) {
   await d.step("The owner deletes outlet 3 (no orders) from the dashboard");
   await as("owner", OWNER, "Store dashboard · owner of Lifecycle Foods");
   const listBefore = await ui.text(d);
-  await ui.deleteOutletRow(d, "Third");
+  await ui.deleteOutletRow(d, OUTLETS.third.title);
   await d.goto(`${BENCH.admin}/outlets`, 500);
   const list = await ui.text(d);
   d.check("the Outlets page no longer lists Third", /Central/.test(list) && /Second/.test(list) && !/\bThird\b/.test(list), list.match(/Outlets —[^]{0,120}/)?.[0]);

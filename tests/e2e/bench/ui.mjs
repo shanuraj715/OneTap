@@ -194,6 +194,16 @@ export async function addOutlet(d, name, slug) {
   return { refused: false, text: await text(d) };
 }
 
+/** Outlets → ✎ on the outlet called `current` → type `next` as its Name → Save changes (this is also the name customers see). */
+export async function renameOutlet(d, current, next) {
+  await d.goto(BENCH.admin + "/outlets", 400);
+  // each outlet's pencil is labelled "Edit <its name>" (the name alone also matches the sidebar's outlet switcher)
+  await d.click(d.page.getByRole("button", { name: `Edit ${current}`, exact: true }), { after: 400 });
+  const dlg = d.page.locator("form, [role=dialog], div").filter({ has: d.page.getByRole("button", { name: "Save changes" }) }).last();
+  await fill(d, "Name", next, dlg);
+  await d.click(dlg.getByRole("button", { name: "Save changes" }), { after: 1000 });
+}
+
 /** Platform → store → Plan & limits → choose a plan → save. */
 export async function setStorePlan(d, storeName, planName) {
   await openStore(d, storeName, "Plan & limits");
@@ -401,9 +411,10 @@ export async function removeAddress(d, storeName) {
 /** Outlets (store dashboard): the bin icon on an outlet's row; the browser's own "Delete …?" box is accepted. Returns the page text. */
 export async function deleteOutletRow(d, outletName) {
   await d.goto(BENCH.admin + "/outlets", 500);
-  const row = d.page.getByText(outletName, { exact: true }).first().locator("xpath=ancestor::*[.//button[@title='Delete' or starts-with(@title,'A brand')]][1]");
-  await row.waitFor({ timeout: 10000 });
-  await d.click(row.locator("button[title='Delete']"), { after: 1200 });
+  // each outlet's × is labelled "Delete <its name>" (the name alone also matches the sidebar's outlet switcher)
+  const del = d.page.getByRole("button", { name: `Delete ${outletName}`, exact: true });
+  await del.waitFor({ timeout: 10000 });
+  await d.click(del, { after: 1200 });
   return text(d);
 }
 

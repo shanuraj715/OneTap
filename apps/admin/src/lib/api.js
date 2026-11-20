@@ -748,6 +748,7 @@ export const getPlatformSettings = () => req("/api/platform/settings");
 export const updatePlatformSettings = (body) => req("/api/platform/settings", json("PUT", body));
 export const listStores = () => req("/api/platform/stores");
 export const getStore = (id) => req(`/api/platform/stores/${id}`);
+export const renameStore = (id, name) => req(`/api/platform/stores/${id}`, json("PATCH", { name }));
 export const setStorePlan = (id, body) => req(`/api/platform/stores/${id}/plan`, json("PATCH", body));
 export const setStoreDomains = (id, body) => req(`/api/platform/stores/${id}/domains`, json("PUT", body));
 export const checkSubdomain = (label, storeId) =>

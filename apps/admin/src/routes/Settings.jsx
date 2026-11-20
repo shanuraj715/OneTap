@@ -20,6 +20,7 @@ import {
   Truck,
 } from "lucide-react";
 import { useOutlet, usePatchConfig } from "../lib/useOutlet";
+import { useAuth } from "../lib/useAuth";
 import { useStorePlan } from "../lib/useStorePlan";
 import { LocationField } from "./settings/LocationField";
 import { Button, Card, Checkbox, Field, InfoHint, Note, PageHeader, Select, Tabs, TextInput, Toast } from "../ui";
@@ -29,11 +30,6 @@ import { SettingsNav } from "../components/SubNav";
                                                                                                                     
 
 const IDENTITY_FIELDS                                                                              = [
-  {
-    key: "name",
-    label: "Restaurant name",
-    info: "The name customers see — on the website, at the top of every receipt, and in order confirmations. Changing it here changes it everywhere.",
-  },
   {
     key: "tagline",
     label: "Tagline",
@@ -71,6 +67,7 @@ const IDENTITY_FIELDS                                                           
 export function Settings() {
   const { outlet } = useOutlet();
   const { hasFeature } = useStorePlan();
+  const isSuperAdmin = Boolean(useAuth().user?.isSuperAdmin);
   const patch = usePatchConfig();
   const [tab, setTab] = useState     ("business");
   const [draft, setDraft] = useState                     (null);
@@ -182,6 +179,26 @@ export function Settings() {
         <>
           <Card title="Business identity" subtitle="Used on the storefront, on receipts, and on tax invoices.">
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 14 }}>
+              {/* the STORE's name (one for every outlet): shown here, never editable by the store — only the platform admin renames a store */}
+              <Field
+                label="Store name"
+                info="The name of your whole store — shown in the storefront header, on receipts and in order messages, the same for every outlet. It is set by TablePe and can't be changed here. To rename just one outlet, use Settings → Outlets."
+                hint={
+                  isSuperAdmin
+                    ? "Change it in the platform console: Stores → this store → Store name."
+                    : "Contact the TablePe admin to update the store name."
+                }
+                style={{ maxWidth: "none" }}
+              >
+                <TextInput
+                  value={outlet.brandName ?? ""}
+                  disabled
+                  readOnly
+                  data-testid="store-name"
+                  aria-label="Store name (only the TablePe admin can change it)"
+                  style={{ background: "var(--color-surface)", color: "var(--color-text-muted)", cursor: "not-allowed" }}
+                />
+              </Field>
               {IDENTITY_FIELDS.map((f) => (
                 <Field key={f.key} label={f.label} hint={f.hint} info={f.info} style={{ maxWidth: "none" }}>
                   <TextInput value={String(draft.identity[f.key] ?? "")} onChange={(e) => setIdentity(f.key, e.target.value)} />

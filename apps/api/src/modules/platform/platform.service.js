@@ -265,6 +265,19 @@ export async function setStorePlan(id, { planId, overrides }) {
   return getStore(id);
 }
 
+/**
+ * Rename a store. The store's name is the one shown in every storefront header, on receipts and in customer messages;
+ * only the platform admin can change it (there is no owner route for it). Writing the brand clears the caches that hold it.
+ */
+export async function renameStore(id, name) {
+  const brand = await BrandModel.findById(id);
+  if (!brand) throw new HttpError(404, "Store not found");
+  brand.name = name;
+  await brand.save();
+  invalidateStorePlan(id);
+  return getStore(id);
+}
+
 /* ------------------------------------------------ switching a whole store off */
 
 const OBJECT_ID = /^[0-9a-f]{24}$/i;
