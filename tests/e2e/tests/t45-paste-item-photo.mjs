@@ -64,7 +64,7 @@ export async function run(d) {
   const row = d.page.locator('[data-testid="item-row"][data-item="Veg Steamed Momos"]');
   await row.waitFor({ timeout: 10000 });
   await d.click(row.getByTitle("Edit"), { after: 700 });
-  await d.page.getByText("Photos", { exact: true }).first().waitFor({ timeout: 8000 });
+  await d.page.getByText(/^Photos/).first().waitFor({ timeout: 8000 });
   const n0 = await photoCount();
   d.check("the dish has room for the pastes below (at most 2 photos to start with)", n0 <= 2, `${n0} photos`);
   d.check("the Photos box offers 'Add photo' and 'Paste photo'", (await d.page.getByTestId("add-photo").isVisible()) && (await d.page.getByTestId("paste-photo").isVisible()));
@@ -74,7 +74,7 @@ export async function run(d) {
   /* ------------------------------------------------------------------ the keyboard shortcut */
   await d.step("A copied picture is pasted with Ctrl/⌘+V", 400);
   await copyPicture("#c8372d");
-  await d.page.getByText("Photos", { exact: true }).first().click(); // somewhere neutral on the page
+  await d.page.getByText(/^Photos/).first().click(); // somewhere neutral on the page
   await d.page.keyboard.press(PASTE);
   d.check("it is added as a new photo", await waitPhotos(n0 + 1), `${await photoCount()} photos`);
   d.check("the new photo really loads", await ui.until(async () => photos().last().locator("img").evaluate((i) => i.complete && i.naturalWidth > 100), 8000));
@@ -116,18 +116,18 @@ export async function run(d) {
   // small pictures fill the dish up to five photos, then a big one is the sixth
   for (let have = n0 + 3; have < 5; have++) {
     await copyPicture(["#8a2dc8", "#2dc8c0", "#c82d8a"][have % 3]);
-    await d.page.getByText("Photos", { exact: true }).first().click();
+    await d.page.getByText(/^Photos/).first().click();
     await d.page.keyboard.press(PASTE);
     await waitPhotos(have + 1);
   }
   d.check("the dish is up to five photos", (await photoCount()) === 5, `${await photoCount()}`);
   await copyPicture("#c89a2d", 2400, 1600, true);
-  await d.page.getByText("Photos", { exact: true }).first().click();
+  await d.page.getByText(/^Photos/).first().click();
   await d.page.keyboard.press(PASTE);
   d.check("a big 2400×1600 picture is accepted as the sixth photo", await waitPhotos(6, 40000), `${await photoCount()} photos`);
   d.check("at six photos the Add and Paste tiles are gone", (await d.page.getByTestId("add-photo").count()) === 0 && (await d.page.getByTestId("paste-photo").count()) === 0);
   await copyPicture("#7a2dc8");
-  await d.page.getByText("Photos", { exact: true }).first().click();
+  await d.page.getByText(/^Photos/).first().click();
   await d.page.keyboard.press(PASTE);
   d.check("pasting a seventh says the dish already has six", await ui.until(async () => /already has 6 square photos/.test(await ui.text(d)), 6000));
   d.never("a seventh photo was added", (await photoCount()) > 6, `${await photoCount()}`);

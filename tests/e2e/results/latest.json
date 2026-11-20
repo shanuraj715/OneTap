@@ -11134,12 +11134,12 @@
     "id": "t32-menu-tree-api",
     "title": "Menu categories inside categories — depth, moving, pictures, ordering, bulk delete of categories and items, import, and how the storefront builds its sections",
     "status": "pass",
-    "pass": 92,
+    "pass": 93,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T05:43:36.817Z",
-    "durationMs": 3530,
+    "at": "2026-11-20T19:17:57.022Z",
+    "durationMs": 4206,
     "steps": [
       {
         "n": 1,
@@ -11338,6 +11338,12 @@
             "kind": "expect"
           },
           {
+            "label": "a parent with no dishes of its own still gets a heading, because dishes sit inside it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
             "label": "switching a category off hides it AND everything inside it",
             "ok": true,
             "detail": "Starters",
@@ -11508,7 +11514,7 @@
           {
             "label": "three categories are made in one request (201)",
             "ok": true,
-            "detail": "201 {\"categories\":[{\"id\":\"6affde08f3756b13a513dde9\",\"name\":\"Bulk Dosa\",\"parentId\":\"6affde08f3756b13a513dde3\",\"image\":{\"url\":",
+            "detail": "201 {\"categories\":[{\"id\":\"6b009ce450422bcd60b6cc0d\",\"name\":\"Bulk Dosa\",\"parentId\":\"6b009ce450422bcd60b6cc07\",\"image\":{\"url\":",
             "kind": "expect"
           },
           {
@@ -11771,8 +11777,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T19:05:22.887Z",
-    "durationMs": 45311,
+    "at": "2026-11-20T19:17:51.906Z",
+    "durationMs": 45571,
     "steps": [
       {
         "n": 1,
@@ -13304,8 +13310,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T18:50:53.290Z",
-    "durationMs": 5187,
+    "at": "2026-11-20T19:15:03.713Z",
+    "durationMs": 5306,
     "steps": [
       {
         "n": 1,
@@ -13452,7 +13458,7 @@
           {
             "label": "a picture is made and added to the dish",
             "ok": true,
-            "detail": "200 {\"item\":{\"id\":\"6b00968bf76c02fd8ecac778\",\"categoryId\":\"6b00968bf76c02fd8ecac772\",\"name\":\"Kadai Paneer\",\"description\":\"Pa",
+            "detail": "200 {\"item\":{\"id\":\"6b009c35d7fb339023460cbb\",\"categoryId\":\"6b009c35d7fb339023460cb5\",\"name\":\"Kadai Paneer\",\"description\":\"Pa",
             "kind": "expect"
           },
           {
@@ -13476,13 +13482,13 @@
           {
             "label": "the picture was compressed to WebP, stored in the store's own folder, and saved without a domain",
             "ok": true,
-            "detail": "/uploads/6b00968bf76c02fd8ecac72a/6b00968bf76c02fd8ecac72d/m",
+            "detail": "/uploads/6b009c35d7fb339023460c74/6b009c35d7fb339023460c77/m",
             "kind": "expect"
           },
           {
             "label": "…and the menu hands out a full address",
             "ok": true,
-            "detail": "http://localhost:3101/uploads/6b00968bf76c02fd8eca",
+            "detail": "http://localhost:3101/uploads/6b009c35d7fb33902346",
             "kind": "expect"
           },
           {
@@ -13506,7 +13512,7 @@
           {
             "label": "…at the same time, not one after another (3 × 0.4 s took under 1.1 s)",
             "ok": true,
-            "detail": "486 ms",
+            "detail": "458 ms",
             "kind": "expect"
           },
           {
@@ -13830,7 +13836,7 @@
           {
             "label": "…and the answer says which key was switched away from, and which made the picture",
             "ok": true,
-            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Second account\"]}",
+            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Third\"]}",
             "kind": "expect"
           },
           {
@@ -13848,7 +13854,7 @@
           {
             "label": "…and the answer says which key was switched away from, and which made the picture",
             "ok": true,
-            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Third\"]}",
+            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Second account\"]}",
             "kind": "expect"
           },
           {
@@ -13937,8 +13943,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T19:05:46.991Z",
-    "durationMs": 18918,
+    "at": "2026-11-20T19:14:57.586Z",
+    "durationMs": 18998,
     "steps": [
       {
         "n": 1,
@@ -15605,8 +15611,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T18:50:00.011Z",
-    "durationMs": 8760,
+    "at": "2026-11-20T19:16:12.730Z",
+    "durationMs": 8983,
     "steps": [
       {
         "n": 1,
@@ -15651,7 +15657,7 @@
           {
             "label": "it is a stored picture (not a data: link)",
             "ok": true,
-            "detail": "http://localhost:3097/uploads/6b009625768310a903c519f9/6b009625768310a903c519fc/",
+            "detail": "http://localhost:3097/uploads/6b009c1c12b2504d99282439/6b009c1d12b2504d99282440/",
             "kind": "expect"
           }
         ]
@@ -15788,8 +15794,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T19:06:03.726Z",
-    "durationMs": 16713,
+    "at": "2026-11-20T19:14:26.583Z",
+    "durationMs": 16633,
     "steps": [
       {
         "n": 1,
@@ -15804,13 +15810,13 @@
           {
             "label": "the list uses several columns on a wide screen",
             "ok": true,
-            "detail": "3 columns, 6 rows, 16 groups",
+            "detail": "4 columns, 4 rows, 16 groups",
             "kind": "expect"
           },
           {
             "label": "the list is one long column on a wide screen",
             "ok": true,
-            "detail": "3 columns",
+            "detail": "4 columns",
             "kind": "never"
           },
           {
@@ -16104,13 +16110,13 @@
           {
             "label": "the pop-up shows the renamed group",
             "ok": true,
-            "detail": "Veg Steamed Momos from ₹60 Veg Steamed Momos — made fresh to order CHOOSE A SIZE Required 5 pcs ₹60 8 pcs ₹90 T46 DIPS & SAUCES Optional Mint Dip +₹10 Cheese Dip +₹35 Mayonnaise +₹15 Garlic Dip +₹25 T",
+            "detail": "‹ › Veg Steamed Momos Veg Steamed Momos from ₹60 Veg Steamed Momos — made fresh to order CHOOSE A SIZE Required 5 pcs ₹60 8 pcs ₹90 T46 DIPS & SAUCES Optional Mint Dip +₹10 Cheese Dip +₹35 Mayonnaise ",
             "kind": "expect"
           },
           {
             "label": "…with the new prices and options",
             "ok": true,
-            "detail": "Veg Steamed Momos from ₹60 Veg Steamed Momos — made fresh to order CHOOSE A SIZE Required 5 pcs ₹60 8 pcs ₹90 T46 DIPS & SAUCES Optional Mint Dip +₹10 Cheese Dip +₹35 Mayonnaise +₹15 Garlic Dip +₹25 T46 REQUIRED CHOICE Optional Veg Free Non-veg +₹20 − 1 + Add · ₹60 Cancel",
+            "detail": "‹ › Veg Steamed Momos Veg Steamed Momos from ₹60 Veg Steamed Momos — made fresh to order CHOOSE A SIZE Required 5 pcs ₹60 8 pcs ₹90 T46 DIPS & SAUCES Optional Mint Dip +₹10 Cheese Dip +₹35 Mayonnaise +₹15 Garlic Dip +₹25 T46 REQUIRED CHOICE Optional Veg Free Non-veg +₹20 − 1 + Add · ₹60 Cancel",
             "kind": "expect"
           },
           {
@@ -17783,8 +17789,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T10:35:44.569Z",
-    "durationMs": 24877,
+    "at": "2026-11-20T19:15:29.647Z",
+    "durationMs": 25067,
     "steps": [
       {
         "n": 1,
@@ -17955,7 +17961,7 @@
           {
             "label": "changing only the kitchen note sends a ticket that says what the note is now",
             "ok": true,
-            "detail": "*** ORDER CHANGED *** | Only the kitchen note changed | ------------------------------------------------ | KITCHEN ORDER | ------------------------------------------------ | Order #0006 | Takeaway | 20 Nov 2026, 04:05 pm | ------------------------------------------------ | Note is now: less spicy please | ------------------------------------------------ |",
+            "detail": "*** ORDER CHANGED *** | Only the kitchen note changed | ------------------------------------------------ | KITCHEN ORDER | ------------------------------------------------ | Order #0006 | Takeaway | 21 Nov 2026, 12:45 am | ------------------------------------------------ | Note is now: less spicy please | ------------------------------------------------ |",
             "kind": "expect"
           },
           {
@@ -19517,8 +19523,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T19:06:17.627Z",
-    "durationMs": 4426,
+    "at": "2026-11-20T19:19:22.508Z",
+    "durationMs": 5065,
     "steps": [
       {
         "n": 1,
@@ -19575,7 +19581,7 @@
           {
             "label": "a rider is added from the Delivery riders tab",
             "ok": true,
-            "detail": "[{\"id\":\"6b009a269f68549d215d3fea\",\"name\":\"Ramesh\",\"phone\":\"98765 43210\",\"isActive\":true,\"createdAt\":\"2026-11-20T19:06:14.502Z\"}]",
+            "detail": "[{\"id\":\"6b009d3615103ab003b26ada\",\"name\":\"Ramesh\",\"phone\":\"98765 43210\",\"isActive\":true,\"createdAt\":\"2026-11-20T19:19:18.920Z\"}]",
             "kind": "expect"
           },
           {
@@ -19605,7 +19611,7 @@
           {
             "label": "the row now says Out for delivery — with Ramesh",
             "ok": true,
-            "detail": "#0001 12:36 AM UI Tester Del 1 ₹90 Out for delivery with Ramesh 0m Delivered",
+            "detail": "#0005 12:49 AM UI Tester Del 1 ₹90 Out for delivery with Ramesh 0m Delivered",
             "kind": "expect"
           },
           {
@@ -19659,7 +19665,7 @@
           {
             "label": "a combo is created from the dish form",
             "ok": true,
-            "detail": "{\"items\":[{\"itemId\":\"6b0099f69f68549d215d33e6\",\"variantId\":null,\"quantity\":1}]}",
+            "detail": "{\"items\":[{\"itemId\":\"6b009cb115103ab003b25efa\",\"variantId\":null,\"quantity\":1}]}",
             "kind": "expect"
           },
           {
@@ -20261,8 +20267,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T18:51:01.508Z",
-    "durationMs": 4587,
+    "at": "2026-11-20T19:14:32.579Z",
+    "durationMs": 5211,
     "steps": [
       {
         "n": 1,
@@ -20719,6 +20725,249 @@
             "label": "an owner who types a /store/… address is sent back to their own dashboard",
             "ok": true,
             "detail": "/",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser console",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t61-item-form-modal": {
+    "id": "t61-item-form-modal",
+    "title": "Edit / New item is a pop-up — fixed Save and Cancel footer, scrolling body, Esc closes — and photos are saved as they change",
+    "status": "pass",
+    "pass": 33,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-20T19:16:23.277Z",
+    "durationMs": 9748,
+    "steps": [
+      {
+        "n": 1,
+        "title": "A pop-up with a fixed footer",
+        "checks": [
+          {
+            "label": "Edit opens a pop-up, with a footer",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the item list is still there behind it (the form no longer replaces the list)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the body is taller than the window space and scrolls on its own",
+            "ok": true,
+            "detail": "{\"scroll\":1670,\"client\":474,\"overflowY\":\"auto\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "scrolling the form to the bottom leaves the Save / Cancel footer where it was, inside the window",
+            "ok": true,
+            "detail": "559 → 559",
+            "kind": "expect"
+          },
+          {
+            "label": "Save changes and Cancel are both visible at the bottom, whatever the scroll",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the page behind doesn't scroll while it is open",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the pop-up is a landscape rectangle, not a square",
+            "ok": true,
+            "detail": "1200 × 589",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Esc closes it; clicking outside does not",
+        "checks": [
+          {
+            "label": "a click outside the pop-up doesn't close it (so nothing typed is lost by accident)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Esc closes the pop-up",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the ✕ closes it too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Other fields are saved with Save, and discarded with Cancel / Esc",
+        "checks": [
+          {
+            "label": "typing a new name and pressing Cancel changes nothing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and so does Esc",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the name is NOT saved just by typing it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Save changes saves it and closes the pop-up",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Save is off while the name is empty",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Photos are saved as they change",
+        "checks": [
+          {
+            "label": "an uploaded photo is on the dish at once — without pressing Save",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…while the name typed in the same form is still unsaved",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the Photos heading says 'Saved'",
+            "ok": true,
+            "detail": "Saved",
+            "kind": "expect"
+          },
+          {
+            "label": "the form says photos need no Save",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a square photo too (two photos saved)",
+            "ok": true,
+            "detail": "2",
+            "kind": "expect"
+          },
+          {
+            "label": "removing a photo is saved at once too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "closing with Esc keeps the photos (already saved) and drops the unsaved name",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the kept photo opens",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "reopening the dish shows the saved photo",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the last photo removed is saved as well",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "A new dish keeps its photos until it is created",
+        "checks": [
+          {
+            "label": "'Add item' opens the same pop-up as New item",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and says its photos are saved when it is created",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no 'Saved' status — nothing is saved before it exists",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the photo does not create anything by itself",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(the uploaded photo is on the server)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "cancelling a NEW dish deletes the photo it uploaded — nothing is left behind",
+            "ok": true,
+            "detail": "404",
+            "kind": "expect"
+          },
+          {
+            "label": "Create item saves the dish together with its photo",
+            "ok": true,
+            "detail": "[\"1:1\"]",
             "kind": "expect"
           },
           {

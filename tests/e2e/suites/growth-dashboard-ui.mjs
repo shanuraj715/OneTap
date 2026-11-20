@@ -137,7 +137,7 @@ try {
   await page.locator('[data-testid="cat-row"][data-category="Beverages"] button', { hasText: "Beverages" }).first().click();
   await page.getByRole("button", { name: /Add item/ }).first().click();
   await page.getByTestId("item-combo").waitFor();
-  await page.locator("label", { hasText: "Name" }).locator("input").first().fill("UI Lassi Combo");
+  await page.getByRole("dialog", { name: "New item" }).locator("input").first().fill("UI Lassi Combo");
   await page.getByTestId("item-combo-on").check();
   await page.getByTestId("combo-part").first().selectOption({ label: "Sweet Lassi" });
   ok(/Separately/.test(await page.getByTestId("item-combo").innerText()), "choosing the dishes shows what they cost separately");

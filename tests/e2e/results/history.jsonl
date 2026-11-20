@@ -924,3 +924,18 @@
 {"id":"t46-addon-groups","status":"pass","pass":50,"fail":0,"mode":"headless","at":"2026-11-20T19:06:03.726Z","durationMs":16713}
 {"id":"t50-store-name","status":"pass","pass":31,"fail":0,"mode":"headless","at":"2026-11-20T19:06:13.183Z","durationMs":9438}
 {"id":"t55-growth-dashboard","status":"pass","pass":26,"fail":0,"mode":"headless","at":"2026-11-20T19:06:17.627Z","durationMs":4426}
+{"id":"t61-item-form-modal","status":"fail","pass":8,"fail":1,"mode":"headless","at":"2026-11-20T19:10:30.677Z","durationMs":32276}
+{"id":"t61-item-form-modal","status":"error","pass":9,"fail":0,"mode":"headless","at":"2026-11-20T19:12:13.122Z","durationMs":33234,"error":"item-form-modal-ui.mjs exited with code 1. }  Node.js v24.3.0"}
+{"id":"t61-item-form-modal","status":"pass","pass":33,"fail":0,"mode":"headless","at":"2026-11-20T19:13:29.120Z","durationMs":9966}
+{"id":"t45-paste-item-photo","status":"error","pass":13,"fail":0,"mode":"headless","at":"2026-11-20T19:14:09.049Z","durationMs":36057,"error":"locator.click: Timeout 30000ms exceeded. Call log:   - waiting for getByText('Photos', { exact: true }).first()"}
+{"id":"t46-addon-groups","status":"pass","pass":50,"fail":0,"mode":"headless","at":"2026-11-20T19:14:26.583Z","durationMs":16633}
+{"id":"t59-item-image-shapes-ui","status":"pass","pass":45,"fail":0,"mode":"headless","at":"2026-11-20T19:14:32.579Z","durationMs":5211}
+{"id":"t39-ai-item-images","status":"pass","pass":32,"fail":0,"mode":"headless","at":"2026-11-20T19:14:57.586Z","durationMs":18998}
+{"id":"t38-ai-images-api","status":"pass","pass":88,"fail":0,"mode":"headless","at":"2026-11-20T19:15:03.713Z","durationMs":5306}
+{"id":"t51-kot-tickets","status":"pass","pass":62,"fail":0,"mode":"headless","at":"2026-11-20T19:15:29.647Z","durationMs":25067}
+{"id":"t45-paste-item-photo","status":"pass","pass":21,"fail":0,"mode":"headless","at":"2026-11-20T19:16:12.730Z","durationMs":8983}
+{"id":"t61-item-form-modal","status":"pass","pass":33,"fail":0,"mode":"headless","at":"2026-11-20T19:16:23.277Z","durationMs":9748}
+{"id":"t55-growth-dashboard","status":"error","pass":16,"fail":0,"mode":"headless","at":"2026-11-20T19:17:00.292Z","durationMs":33032,"error":"growth-dashboard-ui.mjs exited with code 1. }  Node.js v24.3.0"}
+{"id":"t33-menu-tree","status":"pass","pass":71,"fail":0,"mode":"headless","at":"2026-11-20T19:17:51.906Z","durationMs":45571}
+{"id":"t32-menu-tree-api","status":"pass","pass":93,"fail":0,"mode":"headless","at":"2026-11-20T19:17:57.022Z","durationMs":4206}
+{"id":"t55-growth-dashboard","status":"pass","pass":26,"fail":0,"mode":"headless","at":"2026-11-20T19:19:22.508Z","durationMs":5065}
