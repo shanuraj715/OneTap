@@ -25,6 +25,7 @@ import {
   ExternalLink,
   FileText,
   HardDrive,
+  Sparkles,
   PanelLeftClose,
   PanelLeftOpen,
   LayoutDashboard,
@@ -48,6 +49,8 @@ import {
   Wand2,
   Server as ServerIcon,
   MessageCircle,
+  ClipboardList,
+  Route as RouteIcon,
 } from "lucide-react";
 import { useAuth, useLogout } from "./lib/useAuth";
 import { OutletSelectionProvider, useOpenStore, useOutlets } from "./lib/useOutlet";
@@ -85,6 +88,7 @@ import { Coupons } from "./routes/Coupons";
 import { MenuEditor } from "./routes/MenuEditor";
 import { MenuLayout } from "./routes/MenuLayout";
 import { Notifications } from "./routes/Notifications";
+import { MessageSending } from "./routes/MessageSending";
 import { Orders } from "./routes/Orders";
 import { Outlets } from "./routes/Outlets";
 import { Payments } from "./routes/Payments";
@@ -102,6 +106,7 @@ import { TakeOrder } from "./routes/take-order/TakeOrder";
 import { PlatformDashboard } from "./routes/platform/PlatformDashboard";
 import { PlatformCache } from "./routes/platform/PlatformCache";
 import { PlatformStorage } from "./routes/platform/PlatformStorage";
+import { PlatformAi } from "./routes/platform/PlatformAi";
 import { PlatformSecurity } from "./routes/platform/PlatformSecurity";
 import { PlatformServer } from "./routes/platform/PlatformServer";
 import { PlatformPlans } from "./routes/platform/PlatformPlans";
@@ -109,6 +114,9 @@ import { PlatformSettings } from "./routes/platform/PlatformSettings";
 import { PlatformStoreDetail } from "./routes/platform/PlatformStoreDetail";
 import { PlatformStores } from "./routes/platform/PlatformStores";
 import { PlatformLeads } from "./routes/platform/PlatformLeads";
+import { OnboardingForm } from "./routes/platform/onboarding/OnboardingForm";
+import { OnboardingList } from "./routes/platform/onboarding/OnboardingList";
+import { PricingPage } from "./routes/platform/onboarding/PricingPage";
 import { PageEditor } from "./routes/platform/website/PageEditor";
 import { WebsitePages } from "./routes/platform/website/WebsitePages";
 import { WebsiteSettings } from "./routes/platform/website/WebsiteSettings";
@@ -145,6 +153,7 @@ const ROUTE_META = {
   "/printing": { title: "Printing", icon: Printer },
   "/payments": { title: "Payments", icon: CreditCard },
   "/notifications": { title: "Notifications", icon: Bell },
+  "/message-sending": { title: "Message sending", icon: RouteIcon },
   "/customers": { title: "Customers", icon: UsersIcon },
   "/appearance": { title: "Appearance", icon: Wand2 },
   "/banners": { title: "Banners", icon: Megaphone },
@@ -158,11 +167,14 @@ const ROUTE_META = {
   "/take-order": { title: "Take order", icon: ConciergeBell },
   "/platform": { title: "Dashboard", icon: LayoutDashboard },
   "/platform/stores": { title: "Stores", icon: Store },
+  "/platform/onboarding": { title: "Onboarding", icon: ClipboardList },
+  "/platform/onboarding/pricing": { title: "Price list", icon: ClipboardList },
   "/platform/plans": { title: "Plans", icon: Layers },
   "/platform/server": { title: "Server", icon: ServerIcon },
   "/platform/security": { title: "Security", icon: ShieldCheck },
   "/platform/cache": { title: "Cache", icon: Database },
   "/platform/storage": { title: "Storage", icon: HardDrive },
+  "/platform/ai": { title: "AI pictures", icon: Sparkles },
   "/platform/settings": { title: "Platform settings", icon: SettingsIcon },
   "/platform/website": { title: "Website", icon: Globe },
   "/platform/website/settings": { title: "Website settings", icon: Globe },
@@ -216,11 +228,13 @@ const PLATFORM_NAV_GROUPS = [
     items: [
       { to: "/platform", label: "Dashboard", icon: <LayoutDashboard size={ICON} />, end: true },
       { to: "/platform/stores", label: "Stores", icon: <Store size={ICON} /> },
+      { to: "/platform/onboarding", label: "Onboarding", icon: <ClipboardList size={ICON} /> },
       { to: "/platform/plans", label: "Plans", icon: <Layers size={ICON} /> },
       { to: "/platform/server", label: "Server", icon: <ServerIcon size={ICON} /> },
       { to: "/platform/security", label: "Security", icon: <ShieldCheck size={ICON} /> },
       { to: "/platform/cache", label: "Cache", icon: <Database size={ICON} /> },
       { to: "/platform/storage", label: "Storage", icon: <HardDrive size={ICON} /> },
+      { to: "/platform/ai", label: "AI pictures", icon: <Sparkles size={ICON} /> },
       { to: "/platform/settings", label: "Settings", icon: <SettingsIcon size={ICON} /> },
     ],
   },
@@ -239,7 +253,7 @@ const PLATFORM_NAV_GROUPS = [
  * a plain link to its first tab they can open, or disappears.
  */
 function resolveNavItem(n, can, hasFeature, waLevel = "none") {
-  const open = (x) => (!x.permission || can(x.permission)) && (!x.feature || hasFeature(x.feature)) && (!x.whatsapp || waLevel !== "none");
+  const open = (x) => (!x.permission || can(x.permission)) && (!x.feature || [].concat(x.feature).some(hasFeature)) && (!x.whatsapp || waLevel !== "none");
   if (!n.tabs) return open(n) ? n : null;
   const allowed = n.tabs.filter(open);
   if (!allowed.length) return null;
@@ -293,7 +307,7 @@ function Shell({ can }                                     ) {
     };
   }, [location.pathname]);
 
-  const currentMeta = ROUTE_META[location.pathname] || (location.pathname.startsWith("/platform/stores/") ? ROUTE_META["/platform/stores"] : null) || (location.pathname.startsWith("/pages/") ? ROUTE_META["/pages"] : null) || {
+  const currentMeta = ROUTE_META[location.pathname] || (location.pathname.startsWith("/platform/stores/") ? ROUTE_META["/platform/stores"] : null) || (location.pathname.startsWith("/platform/onboarding/") ? ROUTE_META["/platform/onboarding"] : null) || (location.pathname.startsWith("/pages/") ? ROUTE_META["/pages"] : null) || {
     title: location.pathname.slice(1).replace("-", " ") || "page",
     icon: UtensilsCrossed,
   };
@@ -573,11 +587,15 @@ function Shell({ can }                                     ) {
               <Route path="/platform" element={<PlatformDashboard />} />
               <Route path="/platform/stores" element={<PlatformStores />} />
               <Route path="/platform/stores/:id" element={<PlatformStoreDetail />} />
+              <Route path="/platform/onboarding" element={<OnboardingList />} />
+              <Route path="/platform/onboarding/pricing" element={<PricingPage />} />
+              <Route path="/platform/onboarding/:id" element={<OnboardingForm />} />
               <Route path="/platform/plans" element={<PlatformPlans />} />
               <Route path="/platform/server" element={<PlatformServer />} />
               <Route path="/platform/security" element={<PlatformSecurity />} />
               <Route path="/platform/cache" element={<PlatformCache />} />
               <Route path="/platform/storage" element={<PlatformStorage />} />
+              <Route path="/platform/ai" element={<PlatformAi />} />
               <Route path="/platform/settings" element={<PlatformSettings />} />
               <Route path="/platform/website" element={<WebsitePages />} />
               <Route path="/platform/website/settings" element={<WebsiteSettings />} />
@@ -598,6 +616,7 @@ function Shell({ can }                                     ) {
             <Route path="/printing" element={<Printing />} />
             <Route path="/payments" element={<Payments />} />
             <Route path="/notifications" element={<Notifications />} />
+            <Route path="/message-sending" element={<MessageSending />} />
             <Route path="/customers" element={<Customers />} />
             <Route path="/appearance" element={<Appearance />} />
             <Route path="/banners" element={<Banners />} />

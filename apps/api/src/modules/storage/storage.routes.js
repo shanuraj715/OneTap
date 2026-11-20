@@ -4,6 +4,7 @@ import { IMAGE_RULES } from "@onetap/config-schema";
 import { requireOutletContext } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import { putImage, removeObject } from "./storage.service.js";
+import { limiter } from "../../middleware/rate-limit.js";
 
 export const storageRouter = Router();
 
@@ -23,7 +24,7 @@ export const storageRouter = Router();
  */
 storageRouter.post(
   "/upload",
-  raw({ type: () => true, limit: IMAGE_RULES.maxUploadBytes + 4096 }),
+  limiter("upload"), raw({ type: () => true, limit: IMAGE_RULES.maxUploadBytes + 4096 }),
   async (req, res) => {
     const ctx = await requireOutletContext(req, "menu:update");
     const body = Buffer.isBuffer(req.body) ? req.body : null;

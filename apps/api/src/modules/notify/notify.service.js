@@ -1,9 +1,15 @@
 import {
+  CODE_METHODS,
   DEFAULT_OTP_TEMPLATE,
+  DEFAULT_WA_CODE_TEMPLATE,
   formatINR,
+  MESSAGE_METHOD_FEATURE,
+  messagingSchema,
   NOTIFY_CHANNELS,
   NOTIFY_FIELDS,
+  OTP_VALID_MINUTES,
   ORDER_STATUS_LABELS,
+  renderCodeMessage,
   renderTemplate,
                           
                       
@@ -12,10 +18,12 @@ import {
 import {
   BrandModel,
   brandFilter,
+  CustomerModel,
   NotificationCredentialModel,
   NotificationLogModel,
   OutletModel,
   tenantFilter,
+  WaAccountModel,
 
 
 } from "@onetap/db";
@@ -24,7 +32,7 @@ import { logger } from "../../logger.js";
 import { HttpError } from "../../middleware/error.js";
 import { effectiveConfig } from "../outlets/config.service.js";
 import { storePlan } from "../platform/plan.service.js";
-import { queueOrderUpdate } from "../whatsapp/whatsapp.service.js";
+import { isOnline, queueOrderUpdate, sendCodeLinked } from "../whatsapp/whatsapp.service.js";
 import { providerFor,                        } from "./providers/index.js";
 
 /* -------------------------------------------------------------- credentials */
@@ -109,32 +117,206 @@ export async function clearNotifyCredentials(ctx               , channel        
   await NotificationCredentialModel.deleteOne(brandFilter(ctx, { channel }));
 }
 
-/* ------------------------------------------------------------- SMS codes */
+/* ------------------------------------------------------- verification codes */
 
 /**
- * The store's sender for one-time codes (customer sign-in, and staff spending
- * a customer's coins) — or null when the store hasn't switched "Send login &
- * coin codes by SMS" on, or its SMS gateway isn't set up. Null is the signal
- * every caller uses for "codes aren't configured here": sign-in falls back to
- * the on-screen code, and staff can spend coins without one.
+ * How this store sends verification codes (sign-up / sign-in, and the code staff ask for before spending a
+ * customer's coins). The owner maps it under Settings → Message sending. A store that never did keeps what it had
+ * before the mapping existed: SMS if "Send login & coin codes by SMS" was on and the gateway is complete, else
+ * nothing is sent and the code is shown on the sign-in screen.
  */
-export async function smsCodeSender(brandId        ) {
+export async function codeSettings(brandId        ) {
   const ctx = { brandId: String(brandId) };
+  const brand = await BrandModel.findOne({ _id: ctx.brandId }).select("name messaging").lean();
+  const saved = brand?.messaging?.codes;
+  if (saved && CODE_METHODS.includes(saved.method)) {
+    return {
+      explicit: true,
+      storeName: brand?.name ?? "",
+      method: saved.method,
+      linkedMessage: saved.linkedMessage ?? "",
+      whatsappTemplate: { name: "", language: "en", copyButton: false, ...(saved.whatsappTemplate ?? {}) },
+    };
+  }
+  // before the mapping existed
   const creds = await credentialsFor(ctx, "sms");
-  const provider = providerFor("sms");
-  const ready = creds.otpEnabled === "on" && provider.requiredFields.every((k) => Boolean(creds[k]));
-  if (!ready) return null;
+  const smsReady = creds.otpEnabled === "on" && providerFor("sms").requiredFields.every((k) => Boolean(creds[k]));
+  return {
+    explicit: false,
+    storeName: brand?.name ?? "",
+    method: smsReady ? "sms" : "screen",
+    linkedMessage: "",
+    whatsappTemplate: { name: "", language: "en", copyButton: false },
+  };
+}
+
+/**
+ * The store's sender for verification codes — or null when codes aren't sent ("Don't send": the code is shown on
+ * the sign-in screen, and staff can spend coins without one). Null is the signal every caller uses for "codes
+ * aren't configured here".
+ *
+ * A mapped method is never silently swapped for another or for the on-screen code: if it can't send right now
+ * (the number is offline, the gateway is incomplete…) `send` fails, and the customer is asked to try again — showing
+ * the code on screen instead would let anyone sign in as anyone.
+ */
+export async function codeSender(brandId        ) {
+  const settings = await codeSettings(brandId);
+  if (settings.method === "screen") return null;
+  const ctx = { brandId: String(brandId) };
 
   return {
-    async send(to        , code        ) {
-      const brand = await BrandModel.findOne({ _id: ctx.brandId }).lean();
-      const template = creds.otpTemplate?.trim() || DEFAULT_OTP_TEMPLATE;
-      const message = template.replaceAll("{{code}}", code).replaceAll("{{store}}", brand?.name ?? "");
-      const result = await provider.send(creds, { to, event: "otp", values: {}, message });
-      if (!result.ok) logger.error({ brandId: ctx.brandId, reason: result.reason }, "SMS code could not be sent");
-      return result;
+    method: settings.method,
+    /** → { ok, reason?, userMessage? } — never throws */
+    async send(to, code, context = {}) {
+      try {
+        const result = await sendCodeBy(settings, ctx, to, code, context);
+        if (!result.ok) logger.error({ brandId: ctx.brandId, method: settings.method, reason: result.reason }, "verification code could not be sent");
+        return result;
+      } catch (e) {
+        logger.error({ err: e, brandId: ctx.brandId, method: settings.method }, "verification code could not be sent");
+        return { ok: false, reason: (e         ).message || "unexpected error", userMessage: CODE_UNAVAILABLE };
+      }
     },
   };
+}
+
+const CODE_UNAVAILABLE = "We can't send the code right now. Please try again in a few minutes.";
+
+/** a customer's first name, if what we were given looks like one (letters only — it ends up in a message to that number) */
+export function firstNameOf(raw) {
+  const first = String(raw ?? "").trim().split(/\s+/)[0] ?? "";
+  return /^[\p{L}\p{M}][\p{L}\p{M}'’.-]{0,29}$/u.test(first) ? first : "";
+}
+
+/**
+ * What each {{variable}} of a code message stands for, for this customer (see CODE_MESSAGE_VARIABLES).
+ * The name on file wins over the one typed into the sign-in form — anybody can type anything there.
+ */
+async function codeValues(settings, ctx, to, code, context) {
+  const [outlet, customer] = await Promise.all([
+    context.outletId ? OutletModel.findOne({ _id: context.outletId, brandId: ctx.brandId }).select("name config.identity.phone").lean() : null,
+    CustomerModel.findOne({ brandId: ctx.brandId, phone: to }).select("name").lean(),
+  ]);
+  const now = new Date();
+  const IST = "Asia/Kolkata";
+  return {
+    code,
+    store: settings.storeName,
+    outlet: outlet?.name ?? settings.storeName,
+    name: firstNameOf(customer?.name) || firstNameOf(context.name) || "there",
+    phone: /^\d{10}$/.test(to) ? `${to.slice(0, 5)} ${to.slice(5)}` : to,
+    minutes: String(OTP_VALID_MINUTES),
+    date: now.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric", timeZone: IST }),
+    time: now.toLocaleTimeString("en-IN", { hour: "numeric", minute: "2-digit", hour12: true, timeZone: IST }),
+    store_phone: outlet?.config?.identity?.phone ?? "",
+  };
+}
+
+async function sendCodeBy(settings, ctx, to, code, context) {
+  if (settings.method === "linked") {
+    return sendCodeLinked(ctx.brandId, to, renderCodeMessage(settings.linkedMessage, await codeValues(settings, ctx, to, code, context)));
+  }
+
+  if (settings.method === "whatsapp") {
+    const creds = await credentialsFor(ctx, "whatsapp");
+    const provider = providerFor("whatsapp");
+    const missing = provider.requiredFields.filter((f) => !creds[f]);
+    if (missing.length) return { ok: false, reason: `WhatsApp Business isn't fully set up (missing ${missing.join(", ")})`, userMessage: CODE_UNAVAILABLE };
+    const t = settings.whatsappTemplate;
+    if (!t.name) return { ok: false, reason: "No WhatsApp template is set for codes", userMessage: CODE_UNAVAILABLE };
+    const result = await provider.send(creds, {
+      to,
+      event: "otp",
+      values: {},
+      whatsapp: { templateName: t.name, languageCode: t.language || "en", params: [code], copyCode: Boolean(t.copyButton) },
+    });
+    return result.ok ? result : { ...result, userMessage: CODE_UNAVAILABLE };
+  }
+
+  // sms
+  const creds = await credentialsFor(ctx, "sms");
+  const provider = providerFor("sms");
+  const missing = provider.requiredFields.filter((f) => !creds[f]);
+  if (missing.length) return { ok: false, reason: `SMS isn't fully set up (missing ${missing.join(", ")})`, userMessage: CODE_UNAVAILABLE };
+  const message = renderCodeMessage(creds.otpTemplate, await codeValues(settings, ctx, to, code, context), DEFAULT_OTP_TEMPLATE);
+  const result = await provider.send(creds, { to, event: "otp", values: {}, message });
+  return result.ok ? result : { ...result, userMessage: "Couldn't send the code. Check the number and try again." };
+}
+
+/* ------------------------------------------------- the mapping, for the dashboard */
+
+/** Can each method send right now? (so the dashboard can say what is missing, and the API can refuse a method that can't work) */
+async function methodReadiness(ctx               ) {
+  const plan = await storePlan(ctx.brandId);
+  const has = (feature        ) => plan.entitlements.features.includes(feature);
+  const numbers = (await WaAccountModel.find({ brandId: ctx.brandId, status: { $in: ["connected", "disconnected"] } }).sort({ createdAt: 1 }).lean()).map((a) => ({
+    id: String(a._id),
+    label: a.label,
+    phone: a.phone ?? "",
+    online: isOnline(a),
+  }));
+  const [waCreds, smsCreds] = await Promise.all([credentialsFor(ctx, "whatsapp"), credentialsFor(ctx, "sms")]);
+  const missing = (channel                    , creds                   ) => providerFor(channel).requiredFields.filter((f) => !creds[f]);
+  const waMissing = missing("whatsapp", waCreds);
+  const smsMissing = missing("sms", smsCreds);
+
+  const linked = !has(MESSAGE_METHOD_FEATURE.linked)
+    ? { ok: false, reason: "WhatsApp chat isn't in this store's plan.", planLocked: true }
+    : !numbers.length
+      ? { ok: false, reason: "No WhatsApp number is linked yet — link one under WhatsApp → Numbers." }
+      : !numbers.some((n) => n.online)
+        ? { ok: false, reason: "Your linked number isn't connected right now — open WhatsApp → Numbers to reconnect it." }
+        : { ok: true };
+  const whatsapp = !has(MESSAGE_METHOD_FEATURE.whatsapp)
+    ? { ok: false, reason: "WhatsApp & SMS alerts aren't in this store's plan.", planLocked: true }
+    : waMissing.length
+      ? { ok: false, reason: "WhatsApp Business isn't set up yet — add its connection details under Notifications → WhatsApp." }
+      : { ok: true };
+  const sms = !has(MESSAGE_METHOD_FEATURE.sms)
+    ? { ok: false, reason: "WhatsApp & SMS alerts aren't in this store's plan.", planLocked: true }
+    : smsMissing.length
+      ? { ok: false, reason: "Your SMS gateway isn't set up yet — add its details under Notifications → SMS." }
+      : { ok: true };
+  return { ready: { linked, whatsapp, sms }, numbers };
+}
+
+export async function getMessaging(ctx               ) {
+  const [settings, readiness] = await Promise.all([codeSettings(ctx.brandId), methodReadiness(ctx)]);
+  const smsCreds = await credentialsFor(ctx, "sms");
+  return {
+    storeName: settings.storeName,
+    codes: {
+      method: settings.method,
+      /** false = the store never chose; what's shown is what it already had */
+      explicit: settings.explicit,
+      linkedMessage: settings.linkedMessage,
+      whatsappTemplate: settings.whatsappTemplate,
+      smsMessage: smsCreds.otpTemplate?.trim() || "",
+    },
+    defaults: { linkedMessage: DEFAULT_WA_CODE_TEMPLATE, smsMessage: DEFAULT_OTP_TEMPLATE },
+    ready: readiness.ready,
+    numbers: readiness.numbers,
+  };
+}
+
+/** Save the mapping. A method that can't send is refused — mapping codes to one would lock every new customer out. */
+export async function saveMessaging(ctx               , input         ) {
+  const parsed = messagingSchema.safeParse(input);
+  if (!parsed.success) throw new HttpError(400, parsed.error.issues[0]?.message ?? "Check the details and try again.");
+  const codes = parsed.data.codes;
+
+  if (codes.method !== "screen") {
+    const { ready } = await methodReadiness(ctx);
+    const r = ready[codes.method];
+    if (!r.ok) throw new HttpError(409, r.reason);
+  }
+  const clean = {
+    method: codes.method,
+    linkedMessage: codes.linkedMessage.trim(),
+    whatsappTemplate: { name: codes.whatsappTemplate.name, language: codes.whatsappTemplate.language, copyButton: codes.whatsappTemplate.copyButton },
+  };
+  await BrandModel.updateOne({ _id: ctx.brandId }, { $set: { messaging: { codes: clean } } });
+  return getMessaging(ctx);
 }
 
 /* ---------------------------------------------------------------- dispatch */

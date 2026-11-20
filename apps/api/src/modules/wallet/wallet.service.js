@@ -184,3 +184,42 @@ export function ledgerFor(ctx               , customerId        , limit = 50) {
     .limit(Math.min(limit, 200))
     .lean();
 }
+
+/**
+ * Take back the coins an order earned, when the order is deleted. Never more than the customer still has (they may
+ * have spent some already — the balance is not allowed to go below zero), and idempotent like the others: the
+ * (order, "revoke") ledger row is written once. Returns how many coins were actually taken back.
+ */
+export async function revokeEarnForOrder(ctx, order) {
+  const earned = order.totals?.coinsEarned ?? 0;
+  if (!order.customer?.customerId || earned <= 0) return 0;
+
+  const orderId = String(order._id);
+  const customer = await CustomerModel.findOne({ _id: order.customer.customerId, brandId: ctx.brandId }).lean();
+  const coins = Math.min(earned, Math.max(0, customer?.walletBalance ?? 0));
+  try {
+    await WalletLedgerModel.create({
+      brandId: ctx.brandId,
+      outletId: ctx.outletId,
+      customerId: order.customer.customerId,
+      orderId,
+      orderNumber: order.orderNumber,
+      kind: "revoke",
+      coins,
+      balanceAfter: -1,
+      reason: `Taken back — order #${order.orderNumber} was deleted`,
+    });
+  } catch (e) {
+    if (e.code !== 11000) throw e;
+    return 0; // already taken back
+  }
+  if (coins <= 0) return 0;
+
+  const updated = await CustomerModel.findOneAndUpdate(
+    { _id: order.customer.customerId, brandId: ctx.brandId },
+    { $inc: { walletBalance: -coins } },
+    { new: true },
+  );
+  if (updated) await WalletLedgerModel.updateOne({ brandId: ctx.brandId, orderId, kind: "revoke" }, { balanceAfter: updated.walletBalance });
+  return coins;
+}

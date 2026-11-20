@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Children, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
                                            
 import {
+  pruneEmptySections,
   resolveMenuSections,
                 
             
@@ -41,19 +42,58 @@ export function MenuSections({
   const toolbarRef = useRef(null);
 
   /** Go to a category: a short pause (the sheet closes, the tap registers), then an eased glide that stops just below the sticky bar. */
-  const goTo = (id) => {
-    setSheetOpen(false);
-    window.setTimeout(() => glideTo(document.getElementById(`sec-${id}`), toolbarRef.current), 500);
-  };
-
   const sections = useMemo(() => resolveMenuSections(menu, layout), [menu, layout]);
 
   const visibleSections = useMemo(() => {
     if (!foodFilter) return sections;
-    return sections
-      .map((s) => ({ ...s, items: s.items.filter((i) => i.foodType === foodFilter) }))
-      .filter((s) => s.items.length > 0);
+    // a parent's heading stays only while something inside it is still shown
+    return pruneEmptySections(sections.map((s) => ({ ...s, items: s.items.filter((i) => i.foodType === foodFilter) })));
   }, [sections, foodFilter]);
+
+  // Categories inside categories: the top-level ones are the main chips; the one in view gets a second row of chips
+  // for what is inside it.
+  const nested = visibleSections.some((s) => (s.depth ?? 0) > 0);
+  const rootSections = nested ? visibleSections.filter((s) => (s.depth ?? 0) === 0) : visibleSections;
+  const [activeRoot, setActiveRoot] = useState(null);
+  const subSections = nested ? visibleSections.filter((s) => s.rootId === activeRoot && (s.depth ?? 0) > 0) : [];
+
+  const goTo = (id) => {
+    setSheetOpen(false);
+    const target = visibleSections.find((s) => s.id === id);
+    if (target) setActiveRoot(target.rootId);
+    window.setTimeout(() => glideTo(document.getElementById(`sec-${id}`), toolbarRef.current), 500);
+  };
+
+  // which top-level category is in view: the last section whose top has passed just under the sticky bar
+  const wantsNav = Boolean(layout.showCategoryNav) && visibleSections.length > 1;
+  useEffect(() => {
+    if (!wantsNav) return undefined;
+    let frame = 0;
+    const update = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const line = (toolbarRef.current?.getBoundingClientRect().bottom ?? 0) + 24;
+        let current = visibleSections[0]?.rootId ?? null;
+        for (const s of visibleSections) {
+          const el = document.getElementById(`sec-${s.id}`);
+          if (!el) continue;
+          if (el.getBoundingClientRect().top <= line) current = s.rootId;
+          else break;
+        }
+        // at the very bottom the last categories can't reach the top of the screen — the last one is the one being read
+        if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) current = visibleSections[visibleSections.length - 1]?.rootId ?? current;
+        setActiveRoot(current);
+      });
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, [wantsNav, visibleSections]);
 
   const foodTypesPresent = useMemo(() => {
     const set = new Set          ();
@@ -66,11 +106,11 @@ export function MenuSections({
   }
 
   return (
-    <div className="ot-menu-sections" style={wrap}>
-      {(layout.showCategoryNav && visibleSections.length > 1) || (layout.showFoodTypeFilter && foodTypesPresent.length > 1) ? (
+    <div className="ot-menu-sections ot-page-px" style={wrap}>
+      {wantsNav || (layout.showFoodTypeFilter && foodTypesPresent.length > 1) ? (
         <div ref={toolbarRef} className="ot-fx-bar" data-fx-toolbar="" style={toolbarStyle()}>
           {layout.showFoodTypeFilter && foodTypesPresent.length > 1 ? (
-            <div style={{ display: "flex", gap: "var(--fx-toolbar-gap, 6px)" }}>
+            <div className="ot-chip-row" style={filterRow}>
               <FilterChip active={foodFilter === null} onClick={() => setFoodFilter(null)}>
                 All
               </FilterChip>
@@ -80,31 +120,32 @@ export function MenuSections({
                 </FilterChip>
               ))}
             </div>
-          ) : (
-            <span />
-          )}
+          ) : null}
 
-          {layout.showCategoryNav && visibleSections.length > 1 ? (
-            /* No overflow here: the chips wrap anyway, and a scrolling box crops
-               whatever it holds at its edges — including the chips' shadows. */
+          {wantsNav ? (
             <>
-              {/* desktop: every category as a chip */}
-              <nav className="ot-cat-chips" aria-label="Menu categories" style={{ display: "flex", gap: "var(--fx-toolbar-gap, 6px)", flexWrap: "wrap" }}>
-                {visibleSections.map((s) => (
-                  <a
-                    key={s.id}
-                    href={`#sec-${s.id}`}
-                    className="ot-fx-chip"
-                    style={fx("chip", jumpLink)}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      goTo(s.id);
-                    }}
-                  >
-                    {s.title}
-                  </a>
-                ))}
-              </nav>
+              {/* desktop: every category as a chip — in ONE row that scrolls sideways, so a long menu never makes the sticky bar tall */}
+              <ChipStrip className="ot-cat-chips" label="Menu categories" watch={rootSections.map((s) => s.id).join()} activeKey={activeRoot}>
+                {rootSections.map((s) => {
+                  const current = s.rootId === activeRoot;
+                  return (
+                    <a
+                      key={s.id}
+                      href={`#sec-${s.id}`}
+                      className="ot-fx-chip"
+                      aria-current={current ? "true" : undefined}
+                      style={fx("chip", { ...jumpLink, ...(current ? jumpLinkActive : null) })}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        goTo(s.id);
+                      }}
+                    >
+                      {s.imageUrl ? <img src={s.imageUrl} alt="" style={chipPhoto} /> : null}
+                      {s.title}
+                    </a>
+                  );
+                })}
+              </ChipStrip>
               {/* phones and tablets: one button, the list opens in a sheet */}
               <button type="button" className="ot-cat-button ot-press ot-fx-chip" aria-haspopup="dialog" aria-expanded={sheetOpen} onClick={() => setSheetOpen(true)} style={fx("chip", categoriesBtn)}>
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
@@ -112,6 +153,26 @@ export function MenuSections({
                 </svg>
                 Categories
               </button>
+              {/* what is inside the top-level category in view */}
+              {subSections.length > 0 ? (
+                <ChipStrip label="Inside this category" watch={subSections.map((s) => s.id).join()} style={{ flexBasis: "100%" }}>
+                  {subSections.map((s) => (
+                    <a
+                      key={s.id}
+                      href={`#sec-${s.id}`}
+                      className="ot-fx-chip"
+                      style={{ ...fx("chip", jumpLink), fontSize: "0.75rem", padding: "3px 10px", marginLeft: (s.depth - 1) * 6 }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        goTo(s.id);
+                      }}
+                    >
+                      {s.imageUrl ? <img src={s.imageUrl} alt="" style={chipPhoto} /> : null}
+                      {s.title}
+                    </a>
+                  ))}
+                </ChipStrip>
+              ) : null}
             </>
           ) : null}
         </div>
@@ -128,17 +189,52 @@ export function MenuSections({
         // until the diner opens them, so a long category doesn't push the whole
         // menu down three screens.
         const isOpen = expanded[section.id] === true;
-        const collapsed = section.collapsible && !isOpen;
-        const shownItems = collapsed ? section.items.slice(0, section.initialItems) : section.items;
         const hiddenCount = section.items.length - section.initialItems;
         const align = section.titleAlign === "center" ? "center" : "left";
         const buttonPlacement = section.viewAllPlacement || "left";
         const isTitleRight = buttonPlacement === "title-right" && !section.hideTitle;
+        // a category inside another sits a level down: smaller heading, the names above it, set in from the left
+        const depth = section.depth ?? 0;
+        const Heading = depth === 0 ? "h2" : depth === 1 ? "h3" : "h4";
+        // a title that is a path ("South Indian › Idli & Vada") keeps reading as one line on a wide screen; on a phone the
+        // parent part drops to a small line above the name (CSS: .ot-sec-crumb / .ot-sec-name)
+        const titleParts = String(section.title).split(" › ");
+        const pathTitle = depth === 0 && titleParts.length > 1;
+        const headingEl = (
+          <Heading
+            className="ot-sec-title"
+            style={{
+              ...heading,
+              ...(depth > 0 ? nestedHeading(depth) : null),
+              borderBottom: "none",
+              paddingBottom: 0,
+              textAlign: align,
+              flex: align === "center" && !section.imageUrl ? 1 : undefined,
+              margin: 0,
+            }}
+          >
+            {pathTitle ? (
+              <>
+                <span className="ot-sec-crumb">{titleParts.slice(0, -1).join(" › ")} › </span>
+                <span className="ot-sec-name">{titleParts[titleParts.length - 1]}</span>
+              </>
+            ) : (
+              section.title
+            )}
+            {section.showItemCount ? <span style={countBadge}> ({section.items.length})</span> : null}
+          </Heading>
+        );
 
         return (
-          <section key={section.id} id={`sec-${section.id}`} style={{ marginBottom: 40, scrollMarginTop: 72 }}>
+          <section
+            key={section.id}
+            id={`sec-${section.id}`}
+            data-depth={depth}
+            style={{ marginBottom: section.headingOnly ? 14 : depth > 0 ? 30 : 40, marginLeft: depth > 1 ? (depth - 1) * 14 : 0, scrollMarginTop: 72 }}
+          >
             {section.hideTitle && !section.subtitle ? null : (
-              <div style={{ marginBottom: 14 }}>
+              <div style={{ marginBottom: section.headingOnly ? 0 : 14 }}>
+                {depth > 0 && section.trail?.length && !section.hideTitle ? <div style={crumb}>{section.trail.join(" › ")}</div> : null}
                 {section.hideTitle ? null : (
                   <div
                     style={{
@@ -146,29 +242,22 @@ export function MenuSections({
                       alignItems: "center",
                       justifyContent: "space-between",
                       gap: 12,
-                      paddingBottom: 8,
-                      borderBottom: align === "center" && !isTitleRight ? "none" : "1px solid var(--color-border)",
+                      paddingBottom: depth > 0 ? 2 : 8,
+                      borderBottom: (align === "center" && !isTitleRight) || depth > 0 ? "none" : "1px solid var(--color-border)",
                     }}
                   >
-                    <h2
-                      style={{
-                        ...heading,
-                        borderBottom: "none",
-                        paddingBottom: 0,
-                        textAlign: align,
-                        flex: align === "center" ? 1 : undefined,
-                        margin: 0,
-                      }}
-                    >
-                      {section.title}
-                      {section.showItemCount ? (
-                        <span style={countBadge}> ({section.items.length})</span>
-                      ) : null}
-                    </h2>
+                    {section.imageUrl ? (
+                      <div style={{ display: "flex", alignItems: "center", gap: 12, flex: align === "center" ? 1 : undefined, justifyContent: align === "center" ? "center" : undefined }}>
+                        <img src={section.imageUrl} alt="" style={{ ...catPhoto, width: depth === 0 ? 52 : 40, height: depth === 0 ? 52 : 40 }} />
+                        {headingEl}
+                      </div>
+                    ) : (
+                      headingEl
+                    )}
                     {isTitleRight && section.collapsible ? (
                       <button
                         type="button"
-                        className="ot-press ot-fx-chip"
+                        className="ot-press ot-fx-chip ot-viewall-title ot-viewall-lg-only"
                         onClick={() => setExpanded((e) => ({ ...e, [section.id]: !isOpen }))}
                         style={fx("chip", viewAllTitleBtn)}
                         aria-expanded={isOpen}
@@ -183,8 +272,9 @@ export function MenuSections({
                 {section.subtitle ? <p style={{ ...subtitle, textAlign: align }}>{section.subtitle}</p> : null}
               </div>
             )}
-            <div className={gridProps.className} style={gridProps.style}>
-              {shownItems.map((item) =>
+            {section.headingOnly ? null : (
+            (() => {
+              const cards = section.items.map((item) =>
                 onSelectItem && item.isAvailable ? (
                   <div
                     key={item.id}
@@ -205,12 +295,26 @@ export function MenuSections({
                 ) : (
                   <Card key={item.id} item={item} />
                 ),
-              )}
-            </div>
-            {section.collapsible && !isTitleRight ? (
+              );
+              // a long section shows its first few cards and slides the rest open (and shut) — see CollapsibleCards
+              return section.collapsible && section.items.length > section.initialItems ? (
+                <CollapsibleCards open={isOpen} keep={section.initialItems} className={gridProps.className} style={gridProps.style} onClosed={() => keepSectionInView(section.id)}>
+                  {cards}
+                </CollapsibleCards>
+              ) : (
+                <div className={gridProps.className} style={gridProps.style}>
+                  {cards}
+                </div>
+              );
+            })()
+            )}
+            {section.collapsible ? (
+              // as configured on a wide screen; on a phone or tablet it is ALWAYS here, under the cards, in the middle
+              // (CSS: .ot-viewall-row / .ot-viewall-sm-only) — a title-right button is hidden there and this one shown instead
               <div
+                className={isTitleRight ? "ot-viewall-sm-only" : "ot-viewall-row"}
                 style={{
-                  display: "flex",
+                  display: isTitleRight ? "none" : "flex",
                   justifyContent:
                     buttonPlacement === "center"
                       ? "center"
@@ -222,7 +326,7 @@ export function MenuSections({
               >
                 <button
                   type="button"
-                  className="ot-press ot-fx-chip"
+                  className="ot-press ot-fx-chip ot-viewall"
                   onClick={() => setExpanded((e) => ({ ...e, [section.id]: !isOpen }))}
                   style={fx("chip", viewAllBtn)}
                   aria-expanded={isOpen}
@@ -240,10 +344,121 @@ export function MenuSections({
   );
 }
 
+/**
+ * The cards of a "View all" section: the first `keep` are always there; the rest SLIDE open and shut instead of
+ * appearing and vanishing. The extra cards only exist in the page while open (and while closing), so a closed section
+ * costs nothing and the server-rendered page is exactly what it was.
+ *
+ * They sit in a `display: contents` group — which adds no box, so the grid or list flows on exactly as one — and are
+ * `inert` while closing (no keyboard focus into something that is leaving). The slide is the height of a clipping box
+ * animated from the bottom of the last kept card to the bottom of the whole grid, or back, over about a second (see the
+ * duration below) while the dishes fade and rise in one after another; `prefers-reduced-motion` makes it instant. Pressing the button again mid-slide turns round from where it is.
+ */
+function CollapsibleCards({ open, keep, className, style, onClosed, children }) {
+  const cards = Children.toArray(children);
+  const boxRef = useRef(null);
+  const gridRef = useRef(null);
+  const running = useRef(null);
+  const last = useRef(open);
+  const [closing, setClosing] = useState(false);
+  const [seen, setSeen] = useState(open);
+  if (seen !== open) {
+    // derived during render, so the very render that starts closing still has the extra cards in the page
+    setSeen(open);
+    setClosing(!open);
+  }
+  const showExtras = open || closing;
+
+  useLayoutEffect(() => {
+    if (last.current === open) return undefined;
+    last.current = open;
+    const box = boxRef.current;
+    const grid = gridRef.current;
+    if (!box || !grid) return undefined;
+    const calm = typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const wasRunning = running.current !== null;
+    const heightNow = box.getBoundingClientRect().height; // before the old slide (if any) is cancelled
+    running.current?.cancel();
+    running.current = null;
+
+    const gridTop = grid.getBoundingClientRect().top;
+    let collapsedH = 0; // the bottom of the last row of kept cards
+    for (let i = 0; i < Math.min(keep, grid.children.length); i += 1) collapsedH = Math.max(collapsedH, grid.children[i].getBoundingClientRect().bottom - gridTop);
+    const fullH = grid.getBoundingClientRect().height;
+
+    const from = wasRunning ? heightNow : open ? collapsedH : fullH;
+    const to = open ? fullH : collapsedH;
+    box.style.overflow = "hidden";
+    // slow enough to WATCH: at least ~1 s, longer the further it has to open (a tall reveal takes longer than a short one),
+    // and a little quicker closing than opening; a smooth start-and-stop curve rather than a fast start that is over before it is seen
+    const travel = Math.abs(to - from);
+    const duration = calm ? 1 : Math.round(Math.min(1700, Math.max(950, 850 + travel * 0.85)) * (open ? 1 : 0.85));
+    const slide = box.animate([{ height: `${from}px` }, { height: `${to}px` }], { duration, easing: "cubic-bezier(0.37, 0, 0.3, 1)", fill: "forwards" });
+    // the dishes themselves fade and rise in, one after another (or fade away together when closing)
+    const extras = calm ? [] : [...(grid.children[keep]?.children ?? [])];
+    extras.forEach((card, i) => {
+      card.animate(
+        open ? [{ opacity: 0, transform: "translateY(16px)" }, { opacity: 1, transform: "none" }] : [{ opacity: 1, transform: "none" }, { opacity: 0, transform: "translateY(8px)" }],
+        open ? { duration: 650, delay: Math.min(i, 8) * 70, easing: "cubic-bezier(0.2, 0.7, 0.2, 1)", fill: "backwards" } : { duration: Math.round(duration * 0.6), easing: "ease-in", fill: "forwards" },
+      );
+    });
+    running.current = slide;
+    slide.onfinish = () => {
+      if (running.current !== slide) return;
+      running.current = null;
+      const letGo = () => {
+        slide.cancel();
+        box.style.overflow = "";
+      };
+      if (open) letGo();
+      else {
+        setClosing(false); // take the extra cards out of the page …
+        requestAnimationFrame(() => requestAnimationFrame(() => { // … and only then release the height, so nothing flashes
+          letGo();
+          onClosed?.();
+        }));
+      }
+    };
+    return undefined;
+  }, [open, keep, onClosed]);
+
+  useEffect(() => () => running.current?.cancel(), []);
+
+  return (
+    <div ref={boxRef}>
+      <div ref={gridRef} className={className} style={style}>
+        {cards.slice(0, keep)}
+        {showExtras ? (
+          <div style={{ display: "contents" }} inert={!open}>
+            {cards.slice(keep)}
+          </div>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+/** How far down the pinned header, order bar and category bar reach — a heading must end up below this to be seen. */
+function pinnedReach(bar) {
+  const root = getComputedStyle(document.documentElement);
+  const px = (name) => parseFloat(root.getPropertyValue(name)) || 0;
+  return px("--ot-header-h") + px("--ot-bar-h") + (bar?.getBoundingClientRect().height ?? 0);
+}
+
+/** After a section folds shut, if its heading has scrolled up under the pinned bars, bring it back so the reader isn't left lost further down. */
+function keepSectionInView(id) {
+  const el = document.getElementById(`sec-${id}`);
+  const reach = pinnedReach(document.querySelector("[data-fx-toolbar]"));
+  if (!el || el.getBoundingClientRect().top >= reach) return;
+  const calm = typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  window.scrollTo({ top: Math.max(0, window.scrollY + el.getBoundingClientRect().top - reach - 12), behavior: calm ? "auto" : "smooth" });
+}
+
 /** Eased scroll to a section, ending just below the sticky category bar. Reduced motion: straight there. */
 function glideTo(el, bar) {
   if (!el) return;
-  const offset = (bar?.getBoundingClientRect().height ?? 0) + 12;
+  const offset = pinnedReach(bar) + 12;
   const target = Math.max(0, el.getBoundingClientRect().top + window.scrollY - offset);
   const start = window.scrollY;
   const distance = target - start;
@@ -288,13 +503,94 @@ function CategorySheet({ sections, onPick, onClose }) {
         </div>
         <div style={{ overflowY: "auto", display: "flex", flexDirection: "column", gap: 2 }}>
           {sections.map((s, i) => (
-            <button key={s.id} ref={i === 0 ? first : undefined} type="button" onClick={() => onPick(s.id)} style={sheetItem}>
-              <span>{s.title}</span>
-              <span style={{ fontSize: 13, color: "var(--color-text-muted)", fontVariantNumeric: "tabular-nums" }}>{s.items.length}</span>
+            <button key={s.id} ref={i === 0 ? first : undefined} type="button" onClick={() => onPick(s.id)} style={{ ...sheetItem, paddingLeft: 12 + (s.depth ?? 0) * 18, fontWeight: (s.depth ?? 0) === 0 ? 700 : 600 }}>
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 10, minWidth: 0 }}>
+                {s.imageUrl ? <img src={s.imageUrl} alt="" style={{ ...catPhoto, width: 30, height: 30, borderRadius: 8 }} /> : null}
+                {s.title}
+              </span>
+              {s.headingOnly ? null : <span style={{ fontSize: 13, color: "var(--color-text-muted)", fontVariantNumeric: "tabular-nums" }}>{s.items.length}</span>}
             </button>
           ))}
         </div>
       </div>
+    </div>
+  );
+}
+
+/**
+ * A row of chips that is always ONE line high: when there are more than fit, it scrolls sideways (swipe, trackpad,
+ * the ‹ › buttons) with a soft fade at whichever edge has more. `activeKey` is re-centred into view when it changes,
+ * so the chip for the category being read is never hidden off to the side. The strip keeps a few pixels of padding
+ * so the chips' shadows aren't cropped by the scroll box.
+ */
+function ChipStrip({ className, label, watch, activeKey, style, children }) {
+  const outer = useRef(null);
+  const strip = useRef(null);
+  const [more, setMore] = useState({ can: false, left: false, right: false });
+
+  const measure = useCallback(() => {
+    const el = strip.current;
+    const box = outer.current;
+    if (!el || !box) return;
+    const can = el.scrollWidth > box.clientWidth + 2; // measured against the whole box, so showing the arrows can't flip it back
+    const left = el.scrollLeft > 2;
+    const right = el.scrollLeft + el.clientWidth < el.scrollWidth - 2;
+    setMore((m) => (m.can === can && m.left === left && m.right === right ? m : { can, left, right }));
+  }, []);
+
+  useEffect(() => {
+    const el = strip.current;
+    if (!el) return undefined;
+    measure();
+    el.addEventListener("scroll", measure, { passive: true });
+    const ro = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(measure);
+    ro?.observe(el);
+    if (outer.current) ro?.observe(outer.current);
+    return () => {
+      el.removeEventListener("scroll", measure);
+      ro?.disconnect();
+    };
+  }, [measure]);
+  useEffect(measure, [measure, watch]);
+
+  // keep the chip being read in view (without moving the page itself)
+  useEffect(() => {
+    const el = strip.current;
+    const chip = el?.querySelector('[aria-current="true"]');
+    if (!el || !chip) return;
+    const pad = 12;
+    if (chip.offsetLeft >= el.scrollLeft + pad && chip.offsetLeft + chip.offsetWidth <= el.scrollLeft + el.clientWidth - pad) return;
+    const calm = typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    el.scrollTo({ left: Math.max(0, chip.offsetLeft - (el.clientWidth - chip.offsetWidth) / 2), behavior: calm ? "auto" : "smooth" });
+  }, [activeKey, watch]);
+
+  const nudge = (dir) => {
+    const el = strip.current;
+    if (el) el.scrollBy({ left: dir * Math.max(120, el.clientWidth * 0.7), behavior: "smooth" });
+  };
+
+  return (
+    <div ref={outer} className={className} style={{ flex: "1 1 0", minWidth: 0, display: "flex", alignItems: "center", gap: 6, ...style }}>
+      {more.can ? (
+        <button type="button" className="ot-strip-arrow ot-press" aria-label={`Scroll ${label.toLowerCase()} left`} disabled={!more.left} onClick={() => nudge(-1)} style={stripArrow}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+        </button>
+      ) : null}
+      <nav
+        ref={strip}
+        aria-label={label}
+        className="ot-chip-strip"
+        data-more-left={more.left}
+        data-more-right={more.right}
+        style={{ flex: "1 1 0", minWidth: 0, display: "flex", gap: "var(--fx-toolbar-gap, 6px)", padding: "4px 3px", margin: "-4px 0", position: "relative" }}
+      >
+        {children}
+      </nav>
+      {more.can ? (
+        <button type="button" className="ot-strip-arrow ot-press" aria-label={`Scroll ${label.toLowerCase()} right`} disabled={!more.right} onClick={() => nudge(1)} style={stripArrow}>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg>
+        </button>
+      ) : null}
     </div>
   );
 }
@@ -304,7 +600,7 @@ function FilterChip({ active, onClick, children }                               
     <button
       type="button"
       onClick={onClick}
-      className="ot-press ot-fx-chip"
+      className="ot-press ot-fx-chip ot-filter-chip"
       data-active={active}
       style={fx("chip", {
         ...chip,
@@ -326,7 +622,8 @@ const toolbar                = {
   gap: 12,
   flexWrap: "wrap",
   position: "sticky",
-  top: 0,
+  // under the pinned header and order bar (their heights are published by StickyBar; 0 where there are none)
+  top: "calc(var(--ot-header-h, 0px) + var(--ot-bar-h, 0px))",
   zIndex: 4,
   padding: "10px 0",
   marginBottom: 12,
@@ -374,7 +671,22 @@ const jumpLink                = {
   border: "1px solid var(--color-border)",
   whiteSpace: "nowrap",
 };
+const filterRow = { display: "flex", gap: "var(--fx-toolbar-gap, 6px)", flex: "0 1 auto", minWidth: 0, padding: "4px 3px", margin: "-4px -3px" };
+const stripArrow = {
+  flex: "0 0 auto",
+  width: 28,
+  height: 28,
+  display: "inline-grid",
+  placeItems: "center",
+  padding: 0,
+  borderRadius: 999,
+  border: "1px solid var(--color-border)",
+  background: "var(--color-bg)",
+  color: "var(--color-text)",
+  cursor: "pointer",
+};
 const categoriesBtn = {
+  marginLeft: "auto",
   font: "inherit",
   fontSize: "0.85rem",
   fontWeight: 600,
@@ -428,6 +740,18 @@ const heading                = {
   paddingBottom: 8,
   borderBottom: "1px solid var(--color-border)",
 };
+/** a category inside another: smaller, set in from the left with a thin bar */
+const nestedHeading = (depth) => ({
+  fontSize: depth === 1 ? 18 : 16,
+  fontWeight: 650,
+  paddingLeft: 10,
+  borderLeft: `3px solid ${depth === 1 ? "var(--color-primary)" : "var(--color-border)"}`,
+});
+const crumb = { fontSize: 12, fontWeight: 600, letterSpacing: "0.02em", color: "var(--color-text-muted)", margin: "0 0 4px 13px" };
+const catPhoto = { borderRadius: 12, objectFit: "cover", flexShrink: 0, border: "1px solid var(--color-border)", background: "var(--color-surface)" };
+const chipPhoto = { width: 18, height: 18, borderRadius: 999, objectFit: "cover", verticalAlign: -4, marginRight: 6 };
+// replaces the chip's whole `border` (never a lone borderColor on top of it: React warns when a longhand is added and removed over a shorthand)
+const jumpLinkActive = { color: "var(--color-text)", border: "1px solid var(--color-primary)", boxShadow: "inset 0 0 0 1px var(--color-primary)" };
 const subtitle                = { margin: "6px 0 0", fontSize: 13.5, color: "var(--color-text-muted)" };
 const clickable                = { cursor: "pointer", borderRadius: "var(--radius-card)" };
 const countBadge                = { fontSize: "0.7em", fontWeight: 500, color: "var(--color-text-muted)" };

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useLayoutEffect, useRef, useCallback } from "react";
+import { createPortal } from "react-dom";
 
 const MONTH_NAMES = [
   "January", "February", "March", "April", "May", "June",
@@ -547,13 +548,57 @@ export function DatePickerInput({
   variant = "ring",
 }) {
   const [open, setOpen] = useState(false);
+  const [pos, setPos] = useState(null); // where the calendar sits, in screen coordinates (null until it has been measured)
   const containerRef = useRef(null);
+  const boxRef = useRef(null);
+  const popRef = useRef(null);
+
+  // The calendar is drawn on top of the page (in <body>, positioned on the screen) instead of inside the layout,
+  // so opening it never makes the page taller or scrolls. It goes where it fits: below the box when there is room,
+  // otherwise above it; flush with the box's left edge, or its right edge when the left would run off the screen.
+  const place = useCallback(() => {
+    const pop = popRef.current;
+    const box = boxRef.current;
+    if (!pop || !box) return;
+    const gap = 8;
+    const edge = 8;
+    const vw = document.documentElement.clientWidth;
+    const vh = window.innerHeight;
+    const b = box.getBoundingClientRect();
+    const w = pop.offsetWidth;
+    const h = pop.offsetHeight;
+    let left = b.left;
+    if (left + w > vw - edge) left = b.right - w;
+    left = Math.max(edge, Math.min(left, vw - w - edge));
+    const below = vh - b.bottom - gap - edge;
+    const above = b.top - gap - edge;
+    let top;
+    if (h <= below) top = b.bottom + gap;
+    else if (h <= above) top = b.top - gap - h;
+    else top = below >= above ? Math.max(edge, Math.min(b.bottom + gap, vh - h - edge)) : Math.max(edge, b.top - gap - h); // neither fits: the roomier side, kept on screen
+    setPos((old) => (old && old.top === top && old.left === left ? old : { top, left }));
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!open) { setPos(null); return undefined; }
+    place();
+    const again = () => place();
+    window.addEventListener("resize", again);
+    window.addEventListener("scroll", again, true); // any scrolling parent moves the box under the calendar
+    const watch = typeof ResizeObserver !== "undefined" && popRef.current ? new ResizeObserver(again) : null; // month ↔ year views differ in height
+    if (watch) watch.observe(popRef.current);
+    return () => {
+      window.removeEventListener("resize", again);
+      window.removeEventListener("scroll", again, true);
+      if (watch) watch.disconnect();
+    };
+  }, [open, place]);
 
   useEffect(() => {
     function handleClickOutside(e) {
-      if (containerRef.current && !containerRef.current.contains(e.target)) {
-        setOpen(false);
-      }
+      const inBox = containerRef.current && containerRef.current.contains(e.target);
+      const inCalendar = popRef.current && popRef.current.contains(e.target);
+      if (!inBox && !inCalendar) setOpen(false);
     }
     if (open) {
       document.addEventListener("mousedown", handleClickOutside);
@@ -586,6 +631,7 @@ export function DatePickerInput({
       ) : null}
 
       <div
+        ref={boxRef}
         onClick={() => !disabled && setOpen((o) => !o)}
         style={{
           display: "flex",
@@ -624,31 +670,39 @@ export function DatePickerInput({
         </span>
       </div>
 
-      {open ? (
-        <div
-          style={{
-            position: "absolute",
-            top: "calc(100% + 8px)",
-            left: 0,
-            zIndex: 100,
-            animation: "ot-pop-in 0.15s ease-out",
-          }}
-        >
-          <DatePicker
-            value={value}
-            themeColor={themeColor}
-            variant={variant}
-            onOk={(str) => {
-              if (onChange) onChange(str);
-              setOpen(false);
-            }}
-            onCancel={() => setOpen(false)}
-            onChange={(str) => {
-              if (onChange) onChange(str);
-            }}
-          />
-        </div>
-      ) : null}
+      {open
+        ? createPortal(
+            <div
+              ref={popRef}
+              style={{
+                position: "fixed",
+                top: pos ? pos.top : 0,
+                left: pos ? pos.left : 0,
+                visibility: pos ? "visible" : "hidden",
+                zIndex: 1000,
+                maxHeight: "calc(100vh - 16px)",
+                overflowY: "auto",
+                borderRadius: 16,
+                animation: "ot-pop-in 0.15s ease-out",
+              }}
+            >
+              <DatePicker
+                value={value}
+                themeColor={themeColor}
+                variant={variant}
+                onOk={(str) => {
+                  if (onChange) onChange(str);
+                  setOpen(false);
+                }}
+                onCancel={() => setOpen(false)}
+                onChange={(str) => {
+                  if (onChange) onChange(str);
+                }}
+              />
+            </div>,
+            document.body,
+          )
+        : null}
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { requireBrandContext, requireUser } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import { hashPassword } from "../auth/password.js";
 import { invalidateStorePlan, storePlan } from "../platform/plan.service.js";
+import { limiter } from "../../middleware/rate-limit.js";
 
 export const usersRouter         = Router();
 
@@ -62,7 +63,7 @@ const createBody = z.object({
   outletIds: z.array(z.string()).optional(),
 });
 
-usersRouter.post("/", async (req, res) => {
+usersRouter.post("/", limiter("account-write"), async (req, res) => {
   const { brandId } = await requireBrandContext(req, "user:manage");
   const me = requireUser(req);
   const body = createBody.parse(req.body);
@@ -90,7 +91,7 @@ const updateBody = z.object({
   password: z.string().min(8).optional(),
 });
 
-usersRouter.patch("/:id", async (req, res) => {
+usersRouter.patch("/:id", limiter("account-write"), async (req, res) => {
   const { brandId } = await requireBrandContext(req, "user:manage");
   const me = requireUser(req);
   const body = updateBody.parse(req.body);
@@ -124,7 +125,7 @@ usersRouter.patch("/:id", async (req, res) => {
  * when they have no other store left — someone who also works for another
  * brand keeps that access.
  */
-usersRouter.delete("/:id", async (req, res) => {
+usersRouter.delete("/:id", limiter("account-write"), async (req, res) => {
   const { brandId } = await requireBrandContext(req, "user:manage");
   const me = requireUser(req);
   if (String(me._id) === req.params.id) throw new HttpError(400, "You can't remove yourself");

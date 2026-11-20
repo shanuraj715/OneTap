@@ -2,6 +2,7 @@ import { Router } from "express";
 import { z } from "zod";
 import { requireOutletContext, requireUser } from "../../middleware/auth.js";
 import { getDesign, resetDesign, saveDesign } from "./qr-cards.service.js";
+import { limiter } from "../../middleware/rate-limit.js";
 
 export const qrCardsRouter = Router();
 
@@ -29,7 +30,7 @@ const saveBody = z.object({
   baseUpdatedAt: z.string().nullable().optional(),
 });
 
-qrCardsRouter.put("/design", async (req, res) => {
+qrCardsRouter.put("/design", limiter("upload"), async (req, res) => {
   const ctx = await requireOutletContext(req, "table:manage");
   const user = requireUser(req);
   res.json(await saveDesign(ctx, saveBody.parse(req.body), String(user._id)));

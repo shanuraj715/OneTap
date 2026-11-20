@@ -14,7 +14,9 @@ export { AwesomeLoader } from "./components/AwesomeLoader";
 export { TopProgressBar } from "./components/TopProgressBar";
 
 export function Button(props             ) {
-  return <BaseButton size="sm" {...props} />;
+  // a button that can't be pressed must LOOK like it can't: faded and grey, whatever its colour (the base button leaves it as it was)
+  const dim = props.disabled ? { opacity: 0.5, filter: "grayscale(1)", cursor: "not-allowed" } : null;
+  return <BaseButton size="sm" {...props} style={{ ...dim, ...props.style }} />;
 }
 
 /** Freezes the page underneath while something (a modal, a dialog) is open. */

@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { categoryHeight, cleanCategoryName, duplicateCategoryName, categoryLevel, categorySubtreeIds, MAX_CATEGORIES_AT_ONCE, MAX_CATEGORY_DEPTH, planCategoryMove } from "@onetap/config-schema";
 import {
   MenuCategoryModel,
   MenuItemModel,
@@ -18,9 +19,11 @@ import { removeObject } from "../storage/storage.service.js";
 
 /* ------------------------------------------------------------------ mapping */
 
-const toCategory = (d                                                                      )               => ({
+const toCategory = (d) => ({
   id: String(d._id),
   name: d.name,
+  parentId: d.parentId ?? null,
+  image: d.image?.url ? { url: d.image.url, key: d.image.key ?? "", ...(d.image.width ? { width: d.image.width } : {}), ...(d.image.height ? { height: d.image.height } : {}) } : null,
   sortOrder: d.sortOrder,
   isActive: d.isActive,
 });
@@ -85,34 +88,193 @@ export async function getMenu(ctx               , { fresh = false } = {}) {
 
 /* --------------------------------------------------------------- categories */
 
-export async function createCategory(ctx               , input                                      ) {
+/** one category's picture, cleaned up — or null for "no picture" */
+function normalizeCategoryImage(image) {
+  if (!image || typeof image.url !== "string" || !image.url) return null;
+  return {
+    url: image.url,
+    key: typeof image.key === "string" ? image.key : "",
+    ...(Number(image.width) > 0 ? { width: Math.round(Number(image.width)) } : {}),
+    ...(Number(image.height) > 0 ? { height: Math.round(Number(image.height)) } : {}),
+  };
+}
+
+/** The outlet's categories as the tree helpers want them (id / parentId only). */
+async function categoryList(ctx) {
+  const docs = await MenuCategoryModel.find(tenantFilter(ctx)).select("name parentId sortOrder").lean();
+  return docs.map((d) => ({ id: String(d._id), name: d.name, parentId: d.parentId ?? null, sortOrder: d.sortOrder ?? 0 }));
+}
+
+/**
+ * A picture file is deleted only when nothing else still shows it — an imported menu copies the picture's address
+ * from the outlet it came from, so two outlets can point at one file.
+ */
+async function removeImageIfUnused(ctx, key) {
+  if (!key) return;
+  const [items, categories] = await Promise.all([
+    MenuItemModel.countDocuments({ brandId: ctx.brandId, "images.key": key }),
+    MenuCategoryModel.countDocuments({ brandId: ctx.brandId, "image.key": key }),
+  ]);
+  if (items + categories === 0) void removeObject(ctx, key);
+}
+
+export async function createCategory(ctx, input) {
+  const all = await categoryList(ctx);
+  let parentId = input.parentId ?? null;
+  if (parentId) {
+    if (!all.some((c) => c.id === parentId)) throw new HttpError(400, "That parent category doesn't exist");
+    if (categoryLevel(all, parentId) + 1 > MAX_CATEGORY_DEPTH) {
+      throw new HttpError(400, `Categories can go ${MAX_CATEGORY_DEPTH} levels deep at most.`);
+    }
+  } else parentId = null;
+
   const doc = await MenuCategoryModel.create({
     brandId: ctx.brandId,
     outletId: ctx.outletId,
     name: input.name,
-    sortOrder: input.sortOrder ?? 0,
+    parentId,
+    ...(normalizeCategoryImage(input.image) ? { image: normalizeCategoryImage(input.image) } : {}),
+    // new ones go to the end of their own level
+    sortOrder: input.sortOrder ?? all.filter((c) => c.parentId === parentId).length,
+    ...(input.isActive === undefined ? {} : { isActive: input.isActive }),
   });
   return toCategory(doc.toObject());
 }
 
-export async function updateCategory(
-  ctx               ,
-  id        ,
-  patch                                                                 ,
-) {
-  const doc = await MenuCategoryModel.findOneAndUpdate(tenantFilter(ctx, { _id: id }), patch, { new: true }).lean();
+/**
+ * Several categories at once, inside `parentId` (null = top level), in the order given — each with its own name and,
+ * if it has one, picture. Names are cleaned like the form does; a missing name, a name given twice or more than
+ * MAX_CATEGORIES_AT_ONCE is refused, and everything is checked BEFORE the first one is created so a refusal never
+ * leaves half of them behind. The new ones go to the end of their level.
+ */
+export async function createCategories(ctx, { parentId = null, categories: wanted, isActive }) {
+  const list = (Array.isArray(wanted) ? wanted : []).map((c) => ({ name: cleanCategoryName(c?.name), image: normalizeCategoryImage(c?.image) }));
+  if (list.length === 0) throw new HttpError(400, "Give at least one category.");
+  if (list.length > MAX_CATEGORIES_AT_ONCE) throw new HttpError(400, `Add ${MAX_CATEGORIES_AT_ONCE} categories or fewer at a time.`);
+  if (list.some((c) => !c.name)) throw new HttpError(400, "Every category needs a name.");
+  const twice = duplicateCategoryName(list.map((c) => c.name));
+  if (twice) throw new HttpError(400, `“${twice}” is in the list twice.`);
+
+  const all = await categoryList(ctx);
+  const parent = parentId || null;
+  if (parent) {
+    if (!all.some((c) => c.id === parent)) throw new HttpError(400, "That parent category doesn't exist");
+    if (categoryLevel(all, parent) + 1 > MAX_CATEGORY_DEPTH) throw new HttpError(400, `Categories can go ${MAX_CATEGORY_DEPTH} levels deep at most.`);
+  }
+  let sortOrder = all.filter((c) => c.parentId === parent).length;
+  const created = [];
+  for (const { name, image } of list) {
+    const doc = await MenuCategoryModel.create({
+      brandId: ctx.brandId,
+      outletId: ctx.outletId,
+      name,
+      parentId: parent,
+      ...(image ? { image } : {}),
+      sortOrder: sortOrder++,
+      ...(isActive === undefined ? {} : { isActive }),
+    });
+    created.push(toCategory(doc.toObject()));
+  }
+  return created;
+}
+
+export async function updateCategory(ctx, id, patch) {
+  const update = { ...patch };
+  const before = await MenuCategoryModel.findOne(tenantFilter(ctx, { _id: id })).lean();
+  if (!before) throw new HttpError(404, "Category not found");
+
+  // moving it inside another category (or back to the top)
+  if (patch.parentId !== undefined) {
+    const parentId = patch.parentId || null;
+    update.parentId = parentId;
+    if ((before.parentId ?? null) !== parentId) {
+      const all = await categoryList(ctx);
+      if (parentId) {
+        if (!all.some((c) => c.id === parentId)) throw new HttpError(400, "That parent category doesn't exist");
+        if (categorySubtreeIds(all, id).includes(parentId)) throw new HttpError(400, "A category can't be moved inside itself or inside one of its own sub-categories.");
+        if (categoryLevel(all, parentId) + categoryHeight(all, id) > MAX_CATEGORY_DEPTH) {
+          throw new HttpError(400, `Categories can go ${MAX_CATEGORY_DEPTH} levels deep at most — that move would go deeper.`);
+        }
+      }
+      // it joins the end of its new level, unless the caller said where
+      if (patch.sortOrder === undefined) update.sortOrder = all.filter((c) => c.parentId === parentId && c.id !== id).length;
+    }
+  }
+
+  // a new picture, or none
+  let oldKey = "";
+  if (patch.image !== undefined) {
+    const next = normalizeCategoryImage(patch.image);
+    if (next) update.image = next;
+    else {
+      delete update.image;
+      update.$unset = { image: 1 };
+    }
+    if ((before.image?.key ?? "") !== (next?.key ?? "")) oldKey = before.image?.key ?? "";
+  }
+
+  const doc = await MenuCategoryModel.findOneAndUpdate(tenantFilter(ctx, { _id: id }), update, { new: true }).lean();
   if (!doc) throw new HttpError(404, "Category not found");
+  await removeImageIfUnused(ctx, oldKey);
   return toCategory(doc);
 }
 
-export async function deleteCategory(ctx               , id        ) {
-  const itemCount = await MenuItemModel.countDocuments(tenantFilter(ctx, { categoryId: id }));
-  if (itemCount > 0) {
-    throw new HttpError(409, `Category still has ${itemCount} item(s). Move or delete them first.`);
-  }
-  const res = await MenuCategoryModel.deleteOne(tenantFilter(ctx, { _id: id }));
-  if (res.deletedCount === 0) throw new HttpError(404, "Category not found");
+/** Put one level of categories in a new order (every id must sit under the same parent). */
+export async function reorderCategories(ctx, ids) {
+  const docs = await MenuCategoryModel.find(tenantFilter(ctx, { _id: { $in: ids } })).select("parentId").lean();
+  if (docs.length !== new Set(ids).size) throw new HttpError(404, "Category not found");
+  if (new Set(docs.map((d) => d.parentId ?? null)).size > 1) throw new HttpError(400, "Only categories on the same level can be put in order together");
+  await Promise.all(ids.map((id, index) => MenuCategoryModel.updateOne(tenantFilter(ctx, { _id: id }), { sortOrder: index })));
 }
+
+/**
+ * Drag-and-drop: put a category inside `parentId` (null = top level), just before `beforeId` (null = at the end), and
+ * renumber the level it lands in. The rule is the shared `planCategoryMove`, so the editor shows exactly this.
+ */
+export async function moveCategory(ctx, id, { parentId = null, beforeId = null } = {}) {
+  const all = await categoryList(ctx);
+  const plan = planCategoryMove(all, id, parentId, beforeId);
+  if (!plan.ok) throw new HttpError(plan.reason === "Category not found" ? 404 : 400, plan.reason);
+  // one update at a time (not a bulk write) so the menu cache is dropped the way it is for every other change
+  await Promise.all(
+    plan.changes.map((c) => MenuCategoryModel.updateOne(tenantFilter(ctx, { _id: c.id }), { $set: { sortOrder: c.sortOrder, ...(c.parentId !== undefined ? { parentId: c.parentId } : {}) } })),
+  );
+  return { changes: plan.changes };
+}
+
+/**
+ * Delete categories — and everything inside them: each one's sub-categories (all the way down) go too. Items are
+ * never removed by accident: if any category being deleted holds items the call is refused (409, with how many)
+ * unless the caller says `deleteItems`, in which case those items are deleted with their pictures.
+ * Returns what was removed.
+ */
+export async function deleteCategories(ctx, ids, { deleteItems = false } = {}) {
+  const all = await categoryList(ctx);
+  const known = new Set(all.map((c) => c.id));
+  const wanted = [...new Set(ids)];
+  if (wanted.some((id) => !known.has(id))) throw new HttpError(404, "Category not found");
+
+  const doomed = [...new Set(wanted.flatMap((id) => categorySubtreeIds(all, id)))];
+  const items = await MenuItemModel.find(tenantFilter(ctx, { categoryId: { $in: doomed } })).select("images").lean();
+  if (items.length > 0 && !deleteItems) {
+    throw new HttpError(409, `${items.length === 1 ? "There is 1 item" : `There are ${items.length} items`} in ${doomed.length === 1 ? "this category" : "these categories"}. Move ${items.length === 1 ? "it" : "them"} to another category first, or delete ${items.length === 1 ? "it" : "them"} too.`, {
+      code: "category_has_items",
+      itemCount: items.length,
+      categoryCount: doomed.length,
+    });
+  }
+
+  const categories = await MenuCategoryModel.find(tenantFilter(ctx, { _id: { $in: doomed } })).select("image").lean();
+  if (items.length) await MenuItemModel.deleteMany(tenantFilter(ctx, { categoryId: { $in: doomed } }));
+  await MenuCategoryModel.deleteMany(tenantFilter(ctx, { _id: { $in: doomed } }));
+
+  // pictures last, once the database no longer points at them
+  const keys = [...items.flatMap((i) => (i.images ?? []).map((im) => im.key)), ...categories.map((c) => c.image?.key)].filter(Boolean);
+  for (const key of new Set(keys)) await removeImageIfUnused(ctx, key);
+  return { deletedCategories: doomed.length, deletedItems: items.length };
+}
+
+export const deleteCategory = (ctx, id) => deleteCategories(ctx, [id]);
 
 /* -------------------------------------------------------------------- items */
 
@@ -185,6 +347,16 @@ export async function deleteItem(ctx               , id        ) {
   const res = await MenuItemModel.deleteOne(tenantFilter(ctx, { _id: id }));
   if (res.deletedCount === 0) throw new HttpError(404, "Item not found");
   for (const im of doc?.images ?? []) if (im.key) void removeObject(ctx, im.key);
+}
+
+/** Delete several items at once (with their pictures). Returns how many went. */
+export async function deleteItems(ctx, ids) {
+  const wanted = [...new Set(ids)];
+  const docs = await MenuItemModel.find(tenantFilter(ctx, { _id: { $in: wanted } })).select("images").lean();
+  if (docs.length !== wanted.length) throw new HttpError(404, "Item not found");
+  await MenuItemModel.deleteMany(tenantFilter(ctx, { _id: { $in: wanted } }));
+  for (const key of new Set(docs.flatMap((d) => (d.images ?? []).map((im) => im.key)).filter(Boolean))) await removeImageIfUnused(ctx, key);
+  return { deletedItems: docs.length };
 }
 
 /* ---------------------------------------------------------- modifier groups */
@@ -270,37 +442,48 @@ export async function importMenu(ctx, input) {
     if (!validTargetCat) throw new HttpError(400, "Selected target category does not exist");
   }
 
-  // Category mapping: sourceCategoryId -> targetCategoryId
+  // Category mapping: sourceCategoryId -> targetCategoryId.
+  // Categories are matched by their place in the tree — the same name under the same parent — not by name alone, so
+  // "Dosa" inside "South Indian" is never merged with a "Dosa" somewhere else. A category's parents are brought
+  // across first, so an imported "Dosa" still sits inside "South Indian".
   const categoryMap = new Map();
-  const targetCategoryByName = new Map(
-    targetCategories.map((c) => [c.name.trim().toLowerCase(), String(c._id)])
-  );
+  const sourceById = new Map(sourceCategories.map((c) => [String(c._id), c]));
+  const slot = (parentId, name) => `${parentId ?? ""}|${name.trim().toLowerCase()}`;
+  const targetBySlot = new Map(targetCategories.map((c) => [slot(c.parentId ?? null, c.name), String(c._id)]));
+  const siblingCount = new Map();
+  for (const c of targetCategories) siblingCount.set(c.parentId ?? null, (siblingCount.get(c.parentId ?? null) ?? 0) + 1);
 
-  let nextCatSortOrder = targetCategories.length;
   let importedCategoriesCount = 0;
 
-  async function resolveTargetCategory(srcCatId) {
+  async function resolveTargetCategory(srcCatId, guard = 0) {
     if (categoryMap.has(srcCatId)) return categoryMap.get(srcCatId);
-    const srcCat = sourceCategories.find((c) => String(c._id) === srcCatId);
+    const srcCat = sourceById.get(srcCatId);
     if (!srcCat) return null;
 
-    const normalizedName = srcCat.name.trim().toLowerCase();
-    if (targetCategoryByName.has(normalizedName)) {
-      const existingId = targetCategoryByName.get(normalizedName);
+    const srcParent = srcCat.parentId && sourceById.has(srcCat.parentId) && guard < MAX_CATEGORY_DEPTH ? srcCat.parentId : null;
+    const parentTargetId = srcParent ? await resolveTargetCategory(srcParent, guard + 1) : null;
+
+    const where = slot(parentTargetId, srcCat.name);
+    if (targetBySlot.has(where)) {
+      const existingId = targetBySlot.get(where);
       categoryMap.set(srcCatId, existingId);
       return existingId;
     }
 
+    const image = normalizeCategoryImage(srcCat.image);
     const newCat = await MenuCategoryModel.create({
       brandId: ctx.brandId,
       outletId: ctx.outletId,
       name: srcCat.name,
-      sortOrder: nextCatSortOrder++,
+      parentId: parentTargetId,
+      ...(image ? { image } : {}),
+      sortOrder: siblingCount.get(parentTargetId) ?? 0,
       isActive: srcCat.isActive ?? true,
     });
+    siblingCount.set(parentTargetId, (siblingCount.get(parentTargetId) ?? 0) + 1);
     const newId = String(newCat._id);
     categoryMap.set(srcCatId, newId);
-    targetCategoryByName.set(normalizedName, newId);
+    targetBySlot.set(where, newId);
     importedCategoriesCount++;
     return newId;
   }

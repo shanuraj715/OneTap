@@ -158,6 +158,21 @@ export const getPlatformStorage = () => req("/api/platform/storage");
 /** payload: { provider?, values?, processing? } */
 export const savePlatformStorage = (payload) => req("/api/platform/storage", json("PUT", payload));
 
+/* ------------------------------------------------------------------ AI pictures (super admin) */
+
+export const getPlatformAi = () => req("/api/platform/ai");
+export const savePlatformAiModel = (model) => req("/api/platform/ai", json("PUT", { model }));
+/** { label?, apiKey } */
+export const addPlatformAiKey = (payload) => req("/api/platform/ai/keys", json("POST", payload));
+/** { id, label?, enabled? } */
+export const updatePlatformAiKey = ({ id, ...patch }) => req(`/api/platform/ai/keys/${id}`, json("PATCH", patch));
+export const removePlatformAiKey = (id) => req(`/api/platform/ai/keys/${id}`, json("DELETE"));
+export const testPlatformAiKey = (id) => req(`/api/platform/ai/keys/${id}/test`, json("POST"));
+
+/** Make pictures of a dish with AI and add them to it. body: { aspectRatio, count, prompt? } — super admin only. */
+export const generateItemImages = (o, id, body) =>
+  req(`/api/menu/items/${id}/generate-images`, { method: "POST", body: JSON.stringify(body), outletId: o._id });
+
 export const resetPlatformStorage = () => req("/api/platform/storage", json("DELETE"));
 
 export const testPlatformStorage = () => req("/api/platform/storage/test", json("POST"));
@@ -218,6 +233,26 @@ export const updateCategory = (o        , id        , body                      
 export const deleteCategory = (o        , id        ) =>
   req      (`/api/menu/categories/${id}`, { method: "DELETE", outletId: o._id });
 
+/** Create several categories at once (`names` already split on commas). */
+export const createCategories = (o        , body                                                                    ) =>
+  req("/api/menu/categories/bulk", { method: "POST", body: JSON.stringify(body), outletId: o._id });
+
+/** Delete several categories (and the ones inside them) at once; `deleteItems` also deletes the dishes in them. */
+export const deleteCategories = (o        , body                                           ) =>
+  req("/api/menu/categories/bulk-delete", { method: "POST", body: JSON.stringify(body), outletId: o._id });
+
+/** Drag-and-drop: move a category inside another (or the top level), before a sibling (or at the end). */
+export const moveCategory = (o        , body                                                           ) =>
+  req("/api/menu/categories/move", { method: "POST", body: JSON.stringify(body), outletId: o._id });
+
+/** Put one level of categories in a new order. */
+export const reorderCategories = (o        , ids          ) =>
+  req("/api/menu/categories/order", { method: "POST", body: JSON.stringify({ ids }), outletId: o._id });
+
+/** Delete several items at once. */
+export const deleteItems = (o        , ids          ) =>
+  req("/api/menu/items/bulk-delete", { method: "POST", body: JSON.stringify({ ids }), outletId: o._id });
+
 export const createItem = (o        , body                                                  ) =>
   req                    ("/api/menu/items", { method: "POST", body: JSON.stringify(body), outletId: o._id });
 
@@ -229,6 +264,9 @@ export const deleteItem = (o        , id        ) =>
 
 export const createModifierGroup = (o        , body                               ) =>
   req                          ("/api/menu/modifier-groups", { method: "POST", body: JSON.stringify(body), outletId: o._id });
+
+export const updateModifierGroup = (o, id, body) =>
+  req(`/api/menu/modifier-groups/${id}`, { method: "PATCH", body: JSON.stringify(body), outletId: o._id });
 
 export const deleteModifierGroup = (o        , id        ) =>
   req      (`/api/menu/modifier-groups/${id}`, { method: "DELETE", outletId: o._id });
@@ -321,6 +359,10 @@ export const editOrder = (o        , id        , body           ) =>
     body: JSON.stringify(body),
     outletId: o._id,
   });
+
+/** Delete an order from the Orders page (owner / manager). */
+export const deleteOrder = (o        , id        ) =>
+  req                       (`/api/orders/${id}`, { method: "DELETE", outletId: o._id });
 
 /** Staff placing an order on a diner's behalf — a walk-in, a phoned-in order,
  *  or a second round added to a table already in service (`sessionId`). */
@@ -624,6 +666,12 @@ export const saveNotifyConfig = (o        , channel                    , values 
     outletId: o._id,
   });
 
+/** How each kind of message is sent (today: verification codes), and whether each way can send right now. */
+export const getMessaging = (o        ) => req                                     ("/api/notify/messaging", { outletId: o._id });
+
+export const saveMessaging = (o        , body         ) =>
+  req                                     ("/api/notify/messaging", { method: "PUT", body: JSON.stringify(body), outletId: o._id });
+
 export const clearNotifyConfig = (o        , channel                    ) =>
   req                                     (`/api/notify/config/${channel}`, { method: "DELETE", outletId: o._id });
 
@@ -700,6 +748,7 @@ export const getPlatformSettings = () => req("/api/platform/settings");
 export const updatePlatformSettings = (body) => req("/api/platform/settings", json("PUT", body));
 export const listStores = () => req("/api/platform/stores");
 export const getStore = (id) => req(`/api/platform/stores/${id}`);
+export const renameStore = (id, name) => req(`/api/platform/stores/${id}`, json("PATCH", { name }));
 export const setStorePlan = (id, body) => req(`/api/platform/stores/${id}/plan`, json("PATCH", body));
 export const setStoreDomains = (id, body) => req(`/api/platform/stores/${id}/domains`, json("PUT", body));
 export const checkSubdomain = (label, storeId) =>
@@ -813,5 +862,29 @@ export async function anExport(o, body) {
     throw new ApiError(res.status, j.error ?? `The report could not be made (${res.status})`, j.details);
   }
   const name = /filename="?([^"]+)"?/.exec(res.headers.get("content-disposition") ?? "")?.[1] ?? "tablepe-report";
+  return { blob: await res.blob(), filename: name };
+}
+
+/* --------------------------------------------------------------- client onboarding */
+// The requirement forms a TablePe representative fills with a new client, and publishing one as a store (platform console).
+export const listOnboarding = (status) => req(`/api/platform/onboarding${status ? `?status=${encodeURIComponent(status)}` : ""}`);
+export const getOnboarding = (id) => req(`/api/platform/onboarding/${id}`);
+export const createOnboarding = (data) => req("/api/platform/onboarding", json("POST", { data }));
+export const saveOnboarding = (id, data) => req(`/api/platform/onboarding/${id}`, json("PUT", { data }));
+export const deleteOnboarding = (id) => req(`/api/platform/onboarding/${id}`, { method: "DELETE" });
+export const checkOnboarding = (id) => req(`/api/platform/onboarding/${id}/check`);
+export const publishOnboarding = (id, ownerPassword) => req(`/api/platform/onboarding/${id}/publish`, json("POST", { ownerPassword }));
+/** The price list the onboarding estimate uses. */
+export const getOnboardingPricing = () => req("/api/platform/onboarding/pricing");
+export const saveOnboardingPricing = (pricing) => req("/api/platform/onboarding/pricing", { method: "PUT", body: JSON.stringify(pricing) });
+export const resolveMapLink = (link) => req("/api/platform/onboarding/resolve-map", json("POST", { link }));
+/** The form as a PDF: `{ blob, filename }`. */
+export async function onboardingPdf(id) {
+  const res = await fetch(`${API_BASE}/api/platform/onboarding/${id}/pdf`, { credentials: "include" });
+  if (!res.ok) {
+    const j = await res.json().catch(() => ({}));
+    throw new ApiError(res.status, j.error ?? `The PDF could not be made (${res.status})`, j.details);
+  }
+  const name = /filename="?([^"]+)"?/.exec(res.headers.get("content-disposition") ?? "")?.[1] ?? "onboarding.pdf";
   return { blob: await res.blob(), filename: name };
 }

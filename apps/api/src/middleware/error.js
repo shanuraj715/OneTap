@@ -27,6 +27,8 @@ export function errorHandler(
     return;
   }
   if (err instanceof HttpError) {
+    // "try again in N seconds" is also said the standard way, for anything that isn't our own screen
+    if (err.status === 429 && Number.isFinite(err.details?.retryAfterSec)) res.set("Retry-After", String(Math.ceil(err.details.retryAfterSec)));
     res.status(err.status).json({ error: err.message, details: err.details });
     return;
   }

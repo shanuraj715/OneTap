@@ -54,6 +54,9 @@ export const useManualStatus = (o                    ) =>
     api.setOrderStatusManual(out, a.id, a.status, a.reason),
   );
 
+/** Delete an order (owner / manager). Every open dashboard refreshes its list from the "order.deleted" push. */
+export const useDeleteOrder = (o                    ) => useOrderMutation(o, (out, id) => api.deleteOrder(out, id));
+
 export const useEditOrder = (o                    ) =>
   useOrderMutation                                     (o, (out, a) => api.editOrder(out, a.id, a.body));
 

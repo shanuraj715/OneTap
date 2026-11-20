@@ -6,14 +6,17 @@ import { requireBrandContext, requireSuperAdmin } from "../../middleware/auth.js
 import { HttpError } from "../../middleware/error.js";
 import { checkLabel, hostStatus, probeBase, subdomainInfo } from "../outlets/subdomains.js";
 import * as storage from "../storage/storage.service.js";
+import * as ai from "../ai/ai.service.js";
 import * as cacheAdmin from "./cache.service.js";
 import * as cacheInspect from "./cache-inspect.service.js";
 import { dashboard } from "./dashboard.service.js";
 import { listLoginLogs, LOGIN_FILTERS } from "./login-logs.service.js";
+import { onboardingRouter } from "../onboarding/onboarding.routes.js";
 import { sysmonRouter } from "../sysmon/sysmon.routes.js";
 import * as storeDelete from "./store-delete.service.js";
 import { storePlan } from "./plan.service.js";
 import * as platform from "./platform.service.js";
+import { limiter } from "../../middleware/rate-limit.js";
 
 /** The platform console — TablePe's own super admin, managing client stores. */
 export const platformRouter = Router();
@@ -101,7 +104,7 @@ const storageBody = z.object({
   processing: imageProcessingSchema.partial().optional(),
 });
 
-platformRouter.put("/storage", async (req, res) => {
+platformRouter.put("/storage", limiter("secrets"), async (req, res) => {
   const body = storageBody.parse(req.body);
   if (!body.provider && !body.processing) throw new HttpError(400, "Nothing to save");
   await storage.saveStorageConfig(body, String(requireSuperAdmin(req)._id));
@@ -109,12 +112,12 @@ platformRouter.put("/storage", async (req, res) => {
 });
 
 /** Back to this server's disk (compression settings are kept). */
-platformRouter.delete("/storage", async (req, res) => {
+platformRouter.delete("/storage", limiter("secrets"), async (req, res) => {
   await storage.resetStorageConfig(String(requireSuperAdmin(req)._id));
   res.json(await storage.getStorageConfig());
 });
 
-platformRouter.post("/storage/test", async (_req, res) => {
+platformRouter.post("/storage/test", limiter("secrets"), async (_req, res) => {
   try {
     res.json(await storage.testStorageConfig());
   } catch (err) {
@@ -123,8 +126,45 @@ platformRouter.post("/storage/test", async (_req, res) => {
   }
 });
 
+/* ----------------------------------------------------------------- AI pictures */
+
+/**
+ * The Gemini API keys that make dish pictures (several: each key has its own usage limit, so pictures are spread
+ * over them), and which model they use. Only the super admin sees or changes this; the keys are encrypted and never
+ * sent back — only a masked hint is.
+ */
+platformRouter.get("/ai", async (req, res) => {
+  requireSuperAdmin(req);
+  res.json(await ai.getAiSettings());
+});
+
+platformRouter.put("/ai", limiter("secrets"), async (req, res) => {
+  const body = z.object({ model: z.string().min(1).max(80) }).parse(req.body);
+  res.json(await ai.saveAiModel(body.model, String(requireSuperAdmin(req)._id)));
+});
+
+platformRouter.post("/ai/keys", limiter("secrets"), async (req, res) => {
+  const body = z.object({ label: z.string().max(60).optional(), apiKey: z.string().min(1).max(300) }).parse(req.body);
+  res.status(201).json(await ai.addAiKey(body, String(requireSuperAdmin(req)._id)));
+});
+
+platformRouter.patch("/ai/keys/:id", limiter("secrets"), async (req, res) => {
+  const body = z.object({ label: z.string().max(60).optional(), enabled: z.boolean().optional() }).parse(req.body);
+  res.json(await ai.updateAiKey(req.params.id, body, String(requireSuperAdmin(req)._id)));
+});
+
+platformRouter.delete("/ai/keys/:id", limiter("secrets"), async (req, res) => {
+  res.json(await ai.removeAiKey(req.params.id, String(requireSuperAdmin(req)._id)));
+});
+
+/** Free: asks Google for a model list with this one key — no picture is made. */
+platformRouter.post("/ai/keys/:id/test", limiter("secrets"), async (req, res) => {
+  requireSuperAdmin(req);
+  res.json(await ai.testAiKey(req.params.id));
+});
+
 /** Use one store's own (older) storage settings as the platform's. The secret stays encrypted. */
-platformRouter.post("/storage/adopt/:brandId", async (req, res) => {
+platformRouter.post("/storage/adopt/:brandId", limiter("secrets"), async (req, res) => {
   await storage.adoptStoreStorage(req.params.brandId, String(requireSuperAdmin(req)._id));
   res.json(await storage.getStorageConfig());
 });
@@ -133,6 +173,7 @@ platformRouter.post("/storage/adopt/:brandId", async (req, res) => {
 
 /** CPU, memory, disk, network, processes and a 0–10 health score for the machine this API runs on. */
 platformRouter.use("/server", sysmonRouter);
+platformRouter.use("/onboarding", onboardingRouter);
 
 /* ------------------------------------------------------------------- cache */
 
@@ -185,7 +226,7 @@ platformRouter.get("/stores/:id/deletion-summary", async (req, res) => {
 });
 
 /** Delete a store and everything it owns. The body must carry the store's exact name. */
-platformRouter.delete("/stores/:id", async (req, res) => {
+platformRouter.delete("/stores/:id", limiter("destructive"), async (req, res) => {
   const body = z.object({ confirmName: z.string() }).parse(req.body ?? {});
   const user = requireSuperAdmin(req);
   res.json(await storeDelete.deleteStore(req.params.id, { confirmName: body.confirmName, by: user.email }));
@@ -201,15 +242,22 @@ platformRouter.get("/stores/:id/disable-summary", async (req, res) => {
  * use the dashboard, but NOTHING is deleted. The optional message is what the team sees. Disabling a store
  * that is already disabled only updates the message.
  */
-platformRouter.post("/stores/:id/disable", async (req, res) => {
+platformRouter.post("/stores/:id/disable", limiter("destructive"), async (req, res) => {
   const { message } = z.object({ message: z.string().max(500, "Keep the message under 500 characters").optional() }).parse(req.body ?? {});
   const user = requireSuperAdmin(req);
   res.json({ store: await platform.setStoreDisabled(req.params.id, true, { message, byUserId: String(user._id) }) });
 });
 
 /** Turn a disabled store back on, exactly as it was. */
-platformRouter.post("/stores/:id/enable", async (req, res) => {
+platformRouter.post("/stores/:id/enable", limiter("destructive"), async (req, res) => {
   res.json({ store: await platform.setStoreDisabled(req.params.id, false) });
+});
+
+const renameBody = z.object({ name: z.string().trim().min(1, "Give the store a name").max(80, "The store name can be at most 80 characters") });
+
+/** Change a store's name — the platform admin only (this router is), never the store's own owner. */
+platformRouter.patch("/stores/:id", async (req, res) => {
+  res.json({ store: await platform.renameStore(req.params.id, renameBody.parse(req.body).name) });
 });
 
 const planBody = z.object({
@@ -241,7 +289,7 @@ platformRouter.get("/subdomains/check", async (req, res) => {
 });
 
 /** Does the wildcard setup (DNS + certificate + nginx) work? Tries a made-up address under the base domain. */
-platformRouter.get("/subdomains/probe", async (_req, res) => {
+platformRouter.get("/subdomains/probe", limiter("outbound-fetch"), async (_req, res) => {
   res.json({ status: await probeBase() });
 });
 
@@ -255,7 +303,7 @@ platformRouter.delete("/stores/:id/subdomain", async (req, res) => {
 });
 
 /** Does this store's TablePe address actually open from outside? */
-platformRouter.get("/stores/:id/subdomain/status", async (req, res) => {
+platformRouter.get("/stores/:id/subdomain/status", limiter("outbound-fetch"), async (req, res) => {
   const info = await subdomainInfo(req.params.id);
   if (!info.host) throw new HttpError(404, "This store has no TablePe address.");
   res.json({ status: await hostStatus(info.host) });
@@ -269,20 +317,20 @@ platformRouter.post("/stores/:id/outlets/:outletId/unblock", async (req, res) =>
   res.json({ store: await platform.setOutletBlocked(req.params.id, req.params.outletId, false) });
 });
 
-platformRouter.delete("/stores/:id/outlets/:outletId", async (req, res) => {
+platformRouter.delete("/stores/:id/outlets/:outletId", limiter("destructive"), async (req, res) => {
   const { confirmName } = z.object({ confirmName: z.string() }).parse(req.body ?? {});
   res.json({ store: await platform.deleteBlockedOutlet(req.params.id, req.params.outletId, confirmName) });
 });
 
-platformRouter.post("/stores/:id/people/:userId/block", async (req, res) => {
+platformRouter.post("/stores/:id/people/:userId/block", limiter("account-write"), async (req, res) => {
   res.json({ store: await platform.setPersonBlocked(req.params.id, req.params.userId, true) });
 });
 
-platformRouter.post("/stores/:id/people/:userId/unblock", async (req, res) => {
+platformRouter.post("/stores/:id/people/:userId/unblock", limiter("account-write"), async (req, res) => {
   res.json({ store: await platform.setPersonBlocked(req.params.id, req.params.userId, false) });
 });
 
-platformRouter.delete("/stores/:id/people/:userId", async (req, res) => {
+platformRouter.delete("/stores/:id/people/:userId", limiter("account-write"), async (req, res) => {
   res.json({ store: await platform.deleteBlockedPerson(req.params.id, req.params.userId) });
 });
 
@@ -294,7 +342,7 @@ const ownerBody = z.object({
   password: z.string().min(8, "Use at least 8 characters").optional(),
 });
 
-platformRouter.post("/stores/:id/owners", async (req, res) => {
+platformRouter.post("/stores/:id/owners", limiter("account-write"), async (req, res) => {
   res.status(201).json({ store: await platform.addOwner(req.params.id, ownerBody.parse(req.body)) });
 });
 
@@ -304,11 +352,11 @@ const ownerUpdateBody = z.object({
   isActive: z.boolean().optional(),
 });
 
-platformRouter.patch("/stores/:id/owners/:userId", async (req, res) => {
+platformRouter.patch("/stores/:id/owners/:userId", limiter("account-write"), async (req, res) => {
   res.json({ store: await platform.updateOwner(req.params.id, req.params.userId, ownerUpdateBody.parse(req.body)) });
 });
 
-platformRouter.delete("/stores/:id/owners/:userId", async (req, res) => {
+platformRouter.delete("/stores/:id/owners/:userId", limiter("account-write"), async (req, res) => {
   res.json({ store: await platform.removeOwner(req.params.id, req.params.userId) });
 });
 

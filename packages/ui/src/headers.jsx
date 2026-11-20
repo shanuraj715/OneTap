@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { fx } from "./fx";
 
 /**
@@ -153,18 +154,25 @@ function Nav({ links, mobileLinks, showToggle = true, collapsed = false, style, 
         </button>
       ) : null}
 
-      {open ? (
-        <>
-          <div className="ot-anim-fade" style={navBackdrop} onClick={() => setOpen(false)} aria-hidden="true" />
-          <nav className="ot-anim-slide-in ot-fx-modal" style={fx("modal", navDrawer)} aria-label="Site menu">
-            {drawerLinks.map((l) => (
-              <a key={l.label} href={l.href} style={navDrawerLink} onClick={() => setOpen(false)}>
-                {l.label}
-              </a>
-            ))}
-          </nav>
-        </>
-      ) : null}
+      {/*
+        The drawer is drawn on <body>, not inside the header: the header is pinned to the top of the page (its own stacking
+        layer), and a drawer left inside it would slide in under the cart bar and the item pop-ups instead of over them.
+      */}
+      {open
+        ? createPortal(
+            <>
+              <div className="ot-anim-fade" style={navBackdrop} onClick={() => setOpen(false)} aria-hidden="true" />
+              <nav className="ot-anim-slide-in ot-fx-modal" style={fx("modal", navDrawer)} aria-label="Site menu">
+                {drawerLinks.map((l) => (
+                  <a key={l.label} href={l.href} style={navDrawerLink} onClick={() => setOpen(false)}>
+                    {l.label}
+                  </a>
+                ))}
+              </nav>
+            </>,
+            document.body,
+          )
+        : null}
     </>
   );
 }

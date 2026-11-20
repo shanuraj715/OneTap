@@ -1,9 +1,11 @@
-import { getAnnouncementVariant, getFooterVariant, getHeaderVariant } from "@onetap/ui";
+import { getAnnouncementVariant, getFooterVariant, getHeaderVariant, StickyBar } from "@onetap/ui";
+import { storeName } from "@/lib/outlet";
 
 /**
  * What every storefront page shares above and below its own content, built from the outlet's settings:
  *
- *   StoreTop     the message bar (when switched on), then the header
+ *   StoreTop     the message bar (when switched on), then the header — the header stays pinned to the top of the screen
+ *                while the page scrolls (the message bar scrolls away)
  *   StoreBottom  the footer, with the store's page links inside it
  *
  * One place, so the menu page, the table-QR page and the store's own pages can never drift apart.
@@ -15,6 +17,8 @@ export function headerLinks({ outletSlug, config, pages, onHome }) {
   return [
     // on the menu page this is an in-page anchor; from another page it goes back to the menu
     { label: "Menu", href: onHome ? "#menu" : `/${outletSlug}#menu` },
+    // the customer's Account page: their orders, how each is going and paid for, and their coins
+    { label: "My orders", href: `/${outletSlug}/account` },
     ...(features.ordering.dineInQr ? [{ label: "Order at table", href: "#" }] : []),
     ...(features.reservations.enabled ? [{ label: "Book a table", href: "#" }] : []),
     ...(pages ?? []).filter((p) => p.showInHeader).map((p) => ({ label: p.title, href: `/${outletSlug}/${p.slug}` })),
@@ -25,7 +29,7 @@ export function headerLinks({ outletSlug, config, pages, onHome }) {
 
 export function StoreTop({ outlet, outletSlug, pages = [], onHome = false, links }) {
   const { identity, layout, announcement } = outlet.config;
-  const name = identity.name || outlet.name;
+  const name = storeName(outlet); // the store, not this outlet
   const Bar = getAnnouncementVariant(layout.announcementVariant).Component;
   const Header = getHeaderVariant(layout.headerVariant).Component;
   const messages = announcement.messages.filter((m) => m.text.trim());
@@ -34,14 +38,16 @@ export function StoreTop({ outlet, outletSlug, pages = [], onHome = false, links
       {announcement.enabled && messages.length > 0 ? (
         <Bar messages={messages} phone={announcement.showPhone ? identity.phone || undefined : undefined} dismissible={announcement.dismissible} rotateSeconds={announcement.rotateSeconds} />
       ) : null}
-      <Header
-        name={name}
-        logoUrl={identity.logoUrl || undefined}
-        tagline={identity.tagline || undefined}
-        phone={identity.phone || undefined}
-        orderHref={onHome ? "#menu" : `/${outletSlug}#menu`}
-        links={links ?? headerLinks({ outletSlug, config: outlet.config, pages, onHome })}
-      />
+      <StickyBar name="header" z={32}>
+        <Header
+          name={name}
+          logoUrl={identity.logoUrl || undefined}
+          tagline={identity.tagline || undefined}
+          phone={identity.phone || undefined}
+          orderHref={onHome ? "#menu" : `/${outletSlug}#menu`}
+          links={links ?? headerLinks({ outletSlug, config: outlet.config, pages, onHome })}
+        />
+      </StickyBar>
     </>
   );
 }
@@ -51,7 +57,7 @@ export function StoreBottom({ outlet, outletSlug, pages = [] }) {
   const Footer = getFooterVariant(layout.footerVariant).Component;
   return (
     <Footer
-      name={identity.name || outlet.name}
+      name={storeName(outlet)}
       address={identity.address || undefined}
       phone={identity.phone || undefined}
       fssaiLicense={identity.fssaiLicense || undefined}

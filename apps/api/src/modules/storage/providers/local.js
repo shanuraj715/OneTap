@@ -23,8 +23,10 @@ export const localProvider = {
     await mkdir(dirname(abs), { recursive: true });
     await writeFile(abs, body);
 
-    const base = cfg.publicBaseUrl?.replace(/\/$/, "") || `${cfg.publicApiUrl?.replace(/\/$/, "")}/uploads`;
-    return { key, url: `${base}/${keyToUrlPath(key)}` };
+    // No domain in what is stored: "/uploads/<key>" — the API adds this deployment's domain when it sends it out
+    // (see upload-urls.js). Only an explicitly configured public base (a CDN in front of the files) is kept as it is.
+    const base = cfg.publicBaseUrl?.replace(/\/$/, "");
+    return { key, url: base ? `${base}/${keyToUrlPath(key)}` : `/uploads/${keyToUrlPath(key)}` };
   },
 
   async remove(cfg, key) {

@@ -7,6 +7,7 @@ import { requireOutletContext, requireUser } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import { currentCustomer } from "../customer/customer.routes.js";
 import {
+  deleteOrder,
   editOrder,
   getCapacityStatus,
   getOrder,
@@ -16,6 +17,7 @@ import {
   setStatusManual,
   updateStatus,
 } from "./orders.service.js";
+import { limiter } from "../../middleware/rate-limit.js";
 
 export const ordersRouter         = Router();
 
@@ -36,7 +38,7 @@ const quoteBody = z.object({
   deliveryPoint: z.object({ lat: z.number(), lng: z.number() }).optional(),
 });
 
-ordersRouter.post("/quote", async (req, res) => {
+ordersRouter.post("/quote", limiter("public-compute"), async (req, res) => {
   const body = quoteBody.parse(req.body);
   const ctx = await publicContext(body.outletId);
   const customer = await currentCustomer(req);
@@ -56,7 +58,7 @@ ordersRouter.post("/quote", async (req, res) => {
  * needed since nothing here is sensitive (no thresholds, just the current
  * level + message).
  */
-ordersRouter.get("/capacity", async (req, res) => {
+ordersRouter.get("/capacity", limiter("public-compute"), async (req, res) => {
   const outletId = typeof req.query.outletId === "string" ? req.query.outletId : "";
   if (!outletId) throw new HttpError(400, "outletId is required");
   const ctx = await publicContext(outletId);
@@ -91,7 +93,7 @@ const placeBody = z.object({
  * authenticated admin call ever sends — the storefront never does, so a
  * customer request can't land here even carrying a stray staff cookie.
  */
-ordersRouter.post("/", async (req, res) => {
+ordersRouter.post("/", limiter("order-place"), async (req, res) => {
   const body = placeBody.parse(req.body);
 
   if (req.header("x-onetap-outlet")) {
@@ -246,6 +248,15 @@ const editBody = z.object({
   note: z.string().max(300).optional(),
   customerName: z.string().max(80).optional(),
   customerPhone: z.string().max(20).optional(),
+});
+
+/**
+ * Delete an order from the Orders page. Owners and managers (`order:delete`). The order is hidden everywhere rather
+ * than erased; coins it used or earned are put right; an order paid online must be refunded first.
+ */
+ordersRouter.delete("/:id", limiter("destructive"), async (req, res) => {
+  const ctx = await requireOutletContext(req, "order:delete");
+  res.json(await deleteOrder(ctx, req.params.id, requireUser(req)));
 });
 
 ordersRouter.patch("/:id", async (req, res) => {

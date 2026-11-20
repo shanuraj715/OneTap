@@ -130,6 +130,8 @@ export function PlatformStoreDetail() {
         ) : null}
       </div>
 
+      <StoreNameCard key={store.id} store={store} />
+
       <Tabs value={tab} onChange={setTab} tabs={TABS} />
 
       {(tab === "plan" || tab === "features") && dirty ? (
@@ -153,6 +155,42 @@ export function PlatformStoreDetail() {
 
       <StoreDialogs dialog={dialog} setDialog={setDialog} />
     </>
+  );
+}
+
+/* ------------------------------------------------------------- store name */
+
+/**
+ * The store's name — the one in every storefront header, on receipts and in customer messages. Only the platform admin can
+ * change it: the store's owner sees it in Settings, greyed out, with a note to contact TablePe.
+ */
+function StoreNameCard({ store }) {
+  const [name, setName] = useState(store.name);
+  useEffect(() => setName(store.name), [store.name]); // after a rename (or a refetch) the box shows what is saved
+  const save = usePlatformMutation(() => api.renameStore(store.id, name.trim()));
+  const clean = name.trim();
+  const changed = clean !== store.name;
+  return (
+    <Card
+      title="Store name"
+      subtitle="Shown in the storefront header, on receipts and in customer messages — the same for every outlet. The store's owner can't change it; they are told to contact you."
+    >
+      <div style={{ display: "flex", gap: 10, alignItems: "flex-end", flexWrap: "wrap" }}>
+        <Field label="Store name" style={{ marginBottom: 0, flex: "1 1 260px", maxWidth: 420 }}>
+          <TextInput value={name} maxLength={80} data-testid="console-store-name" onChange={(e) => setName(e.target.value)} />
+        </Field>
+        <Button onClick={() => save.mutate()} disabled={!changed || !clean || save.isPending} data-testid="console-store-name-save" style={{ height: 35 }}>
+          {save.isPending ? "Renaming…" : "Rename store"}
+        </Button>
+        {changed ? (
+          <Button variant="outline" onClick={() => setName(store.name)} style={{ height: 35 }}>
+            Undo
+          </Button>
+        ) : null}
+      </div>
+      {save.error ? <Toast kind="error">{save.error.message}</Toast> : null}
+      {save.isSuccess && !changed ? <Toast kind="ok">Store name changed.</Toast> : null}
+    </Card>
   );
 }
 

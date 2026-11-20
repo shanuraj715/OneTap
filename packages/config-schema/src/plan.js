@@ -169,6 +169,7 @@ export function applyEntitlements(config, entitlements) {
         dineInQr: ordering.dineInQr && has("dineInQr"),
         delivery: ordering.delivery && has("delivery"),
       },
+      coupons: config.features.coupons !== false && has("coupons"),
     },
     wallet: { ...config.wallet, enabled: config.wallet.enabled && has("wallet") },
     payments: { ...config.payments, enabled: gateways.length ? gateways : ["cod"] },

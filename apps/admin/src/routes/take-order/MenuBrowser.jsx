@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from "react";
-import { formatINR, itemFromPrice } from "@onetap/config-schema";
+import { activeCategoryIds, flattenCategories, formatINR, itemFromPrice } from "@onetap/config-schema";
 import { Minus, Plus, Search, SlidersHorizontal, X } from "lucide-react";
 import { lineKey } from "./useTakeOrder";
 import { chip, chipActive, FOOD_COLOR, input, muted } from "./styles";
@@ -17,10 +17,14 @@ export function MenuBrowser({ menu, lines, onCustomise, onAddPlain, onSetPlainQt
   const [activeCat, setActiveCat] = useState(null);
   const sectionRefs = useRef(new Map());
 
-  const categories = useMemo(
-    () => (menu?.categories ?? []).filter((c) => c.isActive).sort((a, b) => a.sortOrder - b.sortOrder),
-    [menu],
-  );
+  // every category that is switched on (and has no switched-off category above it), in tree order, with the names above it
+  const categories = useMemo(() => {
+    const list = menu?.categories ?? [];
+    const on = activeCategoryIds(list);
+    return flattenCategories(list)
+      .filter((e) => on.has(e.category.id))
+      .map((e) => ({ ...e.category, label: [...e.trail, e.category.name].join(" › ") }));
+  }, [menu]);
 
   const sections = useMemo(() => {
     const needle = q.trim().toLowerCase();
@@ -75,7 +79,7 @@ export function MenuBrowser({ menu, lines, onCustomise, onAddPlain, onSetPlainQt
                 onClick={() => jump(cat.id)}
                 style={{ ...chip, ...(activeCat === cat.id ? chipActive : {}) }}
               >
-                {cat.name}
+                {cat.label}
               </button>
             ))}
           </div>
@@ -89,7 +93,7 @@ export function MenuBrowser({ menu, lines, onCustomise, onAddPlain, onSetPlainQt
         {sections.map(({ cat, items }) => (
           <section key={cat.id} ref={(el) => el && sectionRefs.current.set(cat.id, el)} style={{ scrollMarginTop: 128, marginTop: 14 }}>
             <h3 style={catHead}>
-              {cat.name} <span style={{ ...muted, fontWeight: 500 }}>· {items.length}</span>
+              {cat.label} <span style={{ ...muted, fontWeight: 500 }}>· {items.length}</span>
             </h3>
             <div style={grid}>
               {items.map((item) => (

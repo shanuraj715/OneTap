@@ -6,7 +6,7 @@ import { OrderBar } from "@/components/OrderBar";
 import { OutletUnavailable } from "@/components/OutletUnavailable";
 import { ThemeStyle } from "@/components/ThemeStyle";
 import { getMenu } from "@/lib/menu";
-import { getOutletBySlug, getOutletsForHost, getPageLinks } from "@/lib/outlet";
+import { getOutletBySlug, getOutletsForHost, getPageLinks, storeName } from "@/lib/outlet";
 
 export const dynamic = "force-dynamic";
 
@@ -29,7 +29,7 @@ export default async function OutletHomePage({ params }) {
   // Anyone can order online if any online channel is on.
   const onlineOrdering =
     features.ordering.takeaway || features.ordering.delivery || features.ordering.dineInQr;
-  const name = identity.name || outlet.name;
+  const name = storeName(outlet); // the big heading is the store's name; the outlet is chosen in the dropdown
 
   // The promo carousel — its style comes from Appearance, its slides from Banners; a slide needs a picture or a title to show.
   const slides = carousel.enabled ? carousel.slides.filter((s) => s.imageUrl || s.title) : [];
@@ -43,15 +43,10 @@ export default async function OutletHomePage({ params }) {
       {/* Takeaway or Delivery, and which outlet — only where there is something to choose */}
       {features.ordering.takeaway || features.ordering.delivery ? <OrderBar current={{ id: outlet.id, slug: outlet.slug }} outlets={store?.outlets ?? []} /> : null}
 
-      <Hero
-        title={name}
-        subtitle={identity.tagline || undefined}
-        ctaLabel={features.ordering.takeaway ? "Order takeaway" : undefined}
-        ctaHref={features.ordering.takeaway ? "#menu" : undefined}
-      />
+      <Hero title={name} subtitle={identity.tagline || undefined} />
 
       {slides.length > 0 ? (
-        <section aria-label="Offers and news" style={{ maxWidth: 1080, margin: "0 auto", padding: "0 18px 18px", boxSizing: "border-box" }}>
+        <section aria-label="Offers and news" className="ot-page-px" style={{ maxWidth: 1080, margin: "0 auto", padding: "0 18px 18px", boxSizing: "border-box" }}>
           <Carousel
             items={slides.map((s) => ({ id: s.id, imageUrl: s.imageUrl || undefined, title: s.title, subtitle: s.subtitle, ctaLabel: s.ctaLabel, href: s.ctaHref }))}
             autoplay={carousel.autoplay}
@@ -63,7 +58,7 @@ export default async function OutletHomePage({ params }) {
         </section>
       ) : null}
 
-      <div id="menu" style={{ scrollMarginTop: 24 }}>
+      <div id="menu" style={{ scrollMarginTop: "calc(var(--ot-header-h, 0px) + var(--ot-bar-h, 0px) + 24px)" }}>
         {menu.items.length > 0 ? (
           onlineOrdering ? (
             <Ordering

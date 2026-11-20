@@ -14,6 +14,7 @@ import {
   updateOutlet,
   updateOutletConfig,
 } from "./outlets.service.js";
+import { limiter } from "../../middleware/rate-limit.js";
 
 export const outletsRouter         = Router();
 
@@ -93,7 +94,7 @@ outletsRouter.patch("/:id", async (req, res) => {
 });
 
 /** Remove an outlet. Refused for a brand's last outlet, or one with order history. */
-outletsRouter.delete("/:id", async (req, res) => {
+outletsRouter.delete("/:id", limiter("destructive"), async (req, res) => {
   const ctx = await requireOutletContext(req, "outlet:manage");
   await deleteOutlet(ctx, req.params.id);
   res.status(204).end();

@@ -43,6 +43,7 @@ import {
   updateTemplate,
 } from "./printing.service.js";
 import { renderHtml, renderText } from "./render.js";
+import { limiter } from "../../middleware/rate-limit.js";
 
 export const printingRouter         = Router();
 
@@ -98,7 +99,7 @@ printingRouter.delete("/printers/:id", async (req, res) => {
 });
 
 /** Queue a sample slip so staff can confirm the printer works before a rush. */
-printingRouter.post("/printers/:id/test", async (req, res) => {
+printingRouter.post("/printers/:id/test", limiter("hardware"), async (req, res) => {
   const ctx = await requireOutletContext(req, "print:job");
   await requireFeature(ctx.brandId, "printing", "Printing");
   const user = requireUser(req);
@@ -106,7 +107,7 @@ printingRouter.post("/printers/:id/test", async (req, res) => {
 });
 
 /** The credential to paste into the print agent's installer. Shown on demand. */
-printingRouter.get("/printers/:id/agent-token", async (req, res) => {
+printingRouter.get("/printers/:id/agent-token", limiter("secrets"), async (req, res) => {
   const ctx = await requireOutletContext(req, "printer:manage");
   const printer = await PrinterModel.findOne(tenantFilter(ctx, { _id: req.params.id }));
   if (!printer) throw new HttpError(404, "Printer not found");
@@ -211,14 +212,14 @@ printingRouter.get("/jobs/by-order", async (req, res) => {
   res.json({ status: await printStatusForOrders(ctx, ids) });
 });
 
-printingRouter.post("/jobs/:id/retry", async (req, res) => {
+printingRouter.post("/jobs/:id/retry", limiter("hardware"), async (req, res) => {
   const ctx = await requireOutletContext(req, "print:job");
   await requireFeature(ctx.brandId, "printing", "Printing");
   const user = requireUser(req);
   res.json({ job: await retryJob(ctx, req.params.id, String(user._id)) });
 });
 
-printingRouter.post("/jobs/:id/reprint", async (req, res) => {
+printingRouter.post("/jobs/:id/reprint", limiter("hardware"), async (req, res) => {
   const ctx = await requireOutletContext(req, "print:job");
   await requireFeature(ctx.brandId, "printing", "Printing");
   const user = requireUser(req);
@@ -231,7 +232,7 @@ printingRouter.post("/jobs/:id/cancel", async (req, res) => {
 });
 
 /** Print an existing order on a chosen printer. */
-printingRouter.post("/orders/:orderId/print", async (req, res) => {
+printingRouter.post("/orders/:orderId/print", limiter("hardware"), async (req, res) => {
   const ctx = await requireOutletContext(req, "print:job");
   await requireFeature(ctx.brandId, "printing", "Printing");
   const user = requireUser(req);
@@ -310,7 +311,7 @@ async function agentContext(req                           ) {
   return verifyAgentToken(header);
 }
 
-printingRouter.get("/agent/jobs", async (req, res) => {
+printingRouter.get("/agent/jobs", limiter("print-agent"), async (req, res) => {
   const { ctx, agentId } = await agentContext(req);
   const jobs = await claimJobs(ctx, {
     targets: ["agent"],
@@ -332,7 +333,7 @@ printingRouter.get("/agent/jobs", async (req, res) => {
   });
 });
 
-printingRouter.post("/agent/jobs/:id/result", async (req, res) => {
+printingRouter.post("/agent/jobs/:id/result", limiter("print-agent"), async (req, res) => {
   const { ctx, agentId } = await agentContext(req);
   const body = resultBody.parse(req.body);
   res.json({ job: await completeJob(ctx, req.params.id, { ...body, by: `agent:${agentId}` }) });

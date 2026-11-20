@@ -5,6 +5,7 @@ import { requireOutletContext } from "../../middleware/auth.js";
 import { requireFeature } from "../platform/plan.service.js";
 import { filterOptions, previewAudience } from "./audience.js";
 import * as marketing from "./marketing.service.js";
+import { limiter } from "../../middleware/rate-limit.js";
 
 /**
  * Marketing for the store dashboard: reach customers over linked WhatsApp, SMS or the WhatsApp Business API.
@@ -39,7 +40,7 @@ marketingRouter.post("/audience/preview", async (req, res) => {
 });
 
 /** check some pasted numbers without saving anything */
-marketingRouter.post("/contacts/parse", async (req, res) => {
+marketingRouter.post("/contacts/parse", limiter("upload"), async (req, res) => {
   await ctxFor(req, "marketing:read");
   const parsed = parseContacts(z.object({ text: z.string().max(400_000) }).parse(req.body).text);
   res.json({ valid: parsed.valid.length, invalid: parsed.invalid.slice(0, 30), invalidCount: parsed.invalid.length, duplicates: parsed.duplicates, sample: parsed.valid.slice(0, 8) });
@@ -85,11 +86,11 @@ marketingRouter.get("/campaigns/:id", async (req, res) => {
   const { ctx } = await ctxFor(req, "marketing:read");
   res.json({ campaign: await marketing.getCampaign(ctx, req.params.id) });
 });
-marketingRouter.post("/campaigns", async (req, res) => {
+marketingRouter.post("/campaigns", limiter("bulk-send"), async (req, res) => {
   const { ctx, userId } = await ctxFor(req, "marketing:send");
   res.status(201).json({ campaign: await marketing.createCampaign(ctx, req.body, userId) });
 });
-marketingRouter.post("/campaigns/:id/cancel", async (req, res) => {
+marketingRouter.post("/campaigns/:id/cancel", limiter("bulk-send"), async (req, res) => {
   const { ctx } = await ctxFor(req, "marketing:send");
   await marketing.cancelCampaign(ctx, req.params.id);
   res.status(204).end();

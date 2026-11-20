@@ -39,6 +39,8 @@ export function OrderPage({
   dineIn,
   dineInEnabled = false,
   deliveryEnabled = false,
+  takeawayEnabled = true,
+  couponsEnabled = true,
   menuHref,
 }) {
   const { customer, loading: customerLoading, refresh } = useCustomer();
@@ -77,10 +79,22 @@ export function OrderPage({
   const effectiveChannel = dineIn ? "dine-in" : fulfilment === "dinein" ? "dine-in" : fulfilment;
   const prepaidGateways = useMemo(() => gateways.filter((g) => g !== "cod"), [gateways]);
   const deliveryAvailable = deliveryEnabled && prepaidGateways.length > 0 && !capacity?.deliveryBlocked;
+  // Why Delivery can't be picked (shown under the buttons) — null when it can.
+  const deliveryOffReason = deliveryAvailable
+    ? null
+    : deliveryEnabled && prepaidGateways.length > 0
+      ? "Delivery is paused right now."
+      : "Delivery isn't available from this outlet.";
+  const takeawayOffReason = takeawayEnabled ? null : "Takeaway isn't available from this outlet.";
 
   useEffect(() => {
     if (fulfilment === "delivery" && !deliveryAvailable) setFulfilment("takeaway");
   }, [fulfilment, deliveryAvailable]);
+
+  // An outlet that only delivers: start on Delivery, since Takeaway can't be chosen.
+  useEffect(() => {
+    if (!dineIn && fulfilment === "takeaway" && !takeawayEnabled && deliveryAvailable) setFulfilment("delivery");
+  }, [fulfilment, takeawayEnabled, deliveryAvailable, dineIn]);
 
   // They picked Delivery on the menu page: start here on Delivery too, once we know it can be offered.
   useEffect(() => {
@@ -219,6 +233,9 @@ export function OrderPage({
         dineIn={dineIn}
         dineInEnabled={dineInEnabled}
         deliveryAvailable={deliveryAvailable}
+        deliveryOffReason={deliveryOffReason}
+        couponsEnabled={couponsEnabled}
+        takeawayOffReason={takeawayOffReason}
         capacity={capacity}
         fulfilment={fulfilment}
         onFulfilment={chooseFulfilment}
@@ -312,6 +329,9 @@ function ReviewOrder({
   dineIn,
   dineInEnabled,
   deliveryAvailable,
+  deliveryOffReason,
+  takeawayOffReason,
+  couponsEnabled,
   capacity,
   fulfilment,
   onFulfilment,
@@ -468,12 +488,18 @@ function ReviewOrder({
         <Section icon={<Utensils size={16} />} title={`Table ${dineIn.tableNumber}`}>
           <p style={muted}>This joins your running tab — settle everything together when you're done.</p>
         </Section>
-      ) : showFulfilmentPicker(deliveryAvailable) ? (
+      ) : (
         <Section icon={<Utensils size={16} />} title="How would you like it?">
-          <div style={{ display: "flex", gap: 8 }}>
-            <ChoiceBtn active={fulfilment === "takeaway"} onClick={() => onFulfilment("takeaway")} emoji="🥡" label="Takeaway" />
-            {deliveryAvailable ? <ChoiceBtn active={fulfilment === "delivery"} onClick={() => onFulfilment("delivery")} emoji="🛵" label="Delivery" /> : null}
+          {/* Always both, so the visitor sees what exists: one this outlet can't do right now is greyed out and says why. */}
+          <div role="group" aria-label="Order type" style={{ display: "flex", gap: 8 }}>
+            <ChoiceBtn testId="fulfilment-takeaway" active={fulfilment === "takeaway"} disabledReason={takeawayOffReason} onClick={() => onFulfilment("takeaway")} emoji="🥡" label="Takeaway" />
+            <ChoiceBtn testId="fulfilment-delivery" active={fulfilment === "delivery"} disabledReason={deliveryOffReason} onClick={() => onFulfilment("delivery")} emoji="🛵" label="Delivery" />
           </div>
+          {deliveryOffReason || takeawayOffReason ? (
+            <p style={{ ...muted, margin: "8px 0 0" }} data-testid="fulfilment-hint">
+              {[takeawayOffReason, deliveryOffReason].filter(Boolean).join(" ")}
+            </p>
+          ) : null}
 
           {fulfilment === "dinein" ? (
             <div style={{ marginTop: 14 }}>
@@ -517,44 +543,47 @@ function ReviewOrder({
             </div>
           ) : null}
         </Section>
-      ) : null}
+      )}
 
-      <Section icon={<Tag size={16} />} title="Coupon">
-        {appliedCoupon ? (
-          <AppliedPill onRemove={onRemoveCoupon}>
-            <strong>{appliedCoupon.code}</strong> applied — {formatINR(appliedCoupon.discount)} off
-          </AppliedPill>
-        ) : (
-          <div style={{ display: "flex", gap: 8 }}>
-            <input
-              className="ot-fx-input"
-              style={{ ...fx("input", input), textTransform: "uppercase" }}
-              value={couponInput}
-              onChange={(e) => {
-                setCouponInput(e.target.value);
-                setCouponError(null);
-              }}
-              placeholder="SAVE20"
-            />
-            <button
-              type="button"
-              className="ot-fx-btn"
-              style={fx("btn", applyBtn)}
-              disabled={couponBusy || couponInput.trim().length < 3}
-              onClick={async () => {
-                setCouponBusy(true);
-                const err = await onApplyCoupon(couponInput.trim());
-                setCouponBusy(false);
-                if (err) setCouponError(err);
-                else setCouponInput("");
-              }}
-            >
-              {couponBusy ? "…" : "Apply"}
-            </button>
-          </div>
-        )}
-        {couponError ? <p style={errorText}>{couponError}</p> : null}
-      </Section>
+      {/* only for stores whose plan includes Coupons — otherwise there is nothing to enter */}
+      {couponsEnabled ? (
+        <Section icon={<Tag size={16} />} title="Coupon">
+          {appliedCoupon ? (
+            <AppliedPill onRemove={onRemoveCoupon}>
+              <strong>{appliedCoupon.code}</strong> applied — {formatINR(appliedCoupon.discount)} off
+            </AppliedPill>
+          ) : (
+            <div style={{ display: "flex", gap: 8 }}>
+              <input
+                className="ot-fx-input"
+                style={{ ...fx("input", input), textTransform: "uppercase" }}
+                value={couponInput}
+                onChange={(e) => {
+                  setCouponInput(e.target.value);
+                  setCouponError(null);
+                }}
+                placeholder="SAVE20"
+              />
+              <button
+                type="button"
+                className="ot-fx-btn"
+                style={fx("btn", applyBtn)}
+                disabled={couponBusy || couponInput.trim().length < 3}
+                onClick={async () => {
+                  setCouponBusy(true);
+                  const err = await onApplyCoupon(couponInput.trim());
+                  setCouponBusy(false);
+                  if (err) setCouponError(err);
+                  else setCouponInput("");
+                }}
+              >
+                {couponBusy ? "…" : "Apply"}
+              </button>
+            </div>
+          )}
+          {couponError ? <p style={errorText}>{couponError}</p> : null}
+        </Section>
+      ) : null}
 
       {walletBalance > 0 ? (
         <Section icon={<Wallet size={16} />} title={`Redeem coins · ${walletBalance} available`}>
@@ -665,14 +694,6 @@ function ReviewOrder({
   );
 }
 
-function showFulfilmentPicker(deliveryAvailable) {
-  // Dine-in is never offered here — only a scanned table QR can put a diner
-  // on the dine-in path (see the `dineIn` branch above). Without it, this
-  // picker's only real choice is takeaway vs delivery; with neither, there's
-  // nothing to pick and takeaway (the default) is used silently.
-  return deliveryAvailable;
-}
-
 /* -------------------------------------------------------------------- done */
 
 function DoneView({ order, dineIn, tab, channel, menuHref }) {
@@ -754,9 +775,22 @@ function AppliedPill({ children, onRemove }) {
   );
 }
 
-function ChoiceBtn({ active, onClick, emoji, label }) {
+function ChoiceBtn({ active, onClick, emoji, label, disabledReason, testId }) {
+  const off = Boolean(disabledReason);
+  const on = active && !off;
   return (
-    <button type="button" onClick={onClick} className="ot-fx-chip" data-active={active} aria-pressed={active} style={fx("chip", { ...choiceBtn, ...(active ? choiceBtnActive : {}) })}>
+    <button
+      type="button"
+      onClick={() => !off && onClick()}
+      disabled={off}
+      title={off ? disabledReason : undefined}
+      className="ot-fx-chip"
+      data-testid={testId}
+      data-active={on}
+      data-unavailable={off ? "true" : undefined}
+      aria-pressed={on}
+      style={fx("chip", { ...choiceBtn, ...(on ? choiceBtnActive : {}), ...(off ? choiceBtnOff : {}) })}
+    >
       <span style={{ fontSize: 18 }}>{emoji}</span>
       {label}
     </button>
@@ -827,6 +861,7 @@ const bannerWarn = {};
 const bannerError = { background: "color-mix(in srgb, #B23B3B 14%, var(--color-surface))" };
 const choiceBtn = { font: "inherit", flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 4, padding: "12px 10px", borderRadius: 12, border: "1.5px solid var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)", fontSize: "0.85rem", fontWeight: 600, cursor: "pointer" };
 const choiceBtnActive = { border: "1.5px solid var(--color-primary)", background: "color-mix(in srgb, var(--color-primary) 10%, var(--color-bg))", color: "var(--color-primary)" };
+const choiceBtnOff = { opacity: 0.45, cursor: "not-allowed", background: "transparent", color: "var(--color-text-muted)", boxShadow: "none" };
 const payOption = { display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", border: "1px solid var(--color-border)", borderRadius: 9, fontSize: 14, cursor: "pointer" };
 const totalsList = { margin: 0, display: "flex", flexDirection: "column", gap: 7 };
 const bottomBar = {

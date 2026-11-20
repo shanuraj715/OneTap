@@ -84,6 +84,11 @@ const waChatSchema = new Schema(
     /** replied STOP to offers: broadcasts skip them (chat and order updates still go) */
     optedOut: { type: Boolean, default: false },
     customerId: { type: String, default: null },
+    /**
+     * Made only to deliver a verification code to someone who has never talked to the store. Kept out of the inbox
+     * until a real conversation happens (they write, or the store messages them).
+     */
+    hidden: { type: Boolean, default: false },
   },
   { timestamps: true },
 );
@@ -105,7 +110,7 @@ const waMessageSchema = new Schema(
     media: { type: mediaSchema, default: null },
     status: { type: String, enum: WA_MESSAGE_STATUSES, default: "queued", index: true },
     source: { type: String, enum: WA_MESSAGE_SOURCES, default: "chat" },
-    /** warm | cold | order — how hard to pace it (see WA_PACING) */
+    /** warm | cold | order | code — how hard to pace it (see WA_PACING) */
     pace: { type: String, default: "warm" },
     /** the earliest it may go out (pacing, quiet hours) */
     sendAfter: { type: Date, default: () => new Date() },

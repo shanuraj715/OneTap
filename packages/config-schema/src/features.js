@@ -24,6 +24,12 @@ export const featureFlagsSchema = z.object({
       cod: z.boolean().default(true),
     })
     .default({}),
+  /**
+   * Whether this outlet offers discount codes at checkout. The owner never sets this; it is what the store's PLAN
+   * allows (the "Coupons" plan feature, which the platform console can lock or unlock per store), worked out by
+   * `applyEntitlements` — so the storefront can hide the coupon box when it's off. Stays `true` in stored configs.
+   */
+  coupons: z.boolean().default(true),
   ui: z
     .object({
       scrollToTop: z.boolean().default(true),

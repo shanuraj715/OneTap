@@ -4,6 +4,7 @@ import { fx } from "./fx";
 import {
   addBtn,
   cardBase,
+  clampOneLine,
   descStyle,
   FoodMark,
   nameStyle,
@@ -43,16 +44,15 @@ export function RowThumbLeft({ item }               ) {
   return (
     <article className="ot-fx-card" style={{ ...fx("card", cardBase), ...dim(item), display: "flex", gap: 14, padding: 12 }}>
       <Photo name={item.name} src={item.images?.[0]?.url} style={{ width: 72, height: 72 }} radius={10} />
+      {/* the price sits right after the veg / non-veg mark, so the name and description below it have the card's whole width */}
       <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", justifyContent: "center" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2 }}>
+        <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "2px 8px", marginBottom: 2 }}>
           <FoodMark type={item.foodType} size={13} />
+          <Price item={item} />
           <Tags tags={item.tags} />
         </div>
         <div style={nameStyle}>{item.name}</div>
         {item.description ? <div style={{ ...descStyle, marginTop: 2 }}>{item.description}</div> : null}
-      </div>
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <Price item={item} />
       </div>
     </article>
   );
@@ -180,7 +180,7 @@ export function ImageOverlay({ item }               ) {
         </div>
         <div style={{ fontWeight: 700, fontSize: 16, lineHeight: 1.3 }}>{item.name}</div>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 6 }}>
-          <span style={{ fontSize: 12, opacity: 0.85 }}>
+          <span style={{ fontSize: 12, opacity: 0.85, minWidth: 0, ...clampOneLine }}>
             {item.variants.length > 1 ? item.variants.map((v) => v.label).join(" · ") : item.description}
           </span>
           <span style={{ fontWeight: 700, fontVariantNumeric: "tabular-nums", color: "#fff" }}>

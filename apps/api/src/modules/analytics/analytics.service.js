@@ -227,7 +227,7 @@ export async function itemsReport(ctx, range, outletIds) {
     days: { $addToSet: dayOf },
   };
   const [cur, before] = await Promise.all([
-    OrderModel.aggregate([{ $match: sales(ctx, range, outletIds) }, { $unwind: "$lines" }, { $group: group }, { $sort: { qty: -1 } }]),
+    OrderModel.aggregate([{ $match: sales(ctx, range, outletIds) }, { $unwind: "$lines" }, { $group: group }, { $sort: { qty: -1, revenue: -1, _id: 1 } }]), // ties: the dearer item first, then by name — so the list never reshuffles between requests
     OrderModel.aggregate([{ $match: sales(ctx, prev, outletIds) }, { $unwind: "$lines" }, { $group: { _id: group._id, qty: group.qty } }]),
   ]);
   const prevQty = new Map(before.map((r) => [r._id, r.qty]));
@@ -361,7 +361,7 @@ export async function compareOutlets(ctx, range, outletIds, outletList) {
         kpis: shapeKpis(row),
         cancelled: cancel[i],
         daily: days.map((d) => daily.find((r) => r._id.o === id && r._id.d === d)?.sales ?? 0),
-        topItems: items.filter((r) => r._id.o === id).sort((a, b) => b.qty - a.qty).slice(0, 8).map((r) => ({ name: r.name, qty: r.qty })),
+        topItems: items.filter((r) => r._id.o === id).sort((a, b) => b.qty - a.qty || String(a.name).localeCompare(String(b.name))).slice(0, 8).map((r) => ({ name: r.name, qty: r.qty })),
         channels: channels.filter((r) => r._id.o === id).map((r) => ({ channel: r._id.c, sales: r.sales, orders: r.orders })),
       };
     }),

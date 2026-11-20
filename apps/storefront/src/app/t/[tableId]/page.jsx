@@ -4,7 +4,8 @@ import { Ordering } from "@/components/Ordering";
 import { OutletUnavailable } from "@/components/OutletUnavailable";
 import { ThemeStyle } from "@/components/ThemeStyle";
 import { getMenu } from "@/lib/menu";
-import { getOutletById, getPageLinks } from "@/lib/outlet";
+import { visitorHeaders } from "@/lib/visitor";
+import { getOutletById, getPageLinks, storeName } from "@/lib/outlet";
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +22,7 @@ async function resolveScan(tableId        , token        )                      
   try {
     const res = await fetch(`${API_BASE}/api/tables/scan/${tableId}?k=${encodeURIComponent(token)}`, {
       cache: "no-store",
+      headers: await visitorHeaders(), // who is looking — a diner already seated here must not be told another party is
     });
     const body = await res.json().catch(() => ({}));
     if (!res.ok) return { error: (body                      ).error ?? "That table code isn't valid" };
@@ -81,7 +83,8 @@ export default async function TablePage({
       ? outlet.name.split("-")[1]?.trim()
       : "";
   const outletLocation = identity.address || identity.location?.formattedAddress || locationFromOutletName;
-  const outletDisplayName = identity.name || (locationFromOutletName ? outlet.name.split(/—|-/)[0]?.trim() : outlet.name);
+  // the store's name; the address next to it says which outlet
+  const outletDisplayName = storeName(outlet);
 
   return (
     <>
@@ -94,7 +97,7 @@ export default async function TablePage({
         links={pages.filter((p) => p.showInHeader).map((p) => ({ label: p.title, href: `/${outlet.slug}/${p.slug}` }))}
       />
 
-      <section style={tableHeaderWrap}>
+      <section className="ot-page-px" style={tableHeaderWrap}>
         <h1 style={tableHeading}>Table {scan.table.number}</h1>
         <div style={tableMeta}>
           <span style={outletNameStyle}>{outletDisplayName}</span>

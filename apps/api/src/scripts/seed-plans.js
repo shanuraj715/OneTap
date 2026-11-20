@@ -21,12 +21,16 @@ const PLANS = [
     description: "One outlet, a small team, the essentials.",
     limits: { maxUsers: 5, multiOutlet: false, maxOutlets: 1 },
     entitlements: { features: ["takeaway", "dineInQr", "coupons", "printing"], effects: ["glass", "neumorph"], qrCardFamilies: ["minimal", "headline", "frame"] },
+    // ₹999 a month; paying for the year up front takes 10% off (edit both in the console's Plans page)
+    marketing: { show: true, monthly: 999, yearlyDiscount: 10, pitch: "Everything one outlet needs to take orders.", order: 10 },
   },
   {
     name: "Pro",
     description: "Up to three outlets, delivery and every look.",
     limits: { maxUsers: 20, multiOutlet: true, maxOutlets: 3 },
     entitlements: {},
+    // ₹2,499 a month; 10% off for the year up front
+    marketing: { show: true, monthly: 2499, yearlyDiscount: 10, highlight: true, pitch: "Every feature, up to three outlets and twenty people.", order: 20 },
   },
   {
     name: "Custom",
@@ -34,7 +38,7 @@ const PLANS = [
     custom: true,
     marketing: {
       show: true,
-      price: "",
+      price: "Custom",
       period: "",
       pitch: "Pick only what you need — we set up your account and features for you.",
       order: 90,

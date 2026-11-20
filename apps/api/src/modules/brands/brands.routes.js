@@ -2,6 +2,7 @@ import { Router } from "express";
 import { z } from "zod";
 import { requireSuperAdmin } from "../../middleware/auth.js";
 import { createBrand, listBrands } from "./brands.service.js";
+import { limiter } from "../../middleware/rate-limit.js";
 
 export const brandsRouter = Router();
 
@@ -26,7 +27,7 @@ const createBrandBody = z.object({
   planId: z.string().min(1).nullable().optional(),
 }).refine((b) => b.hostnames.length > 0 || b.subdomain?.trim(), { message: "Give the store a TablePe address or an own domain", path: ["subdomain"] });
 
-brandsRouter.post("/", async (req, res) => {
+brandsRouter.post("/", limiter("destructive"), async (req, res) => {
   requireSuperAdmin(req);
   const body = createBrandBody.parse(req.body);
   const result = await createBrand(body);

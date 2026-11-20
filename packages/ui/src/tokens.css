@@ -258,6 +258,55 @@
   .ot-header-px { padding-left: 14px; padding-right: 14px; }
 }
 
+/*
+ * Page side padding on phones AND tablets (up to 1023px — the same line as the Categories button): every page-width
+ * container carries .ot-page-px and keeps its own padding on a desktop, but sits 14px from the screen edge here, so
+ * the menu, hero, offers, order bar and footer share one edge (the header already uses 14px on a phone).
+ */
+@media (max-width: 1023px) {
+  .ot-page-px { padding-left: 14px !important; padding-right: 14px !important; }
+  .ot-header-px { padding-left: 14px; padding-right: 14px; }
+}
+
+/*
+ * The sticky filter bar on phones and tablets stays ONE row: the Veg/Egg/Non-veg filter takes whatever width the
+ * Categories button leaves (basis 0, so it can never push the button onto a second row) and scrolls if it must.
+ */
+@media (max-width: 1023px) {
+  .ot-chip-row { flex: 1 1 0 !important; }
+}
+@media (max-width: 640px) {
+  .ot-chip-row { gap: 5px !important; }
+  .ot-filter-chip { font-size: 0.76rem !important; padding: 5px 10px !important; }
+  .ot-cat-button { font-size: 0.78rem !important; padding: 6px 11px !important; gap: 5px !important; }
+}
+
+/*
+ * "View all": from 720px up the button is where the store configured it (beside the title, bottom-left, -centre or
+ * -right). Under 720px — a phone — it is always under the cards, in the middle: a button beside the title is hidden
+ * there and the one under the cards shown instead, and a left/right one is centred. (The window's WIDTH decides, not
+ * the kind of device: a tablet or a touch laptop that is 720px or wider shows it where it was configured.)
+ */
+.ot-viewall-sm-only { display: none !important; }
+@media (max-width: 719.98px) {
+  .ot-viewall-lg-only { display: none !important; }
+  .ot-viewall-sm-only { display: flex !important; }
+  .ot-viewall-row,
+  .ot-viewall-sm-only { justify-content: center !important; }
+}
+
+/*
+ * Phones only: a section title that is a path ("South Indian › Idli & Vada") is written on two lines — the parent small
+ * and muted, the name a little smaller than the normal heading — and the View all buttons are smaller, so the heading
+ * and the button fit on one row of a narrow screen.
+ */
+@media (max-width: 640px) {
+  .ot-sec-title .ot-sec-crumb { display: block; font-size: 0.54em; font-weight: 600; line-height: 1.25; letter-spacing: 0.02em; color: var(--color-text-muted); margin-bottom: 1px; }
+  .ot-sec-title .ot-sec-name { display: block; font-size: 0.86em; line-height: 1.2; }
+  .ot-viewall-title { font-size: 0.72rem !important; padding: 4px 10px !important; }
+  .ot-viewall { font-size: 0.78rem !important; padding: 7px 14px !important; }
+}
+
 /* Parts of a header that only make sense on a wide screen (a phone number's text, a second button). */
 @media (max-width: 720px) {
   .ot-hide-sm { display: none !important; }
@@ -338,4 +387,41 @@
   .ot-cat-chips { display: none !important; }
   .ot-cat-button { display: inline-flex !important; }
 }
+/*
+ * Chip rows (the Veg/Egg/Non-veg filter, the category chips): ONE line high, however many there are. Too many to fit
+ * means the row scrolls sideways (no scrollbar), with a soft fade at an edge that has more behind it.
+ */
+.ot-chip-row,
+.ot-chip-strip { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; -ms-overflow-style: none; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; }
+.ot-chip-row::-webkit-scrollbar,
+.ot-chip-strip::-webkit-scrollbar { display: none; }
+.ot-chip-row > *,
+.ot-chip-strip > * { flex: 0 0 auto; }
+.ot-chip-strip {
+  --fade-l: 0px;
+  --fade-r: 0px;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 var(--fade-l), #000 calc(100% - var(--fade-r)), transparent 100%);
+}
+.ot-chip-strip[data-more-left="true"] { --fade-l: 22px; }
+.ot-chip-strip[data-more-right="true"] { --fade-r: 22px; }
+.ot-strip-arrow:disabled { opacity: 0.35; cursor: default; }
+/* touch screens swipe; the arrows are for a mouse */
+@media (hover: none) { .ot-strip-arrow { display: none !important; } }
 .ot-cat-sheet { animation: ot-fade var(--motion-fast) var(--ease-out) both; }
+
+/*
+ * The order bar (Takeaway / Delivery and the outlet) is pinned under the header, so it is kept slim: less padding
+ * everywhere, and on a phone the switch and the outlet share ONE row (the outlet wraps under it only on a very narrow
+ * screen). The longer notes that go with it (why Delivery is off, the delivery check) are NOT pinned — they scroll away.
+ */
+.ot-ob-inner { padding-top: 8px !important; padding-bottom: 8px !important; }
+@media (max-width: 640px) {
+  .ot-ob-inner { gap: 6px !important; }
+  .ot-ob-controls { gap: 8px !important; }
+  .ot-ob-switch { flex: 1 1 auto !important; max-width: none !important; }
+  .ot-ob-seg { padding: 3px !important; border-radius: 12px !important; }
+  .ot-ob-seg-btn { min-height: 36px !important; padding: 0 11px !important; font-size: 0.8125rem !important; gap: 5px !important; }
+  .ot-ob-pill-wrap { flex: 1 1 120px !important; }
+  .ot-ob-pill { min-height: 44px !important; padding: 0 10px !important; gap: 7px !important; border-radius: 12px !important; }
+}

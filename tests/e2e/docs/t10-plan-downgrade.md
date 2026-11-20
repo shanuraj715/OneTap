@@ -1,6 +1,6 @@
 # T10 — Plan downgrade Pro → Basic — what stops, what keeps working, grace period, after the grace period, a manually disabled outlet
 
-**Area:** plans · **Last result:** ✅ PASSED (37 passed, 0 failed · 2026-11-16 03:12 · headless · 1 min 52 s)
+**Area:** plans · **Last result:** ✅ PASSED (38 passed, 0 failed · 2026-11-20 05:44 · headless · 53.5 s)
 
 **Run it alone:** `node run.mjs --only t10` (add `--visible` to watch it)
 
@@ -21,7 +21,7 @@ Continues from t09, in Chrome. The platform moves the store to Basic: it goes 'o
 
 - Right after the downgrade the platform page shows the store over its limits with a grace deadline; the owner's dashboard shows 'Everything keeps working until …'.
 - During grace all 3 outlets still open for customers and accept orders; the owner can still sign in and change settings.
-- Locked on Basic: 'Add outlet' is greyed out, creating a coupon is refused, customers are no longer offered Delivery — while .
+- Locked on Basic: 'Add outlet' is greyed out, creating a coupon is refused, customers can no longer choose Delivery (it is still listed, but greyed out) — while .
 - After the grace period the owner's notice says the grace period ended; still nothing is blocked automatically.
 - Disabling outlet 3: its page says 'This outlet is temporarily unavailable' with no menu; outlets 1 and 2 are unaffected; enabling it again brings the menu back.
 
@@ -39,17 +39,17 @@ Continues from t09, in Chrome. The platform moves the store to Basic: it goes 'o
 
 _Nothing failed._
 
-### ✅ Passed (37)
+### ✅ Passed (38)
 
 **Step 1 — Before: the store is on Pro and customers can choose Delivery**
 
-- the platform shows Pro with 3 of 3 outlets and no grace period — _Within plan People 1 / 10 Outlets 3 / 3 Plan & limits Features Owners O_
-- customers are offered Delivery at Central — _Takeaway Delivery_
+- the platform shows Pro with 3 of 3 outlets and no grace period — _Within plan People 1 / 10 Outlets 3 / 3 Store name Shown in the storefr_
+- customers are offered Delivery at Central (and can choose it) — _Takeaway Delivery_
 - the grace period is set to 7 days
 
 **Step 2 — The platform moves the store from Pro down to Basic**
 
-- the platform page now shows Basic with 3 outlets against a limit of 1 — _Over its limits since Nov 16, 2026. Everything keeps working until Nov 23, 2026; aft_
+- the platform page now shows Basic with 3 outlets against a limit of 1 — _Over its limits since Nov 20, 2026. Everything keeps working until Nov 27, 2026; aft_
 - …and says the store is over its limits, with the 7-day grace deadline
 - did not happen: the downgrade blocked an outlet by itself
 
@@ -70,7 +70,8 @@ _Nothing failed._
 - outlet "central" still opens
 - outlet "second" still opens
 - outlet "third" still opens
-- did not happen: customers are still offered Delivery
+- Delivery is still listed, but greyed out and can't be chosen — _Takeaway Delivery_
+- did not happen: customers can still choose Delivery
 - a customer can still place a takeaway order at outlet 2 — _order #0005_
 
 **Step 5 — After the grace period (set to 0 days): is anything blocked automatically?**
@@ -91,7 +92,7 @@ _Nothing failed._
 - did not happen: outlet "central" is affected by outlet 3 being disabled
 - did not happen: outlet "second" is affected by outlet 3 being disabled
 - the store's address still opens
-- the disabled outlet no longer counts toward the limit: 2 outlets in use — _Over limit People 1 / 3 Outlets 2 / 1 1 outlet, 0 people blocked Plan & limits Featu_
+- the disabled outlet no longer counts toward the limit: 2 outlets in use — _Over limit People 1 / 3 Outlets 2 / 1 1 outlet, 0 people blocked Store name Shown in_
 - enabling it again brings the menu back
 - outlet 3 is left disabled for the next tests
 - did not happen: the browser logged JavaScript errors
@@ -100,16 +101,16 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
-| 2026-11-16 03:12 | pass | 37 | 0 | headless | 1 min 52 s |
-| 2026-11-16 02:22 | pass | 37 | 0 | headless | 1 min 52 s |
-| 2026-11-16 02:04 | pass | 37 | 0 | headless | 1 min 52 s |
-| 2026-11-16 01:46 | pass | 37 | 0 | headless | 1 min 52 s |
-| 2026-11-16 01:00 | pass | 37 | 0 | headless | 1 min 52 s |
-| 2026-11-15 23:32 | pass | 37 | 0 | headless | 1 min 51 s |
-| 2026-11-15 23:24 | pass | 37 | 0 | visible | 4 min 20 s |
-| 2026-11-15 23:03 | pass | 37 | 0 | headless | 1 min 51 s |
-| 2026-11-15 22:56 | error | 26 | 0 | headless | 2 min 0 s |
-| 2026-11-15 22:49 | error | 11 | 0 | headless | 45.3 s |
+| 2026-11-20 05:44 | pass | 38 | 0 | headless | 53.5 s |
+| 2026-11-20 05:35 | pass | 38 | 0 | headless | 53.3 s |
+| 2026-11-20 05:29 | error | 14 | 4 | headless | 2 min 20 s |
+| 2026-11-20 05:20 | error | 10 | 1 | headless | 1 min 45 s |
+| 2026-11-20 05:10 | error | 10 | 1 | headless | 1 min 45 s |
+| 2026-11-20 04:40 | error | 1 | 2 | headless | 1 min 37 s |
+| 2026-11-20 04:16 | pass | 38 | 0 | headless | 52.8 s |
+| 2026-11-20 00:08 | pass | 38 | 0 | headless | 52.2 s |
+| 2026-11-19 23:56 | pass | 38 | 0 | headless | 54.3 s |
+| 2026-11-19 23:50 | pass | 38 | 0 | headless | 54.2 s |
 
 ---
 _Generated by `tests/e2e/run.mjs` — edit the test file (`tests/t10-plan-downgrade.mjs`), not this page._

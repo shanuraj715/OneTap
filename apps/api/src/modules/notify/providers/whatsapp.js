@@ -1,4 +1,5 @@
 import { NOTIFY_VARIABLES } from "@onetap/config-schema";
+import { env } from "../../../env.js";
                                                                                         
 
 /** Digits only, with a country code — Meta rejects "+", spaces or dashes. */
@@ -26,10 +27,16 @@ export const whatsappProvider                 = {
       return { ok: false, reason: "No WhatsApp template is set for this order status" };
     }
     const apiVersion = creds.apiVersion || "v20.0";
-    const url = `https://graph.facebook.com/${apiVersion}/${creds.phoneNumberId}/messages`;
+    const url = `${env.WHATSAPP_GRAPH_URL.replace(/\/$/, "")}/${apiVersion}/${creds.phoneNumberId}/messages`;
 
     // an order alert fills the five fixed order variables; a marketing message brings its own list of words
     const words = input.whatsapp.params ?? NOTIFY_VARIABLES.map((key) => input.values[key]);
+    const components = [];
+    if (words.length) components.push({ type: "body", parameters: words.map((text) => ({ type: "text", text: String(text) })) });
+    // an Authentication template made with a "Copy code" button wants the code a second time, in that button
+    if (input.whatsapp.copyCode && words.length) {
+      components.push({ type: "button", sub_type: "url", index: "0", parameters: [{ type: "text", text: String(words[0]) }] });
+    }
     const body = {
       messaging_product: "whatsapp",
       to: normalizePhone(input.to),
@@ -38,7 +45,7 @@ export const whatsappProvider                 = {
         name: input.whatsapp.templateName,
         language: { code: input.whatsapp.languageCode || "en" },
         // a template with no placeholders must not carry an (empty) body component — Meta rejects it
-        ...(words.length ? { components: [{ type: "body", parameters: words.map((text) => ({ type: "text", text: String(text) })) }] } : {}),
+        ...(components.length ? { components } : {}),
       },
     };
 

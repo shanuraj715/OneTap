@@ -47,6 +47,8 @@ export default async function OutletOrderPage({ params }) {
         gateways={outlet.config.payments.enabled}
         dineInEnabled={features.ordering.dineInQr}
         deliveryEnabled={features.ordering.delivery}
+        takeawayEnabled={features.ordering.takeaway}
+        couponsEnabled={features.coupons}
         menuHref={`/${outletSlug}`}
       />
     </>

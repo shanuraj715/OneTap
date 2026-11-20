@@ -3,6 +3,7 @@ import { OrderPage } from "@/components/OrderPage";
 import { OutletUnavailable } from "@/components/OutletUnavailable";
 import { ThemeStyle } from "@/components/ThemeStyle";
 import { getMenu } from "@/lib/menu";
+import { visitorHeaders } from "@/lib/visitor";
 import { getOutletById } from "@/lib/outlet";
 
 export const dynamic = "force-dynamic";
@@ -12,7 +13,10 @@ const API_BASE = apiServerUrl();
 /** Validates the signed QR before revealing anything about the restaurant — same check the table page itself makes. */
 async function resolveScan(tableId, token) {
   try {
-    const res = await fetch(`${API_BASE}/api/tables/scan/${tableId}?k=${encodeURIComponent(token)}`, { cache: "no-store" });
+    const res = await fetch(`${API_BASE}/api/tables/scan/${tableId}?k=${encodeURIComponent(token)}`, {
+      cache: "no-store",
+      headers: await visitorHeaders(), // who is looking — a diner already seated here must not be told another party is
+    });
     const body = await res.json().catch(() => ({}));
     if (!res.ok) return { error: body.error ?? "That table code isn't valid" };
     return body;
@@ -88,6 +92,7 @@ export default async function TableOrderPage({ params, searchParams }) {
         outletName={name}
         menu={menu}
         gateways={outlet.config.payments.enabled}
+        couponsEnabled={features.coupons}
         dineIn={{ tableId: scan.table.id, tableNumber: scan.table.number, token: k }}
         menuHref={`/t/${tableId}?k=${encodeURIComponent(k)}`}
       />

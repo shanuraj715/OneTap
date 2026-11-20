@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
                                            
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { formatINR,                                      } from "@onetap/config-schema";
+import { categoryPathLabel, formatINR,                                      } from "@onetap/config-schema";
 import {
   Minus,
   NotepadText,
@@ -98,7 +98,8 @@ export function OrderEditModal({
   const catalogue = useMemo(() => {
     if (!menu) return [];
     const q = search.trim().toLowerCase();
-    const categoryName = new Map(menu.categories.map((c) => [c.id, c.name]));
+    // "South Indian › Dosa" — so two categories with the same name in different places can be told apart
+    const categoryName = new Map(menu.categories.map((c) => [c.id, categoryPathLabel(menu.categories, c.id)]));
     return menu.items
       .filter((item) => item.isAvailable && (!q || item.name.toLowerCase().includes(q)))
       .map((item) => ({ item, category: categoryName.get(item.categoryId) ?? "" }))

@@ -15,7 +15,7 @@ export const SUB_URL = `http://${SUB_HOST}`;
 export const OWNER = [W.ownerEmail, W.ownerPassword];
 export const PLAN = { basic: "Lifecycle Basic", pro: "Lifecycle Pro", custom: "Lifecycle Custom" };
 
-/** the three outlets: dashboard name + URL slug, and what customers see (the Restaurant name saved in Settings) */
+/** the three outlets: dashboard name + URL slug, and what customers see (the name each outlet is renamed to under Settings → Outlets) */
 export const OUTLETS = {
   central: { name: "Central", slug: "central", title: "Lifecycle Central", lat: 28.6315, lng: 77.2167, radius: 3, fee: 20, free: 500, minOrder: 0, hours: ["08:00", "20:00"] },
   second: { name: "Second", slug: "second", title: "Lifecycle Second", lat: 28.5707, lng: 77.3219, radius: 5, fee: 30, free: 600, minOrder: 50, hours: ["09:00", "21:00"] },

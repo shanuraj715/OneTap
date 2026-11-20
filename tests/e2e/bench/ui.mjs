@@ -94,7 +94,7 @@ export async function openPlatform(d, path = "") {
  * Plans → New plan → fill the form → Save plan.
  *   features: caption list to tick (exact captions from the plan form), or "all"
  */
-export async function createPlan(d, { name, description = "", custom = false, people, multiOutlet = false, outlets, features = [] }) {
+export async function createPlan(d, { name, description = "", custom = false, people, multiOutlet = false, outlets, features = [], monthly, yearly }) {
   await openPlatform(d, "/plans");
   await d.click(d.page.getByRole("button", { name: "New plan" }));
   const form = d.page.locator("form, [role=dialog]").filter({ has: d.page.getByRole("button", { name: "Save plan" }) }).last();
@@ -105,11 +105,16 @@ export async function createPlan(d, { name, description = "", custom = false, pe
     if (people) { await tick(d, "Unlimited", false, form).catch(() => {}); await fill(d, "People (owners included)", people, form); }
     await tick(d, "Multi-outlet", multiOutlet, form);
     if (multiOutlet && outlets) await fill(d, "Outlets", outlets, form);
-    const all = features === "all";
-    const wanted = all ? ["Takeaway ordering", "Dine-in QR ordering", "Delivery", "Online payments", "Coupons", "Coin wallet", "Printing", "WhatsApp & SMS alerts", "WhatsApp chat", "Marketing", "Own favicon", "Own domain name"] : features;
-    // the form starts with features ticked: set EVERY feature box to exactly what this plan should have
-    const every = ["Takeaway ordering", "Dine-in QR ordering", "Delivery", "Online payments", "Coupons", "Coin wallet", "Printing", "WhatsApp & SMS alerts", "WhatsApp chat", "Marketing", "Own favicon", "Own domain name"];
+    // the form starts with every feature ticked: set EACH box to exactly what this plan should have
+    const every = ["Takeaway ordering", "Dine-in QR ordering", "Delivery", "Online payments", "Coupons", "Coin wallet", "Printing", "WhatsApp & SMS alerts", "WhatsApp chat", "Marketing", "Analytics & reports", "Own favicon", "Own domain name"];
+    const wanted = features === "all" ? every : features;
     for (const f of every) await tick(d, f, wanted.includes(f), form);
+  }
+  if (monthly) {
+    // what the website shows for the plan — and what the onboarding price estimate starts from
+    await tick(d, "Show this plan on the website's Pricing", true, form);
+    await fill(d, "Monthly price (₹)", monthly, form);
+    if (yearly) await fill(d, "Yearly discount (%)", yearly, form);
   }
   await d.click(d.page.getByRole("button", { name: "Save plan" }), { after: 900 });
 }
@@ -187,6 +192,16 @@ export async function addOutlet(d, name, slug) {
   await fill(d, "URL slug", slug, dlg);
   await d.click(dlg.getByRole("button", { name: "Create outlet" }), { after: 1200 });
   return { refused: false, text: await text(d) };
+}
+
+/** Outlets → ✎ on the outlet called `current` → type `next` as its Name → Save changes (this is also the name customers see). */
+export async function renameOutlet(d, current, next) {
+  await d.goto(BENCH.admin + "/outlets", 400);
+  // each outlet's pencil is labelled "Edit <its name>" (the name alone also matches the sidebar's outlet switcher)
+  await d.click(d.page.getByRole("button", { name: `Edit ${current}`, exact: true }), { after: 400 });
+  const dlg = d.page.locator("form, [role=dialog], div").filter({ has: d.page.getByRole("button", { name: "Save changes" }) }).last();
+  await fill(d, "Name", next, dlg);
+  await d.click(dlg.getByRole("button", { name: "Save changes" }), { after: 1000 });
 }
 
 /** Platform → store → Plan & limits → choose a plan → save. */
@@ -316,7 +331,7 @@ export async function customerSignIn(d, { name, phone, extra = { gender: "Male",
     await d.type(d.page.getByRole("spinbutton", { name: "Age" }), extra.age, { after: 150, delay: 20 });
     await d.click(d.page.getByRole("button", { name: "Save and continue" }), { after: 1000 });
   }
-  await d.page.getByRole("button", { name: /place order|add delivery address/i }).first().waitFor({ timeout: 20000 });
+  await d.page.getByRole("button", { name: /place order|add delivery address|send to kitchen/i }).first().waitFor({ timeout: 20000 }); // a table order says "Send to kitchen"
 }
 
 /** Coupons → New coupon → Code + Description + Percent off → Create coupon. Returns the page text afterwards. */
@@ -396,9 +411,10 @@ export async function removeAddress(d, storeName) {
 /** Outlets (store dashboard): the bin icon on an outlet's row; the browser's own "Delete …?" box is accepted. Returns the page text. */
 export async function deleteOutletRow(d, outletName) {
   await d.goto(BENCH.admin + "/outlets", 500);
-  const row = d.page.getByText(outletName, { exact: true }).first().locator("xpath=ancestor::*[.//button[@title='Delete' or starts-with(@title,'A brand')]][1]");
-  await row.waitFor({ timeout: 10000 });
-  await d.click(row.locator("button[title='Delete']"), { after: 1200 });
+  // each outlet's × is labelled "Delete <its name>" (the name alone also matches the sidebar's outlet switcher)
+  const del = d.page.getByRole("button", { name: `Delete ${outletName}`, exact: true });
+  await del.waitFor({ timeout: 10000 });
+  await d.click(del, { after: 1200 });
   return text(d);
 }
 
@@ -485,3 +501,49 @@ export async function setStoreFeature(d, storeName, featureLabel, choice) {
   await save.waitFor({ state: "visible", timeout: 10000 });
   await d.click(save, { after: 1000 });
 }
+
+/* ----------------------------------------------------------------------------------- Tables & dine-in (store dashboard) */
+/** Tables & QR page, ready (the "Add a table" form is there) */
+export async function openTables(d) {
+  await d.goto(BENCH.admin + "/tables", 500);
+  await d.page.getByText("Add a table").first().waitFor({ timeout: 15000 });
+}
+/** every table tile as the screen shows it: [{ number, status, seats, text }] — the zone headings are not tiles */
+export async function tableTiles(d) {
+  const raw = await d.page.locator("button.ot-press").allInnerTexts();
+  return raw.map((t) => {
+    const [number, status, seats] = t.split("\n").map((x) => x.trim()).filter(Boolean);
+    return { number, status, seats: Number((seats ?? "").match(/\d+/)?.[0]), text: t.replace(/\s+/g, " ").trim() };
+  });
+}
+/** one tile's button (matched by its number, so T1 never finds T10) */
+export const tableTile = (d, number) => d.page.locator("button.ot-press").filter({ hasText: new RegExp(`^${esc(number)}(Free|Seated|Needs cleaning|Bill requested|Reserved)`) }).first();
+/** clear a text box with the keyboard (a plain "type nothing" leaves the old text selected) */
+async function blank(d, label) {
+  const el = await F(d, label);
+  await d.click(el, { after: 80 });
+  await d.page.keyboard.press("ControlOrMeta+a");
+  await d.page.keyboard.press("Backspace");
+}
+/** "Add a table": Number, Zone (empty = none), Seats (undefined = leave the form's 4), then press Add table */
+export async function addTable(d, { number, zone = "", seats }) {
+  await (number === "" ? blank(d, "Number") : fill(d, "Number", number));
+  await (zone === "" ? blank(d, "Zone") : fill(d, "Zone", zone));
+  if (seats !== undefined) await (String(seats) === "" ? blank(d, "Seats") : fill(d, "Seats", seats));
+  await d.click(d.page.getByRole("button", { name: "Add table" }), { after: 1200 });
+}
+/** open a table's QR panel (click its tile); returns the dialog and the address printed in it */
+export async function openTableQr(d, number) {
+  await d.click(tableTile(d, number), { after: 900 });
+  const dlg = d.page.getByRole("dialog", { name: `Table ${number}` });
+  await dlg.waitFor({ timeout: 10000 });
+  await until(async () => /http\S+/.test(await dlg.innerText()), 8000);
+  return { dlg, url: (await dlg.innerText()).match(/http\S+/)?.[0] };
+}
+/** the address printed in a table's QR panel, with the panel closed again */
+export async function tableQrUrl(d, number) {
+  const { dlg, url } = await openTableQr(d, number);
+  await d.click(dlg.getByRole("button", { name: "Done" }), { after: 400 });
+  return url;
+}
+

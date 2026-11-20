@@ -2,6 +2,7 @@ import { WebSocket, WebSocketServer } from "ws";
 import { menuLayoutSchema } from "@onetap/config-schema";
 import { logger } from "../logger.js";
 import { SESSION_COOKIE } from "../middleware/auth.js";
+import { allowUpgrade, refuseUpgrade } from "../middleware/rate-limit.js";
 import { userFromToken } from "../modules/auth/auth.service.js";
 
 /**
@@ -132,11 +133,15 @@ async function authorizeEditor(req, session) {
  * order realtime hub — each upgrade listener guards its own path.
  */
 export function attachPreview(server) {
-  const wss = new WebSocketServer({ noServer: true });
+  // a layout is a few KB of settings; a megabyte is already far more than any editor sends
+  const wss = new WebSocketServer({ noServer: true, maxPayload: 1024 * 1024 });
 
   server.on("upgrade", (req, socket, head) => {
     const url = new URL(req.url ?? "/", "http://localhost");
     if (url.pathname !== "/preview") return; // not ours
+
+    const gate = allowUpgrade(req);
+    if (!gate.ok) return refuseUpgrade(socket, gate.retryAfterSec);
 
     const id = url.searchParams.get("id") ?? "";
     const role = url.searchParams.get("role") === "editor" ? "editor" : "viewer";
@@ -166,7 +171,13 @@ export function attachPreview(server) {
         ws.on("error", () => set.delete(ws));
 
         if (role === "editor") {
+          // an editor sends a layout as it is changed — a few a second at most; a flood is dropped, not rebroadcast
+          const recent = [];
           ws.on("message", (raw) => {
+            const now = Date.now();
+            while (recent.length && now - recent[0] > 1000) recent.shift();
+            if (recent.length >= 20) return;
+            recent.push(now);
             let msg;
             try {
               msg = JSON.parse(String(raw));

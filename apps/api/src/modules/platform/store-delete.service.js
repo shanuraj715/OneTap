@@ -57,7 +57,7 @@ export async function deletionSummary(id) {
   const [outlets, menuItems, orders, customers, tables, people] = await Promise.all([
     OutletModel.countDocuments({ brandId }),
     MenuItemModel.countDocuments({ brandId }),
-    OrderModel.countDocuments({ brandId }),
+    OrderModel.countDocuments({ brandId }).setOptions({ includeDeleted: true }),
     CustomerModel.countDocuments({ brandId }),
     TableModel.countDocuments({ brandId }),
     UserModel.countDocuments({ "memberships.brandId": brandId }),
@@ -87,7 +87,8 @@ export async function deleteStore(id, { confirmName, by } = {}) {
   const models = storeCollections();
   models.sort((a, b) => (a.modelName === "Outlet" ? -1 : b.modelName === "Outlet" ? 1 : 0));
   for (const Model of models) {
-    const result = await Model.deleteMany({ brandId });
+    // includeDeleted: an order that was "deleted" in the dashboard is still data, and goes with the store
+    const result = await Model.deleteMany({ brandId }, { includeDeleted: true });
     removed[Model.modelName] = result.deletedCount ?? 0;
   }
 

@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { isIP } from "node:net";
 import { ipKeyGenerator, rateLimit } from "express-rate-limit";
 import { LoginGuardModel } from "@onetap/db";
@@ -78,12 +79,14 @@ export function blockedError(info) {
 }
 
 /** Is this address blocked right now, and for how long? */
-export async function blockInfo(req, scope) {
+export const blockInfo = (req, scope) => blockInfoFor(keyOf(scope, addressOf(req)), GUARD_SETTINGS);
+
+async function blockInfoFor(key, settings) {
   if (!guardOn) return { blocked: false };
-  const row = await LoginGuardModel.findOne({ key: keyOf(scope, addressOf(req)) }).lean();
+  const row = await LoginGuardModel.findOne({ key }).lean();
   const left = row?.blockedUntil ? (new Date(row.blockedUntil).getTime() - Date.now()) / 1000 : 0;
   if (left > 0) return { blocked: true, retryAfterSec: Math.ceil(left), blockedUntil: row.blockedUntil };
-  const failuresLeft = row && row.windowStart && Date.now() - new Date(row.windowStart).getTime() < GUARD_SETTINGS.windowSeconds * 1000 ? Math.max(0, GUARD_SETTINGS.maxFailures - row.failures) : GUARD_SETTINGS.maxFailures;
+  const failuresLeft = row && row.windowStart && Date.now() - new Date(row.windowStart).getTime() < settings.windowSeconds * 1000 ? Math.max(0, settings.maxFailures - row.failures) : settings.maxFailures;
   return { blocked: false, attemptsLeft: failuresLeft };
 }
 
@@ -97,12 +100,12 @@ export async function assertNotBlocked(req, scope) {
  * Count one failed attempt. Returns { blocked, retryAfterSec?, attemptsLeft? } — `blocked` is true when THIS failure
  * tipped the address over (the caller should answer with the block, not "wrong password").
  */
-export async function recordFailure(req, scope) {
+export const recordFailure = (req, scope) => recordFailureFor(keyOf(scope, addressOf(req)), addressOf(req), scope, GUARD_SETTINGS);
+
+async function recordFailureFor(key, addr, scope, settings) {
   if (!guardOn) return { blocked: false };
-  const addr = addressOf(req);
-  const key = keyOf(scope, addr);
   const now = new Date();
-  const { maxFailures, windowSeconds, steps, forgetSeconds } = GUARD_SETTINGS;
+  const { maxFailures, windowSeconds, steps, forgetSeconds } = settings;
 
   // a window that has run out starts again from zero
   await LoginGuardModel.updateOne({ key, windowStart: { $lt: new Date(now.getTime() - windowSeconds * 1000) }, $or: [{ blockedUntil: null }, { blockedUntil: { $lte: now } }] }, { $set: { failures: 0, windowStart: now } });
@@ -127,7 +130,7 @@ export async function recordFailure(req, scope) {
       { $set: { blockedUntil, lastBlockAt: now, strikes, failures: 0, windowStart: now, expireAt } },
     );
     if (won.modifiedCount) return { blocked: true, retryAfterSec: seconds, blockedUntil, strikes };
-    return blockInfo(req, scope); // another request tipped it at the same moment
+    return blockInfoFor(key, settings); // another request tipped it at the same moment
   }
 
   await LoginGuardModel.updateOne({ key }, { $set: { expireAt: new Date(now.getTime() + Math.max(forgetSeconds, windowSeconds) * 1000) } });
@@ -142,9 +145,46 @@ export async function failed(req, scope, err) {
   throw err;
 }
 
+/* ------------------------------------------------------ one account, from any address */
+
+/**
+ * The per-address block above stops one machine guessing. A botnet guessing ONE account's password from hundreds of
+ * addresses gets one or two tries from each and walks past it — so the same counting is also kept per account
+ * (the submitted email, whether or not it exists, so the answer reveals nothing): 10 wrong passwords in 15 minutes
+ * pause that account's sign-in for 1 minute, then 5, 15 and 60. The pauses are short on purpose — someone can make
+ * an owner wait a few minutes by typing their email wrongly, but not lock them out for a day.
+ */
+export const ACCOUNT_GUARD = { maxFailures: 10, windowSeconds: 900, steps: [60, 300, 900, 3600], forgetSeconds: 86400 };
+
+const emailKey = (email) => keyOf("staff-account", createHash("sha256").update(String(email).trim().toLowerCase()).digest("hex").slice(0, 24));
+/** "o•••@acme.test" — enough for the console to say which account, without printing the whole address */
+const maskEmail = (email) => String(email).trim().toLowerCase().replace(/^(.).*?(@.*)?$/, (_m, a, b) => `${a}•••${b ?? ""}`);
+
+export function accountBlockedError(info) {
+  return new HttpError(429, `Too many failed attempts for this account. Try again in ${humanSeconds(info.retryAfterSec)}.`, {
+    code: "account_blocked",
+    retryAfterSec: info.retryAfterSec,
+    blockedUntil: info.blockedUntil,
+  });
+}
+
+/** Throws the 429 when this account's sign-in is paused — call before looking at the password. */
+export async function assertAccountNotBlocked(email) {
+  const info = await blockInfoFor(emailKey(email), ACCOUNT_GUARD);
+  if (info.blocked) throw accountBlockedError(info);
+}
+
+/** Count one wrong password against the account. Returns { blocked, retryAfterSec? } — true when THIS one tipped it over. */
+export const recordAccountFailure = (email) => recordFailureFor(emailKey(email), maskEmail(email), "staff-account", ACCOUNT_GUARD);
+
+/** A right password clears the account's count. */
+export async function clearAccountFailures(email) {
+  if (guardOn) await LoginGuardModel.deleteOne({ key: emailKey(email) });
+}
+
 /** express-rate-limit, per address, for ANY request to a sign-in endpoint (right or wrong). */
-export const floodLimiter = (name) =>
-  rateLimit({
+export const floodLimiter = (name) => {
+  const mw = rateLimit({
     windowMs: 60_000,
     limit: GUARD_SETTINGS.floodPerMinute,
     standardHeaders: "draft-7",
@@ -155,9 +195,12 @@ export const floodLimiter = (name) =>
     validate: { keyGeneratorIpFallback: false },
     handler: (req, res, next, options) => {
       const retry = Number(res.getHeader("Retry-After")) || Math.ceil(options.windowMs / 1000);
-      next(new HttpError(429, `Too many sign-in requests. Try again in ${humanSeconds(retry)}.`, { code: "rate_limited", retryAfterSec: retry }));
+      next(new HttpError(429, `Too many sign-in requests. Try again in ${humanSeconds(retry)}.`, { code: "rate_limited", retryAfterSec: retry, policy: `${name}-flood` }));
     },
   });
+  mw.policy = `${name}-flood`; // listed in the route inventory as "login-flood" / "otp-flood"
+  return mw;
+};
 
 /* ---------------------------------------------------- what the platform console shows */
 

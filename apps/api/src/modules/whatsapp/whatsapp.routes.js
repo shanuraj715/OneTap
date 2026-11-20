@@ -4,6 +4,7 @@ import { WA_MAX_MEDIA_BYTES, waAccessSchema, waBroadcastSchema, waColorSchema, w
 import { HttpError } from "../../middleware/error.js";
 import { putFile } from "../storage/storage.service.js";
 import * as wa from "./whatsapp.service.js";
+import { limiter } from "../../middleware/rate-limit.js";
 
 /**
  * WhatsApp chat for the store dashboard. Every route goes through `waContext`: the plan must include it, and the
@@ -25,7 +26,7 @@ whatsappRouter.get("/accounts", async (req, res) => {
   const { ctx, level } = await wa.waContext(req, "read");
   res.json({ accounts: await wa.listAccounts(ctx, { withQr: level === "manage" }) });
 });
-whatsappRouter.post("/accounts", async (req, res) => {
+whatsappRouter.post("/accounts", limiter("wa-link"), async (req, res) => {
   const { ctx, userId } = await wa.waContext(req, "manage");
   const body = labelBody.extend({ color: waColorSchema.optional() }).parse(req.body);
   res.status(201).json({ account: await wa.createAccount(ctx, body, userId) });
@@ -52,7 +53,7 @@ whatsappRouter.post("/distribute/preview", async (req, res) => {
   const { ctx } = await wa.waContext(req, "manage");
   res.json(await wa.previewDistribution(ctx, distributeBody.parse(req.body)));
 });
-whatsappRouter.post("/distribute", async (req, res) => {
+whatsappRouter.post("/distribute", limiter("bulk-send"), async (req, res) => {
   const { ctx } = await wa.waContext(req, "manage");
   res.json(await wa.applyDistribution(ctx, distributeBody.parse(req.body)));
 });
@@ -62,19 +63,19 @@ whatsappRouter.post("/cleanup/preview", async (req, res) => {
   const { ctx } = await wa.waContext(req, "manage");
   res.json(await wa.previewCleanup(ctx, cleanupBody.parse(req.body)));
 });
-whatsappRouter.post("/cleanup", async (req, res) => {
+whatsappRouter.post("/cleanup", limiter("bulk-send"), async (req, res) => {
   const { ctx } = await wa.waContext(req, "manage");
   res.json(await wa.runCleanup(ctx, cleanupBody.parse(req.body)));
 });
-whatsappRouter.post("/accounts/:id/relink", async (req, res) => {
+whatsappRouter.post("/accounts/:id/relink", limiter("wa-link"), async (req, res) => {
   const { ctx } = await wa.waContext(req, "manage");
   res.json({ account: await wa.relinkAccount(ctx, req.params.id) });
 });
-whatsappRouter.post("/accounts/:id/unlink", async (req, res) => {
+whatsappRouter.post("/accounts/:id/unlink", limiter("wa-link"), async (req, res) => {
   const { ctx } = await wa.waContext(req, "manage");
   res.json({ account: await wa.unlinkAccount(ctx, req.params.id) });
 });
-whatsappRouter.delete("/accounts/:id", async (req, res) => {
+whatsappRouter.delete("/accounts/:id", limiter("wa-link"), async (req, res) => {
   const { ctx } = await wa.waContext(req, "manage");
   await wa.removeAccount(ctx, req.params.id);
   res.status(204).end();
@@ -93,7 +94,7 @@ whatsappRouter.get("/chats", async (req, res) => {
     }),
   });
 });
-whatsappRouter.post("/chats", async (req, res) => {
+whatsappRouter.post("/chats", limiter("chat-send"), async (req, res) => {
   const { ctx } = await wa.waContext(req, "send");
   const body = z.object({ phone: z.string().min(5).max(30), name: z.string().max(80).optional() }).parse(req.body);
   res.status(201).json({ chat: await wa.startChat(ctx, body) });
@@ -107,12 +108,12 @@ whatsappRouter.patch("/chats/:id", async (req, res) => {
   const body = z.object({ name: z.string().max(80).optional(), accountId: z.string().max(40).nullable().optional() }).parse(req.body);
   res.json({ chat: await wa.updateChat(ctx, req.params.id, body) });
 });
-whatsappRouter.delete("/chats/:id", async (req, res) => {
+whatsappRouter.delete("/chats/:id", limiter("destructive"), async (req, res) => {
   const { ctx } = await wa.waContext(req, "send");
   await wa.deleteChat(ctx, req.params.id);
   res.status(204).end();
 });
-whatsappRouter.post("/chats/:id/clear", async (req, res) => {
+whatsappRouter.post("/chats/:id/clear", limiter("destructive"), async (req, res) => {
   const { ctx } = await wa.waContext(req, "send");
   await wa.clearChat(ctx, req.params.id);
   res.status(204).end();
@@ -127,11 +128,11 @@ whatsappRouter.get("/chats/:id/messages", async (req, res) => {
   const { ctx } = await wa.waContext(req, "read");
   res.json({ messages: await wa.listMessages(ctx, req.params.id, { before: typeof req.query.before === "string" ? req.query.before : undefined }) });
 });
-whatsappRouter.post("/chats/:id/messages", async (req, res) => {
+whatsappRouter.post("/chats/:id/messages", limiter("chat-send"), async (req, res) => {
   const { ctx, userId } = await wa.waContext(req, "send");
   res.status(201).json({ message: await wa.sendMessage(ctx, req.params.id, waSendSchema.parse(req.body), userId) });
 });
-whatsappRouter.post("/chats/:id/messages/:messageId/retry", async (req, res) => {
+whatsappRouter.post("/chats/:id/messages/:messageId/retry", limiter("chat-send"), async (req, res) => {
   const { ctx } = await wa.waContext(req, "send");
   await wa.retryMessage(ctx, req.params.id, req.params.messageId);
   res.status(204).end();
@@ -143,7 +144,7 @@ whatsappRouter.delete("/chats/:id/messages/:messageId", async (req, res) => {
 });
 
 /** An attachment: the raw file as the body, its type in Content-Type and its name in ?name=. */
-whatsappRouter.post("/media", raw({ type: () => true, limit: WA_MAX_MEDIA_BYTES + 4096 }), async (req, res) => {
+whatsappRouter.post("/media", limiter("upload"), raw({ type: () => true, limit: WA_MAX_MEDIA_BYTES + 4096 }), async (req, res) => {
   const { ctx } = await wa.waContext(req, "send");
   const body = Buffer.isBuffer(req.body) ? req.body : null;
   if (!body?.length) throw new HttpError(400, "Send the file as the request body.");
@@ -160,7 +161,7 @@ whatsappRouter.get("/broadcasts", async (req, res) => {
   const { ctx } = await wa.waContext(req, "manage");
   res.json({ broadcasts: await wa.listBroadcasts(ctx), preview: await wa.broadcastPreview(ctx) });
 });
-whatsappRouter.post("/broadcasts", async (req, res) => {
+whatsappRouter.post("/broadcasts", limiter("bulk-send"), async (req, res) => {
   const { ctx, userId } = await wa.waContext(req, "manage");
   res.status(201).json({ broadcast: await wa.createBroadcast(ctx, waBroadcastSchema.parse(req.body), userId) });
 });

@@ -1,22 +1,23 @@
-import { useEffect, useRef, useState } from "react";
-import { formatINR, IMAGE_RULES, itemPriceLabel } from "@onetap/config-schema";
-import { Download, ImagePlus, Loader, Star, X } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { flattenCategories, formatINR, IMAGE_RULES, modifierRuleText } from "@onetap/config-schema";
+import { ClipboardPaste, Download, ImagePlus, Loader, Star, X } from "lucide-react";
 import * as api from "../lib/api";
 import { ImportMenuModal } from "../components/ImportMenuModal";
 
 import { useOutlet } from "../lib/useOutlet";
 import { useImageUpload } from "../lib/useStorage";
+import { readClipboardImages, usePasteImages } from "../lib/usePasteImages";
 import {
-  useCreateCategory,
   useCreateItem,
   useCreateModifierGroup,
-  useDeleteCategory,
-  useDeleteItem,
   useDeleteModifierGroup,
   useMenu,
-  useUpdateCategory,
   useUpdateItem,
+  useUpdateModifierGroup,
 } from "../lib/useMenu";
+import { CategoriesPanel } from "./menu/CategoriesPanel";
+import { ItemsPanel } from "./menu/ItemsPanel";
+import { useSelection } from "./menu/shared";
 import { AwesomeLoader, Button, Card, Field, PageHeader, TextInput, Toast } from "../ui";
 
 const toPaise = (rupees        ) => Math.round(Number(rupees || 0) * 100);
@@ -28,12 +29,27 @@ export function MenuEditor() {
   const [categoryId, setCategoryId] = useState               (null);
   const [editing, setEditing] = useState                         (null);
   const [importModal, setImportModal] = useState(null);
+  // ticked categories / ticked items, for "delete selected"
+  const catSel = useSelection();
+  const itemSel = useSelection();
 
   const menu = menuQuery.data;
 
+  // land on the first top-level category; if the selected one was deleted, fall back to it
   useEffect(() => {
-    if (menu && !categoryId && menu.categories[0]) setCategoryId(menu.categories[0].id);
+    if (!menu) return;
+    if (categoryId && menu.categories.some((c) => c.id === categoryId)) return;
+    const first = flattenCategories(menu.categories)[0]?.category;
+    setCategoryId(first ? first.id : null);
   }, [menu, categoryId]);
+
+  // ticks never outlive the thing they were on
+  useEffect(() => {
+    if (!menu) return;
+    catSel.keepOnly(new Set(menu.categories.map((c) => c.id)));
+    itemSel.keepOnly(new Set(menu.items.map((i) => i.id)));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [menu]);
 
   if (!outlet) {
     return (
@@ -58,10 +74,6 @@ export function MenuEditor() {
     );
   }
 
-  const items = menu.items
-    .filter((i) => i.categoryId === categoryId)
-    .sort((a, b) => a.sortOrder - b.sortOrder);
-
   return (
     <>
       <PageHeader
@@ -77,16 +89,18 @@ export function MenuEditor() {
         }
       />
 
-      <div style={{ display: "grid", gridTemplateColumns: "300px 1fr", gap: 20, alignItems: "start" }}>
-        <Categories
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(340px, 420px) minmax(0, 1fr)", gap: 20, alignItems: "start" }}>
+        <CategoriesPanel
           outlet={outlet}
           menu={menu}
           selected={categoryId}
           onSelect={(id) => {
             setCategoryId(id);
             setEditing(null);
+            itemSel.clear();
           }}
           onImport={() => setImportModal({ targetCategoryId: null })}
+          selection={catSel}
         />
 
         <div>
@@ -99,13 +113,14 @@ export function MenuEditor() {
               onDone={() => setEditing(null)}
             />
           ) : (
-            <Items
+            <ItemsPanel
               outlet={outlet}
-              items={items}
-              disabled={!categoryId}
+              menu={menu}
+              categoryId={categoryId}
               onNew={() => setEditing("new")}
               onEdit={setEditing}
               onImport={() => setImportModal({ targetCategoryId: categoryId })}
+              selection={itemSel}
             />
           )}
         </div>
@@ -122,202 +137,6 @@ export function MenuEditor() {
         />
       )}
     </>
-  );
-}
-
-/* --------------------------------------------------------------- categories */
-
-function Categories({
-  outlet,
-  menu,
-  selected,
-  onSelect,
-  onImport,
-}) {
-  const [name, setName] = useState("");
-  const create = useCreateCategory(outlet);
-  const update = useUpdateCategory(outlet);
-  const remove = useDeleteCategory(outlet);
-
-  const add = () => {
-    if (!name.trim()) return;
-    create.mutate({ name: name.trim(), sortOrder: menu.categories.length }, { onSuccess: () => setName("") });
-  };
-
-  return (
-    <Card
-      title="Categories"
-      action={
-        onImport ? (
-          <button
-            type="button"
-            onClick={onImport}
-            style={{
-              font: "inherit",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 4,
-              fontSize: 12,
-              padding: "2px 7px",
-              borderRadius: 6,
-              border: "1px solid var(--color-border)",
-              background: "var(--color-bg)",
-              color: "var(--color-text)",
-              cursor: "pointer",
-            }}
-            title="Import categories from another outlet"
-          >
-            <Download size={12} /> Import
-          </button>
-        ) : null
-      }
-    >
-      <div style={{ display: "flex", flexDirection: "column", gap: 2, marginBottom: 12 }}>
-        {menu.categories
-          .slice()
-          .sort((a, b) => a.sortOrder - b.sortOrder)
-          .map((c) => {
-            const count = menu.items.filter((i) => i.categoryId === c.id).length;
-            const active = c.id === selected;
-            return (
-              <div key={c.id} style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                <button
-                  type="button"
-                  onClick={() => onSelect(c.id)}
-                  style={{
-                    ...catBtn,
-                    background: active ? "var(--color-primary)" : "transparent",
-                    color: active ? "var(--color-on-primary)" : "var(--color-text)",
-                  }}
-                >
-                  <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.name}</span>
-                  <span style={{ opacity: 0.7, fontSize: 12, flexShrink: 0 }}>{count}</span>
-                </button>
-                <button
-                  type="button"
-                  title="Rename"
-                  onClick={() => {
-                    const next = window.prompt("Category name", c.name);
-                    if (next && next !== c.name) update.mutate({ id: c.id, body: { name: next } });
-                  }}
-                  style={iconBtn}
-                >
-                  ✎
-                </button>
-                <button
-                  type="button"
-                  title="Delete"
-                  onClick={() => {
-                    if (window.confirm(`Delete "${c.name}"?`)) remove.mutate(c.id);
-                  }}
-                  style={iconBtn}
-                >
-                  ×
-                </button>
-              </div>
-            );
-          })}
-      </div>
-
-      <div style={{ display: "flex", gap: 6 }}>
-        <TextInput
-          value={name}
-          placeholder="New category"
-          onChange={(e) => setName(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && add()}
-          style={{ flex: 1, minWidth: 0 }}
-        />
-        <Button onClick={add} disabled={create.isPending}>
-          +
-        </Button>
-      </div>
-      {remove.error ? <Toast kind="error">{(remove.error         ).message}</Toast> : null}
-    </Card>
-  );
-}
-
-/* -------------------------------------------------------------------- items */
-
-function Items({
-  outlet,
-  items,
-  disabled,
-  onNew,
-  onEdit,
-  onImport,
-}) {
-  const update = useUpdateItem(outlet);
-  const remove = useDeleteItem(outlet);
-
-  return (
-    <Card
-      title="Items"
-      action={
-        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          {onImport && (
-            <Button
-              onClick={onImport}
-              disabled={disabled}
-              style={{ display: "inline-flex", gap: 6, alignItems: "center" }}
-              title="Import items into this category from another outlet"
-            >
-              <Download size={13} /> Import
-            </Button>
-          )}
-          <Button onClick={onNew} disabled={disabled}>
-            Add item
-          </Button>
-        </div>
-      }
-    >
-      {items.length === 0 ? (
-        <p style={{ color: "var(--color-text-muted)", margin: 0, fontSize: 14 }}>
-          {disabled ? "Pick a category." : "No items yet."}
-        </p>
-      ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-          {items.map((it) => (
-            <div key={it.id} style={itemRow}>
-              {it.images?.[0]?.url ? (
-                <img
-                  src={it.images[0].url}
-                  alt=""
-                  style={{ width: 34, height: 34, borderRadius: 6, objectFit: "cover", flexShrink: 0 }}
-                />
-              ) : null}
-              <Mark type={it.foodType} />
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontWeight: 600, fontSize: 14 }}>{it.name}</div>
-                <div style={{ fontSize: 12, color: "var(--color-text-muted)" }}>
-                  {itemPriceLabel(it)}
-                  {it.variants.length > 1 ? ` · ${it.variants.length} sizes` : ""}
-                  {it.modifierGroupIds.length ? ` · ${it.modifierGroupIds.length} add-on group` : ""}
-                </div>
-              </div>
-              <label style={{ fontSize: 12, display: "flex", gap: 5, alignItems: "center" }}>
-                <input
-                  type="checkbox"
-                  checked={it.isAvailable}
-                  onChange={(e) => update.mutate({ id: it.id, body: { isAvailable: e.target.checked } })}
-                />
-                available
-              </label>
-              <button type="button" style={iconBtn} title="Edit" onClick={() => onEdit(it)}>
-                ✎
-              </button>
-              <button
-                type="button"
-                style={iconBtn}
-                title="Delete"
-                onClick={() => window.confirm(`Delete "${it.name}"?`) && remove.mutate(it.id)}
-              >
-                ×
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
-    </Card>
   );
 }
 
@@ -349,6 +168,12 @@ function ItemForm({
   );
   const [groupIds, setGroupIds] = useState          (item?.modifierGroupIds ?? []);
   const [tags, setTags] = useState((item?.tags ?? []).join(", "));
+  // where the dish lives — any category in the tree, so a dish can be placed or moved
+  const [catId, setCatId] = useState(item?.categoryId ?? categoryId);
+  const categoryChoices = useMemo(
+    () => flattenCategories(menu.categories).map(({ category, depth }) => ({ id: category.id, label: `${"\u00A0\u00A0\u00A0".repeat(depth)}${depth ? "↳ " : ""}${category.name}` })),
+    [menu.categories],
+  );
 
   const pending = create.isPending || update.isPending;
   const error = (create.error ?? update.error)                ;
@@ -356,7 +181,7 @@ function ItemForm({
   const save = () => {
     if (!name.trim()) return;
     const body = {
-      categoryId,
+      categoryId: catId,
       name: name.trim(),
       description: description.trim(),
       foodType,
@@ -385,6 +210,15 @@ function ItemForm({
         <Field label="Name" info="What diners see on the menu and what the kitchen reads on the ticket. Keep it short — long names wrap awkwardly on a 58 mm receipt roll." style={{ maxWidth: "none" }}>
           <TextInput value={name} onChange={(e) => setName(e.target.value)} autoFocus />
         </Field>
+        <Field label="Category" hint="Where it appears on the menu" info="Any category, including one inside another (South Indian → Dosa). Change it to move the dish." style={{ maxWidth: "none" }}>
+          <select value={catId} onChange={(e) => setCatId(e.target.value)} style={selectStyle} aria-label="Category">
+            {categoryChoices.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.label}
+              </option>
+            ))}
+          </select>
+        </Field>
         <Field label="Description" info="One line under the item on the website. Use it for what is actually in the dish; it never prints on a kitchen ticket, so it costs the cooks nothing." style={{ maxWidth: "none" }}>
           <TextInput value={description} onChange={(e) => setDescription(e.target.value)} />
         </Field>
@@ -409,6 +243,7 @@ function ItemForm({
         <div style={{ fontSize: 12, color: "var(--color-text-muted)", marginBottom: 10, lineHeight: 1.5 }}>
           Up to {IMAGE_RULES.maxPerItem}. The first is the cover shown on menu cards. Any format (JPEG, PNG, WebP,
           AVIF, HEIC…) — compressed automatically. TablePe sets where photos are kept and how small they are made.
+          Copied a picture? Press Ctrl+V (⌘V on a Mac) here, or use Paste.
         </div>
         <ItemPhotos outlet={outlet} images={images} originalKeys={item?.images ?? []} onChange={setImages} />
       </div>
@@ -467,21 +302,27 @@ function ItemForm({
       {menu.modifierGroups.length > 0 && (
         <div style={{ borderTop: "1px solid var(--color-border)", margin: "6px 0 14px", paddingTop: 14 }}>
           <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 8 }}>Add-on groups</div>
-          {menu.modifierGroups.map((g) => (
-            <label key={g.id} style={{ display: "flex", gap: 8, alignItems: "center", fontSize: 14, marginBottom: 6 }}>
-              <input
-                type="checkbox"
-                checked={groupIds.includes(g.id)}
-                onChange={(e) =>
-                  setGroupIds(e.target.checked ? [...groupIds, g.id] : groupIds.filter((id) => id !== g.id))
-                }
-              />
-              {g.name}
-              <span style={{ color: "var(--color-text-muted)", fontSize: 12 }}>
-                ({g.options.length} options)
-              </span>
-            </label>
-          ))}
+          {/* as many columns as fit (each at least 190px wide), so a long list runs across the box, not down the page */}
+          <div data-testid="item-addon-groups" style={groupGrid}>
+            {menu.modifierGroups.map((g) => (
+              <label key={g.id} data-testid="item-addon-group" data-group={g.name} style={groupCheck}>
+                <input
+                  type="checkbox"
+                  style={{ marginTop: 3, flexShrink: 0 }}
+                  checked={groupIds.includes(g.id)}
+                  onChange={(e) =>
+                    setGroupIds(e.target.checked ? [...groupIds, g.id] : groupIds.filter((id) => id !== g.id))
+                  }
+                />
+                <span style={{ minWidth: 0, overflowWrap: "anywhere" }}>
+                  {g.name}
+                  <span style={{ display: "block", color: "var(--color-text-muted)", fontSize: 12 }}>
+                    {g.options.length} {g.options.length === 1 ? "option" : "options"}
+                  </span>
+                </span>
+              </label>
+            ))}
+          </div>
         </div>
       )}
 
@@ -508,6 +349,9 @@ function ItemPhotos({ outlet, images, originalKeys, onChange }) {
   const originalKeySet = new Set((originalKeys ?? []).map((im) => im.key).filter(Boolean));
   const room = IMAGE_RULES.maxPerItem - images.length;
 
+  // what to tell the person after a paste that couldn't be used (the upload hook reports its own errors)
+  const [pasteNote, setPasteNote] = useState(null);
+
   const addFiles = async (fileList) => {
     clearError();
     const files = Array.from(fileList ?? []).slice(0, Math.max(0, room));
@@ -518,6 +362,28 @@ function ItemPhotos({ outlet, images, originalKeys, onChange }) {
     } catch {
       /* error surfaced by the hook */
     }
+  };
+
+  // A picture pasted from the clipboard (Ctrl/⌘+V, or the Paste button) is added like one picked from the file box.
+  const addPasted = (files) => {
+    setPasteNote(null);
+    if (busy) return;
+    if (room <= 0) {
+      setPasteNote(`This item already has ${IMAGE_RULES.maxPerItem} photos — remove one to paste another.`);
+      return;
+    }
+    if (files.length > room) setPasteNote(`Only the first ${room} of ${files.length} pasted pictures fit (up to ${IMAGE_RULES.maxPerItem} per item).`);
+    void addFiles(files);
+  };
+  usePasteImages(addPasted);
+
+  const pasteFromButton = async () => {
+    setPasteNote(null);
+    const r = await readClipboardImages();
+    if (r.files) addPasted(r.files);
+    else if (r.reason === "empty") setPasteNote("There's no picture on your clipboard. Copy a picture first, then press Paste.");
+    else if (r.reason === "denied") setPasteNote("Your browser didn't allow reading the clipboard. Click on this page and press Ctrl+V (⌘V on a Mac) instead.");
+    else setPasteNote("This browser can't paste from a button. Press Ctrl+V (⌘V on a Mac) instead.");
   };
 
   const removeAt = (idx) => {
@@ -554,7 +420,7 @@ function ItemPhotos({ outlet, images, originalKeys, onChange }) {
         style={{ display: "flex", flexWrap: "wrap", gap: 10 }}
       >
         {images.map((im, idx) => (
-          <div key={im.key || im.url} style={thumbBox}>
+          <div key={im.key || im.url} style={thumbBox} data-testid="item-photo">
             <img src={im.url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             {idx === 0 ? (
               <span style={coverBadge}>
@@ -584,6 +450,7 @@ function ItemPhotos({ outlet, images, originalKeys, onChange }) {
             type="button"
             onClick={() => inputRef.current?.click()}
             disabled={busy}
+            data-testid="add-photo"
             style={{
               ...thumbBox,
               ...addTile,
@@ -593,6 +460,20 @@ function ItemPhotos({ outlet, images, originalKeys, onChange }) {
           >
             {busy ? <Loader size={18} /> : <ImagePlus size={18} />}
             <span style={{ fontSize: 11 }}>{busy ? "Uploading…" : "Add photo"}</span>
+          </button>
+        ) : null}
+
+        {room > 0 ? (
+          <button
+            type="button"
+            onClick={() => void pasteFromButton()}
+            disabled={busy}
+            title="Add the picture you copied (or press Ctrl+V / ⌘V)"
+            data-testid="paste-photo"
+            style={{ ...thumbBox, ...addTile, background: "var(--color-bg)", borderColor: "var(--color-border)" }}
+          >
+            <ClipboardPaste size={18} />
+            <span style={{ fontSize: 11 }}>Paste photo</span>
           </button>
         ) : null}
       </div>
@@ -609,15 +490,17 @@ function ItemPhotos({ outlet, images, originalKeys, onChange }) {
         }}
       />
       {error ? <Toast kind="error">{error}</Toast> : null}
+      {pasteNote ? <Toast kind="info">{pasteNote}</Toast> : null}
     </>
   );
 }
 
 /* ---------------------------------------------------------- modifier groups */
 
-function ModifierGroups({ outlet, menu }                                ) {
+function ModifierGroups({ outlet, menu }) {
   const [name, setName] = useState("");
   const [options, setOptions] = useState("");
+  const [editingId, setEditingId] = useState(null);
   const create = useCreateModifierGroup(outlet);
   const remove = useDeleteModifierGroup(outlet);
 
@@ -647,83 +530,203 @@ function ModifierGroups({ outlet, menu }                                ) {
       {menu.modifierGroups.length === 0 ? (
         <p style={{ color: "var(--color-text-muted)", margin: "0 0 14px", fontSize: 14 }}>None yet.</p>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 16 }}>
-          {menu.modifierGroups.map((g) => (
-            <div key={g.id} style={itemRow}>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 600, fontSize: 14 }}>{g.name}</div>
-                <div style={{ fontSize: 12, color: "var(--color-text-muted)" }}>
-                  {g.options.map((o) => `${o.label} +${formatINR(o.priceDelta)}`).join(" · ") || "no options"}
+        // columns as wide as they can be while still fitting (at least 340px each); the group being edited takes the full width
+        <div data-testid="group-list" style={groupListGrid}>
+          {menu.modifierGroups.map((g) =>
+            editingId === g.id ? (
+              <GroupEditor key={g.id} outlet={outlet} group={g} onDone={() => setEditingId(null)} />
+            ) : (
+              <div key={g.id} style={itemRow} data-testid="group-row" data-group={g.name}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: 600, fontSize: 14 }}>{g.name}</div>
+                  <div style={{ fontSize: 12, color: "var(--color-text-muted)", overflowWrap: "anywhere" }}>
+                    {g.options.map((o) => `${o.label} +${formatINR(o.priceDelta)}`).join(" · ") || "no options"}
+                  </div>
                 </div>
+                <button
+                  type="button"
+                  style={iconBtn}
+                  title="Edit"
+                  aria-label={`Edit ${g.name}`}
+                  data-testid="group-edit"
+                  onClick={() => setEditingId(g.id)}
+                >
+                  ✎
+                </button>
+                <button
+                  type="button"
+                  style={iconBtn}
+                  title="Delete"
+                  aria-label={`Delete ${g.name}`}
+                  onClick={() => window.confirm(`Delete "${g.name}"?`) && remove.mutate(g.id)}
+                >
+                  ×
+                </button>
               </div>
+            ),
+          )}
+        </div>
+      )}
+
+      {/*
+        One row: both boxes and the button share a bottom edge and a height. The "how to write the options" hint sits under
+        the whole row — inside the Options field it made that field taller and pushed its box out of line with the others.
+      */}
+      <div style={{ display: "flex", gap: 12, alignItems: "flex-end", flexWrap: "wrap" }}>
+        <Field
+          label="Group name"
+          info="The heading a diner sees above a set of choices — 'Extra dips', 'Choose your spice'. It appears when they tap an item to customise it."
+          style={{ marginBottom: 0, flex: "1 1 180px", maxWidth: 260 }}
+        >
+          <TextInput value={name} placeholder="Add-ons" onChange={(e) => setName(e.target.value)} />
+        </Field>
+        <Field
+          label="Options"
+          info="Each choice and what it adds to the price. Write 'Cheese Dip + 30' to charge ₹30 extra, or just 'No onion' for a free option. These print on the kitchen ticket under the item, so cooks see them."
+          style={{ marginBottom: 0, flex: "2 1 280px", maxWidth: 520 }}
+        >
+          <TextInput value={options} placeholder="Cheese Dip + 30, Extra Mayo + 15" onChange={(e) => setOptions(e.target.value)} />
+        </Field>
+        <Button onClick={add} disabled={create.isPending} style={{ height: 35, flexShrink: 0 }}>
+          Add group
+        </Button>
+      </div>
+      <p style={{ margin: "8px 0 0", fontSize: 12, color: "var(--color-text-muted)" }}>
+        Separate the options with commas, and put a price after a + for an extra charge — e.g. Cheese Dip + 30, Extra Mayo + 15.
+        To change a group later, press ✎ on it.
+      </p>
+      {create.error ? <Toast kind="error">{create.error.message}</Toast> : null}
+      {remove.error ? <Toast kind="error">{remove.error.message}</Toast> : null}
+    </Card>
+  );
+}
+
+/**
+ * What a group allows a customer to pick once it has `n` options. A group that let people pick any number keeps doing
+ * so when options are added or removed; a group with a deliberate limit ("choose up to 2", "pick one") keeps its limit
+ * (never more than it has options). Nothing here is typed in — the editor only changes the name and the options.
+ */
+function ruleFor(group, n) {
+  const anyNumber = group.maxSelect >= group.options.length;
+  const maxSelect = Math.max(1, anyNumber ? n : Math.min(group.maxSelect, n));
+  return { maxSelect, minSelect: Math.min(group.minSelect, maxSelect) };
+}
+
+let rowKeyCounter = 0;
+const nextRowKey = () => `opt-${++rowKeyCounter}`;
+
+/** Edit one add-on group in place: rename it, change what each option is called and costs, add options, remove options. */
+function GroupEditor({ outlet, group, onDone }) {
+  const update = useUpdateModifierGroup(outlet);
+  const [name, setName] = useState(group.name);
+  // an existing option keeps its id (orders, carts and items refer to it); a new one gets its id from the server
+  const [rows, setRows] = useState(() =>
+    group.options.map((o) => ({ key: nextRowKey(), id: o.id, label: o.label, price: toRupees(o.priceDelta) })),
+  );
+  const [problem, setProblem] = useState(null);
+
+  const setRow = (key, patch) => setRows((rs) => rs.map((r) => (r.key === key ? { ...r, ...patch } : r)));
+
+  const save = () => {
+    if (!name.trim()) return setProblem("Give the group a name.");
+    if (rows.length === 0) return setProblem("A group needs at least one option — add one, or delete the group instead.");
+    for (const r of rows) {
+      if (!r.label.trim()) return setProblem("Every option needs a name — type it in, or remove the empty row.");
+      const price = Number(r.price === "" ? 0 : r.price);
+      if (!Number.isFinite(price) || price < 0) return setProblem(`"${r.label.trim()}": the extra price must be 0 or more.`);
+    }
+    setProblem(null);
+    update.mutate(
+      {
+        id: group.id,
+        body: {
+          name: name.trim(),
+          ...ruleFor(group, rows.length),
+          options: rows.map((r) => ({ ...(r.id ? { id: r.id } : {}), label: r.label.trim(), priceDelta: toPaise(r.price) })),
+        },
+      },
+      { onSuccess: onDone },
+    );
+  };
+
+  const rule = modifierRuleText({ ...group, ...ruleFor(group, rows.length), options: rows });
+
+  return (
+    <div style={groupEditorBox} data-testid="group-editor" data-group={group.name}>
+      <Field label="Group name" style={{ marginBottom: 0, maxWidth: 340 }}>
+        <TextInput data-testid="group-name" value={name} onChange={(e) => setName(e.target.value)} />
+      </Field>
+
+      <div>
+        <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 6 }}>
+          Options <span style={{ fontWeight: 400, color: "var(--color-text-muted)" }}>— the extra price is in ₹; 0 means free</span>
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8, maxWidth: 560 }}>
+          {rows.map((r) => (
+            <div key={r.key} style={{ display: "flex", gap: 8, alignItems: "center" }} data-testid="group-option">
+              <TextInput
+                data-testid="group-option-label"
+                aria-label="Option name"
+                value={r.label}
+                placeholder="Option, e.g. Cheese Dip"
+                onChange={(e) => setRow(r.key, { label: e.target.value })}
+                style={{ flex: 1 }}
+              />
+              <TextInput
+                data-testid="group-option-price"
+                aria-label="Extra price in rupees"
+                type="number"
+                min="0"
+                value={r.price}
+                placeholder="₹"
+                onChange={(e) => setRow(r.key, { price: e.target.value })}
+                style={{ width: 100 }}
+              />
               <button
                 type="button"
                 style={iconBtn}
-                title="Delete"
-                onClick={() => window.confirm(`Delete "${g.name}"?`) && remove.mutate(g.id)}
+                title="Remove this option"
+                aria-label={`Remove ${r.label || "this option"}`}
+                data-testid="group-option-remove"
+                onClick={() => setRows((rs) => rs.filter((x) => x.key !== r.key))}
               >
                 ×
               </button>
             </div>
           ))}
         </div>
-      )}
-
-      <div style={{ display: "flex", gap: 8, alignItems: "flex-end", flexWrap: "wrap" }}>
-        <Field label="Group name" info="The heading a diner sees above a set of choices — 'Extra dips', 'Choose your spice'. It appears when they tap an item to customise it.">
-          <TextInput value={name} placeholder="Add-ons" onChange={(e) => setName(e.target.value)} style={{ width: 180 }} />
-        </Field>
-        <Field label="Options" hint="Comma separated, e.g. Cheese Dip + 30, Extra Mayo + 15" info="Each choice and what it adds to the price. Write 'Cheese Dip + 30' to charge ₹30 extra, or just 'No onion' for a free option. These print on the kitchen ticket under the item, so cooks see them.">
-          <TextInput value={options} onChange={(e) => setOptions(e.target.value)} style={{ width: 340 }} />
-        </Field>
-        <div style={{ marginBottom: 14 }}>
-          <Button onClick={add} disabled={create.isPending}>
-            Add group
+        <div style={{ marginTop: 8 }}>
+          <Button
+            variant="outline"
+            data-testid="group-option-add"
+            onClick={() => setRows((rs) => [...rs, { key: nextRowKey(), id: undefined, label: "", price: "0" }])}
+          >
+            + Add option
           </Button>
         </div>
       </div>
-      {create.error ? <Toast kind="error">{(create.error         ).message}</Toast> : null}
-    </Card>
+
+      <div style={{ fontSize: 12, color: "var(--color-text-muted)" }} data-testid="group-rule">
+        {rule ? `${rule}.` : "Customers can pick any number of these."} Items that use this group keep using it.
+      </div>
+
+      <div style={{ display: "flex", gap: 10 }}>
+        <Button onClick={save} disabled={update.isPending} data-testid="group-save">
+          {update.isPending ? "Saving…" : "Save changes"}
+        </Button>
+        <Button variant="outline" onClick={onDone} data-testid="group-cancel">
+          Cancel
+        </Button>
+      </div>
+      {problem ? <Toast kind="error">{problem}</Toast> : null}
+      {update.error ? <Toast kind="error">{update.error.message}</Toast> : null}
+    </div>
   );
 }
 
 /* ------------------------------------------------------------------- shared */
 
-function Mark({ type }                    ) {
-  const color = type === "veg" ? "#0E8A3E" : type === "egg" ? "#C79A20" : "#B23B3B";
-  const round = type !== "veg";
-  return (
-    <span
-      style={{
-        width: 13,
-        height: 13,
-        flexShrink: 0,
-        border: `2px solid ${color}`,
-        borderRadius: round ? "50%" : 3,
-        display: "grid",
-        placeItems: "center",
-      }}
-    >
-      <span style={{ width: 6, height: 6, background: color, borderRadius: round ? "50%" : 1 }} />
-    </span>
-  );
-}
 
-const catBtn = {
-  flex: 1,
-  minWidth: 0,
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  gap: 8,
-  font: "inherit",
-  fontSize: 14,
-  textAlign: "left",
-  padding: "7px 10px",
-  border: "none",
-  borderRadius: 8,
-  cursor: "pointer",
-};
 const iconBtn                = {
   font: "inherit",
   fontSize: 14,
@@ -737,7 +740,20 @@ const iconBtn                = {
   cursor: "pointer",
   flexShrink: 0,
 };
-const itemRow                = {
+const groupGrid = { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(190px, 100%), 1fr))", gap: "10px 18px" };
+const groupCheck = { display: "flex", gap: 8, alignItems: "flex-start", fontSize: 14, minWidth: 0, cursor: "pointer" };
+const groupListGrid = { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(min(340px, 100%), 1fr))", gap: 8, marginBottom: 16 };
+const groupEditorBox = {
+  gridColumn: "1 / -1",
+  display: "flex",
+  flexDirection: "column",
+  gap: 14,
+  padding: "14px 14px 16px",
+  border: "1px solid var(--color-primary)",
+  borderRadius: 8,
+  background: "var(--color-bg)",
+};
+const itemRow = {
   display: "flex",
   alignItems: "center",
   gap: 10,

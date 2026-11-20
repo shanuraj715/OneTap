@@ -60,6 +60,30 @@ otpSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
 export const OtpChallengeModel = models.OtpChallenge ?? model("OtpChallenge", otpSchema);
 
+/**
+ * How many codes a number has been sent lately, and when the next one may be requested (the resend waits in
+ * config-schema/otp.js). Separate from OtpChallenge on purpose: a challenge is deleted ten minutes after it is made,
+ * but the waits run for hours — and the rule has to hold for anyone who calls the API directly.
+ * One row per (store, number, purpose); it is forgotten after a day without a request, or when the number signs in.
+ */
+const otpThrottleSchema = new Schema({
+  brandId: { type: String, required: true },
+  destination: { type: String, required: true },
+  purpose: { type: String, enum: ["login", "coins"], default: "login" },
+  /** codes actually sent in this stretch (a send that failed is given back) */
+  count: { type: Number, default: 0 },
+  lastSentAt: Date,
+  /** no new code before this moment */
+  nextAllowedAt: { type: Date, required: true },
+  /** how the last code went out ("linked" | "whatsapp" | "sms") — so a screen that asks too early can say so */
+  via: String,
+  expiresAt: { type: Date, required: true },
+});
+otpThrottleSchema.index({ brandId: 1, destination: 1, purpose: 1 }, { unique: true });
+otpThrottleSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+
+export const OtpThrottleModel = models.OtpThrottle ?? model("OtpThrottle", otpThrottleSchema);
+
 /* ----------------------------------------------------------- customer session */
 
 const customerSessionSchema = new Schema(

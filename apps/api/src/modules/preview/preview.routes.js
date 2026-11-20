@@ -2,6 +2,7 @@ import { Router } from "express";
 import { requireOutletContext } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import { createPreviewSession, getPreviewSession } from "../../realtime/preview.js";
+import { limiter } from "../../middleware/rate-limit.js";
 
 export const previewRouter = Router();
 
@@ -11,7 +12,7 @@ export const previewRouter = Router();
  * the /preview WebSocket. Menu layout is a storefront-appearance concern, so
  * the same permission the config patch uses gates this.
  */
-previewRouter.post("/", async (req, res) => {
+previewRouter.post("/", limiter("preview"), async (req, res) => {
   const ctx = await requireOutletContext(req, "appearance:update");
   const layout = req.body?.layout ?? {};
   const session = createPreviewSession({ outletId: ctx.outletId, brandId: ctx.brandId, layout });

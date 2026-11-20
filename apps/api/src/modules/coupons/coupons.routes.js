@@ -15,6 +15,7 @@ import {
   publicCoupons,
   updateCoupon,
 } from "./coupons.service.js";
+import { limiter } from "../../middleware/rate-limit.js";
 
 export const couponsRouter         = Router();
 
@@ -75,7 +76,7 @@ const applyBody = z.object({
  * Re-prices the cart with and without the coupon so the storefront can show the
  * exact discount and the new total, using the same engine order placement uses.
  */
-couponsRouter.post("/apply", async (req, res) => {
+couponsRouter.post("/apply", limiter("coupon-guess"), async (req, res) => {
   const body = applyBody.parse(req.body);
   const ctx = await publicContext(body.outletId);
   const customer = await currentCustomer(req);

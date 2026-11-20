@@ -3,7 +3,8 @@ import { tenantScope } from "../tenant-scope.js";
 
 const { Schema, model, models } = mongoose;
 
-export const WALLET_LEDGER_KINDS = ["earn", "redeem", "reverse"];
+// "revoke": coins an order earned, taken back because the order was deleted (never more than the customer still has)
+export const WALLET_LEDGER_KINDS = ["earn", "redeem", "reverse", "revoke"];
 
 /**
  * One row per coin movement — the audit trail for the loyalty wallet, and the

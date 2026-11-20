@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { activeCategoryIds, categorySubtreeIds, flattenCategories } from "./menu.js";
 
 /**
  * How the storefront menu is arranged.
@@ -73,6 +74,8 @@ export const menuSectionSchema = z.object({
   source: menuSectionSourceSchema.default("category"),
   /** for source "category" */
   categoryId: z.string().default(""),
+  /** for source "category": also show the dishes of the categories inside it (South Indian → Dosa, Idli & Vada) */
+  includeSubcategories: z.boolean().default(true),
   /** how the section is filled — see {@link MENU_ITEM_SELECTIONS} */
   itemSelection: menuItemSelectionSchema.default("auto"),
   /** the hand-picked item ids, in display order — used when itemSelection is "manual" (or source is "picks") */
@@ -148,28 +151,70 @@ export const menuLayoutSchema = z.object({
 
 const bySortOrder = (a, b) => a.sortOrder - b.sortOrder;
 
-/** Every active category as its own section — the "automatic" arrangement. */
+/** The section a category becomes. `extra` carries where it sits in the tree. */
+function sectionFor(cat, items, layout, extra = {}) {
+  return {
+    id: cat.id,
+    title: cat.name,
+    subtitle: "",
+    cardVariant: layout.defaultCardVariant,
+    columns: 0,
+    items,
+    hideTitle: false,
+    titleAlign: "left",
+    showItemCount: false,
+    collapsible: false,
+    initialItems: 6,
+    viewAllLabel: "View all",
+    showLessLabel: "Show less",
+    viewAllPlacement: "left",
+    // where it sits: 0 = top level; the names above it; the top-level category it belongs to; its picture
+    depth: 0,
+    trail: [],
+    rootId: cat.id,
+    imageUrl: cat.image?.url ?? "",
+    headingOnly: false,
+    ...extra,
+  };
+}
+
+/**
+ * Every active category as its own section, in tree order — the "automatic" arrangement. A category inside another
+ * becomes a section under its parent's heading ("South Indian" → "Dosa" → "Rava Dosa"). A parent with no dishes of
+ * its own still gets a heading (`headingOnly`) when something inside it has dishes; one with nothing at all below it
+ * is left out. A category that is switched off hides everything inside it.
+ */
 function autoSections(menu, layout) {
-  return [...menu.categories]
-    .filter((c) => c.isActive)
-    .sort((a, b) => a.sortOrder - b.sortOrder)
-    .map((cat) => ({
-      id: cat.id,
-      title: cat.name,
-      subtitle: "",
-      cardVariant: layout.defaultCardVariant,
-      columns: 0,
-      items: menu.items.filter((i) => i.categoryId === cat.id).sort(bySortOrder),
-      hideTitle: false,
-      titleAlign: "left",
-      showItemCount: false,
-      collapsible: false,
-      initialItems: 6,
-      viewAllLabel: "View all",
-      showLessLabel: "Show less",
-      viewAllPlacement: "left",
-    }))
-    .filter((s) => s.items.length > 0);
+  const active = activeCategoryIds(menu.categories);
+  const itemsOf = (id) => menu.items.filter((i) => i.categoryId === id).sort(bySortOrder);
+  const hasDishes = (id) => categorySubtreeIds(menu.categories, id).some((cid) => active.has(cid) && menu.items.some((i) => i.categoryId === cid));
+  const rootOf = new Map();
+
+  const out = [];
+  for (const entry of flattenCategories(menu.categories)) {
+    const cat = entry.category;
+    if (!active.has(cat.id)) continue;
+    const rootId = entry.parentId ? rootOf.get(entry.parentId) ?? cat.id : cat.id;
+    rootOf.set(cat.id, rootId);
+    const items = itemsOf(cat.id);
+    if (items.length === 0 && !hasDishes(cat.id)) continue;
+    out.push(sectionFor(cat, items, layout, { depth: entry.depth, trail: entry.trail, rootId, headingOnly: items.length === 0 }));
+  }
+  return out;
+}
+
+/**
+ * After a filter (veg only…) has emptied some sections: keep a parent's heading only while something below it is
+ * still shown, and drop sections with nothing left.
+ */
+export function pruneEmptySections(sections) {
+  return sections.filter((s, i) => {
+    if (!s.headingOnly) return s.items.length > 0;
+    for (let j = i + 1; j < sections.length && (sections[j].depth ?? 0) > (s.depth ?? 0); j += 1) {
+      if (!sections[j].headingOnly && sections[j].items.length > 0) return true;
+    }
+    return false;
+  });
 }
 
 /** Lowest price for an item, for the price-sort options. */
@@ -201,9 +246,9 @@ function applySort(items, sortBy) {
  * @returns {ResolvedSection[]}
  */
 export function resolveMenuSections(menu, layout) {
-  const activeCategories = [...menu.categories]
-    .filter((c) => c.isActive)
-    .sort((a, b) => a.sortOrder - b.sortOrder);
+  const activeIds = activeCategoryIds(menu.categories);
+  // active categories in tree order (a parent before the categories inside it)
+  const activeCategories = flattenCategories(menu.categories).map((e) => e.category).filter((c) => activeIds.has(c.id));
 
   if (layout.mode === "auto" || layout.sections.length === 0) {
     return autoSections(menu, layout);
@@ -227,7 +272,13 @@ export function resolveMenuSections(menu, layout) {
     } else if (section.source === "category") {
       const cat = menu.categories.find((c) => c.id === section.categoryId);
       if (!cat) continue;
-      items = menu.items.filter((i) => i.categoryId === cat.id).sort(bySortOrder);
+      // the category itself, then (unless switched off for this section) the categories inside it, in tree order
+      const inside = section.includeSubcategories === false ? [cat.id] : categorySubtreeIds(menu.categories, cat.id).filter((id) => activeIds.has(id) || id === cat.id);
+      const order = new Map(flattenCategories(menu.categories).map((e, n) => [e.category.id, n]));
+      items = inside
+        .slice()
+        .sort((a, b) => (order.get(a) ?? 0) - (order.get(b) ?? 0))
+        .flatMap((id) => menu.items.filter((i) => i.categoryId === id).sort(bySortOrder));
     } else {
       // "all": whatever hasn't been shown by an earlier section yet
       items = activeCategories.flatMap((cat) =>
@@ -258,6 +309,12 @@ export function resolveMenuSections(menu, layout) {
       viewAllLabel: section.viewAllLabel || "View all",
       showLessLabel: section.showLessLabel || "Show less",
       viewAllPlacement: section.viewAllPlacement || "left",
+      // a hand-arranged section is one flat block; only its category's picture carries over
+      depth: 0,
+      trail: [],
+      rootId: section.id,
+      imageUrl: section.source === "category" ? menu.categories.find((c) => c.id === section.categoryId)?.image?.url ?? "" : "",
+      headingOnly: false,
     });
   }
 

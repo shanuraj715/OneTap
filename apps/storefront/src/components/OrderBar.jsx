@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { checkDelivery, formatINR, haversineKm, ORDER_TYPE_LABELS, ORDER_TYPE_STORAGE_KEY, offeredOrderTypes, startingOrderType } from "@onetap/config-schema";
-import { fx } from "@onetap/ui";
+import { fx, StickyBar } from "@onetap/ui";
 import { Bike, Check, ChevronDown, LocateFixed, MapPin, ShoppingBag } from "lucide-react";
 import { useUserLocation } from "@/lib/useUserLocation";
 
@@ -16,11 +16,17 @@ import { useUserLocation } from "@/lib/useUserLocation";
  * from the outlet's own delivery rules with the same `checkDelivery` the checkout uses, so the two always agree.
  * The visitor's location is asked for only when they press "Use my location".
  *
+ * The row of controls is pinned to the top of the screen under the header while the page scrolls; the notes that go with
+ * it (why Delivery is off, whether delivery reaches the visitor) are a separate block under it and scroll away, so what
+ * stays on screen is slim.
+ *
  *   current   { id, slug } of the outlet being viewed
  *   outlets   every open outlet of the store: { id, slug, name, address, location, ordering, delivery }
  */
 
 const TYPE_ICON = { takeaway: ShoppingBag, delivery: Bike };
+/** the switch always shows BOTH, in this order — one an outlet doesn't offer is shown greyed out and can't be chosen */
+const SWITCH_TYPES = ["takeaway", "delivery"];
 const CHOICE_COOKIE = "onetap_outlet_slug"; // the same cookie the "which location?" page remembers a choice in
 
 const kmText = (km) => (km < 0.1 ? "under 0.1 km" : km < 10 ? `${km.toFixed(1)} km` : `${Math.round(km)} km`);
@@ -99,121 +105,152 @@ export function OrderBar({ current, outlets }) {
 
   if (!here) return null;
   const several = outlets.length > 1;
-  if (!several && offered.length < 2) return null; // nothing for the visitor to choose
+  if (!several && offered.length < 1) return null; // nothing to order online here at all
 
   const mine = rows.find((r) => r.outlet.id === here.id);
   const myNote = mine?.note;
   const nearestDelivering = type === "delivery" && myNote?.tone === "warn" ? rows.find((r) => r.outlet.id !== here.id && r.note.result?.serviceable) : null;
 
+  const missing = SWITCH_TYPES.filter((t) => !offered.includes(t));
+
   return (
-    <section aria-label="How would you like your order?" className="ot-fx-bar" style={fx("bar", bar)}>
-      <div style={inner}>
-        <div style={controls}>
-          {offered.length > 1 ? (
-            <div role="group" aria-label="Order type" style={segmented}>
-              {offered.map((t) => {
-                const Icon = TYPE_ICON[t];
-                const active = type === t;
-                return (
-                  <button key={t} type="button" aria-pressed={active} onClick={() => choose(t)} className="ot-fx-chip" style={fx("chip", { ...segBtn, ...(active ? segActive : null) })}>
-                    <Icon size={16} aria-hidden="true" /> {ORDER_TYPE_LABELS[t]}
-                  </button>
-                );
-              })}
-            </div>
-          ) : null}
-
-          {several ? (
-            <div style={{ position: "relative", flex: "1 1 240px", minWidth: 0 }}>
-              <button ref={pillRef} type="button" onClick={() => setOpen((o) => !o)} aria-haspopup="dialog" aria-expanded={open} className="ot-fx-chip" style={fx("chip", pill)}>
-                <MapPin size={16} aria-hidden="true" style={{ flexShrink: 0, color: "var(--color-primary)" }} />
-                <span style={pillText}>
-                  <span style={pillName}>{here.name}</span>
-                  {mine?.km != null ? <span style={pillKm}>{kmText(mine.km)} away</span> : null}
-                </span>
-                <ChevronDown size={16} aria-hidden="true" style={{ flexShrink: 0, transition: "transform 160ms", transform: open ? "rotate(180deg)" : "none" }} />
-              </button>
-
-              {open ? (
-                <div ref={panelRef} role="dialog" aria-label="Choose an outlet" className="ot-anim-drop ot-fx-modal" style={fx("modal", panel)}>
-                  <div style={panelHead}>
-                    <strong style={{ fontSize: 14 }}>Choose an outlet</strong>
-                    {location.status === "ready" ? (
-                      <button type="button" onClick={location.request} style={textBtn}>
-                        <LocateFixed size={13} aria-hidden="true" /> Update my location
-                      </button>
-                    ) : null}
-                  </div>
-
-                  {location.status !== "ready" ? (
-                    <div style={locateBox}>
-                      <button type="button" onClick={location.request} disabled={location.status === "asking"} className="ot-fx-btn" style={fx("btn", locateBtn)}>
-                        <LocateFixed size={15} aria-hidden="true" /> {location.status === "asking" ? "Finding you…" : "Use my location"}
-                      </button>
-                      <span style={hintText}>
-                        {location.status === "denied"
-                          ? "Location is blocked in your browser. Allow it for this site to see distances, or just pick an outlet."
-                          : location.status === "unavailable"
-                            ? "This browser can't share a location. Pick an outlet below."
-                            : location.status === "error"
-                              ? "We couldn't get your location. Try again, or pick an outlet below."
-                              : "See how far each outlet is, and whether it delivers to you."}
-                      </span>
-                    </div>
-                  ) : null}
-
-                  <ul style={list}>
-                    {rows.map(({ outlet, km, note }) => {
-                      const isHere = outlet.id === here.id;
+    <>
+      {/* PINNED under the header while the page scrolls: only the controls — kept slim, the notes below scroll away */}
+      <StickyBar name="bar" below="header" z={31} maxShare={0.14} maxPx={100}>
+        <section aria-label="How would you like your order?" className="ot-fx-bar" style={fx("bar", bar)}>
+          <div className="ot-page-px ot-ob-inner" style={inner}>
+            <div className="ot-ob-controls" style={controls}>
+              {offered.length > 0 ? (
+                <div className="ot-ob-switch" style={switchWrap}>
+                  <div role="group" aria-label="Order type" className="ot-ob-seg" style={segmented}>
+                    {SWITCH_TYPES.map((t) => {
+                      const Icon = TYPE_ICON[t];
+                      const available = offered.includes(t);
+                      const active = available && type === t;
                       return (
-                        <li key={outlet.id}>
-                          <button type="button" onClick={() => goTo(outlet)} aria-current={isHere ? "true" : undefined} style={{ ...option, ...(isHere ? optionHere : null) }}>
-                            <span style={{ ...radio, ...(isHere ? radioOn : null) }} aria-hidden="true">
-                              {isHere ? <Check size={11} strokeWidth={3.5} /> : null}
-                            </span>
-                            <span style={{ flex: 1, minWidth: 0 }}>
-                              <span style={optionTop}>
-                                <span style={optionName}>{outlet.name}</span>
-                                {km != null ? <span style={optionKm}>{kmText(km)}</span> : null}
-                              </span>
-                              {outlet.address ? <span style={optionAddress}>{outlet.address}</span> : null}
-                              <span style={{ ...chip, ...CHIP_TONE[note.tone] }}>{note.text}</span>
-                            </span>
-                          </button>
-                        </li>
+                        <button
+                          key={t}
+                          type="button"
+                          disabled={!available}
+                          aria-pressed={active}
+                          title={available ? undefined : `${ORDER_TYPE_LABELS[t]} isn't available from this outlet`}
+                          onClick={() => available && choose(t)}
+                          className="ot-fx-chip ot-ob-seg-btn"
+                          data-unavailable={available ? undefined : "true"}
+                          style={fx("chip", { ...segBtn, ...(active ? segActive : null), ...(available ? null : segOff) })}
+                        >
+                          <Icon size={16} aria-hidden="true" /> {ORDER_TYPE_LABELS[t]}
+                        </button>
                       );
                     })}
-                  </ul>
+                  </div>
+                </div>
+              ) : null}
+
+              {several ? (
+                <div className="ot-ob-pill-wrap" style={{ position: "relative", flex: "1 1 240px", minWidth: 0 }}>
+                  <button ref={pillRef} type="button" onClick={() => setOpen((o) => !o)} aria-haspopup="dialog" aria-expanded={open} className="ot-fx-chip ot-ob-pill" style={fx("chip", pill)}>
+                    <MapPin size={16} aria-hidden="true" style={{ flexShrink: 0, color: "var(--color-primary)" }} />
+                    <span style={pillText}>
+                      <span style={pillName}>{here.name}</span>
+                      {mine?.km != null ? <span style={pillKm}>{kmText(mine.km)} away</span> : null}
+                    </span>
+                    <ChevronDown size={16} aria-hidden="true" style={{ flexShrink: 0, transition: "transform 160ms", transform: open ? "rotate(180deg)" : "none" }} />
+                  </button>
+
+                  {open ? (
+                    <div ref={panelRef} role="dialog" aria-label="Choose an outlet" className="ot-anim-drop ot-fx-modal" style={fx("modal", panel)}>
+                      <div style={panelHead}>
+                        <strong style={{ fontSize: 14 }}>Choose an outlet</strong>
+                        {location.status === "ready" ? (
+                          <button type="button" onClick={location.request} style={textBtn}>
+                            <LocateFixed size={13} aria-hidden="true" /> Update my location
+                          </button>
+                        ) : null}
+                      </div>
+
+                      {location.status !== "ready" ? (
+                        <div style={locateBox}>
+                          <button type="button" onClick={location.request} disabled={location.status === "asking"} className="ot-fx-btn" style={fx("btn", locateBtn)}>
+                            <LocateFixed size={15} aria-hidden="true" /> {location.status === "asking" ? "Finding you…" : "Use my location"}
+                          </button>
+                          <span style={hintText}>
+                            {location.status === "denied"
+                              ? "Location is blocked in your browser. Allow it for this site to see distances, or just pick an outlet."
+                              : location.status === "unavailable"
+                                ? "This browser can't share a location. Pick an outlet below."
+                                : location.status === "error"
+                                  ? "We couldn't get your location. Try again, or pick an outlet below."
+                                  : "See how far each outlet is, and whether it delivers to you."}
+                          </span>
+                        </div>
+                      ) : null}
+
+                      <ul style={list}>
+                        {rows.map(({ outlet, km, note }) => {
+                          const isHere = outlet.id === here.id;
+                          return (
+                            <li key={outlet.id}>
+                              <button type="button" onClick={() => goTo(outlet)} aria-current={isHere ? "true" : undefined} style={{ ...option, ...(isHere ? optionHere : null) }}>
+                                <span style={{ ...radio, ...(isHere ? radioOn : null) }} aria-hidden="true">
+                                  {isHere ? <Check size={11} strokeWidth={3.5} /> : null}
+                                </span>
+                                <span style={{ flex: 1, minWidth: 0 }}>
+                                  <span style={optionTop}>
+                                    <span style={optionName}>{outlet.name}</span>
+                                    {km != null ? <span style={optionKm}>{kmText(km)}</span> : null}
+                                  </span>
+                                  {outlet.address ? <span style={optionAddress}>{outlet.address}</span> : null}
+                                  <span style={{ ...chip, ...CHIP_TONE[note.tone] }}>{note.text}</span>
+                                </span>
+                              </button>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                  ) : null}
                 </div>
               ) : null}
             </div>
+          </div>
+        </section>
+      </StickyBar>
+
+      {/* the notes that go with the controls — not pinned */}
+      {(offered.length > 0 && missing.length > 0) || type === "delivery" ? (
+        <div className="ot-page-px" style={notes}>
+          {offered.length > 0 && missing.length > 0 ? (
+            <p style={offHint} data-testid="order-type-hint">
+              {missing.map((t) => ORDER_TYPE_LABELS[t]).join(" and ")} isn&apos;t available from this outlet.
+            </p>
+          ) : null}
+
+          {type === "delivery" ? (
+            <p role="status" style={{ ...status, ...STATUS_TONE[myNote?.tone ?? "muted"] }}>
+              <span>
+                {myNote?.tone === "muted" && !point && here.delivery ? (
+                  <>
+                    {here.name} offers delivery.{" "}
+                    <button type="button" onClick={location.request} disabled={location.status === "asking"} style={inlineBtn}>
+                      {location.status === "asking" ? "Finding you…" : "Use my location"}
+                    </button>{" "}
+                    to check it reaches you{location.status === "denied" ? " (your browser is blocking location — you can still enter your address at checkout)" : ""}.
+                  </>
+                ) : (
+                  `${myNote?.tone === "good" ? "✓ " : ""}${here.name}: ${myNote?.text ?? ""}`
+                )}
+              </span>
+              {nearestDelivering ? (
+                <button type="button" onClick={() => goTo(nearestDelivering.outlet)} style={inlineBtn}>
+                  {nearestDelivering.outlet.name} delivers to you — switch
+                </button>
+              ) : null}
+            </p>
           ) : null}
         </div>
-
-        {type === "delivery" ? (
-          <p role="status" style={{ ...status, ...STATUS_TONE[myNote?.tone ?? "muted"] }}>
-            <span>
-              {myNote?.tone === "muted" && !point && here.delivery ? (
-                <>
-                  {here.name} offers delivery.{" "}
-                  <button type="button" onClick={location.request} disabled={location.status === "asking"} style={inlineBtn}>
-                    {location.status === "asking" ? "Finding you…" : "Use my location"}
-                  </button>{" "}
-                  to check it reaches you{location.status === "denied" ? " (your browser is blocking location — you can still enter your address at checkout)" : ""}.
-                </>
-              ) : (
-                `${myNote?.tone === "good" ? "✓ " : ""}${here.name}: ${myNote?.text ?? ""}`
-              )}
-            </span>
-            {nearestDelivering ? (
-              <button type="button" onClick={() => goTo(nearestDelivering.outlet)} style={inlineBtn}>
-                {nearestDelivering.outlet.name} delivers to you — switch
-              </button>
-            ) : null}
-          </p>
-        ) : null}
-      </div>
-    </section>
+      ) : null}
+    </>
   );
 }
 
@@ -221,9 +258,15 @@ export function OrderBar({ current, outlets }) {
 
 const bar = { background: "var(--color-bg)", borderBottom: "1px solid var(--color-border)" };
 const inner = { maxWidth: 1080, margin: "0 auto", padding: "12px 18px", display: "flex", flexDirection: "column", gap: 10 };
+// the notes under the pinned controls: same width and edge as the bar above them
+const notes = { maxWidth: 1080, margin: "0 auto", padding: "10px 18px 0", display: "flex", flexDirection: "column", gap: 8, boxSizing: "border-box" };
 const controls = { display: "flex", flexWrap: "wrap", alignItems: "stretch", gap: 10 };
 // fills the row on a phone (it wraps onto its own line there); stays a compact switch on a wide screen
-const segmented = { display: "flex", gap: 6, padding: 4, borderRadius: 14, background: "var(--color-surface)", border: "1px solid var(--color-border)", flex: "1 1 260px", maxWidth: 360 };
+const switchWrap = { flex: "1 1 260px", maxWidth: 360, display: "flex", flexDirection: "column", gap: 6 };
+const segmented = { display: "flex", gap: 6, padding: 4, borderRadius: 14, background: "var(--color-surface)", border: "1px solid var(--color-border)" };
+// an order type this outlet doesn't offer: visible, but plainly off
+const segOff = { opacity: 0.45, cursor: "not-allowed", background: "transparent", color: "var(--color-text-muted)", boxShadow: "none" };
+const offHint = { margin: 0, fontSize: 12.5, lineHeight: 1.4, color: "var(--color-text-muted)" };
 const segBtn = {
   font: "inherit",
   display: "inline-flex",
@@ -283,9 +326,9 @@ const locateBtn = { font: "inherit", display: "inline-flex", alignItems: "center
 const hintText = { fontSize: 12.5, lineHeight: 1.45, color: "var(--color-text-muted)" };
 const list = { listStyle: "none", margin: 0, padding: "2px 8px 10px", overflowY: "auto", display: "flex", flexDirection: "column", gap: 4 };
 const option = { font: "inherit", width: "100%", display: "flex", alignItems: "flex-start", gap: 12, textAlign: "left", padding: "11px 10px", borderRadius: 12, border: "1px solid transparent", background: "transparent", color: "var(--color-text)", cursor: "pointer" };
-const optionHere = { background: "color-mix(in srgb, var(--color-primary) 8%, var(--color-bg))", borderColor: "color-mix(in srgb, var(--color-primary) 30%, var(--color-border))" };
+const optionHere = { background: "color-mix(in srgb, var(--color-primary) 8%, var(--color-bg))", border: "1px solid color-mix(in srgb, var(--color-primary) 30%, var(--color-border))" };
 const radio = { flexShrink: 0, width: 18, height: 18, marginTop: 2, borderRadius: 999, border: "1.5px solid var(--color-border)", display: "grid", placeItems: "center", color: "var(--color-on-primary)" };
-const radioOn = { background: "var(--color-primary)", borderColor: "var(--color-primary)" };
+const radioOn = { background: "var(--color-primary)", border: "1.5px solid var(--color-primary)" };
 const optionTop = { display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 10 };
 const optionName = { fontSize: 14.5, fontWeight: 700, overflowWrap: "anywhere" };
 const optionKm = { fontSize: 12.5, fontWeight: 700, color: "var(--color-text)", whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums" };

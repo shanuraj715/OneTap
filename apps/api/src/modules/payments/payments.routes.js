@@ -15,6 +15,7 @@ import {
   saveCredentials,
   verifyPayment,
 } from "./payments.service.js";
+import { limiter } from "../../middleware/rate-limit.js";
 
 export const paymentsRouter         = Router();
 
@@ -47,7 +48,7 @@ paymentsRouter.get("/config", async (req, res) => {
 
 const saveBody = z.object({ values: z.record(z.string(), z.string()) });
 
-paymentsRouter.put("/config/:gateway", async (req, res) => {
+paymentsRouter.put("/config/:gateway", limiter("secrets"), async (req, res) => {
   const ctx = await requireOutletContext(req, "payment-config:manage");
   const user = requireUser(req);
   const gateway = gatewaySchema.parse(req.params.gateway);
@@ -56,7 +57,7 @@ paymentsRouter.put("/config/:gateway", async (req, res) => {
   res.json({ gateways: await listGatewayConfig(ctx) });
 });
 
-paymentsRouter.delete("/config/:gateway", async (req, res) => {
+paymentsRouter.delete("/config/:gateway", limiter("secrets"), async (req, res) => {
   const ctx = await requireOutletContext(req, "payment-config:manage");
   await clearCredentials(ctx, gatewaySchema.parse(req.params.gateway));
   res.json({ gateways: await listGatewayConfig(ctx) });
@@ -66,7 +67,7 @@ paymentsRouter.delete("/config/:gateway", async (req, res) => {
 
 const intentBody = z.object({ outletId: z.string().min(1), orderId: z.string().min(1) });
 
-paymentsRouter.post("/intent", async (req, res) => {
+paymentsRouter.post("/intent", limiter("payment"), async (req, res) => {
   const body = intentBody.parse(req.body);
   const ctx = await publicContext(body.outletId);
   await requireOwnOrder(req, ctx, body.orderId);
@@ -79,7 +80,7 @@ const verifyBody = z.object({
   payload: z.record(z.string(), z.string()),
 });
 
-paymentsRouter.post("/verify", async (req, res) => {
+paymentsRouter.post("/verify", limiter("payment"), async (req, res) => {
   const body = verifyBody.parse(req.body);
   const ctx = await publicContext(body.outletId);
   const { orderId } = await verifyPayment(ctx, body.paymentId, body.payload);
@@ -93,7 +94,7 @@ paymentsRouter.post("/verify", async (req, res) => {
  * Public and unauthenticated by design — the gateway calls it. Trust comes from
  * the signature, checked inside the adapter against that outlet's webhook secret.
  */
-paymentsRouter.post("/webhook/:gateway", async (req, res) => {
+paymentsRouter.post("/webhook/:gateway", limiter("webhook"), async (req, res) => {
   const gateway = gatewaySchema.parse(req.params.gateway);
   const raw = (req                                  ).rawBody;
   if (!raw) throw new HttpError(400, "Missing request body");

@@ -14,6 +14,12 @@ export const WA_PACING = {
   cold: { minGapSec: 120, maxGapSec: 240, perDay: 15, quietFrom: 22, quietTo: 9 },
   /** order updates to someone who ordered but never chatted: expected by them, so their own (smaller) budget and no quiet hours */
   order: { minGapSec: 30, maxGapSec: 60, perDay: 40 },
+  /**
+   * a verification code (sign-up / sign-in): nobody can wait hours for one, so it skips the first-contact spacing,
+   * the quiet hours and the daily first-contact budget — but it has its own per-day cap so a stranger hammering the
+   * sign-in form can't turn the store's number into a spam cannon
+   */
+  code: { perDay: 300, typingMinMs: 300, typingMaxMs: 700 },
   /** a conversation that is already going: a short "typing…" pause before each message */
   warm: { typingMinMs: 1000, typingMaxMs: 3000, minGapMs: 1200 },
   /** India — quiet hours and "today" are counted in this time zone */
@@ -71,10 +77,11 @@ export const waAccessSchema = z.object(Object.fromEntries(WA_DELEGABLE_ROLES.map
 
 export const WA_MESSAGE_TYPES = ["text", "image", "video", "audio", "document", "sticker", "other"];
 export const WA_MESSAGE_STATUSES = ["queued", "sending", "sent", "delivered", "read", "failed", "received"];
-export const WA_MESSAGE_SOURCES = ["chat", "order", "broadcast", "phone"];
+export const WA_MESSAGE_SOURCES = ["chat", "order", "broadcast", "phone", "code"];
 
 export const waMediaSchema = z.object({
-  url: z.string().url().max(1000),
+  // our own uploads are kept without a domain ("/uploads/<key>"); anything else must be a full web address
+  url: z.string().max(1000).refine((v) => v.startsWith("/uploads/") || z.string().url().safeParse(v).success, "Not a valid address"),
   key: z.string().max(300).default(""),
   mime: z.string().max(120),
   fileName: z.string().max(200).default(""),

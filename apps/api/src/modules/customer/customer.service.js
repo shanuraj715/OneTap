@@ -1,4 +1,5 @@
 import { createHash, randomBytes, randomInt } from "node:crypto";
+import { OTP_VALID_MINUTES, otpResendWait } from "@onetap/config-schema";
 import {
   CustomerModel,
   CustomerSessionModel,
@@ -7,27 +8,33 @@ import {
 import { isProd } from "../../env.js";
 import { HttpError } from "../../middleware/error.js";
 import { sendOtp } from "../notifications/notify.js";
-import { smsCodeSender } from "../notify/notify.service.js";
+import { codeSender } from "../notify/notify.service.js";
+import { clearThrottle, livePurposeFilter, noteSent, releaseSend, reserveSend } from "./otp-throttle.js";
 
-const OTP_TTL_MIN = 10;
 const MAX_ATTEMPTS = 5;
-const MAX_PER_HOUR = 5;
 const SESSION_DAYS = 30;
 
 const sha = (v        ) => createHash("sha256").update(v).digest("hex");
 
 const looksLikeEmail = (v        ) => v.includes("@");
-export const normalizeDestination = (v        ) =>
-  looksLikeEmail(v) ? v.toLowerCase().trim() : v.replace(/[^\d+]/g, "");
+/**
+ * One spelling per person: an email in lower case; an Indian mobile number as its 10 digits, however it was written
+ * (98113 00003, +91 98113 00003, 0091…, 098…). The wait before another code (otp-throttle.js) and the code check
+ * both go by this — two spellings of one number must not be two numbers, or the wait could be sidestepped.
+ */
+export const normalizeDestination = (v        ) => {
+  if (looksLikeEmail(v)) return v.toLowerCase().trim();
+  const national = v.replace(/\D/g, "").replace(/^(?:0{0,2}91|0)(?=\d{10}$)/, "");
+  return national.length === 10 ? national : v.replace(/[^\d+]/g, "");
+};
 
 /**
  * Send a 6-digit code. `purpose` keeps sign-in codes and staff coin codes
  * apart, so one flow can never consume the other's code.
  *
- * When the store has "Send login & coin codes by SMS" switched on, the code
- * goes out by SMS and is never returned. When it hasn't, nothing is sent and
- * the code comes back as `devCode` for the screen to show — today's behaviour,
- * kept for stores that haven't set SMS up.
+ * How it goes out is the store's choice (Settings → Message sending): its linked WhatsApp number, WhatsApp
+ * Business, or SMS — and then it is never returned to the caller. When the store hasn't chosen one, nothing is sent
+ * and the code comes back as `devCode` for the screen to show — kept for stores that haven't set sending up.
  */
 export async function requestOtp(input) {
   const purpose = input.purpose ?? "login";
@@ -38,52 +45,51 @@ export async function requestOtp(input) {
     throw new HttpError(400, "Enter a valid mobile number or email address");
   }
 
-  // Until SMS/WhatsApp is integrated, allow OTP verification via devCode
-  // so customers can test and use the login/signup flow seamlessly.
-
-  const hourAgo = new Date(Date.now() - 60 * 60 * 1000);
-  const recent = await OtpChallengeModel.countDocuments({
-    brandId: input.brandId,
-    destination,
-    createdAt: { $gte: hourAgo },
-  });
-  if (recent >= MAX_PER_HOUR) {
-    throw new HttpError(429, "Too many codes requested. Try again in an hour.");
-  }
+  // How soon another code may be asked for is decided here, on the server (config-schema/otp.js has the waits).
+  // Asking too early is refused with 429 + the seconds to wait; the sign-in screen only mirrors this.
+  const key = { brandId: input.brandId, destination, purpose };
+  const { previousCount, resendAfterSec } = await reserveSend(key);
 
   const code = String(randomInt(0, 1_000_000)).padStart(6, "0");
-  await OtpChallengeModel.create({
+  const challenge = await OtpChallengeModel.create({
     brandId: input.brandId,
     outletId: input.outletId,
     destination,
     channel,
     purpose,
     codeHash: sha(code),
-    expiresAt: new Date(Date.now() + OTP_TTL_MIN * 60 * 1000),
+    expiresAt: new Date(Date.now() + OTP_VALID_MINUTES * 60 * 1000),
   });
 
-  const sender = channel === "sms" ? await smsCodeSender(input.brandId) : null;
+  const sender = channel === "sms" ? await codeSender(input.brandId) : null;
   if (sender) {
-    const sent = await sender.send(destination, code);
-    if (!sent.ok) throw new HttpError(502, "Couldn't send the code. Check the number and try again.");
-    return { channel, sent: true };
+    const sent = await sender.send(destination, code, { outletId: input.outletId, name: input.name });
+    if (!sent.ok) {
+      // nobody has this code — drop it, so it can't replace the one the customer may still be holding,
+      // and give the send back (the number can try again after the shortest wait)
+      await OtpChallengeModel.deleteOne({ _id: challenge._id });
+      await releaseSend(key, previousCount);
+      throw new HttpError(502, sent.userMessage || "Couldn't send the code. Check the number and try again.", { code: "otp_send_failed", retryAfterSec: otpResendWait(1) });
+    }
+    await noteSent(key, sender.method);
+    return { channel, sent: true, via: sender.method, resendAfterSec };
   }
 
   const result = await sendOtp(channel, destination, code);
-  return { channel, devCode: result.devCode };
+  return { channel, devCode: result.devCode, resendAfterSec };
 }
 
 /**
  * Check a code for `purpose` and consume it. 123456 is accepted only for a
- * store that doesn't send real codes — once SMS codes are on, only the code
- * that was actually sent works.
+ * store that doesn't send real codes — once codes are sent (linked WhatsApp,
+ * WhatsApp Business or SMS), only the code that was actually sent works.
  */
 async function consumeCode({ brandId, destination, code, purpose }) {
   const challenge = await OtpChallengeModel.findOne({
     brandId,
     destination,
     // older challenges have no purpose — they were all sign-in codes
-    purpose: purpose === "login" ? { $ne: "coins" } : purpose,
+    purpose: livePurposeFilter(purpose),
     consumedAt: { $exists: false },
     expiresAt: { $gt: new Date() },
   }).sort({ createdAt: -1 });
@@ -91,8 +97,8 @@ async function consumeCode({ brandId, destination, code, purpose }) {
   if (!challenge) throw new HttpError(400, "That code has expired. Request a new one.");
   if (challenge.attempts >= MAX_ATTEMPTS) throw new HttpError(429, "Too many attempts. Request a new code.");
 
-  const smsCodesOn = Boolean(await smsCodeSender(brandId));
-  const isValidCode = challenge.codeHash === sha(code.trim()) || (!smsCodesOn && code.trim() === "123456");
+  const codesAreSent = Boolean(await codeSender(brandId));
+  const isValidCode = challenge.codeHash === sha(code.trim()) || (!codesAreSent && code.trim() === "123456");
   if (!isValidCode) {
     challenge.attempts += 1;
     await challenge.save();
@@ -101,6 +107,8 @@ async function consumeCode({ brandId, destination, code, purpose }) {
 
   challenge.consumedAt = new Date();
   await challenge.save();
+  // the number has proved it is theirs: the next sign-in starts with a clean slate
+  await clearThrottle({ brandId, destination, purpose });
 }
 
 /** Staff spending a customer's coins: the customer read back the code sent to their phone. */
