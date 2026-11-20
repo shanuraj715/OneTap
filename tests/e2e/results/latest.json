@@ -2210,8 +2210,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T10:39:27.835Z",
-    "durationMs": 192290,
+    "at": "2026-11-20T19:01:04.083Z",
+    "durationMs": 192548,
     "steps": [
       {
         "n": 1,
@@ -5208,8 +5208,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:20:41.874Z",
-    "durationMs": 43945,
+    "at": "2026-11-20T19:01:52.823Z",
+    "durationMs": 43541,
     "steps": [
       {
         "n": 1,
@@ -5374,7 +5374,7 @@
           {
             "label": "the panel says 'Table T9' and 'Rooftop · 6 seats · Free'",
             "ok": true,
-            "detail": "Table T9 Rooftop · 6 seats · Free http://localhost:3170/t/6aff92329a836d65e07f24",
+            "detail": "Table T9 Rooftop · 6 seats · Free http://localhost:3170/t/6b0098f99c9a5eb28fef13",
             "kind": "expect"
           },
           {
@@ -5386,7 +5386,7 @@
           {
             "label": "the address printed under it is /t/<id>?k=<code> on the store's own site",
             "ok": true,
-            "detail": "http://localhost:3170/t/6aff92329a836d65e07f240e?k=Zs2j_uzabToUPB1VQ0FK5cub",
+            "detail": "http://localhost:3170/t/6b0098f99c9a5eb28fef1346?k=xgmA0fjioXoHtePSdVfTFZpf",
             "kind": "expect"
           },
           {
@@ -5410,7 +5410,7 @@
           {
             "label": "every table has its own address and its own code",
             "ok": true,
-            "detail": "http://localhost:3170/t/6aff92329a836d65e07f240e?k=Zs2j_uzabToUPB1VQ0FK5cub | http://localhost:3170/t/6aff92339a836d65e07f241e?k=CccxNNUfMUXccvj9gHqVk3FV | http://localhost:3170/t/6aff922c9a836d65e07f1f6d?k=C-Pc9uaMEtTp7JD7kkIXWkwn",
+            "detail": "http://localhost:3170/t/6b0098f99c9a5eb28fef1346?k=xgmA0fjioXoHtePSdVfTFZpf | http://localhost:3170/t/6b0098fa9c9a5eb28fef1358?k=7WvEvp0vUPkw-gNcE82fJ0x0 | http://localhost:3170/t/6b0098f49c9a5eb28fef0e8b?k=iK-GhraFZ2Bnua872kAmDfZ7",
             "kind": "expect"
           },
           {
@@ -5593,8 +5593,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T10:40:27.423Z",
-    "durationMs": 55402,
+    "at": "2026-11-20T19:02:54.303Z",
+    "durationMs": 56299,
     "steps": [
       {
         "n": 1,
@@ -5735,7 +5735,7 @@
           {
             "label": "'Seated now — 1' with 'Table D1 … 2 orders · tab ₹130'",
             "ok": true,
-            "detail": "Seated now — 1 Table D1 since 04:09 PM · 2 orders · tab ₹130 Move to… Table D2 Table D3 Table T1 Table T2 Table T3 Table T4 Table ",
+            "detail": "Seated now — 1 Table D1 since 12:32 AM · 2 orders · tab ₹130 Move to… Table D2 Table D3 Table T1 Table T2 Table T3 Table T4 Table ",
             "kind": "expect"
           },
           {
@@ -5747,7 +5747,7 @@
           {
             "label": "the Orders page lists both: '#0001 … Dina Diner 9877712345 DI Table D1 … ₹70 Placed' and '#0002 … ₹60'",
             "ok": true,
-            "detail": "#0001 04:09 PM Dina Diner 9877712345 DI Table D1 1 ₹70 Placed 0m Approve || #0002 04:09 PM Dina Diner 9877712345 DI Table D1 1 ₹60 Placed 0m Approve",
+            "detail": "#0001 12:32 AM Dina Diner 9877712345 DI Table D1 1 ₹70 Placed 0m Approve || #0002 12:32 AM Dina Diner 9877712345 DI Table D1 1 ₹60 Placed 0m Approve",
             "kind": "expect"
           },
           {
@@ -5771,7 +5771,7 @@
           {
             "label": "'Seated now' says 'Table D2 … moved: D1 → D2'",
             "ok": true,
-            "detail": "Seated now — 1 Table D2moved: D1 → D2 since 04:09 PM · 2 orders · tab ₹130 Move to… Table D1 Table D3 Table T1 Table T2 Table T3 Table T4 Table T5 Move Close Garden D1 Ne",
+            "detail": "Seated now — 1 Table D2moved: D1 → D2 since 12:32 AM · 2 orders · tab ₹130 Move to… Table D1 Table D3 Table T1 Table T2 Table T3 Table T4 Table T5 Move Close Garden D1 Ne",
             "kind": "expect"
           },
           {
@@ -5873,7 +5873,7 @@
           {
             "label": "after 'Cancel / void' the order #0003 is Cancelled",
             "ok": true,
-            "detail": "#0003 04:10 PM Rohan Other 9877799999 DI Table D3 1 ₹70 Cancelled —",
+            "detail": "#0003 12:32 AM Rohan Other 9877799999 DI Table D3 1 ₹70 Cancelled —",
             "kind": "expect"
           },
           {
@@ -5909,7 +5909,7 @@
           {
             "label": "the panel shows a new code for the same table",
             "ok": true,
-            "detail": "http://localhost:3170/t/6b002369931fbf28ba4da217?k=5-RP7dDlcxOkrBr7i_W2DdMm → http://localhost:3170/t/6b002369931fbf28ba4da217?k=TPRUS34XaTfTWzGI2OJIap1c",
+            "detail": "http://localhost:3170/t/6b00992b3baee33b09689568?k=cc2g68np8iibHNNZnjyRLxiI → http://localhost:3170/t/6b00992b3baee33b09689568?k=Xm7qGtdBoBKC1j1jUg5y1ugS",
             "kind": "expect"
           },
           {
@@ -6533,8 +6533,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:25:41.701Z",
-    "durationMs": 52542,
+    "at": "2026-11-20T19:03:51.891Z",
+    "durationMs": 52370,
     "steps": [
       {
         "n": 1,
@@ -6639,7 +6639,7 @@
           {
             "label": "each locked one has ONE box: 'Add … for this client' (with what it costs a month)",
             "ok": true,
-            "detail": "{\"lockedCount\":9,\"addBoxes\":1,\"marketingRow\":\"Marketing Not in the Starter plan Add for this client · +₹100 a month\"}",
+            "detail": "{\"lockedCount\":13,\"addBoxes\":1,\"marketingRow\":\"Marketing Not in the Starter plan Add for this client · +₹100 a month\"}",
             "kind": "expect"
           },
           {
@@ -6885,7 +6885,7 @@
           {
             "label": "Save: 'Saved.' and the form is now a saved draft with its own address",
             "ok": true,
-            "detail": "http://localhost:3171/platform/onboarding/6aff9364429f64d2670472ab",
+            "detail": "http://localhost:3171/platform/onboarding/6b009977c8e7f487fc9f67d1",
             "kind": "expect"
           },
           {
@@ -7071,7 +7071,7 @@
           {
             "label": "no blank pages: every page has real content (not just a footer) — printing it gives no empty sheets",
             "ok": true,
-            "detail": "1091 / 1040 / 624",
+            "detail": "1166 / 1040 / 624",
             "kind": "expect"
           },
           {
@@ -7334,8 +7334,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T10:41:08.374Z",
-    "durationMs": 35766,
+    "at": "2026-11-20T19:04:32.377Z",
+    "durationMs": 35292,
     "steps": [
       {
         "n": 1,
@@ -11771,8 +11771,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T10:42:05.547Z",
-    "durationMs": 44810,
+    "at": "2026-11-20T19:05:22.887Z",
+    "durationMs": 45311,
     "steps": [
       {
         "n": 1,
@@ -13937,8 +13937,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T18:50:42.246Z",
-    "durationMs": 19524,
+    "at": "2026-11-20T19:05:46.991Z",
+    "durationMs": 18918,
     "steps": [
       {
         "n": 1,
@@ -15788,8 +15788,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T10:42:21.945Z",
-    "durationMs": 16371,
+    "at": "2026-11-20T19:06:03.726Z",
+    "durationMs": 16713,
     "steps": [
       {
         "n": 1,
@@ -17564,8 +17564,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T06:39:57.717Z",
-    "durationMs": 15684,
+    "at": "2026-11-20T19:06:13.183Z",
+    "durationMs": 9438,
     "steps": [
       {
         "n": 1,
@@ -19517,8 +19517,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T10:45:19.677Z",
-    "durationMs": 4693,
+    "at": "2026-11-20T19:06:17.627Z",
+    "durationMs": 4426,
     "steps": [
       {
         "n": 1,
@@ -19527,7 +19527,7 @@
           {
             "label": "the store's sidebar shows Bookings (under Store & orders) and Ratings (under Customers & growth)",
             "ok": true,
-            "detail": "STORE & ORDERS Take order Dashboard Orders Bookings Menu Tables Printing CUSTOMERS & GROWTH Analytics Customers Ratings Marketing Coupons SETUP Storefront Settings",
+            "detail": "STORE & ORDERS Take order Dashboard Orders Bookings Menu Tables Printing CUSTOMERS & GROWTH Analytics Customers Ratings Marketing WhatsApp 1 Coupons SETUP Storefront Settings",
             "kind": "expect"
           }
         ]
@@ -19575,7 +19575,7 @@
           {
             "label": "a rider is added from the Delivery riders tab",
             "ok": true,
-            "detail": "[{\"id\":\"6b0024bc620fe03c81234605\",\"name\":\"Ramesh\",\"phone\":\"98765 43210\",\"isActive\":true,\"createdAt\":\"2026-11-20T10:45:16.483Z\"}]",
+            "detail": "[{\"id\":\"6b009a269f68549d215d3fea\",\"name\":\"Ramesh\",\"phone\":\"98765 43210\",\"isActive\":true,\"createdAt\":\"2026-11-20T19:06:14.502Z\"}]",
             "kind": "expect"
           },
           {
@@ -19605,7 +19605,7 @@
           {
             "label": "the row now says Out for delivery — with Ramesh",
             "ok": true,
-            "detail": "#0001 04:15 PM UI Tester Del 1 ₹90 Out for delivery with Ramesh 0m Delivered",
+            "detail": "#0001 12:36 AM UI Tester Del 1 ₹90 Out for delivery with Ramesh 0m Delivered",
             "kind": "expect"
           },
           {
@@ -19623,7 +19623,7 @@
           {
             "label": "a pre-order is tagged with its pickup time under its number",
             "ok": true,
-            "detail": "5:30 PM today",
+            "detail": "11:45 AM today",
             "kind": "expect"
           }
         ]
@@ -19659,7 +19659,7 @@
           {
             "label": "a combo is created from the dish form",
             "ok": true,
-            "detail": "{\"items\":[{\"itemId\":\"6b0024ad620fe03c81234059\",\"variantId\":null,\"quantity\":1}]}",
+            "detail": "{\"items\":[{\"itemId\":\"6b0099f69f68549d215d33e6\",\"variantId\":null,\"quantity\":1}]}",
             "kind": "expect"
           },
           {
@@ -20566,6 +20566,159 @@
             "label": "the dish's own pictures are back exactly as they were at the start",
             "ok": true,
             "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser console",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t60-store-address": {
+    "id": "t60-store-address",
+    "title": "Super admin inside a store — every page is at /store/<store-name>/<store-id>/…; the store owner keeps the plain addresses",
+    "status": "pass",
+    "pass": 18,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-20T18:57:37.953Z",
+    "durationMs": 4514,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The super admin opens a store",
+        "checks": [
+          {
+            "label": "'Open store dashboard' lands on /store/<store-name>/<store-id>",
+            "ok": true,
+            "detail": "/store/acme-momos/6b00966c4d4320b22f126524",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Every page of the store keeps that address",
+        "checks": [
+          {
+            "label": "the sidebar's Menu goes to …/menu",
+            "ok": true,
+            "detail": "/store/acme-momos/6b00966c4d4320b22f126524/menu",
+            "kind": "expect"
+          },
+          {
+            "label": "…and it is the store's menu",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Orders goes to …/orders",
+            "ok": true,
+            "detail": "/store/acme-momos/6b00966c4d4320b22f126524/orders",
+            "kind": "expect"
+          },
+          {
+            "label": "Settings goes to …/settings",
+            "ok": true,
+            "detail": "/store/acme-momos/6b00966c4d4320b22f126524/settings",
+            "kind": "expect"
+          },
+          {
+            "label": "a tab inside Settings (Payments) keeps the prefix too",
+            "ok": true,
+            "detail": "/store/acme-momos/6b00966c4d4320b22f126524/payments",
+            "kind": "expect"
+          },
+          {
+            "label": "the sidebar marks the section you are in (Settings, on its Payments tab) and not the others",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Reload, shared and old addresses",
+        "checks": [
+          {
+            "label": "reloading a store page stays on it (a bookmark or a link to another admin works)",
+            "ok": true,
+            "detail": "/store/acme-momos/6b00966c4d4320b22f126524/menu",
+            "kind": "expect"
+          },
+          {
+            "label": "a wrong or old store name in the address is corrected to the current one",
+            "ok": true,
+            "detail": "/store/acme-momos/6b00966c4d4320b22f126524/orders",
+            "kind": "expect"
+          },
+          {
+            "label": "an old plain address (/orders) opened by the super admin goes to the store they last had open",
+            "ok": true,
+            "detail": "/store/acme-momos/6b00966c4d4320b22f126524/orders",
+            "kind": "expect"
+          },
+          {
+            "label": "an address with another store's id shows THAT store (the id decides, the name follows)",
+            "ok": true,
+            "detail": "/store/beta-bites/6b00966d4d4320b22f126582/menu",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the page says it is Beta Bites",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Leaving the store",
+        "checks": [
+          {
+            "label": "'Back to my dashboard' leaves the store (no /store in the address)",
+            "ok": true,
+            "detail": "/platform/stores/6b00966d4d4320b22f126582",
+            "kind": "expect"
+          },
+          {
+            "label": "the platform console is at /platform, not under a store",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "A store owner keeps the plain addresses",
+        "checks": [
+          {
+            "label": "the owner's Menu is /menu (no store prefix)",
+            "ok": true,
+            "detail": "/menu",
+            "kind": "expect"
+          },
+          {
+            "label": "…and Orders is /orders",
+            "ok": true,
+            "detail": "/orders",
+            "kind": "expect"
+          },
+          {
+            "label": "an owner who types a /store/… address is sent back to their own dashboard",
+            "ok": true,
+            "detail": "/",
             "kind": "expect"
           },
           {

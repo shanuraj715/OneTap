@@ -911,3 +911,16 @@
 {"id":"t38-ai-images-api","status":"pass","pass":88,"fail":0,"mode":"headless","at":"2026-11-20T18:50:53.290Z","durationMs":5187}
 {"id":"t58-item-image-shapes-api","status":"pass","pass":30,"fail":0,"mode":"headless","at":"2026-11-20T18:50:56.904Z","durationMs":3584}
 {"id":"t59-item-image-shapes-ui","status":"pass","pass":45,"fail":0,"mode":"headless","at":"2026-11-20T18:51:01.508Z","durationMs":4587}
+{"id":"t60-store-address","status":"fail","pass":16,"fail":2,"mode":"headless","at":"2026-11-20T18:57:01.242Z","durationMs":4699}
+{"id":"t60-store-address","status":"fail","pass":17,"fail":1,"mode":"headless","at":"2026-11-20T18:57:24.183Z","durationMs":4619}
+{"id":"t60-store-address","status":"pass","pass":18,"fail":0,"mode":"headless","at":"2026-11-20T18:57:37.953Z","durationMs":4514}
+{"id":"t08-plans-outlets-settings","status":"pass","pass":44,"fail":0,"mode":"headless","at":"2026-11-20T19:01:04.083Z","durationMs":192548}
+{"id":"t18-tables","status":"pass","pass":54,"fail":0,"mode":"headless","at":"2026-11-20T19:01:52.823Z","durationMs":43541}
+{"id":"t19-dine-in","status":"pass","pass":55,"fail":0,"mode":"headless","at":"2026-11-20T19:02:54.303Z","durationMs":56299}
+{"id":"t21-onboarding","status":"pass","pass":120,"fail":0,"mode":"headless","at":"2026-11-20T19:03:51.891Z","durationMs":52370}
+{"id":"t22-onboarding-price","status":"pass","pass":55,"fail":0,"mode":"headless","at":"2026-11-20T19:04:32.377Z","durationMs":35292}
+{"id":"t33-menu-tree","status":"pass","pass":71,"fail":0,"mode":"headless","at":"2026-11-20T19:05:22.887Z","durationMs":45311}
+{"id":"t39-ai-item-images","status":"pass","pass":32,"fail":0,"mode":"headless","at":"2026-11-20T19:05:46.991Z","durationMs":18918}
+{"id":"t46-addon-groups","status":"pass","pass":50,"fail":0,"mode":"headless","at":"2026-11-20T19:06:03.726Z","durationMs":16713}
+{"id":"t50-store-name","status":"pass","pass":31,"fail":0,"mode":"headless","at":"2026-11-20T19:06:13.183Z","durationMs":9438}
+{"id":"t55-growth-dashboard","status":"pass","pass":26,"fail":0,"mode":"headless","at":"2026-11-20T19:06:17.627Z","durationMs":4426}
