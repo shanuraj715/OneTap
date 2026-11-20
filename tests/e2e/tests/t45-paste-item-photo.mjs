@@ -129,7 +129,7 @@ export async function run(d) {
   await copyPicture("#7a2dc8");
   await d.page.getByText("Photos", { exact: true }).first().click();
   await d.page.keyboard.press(PASTE);
-  d.check("pasting a seventh says the dish already has six", await ui.until(async () => /already has 6 photos/.test(await ui.text(d)), 6000));
+  d.check("pasting a seventh says the dish already has six", await ui.until(async () => /already has 6 square photos/.test(await ui.text(d)), 6000));
   d.never("a seventh photo was added", (await photoCount()) > 6, `${await photoCount()}`);
   await d.shot("paste-photo-six");
 

@@ -889,3 +889,25 @@
 {"id":"t56-growth-storefront","status":"pass","pass":22,"fail":0,"mode":"headless","at":"2026-11-20T10:45:27.518Z","durationMs":7823}
 {"id":"t57-policy-pages","status":"error","pass":11,"fail":0,"mode":"headless","at":"2026-11-20T11:15:39.758Z","durationMs":1416,"error":"policy-pages.mjs exited with code 1. }  Node.js v24.3.0"}
 {"id":"t57-policy-pages","status":"pass","pass":13,"fail":0,"mode":"headless","at":"2026-11-20T11:15:48.669Z","durationMs":1377}
+{"id":"t58-item-image-shapes-api","status":"pass","pass":30,"fail":0,"mode":"headless","at":"2026-11-20T18:41:26.460Z","durationMs":4082}
+{"id":"t59-item-image-shapes-ui","status":"fail","pass":42,"fail":2,"mode":"headless","at":"2026-11-20T18:41:31.433Z","durationMs":4944}
+{"id":"t59-item-image-shapes-ui","status":"pass","pass":45,"fail":0,"mode":"headless","at":"2026-11-20T18:41:52.548Z","durationMs":5131}
+{"id":"t06-storefront-header-categories","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-20T18:42:35.104Z","durationMs":36898}
+{"id":"t37-storefront-mobile-layout","status":"pass","pass":45,"fail":0,"mode":"headless","at":"2026-11-20T18:42:42.812Z","durationMs":7687}
+{"id":"t38-ai-images-api","status":"fail","pass":33,"fail":9,"mode":"headless","at":"2026-11-20T18:42:46.617Z","durationMs":3786}
+{"id":"t39-ai-item-images","status":"error","pass":10,"fail":1,"mode":"headless","at":"2026-11-20T18:43:31.307Z","durationMs":39488,"error":"locator.click: Timeout 30000ms exceeded. Call log:   - waiting for getByRole('dialog', { name: 'Make pictures with AI' }).getByRole('radiogroup', { name: 'How many pictures' }).getByRole('radio', { name: '3' }).first()"}
+{"id":"t41-storefront-view-all","status":"pass","pass":85,"fail":0,"mode":"headless","at":"2026-11-20T18:44:18.278Z","durationMs":46949}
+{"id":"t45-paste-item-photo","status":"fail","pass":20,"fail":1,"mode":"headless","at":"2026-11-20T18:44:33.195Z","durationMs":14896}
+{"id":"t47-storefront-pinned-bars","status":"pass","pass":101,"fail":0,"mode":"headless","at":"2026-11-20T18:45:55.660Z","durationMs":82447}
+{"id":"t48-hero-button-card-c02","status":"pass","pass":69,"fail":0,"mode":"headless","at":"2026-11-20T18:46:21.336Z","durationMs":25656}
+{"id":"t49-storefront-item-popup","status":"pass","pass":42,"fail":0,"mode":"headless","at":"2026-11-20T18:46:38.835Z","durationMs":17479}
+{"id":"t38-ai-images-api","status":"fail","pass":33,"fail":9,"mode":"headless","at":"2026-11-20T18:46:53.320Z","durationMs":4138}
+{"id":"t39-ai-item-images","status":"error","pass":10,"fail":1,"mode":"headless","at":"2026-11-20T18:48:33.229Z","durationMs":39763,"error":"locator.click: Timeout 30000ms exceeded. Call log:   - waiting for getByRole('dialog', { name: 'Make pictures with AI' }).getByRole('radiogroup', { name: 'How many pictures' }).getByRole('radio', { name: '3' }).first()"}
+{"id":"t45-paste-item-photo","status":"fail","pass":20,"fail":1,"mode":"headless","at":"2026-11-20T18:48:48.171Z","durationMs":14915}
+{"id":"t39-ai-item-images","status":"error","pass":11,"fail":0,"mode":"headless","at":"2026-11-20T18:49:51.225Z","durationMs":39744,"error":"locator.click: Timeout 30000ms exceeded. Call log:   - waiting for getByRole('dialog', { name: 'Make pictures with AI' }).getByRole('radiogroup', { name: 'How many pictures' }).getByRole('radio', { name: '3' }).first()"}
+{"id":"t45-paste-item-photo","status":"pass","pass":21,"fail":0,"mode":"headless","at":"2026-11-20T18:50:00.011Z","durationMs":8760}
+{"id":"t59-item-image-shapes-ui","status":"pass","pass":45,"fail":0,"mode":"headless","at":"2026-11-20T18:50:04.534Z","durationMs":4505}
+{"id":"t39-ai-item-images","status":"pass","pass":32,"fail":0,"mode":"headless","at":"2026-11-20T18:50:42.246Z","durationMs":19524}
+{"id":"t38-ai-images-api","status":"pass","pass":88,"fail":0,"mode":"headless","at":"2026-11-20T18:50:53.290Z","durationMs":5187}
+{"id":"t58-item-image-shapes-api","status":"pass","pass":30,"fail":0,"mode":"headless","at":"2026-11-20T18:50:56.904Z","durationMs":3584}
+{"id":"t59-item-image-shapes-ui","status":"pass","pass":45,"fail":0,"mode":"headless","at":"2026-11-20T18:51:01.508Z","durationMs":4587}

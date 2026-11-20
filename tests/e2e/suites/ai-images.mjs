@@ -104,7 +104,7 @@ ok(r.status === 200 && r.json.configured === false && r.json.keys.length === 0 &
 for (const [who, cookie] of [["a store owner", owner], ["the kitchen", kitchen], ["someone not signed in", ""]]) {
   const a = await call("GET", "/api/platform/ai", { cookie });
   const b = await call("POST", "/api/platform/ai/keys", { cookie, body: { apiKey: K(1) } });
-  const c = await gen(kadai.id, { aspectRatio: "4:3", count: 1 }, cookie);
+  const c = await gen(kadai.id, { aspectRatio: "1:1", count: 1 }, cookie);
   ok([a.status, b.status, c.status].every((s) => s === 401 || s === 403), `${who} can neither see the keys, add one, nor make a picture`, `${a.status}/${b.status}/${c.status}`);
 }
 ok(google.calls.length === 0, "…and Google was never called for them");
@@ -168,14 +168,14 @@ say("5. several pictures — at once, on different keys, from different angles")
 await must(call("POST", "/api/platform/ai/keys", { cookie: su, body: { label: "Third", apiKey: K(4) } }), "key 4");
 resetGoogle(); google.delayMs = 400;
 const t0 = Date.now();
-r = await gen(kadai.id, { aspectRatio: "4:3", count: 3 });
+r = await gen(kadai.id, { aspectRatio: "1:1", count: 3 });
 const took = Date.now() - t0;
 const used = google.calls.filter((c) => c.path === "/v1beta/interactions");
 ok(r.status === 200 && r.json.added.length === 3, "three pictures are made", `${r.status} added ${r.json.added?.length}`);
 ok(took < 1100, "…at the same time, not one after another (3 × 0.4 s took under 1.1 s)", `${took} ms`);
 ok(new Set(used.map((c) => c.key)).size === 3, "…each on a DIFFERENT key", [...new Set(used.map((c) => c.key.slice(-26, -24)))].join());
 ok(new Set(used.map((c) => c.body.input[0].text)).size === 3, "…and each asked for from a different angle, so they aren't copies");
-ok(used.every((c) => c.body.response_format.aspect_ratio === "4:3"), "all in the chosen shape (4:3)");
+ok(used.every((c) => c.body.response_format.aspect_ratio === "1:1"), "all in the chosen shape (1:1)");
 now = await itemNow(kadai.id);
 ok(now.images.length === 4, "the dish now has four pictures", String(now.images.length));
 google.delayMs = 0;
@@ -199,14 +199,14 @@ const retestAll = async () => { google.behave = {}; for (const k of await allKey
 const dish3 = await mkItem("Palak Paneer");
 resetGoogle();
 google.behave[keyA] = "quota";
-r = await gen(dish3.id, { aspectRatio: "4:3", count: 3 }); // three pictures, three keys: every key is tried, so the full one is certainly found
+r = await gen(dish3.id, { aspectRatio: "1:1", count: 3 }); // three pictures, three keys: every key is tried, so the full one is certainly found
 ok(r.status === 200 && r.json.added.length === 3 && r.json.failed.length === 0, "all three pictures are made even though one key is over its limit", `${r.status} ${JSON.stringify(r.json.failed)}`);
 let s = await settings();
 const a = s.keys.find((k) => k.label === "Main account");
 ok(a.status === "cooling" && /quota|limit/i.test(a.lastError) && a.cooldownUntil, "that key now rests, with the reason shown", `${a.status} · ${a.lastError}`);
 ok(google.calls.filter((c) => c.key === keyA).length === 1, "it was tried exactly once — that is how its limit was found");
 resetGoogle();
-await must(gen(dish3.id, { aspectRatio: "4:3", count: 1 }), "next");
+await must(gen(dish3.id, { aspectRatio: "1:1", count: 1 }), "next");
 ok(!google.calls.some((c) => c.key === keyA), "the next request doesn't even try the resting key");
 await retestAll();
 ok((await settings()).keys.every((k) => k.status === "ready"), "testing the keys again ends their rest");
@@ -216,7 +216,7 @@ say("8. a key Google refuses");
 const dish4 = await mkItem("Matar Paneer");
 resetGoogle();
 google.behave[keyB] = "badkey";
-r = await gen(dish4.id, { aspectRatio: "3:2", count: 3 });
+r = await gen(dish4.id, { aspectRatio: "1:1", count: 3 });
 s = await settings();
 const b = s.keys.find((k) => k.label === "Second account");
 ok(r.status === 200 && r.json.added.length === 3, "all three pictures are made on the other keys", `${r.status}`);
@@ -230,14 +230,14 @@ say("9. every key at its limit");
 const dish5 = await mkItem("Shahi Paneer");
 resetGoogle();
 for (const k of [K(1), K(2), K(4)]) google.behave[k] = "quota";
-r = await gen(dish5.id, { aspectRatio: "4:3", count: 1 });
+r = await gen(dish5.id, { aspectRatio: "1:1", count: 1 });
 ok(r.status === 429 && /limit/i.test(r.json.error), "with every key used up the answer says so (429)", r.json.error);
 ok((await itemNow(dish5.id)).images.length === 0, "nothing was saved");
 resetGoogle();
-r = await gen(dish5.id, { aspectRatio: "4:3", count: 1 });
+r = await gen(dish5.id, { aspectRatio: "1:1", count: 1 });
 ok(r.status === 429 && /resting/i.test(r.json.error) && google.calls.length === 0, "the next try doesn't bother Google while they all rest, and says when they're back", r.json.error);
 await retestAll();
-r = await gen(dish5.id, { aspectRatio: "4:3", count: 1 });
+r = await gen(dish5.id, { aspectRatio: "1:1", count: 1 });
 ok(r.status === 200, "once the keys are tested again it works");
 
 /* ------------------------------------------------------------------ 10 */
@@ -247,7 +247,7 @@ for (const [how, expect] of [["safety", /safety filter/], ["words", /words inste
   resetGoogle();
   if (how === "safety") google.mode = "legacy"; // a block reason is part of the older interface's answer
   for (const k of [K(1), K(2), K(4)]) google.behave[k] = how;
-  r = await gen(dish6.id, { aspectRatio: "4:3", count: 1 });
+  r = await gen(dish6.id, { aspectRatio: "1:1", count: 1 });
   ok(r.status === 502 && expect.test(r.json.error), `${how === "safety" ? "a refusal" : "a text-only answer"} is explained in plain words`, r.json.error);
 }
 ok((await itemNow(dish6.id)).images.length === 0 && (await settings()).keys.every((k) => k.status === "ready"), "nothing was saved, and no key was punished for it");
@@ -255,7 +255,7 @@ resetGoogle();
 google.behave = {};
 let n = 0; const realBehave = google.behave;
 google.behave = new Proxy(realBehave, { get: (o, k) => (typeof k === "string" && k.startsWith("AIza") ? (++n === 2 ? "busy" : "ok") : o[k]) });
-r = await gen(dish6.id, { aspectRatio: "4:3", count: 3 });
+r = await gen(dish6.id, { aspectRatio: "1:1", count: 3 });
 ok(r.status === 200 && r.json.added.length === 2 && r.json.failed.length === 1, "one picture failing doesn't lose the others: 2 saved, 1 reported", `added ${r.json.added?.length} failed ${r.json.failed?.length}: ${r.json.failed?.[0]}`);
 ok((await itemNow(dish6.id)).images.length === 2, "the two that worked are on the dish");
 google.behave = {};
@@ -275,21 +275,21 @@ say("12. the limits");
 const dish8 = await mkItem("Paneer Lababdar");
 r = await gen(dish8.id, { aspectRatio: "7:5", count: 1 });
 ok(r.status === 400, "a shape that isn't offered is refused", `${r.status}`);
-for (const count of [0, 5, 1.5]) ok((await gen(dish8.id, { aspectRatio: "4:3", count })).status === 400, `a count of ${count} is refused`);
-ok((await gen("000000000000000000000000", { aspectRatio: "4:3", count: 1 })).status === 404, "a dish that doesn't exist is a 404");
+for (const count of [0, 5, 1.5]) ok((await gen(dish8.id, { aspectRatio: "1:1", count })).status === 400, `a count of ${count} is refused`);
+ok((await gen("000000000000000000000000", { aspectRatio: "1:1", count: 1 })).status === 404, "a dish that doesn't exist is a 404");
 const other = await mkItem("Other outlet dish", {}, outlet2);
-ok((await gen(other.id, { aspectRatio: "4:3", count: 1 }, su, outlet)).status === 404, "a dish of ANOTHER outlet can't be reached through this one");
+ok((await gen(other.id, { aspectRatio: "1:1", count: 1 }, su, outlet)).status === 404, "a dish of ANOTHER outlet can't be reached through this one");
 ok(google.calls.length === 0, "none of those cost anything (Google wasn't called)");
 // fill a dish to six pictures
 const full = await mkItem("Full dish");
 const sixImgs = Array.from({ length: 6 }, (_, i) => ({ url: `https://cdn.example/p${i}.png` }));
 await must(call("PATCH", `/api/menu/items/${full.id}`, { cookie: owner, outlet, body: { images: sixImgs } }), "six");
-r = await gen(full.id, { aspectRatio: "4:3", count: 1 });
-ok(r.status === 409 && /already has 6 pictures/.test(r.json.error), "a dish with six pictures can't take more", r.json.error);
+r = await gen(full.id, { aspectRatio: "1:1", count: 1 });
+ok(r.status === 409 && /already has 6 square pictures/.test(r.json.error), "a dish with six pictures can't take more", r.json.error);
 const five = await mkItem("Nearly full dish", { images: sixImgs.slice(0, 5) });
-r = await gen(five.id, { aspectRatio: "4:3", count: 2 });
-ok(r.status === 400 && /Only 1 more picture fits/.test(r.json.error) && google.calls.length === 0, "asking for more than fit is refused before anything is spent", r.json.error);
-r = await gen(five.id, { aspectRatio: "4:3", count: 1 });
+r = await gen(five.id, { aspectRatio: "1:1", count: 2 });
+ok(r.status === 400 && /Only 1 more square picture fits/.test(r.json.error) && google.calls.length === 0, "asking for more than fit is refused before anything is spent", r.json.error);
+r = await gen(five.id, { aspectRatio: "1:1", count: 1 });
 ok(r.status === 200 && (await itemNow(five.id)).images.length === 6, "…and exactly the room left works");
 ok((await itemNow(five.id)).images.slice(0, 5).every((im, i) => im.url === sixImgs[i].url), "the pictures the dish already had are kept, in order");
 
@@ -321,7 +321,7 @@ const scenarios = [
 for (const [how, what, lo, hi] of scenarios) {
   await mainFirst();
   google.behave[K(1)] = how;
-  r = await gen(dishL.id, { aspectRatio: "4:3", count: 1 });
+  r = await gen(dishL.id, { aspectRatio: "1:1", count: 1 });
   const triedFirst = google.calls.filter((c) => c.path === "/v1beta/interactions" && c.key === K(1)).length;
   ok(r.status === 200 && r.json.added.length === 1 && triedFirst === 1, `${what}: the picture is still made, on another key (the limited key was tried once)`, `${r.status} ${r.json.error ?? ""} tried ${triedFirst}`);
   ok(r.json.rested?.length === 1 && r.json.rested[0].label === "Main account" && !r.json.usedKeys.includes("Main account"), "…and the answer says which key was switched away from, and which made the picture", JSON.stringify({ rested: r.json.rested?.map((x) => x.label), used: r.json.usedKeys }));
@@ -332,9 +332,32 @@ await mainFirst();
 google.behave[K(1)] = "quota";
 google.behave[K(2)] = "quota";
 const dishM = await mkItem("Two limited keys dish");
-r = await gen(dishM.id, { aspectRatio: "4:3", count: 2 });
+r = await gen(dishM.id, { aspectRatio: "1:1", count: 2 });
 ok(r.status === 200 && r.json.added.length === 2 && r.json.rested.length === 2 && r.json.usedKeys.join() === "Third", "with TWO keys at their limit the third carries the whole batch, and both are reported", JSON.stringify({ rested: r.json.rested?.map((x) => x.label), used: r.json.usedKeys }));
 await retestAll();
+
+
+/* ------------------------------------------------------------------ 14 */
+say("14. a picture is kept in the shape it was made in");
+{
+  resetGoogle();
+  const shaped = await mkItem("Shape test dish");
+  let r2 = await gen(shaped.id, { aspectRatio: "16:9", count: 1 });
+  let it = await itemNow(shaped.id);
+  ok(r2.status === 200 && it.images.length === 1 && it.images[0].ratio === "16:9", "a 16:9 picture is saved as the dish's WIDE picture", JSON.stringify(it.images.map((i) => i.ratio)));
+  r2 = await gen(shaped.id, { aspectRatio: "16:9", count: 1 });
+  ok(r2.status === 409 && /already has its wide \(16:9\) picture/.test(r2.json.error) && google.calls.length === 1, "a second wide picture is refused before anything is spent — a dish holds one", r2.json.error);
+  r2 = await gen(shaped.id, { aspectRatio: "3:2", count: 1 });
+  it = await itemNow(shaped.id);
+  ok(r2.status === 200 && it.images.some((i) => i.ratio === "4:3"), "the 3:2 'Photo' shape is saved as the dish's LANDSCAPE 4:3 picture", JSON.stringify(it.images.map((i) => i.ratio)));
+  r2 = await gen(shaped.id, { aspectRatio: "4:3", count: 2 });
+  ok(r2.status === 409, "the landscape place is now full too (3:2 and 4:3 share it)", `${r2.status} ${r2.json.error}`);
+  r2 = await gen(shaped.id, { aspectRatio: "1:1", count: 3 });
+  it = await itemNow(shaped.id);
+  ok(r2.status === 200 && it.images.filter((i) => i.ratio === "1:1").length === 3 && it.images.length === 5, "square pictures still add up as a gallery next to them (three more)", JSON.stringify(it.images.map((i) => i.ratio)));
+  r2 = await gen(shaped.id, { aspectRatio: "3:4", count: 2 });
+  ok(r2.status === 400 && /Only 1 more portrait picture fits/.test(r2.json.error), "asking for two portrait pictures says only one fits", r2.json.error);
+}
 
 console.log(`\nSUMMARY ${pass} passed, ${fail} failed`);
 server.close(); mock.close();

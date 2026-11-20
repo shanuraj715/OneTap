@@ -1940,8 +1940,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:09:13.002Z",
-    "durationMs": 36809,
+    "at": "2026-11-20T18:42:35.104Z",
+    "durationMs": 36898,
     "steps": [
       {
         "n": 1,
@@ -2046,7 +2046,7 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "0,0,0,5,119,612,843,875,875,875,875,875,875,875",
+            "detail": "0,0,0,0,83,435,823,875,875,875,875,875,875,875",
             "kind": "expect"
           },
           {
@@ -2112,7 +2112,7 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "0,0,0,3,109,532,928,1081,1090,1090,1090,1090,1090,1090",
+            "detail": "0,0,0,1,77,347,876,1057,1090,1090,1090,1090,1090,1090",
             "kind": "expect"
           },
           {
@@ -13001,8 +13001,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:31:52.417Z",
-    "durationMs": 6937,
+    "at": "2026-11-20T18:42:42.812Z",
+    "durationMs": 7687,
     "steps": [
       {
         "n": 1,
@@ -13300,12 +13300,12 @@
     "id": "t38-ai-images-api",
     "title": "AI dish pictures — several Gemini keys used in turn, only the super admin can use them, and what is made is saved to the dish",
     "status": "pass",
-    "pass": 82,
+    "pass": 88,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:31:56.510Z",
-    "durationMs": 4078,
+    "at": "2026-11-20T18:50:53.290Z",
+    "durationMs": 5187,
     "steps": [
       {
         "n": 1,
@@ -13452,7 +13452,7 @@
           {
             "label": "a picture is made and added to the dish",
             "ok": true,
-            "detail": "200 {\"item\":{\"id\":\"6aff94fb42fa739c9e4c990a\",\"categoryId\":\"6aff94fb42fa739c9e4c9905\",\"name\":\"Kadai Paneer\",\"description\":\"Pa",
+            "detail": "200 {\"item\":{\"id\":\"6b00968bf76c02fd8ecac778\",\"categoryId\":\"6b00968bf76c02fd8ecac772\",\"name\":\"Kadai Paneer\",\"description\":\"Pa",
             "kind": "expect"
           },
           {
@@ -13476,13 +13476,13 @@
           {
             "label": "the picture was compressed to WebP, stored in the store's own folder, and saved without a domain",
             "ok": true,
-            "detail": "/uploads/6aff94fa42fa739c9e4c98bc/6aff94fa42fa739c9e4c98bf/m",
+            "detail": "/uploads/6b00968bf76c02fd8ecac72a/6b00968bf76c02fd8ecac72d/m",
             "kind": "expect"
           },
           {
             "label": "…and the menu hands out a full address",
             "ok": true,
-            "detail": "http://localhost:3101/uploads/6aff94fa42fa739c9e4c",
+            "detail": "http://localhost:3101/uploads/6b00968bf76c02fd8eca",
             "kind": "expect"
           },
           {
@@ -13506,7 +13506,7 @@
           {
             "label": "…at the same time, not one after another (3 × 0.4 s took under 1.1 s)",
             "ok": true,
-            "detail": "488 ms",
+            "detail": "486 ms",
             "kind": "expect"
           },
           {
@@ -13522,7 +13522,7 @@
             "kind": "expect"
           },
           {
-            "label": "all in the chosen shape (4:3)",
+            "label": "all in the chosen shape (1:1)",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -13746,13 +13746,13 @@
           {
             "label": "a dish with six pictures can't take more",
             "ok": true,
-            "detail": "This dish already has 6 pictures. Remove one first.",
+            "detail": "This dish already has 6 square pictures. Remove one first.",
             "kind": "expect"
           },
           {
             "label": "asking for more than fit is refused before anything is spent",
             "ok": true,
-            "detail": "Only 1 more picture fits (a dish can have 6).",
+            "detail": "Only 1 more square picture fits (a dish can have 6).",
             "kind": "expect"
           },
           {
@@ -13794,7 +13794,7 @@
           {
             "label": "…and the answer says which key was switched away from, and which made the picture",
             "ok": true,
-            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Second account\"]}",
+            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Third\"]}",
             "kind": "expect"
           },
           {
@@ -13812,7 +13812,7 @@
           {
             "label": "…and the answer says which key was switched away from, and which made the picture",
             "ok": true,
-            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Third\"]}",
+            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Second account\"]}",
             "kind": "expect"
           },
           {
@@ -13830,7 +13830,7 @@
           {
             "label": "…and the answer says which key was switched away from, and which made the picture",
             "ok": true,
-            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Third\"]}",
+            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Second account\"]}",
             "kind": "expect"
           },
           {
@@ -13848,7 +13848,7 @@
           {
             "label": "…and the answer says which key was switched away from, and which made the picture",
             "ok": true,
-            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Second account\"]}",
+            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Third\"]}",
             "kind": "expect"
           },
           {
@@ -13882,6 +13882,48 @@
             "kind": "expect"
           }
         ]
+      },
+      {
+        "n": 15,
+        "title": "a picture is kept in the shape it was made in",
+        "checks": [
+          {
+            "label": "a 16:9 picture is saved as the dish's WIDE picture",
+            "ok": true,
+            "detail": "[\"16:9\"]",
+            "kind": "expect"
+          },
+          {
+            "label": "a second wide picture is refused before anything is spent — a dish holds one",
+            "ok": true,
+            "detail": "This dish already has its wide (16:9) picture. Remove it first, or choose another shape.",
+            "kind": "expect"
+          },
+          {
+            "label": "the 3:2 'Photo' shape is saved as the dish's LANDSCAPE 4:3 picture",
+            "ok": true,
+            "detail": "[\"16:9\",\"4:3\"]",
+            "kind": "expect"
+          },
+          {
+            "label": "the landscape place is now full too (3:2 and 4:3 share it)",
+            "ok": true,
+            "detail": "409 This dish already has its landscape (4:3) picture. Remove it first, or choose another shape.",
+            "kind": "expect"
+          },
+          {
+            "label": "square pictures still add up as a gallery next to them (three more)",
+            "ok": true,
+            "detail": "[\"16:9\",\"4:3\",\"1:1\",\"1:1\",\"1:1\"]",
+            "kind": "expect"
+          },
+          {
+            "label": "asking for two portrait pictures says only one fits",
+            "ok": true,
+            "detail": "Only 1 more portrait picture fits (a dish can have 1).",
+            "kind": "expect"
+          }
+        ]
       }
     ],
     "findings": [],
@@ -13895,8 +13937,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T05:44:50.821Z",
-    "durationMs": 18904,
+    "at": "2026-11-20T18:50:42.246Z",
+    "durationMs": 19524,
     "steps": [
       {
         "n": 1,
@@ -13957,7 +13999,7 @@
         "title": "The pop-up asks for the shape and how many pictures",
         "checks": [
           {
-            "label": "it names the dish and how many of its six pictures are used",
+            "label": "it names the dish and how many of its six square pictures are used",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -13984,7 +14026,7 @@
       },
       {
         "n": 4,
-        "title": "16:9, three pictures",
+        "title": "Square, three pictures (a dish holds up to six square ones; the other shapes hold one each)",
         "checks": [
           {
             "label": "the button says what it will make",
@@ -14029,9 +14071,9 @@
         "title": "What Google was asked, and what the dish has now",
         "checks": [
           {
-            "label": "Google was asked for three pictures, all 16:9, with the chosen model",
+            "label": "Google was asked for three pictures, all 1:1, with the chosen model",
             "ok": true,
-            "detail": "[[\"16:9\",\"gemini-3.1-flash-lite-image\"],[\"16:9\",\"gemini-3.1-flash-lite-image\"],[\"16:9\",\"gemini-3.1-flash-lite-image\"]]",
+            "detail": "[[\"1:1\",\"gemini-3.1-flash-lite-image\"],[\"1:1\",\"gemini-3.1-flash-lite-image\"],[\"1:1\",\"gemini-3.1-flash-lite-image\"]]",
             "kind": "expect"
           },
           {
@@ -14091,7 +14133,7 @@
           {
             "label": "Backup shows Resting, with Google's reason",
             "ok": true,
-            "detail": "Backup quot••••bbbb Resting 0 pictures made · back Nov 20, 2026 Google says this key's quota or rate limit is used up. T",
+            "detail": "Backup quot••••bbbb Resting 0 pictures made · back Nov 21, 2026 Google says this key's quota or rate limit is used up. T",
             "kind": "expect"
           },
           {
@@ -14201,8 +14243,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:33:43.079Z",
-    "durationMs": 44027,
+    "at": "2026-11-20T18:44:18.278Z",
+    "durationMs": 46949,
     "steps": [
       {
         "n": 1,
@@ -14565,7 +14607,7 @@
           {
             "label": "desktop: opening takes long enough to WATCH (about 0.8 s), without dragging",
             "ok": true,
-            "detail": "793 ms",
+            "detail": "792 ms",
             "kind": "expect"
           },
           {
@@ -14595,7 +14637,7 @@
           {
             "label": "desktop: closing is visible too (about 0.7 s)",
             "ok": true,
-            "detail": "669 ms",
+            "detail": "664 ms",
             "kind": "expect"
           },
           {
@@ -14673,7 +14715,7 @@
           {
             "label": "phone: opening takes long enough to WATCH (about 1.0 s), without dragging",
             "ok": true,
-            "detail": "1027 ms",
+            "detail": "1011 ms",
             "kind": "expect"
           },
           {
@@ -14701,9 +14743,9 @@
             "kind": "expect"
           },
           {
-            "label": "phone: closing is visible too (about 0.9 s)",
+            "label": "phone: closing is visible too (about 0.8 s)",
             "ok": true,
-            "detail": "852 ms",
+            "detail": "846 ms",
             "kind": "expect"
           },
           {
@@ -15563,8 +15605,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T05:44:59.638Z",
-    "durationMs": 8793,
+    "at": "2026-11-20T18:50:00.011Z",
+    "durationMs": 8760,
     "steps": [
       {
         "n": 1,
@@ -15609,7 +15651,7 @@
           {
             "label": "it is a stored picture (not a data: link)",
             "ok": true,
-            "detail": "http://localhost:3097/uploads/6affde3e9552ccde3f96c76f/6affde3e9552ccde3f96c772/",
+            "detail": "http://localhost:3097/uploads/6b009625768310a903c519f9/6b009625768310a903c519fc/",
             "kind": "expect"
           }
         ]
@@ -16103,8 +16145,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:37:06.894Z",
-    "durationMs": 116788,
+    "at": "2026-11-20T18:45:55.660Z",
+    "durationMs": 82447,
     "steps": [
       {
         "n": 1,
@@ -16772,8 +16814,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T10:42:45.321Z",
-    "durationMs": 23338,
+    "at": "2026-11-20T18:46:21.336Z",
+    "durationMs": 25656,
     "steps": [
       {
         "n": 1,
@@ -17237,8 +17279,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T10:43:02.811Z",
-    "durationMs": 17471,
+    "at": "2026-11-20T18:46:38.835Z",
+    "durationMs": 17479,
     "steps": [
       {
         "n": 1,
@@ -19970,6 +20012,564 @@
           },
           {
             "label": "…and the page opens",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t58-item-image-shapes-api": {
+    "id": "t58-item-image-shapes-api",
+    "title": "Dish pictures in four shapes — square (default), landscape 4:3, wide 16:9, portrait 3:4 — stored, limited and chosen per card; existing square pictures untouched",
+    "status": "pass",
+    "pass": 30,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-20T18:50:56.904Z",
+    "durationMs": 3584,
+    "steps": [
+      {
+        "n": 1,
+        "title": "a dish that already has square pictures keeps every one of them",
+        "checks": [
+          {
+            "label": "both old pictures come back, each as a square (1:1) one",
+            "ok": true,
+            "detail": "[\"1:1\",\"1:1\"]",
+            "kind": "expect"
+          },
+          {
+            "label": "…with their address and file key exactly as they were",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a card of ANY shape shows the first square picture — the dish looks exactly as before",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the dish pop-up still cycles through both",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "changing the price (not the pictures) leaves the pictures alone",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "saving the dish form (which sends the pictures back) keeps both",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "adding a landscape, a wide and a portrait picture next to the squares",
+        "checks": [
+          {
+            "label": "the dish now has five pictures: two squares and one of each other shape",
+            "ok": true,
+            "detail": "200 5",
+            "kind": "expect"
+          },
+          {
+            "label": "each is kept in its own shape, the old squares first and unchanged",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a landscape card gets the landscape picture, a wide card the wide one, a portrait card the portrait one, a small card the square one",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the pop-up shows the wide picture when there is one",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the square gallery is still the two squares",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "their sizes are kept",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the database holds the shape on every picture (the old ones now say 1:1)",
+            "ok": true,
+            "detail": "1:1,1:1,4:3,16:9,3:4",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "only the shapes that were uploaded are used; the rest fall back to square",
+        "checks": [
+          {
+            "label": "a dish with a square and a landscape picture: landscape cards use the landscape one, wide and portrait cards fall back to the square one",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a dish with no pictures has none for any shape (the card shows its placeholder)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a dish that has only a wide picture still shows it on a square card rather than nothing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a picture sent without a shape (an older dashboard tab, say) is stored as square",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "how many of each shape a dish can hold",
+        "checks": [
+          {
+            "label": "a second picture of the same landscape / wide / portrait shape is not kept (one each)",
+            "ok": true,
+            "detail": "4:3:l1.webp 16:9:w1.webp 3:4:t1.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "squares: the first six are kept (the gallery limit it always had)",
+            "ok": true,
+            "detail": "6",
+            "kind": "expect"
+          },
+          {
+            "label": "six squares plus one of each other shape — nine in all — fit",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "ten pictures in one save is refused",
+            "ok": true,
+            "detail": "400",
+            "kind": "expect"
+          },
+          {
+            "label": "a shape that doesn't exist (2:1) is refused",
+            "ok": true,
+            "detail": "400",
+            "kind": "expect"
+          },
+          {
+            "label": "taking every picture off works",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "importing a menu from another outlet brings the shapes along",
+        "checks": [
+          {
+            "label": "an item with all four shapes is imported into the second outlet",
+            "ok": true,
+            "detail": "201 {\"importedCategoriesCount\":1,\"importedItemsCount\":1,\"importedModifierGroupsCount\":0}",
+            "kind": "expect"
+          },
+          {
+            "label": "…with every picture still in its own shape",
+            "ok": true,
+            "detail": "1:1,1:1,4:3,16:9,3:4",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "the card variants ask for the right shape",
+        "checks": [
+          {
+            "label": "photo-on-top and overlay cards use landscape 4:3",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the wide cards use 16:9",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the tall card uses portrait 3:4",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "thumbnail and round cards use the square picture",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "every card asks for a shape that exists",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t59-item-image-shapes-ui": {
+    "id": "t59-item-image-shapes-ui",
+    "title": "Dish photos in four shapes — the dish form's four sections (upload, replace, trim warning, paste into the chosen one, remove) and the picture each card style shows",
+    "status": "pass",
+    "pass": 45,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-20T18:51:01.508Z",
+    "durationMs": 4587,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The dish form has four photo sections",
+        "checks": [
+          {
+            "label": "a 1:1 section is there",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a 4:3 section is there",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a 16:9 section is there",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a 3:4 section is there",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the square section is marked Default",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Ctrl+V is aimed at the square section until another is chosen",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the dish's own 2 square picture(s) are all in the square section",
+            "ok": true,
+            "detail": "2",
+            "kind": "expect"
+          },
+          {
+            "label": "the other three sections start empty",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the square section still has 'Add photo' and 'Paste photo'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Upload into each shape",
+        "checks": [
+          {
+            "label": "once a shape has its picture, its 'Add' tile goes (one picture per shape)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a picture that really is 4:3 gets no 'trimmed' warning",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "choosing another landscape picture REPLACES the first (still one)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a square picture put in the landscape section says its edges will be trimmed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Paste goes into the section you chose",
+        "checks": [
+          {
+            "label": "clicking the portrait section aims Ctrl+V at it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the pasted picture replaced the portrait one — the squares are untouched",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Save keeps the squares and stores the shapes",
+        "checks": [
+          {
+            "label": "saved: 2 square + one landscape + one wide + one portrait",
+            "ok": true,
+            "detail": "1:1,1:1,16:9,4:3,3:4",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the dish's own square pictures are exactly the ones it had (same files, same order)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…each other shape holds one picture",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the files really are wide and tall (the pictures weren't squashed to squares)",
+            "ok": true,
+            "detail": "[[\"1:1\",800,800],[\"1:1\",800,800],[\"16:9\",640,360],[\"4:3\",400,300],[\"3:4\",300,400]]",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Reopen, remove one",
+        "checks": [
+          {
+            "label": "reopening the dish shows each picture in its own section",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "removing the wide picture brings its 'Add' tile back",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "after saving, the wide picture is gone and the rest is as it was",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the two square pictures are still exactly the same files, in the same order",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Storefront: each card style shows its own shape",
+        "checks": [
+          {
+            "label": "C02 (row-thumb-left) shows the sq picture of a dish that has all four",
+            "ok": true,
+            "detail": "https://img.test/full-sq.png",
+            "kind": "expect"
+          },
+          {
+            "label": "C02: a dish with only a square picture shows the square one",
+            "ok": true,
+            "detail": "https://img.test/only-sq.png",
+            "kind": "expect"
+          },
+          {
+            "label": "C03 (row-thumb-right) shows the sq picture of a dish that has all four",
+            "ok": true,
+            "detail": "https://img.test/full-sq.png",
+            "kind": "expect"
+          },
+          {
+            "label": "C03: a dish with only a square picture shows the square one",
+            "ok": true,
+            "detail": "https://img.test/only-sq.png",
+            "kind": "expect"
+          },
+          {
+            "label": "C04 (image-top) shows the land picture of a dish that has all four",
+            "ok": true,
+            "detail": "https://img.test/full-land.png",
+            "kind": "expect"
+          },
+          {
+            "label": "C04: a dish with only a square picture shows the square one",
+            "ok": true,
+            "detail": "https://img.test/only-sq.png",
+            "kind": "expect"
+          },
+          {
+            "label": "C05 (image-top-badge) shows the land picture of a dish that has all four",
+            "ok": true,
+            "detail": "https://img.test/full-land.png",
+            "kind": "expect"
+          },
+          {
+            "label": "C05: a dish with only a square picture shows the square one",
+            "ok": true,
+            "detail": "https://img.test/only-sq.png",
+            "kind": "expect"
+          },
+          {
+            "label": "C06 (text-above-image) shows the wide picture of a dish that has all four",
+            "ok": true,
+            "detail": "https://img.test/full-wide.png",
+            "kind": "expect"
+          },
+          {
+            "label": "C06: a dish with only a square picture shows the square one",
+            "ok": true,
+            "detail": "https://img.test/only-sq.png",
+            "kind": "expect"
+          },
+          {
+            "label": "C07 (image-overlay) shows the land picture of a dish that has all four",
+            "ok": true,
+            "detail": "https://img.test/full-land.png",
+            "kind": "expect"
+          },
+          {
+            "label": "C07: a dish with only a square picture shows the square one",
+            "ok": true,
+            "detail": "https://img.test/only-sq.png",
+            "kind": "expect"
+          },
+          {
+            "label": "C08 (portrait) shows the tall picture of a dish that has all four",
+            "ok": true,
+            "detail": "https://img.test/full-tall.png",
+            "kind": "expect"
+          },
+          {
+            "label": "C08: a dish with only a square picture shows the square one",
+            "ok": true,
+            "detail": "https://img.test/only-sq.png",
+            "kind": "expect"
+          },
+          {
+            "label": "C09 (circle) shows the sq picture of a dish that has all four",
+            "ok": true,
+            "detail": "https://img.test/full-sq.png",
+            "kind": "expect"
+          },
+          {
+            "label": "C09: a dish with only a square picture shows the square one",
+            "ok": true,
+            "detail": "https://img.test/only-sq.png",
+            "kind": "expect"
+          },
+          {
+            "label": "C11 (featured-wide) shows the wide picture of a dish that has all four",
+            "ok": true,
+            "detail": "https://img.test/full-wide.png",
+            "kind": "expect"
+          },
+          {
+            "label": "C11: a dish with only a square picture shows the square one",
+            "ok": true,
+            "detail": "https://img.test/only-sq.png",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "Storefront: the dish pop-up uses the wide picture",
+        "checks": [
+          {
+            "label": "a dish with a wide picture shows it in the pop-up (not the square)",
+            "ok": true,
+            "detail": "https://img.test/full-wide.png",
+            "kind": "expect"
+          },
+          {
+            "label": "a dish with only a square picture still shows it in the pop-up, as before",
+            "ok": true,
+            "detail": "https://img.test/only-sq.png",
+            "kind": "expect"
+          },
+          {
+            "label": "the dish's own pictures are back exactly as they were at the start",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser console",
             "ok": true,
             "detail": "",
             "kind": "expect"

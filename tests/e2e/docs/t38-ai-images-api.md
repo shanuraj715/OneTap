@@ -1,6 +1,6 @@
 # T38 — AI dish pictures — several Gemini keys used in turn, only the super admin can use them, and what is made is saved to the dish
 
-**Area:** menu · **Last result:** ✅ PASSED (82 passed, 0 failed · 2026-11-20 06:01 · headless · 4.1 s)
+**Area:** menu · **Last result:** ✅ PASSED (88 passed, 0 failed · 2026-11-21 00:20 · headless · 5.2 s)
 
 **Run it alone:** `node run.mjs --only t38` (add `--visible` to watch it)
 
@@ -24,6 +24,7 @@ Runs suites/ai-images.mjs: its own in-memory API plus a STAND-IN for Google's se
 12. the limits
 13. the description you type is used
 14. however Google says 'limit reached', the next key takes over — and the key rests for as long as Google said
+15. a picture is kept in the shape it was made in
 
 ## What to expect (these must happen)
 
@@ -47,7 +48,7 @@ Runs suites/ai-images.mjs: its own in-memory API plus a STAND-IN for Google's se
 
 _Nothing failed._
 
-### ✅ Passed (82)
+### ✅ Passed (88)
 
 **Step 1 — only the platform's super admin**
 
@@ -84,17 +85,17 @@ _Nothing failed._
 - Google was asked for the chosen model and shape (16:9) — _{"type":"image","aspect_ratio":"16:9","image_size":"1K"}_
 - the request describes the dish: its name, that it's vegetarian, its section
 - one of the saved keys was used, in a header
-- the picture was compressed to WebP, stored in the store's own folder, and saved without a domain — _/uploads/6aff94fa42fa739c9e4c98bc/6aff94fa42fa739c9e4c98bf/m_
-- …and the menu hands out a full address — _http://localhost:3101/uploads/6aff94fa42fa739c9e4c_
+- the picture was compressed to WebP, stored in the store's own folder, and saved without a domain — _/uploads/6b00968bf76c02fd8ecac72a/6b00968bf76c02fd8ecac72d/m_
+- …and the menu hands out a full address — _http://localhost:3101/uploads/6b00968bf76c02fd8eca_
 - the file opens
 
 **Step 5 — several pictures — at once, on different keys, from different angles**
 
 - three pictures are made — _200 added 3_
-- …at the same time, not one after another (3 × 0.4 s took under 1.1 s) — _488 ms_
+- …at the same time, not one after another (3 × 0.4 s took under 1.1 s) — _486 ms_
 - …each on a DIFFERENT key — _2_,4_,1__
 - …and each asked for from a different angle, so they aren't copies
-- all in the chosen shape (4:3)
+- all in the chosen shape (1:1)
 - the dish now has four pictures — _4_
 
 **Step 6 — spreading the work across keys over time**
@@ -145,8 +146,8 @@ _Nothing failed._
 - a dish that doesn't exist is a 404
 - a dish of ANOTHER outlet can't be reached through this one
 - none of those cost anything (Google wasn't called)
-- a dish with six pictures can't take more — _This dish already has 6 pictures. Remove one first._
-- asking for more than fit is refused before anything is spent — _Only 1 more picture fits (a dish can have 6)._
+- a dish with six pictures can't take more — _This dish already has 6 square pictures. Remove one first._
+- asking for more than fit is refused before anything is spent — _Only 1 more square picture fits (a dish can have 6)._
 - …and exactly the room left works
 - the pictures the dish already had are kept, in order
 
@@ -157,26 +158,38 @@ _Nothing failed._
 **Step 14 — however Google says 'limit reached', the next key takes over — and the key rests for as long as Google said**
 
 - a limit reported as HTTP 403 with 'quota' in the words: the picture is still made, on another key (the limited key was tried once) — _200  tried 1_
-- …and the answer says which key was switched away from, and which made the picture — _{"rested":["Main account"],"used":["Second account"]}_
+- …and the answer says which key was switched away from, and which made the picture — _{"rested":["Main account"],"used":["Third"]}_
 - …that key rests 10 minutes — _600 s_
 - a limit that says 'retry in 40 s': the picture is still made, on another key (the limited key was tried once) — _200  tried 1_
-- …and the answer says which key was switched away from, and which made the picture — _{"rested":["Main account"],"used":["Third"]}_
+- …and the answer says which key was switched away from, and which made the picture — _{"rested":["Main account"],"used":["Second account"]}_
 - …that key rests about as long as Google said — _45 s_
 - a per-DAY limit: the picture is still made, on another key (the limited key was tried once) — _200  tried 1_
-- …and the answer says which key was switched away from, and which made the picture — _{"rested":["Main account"],"used":["Third"]}_
+- …and the answer says which key was switched away from, and which made the picture — _{"rested":["Main account"],"used":["Second account"]}_
 - …that key rests for hours (a daily limit) — _21600 s_
 - a plain limit with no hint (429): the picture is still made, on another key (the limited key was tried once) — _200  tried 1_
-- …and the answer says which key was switched away from, and which made the picture — _{"rested":["Main account"],"used":["Second account"]}_
+- …and the answer says which key was switched away from, and which made the picture — _{"rested":["Main account"],"used":["Third"]}_
 - …that key rests 10 minutes — _600 s_
 - a key whose Google project can't make pictures (billing off): the picture is still made, on another key (the limited key was tried once) — _200  tried 1_
 - …and the answer says which key was switched away from, and which made the picture — _{"rested":["Main account"],"used":["Third"]}_
 - …that key rests for a day — _86400 s_
 - with TWO keys at their limit the third carries the whole batch, and both are reported — _{"rested":["Main account","Second account"],"used":["Third"]}_
 
+**Step 15 — a picture is kept in the shape it was made in**
+
+- a 16:9 picture is saved as the dish's WIDE picture — _["16:9"]_
+- a second wide picture is refused before anything is spent — a dish holds one — _This dish already has its wide (16:9) picture. Remove it first, or choose another shape._
+- the 3:2 'Photo' shape is saved as the dish's LANDSCAPE 4:3 picture — _["16:9","4:3"]_
+- the landscape place is now full too (3:2 and 4:3 share it)
+- square pictures still add up as a gallery next to them (three more) — _["16:9","4:3","1:1","1:1","1:1"]_
+- asking for two portrait pictures says only one fits — _Only 1 more portrait picture fits (a dish can have 1)._
+
 ## History (latest 10 runs)
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-21 00:20 | pass | 88 | 0 | headless | 5.2 s |
+| 2026-11-21 00:16 | fail | 33 | 9 | headless | 4.1 s |
+| 2026-11-21 00:12 | fail | 33 | 9 | headless | 3.8 s |
 | 2026-11-20 06:01 | pass | 82 | 0 | headless | 4.1 s |
 | 2026-11-20 04:59 | pass | 82 | 0 | headless | 4.0 s |
 | 2026-11-20 02:15 | pass | 82 | 0 | headless | 5.1 s |
@@ -184,8 +197,6 @@ _Nothing failed._
 | 2026-11-19 19:46 | pass | 82 | 0 | headless | 4.3 s |
 | 2026-11-19 19:46 | fail | 81 | 1 | headless | 4.6 s |
 | 2026-11-19 19:31 | pass | 66 | 0 | headless | 4.0 s |
-| 2026-11-19 19:23 | pass | 66 | 0 | headless | 4.3 s |
-| 2026-11-19 19:23 | fail | 64 | 2 | headless | 4.4 s |
 
 ---
 _Generated by `tests/e2e/run.mjs` — edit the test file (`tests/t38-ai-images-api.mjs`), not this page._

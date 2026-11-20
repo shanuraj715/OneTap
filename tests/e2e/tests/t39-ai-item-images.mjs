@@ -83,7 +83,7 @@ export async function run(d) {
   await d.click(row.getByTestId("ai-button"), { after: 600 });
   const dlg = d.page.getByRole("dialog", { name: "Make pictures with AI" });
   await dlg.waitFor({ timeout: 8000 });
-  d.check("it names the dish and how many of its six pictures are used", /Veg Steamed Momos/.test(await dlg.innerText()) && new RegExp(`${originalImages.length} of 6 pictures used`).test(await dlg.innerText()));
+  d.check("it names the dish and how many of its six square pictures are used", /Veg Steamed Momos/.test(await dlg.innerText()) && new RegExp(`${originalImages.length} of 6 square pictures used`).test(await dlg.innerText()));
   const shapes = await dlg.getByRole("radiogroup", { name: "Aspect ratio" }).getByRole("radio").allInnerTexts();
   d.check("five shapes are offered", ["1:1", "4:3", "3:2", "16:9", "3:4"].every((s) => shapes.some((t) => t.includes(s))) && shapes.length === 5, shapes.map((t) => t.split("\n")[0]).join(" "));
   const counts = await dlg.getByRole("radiogroup", { name: "How many pictures" }).getByRole("radio").allInnerTexts();
@@ -91,8 +91,8 @@ export async function run(d) {
   d.check("nothing is made yet (Google has not been asked)", (await (await fetch(`${GOOGLE}/__calls`)).json()).length === 0);
   await d.shot("ai-pictures-popup");
 
-  await d.step("16:9, three pictures", 400);
-  await d.click(dlg.getByRole("radio", { name: /16:9/ }), { after: 200 });
+  await d.step("Square, three pictures (a dish holds up to six square ones; the other shapes hold one each)", 400);
+  await d.click(dlg.getByRole("radio", { name: /1:1/ }), { after: 200 });
   await d.click(dlg.getByRole("radiogroup", { name: "How many pictures" }).getByRole("radio", { name: "3" }), { after: 200 });
   d.check("the button says what it will make", await dlg.getByRole("button", { name: "Make 3 pictures" }).isVisible());
   await d.click(dlg.getByRole("button", { name: "Make 3 pictures" }), { after: 100 });
@@ -109,7 +109,7 @@ export async function run(d) {
   await d.step("What Google was asked, and what the dish has now", 400);
   const asked = await (await fetch(`${GOOGLE}/__calls`)).json();
   const good = asked.filter((c) => c.outcome === "ok");
-  d.check("Google was asked for three pictures, all 16:9, with the chosen model", good.length === 3 && good.every((c) => c.aspectRatio === "16:9" && c.model === "gemini-3.1-flash-lite-image"), JSON.stringify(good.map((c) => [c.aspectRatio, c.model])));
+  d.check("Google was asked for three pictures, all 1:1, with the chosen model", good.length === 3 && good.every((c) => c.aspectRatio === "1:1" && c.model === "gemini-3.1-flash-lite-image"), JSON.stringify(good.map((c) => [c.aspectRatio, c.model])));
   d.check("each description names the dish and says it is vegetarian", good.every((c) => /Veg Steamed Momos/.test(c.prompt) && /vegetarian/.test(c.prompt)));
   d.check("all three pictures came from the Primary key", good.every((c) => c.key === KEY_OK));
   const quotaTries = asked.filter((c) => c.key === KEY_QUOTA).length;
