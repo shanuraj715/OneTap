@@ -7,6 +7,11 @@ import { useCallback, useEffect, useState } from "react";
  */
 const EMPTY = {
   tableId: null,
+  /**
+   * The party the screen saw at that table when it was picked — a session id, or null for a free table (undefined = not
+   * recorded yet). Sent with the order so the server can refuse it if someone else took the table in the meantime.
+   */
+  seenSessionId: undefined,
   lines: [],
   phone: "",
   name: "",
@@ -67,7 +72,16 @@ export function useTakeOrder(outletId) {
   const set = useCallback((patch) => setState((s) => ({ ...s, ...patch })), []);
 
   /** Picking a table: the customer belongs to the table, so they're cleared — the cart stays. */
-  const setTable = useCallback((tableId) => setState((s) => (s.tableId === tableId ? s : { ...s, tableId, ...NO_CUSTOMER })), []);
+  const setTable = useCallback(
+    (tableId, seenSessionId) => setState((s) => (s.tableId === tableId ? s : { ...s, tableId, seenSessionId, ...NO_CUSTOMER })),
+    [],
+  );
+
+  /** The same order moved to another (free) table: the items AND the customer typed so far go along. */
+  const moveTable = useCallback(
+    (tableId) => setState((s) => ({ ...s, tableId, seenSessionId: null, customerKey: s.customerKey ? `${tableId}|free` : null })),
+    [],
+  );
 
   /** Customer details typed (or picked) for the party now at the table. */
   const setCustomer = useCallback((patch, customerKey) => setState((s) => ({ ...s, ...patch, customerKey })), []);
@@ -100,5 +114,5 @@ export function useTakeOrder(outletId) {
   const clearItems = useCallback(() => setState((s) => ({ ...s, lines: [], note: "", ...NO_CUSTOMER })), []);
   const reset = useCallback(() => setState(EMPTY), []);
 
-  return { state, set, setTable, setCustomer, clearCustomer, addLine, setQty, clearItems, reset };
+  return { state, set, setTable, moveTable, setCustomer, clearCustomer, addLine, setQty, clearItems, reset };
 }

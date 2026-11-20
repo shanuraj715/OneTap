@@ -68,6 +68,8 @@ const placeBody = z.object({
   email: z.union([z.string().email("That email doesn't look right."), z.literal("")]).optional(),
   note: z.string().max(300).optional(),
   coinsApproval: z.string().max(200).optional(),
+  /** the party the screen saw at this table when the order was started — null = the table was free */
+  expectedSessionId: z.string().max(64).nullable().optional(),
 });
 
 /** Place the order on the table and send it straight to the kitchen. */

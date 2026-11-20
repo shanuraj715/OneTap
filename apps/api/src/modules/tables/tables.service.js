@@ -144,7 +144,12 @@ export async function openSession(ctx               , tableId        , customerI
     );
     if (existing) {
       if (existing.customerId !== customerId) {
-        throw new HttpError(409, "Another party is already seated at this table. Please ask staff.");
+        throw new HttpError(409, "Another party is already seated at this table. Please ask staff.", {
+          code: "table_taken",
+          tableId: String(table._id),
+          tableNumber: table.number,
+          occupied: true,
+        });
       }
       return existing;
     }
@@ -159,9 +164,21 @@ export async function openSession(ctx               , tableId        , customerI
     tableHistory: [{ tableId, number: table.number, at: new Date() }],
   });
 
-  table.activeSessionId = String(session._id);
-  table.status = "seated";
-  await table.save();
+  // Claim the table in ONE step, only if nobody has taken it since we looked (what we saw in `activeSessionId` is still
+  // there). Two people opening the same free table at the same moment can't both win: the second claim matches nothing.
+  const claimed = await TableModel.updateOne(
+    tenantFilter(ctx, { _id: table._id, activeSessionId: table.activeSessionId ?? null }),
+    { $set: { activeSessionId: String(session._id), status: "seated" } },
+  );
+  if (claimed.modifiedCount !== 1) {
+    await TableSessionModel.deleteOne(tenantFilter(ctx, { _id: session._id }));
+    throw new HttpError(409, `Table ${table.number} was just taken by someone else.`, {
+      code: "table_taken",
+      tableId: String(table._id),
+      tableNumber: table.number,
+      occupied: true,
+    });
+  }
   return session;
 }
 

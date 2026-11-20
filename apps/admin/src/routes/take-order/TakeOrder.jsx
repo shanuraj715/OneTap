@@ -64,6 +64,8 @@ export function TakeOrder() {
   const partyKey = state.tableId ? `${state.tableId}|${session?.id ?? "free"}` : null;
   useEffect(() => {
     if (!sessionsQ.isSuccess || !partyKey) return;
+    // while the table has been taken by someone else the typed customer is kept — the order is about to be moved to a free table
+    if (state.seenSessionId !== undefined && state.seenSessionId !== (session?.id ?? null) && session) return;
     const hasCustomer = state.phone || state.name || state.email;
     if (hasCustomer && state.customerKey !== partyKey) order.clearCustomer();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -82,9 +84,24 @@ export function TakeOrder() {
   }, [tablesQ.isSuccess, table, state.tableId]);
 
   const pickTable = (id) => {
-    order.setTable(id);
+    order.setTable(id, sessions.find((x) => x.tableId === id)?.id ?? null);
     setView("menu");
   };
+
+  // A table opened from elsewhere (or a half-taken order restored after a refresh) records which party was there once the
+  // sessions are known, so the order can be refused if someone else takes the table before it is sent.
+  useEffect(() => {
+    if (state.tableId && state.seenSessionId === undefined && sessionsQ.isSuccess) order.set({ seenSessionId: session?.id ?? null });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.tableId, state.seenSessionId, sessionsQ.isSuccess]);
+
+  // tables a waiter can move an order to: in service, nobody seated, not waiting to be cleaned or reserved
+  const freeTables = useMemo(() => {
+    const seated = new Set(sessions.map((x) => x.tableId));
+    return tables
+      .filter((t) => t.isActive && t.id !== state.tableId && !seated.has(t.id) && t.status !== "needs-cleaning" && t.status !== "reserved")
+      .sort((a, b) => a.number.localeCompare(b.number, undefined, { numeric: true }));
+  }, [tables, sessions, state.tableId]);
 
   const addPlain = (item) =>
     order.addLine({ itemId: item.id, modifierOptionIds: [], quantity: 1, name: item.name, foodType: item.foodType, modifierLabels: [], unitPrice: item.basePrice });
@@ -171,11 +188,15 @@ export function TakeOrder() {
         partyKey={partyKey}
         order={order}
         wide={wide}
+        seenSessionId={state.seenSessionId}
+        freeTables={freeTables}
+        onMoveTable={(id) => order.moveTable(id)}
         onChangeTable={() => setView("table")}
         onBack={() => setView("menu")}
         onSent={(placed) => {
           setSent({ ...placed, tableNumber: table.number });
           order.clearItems();
+          order.set({ seenSessionId: placed.sessionId ?? undefined }); // the party this order now belongs to
           setView("done");
         }}
       />

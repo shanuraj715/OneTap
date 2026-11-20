@@ -23,7 +23,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
  * order, who it's for, coins, and Send. Every total shown comes from the
  * server's own pricing, so what staff read out is what the bill will say.
  */
-export function OrderPanel({ outlet, table, session, partyKey, order, wide, onChangeTable, onBack, onSent }) {
+export function OrderPanel({ outlet, table, session, partyKey, order, wide, seenSessionId, freeTables = [], onMoveTable, onChangeTable, onBack, onSent }) {
   const qc = useQueryClient();
   const { state, set, setQty, setCustomer } = order;
   const freeTable = useCloseSession(outlet);
@@ -104,15 +104,28 @@ export function OrderPanel({ outlet, table, session, partyKey, order, wide, onCh
         email: seated ? undefined : state.email.trim() || undefined,
         note: state.note.trim() || undefined,
         coinsApproval: approved ? state.approval : undefined,
+        // what this screen saw at the table when the order was started — the server refuses it if that has changed
+        expectedSessionId: seenSessionId === undefined ? undefined : seenSessionId,
       }),
+    onError: (err) => {
+      // someone got the table first: look again at who is where, so the tiles and the move list are right
+      if (err?.details?.code === "table_taken") for (const key of ["sessions", "tables"]) qc.invalidateQueries({ queryKey: [key] });
+    },
     onSuccess: ({ order: placed }) => {
       for (const key of ["orders", "sessions", "tables", "staff-customer"]) qc.invalidateQueries({ queryKey: [key] });
       onSent(placed);
     },
   });
 
+  // The table is no longer as it was when this order was started — the server said so, or the live list shows it already.
+  const serverSaid = place.error?.details?.code === "table_taken" ? place.error.details : null;
+  const changed = seenSessionId !== undefined && (session?.id ?? null) !== seenSessionId;
+  const conflict = serverSaid ? { occupied: Boolean(serverSaid.occupied) } : changed ? { occupied: Boolean(session) } : null;
+
   const emailBad = !seated && state.email.trim() && !EMAIL_RE.test(state.email.trim());
-  const blocker = !table
+  const blocker = conflict
+    ? `Table ${table?.number ?? ""} is no longer as it was`
+    : !table
     ? "Pick a table"
     : state.lines.length === 0
       ? "Add something from the menu"
@@ -395,7 +408,53 @@ export function OrderPanel({ outlet, table, session, partyKey, order, wide, onCh
           </div>
         ) : null}
         {quote.error && cartLines.length > 0 ? <p style={errText}>{quote.error.message}</p> : null}
-        {place.error ? <p style={errText} role="alert">{place.error.message}</p> : null}
+        {conflict ? (
+          <div style={conflictBox} role="alert" data-testid="table-taken">
+            <strong style={{ display: "block", fontSize: 15 }}>
+              {conflict.occupied ? `Table ${table.number} is no longer free` : `Table ${table.number} has changed`}
+            </strong>
+            <p style={{ margin: "4px 0 10px", fontSize: 13.5, lineHeight: 1.45 }}>
+              {conflict.occupied
+                ? `Someone else just started an order for this table${session?.customerName ? ` (${session.customerName})` : ""}. This order was not sent. Move it to a free table:`
+                : "The party that was here has left, so this order was not sent. Carry on with the table as it is now, or move it to another free table:"}
+            </p>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              {!conflict.occupied ? (
+                <button
+                  type="button"
+                  data-testid="table-taken-continue"
+                  style={{ ...primaryBtn, minHeight: 44, padding: "0 16px" }}
+                  onClick={() => {
+                    place.reset();
+                    order.set({ seenSessionId: session?.id ?? null });
+                  }}
+                >
+                  Continue on Table {table.number}
+                </button>
+              ) : null}
+              {freeTables.slice(0, 12).map((t) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  data-testid={`move-to-${t.number}`}
+                  style={{ ...ghostBtn, minHeight: 44, padding: "0 16px" }}
+                  onClick={() => {
+                    place.reset();
+                    onMoveTable?.(t.id);
+                  }}
+                >
+                  Table {t.number}
+                </button>
+              ))}
+              {freeTables.length === 0 ? <span style={{ ...muted, fontSize: 13 }}>No free table right now.</span> : null}
+              <button type="button" data-testid="table-taken-all" style={{ ...ghostBtn, minHeight: 44, padding: "0 16px", border: "none", textDecoration: "underline" }} onClick={onChangeTable}>
+                See all tables
+              </button>
+            </div>
+          </div>
+        ) : place.error ? (
+          <p style={errText} role="alert">{place.error.message}</p>
+        ) : null}
         <button
           type="button"
           onClick={() => !blocker && place.mutate()}
@@ -585,3 +644,12 @@ const footer = { position: "sticky", bottom: 0, padding: "12px 16px calc(14px + 
 const totalsBox = { display: "flex", flexDirection: "column", gap: 4, marginBottom: 10 };
 const errText = { margin: "8px 0 0", fontSize: 13, color: "var(--tone-danger)", fontWeight: 600 };
 const okText = { margin: "10px 0 0", fontSize: 13, color: "var(--tone-success)", fontWeight: 700 };
+
+const conflictBox = {
+  margin: "0 0 12px",
+  padding: "12px 14px",
+  borderRadius: 12,
+  border: "1px solid var(--tone-warning)",
+  background: "color-mix(in srgb, var(--tone-warning) 10%, var(--color-bg))",
+  color: "var(--color-text)",
+};

@@ -181,6 +181,21 @@ export async function placeStaffOrder(ctx, user, input) {
     ? await TableSessionModel.findOne(tenantFilter(ctx, { _id: table.activeSessionId, status: "open" }))
     : null;
 
+  // The table must still be as it was when this order was started: free if it was free, the same party if it was seated.
+  // (`expectedSessionId`: the party the screen saw at that table — null for a free table. Missing = an older screen: no check.)
+  if (input.expectedSessionId !== undefined) {
+    const nowId = session ? String(session._id) : null;
+    if ((input.expectedSessionId || null) !== nowId) {
+      throw new HttpError(
+        409,
+        nowId
+          ? `Table ${table.number} was just taken — someone else has started an order there.`
+          : `Table ${table.number} has changed since you picked it — the party there has left.`,
+        { code: "table_taken", tableId: String(table._id), tableNumber: table.number, occupied: Boolean(nowId) },
+      );
+    }
+  }
+
   let customer;
   if (session) {
     customer = await CustomerModel.findOne({ _id: session.customerId, brandId: ctx.brandId });
