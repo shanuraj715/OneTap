@@ -1,13 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as api from "./api";
+import { POLL_WITHOUT_SOCKET_MS } from "./useOrders";
+import { useAuth } from "./useAuth";
 
 /** The kitchen screen's orders. The live socket refreshes it at once; the poll is the safety net if the socket is down. */
 export function useKitchenOrders(outlet, screen, enabled = true) {
+  const { user } = useAuth();
+  const socketsOff = user?.realtime?.websocket === false;
   return useQuery({
     queryKey: ["kitchen", outlet?._id, screen],
     queryFn: () => api.listKitchenOrders(outlet, screen),
     enabled: Boolean(outlet) && enabled,
-    refetchInterval: 8_000,
+    refetchInterval: socketsOff ? POLL_WITHOUT_SOCKET_MS : 8_000,
     retry: false,
   });
 }

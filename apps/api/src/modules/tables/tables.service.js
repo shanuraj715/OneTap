@@ -10,6 +10,7 @@ import {
                 
                      
 } from "@onetap/db";
+import { normalizeTableStatus } from "@onetap/config-schema";
 import { env } from "../../env.js";
 import { safeEqual } from "../../lib/crypto.js";
 import { HttpError } from "../../middleware/error.js";
@@ -44,7 +45,7 @@ const shape = (t          ) => ({
   number: t.number,
   zone: t.zone,
   seats: t.seats,
-  status: t.status,
+  status: normalizeTableStatus(t.status),
   isActive: t.isActive,
   activeSessionId: t.activeSessionId ?? null,
 });
@@ -213,7 +214,7 @@ async function unlockTable(ctx               , session                          
   const table = await TableModel.findOne(tenantFilter(ctx, { _id: session.tableId }));
   if (table) {
     table.activeSessionId = null;
-    table.status = "needs-cleaning";
+    table.status = "free"; // the next party can sit straight away
     await table.save();
   }
 }
@@ -284,7 +285,7 @@ export async function moveSession(ctx               , sessionId        , toTable
 
   if (from) {
     from.activeSessionId = null;
-    from.status = "needs-cleaning";
+    from.status = "free";
     await from.save();
   }
   to.activeSessionId = sessionId;

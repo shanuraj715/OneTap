@@ -83,7 +83,10 @@ platformRouter.get("/settings", async (_req, res) => {
 });
 
 platformRouter.put("/settings", async (req, res) => {
-  const body = z.object({ graceDays: z.number().int().min(0).max(365) }).parse(req.body);
+  const body = z
+    .object({ graceDays: z.number().int().min(0).max(365).optional(), realtimeWebsocket: z.boolean().optional() })
+    .refine((b) => b.graceDays !== undefined || b.realtimeWebsocket !== undefined, "Nothing to change.")
+    .parse(req.body);
   res.json({ settings: await platform.updateSettings(body) });
 });
 

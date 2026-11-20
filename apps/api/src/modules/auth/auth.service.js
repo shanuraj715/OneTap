@@ -6,6 +6,7 @@ import {
 } from "@onetap/config-schema";
 import { SessionModel, UserModel,              } from "@onetap/db";
 import { HttpError } from "../../middleware/error.js";
+import { platformConfig } from "../cache/platform-config.js";
 import { storePlan } from "../platform/plan.service.js";
 import { recordLogin } from "./login-log.js";
 import { hashPassword, verifyPassword } from "./password.js";
@@ -97,7 +98,9 @@ export function toSessionUser(user         )              {
  * super admin is never affected.
  */
 export async function describeSessionUser(user) {
-  const session = toSessionUser(user);
+  // whether dashboards get live updates over a WebSocket or ask for their orders on a timer (a platform switch)
+  const realtime = { websocket: (await platformConfig()).realtimeWebsocket !== false };
+  const session = { ...toSessionUser(user), realtime };
   if (user.isSuperAdmin || !session.brandId) return { ...session, storeDisabled: null };
   try {
     const { disabled, brand } = await storePlan(session.brandId);

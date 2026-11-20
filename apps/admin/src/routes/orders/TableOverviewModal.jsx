@@ -166,7 +166,6 @@ function TableGrid({ zones, tables, sessions, onSelect }) {
 function tone(status) {
   if (status === "seated") return { background: "var(--color-primary)", color: "var(--color-on-primary)", borderColor: "var(--color-primary)" };
   if (status === "bill-requested") return { background: "var(--tone-warning-wash)", color: "var(--tone-warning)", borderColor: "var(--tone-warning)" };
-  if (status === "needs-cleaning") return { background: "var(--tone-info-wash)", color: "var(--tone-info)" };
   if (status === "reserved") return { background: "var(--color-surface)", color: "var(--color-text-muted)" };
   return { background: "var(--color-bg)", color: "var(--color-text)" };
 }
@@ -211,23 +210,10 @@ function TableDetail({
     return (
       <div>
         <Note icon={<Sparkles size={15} />}>
-          {table.status === "needs-cleaning"
-            ? "This table was just vacated — mark it cleaned once it's ready for the next party."
-            : table.status === "free"
-              ? "Free and ready — the next diner who scans its QR or claims it will lock it automatically."
-              : `Currently ${TABLE_STATUS_LABELS[table.status].toLowerCase()}.`}
+          {table.status === "free"
+            ? "Free and ready — the next diner who scans its QR or claims it will lock it automatically."
+            : `Currently ${TABLE_STATUS_LABELS[table.status].toLowerCase()}.`}
         </Note>
-        {canManage && table.status === "needs-cleaning" ? (
-          <div style={{ marginTop: 14 }}>
-            <Button
-              disabled={updateTable.isPending}
-              onClick={() => updateTable.mutate({ id: table.id, patch: { status: "free" } })}
-            >
-              <CheckCircle2 size={14} style={{ marginRight: 6, verticalAlign: -2 }} />
-              Mark cleaned
-            </Button>
-          </div>
-        ) : null}
         {updateTable.error ? <Toast kind="error">{(updateTable.error         ).message}</Toast> : null}
       </div>
     );

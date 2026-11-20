@@ -4,6 +4,7 @@ import { OutletModel,              } from "@onetap/db";
 import { logger } from "../logger.js";
 import { SESSION_COOKIE } from "../middleware/auth.js";
 import { allowUpgrade, refuseUpgrade } from "../middleware/rate-limit.js";
+import { onPlatformConfigChange, platformConfig } from "../modules/cache/platform-config.js";
 import { userFromToken } from "../modules/auth/auth.service.js";
 import { storePlan } from "../modules/platform/plan.service.js";
 
@@ -89,8 +90,18 @@ export function attachRealtime(server        )       {
     const gate = allowUpgrade(req);
     if (!gate.ok) return refuseUpgrade(socket, gate.retryAfterSec);
 
-    void authorize(req)
+    // the platform can switch live connections off for everyone; dashboards then ask the API on a timer instead
+    void platformConfig()
+      .then((cfg) => {
+        if (cfg.realtimeWebsocket === false) return "off";
+        return authorize(req);
+      })
       .then((auth) => {
+        if (auth === "off") {
+          socket.write("HTTP/1.1 503 Service Unavailable\r\nConnection: close\r\n\r\n");
+          socket.destroy();
+          return;
+        }
         if (!auth) {
           socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n");
           socket.destroy();
@@ -121,6 +132,20 @@ export function attachRealtime(server        )       {
         logger.warn({ err }, "realtime upgrade failed");
         socket.destroy();
       });
+  });
+
+  // When the platform switches live updates off, everyone connected is let go at once (code 4410 tells the dashboard why,
+  // so it starts asking on a timer straight away); switching it back on needs nothing — dashboards reconnect by themselves.
+  onPlatformConfigChange((previous, next) => {
+    if (previous.realtimeWebsocket !== false && next.realtimeWebsocket === false) {
+      for (const client of [...clients]) {
+        try {
+          client.socket.close(4410, "live updates switched off");
+        } catch {
+          /* already gone */
+        }
+      }
+    }
   });
 
   // A browser tab that goes to sleep or a laptop that closes leaves a socket

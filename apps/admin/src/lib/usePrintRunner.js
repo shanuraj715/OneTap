@@ -1,5 +1,7 @@
 import { createContext, createElement, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useLocation as useRouterLocation } from "react-router-dom";
+import { storeFromPath } from "./nav";
                                                          
 import * as api from "./api";
 import { useAuth } from "./useAuth";
@@ -7,7 +9,9 @@ import { useOutlet } from "./useOutlet";
 import { useStorePlan } from "./useStorePlan";
                                                 
 
-const POLL_MS = 4_000;
+/** How often this station asks the server for new tickets — and never more often than this, whatever wakes the tab. */
+export const PRINT_POLL_MS = 8_000;
+const POLL_MS = PRINT_POLL_MS;
 const STORAGE_KEY = "onetap.printStation";
 
 /**
@@ -189,6 +193,9 @@ export function usePrintRunner(outlet                    , canPrint         )   
   const [lastError, setLastError] = useState               (null);
   const qc = useQueryClient();
   const running = useRef(false);
+  const lastStart = useRef(0);
+  // when the next automatic check is due (for the countdown beside "Print station on")
+  const [nextAt, setNextAt] = useState(null);
 
   const update = useCallback((patch                          ) => {
     setSettings((prev) => {
@@ -198,9 +205,13 @@ export function usePrintRunner(outlet                    , canPrint         )   
     });
   }, []);
 
-  const poll = useCallback(async () => {
+  const poll = useCallback(async (force = false) => {
     if (!outlet || running.current) return;
+    // a tab coming back to the front or a window focus must not trigger an extra request inside the interval
+    if (!force && Date.now() - lastStart.current < POLL_MS - 500) return;
     running.current = true;
+    lastStart.current = Date.now();
+    setNextAt(lastStart.current + POLL_MS);
     setBusy(true);
     try {
       const { jobs } = await api.claimPrintJobs(outlet, settings.clientId, settings.targets);
@@ -256,7 +267,8 @@ export function usePrintRunner(outlet                    , canPrint         )   
     busy,
     lastRun,
     lastError,
-    runNow: () => void poll(),
+    runNow: () => void poll(true),
+    nextAt: settings.enabled && outlet && canPrint ? nextAt : null,
   };
 }
 
@@ -272,9 +284,13 @@ const PrintStationContext = createContext(null);
  */
 export function PrintStationProvider({ children }) {
   const { outlet } = useOutlet();
-  const { can } = useAuth();
+  const { can, user } = useAuth();
   const { hasFeature } = useStorePlan();
-  const runner = usePrintRunner(outlet, can("print:job") && hasFeature("printing"));
+  const { pathname } = useRouterLocation();
+  // The platform's super admin looking at the platform console (not inside one store) is not a print station: it asks
+  // the server for nothing, whatever is switched on in this browser.
+  const inPlatformConsole = Boolean(user?.isSuperAdmin) && !storeFromPath(pathname);
+  const runner = usePrintRunner(outlet, can("print:job") && hasFeature("printing") && !inPlatformConsole);
   return createElement(PrintStationContext.Provider, { value: runner }, children);
 }
 

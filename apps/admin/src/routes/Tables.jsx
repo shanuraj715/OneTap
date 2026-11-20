@@ -266,7 +266,6 @@ function QrPanel({
 function tone(status             )                {
   if (status === "seated") return { background: "var(--color-primary)", color: "var(--color-on-primary)", borderColor: "var(--color-primary)" };
   if (status === "bill-requested") return { background: "var(--tone-warning-wash)", color: "var(--tone-warning)", borderColor: "var(--tone-warning)" };
-  if (status === "needs-cleaning") return { background: "var(--tone-info-wash)", color: "var(--tone-info)" };
   if (status === "reserved") return { background: "var(--color-surface)", color: "var(--color-text-muted)" };
   return { background: "var(--color-bg)", color: "var(--color-text)" };
 }

@@ -128,9 +128,9 @@ export function Kitchen() {
         <button type="button" onClick={toggleSound} style={iconBtn} aria-label={sound ? "Turn the new-order sound off" : "Turn the new-order sound on"} data-testid="kitchen-sound" aria-pressed={sound}>
           {sound ? <Bell size={18} /> : <BellOff size={18} />}
         </button>
-        <span style={{ ...muted, display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12.5 }} title={stream.status === "live" ? "Live" : "Reconnecting — refreshing every few seconds"}>
+        <span style={{ ...muted, display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12.5 }} title={stream.status === "live" ? "Live" : stream.status === "polling" ? "Live updates are switched off by the platform — refreshing every 5 seconds" : "Reconnecting — refreshing every few seconds"}>
           {stream.status === "live" ? <Wifi size={15} color="var(--tone-success)" /> : <WifiOff size={15} color="var(--tone-warning)" />}
-          {wide ? (stream.status === "live" ? "Live" : "Reconnecting") : null}
+          {wide ? (stream.status === "live" ? "Live" : stream.status === "polling" ? "Every 5s" : "Reconnecting") : null}
         </span>
       </header>
 

@@ -37,6 +37,11 @@ const platformSettingsSchema = new Schema(
     /** days a store may stay over a lowered limit before you're asked to block the extras */
     graceDays: { type: Number, default: 30, min: 0, max: 365 },
     /**
+     * Live order updates over a WebSocket (default) — or, when off, every dashboard asks the API for its orders every 5
+     * seconds instead. One switch for every store, set in the platform console.
+     */
+    realtimeWebsocket: { type: Boolean, default: true },
+    /**
      * How long the API may reuse what it has read from the database (a store's
      * look, menu, addresses…) before reading it again. Seconds; 0 turns the cache off.
      */
@@ -53,6 +58,6 @@ const platformSettingsSchema = new Schema(
 );
 
 // the grace period matters to every store's plan status; the cache bookkeeping fields change nothing that is cached
-platformSettingsSchema.plugin(writeEvents, { model: "PlatformSettings", ignore: ["cacheTtlSeconds", "cacheExpiredAt", "cacheStoreExpiredAt", "key"] });
+platformSettingsSchema.plugin(writeEvents, { model: "PlatformSettings", ignore: ["cacheTtlSeconds", "cacheExpiredAt", "cacheStoreExpiredAt", "realtimeWebsocket", "key"] });
 
 export const PlatformSettingsModel = models.PlatformSettings ?? model("PlatformSettings", platformSettingsSchema);

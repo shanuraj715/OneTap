@@ -7,6 +7,7 @@ import {
   FEEDBACK_EDIT_DAYS,
   FEEDBACK_WINDOW_DAYS,
   nextStatusesFor,
+  OPEN_ORDER_STATUSES,
   priceCart,
   PricingError,
   stockNeeds,
@@ -604,7 +605,26 @@ export async function updateStatus(
   // both appear — whichever printers the outlet has pointed at this status.
   firePrinters(ctx, updated, status);
   fireNotifications(ctx, updated, status);
+  if (status === "completed") await freeTableIfDone(ctx, updated, byUserId);
   return updated;
+}
+
+/**
+ * A dine-in order that is Completed may have been the last thing the table was waiting for: when nothing else on the
+ * table's session is still open and everything is paid, the table is freed by itself — no one has to press "Free the
+ * table". A table with another order still being made (or something unpaid) stays seated. Never fails the status change.
+ */
+async function freeTableIfDone(ctx, order, byUserId) {
+  if (order.channel !== "dine-in" || !order.sessionId) return;
+  try {
+    const sessionId = String(order.sessionId);
+    const stillOpen = await OrderModel.countDocuments(tenantFilter(ctx, { sessionId, status: { $in: OPEN_ORDER_STATUSES } }));
+    if (stillOpen > 0) return;
+    const { closeSession } = await import("../tables/tables.service.js"); // loaded here: tables.service imports this file
+    await closeSession(ctx, sessionId, byUserId); // refuses (409) while anything is unpaid — then the table simply stays seated
+  } catch (err) {
+    if (err?.status !== 409 && err?.status !== 404) logger.warn({ err, orderId: String(order._id) }, "couldn't free the table after the order was completed");
+  }
 }
 
 /**
@@ -654,6 +674,7 @@ export async function setStatusManual(
   broadcast(ctx.outletId , { type: "order.updated", order: wire(updated) });
   firePrinters(ctx, updated, status);
   fireNotifications(ctx, updated, status);
+  if (status === "completed") await freeTableIfDone(ctx, updated, byUserId);
   return updated;
 }
 

@@ -217,7 +217,7 @@ export function OrderPanel({ outlet, table, session, partyKey, order, wide, seen
                   </span>
                   <button
                     type="button"
-                    onClick={() => freeTable.mutate(session.id)}
+                    onClick={() => freeTable.mutate(session.id, { onSuccess: () => order.set({ seenSessionId: null }) })}
                     disabled={freeTable.isPending}
                     style={{ ...ghostBtn, minHeight: 44, fontSize: 14, ...(freeTable.isPending ? disabledLook : {}) }}
                   >

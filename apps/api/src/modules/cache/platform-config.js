@@ -16,7 +16,7 @@ import { PlatformSettingsModel } from "@onetap/db";
  */
 
 const REFRESH_MS = 30_000;
-const DEFAULTS = { graceDays: 30, cacheTtlSeconds: 300 };
+const DEFAULTS = { graceDays: 30, cacheTtlSeconds: 300, realtimeWebsocket: true };
 
 let state = null;
 let pending = null;
@@ -28,6 +28,7 @@ function shape(doc) {
   return {
     graceDays: doc?.graceDays ?? DEFAULTS.graceDays,
     cacheTtlSeconds: doc?.cacheTtlSeconds ?? DEFAULTS.cacheTtlSeconds,
+    realtimeWebsocket: doc?.realtimeWebsocket ?? DEFAULTS.realtimeWebsocket,
     cacheExpiredAt: iso(doc?.cacheExpiredAt),
     cacheStoreExpiredAt: Object.fromEntries(Object.entries(doc?.cacheStoreExpiredAt ?? {}).map(([id, at]) => [id, iso(at)])),
   };

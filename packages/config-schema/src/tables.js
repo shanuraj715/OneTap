@@ -1,6 +1,9 @@
 import { z } from "zod";
 
-export const TABLE_STATUSES = ["free", "seated", "bill-requested", "needs-cleaning", "reserved"]         ;
+export const TABLE_STATUSES = ["free", "seated", "bill-requested", "reserved"]         ;
+
+/** A table that was marked "needs-cleaning" before that status was removed is simply free. */
+export const normalizeTableStatus = (status) => (status === "needs-cleaning" ? "free" : status);
 export const tableStatusSchema = z.enum(TABLE_STATUSES);
                                                           
 
@@ -8,7 +11,6 @@ export const TABLE_STATUS_LABELS                              = {
   free: "Free",
   seated: "Seated",
   "bill-requested": "Bill requested",
-  "needs-cleaning": "Needs cleaning",
   reserved: "Reserved",
 };
 

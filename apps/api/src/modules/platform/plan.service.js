@@ -29,8 +29,8 @@ export function invalidateStorePlan(brandId) {
 }
 
 export async function platformSettings() {
-  const { graceDays } = await platformConfig();
-  return { graceDays };
+  const { graceDays, realtimeWebsocket } = await platformConfig();
+  return { graceDays, realtimeWebsocket };
 }
 
 /** People counted toward the limit: everyone with access to the store — owners included — who isn't blocked or deactivated. */

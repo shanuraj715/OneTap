@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { Check, Globe, Settings as SettingsIcon, X } from "lucide-react";
+import { Check, Globe, Radio, Settings as SettingsIcon, X } from "lucide-react";
 import * as api from "../../lib/api";
 import { usePlatformMutation, usePlatformSettings } from "../../lib/usePlatform";
-import { Button, Card, Field, Note, PageHeader, TextInput, Toast } from "../../ui";
+import { Button, Card, Checkbox, Field, Note, PageHeader, TextInput, Toast } from "../../ui";
 import { CacheSettingsCard } from "./CachePanels";
 import { browserCanOpen, describeHttpError, muted, row, SERVER_CHECK_FAILED } from "./shared";
 
@@ -17,6 +17,10 @@ export function PlatformSettings() {
   }, [q.data]);
 
   const valid = /^\d+$/.test(graceDays) && Number(graceDays) <= 365;
+
+  // live order updates: a WebSocket for every store (default), or every dashboard asks the API every 5 seconds
+  const socketOn = q.data?.settings.realtimeWebsocket !== false;
+  const liveSave = usePlatformMutation((v) => api.updatePlatformSettings({ realtimeWebsocket: v }));
 
   // the domain stores' TablePe addresses live under — set on the server (STORE_SUBDOMAIN_BASE), not here
   const probe = usePlatformMutation(api.probeSubdomains);
@@ -48,6 +52,28 @@ export function PlatformSettings() {
         <p style={muted}>Applies to every store, including ones already in a grace period.</p>
         {save.error ? <Toast kind="error">{save.error.message}</Toast> : null}
         {save.isSuccess && !save.isPending ? <Toast kind="ok">Saved.</Toast> : null}
+      </Card>
+
+      <Card
+        title="Live order updates"
+        icon={<Radio size={16} />}
+        subtitle="How store dashboards, the kitchen display and the waiter's bell learn about new orders and status changes."
+      >
+        <div data-testid="realtime-setting" style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <Checkbox
+            checked={socketOn}
+            disabled={q.isLoading || liveSave.isPending}
+            onChange={(v) => liveSave.mutate(v)}
+            label="Use a WebSocket connection for live updates (every store)"
+            info="On: each open dashboard keeps one live connection, and an order shows up the moment it is placed. Off: no live connections are opened (the ones already open are closed at once) and every dashboard asks the API for its orders every 5 seconds instead — simpler for the server to run behind some proxies, but slower to show a new order."
+          />
+          <p style={muted} data-testid="realtime-state">
+            {socketOn
+              ? "On — stores get orders the moment they are placed."
+              : "Off — every dashboard refreshes its order list every 5 seconds. The waiter's bell (kitchen ready) needs live updates and stays quiet while this is off."}
+          </p>
+          {liveSave.error ? <Toast kind="error">{liveSave.error.message}</Toast> : null}
+        </div>
       </Card>
 
       <CacheSettingsCard />

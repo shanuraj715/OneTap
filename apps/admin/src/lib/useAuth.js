@@ -17,6 +17,8 @@ export function useAuth() {
     },
     retry: false,
     staleTime: 60_000,
+    // picks up platform switches (like "live updates over a WebSocket") within a minute
+    refetchInterval: 60_000,
   });
 
   const user = (query.data ?? null)                      ;

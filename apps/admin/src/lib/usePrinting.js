@@ -1,3 +1,4 @@
+import { PRINT_POLL_MS } from "./usePrintRunner";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
                                                                                          
 import * as api from "./api";
@@ -28,7 +29,7 @@ export function usePrintJobs(outlet                    , enabled         , statu
     queryKey: ["print-jobs", outlet?._id, status ?? "all"],
     queryFn: () => api.listPrintJobs(outlet , status),
     enabled: Boolean(outlet) && enabled,
-    refetchInterval: 5_000,
+    refetchInterval: PRINT_POLL_MS, // same 8 s as the print station's own check
   });
 }
 

@@ -1,6 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
                                                          
 import * as api from "./api";
+import { useAuth } from "./useAuth";
+
+/** How often lists ask the API when live updates are switched off for the whole platform. */
+export const POLL_WITHOUT_SOCKET_MS = 5_000;
+
+function usePollMs(pollSeconds) {
+  const { user } = useAuth();
+  return user?.realtime?.websocket === false ? POLL_WITHOUT_SOCKET_MS : Math.max(3, pollSeconds) * 1000;
+}
                                     
 
 /**
@@ -16,21 +25,23 @@ export function useOrders(
   pollSeconds = 10,
   paymentPending                          = "hide",
 ) {
+  const pollMs = usePollMs(pollSeconds);
   return useQuery({
     queryKey: ["orders", outlet?._id, status ?? "all", paymentPending],
     queryFn: () => api.listOrders(outlet , status, paymentPending),
     enabled: Boolean(outlet),
-    refetchInterval: Math.max(3, pollSeconds) * 1000,
+    refetchInterval: pollMs,
   });
 }
 
 /** The live load-management read — polled at the same cadence as the queue. */
 export function useCapacity(outlet                    , enabled         , pollSeconds = 10) {
+  const pollMs = usePollMs(pollSeconds);
   return useQuery({
     queryKey: ["capacity", outlet?._id],
     queryFn: () => api.getCapacity(outlet ),
     enabled: Boolean(outlet) && enabled,
-    refetchInterval: Math.max(3, pollSeconds) * 1000,
+    refetchInterval: pollMs,
   });
 }
 

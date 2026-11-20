@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useMedia } from "../lib/useMedia";
                                            
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -156,6 +157,7 @@ function actionStyle(status             )                {
 }
 
 export function Orders() {
+  const narrowScreen = useMedia("(max-width: 767px)");
   const { outlet } = useOutlet();
   const { can } = useAuth();
   // Dine-in orders show their table, and can be moved to another one.
@@ -401,6 +403,9 @@ export function Orders() {
           ) : null}
         </span>
 
+        {/* on a phone the filters are ONE row that scrolls sideways (the list under it never gets pushed down);
+            on a wide screen this wrapper vanishes and they wrap as before */}
+        <div className="ot-hscroll" style={narrowScreen ? filterScroll : { display: "contents" }} data-testid="orders-filters">
         <MultiFilter
           label="Status"
           icon={<Filter size={13} />}
@@ -470,6 +475,7 @@ export function Orders() {
             Clear {activeFilters} filter{activeFilters === 1 ? "" : "s"}
           </button>
         ) : null}
+        </div>
       </div>
 
       {setStatus.error ? <Toast kind="error">{(setStatus.error         ).message}</Toast> : null}
@@ -1202,6 +1208,8 @@ function LiveBadge({
   const map = {
     live: { tone: "ok"         , label: "Live", title: "Connected — orders arrive the moment they're placed." },
     connecting: { tone: "warn"         , label: "Connecting…", title: "Opening the live connection." },
+    // live updates are switched off for the whole platform: the list simply refreshes itself
+    polling: { tone: "neutral", label: "Refreshing every 5s", title: "Live updates are switched off by the platform. The list asks for new orders every 5 seconds." },
     offline: {
       tone: "warn"         ,
       label: `Reconnecting · polling ${pollSeconds}s`,
@@ -1497,6 +1505,17 @@ const pageHead                = {
   alignItems: "flex-start",
   gap: 16,
   flexWrap: "wrap",
+};
+const filterScroll = {
+  display: "flex",
+  gap: 8,
+  alignItems: "center",
+  flexWrap: "nowrap",
+  overflowX: "auto",
+  width: "100%",
+  paddingBottom: 4,
+  scrollbarWidth: "none",
+  WebkitOverflowScrolling: "touch",
 };
 const toolbar                = {
   display: "flex",

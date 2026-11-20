@@ -4,6 +4,7 @@ import { Link, storeUrl, useNavigate, useParams } from "../../lib/nav";
 import { CARD_TEMPLATE_FAMILIES, EFFECT_IDS, EFFECT_PRESETS, FEATURES } from "@onetap/config-schema";
 import { ArrowLeft, Ban, Check, ExternalLink, Globe, RefreshCw, Save, Store, Trash2, X } from "lucide-react";
 import * as api from "../../lib/api";
+import { useMedia } from "../../lib/useMedia";
 import { usePlans, usePlatformMutation, useStore } from "../../lib/usePlatform";
 import { Button, Card, Field, Note, PageHeader, Pill, Select, Tabs, TextInput, Toast } from "../../ui";
 import { StoreCacheCard } from "./CachePanels";
@@ -28,6 +29,7 @@ const emptyAdjust = () => ({ features: { unlock: [], lock: [] }, effects: { unlo
 
 /** One client store: its plan and overrides, what's unlocked, owners, outlets, people, and appearance. */
 export function PlatformStoreDetail() {
+  const narrow = useMedia("(max-width: 560px)");
   const { id } = useParams();
   const navigate = useNavigate();
   const q = useStore(id);
@@ -81,14 +83,14 @@ export function PlatformStoreDetail() {
         icon={<Store size={23} />}
         subtitle={`${planLabel(store.plan)} · created ${fmtDate(store.createdAt)}`}
         action={
-          <span style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-            <Link to="/platform/stores" style={{ textDecoration: "none" }}>
-              <Button variant="outline" style={{ display: "inline-flex", gap: 6, alignItems: "center" }}>
-                <ArrowLeft size={14} /> All stores
+          <span style={{ display: "flex", gap: 8, flexWrap: "nowrap", alignItems: "center" }} data-testid="store-actions">
+            <Link to="/platform/stores" style={{ textDecoration: "none" }} aria-label="All stores">
+              <Button variant="outline" style={{ display: "inline-flex", gap: 6, alignItems: "center", whiteSpace: "nowrap" }}>
+                <ArrowLeft size={14} /> {narrow ? "Stores" : "All stores"}
               </Button>
             </Link>
-            <Button onClick={() => open("/")} style={{ display: "inline-flex", gap: 6, alignItems: "center" }}>
-              <ExternalLink size={14} /> Open store dashboard
+            <Button onClick={() => open("/")} style={{ display: "inline-flex", gap: 6, alignItems: "center", whiteSpace: "nowrap" }}>
+              <ExternalLink size={14} /> {narrow ? "Open dashboard" : "Open store dashboard"}
             </Button>
             {/* disable / enable / delete — the dashboard and details are already one click away on this page */}
             <StoreActionsMenu store={store} exclude={["open", "details"]} onChoose={(kind) => setDialog({ kind, store })} />

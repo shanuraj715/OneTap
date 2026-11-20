@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "./useAuth";
                                     
 
 const API_BASE = import.meta.env.VITE_API_URL ?? "http://localhost:3072";
@@ -41,6 +42,9 @@ export function useOrderStream(outlet                    , enabled         )    
   // the kitchen marked a dish or an order ready (only sent when the store switched the waiter's bell on)
   const [lastReady, setLastReady] = useState(null);
   const qc = useQueryClient();
+  // The platform can switch live connections off: then no socket is opened at all and the lists refresh on a timer.
+  const { user } = useAuth();
+  const socketsOn = user?.realtime?.websocket !== false;
 
   const socketRef = useRef                  (null);
   const attemptRef = useRef(0);
@@ -50,6 +54,10 @@ export function useOrderStream(outlet                    , enabled         )    
 
   useEffect(() => {
     if (!outlet || !enabled) return;
+    if (!socketsOn) {
+      setStatus("polling");
+      return;
+    }
     stoppedRef.current = false;
 
     const url = `${API_BASE.replace(/^http/, "ws")}/realtime?outletId=${encodeURIComponent(outlet._id)}`;
@@ -109,6 +117,13 @@ export function useOrderStream(outlet                    , enabled         )    
         // TablePe just switched this store off (the server closes with 4403): re-read who we are, so the app
         // shows the "store is disabled" notice straight away instead of at the next click or refresh.
         if (e.code === 4403) void qc.invalidateQueries({ queryKey: ["me"] });
+        // the platform just switched live updates off (4410): re-read the switch, then ask on a timer instead of reconnecting
+        if (e.code === 4410) {
+          stoppedRef.current = true;
+          setStatus("polling");
+          void qc.invalidateQueries({ queryKey: ["me"] });
+          return;
+        }
         if (!stoppedRef.current) scheduleReconnect();
       };
       socket.onerror = () => socket.close();
@@ -129,7 +144,7 @@ export function useOrderStream(outlet                    , enabled         )    
       socketRef.current?.close();
       socketRef.current = null;
     };
-  }, [outlet, enabled, qc]);
+  }, [outlet, enabled, qc, socketsOn]);
 
   return { status, lastCreatedId, lastEventAt, lastReady };
 }

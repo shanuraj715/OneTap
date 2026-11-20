@@ -17,8 +17,10 @@ import {
   Check,
   ChevronsUpDown,
   Database,
+  CheckCircle2,
   ChefHat,
   ConciergeBell,
+  Loader2,
   Globe,
   Inbox,
   Menu as MenuIcon,
@@ -881,19 +883,37 @@ const navItem                = {
  * that tickets will print here), red when the last check failed. Pressing it opens the Printing page.
  */
 function PrintStationChip({ collapsed }) {
-  const { active, busy, lastError } = usePrintStation();
+  const { active, busy, lastError, nextAt } = usePrintStation();
+  // a once-a-second tick so the countdown to the next check moves
+  const [now, setNow] = useState(Date.now());
+  useEffect(() => {
+    if (!active) return undefined;
+    const t = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(t);
+  }, [active]);
   if (!active) return null;
+  const secs = nextAt ? Math.max(0, Math.ceil((nextAt - now) / 1000)) : null;
   const tone = lastError ? "var(--tone-danger)" : "var(--tone-success)";
-  const label = lastError ? "Print station — problem" : busy ? "Print station — checking…" : "Print station on";
+  const label = lastError ? "Print station — problem" : busy ? "Checking…" : "Print station on";
   return (
     <NavLink
       to="/printing"
       data-testid="print-station-chip"
-      title={lastError ? `Print station: ${lastError}` : "This computer prints tickets as they arrive, from any page. Press to open Printing."}
+      data-state={lastError ? "error" : busy ? "checking" : "on"}
+      title={lastError ? `Print station: ${lastError}` : `This computer prints tickets as they arrive, from any page${secs != null && !busy ? ` — checking again in ${secs}s` : ""}. Press to open Printing.`}
       style={{ ...storefrontLink, justifyContent: collapsed ? "center" : "flex-start", color: tone, fontWeight: 600 }}
     >
-      <Printer size={13} />
-      {!collapsed ? label : null}
+      {lastError ? <AlertTriangle size={14} /> : busy ? <Loader2 size={14} className="ot-spin" data-testid="print-station-loader" /> : <CheckCircle2 size={14} data-testid="print-station-check" />}
+      {!collapsed ? (
+        <>
+          {label}
+          {!lastError && !busy && secs != null ? (
+            <span style={{ fontWeight: 500, color: "var(--color-text-muted)", fontVariantNumeric: "tabular-nums" }} data-testid="print-station-countdown">
+              · {secs}s
+            </span>
+          ) : null}
+        </>
+      ) : null}
     </NavLink>
   );
 }

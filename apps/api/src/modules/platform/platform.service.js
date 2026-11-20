@@ -105,9 +105,12 @@ export async function updatePlan(id, input) {
 /** Platform-wide settings, plus the domain store addresses are built on (a server setting: STORE_SUBDOMAIN_BASE). */
 export const getSettings = async () => ({ ...(await platformSettings()), subdomainBase: configuredBase() });
 
-export async function updateSettings({ graceDays }) {
+export async function updateSettings({ graceDays, realtimeWebsocket }) {
   // saved through the settings snapshot, so every reader of it (plan checks, the cache) sees the change at once
-  await savePlatformConfig({ graceDays });
+  await savePlatformConfig({
+    ...(graceDays !== undefined ? { graceDays } : {}),
+    ...(realtimeWebsocket !== undefined ? { realtimeWebsocket } : {}),
+  });
   invalidateStorePlan();
   return getSettings();
 }

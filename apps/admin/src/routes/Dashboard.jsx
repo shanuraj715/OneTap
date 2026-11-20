@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import { BarChart, DonutChart, HBarList, LineChart } from "../charts";
 import { useAuth } from "../lib/useAuth";
+import { useMedia } from "../lib/useMedia";
 import { useDashboardStats } from "../lib/useDashboard";
 import { useOutlet } from "../lib/useOutlet";
 import { AwesomeLoader, Card, Empty, InfoHint, PageHeader, Pill, Table, Td, Th, Toast } from "../ui";
@@ -38,6 +39,8 @@ export function Dashboard() {
   const { outlet, isLoading } = useOutlet();
   const { user } = useAuth();
   const stats = useDashboardStats(outlet, true);
+  // 3 columns on a tablet or computer, 2 on a phone (the small number cards sit two to a row; wide widgets take the full row)
+  const phone = useMedia("(max-width: 599px)");
 
   if (!isLoading && !outlet) {
     return (
@@ -78,10 +81,10 @@ export function Dashboard() {
           </Empty>
         </Card>
       ) : (
-        <div style={grid}>
+        <div style={{ ...grid, gridTemplateColumns: `repeat(${phone ? 2 : 3}, minmax(0, 1fr))`, gap: phone ? 10 : 16 }} data-testid="dashboard-grid">
           {widgets.map((w) => (
-            <WidgetFrame key={w.id} id={w.id}>
-              {renderWidget(w.id, stats.data )}
+            <WidgetFrame key={w.id} id={w.id} cols={phone ? 2 : 3}>
+              {renderWidget(w.id, stats.data)}
             </WidgetFrame>
           ))}
         </div>
@@ -112,11 +115,11 @@ const WIDGET_ICON                                        = {
   "low-stock": PackageX,
 };
 
-function WidgetFrame({ id, children }                                                ) {
+function WidgetFrame({ id, children, cols = 3 }) {
   const meta = DASHBOARD_WIDGET_CATALOG[id];
   const Icon = WIDGET_ICON[id];
   return (
-    <div style={{ gridColumn: `span ${meta.span}`, minWidth: 0 }}>
+    <div className="ot-widget" data-widget={id} style={{ gridColumn: `span ${Math.min(meta.span, cols)}`, minWidth: 0 }}>
       <Card
         title={meta.label}
         icon={<Icon size={15} />}
@@ -130,7 +133,7 @@ function WidgetFrame({ id, children }                                           
 
 /* ---------------------------------------------------------------- renderers */
 
-function renderWidget(id                   , s                )            {
+function renderWidget(id, s) {
   switch (id) {
     case "revenue-today":
       return <Stat value={formatINR(s.today.revenue)} />;
@@ -230,9 +233,10 @@ function renderWidget(id                   , s                )            {
       return s.lowStock.length ? (
         <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
           {s.lowStock.map((i) => (
-            <Pill key={i.id} tone="warn" icon={<PackageX size={11} />}>
+            <span key={i.id} style={stockChip}>
+              <PackageX size={11} style={{ flexShrink: 0 }} />
               {i.name}
-            </Pill>
+            </span>
           ))}
         </div>
       ) : (
@@ -260,14 +264,18 @@ function Stat({
                 
                                             
  ) {
+  const phone = useMedia("(max-width: 599px)");
   const color =
     tone === "danger" ? "var(--tone-danger)" : tone === "warn" ? "var(--tone-warning)" : tone === "ok" ? "var(--tone-success)" : tone === "muted" ? "var(--color-text-muted)" : "var(--color-text)";
   return (
     <div>
-      <div style={{ fontSize: 30, fontWeight: 700, fontFamily: "var(--font-heading)", color, lineHeight: 1.15 }}>{value}</div>
+      <div style={{ fontSize: phone ? 24 : 30, fontWeight: 700, fontFamily: "var(--font-heading)", color, lineHeight: 1.15, overflowWrap: "anywhere" }}>{value}</div>
       {hint ? <div style={{ fontSize: 12, color: "var(--color-text-muted)", marginTop: 3 }}>{hint}</div> : null}
     </div>
   );
 }
 
 const grid                = { display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 16 };
+
+// a "sold out" chip whose name wraps instead of running past the edge of a narrow card
+const stockChip = { display: "inline-flex", alignItems: "center", gap: 5, maxWidth: "100%", padding: "3px 9px", borderRadius: 12, fontSize: 11.5, fontWeight: 600, background: "var(--tone-warning-wash)", color: "var(--tone-warning)", overflowWrap: "anywhere" };

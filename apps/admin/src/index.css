@@ -107,3 +107,13 @@ body {
   }
 }
 
+
+/* a row that scrolls sideways without showing a scrollbar (Orders filters on a phone) */
+.ot-hscroll::-webkit-scrollbar { display: none; }
+
+/* Dashboard widgets: every card in a row is as tall as the tallest, and they tighten up on a phone */
+.ot-widget > section { height: 100%; box-sizing: border-box; margin-bottom: 0; }
+@media (max-width: 599px) {
+  .ot-widget > section { padding: 12px; }
+  .ot-widget h2 { font-size: 13.5px !important; line-height: 1.3; }
+}

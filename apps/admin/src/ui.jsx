@@ -358,8 +358,9 @@ export function PageHeader({
  ) {
   return (
     <div style={pageHeaderSticky}>
-      <div>
-        <h1 style={{ fontFamily: "var(--font-heading)", fontSize: 26, margin: 0, display: "flex", alignItems: "center", gap: 9 }}>
+      {/* the title takes the room it needs; on a phone the action buttons drop under it instead of squeezing it */}
+      <div style={{ flex: "1 1 240px", minWidth: 0 }}>
+        <h1 style={{ fontFamily: "var(--font-heading)", fontSize: "clamp(21px, 5.5vw, 26px)", margin: 0, display: "flex", alignItems: "center", gap: 9, overflowWrap: "anywhere" }}>
           {icon}
           {title}
         </h1>
@@ -395,12 +396,13 @@ const pageHeaderSticky                = {
   top: 0,
   zIndex: 5,
   background: "var(--color-bg)",
-  paddingTop: 28,
-  paddingBottom: 20,
+  paddingTop: "clamp(14px, 4vw, 28px)",
+  paddingBottom: "clamp(12px, 3vw, 20px)",
   display: "flex",
   alignItems: "flex-start",
   justifyContent: "space-between",
-  gap: 16,
+  flexWrap: "wrap",
+  gap: 12,
 };
 
 export function Toast({ kind, children }                                                        ) {

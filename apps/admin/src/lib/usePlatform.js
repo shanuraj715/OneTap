@@ -74,6 +74,7 @@ export function usePlatformMutation(fn) {
       void qc.invalidateQueries({ queryKey: ["platform"] });
       void qc.invalidateQueries({ queryKey: ["store-plan"] });
       void qc.invalidateQueries({ queryKey: ["outlets"] });
+      void qc.invalidateQueries({ queryKey: ["me"] }); // a platform switch can change what this very session sees
     },
   });
 }

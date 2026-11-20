@@ -9,6 +9,7 @@ import { useActiveSessions, useTables } from "../../lib/useTables";
 import { ItemSheet } from "./ItemSheet";
 import { isCustomisable, MenuBrowser } from "./MenuBrowser";
 import { OrderPanel } from "./OrderPanel";
+import { PartyDoneBanner } from "./PartyDoneBanner";
 import { TablePicker } from "./TablePicker";
 import { lineKey, useTakeOrder } from "./useTakeOrder";
 import { ghostBtn, iconBtn, muted, primaryBtn, useMedia } from "./styles";
@@ -95,11 +96,11 @@ export function TakeOrder() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.tableId, state.seenSessionId, sessionsQ.isSuccess]);
 
-  // tables a waiter can move an order to: in service, nobody seated, not waiting to be cleaned or reserved
+  // tables a waiter can move an order to: in service, nobody seated, not reserved
   const freeTables = useMemo(() => {
     const seated = new Set(sessions.map((x) => x.tableId));
     return tables
-      .filter((t) => t.isActive && t.id !== state.tableId && !seated.has(t.id) && t.status !== "needs-cleaning" && t.status !== "reserved")
+      .filter((t) => t.isActive && t.id !== state.tableId && !seated.has(t.id) && t.status !== "reserved")
       .sort((a, b) => a.number.localeCompare(b.number, undefined, { numeric: true }));
   }, [tables, sessions, state.tableId]);
 
@@ -201,10 +202,17 @@ export function TakeOrder() {
         }}
       />
     );
-    const menu = menuQ.isLoading ? (
-      <p style={{ ...muted, padding: 20 }}>Loading the menu…</p>
-    ) : (
-      <MenuBrowser menu={menuQ.data} lines={state.lines} onCustomise={setSheetItem} onAddPlain={addPlain} onSetPlainQty={setPlainQty} />
+    // the party at this table has finished: the "free it" button is right here, before anything is added
+    const partyDone = Boolean(session && session.allPaid && session.openOrders === 0);
+    const menu = (
+      <>
+        {partyDone ? <PartyDoneBanner outlet={outlet} session={session} onFreed={() => order.set({ seenSessionId: null })} /> : null}
+        {menuQ.isLoading ? (
+          <p style={{ ...muted, padding: 20 }}>Loading the menu…</p>
+        ) : (
+          <MenuBrowser menu={menuQ.data} lines={state.lines} onCustomise={setSheetItem} onAddPlain={addPlain} onSetPlainQty={setPlainQty} />
+        )}
+      </>
     );
 
     content = wide ? (
