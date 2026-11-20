@@ -409,3 +409,19 @@
 /* touch screens swipe; the arrows are for a mouse */
 @media (hover: none) { .ot-strip-arrow { display: none !important; } }
 .ot-cat-sheet { animation: ot-fade var(--motion-fast) var(--ease-out) both; }
+
+/*
+ * The order bar (Takeaway / Delivery and the outlet) is pinned under the header, so it is kept slim: less padding
+ * everywhere, and on a phone the switch and the outlet share ONE row (the outlet wraps under it only on a very narrow
+ * screen). The longer notes that go with it (why Delivery is off, the delivery check) are NOT pinned — they scroll away.
+ */
+.ot-ob-inner { padding-top: 8px !important; padding-bottom: 8px !important; }
+@media (max-width: 640px) {
+  .ot-ob-inner { gap: 6px !important; }
+  .ot-ob-controls { gap: 8px !important; }
+  .ot-ob-switch { flex: 1 1 auto !important; max-width: none !important; }
+  .ot-ob-seg { padding: 3px !important; border-radius: 12px !important; }
+  .ot-ob-seg-btn { min-height: 36px !important; padding: 0 11px !important; font-size: 0.8125rem !important; gap: 5px !important; }
+  .ot-ob-pill-wrap { flex: 1 1 120px !important; }
+  .ot-ob-pill { min-height: 44px !important; padding: 0 10px !important; gap: 7px !important; border-radius: 12px !important; }
+}

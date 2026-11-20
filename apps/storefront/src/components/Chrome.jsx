@@ -1,10 +1,11 @@
-import { getAnnouncementVariant, getFooterVariant, getHeaderVariant } from "@onetap/ui";
+import { getAnnouncementVariant, getFooterVariant, getHeaderVariant, StickyBar } from "@onetap/ui";
 import { storeName } from "@/lib/outlet";
 
 /**
  * What every storefront page shares above and below its own content, built from the outlet's settings:
  *
- *   StoreTop     the message bar (when switched on), then the header
+ *   StoreTop     the message bar (when switched on), then the header — the header stays pinned to the top of the screen
+ *                while the page scrolls (the message bar scrolls away)
  *   StoreBottom  the footer, with the store's page links inside it
  *
  * One place, so the menu page, the table-QR page and the store's own pages can never drift apart.
@@ -37,14 +38,16 @@ export function StoreTop({ outlet, outletSlug, pages = [], onHome = false, links
       {announcement.enabled && messages.length > 0 ? (
         <Bar messages={messages} phone={announcement.showPhone ? identity.phone || undefined : undefined} dismissible={announcement.dismissible} rotateSeconds={announcement.rotateSeconds} />
       ) : null}
-      <Header
-        name={name}
-        logoUrl={identity.logoUrl || undefined}
-        tagline={identity.tagline || undefined}
-        phone={identity.phone || undefined}
-        orderHref={onHome ? "#menu" : `/${outletSlug}#menu`}
-        links={links ?? headerLinks({ outletSlug, config: outlet.config, pages, onHome })}
-      />
+      <StickyBar name="header" z={32}>
+        <Header
+          name={name}
+          logoUrl={identity.logoUrl || undefined}
+          tagline={identity.tagline || undefined}
+          phone={identity.phone || undefined}
+          orderHref={onHome ? "#menu" : `/${outletSlug}#menu`}
+          links={links ?? headerLinks({ outletSlug, config: outlet.config, pages, onHome })}
+        />
+      </StickyBar>
     </>
   );
 }

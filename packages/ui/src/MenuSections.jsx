@@ -439,18 +439,26 @@ function CollapsibleCards({ open, keep, className, style, onClosed, children }) 
   );
 }
 
-/** After a section folds shut, if its heading has scrolled off the top, bring it back so the reader isn't left lost further down. */
+/** How far down the pinned header, order bar and category bar reach — a heading must end up below this to be seen. */
+function pinnedReach(bar) {
+  const root = getComputedStyle(document.documentElement);
+  const px = (name) => parseFloat(root.getPropertyValue(name)) || 0;
+  return px("--ot-header-h") + px("--ot-bar-h") + (bar?.getBoundingClientRect().height ?? 0);
+}
+
+/** After a section folds shut, if its heading has scrolled up under the pinned bars, bring it back so the reader isn't left lost further down. */
 function keepSectionInView(id) {
   const el = document.getElementById(`sec-${id}`);
-  if (!el || el.getBoundingClientRect().top >= 0) return;
+  const reach = pinnedReach(document.querySelector("[data-fx-toolbar]"));
+  if (!el || el.getBoundingClientRect().top >= reach) return;
   const calm = typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  el.scrollIntoView({ behavior: calm ? "auto" : "smooth", block: "start" });
+  window.scrollTo({ top: Math.max(0, window.scrollY + el.getBoundingClientRect().top - reach - 12), behavior: calm ? "auto" : "smooth" });
 }
 
 /** Eased scroll to a section, ending just below the sticky category bar. Reduced motion: straight there. */
 function glideTo(el, bar) {
   if (!el) return;
-  const offset = (bar?.getBoundingClientRect().height ?? 0) + 12;
+  const offset = pinnedReach(bar) + 12;
   const target = Math.max(0, el.getBoundingClientRect().top + window.scrollY - offset);
   const start = window.scrollY;
   const distance = target - start;
@@ -614,7 +622,8 @@ const toolbar                = {
   gap: 12,
   flexWrap: "wrap",
   position: "sticky",
-  top: 0,
+  // under the pinned header and order bar (their heights are published by StickyBar; 0 where there are none)
+  top: "calc(var(--ot-header-h, 0px) + var(--ot-bar-h, 0px))",
   zIndex: 4,
   padding: "10px 0",
   marginBottom: 12,

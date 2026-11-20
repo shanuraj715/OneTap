@@ -63,7 +63,7 @@ export default async function OutletHomePage({ params }) {
         </section>
       ) : null}
 
-      <div id="menu" style={{ scrollMarginTop: 24 }}>
+      <div id="menu" style={{ scrollMarginTop: "calc(var(--ot-header-h, 0px) + var(--ot-bar-h, 0px) + 24px)" }}>
         {menu.items.length > 0 ? (
           onlineOrdering ? (
             <Ordering

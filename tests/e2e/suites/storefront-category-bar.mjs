@@ -97,7 +97,8 @@ try {
     ok(inView, "…and it is scrolled into view in the row, not hidden off to the side");
 
     // reading down the page moves the highlight and keeps it in view
-    await page.evaluate((n) => { const hh = [...document.querySelectorAll("section h2, section h3")].find((x) => x.textContent.trim().startsWith(n)); window.scrollTo(0, hh.getBoundingClientRect().top + scrollY - 62); }, names[4]);
+    // (the bar is pinned UNDER the header and order bar now: bring the heading to just below all three)
+    await page.evaluate((n) => { const hh = [...document.querySelectorAll("section h2, section h3")].find((x) => x.textContent.trim().startsWith(n)); const css = getComputedStyle(document.documentElement); const reach = (parseFloat(css.getPropertyValue("--ot-header-h")) || 0) + (parseFloat(css.getPropertyValue("--ot-bar-h")) || 0) + document.querySelector("[data-fx-toolbar]").getBoundingClientRect().height; window.scrollTo(0, hh.getBoundingClientRect().top + scrollY - reach - 8); }, names[4]);
     await page.waitForTimeout(900);
     await settle(page);
     const cur2 = await strip.locator('[aria-current="true"]').innerText().catch(() => "none");

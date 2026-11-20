@@ -4,6 +4,7 @@ export { fx, fxClass, FX_ROLES } from "./fx";
 export { Hero,                } from "./Hero";
 export { MenuList } from "./MenuList";
 export { MenuSections } from "./MenuSections";
+export { StickyBar } from "./StickyBar";
 export { PageBlocks } from "./PageBlocks";
 export { ProgressSteps } from "./variants/progress";
 export { DropdownSoft } from "./variants/dropdowns";
