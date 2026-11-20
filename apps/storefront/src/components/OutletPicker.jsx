@@ -23,7 +23,7 @@ const Spinner = ({ size = 16 }) => (
  * the choice for next time and lands on that outlet's own URL, which from
  * then on is what's shared, bookmarked and printed on table QR codes.
  */
-export function OutletPicker({ brand, outlets, cookieName }) {
+export function OutletPicker({ brand, outlets, cookieName, pageLinks = [] }) {
   const router = useRouter();
   const [locating, setLocating] = useState(false);
   const [locateStatus, setLocateStatus] = useState("idle"); // idle | denied | error
@@ -92,10 +92,24 @@ export function OutletPicker({ brand, outlets, cookieName }) {
             </button>
           ))}
         </div>
+
+        {/* the store's own pages — About, Contact, Pricing, Privacy, Terms, Refunds, Delivery */}
+        {pageLinks.length ? (
+          <nav aria-label="About this store" style={footerNav} data-testid="picker-pages">
+            {pageLinks.map((l) => (
+              <a key={l.href} href={l.href} style={footerLink}>
+                {l.label}
+              </a>
+            ))}
+          </nav>
+        ) : null}
       </div>
     </main>
   );
 }
+
+const footerNav = { display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "8px 16px", marginTop: 28, paddingTop: 16, borderTop: "1px solid var(--color-border)" };
+const footerLink = { fontSize: 13, color: "var(--color-text-muted)", textDecoration: "underline" };
 
 const page = {
   minHeight: "100vh",

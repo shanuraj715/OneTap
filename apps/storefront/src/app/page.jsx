@@ -3,7 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { CantReach } from "@/components/AddressNotice";
 import { OutletPicker } from "@/components/OutletPicker";
 import { OutletUnavailable } from "@/components/OutletUnavailable";
-import { getOutletsForHost, lookupHost } from "@/lib/outlet";
+import { getOutletsForHost, getPageLinks, lookupHost } from "@/lib/outlet";
 
 export const dynamic = "force-dynamic";
 
@@ -42,5 +42,11 @@ export default async function RootPage() {
     redirect(`/${chosen}`);
   }
 
-  return <OutletPicker brand={resolved.brand} outlets={resolved.outlets} cookieName={CHOICE_COOKIE} />;
+  // The store's pages (About, Contact, Pricing, Privacy, Terms, Refunds…) are per outlet; this landing page links to
+  // the first outlet's, so a visitor — or a payment gateway's reviewer — finds them without picking an outlet first.
+  const first = resolved.outlets[0];
+  const pages = first ? (await getPageLinks(first.id)).filter((p) => p.showInFooter) : [];
+  const pageLinks = pages.map((p) => ({ label: p.title, href: `/${first.slug}/${p.slug}` }));
+
+  return <OutletPicker brand={resolved.brand} outlets={resolved.outlets} cookieName={CHOICE_COOKIE} pageLinks={pageLinks} />;
 }
