@@ -17,8 +17,8 @@ export const meta = {
     "Back on the menu the same diner sees 'Running tab ₹70' and can order again: the second order brings the tab to ₹130, on the same table session.",
     "A stranger scanning D1 while it is occupied sees 'Another party is currently seated at this table' and no menu to order from; the order page says 'Another party is seated here'.",
     "Tables page: 'Seated now — 1', 'Table D1 … 2 orders · tab ₹130', D1 'Seated'. Orders page: both orders 'DI Table D1' for the diner. The table overview shows the diner, 'Running tab ₹130' and '₹130 unpaid'.",
-    "Moving the party to D2: 'moved: D1 → D2', D1 'Needs cleaning', D2 'Seated', and the orders now say Table D2.",
-    "Closing a table that still owes money is refused with 'Confirm payment before marking this table vacant — ₹130 still unpaid.'; the overview's 'Mark table as vacant' stays disabled until 'Confirm payment' ('Fully paid'); then D2 'Needs cleaning', and 'Mark cleaned' makes it 'Free'.",
+    "Moving the party to D2: 'moved: D1 → D2', D1 'Free', D2 'Seated', and the orders now say Table D2.",
+    "Closing a table that still owes money is refused with 'Confirm payment before marking this table vacant — ₹130 still unpaid.'; the overview's 'Mark table as vacant' stays disabled until 'Confirm payment' ('Fully paid'); then D2 is 'Free' at once (the Needs cleaning status no longer exists).",
     "A seated table can't be removed ('Close the open session before removing this table'); 'Cancel / void' cancels its orders and frees the table, after which it can be removed and its code says 'isn't valid'.",
     "Rotating D2's code: the old address says 'That table code has expired', the new one works; a forged code and an unknown table are refused.",
     "With Dine-in QR ordering switched off in Settings, a table's code says 'Table ordering is off right now … order at the counter'; switched on again it works.",
@@ -148,14 +148,14 @@ export async function run(d, h) {
   const moved = await page();
   d.check("'Seated now' says 'Table D2 … moved: D1 → D2'", /Table D2\s*moved: D1 → D2/.test(moved), moved.match(/Seated now.{0,160}/)?.[0]);
   const tilesMoved = await ui.tableTiles(d);
-  d.check("D1 'Needs cleaning', D2 'Seated', D3 still Free", tilesMoved.find((t) => t.number === "D1")?.status === "Needs cleaning" && tilesMoved.find((t) => t.number === "D2")?.status === "Seated" && tilesMoved.find((t) => t.number === "D3")?.status === "Free", tilesMoved.filter((t) => /^D/.test(t.number)).map((t) => t.text).join(" | "));
+  d.check("D1 'Free' (no 'Needs cleaning' any more), D2 'Seated', D3 still Free", tilesMoved.find((t) => t.number === "D1")?.status === "Free" && tilesMoved.find((t) => t.number === "D2")?.status === "Seated" && tilesMoved.find((t) => t.number === "D3")?.status === "Free", tilesMoved.filter((t) => /^D/.test(t.number)).map((t) => t.text).join(" | "));
   d.check("the tab moved with them: still 2 orders · ₹130", /Table D2 since .{3,12} · 2 orders · tab ₹130/.test(moved) || /2 orders · tab ₹130/.test(moved));
   await d.goto(`${BENCH.admin}/orders`, 1500);
   await row(no1).waitFor({ timeout: 15000 });
   d.check("both orders on the Orders page now say Table D2", /DI Table D2/.test(norm(await row(no1).innerText())) && /DI Table D2/.test(norm(await row(second.no).innerText())));
 
   // ------------------------------------------------------------------------------------------------------------- 7
-  await d.step("A table that still owes money can't be closed; confirm payment, mark vacant, mark cleaned");
+  await d.step("A table that still owes money can't be closed; confirm payment, mark vacant (it is Free at once)");
   await ui.openTables(d);
   await d.click(d.page.getByRole("button", { name: "Close", exact: true }).first(), { after: 1500 });
   d.check("Close is refused: 'Confirm payment before marking this table vacant — ₹130 still unpaid.'", /Confirm payment before marking this table vacant — ₹130 still unpaid/.test(await page()), (await page()).match(/Confirm payment.{0,80}/)?.[0]);
@@ -168,12 +168,8 @@ export async function run(d, h) {
   d.check("'Confirm payment' → the tab says 'Fully paid' and 'Confirm payment' is now disabled", /Fully paid/.test(norm(await overview().innerText())) && (await d.page.getByRole("button", { name: "Confirm payment" }).isDisabled()));
   await d.click(d.page.getByRole("button", { name: "Mark table as vacant" }), { after: 1500 });
   await d.click(overview().getByRole("button", { name: /^D2 / }), { after: 800 });
-  d.check("D2 is now 'Needs cleaning' and offers 'Mark cleaned'", /Needs cleaning/.test(norm(await overview().innerText())) && (await d.page.getByRole("button", { name: "Mark cleaned" }).count()) === 1);
-  await d.click(d.page.getByRole("button", { name: "Mark cleaned" }), { after: 1000 });
-  d.check("'Mark cleaned' → D2 is Free again", /Free and ready/.test(norm(await overview().innerText())));
+  d.check("D2 is now Free straight away — there is no 'Needs cleaning' step and no 'Mark cleaned' button", /Free and ready/.test(norm(await overview().innerText())) && (await d.page.getByRole("button", { name: "Mark cleaned" }).count()) === 0 && !/Needs cleaning/i.test(norm(await overview().innerText())));
   await d.click(overview().getByRole("button", { name: "Back to tables" }), { after: 600 });
-  await d.click(overview().getByRole("button", { name: /^D1 / }), { after: 800 });
-  await d.click(d.page.getByRole("button", { name: "Mark cleaned" }), { after: 1000 });
   await d.press("Escape", 500);
   await ui.openTables(d);
   const cleaned = await ui.tableTiles(d);
@@ -202,7 +198,7 @@ export async function run(d, h) {
   d.check(`after 'Cancel / void' the order #${rohan.no} is Cancelled`, /Cancelled/.test(voided), voided);
   d.never("the voided order is still open for the kitchen", /Placed|Preparing|Ready/.test(voided) && !/Cancelled/.test(voided));
   await ui.openTables(d);
-  d.check("D3 is freed ('Needs cleaning') and nobody is seated", (await ui.tableTiles(d)).find((t) => t.number === "D3")?.status === "Needs cleaning" && !/Seated now/.test(await page()));
+  d.check("D3 is freed ('Free') and nobody is seated", (await ui.tableTiles(d)).find((t) => t.number === "D3")?.status === "Free" && !/Seated now/.test(await page()));
   const rm = await ui.openTableQr(d, "D3");
   await d.click(rm.dlg.getByRole("button", { name: "Remove table" }), { after: 1200 });
   d.check("now that it is free, D3 can be removed", !(await ui.tableTiles(d)).some((t) => t.number === "D3"));

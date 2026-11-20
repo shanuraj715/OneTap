@@ -973,3 +973,19 @@
 {"id":"t52-print-station-any-page","status":"pass","pass":14,"fail":0,"mode":"headless","at":"2026-11-20T22:08:25.542Z","durationMs":48488}
 {"id":"t55-growth-dashboard","status":"pass","pass":26,"fail":0,"mode":"headless","at":"2026-11-20T22:08:31.649Z","durationMs":5186}
 {"id":"t20-missed-order-alerts","status":"pass","pass":75,"fail":0,"mode":"headless","at":"2026-11-20T22:11:33.141Z","durationMs":175414}
+{"id":"t66-ops-batch","status":"error","pass":14,"fail":0,"mode":"headless","at":"2026-11-20T22:36:06.396Z","durationMs":32407,"error":"ops-batch.mjs exited with code 1. }  Node.js v24.3.0"}
+{"id":"t66-ops-batch","status":"fail","pass":23,"fail":1,"mode":"headless","at":"2026-11-20T22:37:20.307Z","durationMs":3326}
+{"id":"t66-ops-batch","status":"fail","pass":26,"fail":2,"mode":"headless","at":"2026-11-20T22:37:55.712Z","durationMs":4445}
+{"id":"t66-ops-batch","status":"error","pass":28,"fail":0,"mode":"headless","at":"2026-11-20T22:38:36.881Z","durationMs":4731,"error":"ops-batch.mjs exited with code 1. }  Node.js v24.3.0"}
+{"id":"t66-ops-batch","status":"error","pass":40,"fail":0,"mode":"headless","at":"2026-11-20T22:40:04.014Z","durationMs":74057,"error":"ops-batch.mjs exited with code 1. }  Node.js v24.3.0"}
+{"id":"t66-ops-batch","status":"fail","pass":46,"fail":1,"mode":"headless","at":"2026-11-20T22:45:04.609Z","durationMs":111173}
+{"id":"t66-ops-batch","status":"pass","pass":47,"fail":0,"mode":"headless","at":"2026-11-20T22:47:04.198Z","durationMs":110611}
+{"id":"t19-dine-in","status":"pass","pass":54,"fail":0,"mode":"headless","at":"2026-11-20T22:48:04.265Z","durationMs":54050}
+{"id":"t18-tables","status":"pass","pass":54,"fail":0,"mode":"headless","at":"2026-11-20T22:48:52.769Z","durationMs":42442}
+{"id":"t52-print-station-any-page","status":"fail","pass":13,"fail":1,"mode":"headless","at":"2026-11-20T22:49:54.594Z","durationMs":60944}
+{"id":"t28-rate-limits-api","status":"pass","pass":124,"fail":0,"mode":"headless","at":"2026-11-20T22:50:05.404Z","durationMs":9888}
+{"id":"t65-kitchen-display","status":"pass","pass":43,"fail":0,"mode":"headless","at":"2026-11-20T22:50:15.485Z","durationMs":9230}
+{"id":"t53-orders-growth-api","status":"pass","pass":84,"fail":0,"mode":"headless","at":"2026-11-20T22:50:23.924Z","durationMs":7625}
+{"id":"t52-print-station-any-page","status":"pass","pass":14,"fail":0,"mode":"headless","at":"2026-11-20T22:51:39.894Z","durationMs":67200}
+{"id":"t20-missed-order-alerts","status":"pass","pass":75,"fail":0,"mode":"headless","at":"2026-11-20T22:54:44.741Z","durationMs":175063}
+{"id":"t55-growth-dashboard","status":"pass","pass":26,"fail":0,"mode":"headless","at":"2026-11-20T22:54:50.620Z","durationMs":5018}

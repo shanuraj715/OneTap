@@ -86,8 +86,8 @@ try {
   console.log("== only one poller");
   await page.goto(AD + "/menu", { waitUntil: "load" });
   await page.getByTestId("print-station-chip").waitFor();
-  const n = await claimsDuring(14000);
-  ok(n >= 2 && n <= 6, "about one check every 4 seconds on a page that is not Printing — not two pollers", `${n} checks in 14 s`);
+  const n = await claimsDuring(20000);
+  ok(n >= 1 && n <= 3, "about one check every 8 seconds on a page that is not Printing — not two pollers", `${n} checks in 20 s`);
 
   /* ------------------------------------------------------------ off means silent, and the backlog prints when it is back */
   console.log("== off is silent; on picks up the waiting tickets");

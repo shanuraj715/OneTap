@@ -5208,8 +5208,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T21:50:31.791Z",
-    "durationMs": 42511,
+    "at": "2026-11-20T22:48:52.769Z",
+    "durationMs": 42442,
     "steps": [
       {
         "n": 1,
@@ -5374,7 +5374,7 @@
           {
             "label": "the panel says 'Table T9' and 'Rooftop · 6 seats · Free'",
             "ok": true,
-            "detail": "Table T9 Rooftop · 6 seats · Free http://localhost:3170/t/6b00c0816ab265fa847586",
+            "detail": "Table T9 Rooftop · 6 seats · Free http://localhost:3170/t/6b00ce2ebb39252e9f0625",
             "kind": "expect"
           },
           {
@@ -5386,7 +5386,7 @@
           {
             "label": "the address printed under it is /t/<id>?k=<code> on the store's own site",
             "ok": true,
-            "detail": "http://localhost:3170/t/6b00c0816ab265fa847586db?k=yo8uKexE04_OWLP75KM0tE8P",
+            "detail": "http://localhost:3170/t/6b00ce2ebb39252e9f0625dc?k=W4S6axvE-HHOIh09WvGj-oDw",
             "kind": "expect"
           },
           {
@@ -5410,7 +5410,7 @@
           {
             "label": "every table has its own address and its own code",
             "ok": true,
-            "detail": "http://localhost:3170/t/6b00c0816ab265fa847586db?k=yo8uKexE04_OWLP75KM0tE8P | http://localhost:3170/t/6b00c0826ab265fa847586ed?k=PkmJAB0cbKplhQxUAqNGNOdA | http://localhost:3170/t/6b00c07b6ab265fa8475821d?k=HtoUPMwZe-Czfo_TuqJjfR-p",
+            "detail": "http://localhost:3170/t/6b00ce2ebb39252e9f0625dc?k=W4S6axvE-HHOIh09WvGj-oDw | http://localhost:3170/t/6b00ce2fbb39252e9f0625ee?k=MlS0stT7xW0qNgVZi7MRgD5V | http://localhost:3170/t/6b00ce29bb39252e9f062124?k=6V4qfo323ERXVrTOVR-Ig3it",
             "kind": "expect"
           },
           {
@@ -5589,12 +5589,12 @@
     "id": "t19-dine-in",
     "title": "Dine-in at a table — create tables, scan the QR, order onto a running tab, staff move / settle / void, occupied tables, rotated codes, switch-off",
     "status": "pass",
-    "pass": 55,
+    "pass": 54,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T21:51:33.203Z",
-    "durationMs": 55397,
+    "at": "2026-11-20T22:48:04.265Z",
+    "durationMs": 54050,
     "steps": [
       {
         "n": 1,
@@ -5735,7 +5735,7 @@
           {
             "label": "'Seated now — 1' with 'Table D1 … 2 orders · tab ₹130'",
             "ok": true,
-            "detail": "Seated now — 1 Table D1 since 03:20 AM · 2 orders · tab ₹130 Move to… Table D2 Table D3 Table T1 Table T2 Table T3 Table T4 Table ",
+            "detail": "Seated now — 1 Table D1 since 04:17 AM · 2 orders · tab ₹130 Move to… Table D2 Table D3 Table T1 Table T2 Table T3 Table T4 Table ",
             "kind": "expect"
           },
           {
@@ -5747,7 +5747,7 @@
           {
             "label": "the Orders page lists both: '#0001 … Dina Diner 9877712345 DI Table D1 … ₹70 Placed' and '#0002 … ₹60'",
             "ok": true,
-            "detail": "#0001 03:20 AM Dina Diner 9877712345 DI Table D1 1 ₹70 Placed 0m Approve || #0002 03:20 AM Dina Diner 9877712345 DI Table D1 1 ₹60 Placed 0m Approve",
+            "detail": "#0001 04:17 AM Dina Diner 9877712345 DI Table D1 1 ₹70 Placed 0m Approve || #0002 04:17 AM Dina Diner 9877712345 DI Table D1 1 ₹60 Placed 0m Approve",
             "kind": "expect"
           },
           {
@@ -5771,13 +5771,13 @@
           {
             "label": "'Seated now' says 'Table D2 … moved: D1 → D2'",
             "ok": true,
-            "detail": "Seated now — 1 Table D2moved: D1 → D2 since 03:20 AM · 2 orders · tab ₹130 Move to… Table D1 Table D3 Table T1 Table T2 Table T3 Table T4 Table T5 Move Close Garden D1 Ne",
+            "detail": "Seated now — 1 Table D2moved: D1 → D2 since 04:17 AM · 2 orders · tab ₹130 Move to… Table D1 Table D3 Table T1 Table T2 Table T3 Table T4 Table T5 Move Close Garden D1 Fr",
             "kind": "expect"
           },
           {
-            "label": "D1 'Needs cleaning', D2 'Seated', D3 still Free",
+            "label": "D1 'Free' (no 'Needs cleaning' any more), D2 'Seated', D3 still Free",
             "ok": true,
-            "detail": "D1 Needs cleaning 2 seats | D2 Seated 4 seats | D3 Free 4 seats",
+            "detail": "D1 Free 2 seats | D2 Seated 4 seats | D3 Free 4 seats",
             "kind": "expect"
           },
           {
@@ -5796,12 +5796,12 @@
       },
       {
         "n": 7,
-        "title": "A table that still owes money can't be closed; confirm payment, mark vacant, mark cleaned",
+        "title": "A table that still owes money can't be closed; confirm payment, mark vacant (it is Free at once)",
         "checks": [
           {
             "label": "Close is refused: 'Confirm payment before marking this table vacant — ₹130 still unpaid.'",
             "ok": true,
-            "detail": "Confirm payment before marking this table vacant — ₹130 still unpaid. Garden D1 Needs cleaning ",
+            "detail": "Confirm payment before marking this table vacant — ₹130 still unpaid. Garden D1 Free 2 seats D2",
             "kind": "expect"
           },
           {
@@ -5823,13 +5823,7 @@
             "kind": "expect"
           },
           {
-            "label": "D2 is now 'Needs cleaning' and offers 'Mark cleaned'",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "'Mark cleaned' → D2 is Free again",
+            "label": "D2 is now Free straight away — there is no 'Needs cleaning' step and no 'Mark cleaned' button",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -5873,7 +5867,7 @@
           {
             "label": "after 'Cancel / void' the order #0003 is Cancelled",
             "ok": true,
-            "detail": "#0003 03:21 AM Rohan Other 9877799999 DI Table D3 1 ₹70 Cancelled —",
+            "detail": "#0003 04:17 AM Rohan Other 9877799999 DI Table D3 1 ₹70 Cancelled —",
             "kind": "expect"
           },
           {
@@ -5883,7 +5877,7 @@
             "kind": "never"
           },
           {
-            "label": "D3 is freed ('Needs cleaning') and nobody is seated",
+            "label": "D3 is freed ('Free') and nobody is seated",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -5909,7 +5903,7 @@
           {
             "label": "the panel shows a new code for the same table",
             "ok": true,
-            "detail": "http://localhost:3170/t/6b00c0b2eaf43731315055d8?k=Qlcayufu42FWu6oNjJR4jGWC → http://localhost:3170/t/6b00c0b2eaf43731315055d8?k=5Qjgub1qzMlPAa_pWOdx1iQ6",
+            "detail": "http://localhost:3170/t/6b00cdf3553f97dc7b29adf4?k=aJBUOekhGOHrCX2emXvNU2zn → http://localhost:3170/t/6b00cdf3553f97dc7b29adf4?k=BQJOeW5uMnU84H3z_8RntzFj",
             "kind": "expect"
           },
           {
@@ -5998,8 +5992,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T22:11:33.141Z",
-    "durationMs": 175414,
+    "at": "2026-11-20T22:54:44.741Z",
+    "durationMs": 175063,
     "steps": [
       {
         "n": 1,
@@ -6092,7 +6086,7 @@
           {
             "label": "the counter's Orders screen has order A as 'Placed' with its wait running ('0m')",
             "ok": true,
-            "detail": "#0001 03:38 AM Meera Late 9877700077 TA 1 ₹70 Placed 0m Accepted",
+            "detail": "#0001 04:22 AM Meera Late 9877700077 TA 1 ₹70 Placed 0m Accepted",
             "kind": "expect"
           },
           {
@@ -6104,7 +6098,7 @@
           {
             "label": "over a minute later the status still says 'Placed' and the wait shows 1m or more",
             "ok": true,
-            "detail": "#0001 03:38 AM Meera Late 9877700077 TA 1 ₹70 Placed 1m Accepted",
+            "detail": "#0001 04:22 AM Meera Late 9877700077 TA 1 ₹70 Placed 1m Accepted",
             "kind": "expect"
           },
           {
@@ -6392,7 +6386,7 @@
           {
             "label": "completed: order A has no timer and no warning",
             "ok": true,
-            "detail": "Completed · #0001 03:38 AM Meera Late 9877700077 TA 1 ₹70 Completed —",
+            "detail": "Completed · #0001 04:22 AM Meera Late 9877700077 TA 1 ₹70 Completed —",
             "kind": "expect"
           },
           {
@@ -9416,8 +9410,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T22:07:36.213Z",
-    "durationMs": 9375,
+    "at": "2026-11-20T22:50:05.404Z",
+    "durationMs": 9888,
     "steps": [
       {
         "n": 1,
@@ -18242,8 +18236,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T22:08:25.542Z",
-    "durationMs": 48488,
+    "at": "2026-11-20T22:51:39.894Z",
+    "durationMs": 67200,
     "steps": [
       {
         "n": 1,
@@ -18298,9 +18292,9 @@
         "title": "only one poller",
         "checks": [
           {
-            "label": "about one check every 4 seconds on a page that is not Printing — not two pollers",
+            "label": "about one check every 8 seconds on a page that is not Printing — not two pollers",
             "ok": true,
-            "detail": "3 checks in 14 s",
+            "detail": "2 checks in 20 s",
             "kind": "expect"
           }
         ]
@@ -18330,7 +18324,7 @@
           {
             "label": "switching it back on prints the ticket that was waiting — from the Orders page",
             "ok": true,
-            "detail": "job printed, chip 1, claims since: 14",
+            "detail": "job printed, chip 1, claims since: 12",
             "kind": "expect"
           }
         ]
@@ -18377,8 +18371,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T21:51:40.724Z",
-    "durationMs": 6661,
+    "at": "2026-11-20T22:50:23.924Z",
+    "durationMs": 7625,
     "steps": [
       {
         "n": 1,
@@ -18537,7 +18531,7 @@
           {
             "label": "outside its hours a dish shows when it IS available instead of a price",
             "ok": true,
-            "detail": "Available 5:21 AM – 6:21 AM",
+            "detail": "Available 6:20 AM – 7:20 AM",
             "kind": "expect"
           },
           {
@@ -18549,7 +18543,7 @@
           {
             "label": "a customer can't order it now",
             "ok": true,
-            "detail": "409 {\"error\":\"Poha is only available 5:21 AM – 6:21 AM\"}",
+            "detail": "409 {\"error\":\"Poha is only available 6:20 AM – 7:20 AM\"}",
             "kind": "expect"
           },
           {
@@ -18591,7 +18585,7 @@
           {
             "label": "now the outlet offers pickup times, grouped by day",
             "ok": true,
-            "detail": "Today:80 Tomorrow:95",
+            "detail": "Today:76 Tomorrow:95",
             "kind": "expect"
           },
           {
@@ -18609,7 +18603,7 @@
           {
             "label": "a customer places a takeaway for a later time",
             "ok": true,
-            "detail": "201 2026-11-20T23:15:00.000Z",
+            "detail": "201 2026-11-21T00:15:00.000Z",
             "kind": "expect"
           },
           {
@@ -18639,7 +18633,7 @@
           {
             "label": "breakfast can be pre-ordered for a time when breakfast is served (hours are checked at the pickup time)",
             "ok": true,
-            "detail": "201 {\"order\":{\"id\":\"6b00c0ea3c91af256349fc3d\",\"orderNumber\":\"0007\",\"channel\":\"takeaway\",\"placedBy\":\"cust",
+            "detail": "201 {\"order\":{\"id\":\"6b00ceac0530bd1b85fc466f\",\"orderNumber\":\"0007\",\"channel\":\"takeaway\",\"placedBy\":\"cust",
             "kind": "expect"
           },
           {
@@ -18813,7 +18807,7 @@
           {
             "label": "the storefront can show what it saves (₹130 separately, ₹110 as a combo → saves ₹20)",
             "ok": true,
-            "detail": "{\"parts\":[{\"itemId\":\"6b00c0e93c91af256349fad2\",\"name\":\"Veg Momos\",\"variantLabel\":null,\"quantity\":1,\"missing\":false},{\"itemId\":\"6b00c0e93c91af256349fad7\",\"name\":\"Masala Chai\",\"variantLabel\":null,\"quantity\":1,\"missing\":false}],\"separately\":13000,\"saves\":2000}",
+            "detail": "{\"parts\":[{\"itemId\":\"6b00ceac0530bd1b85fc4504\",\"name\":\"Veg Momos\",\"variantLabel\":null,\"quantity\":1,\"missing\":false},{\"itemId\":\"6b00ceac0530bd1b85fc450b\",\"name\":\"Masala Chai\",\"variantLabel\":null,\"quantity\":1,\"missing\":false}],\"separately\":13000,\"saves\":2000}",
             "kind": "expect"
           },
           {
@@ -18837,7 +18831,7 @@
           {
             "label": "an ordered combo carries what it is made of",
             "ok": true,
-            "detail": "[{\"itemId\":\"6b00c0e93c91af256349fad2\",\"name\":\"Veg Momos\",\"variantLabel\":null,\"quantity\":1},{\"itemId\":\"6b00c0e93c91af256349fad7\",\"name\":\"Masala Chai\",\"variantLabel\":null,\"quantity\":1}]",
+            "detail": "[{\"itemId\":\"6b00ceac0530bd1b85fc4504\",\"name\":\"Veg Momos\",\"variantLabel\":null,\"quantity\":1},{\"itemId\":\"6b00ceac0530bd1b85fc450b\",\"name\":\"Masala Chai\",\"variantLabel\":null,\"quantity\":1}]",
             "kind": "expect"
           },
           {
@@ -18861,7 +18855,7 @@
           {
             "label": "a pre-order's kitchen ticket starts with PRE-ORDER and the full pickup time",
             "ok": true,
-            "detail": "PRE-ORDER |            Pickup 4:45 AM, Sat 21 Nov | ------------------------------------------------ |                  KITCHEN ORDER",
+            "detail": "PRE-ORDER |            Pickup 5:45 AM, Sat 21 Nov | ------------------------------------------------ |                  KITCHEN ORDER",
             "kind": "expect"
           }
         ]
@@ -18873,7 +18867,7 @@
           {
             "label": "a 'buy 1 get 1 free' coupon on the Food category is created",
             "ok": true,
-            "detail": "201 {\"coupon\":{\"id\":\"6b00c0ec3c91af256349fd9b\",\"code\":\"B1G1MOMO\",\"description\":\"\",\"discountType\":\"bogo\",\"value\":1,\"maxDiscou",
+            "detail": "201 {\"coupon\":{\"id\":\"6b00ceae0530bd1b85fc47cc\",\"code\":\"B1G1MOMO\",\"description\":\"\",\"discountType\":\"bogo\",\"value\":1,\"maxDiscou",
             "kind": "expect"
           },
           {
@@ -19523,8 +19517,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T22:08:31.649Z",
-    "durationMs": 5186,
+    "at": "2026-11-20T22:54:50.620Z",
+    "durationMs": 5018,
     "steps": [
       {
         "n": 1,
@@ -19581,7 +19575,7 @@
           {
             "label": "a rider is added from the Delivery riders tab",
             "ok": true,
-            "detail": "[{\"id\":\"6b00c4dc3c7828da1c8662e3\",\"name\":\"Ramesh\",\"phone\":\"98765 43210\",\"isActive\":true,\"createdAt\":\"2026-11-20T22:08:28.085Z\"}]",
+            "detail": "[{\"id\":\"6b00cfb65c8b088635dfb3f2\",\"name\":\"Ramesh\",\"phone\":\"98765 43210\",\"isActive\":true,\"createdAt\":\"2026-11-20T22:54:46.989Z\"}]",
             "kind": "expect"
           },
           {
@@ -19611,7 +19605,7 @@
           {
             "label": "the row now says Out for delivery — with Ramesh",
             "ok": true,
-            "detail": "#0005 03:38 AM UI Tester Del 1 ₹90 Out for delivery with Ramesh 0m Delivered",
+            "detail": "#0005 04:24 AM UI Tester Del 1 ₹90 Out for delivery with Ramesh 0m Delivered",
             "kind": "expect"
           },
           {
@@ -19665,7 +19659,7 @@
           {
             "label": "a combo is created from the dish form",
             "ok": true,
-            "detail": "{\"items\":[{\"itemId\":\"6b00c3aa3c7828da1c8641f0\",\"variantId\":null,\"quantity\":1}]}",
+            "detail": "{\"items\":[{\"itemId\":\"6b00cf045c8b088635dfa1a7\",\"variantId\":null,\"quantity\":1}]}",
             "kind": "expect"
           },
           {
@@ -21527,8 +21521,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T22:03:18.012Z",
-    "durationMs": 9764,
+    "at": "2026-11-20T22:50:15.485Z",
+    "durationMs": 9230,
     "steps": [
       {
         "n": 1,
@@ -21759,7 +21753,7 @@
           {
             "label": "bell ON: the waiter's screen shows 'Table T4 — Order #… Everything is ready'",
             "ok": true,
-            "detail": "Table T4 — Order #0011 Everything is ready — take it out.",
+            "detail": "Table T4 — Order #0007 Everything is ready — take it out.",
             "kind": "expect"
           },
           {
@@ -21808,6 +21802,351 @@
             "label": "its waiting time is shown in minutes",
             "ok": true,
             "detail": "2 min",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t66-ops-batch": {
+    "id": "t66-ops-batch",
+    "title": "Completed dine-in order frees the table (no Needs cleaning) · phone layouts · platform live-updates switch · print station every 8 s with check, loader and countdown",
+    "status": "pass",
+    "pass": 47,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-20T22:47:04.198Z",
+    "durationMs": 110611,
+    "steps": [
+      {
+        "n": 1,
+        "title": "A completed dine-in order frees the table; no 'Needs cleaning'",
+        "checks": [
+          {
+            "label": "the table is Seated while the order is open",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and still Seated when the order is only Ready",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the order is marked Completed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the table is Free again by itself — nobody had to press 'Free the table'",
+            "ok": true,
+            "detail": "free null",
+            "kind": "expect"
+          },
+          {
+            "label": "and its party session is closed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a table with ANOTHER order still being made stays Seated when one order is completed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and is freed when the last one is completed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'needs-cleaning' is no longer a status (setting it is refused)",
+            "ok": true,
+            "detail": "400",
+            "kind": "expect"
+          },
+          {
+            "label": "moving a party leaves the old table Free (not 'needs cleaning'), the new one Seated",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Phone: 'Free table for new guests' is on the front screen",
+        "checks": [
+          {
+            "label": "(set-up: T4 is still seated by a party with nothing open and nothing owed)",
+            "ok": true,
+            "detail": "{\"paid\":true,\"open\":0}",
+            "kind": "expect"
+          },
+          {
+            "label": "on a phone, with nothing added yet, the menu screen shows 'Free table for new guests'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…near the top of the screen and fully inside it",
+            "ok": true,
+            "detail": "{\"y\":133,\"w\":243}",
+            "kind": "expect"
+          },
+          {
+            "label": "tapping it frees the table",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "and the banner goes away",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Phone: the dashboard",
+        "checks": [
+          {
+            "label": "the cards sit two to a row on a phone",
+            "ok": true,
+            "detail": "2 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "every card is inside the screen",
+            "ok": true,
+            "detail": "16–183 193–359 16–183 193–359 16–183 193–359 16–183 193–359 16–183 193–359 16–359 16–183 193–359 16–359 16–183 16–359 16–183",
+            "kind": "expect"
+          },
+          {
+            "label": "nothing inside a card is clipped or overflows it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the page doesn't scroll sideways",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "cards in a row are the same height",
+            "ok": true,
+            "detail": "137 vs 137",
+            "kind": "expect"
+          },
+          {
+            "label": "on a computer it is still three columns",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Phone: Orders filters in one scrolling row",
+        "checks": [
+          {
+            "label": "the filters are one row, wider than the screen, scrolling sideways",
+            "ok": true,
+            "detail": "{\"sw\":836,\"cw\":343,\"h\":35,\"oneRow\":true,\"ox\":\"auto\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "the row is a single line tall — the order list isn't pushed down",
+            "ok": true,
+            "detail": "35px",
+            "kind": "expect"
+          },
+          {
+            "label": "the page itself doesn't scroll sideways",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the last chip (Payment pending) is reachable by scrolling the row",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a filter dropdown still opens (it isn't clipped by the scrolling row)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Platform: live updates over a WebSocket on / off",
+        "checks": [
+          {
+            "label": "the default: the Orders page says Live (a WebSocket)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the platform setting is ON by default",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Platform settings → Live order updates: the switch is on",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "switching it off is saved",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the page explains what off means",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a new live connection is refused while it is off",
+            "ok": true,
+            "detail": "refused",
+            "kind": "expect"
+          },
+          {
+            "label": "an open Orders page switches itself to 'Refreshing every 5s' (within a minute)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it asks the API for the order list every ~5 seconds",
+            "ok": true,
+            "detail": "2 requests in 11.5 s",
+            "kind": "expect"
+          },
+          {
+            "label": "switching it back on is saved",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the Orders page is Live again by itself",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Print station: 8-second checks, green check, loader, countdown",
+        "checks": [
+          {
+            "label": "when idle the chip says 'Print station on' with a green check",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and shows a countdown to the next check (just the seconds, no extra words)",
+            "ok": true,
+            "detail": "Print station on · 9s",
+            "kind": "expect"
+          },
+          {
+            "label": "the countdown goes down second by second",
+            "ok": true,
+            "detail": "9s → 7s",
+            "kind": "expect"
+          },
+          {
+            "label": "the check is green (the success colour)",
+            "ok": true,
+            "detail": "rgb(46, 125, 70)",
+            "kind": "expect"
+          },
+          {
+            "label": "while it asks the server the chip shows a loader and 'Checking…'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the station asks the server only every ~8 s (not every 4)",
+            "ok": true,
+            "detail": "3 calls in 38 s, gaps 8,8s",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "Print station: the platform dashboard (super admin) never prints or checks",
+        "checks": [
+          {
+            "label": "with the print station switched on in this browser, the super admin's platform dashboard makes NO print requests",
+            "ok": true,
+            "detail": "0 calls in 19 s",
+            "kind": "expect"
+          },
+          {
+            "label": "…and shows no 'Print station on' chip",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "Phone: the store page in the platform console",
+        "checks": [
+          {
+            "label": "the three buttons sit in one tidy row inside the screen",
+            "ok": true,
+            "detail": "{\"oneRow\":true,\"maxRight\":305,\"vw\":375,\"minLeft\":16}",
+            "kind": "expect"
+          },
+          {
+            "label": "the page doesn't scroll sideways",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the store name has room (it isn't squeezed into a thin column)",
+            "ok": true,
+            "detail": "343px wide",
             "kind": "expect"
           },
           {

@@ -1,6 +1,6 @@
 # T19 — Dine-in at a table — create tables, scan the QR, order onto a running tab, staff move / settle / void, occupied tables, rotated codes, switch-off
 
-**Area:** tables · **Last result:** ✅ PASSED (55 passed, 0 failed · 2026-11-21 03:21 · headless · 55.4 s)
+**Area:** tables · **Last result:** ✅ PASSED (54 passed, 0 failed · 2026-11-21 04:18 · headless · 54.0 s)
 
 **Run it alone:** `node run.mjs --only t19` (add `--visible` to watch it) · starts from fresh fake data
 
@@ -16,7 +16,7 @@ In Chrome. The owner of Acme Momos adds three tables (D1, D2, D3) and copies D1'
 4. A stranger scanning the same code is turned away
 5. Staff see the party: seated now, orders, tab
 6. Staff move the party from D1 to D2
-7. A table that still owes money can't be closed; confirm payment, mark vacant, mark cleaned
+7. A table that still owes money can't be closed; confirm payment, mark vacant (it is Free at once)
 8. A second diner at D3; staff void the party; a seated table can't be removed
 9. Rotating a code kills the printed one; forged and unknown codes are refused
 10. Dine-in QR ordering switched off in Settings, and on again
@@ -29,8 +29,8 @@ In Chrome. The owner of Acme Momos adds three tables (D1, D2, D3) and copies D1'
 - Back on the menu the same diner sees 'Running tab ₹70' and can order again: the second order brings the tab to ₹130, on the same table session.
 - A stranger scanning D1 while it is occupied sees 'Another party is currently seated at this table' and no menu to order from; the order page says 'Another party is seated here'.
 - Tables page: 'Seated now — 1', 'Table D1 … 2 orders · tab ₹130', D1 'Seated'. Orders page: both orders 'DI Table D1' for the diner. The table overview shows the diner, 'Running tab ₹130' and '₹130 unpaid'.
-- Moving the party to D2: 'moved: D1 → D2', D1 'Needs cleaning', D2 'Seated', and the orders now say Table D2.
-- Closing a table that still owes money is refused with 'Confirm payment before marking this table vacant — ₹130 still unpaid.'; the overview's 'Mark table as vacant' stays disabled until 'Confirm payment' ('Fully paid'); then D2 'Needs cleaning', and 'Mark cleaned' makes it 'Free'.
+- Moving the party to D2: 'moved: D1 → D2', D1 'Free', D2 'Seated', and the orders now say Table D2.
+- Closing a table that still owes money is refused with 'Confirm payment before marking this table vacant — ₹130 still unpaid.'; the overview's 'Mark table as vacant' stays disabled until 'Confirm payment' ('Fully paid'); then D2 is 'Free' at once (the Needs cleaning status no longer exists).
 - A seated table can't be removed ('Close the open session before removing this table'); 'Cancel / void' cancels its orders and frees the table, after which it can be removed and its code says 'isn't valid'.
 - Rotating D2's code: the old address says 'That table code has expired', the new one works; a forged code and an unknown table are refused.
 - With Dine-in QR ordering switched off in Settings, a table's code says 'Table ordering is off right now … order at the counter'; switched on again it works.
@@ -52,7 +52,7 @@ In Chrome. The owner of Acme Momos adds three tables (D1, D2, D3) and copies D1'
 
 _Nothing failed._
 
-### ✅ Passed (55)
+### ✅ Passed (54)
 
 **Step 1 — Staff add three tables and copy the code of the first**
 
@@ -95,18 +95,17 @@ _Nothing failed._
 **Step 6 — Staff move the party from D1 to D2**
 
 - 'Seated now' says 'Table D2 … moved: D1 → D2'
-- D1 'Needs cleaning', D2 'Seated', D3 still Free — _D1 Needs cleaning 2 seats \| D2 Seated 4 seats \| D3 Free 4 seats_
+- D1 'Free' (no 'Needs cleaning' any more), D2 'Seated', D3 still Free — _D1 Free 2 seats \| D2 Seated 4 seats \| D3 Free 4 seats_
 - the tab moved with them: still 2 orders · ₹130
 - both orders on the Orders page now say Table D2
 
-**Step 7 — A table that still owes money can't be closed; confirm payment, mark vacant, mark cleaned**
+**Step 7 — A table that still owes money can't be closed; confirm payment, mark vacant (it is Free at once)**
 
 - Close is refused: 'Confirm payment before marking this table vacant — ₹130 still unpaid.'
 - did not happen: the table was freed although ₹130 is unpaid
 - in the overview 'Mark table as vacant' is disabled while it is unpaid
 - 'Confirm payment' → the tab says 'Fully paid' and 'Confirm payment' is now disabled
-- D2 is now 'Needs cleaning' and offers 'Mark cleaned'
-- 'Mark cleaned' → D2 is Free again
+- D2 is now Free straight away — there is no 'Needs cleaning' step and no 'Mark cleaned' button
 - the Tables page has no one seated and D1, D2, D3 all Free — _D1 Free 2 seats \| D2 Free 4 seats \| D3 Free 4 seats_
 
 **Step 8 — A second diner at D3; staff void the party; a seated table can't be removed**
@@ -115,9 +114,9 @@ _Nothing failed._
 - D3 is Seated and listed under 'Seated now'
 - removing a seated table is refused: 'Close the open session before removing this table'
 - did not happen: a seated table was removed
-- after 'Cancel / void' the order #0003 is Cancelled — _#0003 03:21 AM Rohan Other 9877799999 DI Table D3 1 ₹70 Cancelled —_
+- after 'Cancel / void' the order #0003 is Cancelled — _#0003 04:17 AM Rohan Other 9877799999 DI Table D3 1 ₹70 Cancelled —_
 - did not happen: the voided order is still open for the kitchen
-- D3 is freed ('Needs cleaning') and nobody is seated
+- D3 is freed ('Free') and nobody is seated
 - now that it is free, D3 can be removed
 - the removed table's code says 'That table code isn't valid' — _This code didn't work That table code isn't valid_
 
@@ -143,6 +142,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-21 04:18 | pass | 54 | 0 | headless | 54.0 s |
 | 2026-11-21 03:21 | pass | 55 | 0 | headless | 55.4 s |
 | 2026-11-21 00:32 | pass | 55 | 0 | headless | 56.3 s |
 | 2026-11-20 16:10 | pass | 55 | 0 | headless | 55.4 s |
@@ -152,7 +152,6 @@ _Nothing failed._
 | 2026-11-20 04:23 | pass | 55 | 0 | headless | 54.6 s |
 | 2026-11-20 00:16 | pass | 55 | 0 | headless | 58.4 s |
 | 2026-11-19 23:43 | pass | 55 | 0 | headless | 54.9 s |
-| 2026-11-19 23:26 | pass | 55 | 0 | headless | 55.7 s |
 
 ---
 _Generated by `tests/e2e/run.mjs` — edit the test file (`tests/t19-dine-in.mjs`), not this page._

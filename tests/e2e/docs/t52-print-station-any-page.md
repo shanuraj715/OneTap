@@ -1,12 +1,12 @@
 # T52 — Print station — a computer switched on as a print station prints tickets from ANY dashboard page (Orders, Menu, Dashboard…), once, and only when it is switched on and the plan has Printing
 
-**Area:** printing · **Last result:** ✅ PASSED (14 passed, 0 failed · 2026-11-21 03:38 · headless · 48.5 s)
+**Area:** printing · **Last result:** ✅ PASSED (14 passed, 0 failed · 2026-11-21 04:21 · headless · 1 min 7 s)
 
 **Run it alone:** `node run.mjs --only t52` (add `--visible` to watch it)
 
 ## What this test does
 
-Runs suites/print-station-any-page.mjs in Chrome as the owner of Acme Momos with a kitchen KOT printer on the 'This browser' target (auto-print on accepted). A new device is not a print station and the sidebar shows nothing. On the Printing page 'Use this computer as a print station' is ticked: the sidebar then says 'Print station on'. With the browser on the Orders page, then the Menu page, then the Dashboard, a new order is placed and accepted each time and its kitchen ticket is printed by this computer within a few seconds without going near Printing (the browser's print is stubbed, and the job turns 'printed'). On a page that is not Printing the browser checks for tickets about every 4 seconds — one poller, not two. Switching it off removes the marker and the browser makes NO print checks; a ticket made meanwhile waits in the queue and is printed from the Orders page as soon as the station is switched back on. It is remembered after a reload. A store on a plan without Printing (Beta Bites) never checks and shows no marker, even if the device was switched on before. The test printer and orders are removed.
+Runs suites/print-station-any-page.mjs in Chrome as the owner of Acme Momos with a kitchen KOT printer on the 'This browser' target (auto-print on accepted). A new device is not a print station and the sidebar shows nothing. On the Printing page 'Use this computer as a print station' is ticked: the sidebar then says 'Print station on'. With the browser on the Orders page, then the Menu page, then the Dashboard, a new order is placed and accepted each time and its kitchen ticket is printed by this computer within a few seconds without going near Printing (the browser's print is stubbed, and the job turns 'printed'). On a page that is not Printing the browser checks for tickets about every 8 seconds — one poller, not two. Switching it off removes the marker and the browser makes NO print checks; a ticket made meanwhile waits in the queue and is printed from the Orders page as soon as the station is switched back on. It is remembered after a reload. A store on a plan without Printing (Beta Bites) never checks and shows no marker, even if the device was switched on before. The test printer and orders are removed.
 
 ## Steps
 
@@ -20,7 +20,7 @@ Runs suites/print-station-any-page.mjs in Chrome as the owner of Acme Momos with
 ## What to expect (these must happen)
 
 - Once switched on, the device prints tickets from any dashboard page and shows 'Print station on' in the sidebar.
-- Only one check about every 4 seconds; none when it is off; none for a store without Printing.
+- Only one check about every 8 seconds; none when it is off; none for a store without Printing.
 - Tickets queued while it was off are printed when it is switched back on; the setting survives a reload.
 
 ## What must NOT happen
@@ -52,14 +52,14 @@ _Nothing failed._
 
 **Step 3 — only one poller**
 
-- about one check every 4 seconds on a page that is not Printing — not two pollers — _3 checks in 14 s_
+- about one check every 8 seconds on a page that is not Printing — not two pollers — _2 checks in 20 s_
 
 **Step 4 — off is silent; on picks up the waiting tickets**
 
 - switching it off removes the sidebar marker
 - with the station off, this browser makes no print checks at all — _0 checks_
 - …and the new ticket simply waits in the queue — _queued_
-- switching it back on prints the ticket that was waiting — from the Orders page — _job printed, chip 1, claims since: 14_
+- switching it back on prints the ticket that was waiting — from the Orders page — _job printed, chip 1, claims since: 12_
 
 **Step 5 — remembered on this device**
 
@@ -74,6 +74,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-21 04:21 | pass | 14 | 0 | headless | 1 min 7 s |
+| 2026-11-21 04:19 | fail | 13 | 1 | headless | 1 min 1 s |
 | 2026-11-21 03:38 | pass | 14 | 0 | headless | 48.5 s |
 | 2026-11-20 12:11 | pass | 14 | 0 | headless | 48.4 s |
 | 2026-11-20 12:07 | fail | 13 | 1 | headless | 1 min 9 s |
