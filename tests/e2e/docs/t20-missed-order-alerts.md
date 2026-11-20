@@ -1,12 +1,12 @@
 # T20 — Missed-order alerts — with the feature off nothing warns anyone; with it on: banner, red row, sound, repeat, per-status messages, roles, dashboard, customer
 
-**Area:** orders · **Last result:** ✅ PASSED (74 passed, 0 failed · 2026-11-20 05:54 · headless · 2 min 58 s)
+**Area:** orders · **Last result:** ✅ PASSED (75 passed, 0 failed · 2026-11-20 16:03 · headless · 2 min 56 s)
 
 **Run it alone:** `node run.mjs --only t20` (add `--visible` to watch it) · starts from fresh fake data
 
 ## What this test does
 
-In Chrome. The owner of Acme Momos opens Settings → Missed-order alerts (on by default: accept within 2, start 5, finish 20, hand over 10 minutes; sound and reminders on), checks the limits (0 becomes 1, 241 is refused) and sets every limit to 1 minute, then switches the alerts OFF. A customer places order A and nobody touches it. After more than a minute the Orders screen shows the wait ('1m') but no banner, no red row, no 'Running late' count and no sound; the dashboard says 'In the queue 1' and 'Missed orders 0'; the order is still 'Placed' (nothing accepts or cancels it for them). The customer's screen is the same. The alerts are switched ON: the Orders screen shows a banner ('Order #A needs attention — hasn't been accepted for N minutes — the limit is 1'), a red row ('Placed Nm — over 1m limit'), 'Running late (1)', and the dashboard shows 'Missed orders 1'. The alert sound waits for a click, then chimes once; a second order B then arrives and, when it also goes late, the sound chimes again, and keeps reminding every minute while orders are still late. Dismissing the banner leaves the rows red and the count. As staff move A on, each stage warns with its own message (accepted but not started, cooking too long, ready and waiting) and the warning ends when it is Completed. 'Play a sound' off and 'Keep reminding me' off are respected. The manager, cashier and kitchen see the same alerts. The customer sees nothing different and can still order.
+In Chrome. The owner of Acme Momos opens Settings → Missed-order alerts (on by default: accept within 2 minutes and finish cooking within 20 minutes; sound and reminders on), checks the limits (0 becomes 1, 241 is refused) and sets both limits to 1 minute, then switches the alerts OFF. A customer places order A and nobody touches it. After more than a minute the Orders screen shows the wait ('1m') but no banner, no red row, no 'Running late' count and no sound; the dashboard says 'In the queue 1' and 'Missed orders 0'; the order is still 'Placed' (nothing accepts or cancels it for them). The customer's screen is the same. The alerts are switched ON: the Orders screen shows a banner ('Order #A needs attention — hasn't been accepted for N minutes — the limit is 1'), a red row ('Placed Nm — over 1m limit'), 'Running late (1)', and the dashboard shows 'Missed orders 1'. The alert sound waits for a click, then chimes once; a second order B then arrives and, when it also goes late, the sound chimes again, and keeps reminding every minute while orders are still late. Dismissing the banner leaves the rows red and the count. As staff move A on, only two moments warn: an order nobody has accepted, and an order that has been Preparing longer than its limit (the timer starts when it reaches Preparing). Once A is Accepted, and again when it is Ready or Completed, nothing warns however long it sits. 'Play a sound' off and 'Keep reminding me' off are respected. The manager, cashier and kitchen see the same alerts. The customer sees nothing different and can still order.
 
 ## Steps
 
@@ -17,20 +17,20 @@ In Chrome. The owner of Acme Momos opens Settings → Missed-order alerts (on by
 5. ALERTS ON: banner, red row, count, dashboard
 6. The sound: waits for a click, chimes, chimes for a second late order, keeps reminding
 7. Dismiss all warnings: the banner and the sound stop, the rows stay red
-8. Staff move A along: every stage has its own warning, and Completed ends it
+8. Staff move A along: only 'not accepted' and 'cooking too long' warn — Accepted, Ready and Completed never do
 9. 'Keep reminding me' off, and 'Play a sound' off
 10. The manager, the cashier and the kitchen see the same alerts
 11. The customer's side
 
 ## What to expect (these must happen)
 
-- Settings → Missed-order alerts starts ticked with 2 / 5 / 20 / 10 minutes, 'Play a sound' and 'Keep reminding me' ticked; typing 0 gives 1; 241 is refused with 'Validation failed' and not saved; 1 / 1 / 1 / 1 saves.
-- Switched off, the four limits, the sound and the reminder boxes disappear and stay off after a reload.
+- Settings → Missed-order alerts starts ticked with 2 / 20 minutes (accept / finish cooking), 'Play a sound' and 'Keep reminding me' ticked; there are no 'start cooking' or 'hand over' limits; typing 0 gives 1; 241 is refused with 'Validation failed' and not saved; 1 / 1 saves.
+- Switched off, the limits, the sound and the reminder boxes disappear and stay off after a reload.
 - ALERTS OFF, order unattended for over a minute: the Orders row shows 'Placed' with the wait '1m' in the normal colour; no banner, no red row, 'Running late' has no count and shows no order; dashboard 'In the queue 1', 'Missed orders 0'; no sound; the order is still Placed.
 - ALERTS ON: banner 'Order #A needs attention' with '#A hasn't been accepted for N minutes — the limit is 1.'; the row is red with 'Placed Nm — over 1m limit'; 'Running late (1)'; 'Show late orders' lists only the late order; the dashboard says 'Missed orders 1'.
 - The sound is waiting for a click ('Click anywhere once to allow the alert sound.'); after one click it says 'Sound on' and chimes once; when a second order goes late it chimes again; with 'Keep reminding me' it chimes again a minute later while they are still late.
 - 'Dismiss all warnings' removes the banner and the sound but the rows stay red and 'Running late (2)' stays; nothing chimes again.
-- After A is Accepted the warning for it goes; a minute later 'was accepted but nobody has started cooking'; Preparing → 'has been cooking longer than expected'; Ready → 'is ready and still waiting to go out'; Completed → no warning, no timer.
+- After A is Accepted the warning for it goes and does NOT come back, however long it sits Accepted; Preparing starts a fresh timer and after the limit 'has been cooking longer than expected'; Ready → no warning; Completed → no warning, no timer.
 - 'Play a sound' off: the banner shows but nothing chimes and it says the sound is off. 'Keep reminding me' off: one chime only, however long the order stays late.
 - The manager, the cashier and the kitchen each see the banner and the red row for a late order.
 - The customer's confirmation is identical with the alerts on or off; a late order is not cancelled or changed for them and they can keep ordering.
@@ -52,30 +52,31 @@ In Chrome. The owner of Acme Momos opens Settings → Missed-order alerts (on by
 
 _Nothing failed._
 
-### ✅ Passed (74)
+### ✅ Passed (75)
 
 **Step 1 — Settings → Missed-order alerts: the defaults and the limits**
 
 - the switch 'Warn me about slow orders' is ticked from the start
-- the limits are 2 / 5 / 20 / 10 minutes — _2/5/20/10_
+- the limits are 2 (accept) / 20 (finish cooking) minutes — _2/20_
+- did not happen: there is still a 'Start cooking within' or 'Hand over within' limit
 - 'Play a sound' and 'Keep reminding me' are ticked
 - typing 0 minutes gives 1 (never 0) — _1_
 - 241 minutes is refused ('Validation failed')
 - did not happen: the refused value 241 was saved
-- 1 / 1 / 1 / 1 saves ('Settings saved.')
-- after a reload all four limits are 1
+- 1 / 1 saves ('Settings saved.')
+- after a reload both limits are 1
 
 **Step 2 — Switch the alerts OFF**
 
 - did not happen: the switch is still ticked after saving it off
-- with it off, the four limits, the sound and the reminder boxes are hidden
+- with it off, the limits, the sound and the reminder boxes are hidden
 
 **Step 3 — A customer places order A and nobody accepts it (alerts OFF)**
 
 - the customer sees 'Order #… placed' and the kitchen has it
-- the counter's Orders screen has order A as 'Placed' with its wait running ('0m') — _#0001 05:52 AM Meera Late 9877700077 TA 1 ₹70 Placed 0m Accepted_
+- the counter's Orders screen has order A as 'Placed' with its wait running ('0m') — _#0001 04:00 PM Meera Late 9877700077 TA 1 ₹70 Placed 0m Accepted_
 - did not happen: a banner shows for a brand-new order
-- over a minute later the status still says 'Placed' and the wait shows 1m or more — _#0001 05:52 AM Meera Late 9877700077 TA 1 ₹70 Placed 1m Accepted_
+- over a minute later the status still says 'Placed' and the wait shows 1m or more — _#0001 04:00 PM Meera Late 9877700077 TA 1 ₹70 Placed 1m Accepted_
 - did not happen: a banner ('needs attention') is shown although the alerts are off
 - did not happen: the late order's row is red although the alerts are off
 - did not happen: the status says 'over 1m limit'
@@ -88,7 +89,7 @@ _Nothing failed._
 
 **Step 4 — The alerts are switched ON (order A is still waiting)**
 
-- ticking it brings the four limits back with the values saved earlier (1 / 1 / 1 / 1), sound and reminder ticked
+- ticking it brings the limits back with the values saved earlier (1 / 1), sound and reminder ticked
 - it saves
 
 **Step 5 — ALERTS ON: banner, red row, count, dashboard**
@@ -122,18 +123,18 @@ _Nothing failed._
 - did not happen: a dismissed warning chimes again
 - did not happen: a dismissed warning's banner comes back by itself
 
-**Step 8 — Staff move A along: every stage has its own warning, and Completed ends it**
+**Step 8 — Staff move A along: only 'not accepted' and 'cooking too long' warn — Accepted, Ready and Completed never do**
 
 - cancelling the other late order (B) takes it out of the late list: 'Running late (1)' — _Cancelled · Running late (1)_
 - did not happen: a cancelled order is still red
 - accepted: order A is no longer red and its status says 'Accepted' (no 'over limit') — _Accepted_
-- a minute later: '#A was accepted but nobody has started cooking for N minute(s) — the limit is 1.'
-- order A is red again: 'Accepted Nm — over 1m limit' — _Accepted 1m — over 1m limit_
-- A had been dismissed as 'not accepted' — it speaks up again because this is a different delay
-- preparing: no warning for A yet — _Preparing_
+- a minute later, still Accepted: NO warning (an accepted order is not the alert's business — only 'not accepted' and 'cooking too long' are) — _Accepted · banner 0_
+- preparing: no warning for A yet (a fresh timer starts now) — _Preparing_
 - '#A has been cooking longer than expected for N minute(s) — the limit is 1.'
-- '#A is ready and still waiting to go out for N minute(s) — the limit is 1.'
-- completed: order A has no timer and no warning — _Completed · #0001 05:52 AM Meera Late 9877700077 TA 1 ₹70 Completed —_
+- A had been dismissed as 'not accepted' — it speaks up again because this is a different delay
+- order A is red: 'Preparing Nm — over 1m limit' — _Preparing 1m — over 1m limit_
+- ready: NO warning, however long it waits — the warning from cooking is gone and none replaces it — _Ready · banner 0_
+- completed: order A has no timer and no warning — _Completed · #0001 04:00 PM Meera Late 9877700077 TA 1 ₹70 Completed —_
 - nothing is late any more: 'Running late' has no count — _Running late_
 
 **Step 9 — 'Keep reminding me' off, and 'Play a sound' off**
@@ -171,6 +172,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-20 16:03 | pass | 75 | 0 | headless | 2 min 56 s |
+| 2026-11-20 12:43 | pass | 75 | 0 | headless | 2 min 60 s |
 | 2026-11-20 11:11 | pass | 74 | 0 | headless | 2 min 56 s |
 | 2026-11-20 05:54 | pass | 74 | 0 | headless | 2 min 58 s |
 | 2026-11-20 04:51 | pass | 74 | 0 | headless | 2 min 57 s |
@@ -179,8 +182,6 @@ _Nothing failed._
 | 2026-11-19 13:00 | pass | 74 | 0 | headless | 2 min 58 s |
 | 2026-11-19 12:40 | pass | 74 | 0 | headless | 2 min 56 s |
 | 2026-11-19 11:27 | pass | 74 | 0 | headless | 2 min 57 s |
-| 2026-11-19 11:17 | error | 13 | 0 | headless | 31.2 s |
-| 2026-11-19 01:18 | pass | 74 | 0 | headless | 2 min 58 s |
 
 ---
 _Generated by `tests/e2e/run.mjs` — edit the test file (`tests/t20-missed-order-alerts.mjs`), not this page._

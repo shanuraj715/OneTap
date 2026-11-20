@@ -11,15 +11,15 @@ export const meta = {
   title: "Missed-order alerts — with the feature off nothing warns anyone; with it on: banner, red row, sound, repeat, per-status messages, roles, dashboard, customer",
   area: "orders",
   fresh: true,
-  summary: "In Chrome. The owner of Acme Momos opens Settings → Missed-order alerts (on by default: accept within 2, start 5, finish 20, hand over 10 minutes; sound and reminders on), checks the limits (0 becomes 1, 241 is refused) and sets every limit to 1 minute, then switches the alerts OFF. A customer places order A and nobody touches it. After more than a minute the Orders screen shows the wait ('1m') but no banner, no red row, no 'Running late' count and no sound; the dashboard says 'In the queue 1' and 'Missed orders 0'; the order is still 'Placed' (nothing accepts or cancels it for them). The customer's screen is the same. The alerts are switched ON: the Orders screen shows a banner ('Order #A needs attention — hasn't been accepted for N minutes — the limit is 1'), a red row ('Placed Nm — over 1m limit'), 'Running late (1)', and the dashboard shows 'Missed orders 1'. The alert sound waits for a click, then chimes once; a second order B then arrives and, when it also goes late, the sound chimes again, and keeps reminding every minute while orders are still late. Dismissing the banner leaves the rows red and the count. As staff move A on, each stage warns with its own message (accepted but not started, cooking too long, ready and waiting) and the warning ends when it is Completed. 'Play a sound' off and 'Keep reminding me' off are respected. The manager, cashier and kitchen see the same alerts. The customer sees nothing different and can still order.",
+  summary: "In Chrome. The owner of Acme Momos opens Settings → Missed-order alerts (on by default: accept within 2 minutes and finish cooking within 20 minutes; sound and reminders on), checks the limits (0 becomes 1, 241 is refused) and sets both limits to 1 minute, then switches the alerts OFF. A customer places order A and nobody touches it. After more than a minute the Orders screen shows the wait ('1m') but no banner, no red row, no 'Running late' count and no sound; the dashboard says 'In the queue 1' and 'Missed orders 0'; the order is still 'Placed' (nothing accepts or cancels it for them). The customer's screen is the same. The alerts are switched ON: the Orders screen shows a banner ('Order #A needs attention — hasn't been accepted for N minutes — the limit is 1'), a red row ('Placed Nm — over 1m limit'), 'Running late (1)', and the dashboard shows 'Missed orders 1'. The alert sound waits for a click, then chimes once; a second order B then arrives and, when it also goes late, the sound chimes again, and keeps reminding every minute while orders are still late. Dismissing the banner leaves the rows red and the count. As staff move A on, only two moments warn: an order nobody has accepted, and an order that has been Preparing longer than its limit (the timer starts when it reaches Preparing). Once A is Accepted, and again when it is Ready or Completed, nothing warns however long it sits. 'Play a sound' off and 'Keep reminding me' off are respected. The manager, cashier and kitchen see the same alerts. The customer sees nothing different and can still order.",
   expect: [
-    "Settings → Missed-order alerts starts ticked with 2 / 5 / 20 / 10 minutes, 'Play a sound' and 'Keep reminding me' ticked; typing 0 gives 1; 241 is refused with 'Validation failed' and not saved; 1 / 1 / 1 / 1 saves.",
-    "Switched off, the four limits, the sound and the reminder boxes disappear and stay off after a reload.",
+    "Settings → Missed-order alerts starts ticked with 2 / 20 minutes (accept / finish cooking), 'Play a sound' and 'Keep reminding me' ticked; there are no 'start cooking' or 'hand over' limits; typing 0 gives 1; 241 is refused with 'Validation failed' and not saved; 1 / 1 saves.",
+    "Switched off, the limits, the sound and the reminder boxes disappear and stay off after a reload.",
     "ALERTS OFF, order unattended for over a minute: the Orders row shows 'Placed' with the wait '1m' in the normal colour; no banner, no red row, 'Running late' has no count and shows no order; dashboard 'In the queue 1', 'Missed orders 0'; no sound; the order is still Placed.",
     "ALERTS ON: banner 'Order #A needs attention' with '#A hasn't been accepted for N minutes — the limit is 1.'; the row is red with 'Placed Nm — over 1m limit'; 'Running late (1)'; 'Show late orders' lists only the late order; the dashboard says 'Missed orders 1'.",
     "The sound is waiting for a click ('Click anywhere once to allow the alert sound.'); after one click it says 'Sound on' and chimes once; when a second order goes late it chimes again; with 'Keep reminding me' it chimes again a minute later while they are still late.",
     "'Dismiss all warnings' removes the banner and the sound but the rows stay red and 'Running late (2)' stays; nothing chimes again.",
-    "After A is Accepted the warning for it goes; a minute later 'was accepted but nobody has started cooking'; Preparing → 'has been cooking longer than expected'; Ready → 'is ready and still waiting to go out'; Completed → no warning, no timer.",
+    "After A is Accepted the warning for it goes and does NOT come back, however long it sits Accepted; Preparing starts a fresh timer and after the limit 'has been cooking longer than expected'; Ready → no warning; Completed → no warning, no timer.",
     "'Play a sound' off: the banner shows but nothing chimes and it says the sound is off. 'Keep reminding me' off: one chime only, however long the order stays late.",
     "The manager, the cashier and the kitchen each see the banner and the red row for a late order.",
     "The customer's confirmation is identical with the alerts on or off; a late order is not cancelled or changed for them and they can keep ordering.",
@@ -117,8 +117,9 @@ export async function run(d, h) {
   await asOwner();
   await openAlertSettings();
   d.check("the switch 'Warn me about slow orders' is ticked from the start", await box("Warn me about slow orders").isChecked());
-  const defaults = [await value("Accept within (minutes)"), await value("Start cooking within (minutes)"), await value("Finish cooking within (minutes)"), await value("Hand over within (minutes)")];
-  d.check("the limits are 2 / 5 / 20 / 10 minutes", defaults.join("/") === "2/5/20/10", defaults.join("/"));
+  const defaults = [await value("Accept within (minutes)"), await value("Finish cooking within (minutes)")];
+  d.check("the limits are 2 (accept) / 20 (finish cooking) minutes", defaults.join("/") === "2/20", defaults.join("/"));
+  d.never("there is still a 'Start cooking within' or 'Hand over within' limit", (await d.page.getByText("Start cooking within").count()) + (await d.page.getByText("Hand over within").count()) > 0);
   d.check("'Play a sound' and 'Keep reminding me' are ticked", (await box("Play a sound").isChecked()) && (await box("Keep reminding me").isChecked()));
   await ui.fill(d, "Accept within (minutes)", "0");
   d.check("typing 0 minutes gives 1 (never 0)", (await value("Accept within (minutes)")) === "1", await value("Accept within (minutes)"));
@@ -129,12 +130,12 @@ export async function run(d, h) {
   await d.page.reload({ waitUntil: "load" });
   await alertsTab();
   d.never("the refused value 241 was saved", (await value("Accept within (minutes)")) === "241");
-  for (const label of ["Accept within (minutes)", "Start cooking within (minutes)", "Finish cooking within (minutes)", "Hand over within (minutes)"]) await ui.fill(d, label, "1");
+  for (const label of ["Accept within (minutes)", "Finish cooking within (minutes)"]) await ui.fill(d, label, "1");
   await save();
-  d.check("1 / 1 / 1 / 1 saves ('Settings saved.')", /Settings saved\./.test(await page()));
+  d.check("1 / 1 saves ('Settings saved.')", /Settings saved\./.test(await page()));
   await d.page.reload({ waitUntil: "load" });
   await alertsTab();
-  d.check("after a reload all four limits are 1", [await value("Accept within (minutes)"), await value("Start cooking within (minutes)"), await value("Finish cooking within (minutes)"), await value("Hand over within (minutes)")].join("/") === "1/1/1/1");
+  d.check("after a reload both limits are 1", [await value("Accept within (minutes)"), await value("Finish cooking within (minutes)")].join("/") === "1/1");
 
   // ----------------------------------------------------------------------------------------------------------------- 2
   await d.step("Switch the alerts OFF");
@@ -143,7 +144,7 @@ export async function run(d, h) {
   await d.page.reload({ waitUntil: "load" });
   await alertsTab();
   d.never("the switch is still ticked after saving it off", await box("Warn me about slow orders").isChecked());
-  d.check("with it off, the four limits, the sound and the reminder boxes are hidden", (await d.page.getByText("Accept within (minutes)").count()) === 0 && (await box("Play a sound").count()) === 0 && (await box("Keep reminding me").count()) === 0);
+  d.check("with it off, the limits, the sound and the reminder boxes are hidden", (await d.page.getByText("Accept within (minutes)").count()) === 0 && (await box("Play a sound").count()) === 0 && (await box("Keep reminding me").count()) === 0);
 
   // ----------------------------------------------------------------------------------------------------------------- 3
   await d.step("A customer places order A and nobody accepts it (alerts OFF)");
@@ -182,7 +183,7 @@ export async function run(d, h) {
   await d.goto(`${BENCH.admin}/settings`, 500);
   await alertsTab();
   await ui.tick(d, "Warn me about slow orders", true);
-  d.check("ticking it brings the four limits back with the values saved earlier (1 / 1 / 1 / 1), sound and reminder ticked", [await value("Accept within (minutes)"), await value("Start cooking within (minutes)"), await value("Finish cooking within (minutes)"), await value("Hand over within (minutes)")].join("/") === "1/1/1/1" && (await box("Play a sound").isChecked()) && (await box("Keep reminding me").isChecked()));
+  d.check("ticking it brings the limits back with the values saved earlier (1 / 1), sound and reminder ticked", [await value("Accept within (minutes)"), await value("Finish cooking within (minutes)")].join("/") === "1/1" && (await box("Play a sound").isChecked()) && (await box("Keep reminding me").isChecked()));
   await save();
   d.check("it saves", /Settings saved\./.test(await page()));
 
@@ -235,7 +236,7 @@ export async function run(d, h) {
   d.never("a dismissed warning's banner comes back by itself", (await banner().count()) > 0);
 
   // ----------------------------------------------------------------------------------------------------------------- 7
-  await d.step("Staff move A along: every stage has its own warning, and Completed ends it");
+  await d.step("Staff move A along: only 'not accepted' and 'cooking too long' warn — Accepted, Ready and Completed never do");
   await setClock(0);
   await ui.cancelOrder(d, b.no);
   d.check("cancelling the other late order (B) takes it out of the late list: 'Running late (1)'", (await statusCell(b.no)) === "Cancelled" && (await chip()) === "Running late (1)", `${await statusCell(b.no)} · ${await chip()}`);
@@ -243,18 +244,20 @@ export async function run(d, h) {
   await advance(a.no, "Accepted");
   d.check("accepted: order A is no longer red and its status says 'Accepted' (no 'over limit')", !(await tinted(a.no)) && (await statusCell(a.no)) === "Accepted", await statusCell(a.no));
   await setClock(61_000);
-  d.check("a minute later: '#A was accepted but nobody has started cooking for N minute(s) — the limit is 1.'", await waitBanner(new RegExp(`#${a.no} was accepted but nobody has started cooking for \\d+ minutes? — the limit is 1`)), await bannerText());
-  d.check("order A is red again: 'Accepted Nm — over 1m limit'", (await tinted(a.no)) && /^Accepted \d+m — over 1m limit$/.test(await statusCell(a.no)), await statusCell(a.no));
-  d.check("A had been dismissed as 'not accepted' — it speaks up again because this is a different delay", /needs attention/.test(await bannerText()));
+  await d.pause(1500);
+  d.check("a minute later, still Accepted: NO warning (an accepted order is not the alert's business — only 'not accepted' and 'cooking too long' are)", (await banner().count()) === 0 && !(await tinted(a.no)) && !/over \d+m limit/.test(await statusCell(a.no)), `${await statusCell(a.no)} · banner ${await banner().count()}`);
   await setClock(0);
   await advance(a.no, "Preparing");
-  d.check("preparing: no warning for A yet", (await banner().count()) === 0 && !(await tinted(a.no)) && (await statusCell(a.no)) === "Preparing", await statusCell(a.no));
+  d.check("preparing: no warning for A yet (a fresh timer starts now)", (await banner().count()) === 0 && !(await tinted(a.no)) && (await statusCell(a.no)) === "Preparing", await statusCell(a.no));
   await setClock(61_000);
   d.check("'#A has been cooking longer than expected for N minute(s) — the limit is 1.'", await waitBanner(new RegExp(`#${a.no} has been cooking longer than expected for \\d+ minutes?`)), await bannerText());
+  d.check("A had been dismissed as 'not accepted' — it speaks up again because this is a different delay", /needs attention/.test(await bannerText()));
+  d.check("order A is red: 'Preparing Nm — over 1m limit'", (await tinted(a.no)) && /^Preparing \d+m — over 1m limit$/.test(await statusCell(a.no)), await statusCell(a.no));
   await setClock(0);
   await advance(a.no, "Ready");
   await setClock(61_000);
-  d.check("'#A is ready and still waiting to go out for N minute(s) — the limit is 1.'", await waitBanner(new RegExp(`#${a.no} is ready and still waiting to go out for \\d+ minutes?`)), await bannerText());
+  await d.pause(1500);
+  d.check("ready: NO warning, however long it waits — the warning from cooking is gone and none replaces it", (await banner().count()) === 0 && !(await tinted(a.no)) && !/over \d+m limit/.test(await statusCell(a.no)), `${await statusCell(a.no)} · banner ${await banner().count()}`);
   await setClock(0);
   await advance(a.no, "Completed");
   await setClock(61_000);

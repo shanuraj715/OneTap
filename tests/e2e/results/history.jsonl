@@ -859,3 +859,33 @@
 {"id":"t50-store-name","status":"pass","pass":31,"fail":0,"mode":"headless","at":"2026-11-20T06:39:57.717Z","durationMs":15684}
 {"id":"t51-kot-tickets","status":"pass","pass":62,"fail":0,"mode":"headless","at":"2026-11-20T06:40:22.053Z","durationMs":24318}
 {"id":"t52-print-station-any-page","status":"pass","pass":14,"fail":0,"mode":"headless","at":"2026-11-20T06:41:10.421Z","durationMs":48350}
+{"id":"t08-plans-outlets-settings","status":"pass","pass":44,"fail":0,"mode":"headless","at":"2026-11-20T07:09:58.930Z","durationMs":191767}
+{"id":"t20-missed-order-alerts","status":"pass","pass":75,"fail":0,"mode":"headless","at":"2026-11-20T07:13:02.942Z","durationMs":179818}
+{"id":"t29-orders-account-api","status":"pass","pass":64,"fail":0,"mode":"headless","at":"2026-11-20T07:47:15.346Z","durationMs":4930}
+{"id":"t30-account-orders","status":"pass","pass":42,"fail":0,"mode":"headless","at":"2026-11-20T07:48:08.322Z","durationMs":48809}
+{"id":"t01-takeaway-order","status":"pass","pass":45,"fail":0,"mode":"headless","at":"2026-11-20T10:30:32.600Z","durationMs":32891}
+{"id":"t20-missed-order-alerts","status":"pass","pass":75,"fail":0,"mode":"headless","at":"2026-11-20T10:33:33.740Z","durationMs":175952}
+{"id":"t28-rate-limits-api","status":"fail","pass":123,"fail":1,"mode":"headless","at":"2026-11-20T10:33:42.776Z","durationMs":9002}
+{"id":"t29-orders-account-api","status":"pass","pass":65,"fail":0,"mode":"headless","at":"2026-11-20T10:33:48.399Z","durationMs":5603}
+{"id":"t30-account-orders","status":"pass","pass":42,"fail":0,"mode":"headless","at":"2026-11-20T10:34:37.708Z","durationMs":45133}
+{"id":"t42-storefront-order-type","status":"pass","pass":39,"fail":0,"mode":"headless","at":"2026-11-20T10:35:07.633Z","durationMs":29901}
+{"id":"t43-checkout-coupons","status":"pass","pass":10,"fail":0,"mode":"headless","at":"2026-11-20T10:35:19.673Z","durationMs":12014}
+{"id":"t51-kot-tickets","status":"pass","pass":62,"fail":0,"mode":"headless","at":"2026-11-20T10:35:44.569Z","durationMs":24877}
+{"id":"t08-plans-outlets-settings","status":"pass","pass":44,"fail":0,"mode":"headless","at":"2026-11-20T10:39:27.835Z","durationMs":192290}
+{"id":"t19-dine-in","status":"pass","pass":55,"fail":0,"mode":"headless","at":"2026-11-20T10:40:27.423Z","durationMs":55402}
+{"id":"t22-onboarding-price","status":"pass","pass":55,"fail":0,"mode":"headless","at":"2026-11-20T10:41:08.374Z","durationMs":35766}
+{"id":"t28-rate-limits-api","status":"pass","pass":124,"fail":0,"mode":"headless","at":"2026-11-20T10:41:16.555Z","durationMs":8160}
+{"id":"t33-menu-tree","status":"pass","pass":71,"fail":0,"mode":"headless","at":"2026-11-20T10:42:05.547Z","durationMs":44810}
+{"id":"t46-addon-groups","status":"pass","pass":50,"fail":0,"mode":"headless","at":"2026-11-20T10:42:21.945Z","durationMs":16371}
+{"id":"t48-hero-button-card-c02","status":"pass","pass":69,"fail":0,"mode":"headless","at":"2026-11-20T10:42:45.321Z","durationMs":23338}
+{"id":"t49-storefront-item-popup","status":"pass","pass":42,"fail":0,"mode":"headless","at":"2026-11-20T10:43:02.811Z","durationMs":17471}
+{"id":"t53-orders-growth-api","status":"pass","pass":84,"fail":0,"mode":"headless","at":"2026-11-20T10:43:09.811Z","durationMs":6985}
+{"id":"t54-engagement-api","status":"pass","pass":88,"fail":0,"mode":"headless","at":"2026-11-20T10:43:15.338Z","durationMs":5501}
+{"id":"t55-growth-dashboard","status":"error","pass":4,"fail":0,"mode":"headless","at":"2026-11-20T10:43:16.528Z","durationMs":1173,"error":"growth-dashboard-ui.mjs exited with code 1. }  Node.js v24.3.0"}
+{"id":"t56-growth-storefront","status":"fail","pass":21,"fail":1,"mode":"headless","at":"2026-11-20T10:43:24.277Z","durationMs":7734}
+{"id":"t53-orders-growth-api","status":"pass","pass":84,"fail":0,"mode":"headless","at":"2026-11-20T10:45:09.684Z","durationMs":7301}
+{"id":"t54-engagement-api","status":"pass","pass":88,"fail":0,"mode":"headless","at":"2026-11-20T10:45:14.956Z","durationMs":5247}
+{"id":"t55-growth-dashboard","status":"pass","pass":26,"fail":0,"mode":"headless","at":"2026-11-20T10:45:19.677Z","durationMs":4693}
+{"id":"t56-growth-storefront","status":"pass","pass":22,"fail":0,"mode":"headless","at":"2026-11-20T10:45:27.518Z","durationMs":7823}
+{"id":"t57-policy-pages","status":"error","pass":11,"fail":0,"mode":"headless","at":"2026-11-20T11:15:39.758Z","durationMs":1416,"error":"policy-pages.mjs exited with code 1. }  Node.js v24.3.0"}
+{"id":"t57-policy-pages","status":"pass","pass":13,"fail":0,"mode":"headless","at":"2026-11-20T11:15:48.669Z","durationMs":1377}

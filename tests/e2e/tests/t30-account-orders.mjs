@@ -10,7 +10,7 @@ export const meta = {
   title: "Storefront Account page — 'My orders' menu link, order history with status, payment mode & state, coins; Delete order on the dashboard",
   area: "storefront",
   fresh: true,
-  summary: "In Chrome on the Acme Momos storefront. The header menu has a 'My orders' link. Signed out, it opens the Account page with a sign-in card ('Sign in to see your orders'); signing in shows 'Your account' with the customer's name and number, a 'Your coins' card (coins are on for this store) and an empty 'No orders yet'. After ordering for takeaway paying cash, the order appears with its number, date, status Placed with a one-line explanation, payment 'Pay at the counter · To pay', the total, its items, and 'View details' with the full bill. As the owner moves it to Accepted, Preparing, Ready and Completed the card follows (progress tracker while active; by itself within about 20 seconds, or on reload), the payment becomes Paid, the details say how many coins were earned and the coins card shows them. A second order that is cancelled shows Cancelled and 'Not charged'. On the dashboard Orders page the owner opens More actions → Delete order: a dialog explains it disappears from the list, the reports and the customer's history and that the coins it earned are taken back; confirming removes the row, and on the customer's Account page the order is gone and the coins are back to what they were. A cashier's More-actions menu has no Delete option. Signing out of the Account page shows the sign-in card again.",
+  summary: "In Chrome on the Acme Momos storefront. The header menu has a 'My orders' link. Signed out, it opens the Account page with a sign-in card ('Sign in to see your orders'); signing in shows 'Your account' with the customer's name and number, a 'Your coins' card (coins are on for this store) and an empty 'No orders yet'. After ordering for takeaway paying cash, the order appears with its number, date, status Placed with a one-line explanation, payment 'Pay at the counter · To pay', the total, its items, and 'View details' with the full bill. As the owner moves it to Accepted, Preparing, Ready and Completed the card follows (progress tracker while active; by itself within about 20 seconds, or on reload), the payment becomes Paid, the details say how many coins were earned and the coins card shows them. A second order that is cancelled shows Cancelled and 'Not charged'. On the dashboard Orders page the owner opens More actions → Delete order: a dialog explains it disappears from the list, the reports and the customer's history and that the coins it earned are taken back; confirming removes the row, and on the customer's Account page the order is gone and the coins are back to what they were. A cashier's and a manager's More-actions menu have no Delete option — deleting an order is for the owner (and the platform admin) only. Signing out of the Account page shows the sign-in card again.",
   expect: [
     "The storefront header menu has 'My orders'; it leads to /main/account.",
     "Signed out, the Account page shows the sign-in card titled 'Sign in to see your orders' (not 'Sign in to order').",
@@ -22,13 +22,13 @@ export const meta = {
     "Owner: Orders → More actions → 'Delete order' → dialog (names the order, says it disappears and which coins are taken back) → confirm removes the row; the customer's page no longer lists it and the coins balance drops back.",
     "The customer's own 'Remove' on an order asks first (says the restaurant keeps its record), 'Keep it' changes nothing, 'Remove' takes only that order off their list — still gone after a reload.",
     "The store still sees the order the customer removed (Orders page), so a customer's removal never changes the store's records.",
-    "A cashier's More-actions menu has no 'Delete order'.",
+    "A cashier's and a manager's More-actions menu have no 'Delete order' (only the owner's does).",
     "Sign out returns to the sign-in card.",
   ],
   expectNot: [
     "The Account page must NOT show anyone's orders while signed out.",
     "Deleting must NOT happen without pressing the red 'Delete order' button (Enter does nothing).",
-    "A cashier must NOT be offered 'Delete order'.",
+    "A cashier or a manager must NOT be offered 'Delete order'.",
     "A customer removing an order from their account must NOT remove it from the store's Orders page.",
     "A deleted order must NOT stay on the customer's Account page, and the coins it earned must NOT stay.",
     "The browser must NOT log JavaScript errors.",
@@ -193,6 +193,15 @@ export async function run(d, h) {
   d.check("the store still sees the order the customer removed from their account", (await crow.count()) > 0);
   const opts = await d.page.locator("body").innerText();
   d.check("the cashier's menu has Edit and Cancel but no 'Delete order'", /Edit order/.test(opts) && !/Delete order/.test(opts));
+
+  await d.step("A manager is not offered 'Delete order' either — only the owner (and the platform admin) is", 400);
+  await ui.signIn(d, "manager");
+  await d.goto(BENCH.admin + "/orders", 600);
+  const mrow = d.page.locator("tr", { hasText: `#${no2}` }).first();
+  await mrow.waitFor({ timeout: 20000 });
+  await d.click(mrow.getByRole("button", { name: "More actions" }), { after: 400 });
+  const mopts = await d.page.locator("body").innerText();
+  d.check("the manager's menu has Edit order but no 'Delete order'", /Edit order/.test(mopts) && !/Delete order/.test(mopts));
 
   await d.step("Signing out of the Account page", 400);
   await d.tab("customer", "Customer · Acme Momos storefront");

@@ -151,10 +151,13 @@ const del = (cookie, id, store = A) => call("DELETE", `/api/orders/${id}`, { coo
   ok(r.status === 401, "nobody signed in can't delete it", `${r.status}`);
   ok((await raw("orders").findOne({ _id: oid(t.id) })).deletedAt === undefined, "…and it is untouched so far");
   r = await del(manager, t.id);
-  ok(r.status === 200 && r.json.ok === true, "a manager can", `${r.status} ${r.json.error ?? ""}`);
+  ok(r.status === 403, "a manager can't either — deleting is for the owner and the platform admin only", `${r.status} ${r.json.error}`);
+  ok((await raw("orders").findOne({ _id: oid(t.id) })).deletedAt === undefined, "…and the order is untouched after the manager's attempt");
+  r = await del(su, t.id);
+  ok(r.status === 200 && r.json.ok === true, "the platform super admin can", `${r.status} ${r.json.error ?? ""}`);
   const u = await seed(A, ravi, { status: "placed" });
   r = await del(ownerA, u.id);
-  ok(r.status === 200, "the owner can", `${r.status}`);
+  ok(r.status === 200, "the store owner can", `${r.status}`);
   r = await del(ownerA, u.id);
   ok(r.status === 404, "deleting it again is a 404 — it is gone", `${r.status}`);
   r = await del(ownerA, "000000000000000000000000");

@@ -1,6 +1,6 @@
 # T48 — Storefront — no 'Order takeaway' button at the top; card C02 (Thumbnail left) shows the price right after the veg / non-veg mark with full-width title and description; every item card cuts its description at one line with an ellipsis
 
-**Area:** storefront · **Last result:** ✅ PASSED (69 passed, 0 failed · 2026-11-20 06:07 · headless · 41.0 s)
+**Area:** storefront · **Last result:** ✅ PASSED (69 passed, 0 failed · 2026-11-20 16:12 · headless · 23.3 s)
 
 **Run it alone:** `node run.mjs --only t48` (add `--visible` to watch it)
 
@@ -130,6 +130,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-20 16:12 | pass | 69 | 0 | headless | 23.3 s |
 | 2026-11-20 06:07 | pass | 69 | 0 | headless | 41.0 s |
 | 2026-11-20 05:03 | pass | 69 | 0 | headless | 23.1 s |
 | 2026-11-20 04:07 | pass | 69 | 0 | headless | 44.8 s |

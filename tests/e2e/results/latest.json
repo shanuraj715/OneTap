@@ -112,8 +112,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:07:22.084Z",
-    "durationMs": 32469,
+    "at": "2026-11-20T10:30:32.600Z",
+    "durationMs": 32891,
     "steps": [
       {
         "n": 1,
@@ -289,7 +289,7 @@
           {
             "label": "the new customer was saved with the details they gave",
             "ok": true,
-            "detail": "{\"id\":\"6aff8f2cc53689ad03c011fe\",\"name\":\"Rohan Mehta\",\"email\":\"rohan.mehta@example.com\",\"phone\":\"9811122233\",\"gender\":\"male\",\"age\":31,\"orderCount\":1,\"walletBalance\":0,\"lastOrderAt\":\"2026-11-20T00:07:12.949Z\",\"createdAt\":\"2026-11-20T00:07:08.312Z\"}",
+            "detail": "{\"id\":\"6b00213aa7c033c8ad39ca2a\",\"name\":\"Rohan Mehta\",\"email\":\"rohan.mehta@example.com\",\"phone\":\"9811122233\",\"gender\":\"male\",\"age\":31,\"orderCount\":1,\"walletBalance\":0,\"lastOrderAt\":\"2026-11-20T10:30:23.675Z\",\"createdAt\":\"2026-11-20T10:30:18.996Z\"}",
             "kind": "expect"
           },
           {
@@ -313,7 +313,7 @@
           {
             "label": "the row shows the customer, phone, type, item count, total and 'Placed'",
             "ok": true,
-            "detail": " #0001 05:37 AM Rohan Mehta 9811122233 TA 8 ₹1,030 Placed 0m Accepted",
+            "detail": " #0001 04:00 PM Rohan Mehta 9811122233 TA 8 ₹1,030 Placed 0m Accepted",
             "kind": "expect"
           }
         ]
@@ -2210,8 +2210,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:12:33.698Z",
-    "durationMs": 192690,
+    "at": "2026-11-20T10:39:27.835Z",
+    "durationMs": 192290,
     "steps": [
       {
         "n": 1,
@@ -2226,13 +2226,13 @@
           {
             "label": "Basic shows 3 people · 1 outlet",
             "ok": true,
-            "detail": "Lifecycle Basic One outlet — takeaway and dine-in QR 0 stores 3 people · 1 outlet (multi-outlet off) Not on the website 2/13 features · 6/6 ",
+            "detail": "Lifecycle Basic One outlet — takeaway and dine-in QR 0 stores 3 people · 1 outlet (multi-outlet off) Not on the website 6/17 features · 6/6 ",
             "kind": "expect"
           },
           {
             "label": "Pro shows 10 people · 3 outlets",
             "ok": true,
-            "detail": "Lifecycle Pro Up to 3 outlets, everything unlocked 0 stores 10 people · 3 outlets Not on the website 13/13 features · 6/6 effects · 9/9 card",
+            "detail": "Lifecycle Pro Up to 3 outlets, everything unlocked 0 stores 10 people · 3 outlets Not on the website 17/17 features · 6/6 effects · 9/9 card",
             "kind": "expect"
           },
           {
@@ -2286,7 +2286,7 @@
           {
             "label": "…and is told coupons aren't in the plan",
             "ok": true,
-            "detail": " New coupon 10% off Code Description Type Flat amount off Percentage off Percent off Max discount (₹) Minimum order (₹) Valid period From Until Usage limits Total uses Uses per customer First-time customers only Order types Takeaway Dine-in Delivery Coupon is active Coupons isn't included in your plan.",
+            "detail": " New coupon 10% off Code Description Type Flat amount off Percentage off Buy X, get Y free Percent off Max discount (₹) Minimum order (₹) Valid period From Until Usage limits Total uses Uses per customer First-time customers only Order types Takeaway Dine-in Delivery Coupon is active Coupons isn't included in your plan.",
             "kind": "expect"
           },
           {
@@ -2385,19 +2385,19 @@
         "title": "Reload Settings for each outlet: every value must be exactly as saved, and independent of the others",
         "checks": [
           {
-            "label": "Central: all 57 settings across 10 tabs read back exactly as saved",
+            "label": "Central: all 55 settings across 10 tabs read back exactly as saved",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "Second: all 57 settings across 10 tabs read back exactly as saved",
+            "label": "Second: all 55 settings across 10 tabs read back exactly as saved",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "Third: all 57 settings across 10 tabs read back exactly as saved",
+            "label": "Third: all 55 settings across 10 tabs read back exactly as saved",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -5593,8 +5593,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:21:42.993Z",
-    "durationMs": 56943,
+    "at": "2026-11-20T10:40:27.423Z",
+    "durationMs": 55402,
     "steps": [
       {
         "n": 1,
@@ -5735,7 +5735,7 @@
           {
             "label": "'Seated now — 1' with 'Table D1 … 2 orders · tab ₹130'",
             "ok": true,
-            "detail": "Seated now — 1 Table D1 since 05:51 AM · 2 orders · tab ₹130 Move to… Table D2 Table D3 Table T1 Table T2 Table T3 Table T4 Table ",
+            "detail": "Seated now — 1 Table D1 since 04:09 PM · 2 orders · tab ₹130 Move to… Table D2 Table D3 Table T1 Table T2 Table T3 Table T4 Table ",
             "kind": "expect"
           },
           {
@@ -5747,7 +5747,7 @@
           {
             "label": "the Orders page lists both: '#0001 … Dina Diner 9877712345 DI Table D1 … ₹70 Placed' and '#0002 … ₹60'",
             "ok": true,
-            "detail": "#0001 05:51 AM Dina Diner 9877712345 DI Table D1 1 ₹70 Placed 0m Approve || #0002 05:51 AM Dina Diner 9877712345 DI Table D1 1 ₹60 Placed 0m Approve",
+            "detail": "#0001 04:09 PM Dina Diner 9877712345 DI Table D1 1 ₹70 Placed 0m Approve || #0002 04:09 PM Dina Diner 9877712345 DI Table D1 1 ₹60 Placed 0m Approve",
             "kind": "expect"
           },
           {
@@ -5771,7 +5771,7 @@
           {
             "label": "'Seated now' says 'Table D2 … moved: D1 → D2'",
             "ok": true,
-            "detail": "Seated now — 1 Table D2moved: D1 → D2 since 05:51 AM · 2 orders · tab ₹130 Move to… Table D1 Table D3 Table T1 Table T2 Table T3 Table T4 Table T5 Move Close Garden D1 Ne",
+            "detail": "Seated now — 1 Table D2moved: D1 → D2 since 04:09 PM · 2 orders · tab ₹130 Move to… Table D1 Table D3 Table T1 Table T2 Table T3 Table T4 Table T5 Move Close Garden D1 Ne",
             "kind": "expect"
           },
           {
@@ -5873,7 +5873,7 @@
           {
             "label": "after 'Cancel / void' the order #0003 is Cancelled",
             "ok": true,
-            "detail": "#0003 05:51 AM Rohan Other 9877799999 DI Table D3 1 ₹70 Cancelled —",
+            "detail": "#0003 04:10 PM Rohan Other 9877799999 DI Table D3 1 ₹70 Cancelled —",
             "kind": "expect"
           },
           {
@@ -5909,7 +5909,7 @@
           {
             "label": "the panel shows a new code for the same table",
             "ok": true,
-            "detail": "http://localhost:3170/t/6aff926372616fe9443fd0d5?k=NboH-9kinF8YVYnhBdoyqm4o → http://localhost:3170/t/6aff926372616fe9443fd0d5?k=CJ6y7sVeSFU154ixLvRJt_oF",
+            "detail": "http://localhost:3170/t/6b002369931fbf28ba4da217?k=5-RP7dDlcxOkrBr7i_W2DdMm → http://localhost:3170/t/6b002369931fbf28ba4da217?k=TPRUS34XaTfTWzGI2OJIap1c",
             "kind": "expect"
           },
           {
@@ -5994,12 +5994,12 @@
     "id": "t20-missed-order-alerts",
     "title": "Missed-order alerts — with the feature off nothing warns anyone; with it on: banner, red row, sound, repeat, per-status messages, roles, dashboard, customer",
     "status": "pass",
-    "pass": 74,
+    "pass": 75,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:24:44.929Z",
-    "durationMs": 177754,
+    "at": "2026-11-20T10:33:33.740Z",
+    "durationMs": 175952,
     "steps": [
       {
         "n": 1,
@@ -6012,10 +6012,16 @@
             "kind": "expect"
           },
           {
-            "label": "the limits are 2 / 5 / 20 / 10 minutes",
+            "label": "the limits are 2 (accept) / 20 (finish cooking) minutes",
             "ok": true,
-            "detail": "2/5/20/10",
+            "detail": "2/20",
             "kind": "expect"
+          },
+          {
+            "label": "there is still a 'Start cooking within' or 'Hand over within' limit",
+            "ok": true,
+            "detail": "",
+            "kind": "never"
           },
           {
             "label": "'Play a sound' and 'Keep reminding me' are ticked",
@@ -6042,13 +6048,13 @@
             "kind": "never"
           },
           {
-            "label": "1 / 1 / 1 / 1 saves ('Settings saved.')",
+            "label": "1 / 1 saves ('Settings saved.')",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "after a reload all four limits are 1",
+            "label": "after a reload both limits are 1",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -6066,7 +6072,7 @@
             "kind": "never"
           },
           {
-            "label": "with it off, the four limits, the sound and the reminder boxes are hidden",
+            "label": "with it off, the limits, the sound and the reminder boxes are hidden",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -6080,13 +6086,13 @@
           {
             "label": "the customer sees 'Order #… placed' and the kitchen has it",
             "ok": true,
-            "detail": "Order confirmed Order #0001 placed The kitchen has it. Order type Takeaway Ready in about 15 minutes Total ₹70 Payment Cash / pay at counter Back to menu",
+            "detail": "Order confirmed Order #0001 placed The kitchen has it. Order type Takeaway Ready in about 15 minutes Total ₹70 Payment Cash / pay at counter Back to menu Follow your order",
             "kind": "expect"
           },
           {
             "label": "the counter's Orders screen has order A as 'Placed' with its wait running ('0m')",
             "ok": true,
-            "detail": "#0001 05:52 AM Meera Late 9877700077 TA 1 ₹70 Placed 0m Accepted",
+            "detail": "#0001 04:00 PM Meera Late 9877700077 TA 1 ₹70 Placed 0m Accepted",
             "kind": "expect"
           },
           {
@@ -6098,7 +6104,7 @@
           {
             "label": "over a minute later the status still says 'Placed' and the wait shows 1m or more",
             "ok": true,
-            "detail": "#0001 05:52 AM Meera Late 9877700077 TA 1 ₹70 Placed 1m Accepted",
+            "detail": "#0001 04:00 PM Meera Late 9877700077 TA 1 ₹70 Placed 1m Accepted",
             "kind": "expect"
           },
           {
@@ -6162,7 +6168,7 @@
         "title": "The alerts are switched ON (order A is still waiting)",
         "checks": [
           {
-            "label": "ticking it brings the four limits back with the values saved earlier (1 / 1 / 1 / 1), sound and reminder ticked",
+            "label": "ticking it brings the limits back with the values saved earlier (1 / 1), sound and reminder ticked",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -6327,7 +6333,7 @@
       },
       {
         "n": 8,
-        "title": "Staff move A along: every stage has its own warning, and Completed ends it",
+        "title": "Staff move A along: only 'not accepted' and 'cooking too long' warn — Accepted, Ready and Completed never do",
         "checks": [
           {
             "label": "cancelling the other late order (B) takes it out of the late list: 'Running late (1)'",
@@ -6348,25 +6354,13 @@
             "kind": "expect"
           },
           {
-            "label": "a minute later: '#A was accepted but nobody has started cooking for N minute(s) — the limit is 1.'",
+            "label": "a minute later, still Accepted: NO warning (an accepted order is not the alert's business — only 'not accepted' and 'cooking too long' are)",
             "ok": true,
-            "detail": "Order #0001 needs attention #0001 was accepted but nobody has started cooking for 1 minute — the limit is 1. Sound on Show late orders",
+            "detail": "Accepted · banner 0",
             "kind": "expect"
           },
           {
-            "label": "order A is red again: 'Accepted Nm — over 1m limit'",
-            "ok": true,
-            "detail": "Accepted 1m — over 1m limit",
-            "kind": "expect"
-          },
-          {
-            "label": "A had been dismissed as 'not accepted' — it speaks up again because this is a different delay",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "preparing: no warning for A yet",
+            "label": "preparing: no warning for A yet (a fresh timer starts now)",
             "ok": true,
             "detail": "Preparing",
             "kind": "expect"
@@ -6378,15 +6372,27 @@
             "kind": "expect"
           },
           {
-            "label": "'#A is ready and still waiting to go out for N minute(s) — the limit is 1.'",
+            "label": "A had been dismissed as 'not accepted' — it speaks up again because this is a different delay",
             "ok": true,
-            "detail": "Order #0001 needs attention #0001 is ready and still waiting to go out for 1 minute — the limit is 1. Sound on Show late orders",
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "order A is red: 'Preparing Nm — over 1m limit'",
+            "ok": true,
+            "detail": "Preparing 1m — over 1m limit",
+            "kind": "expect"
+          },
+          {
+            "label": "ready: NO warning, however long it waits — the warning from cooking is gone and none replaces it",
+            "ok": true,
+            "detail": "Ready · banner 0",
             "kind": "expect"
           },
           {
             "label": "completed: order A has no timer and no warning",
             "ok": true,
-            "detail": "Completed · #0001 05:52 AM Meera Late 9877700077 TA 1 ₹70 Completed —",
+            "detail": "Completed · #0001 04:00 PM Meera Late 9877700077 TA 1 ₹70 Completed —",
             "kind": "expect"
           },
           {
@@ -6488,7 +6494,7 @@
           {
             "label": "a customer can still order while orders are late; their confirmation reads exactly like before the alerts were on",
             "ok": true,
-            "detail": "Order confirmed Order #N placed The kitchen has it. Order type Takeaway Ready in about N minutes Total ₹70 Payment Cash / pay at counter Back to menu || Order confirmed Order #N placed The kitchen has it. Order type Takeaway Ready in about N minutes Total ₹70 Payment Cash / pay at counter Back to menu",
+            "detail": "Order confirmed Order #N placed The kitchen has it. Order type Takeaway Ready in about N minutes Total ₹70 Payment Cash / pay at counter Back to menu Follow your order || Order confirmed Order #N placed The kitchen has it. Order type Takeaway Ready in about N minutes Total ₹70 Payment Cash / pay at counter Back to menu Follow your order",
             "kind": "expect"
           },
           {
@@ -7328,8 +7334,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:26:21.967Z",
-    "durationMs": 36096,
+    "at": "2026-11-20T10:41:08.374Z",
+    "durationMs": 35766,
     "steps": [
       {
         "n": 1,
@@ -9410,8 +9416,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:29:22.522Z",
-    "durationMs": 7432,
+    "at": "2026-11-20T10:41:16.555Z",
+    "durationMs": 8160,
     "steps": [
       {
         "n": 1,
@@ -10128,7 +10134,7 @@
           {
             "label": "the inventory sees the whole API",
             "ok": true,
-            "detail": "288 routes, 168 change data",
+            "detail": "310 routes, 181 change data",
             "kind": "expect"
           },
           {
@@ -10225,12 +10231,12 @@
     "id": "t29-orders-account-api",
     "title": "Order history for the storefront Account page, and deleting an order — who may, what it puts right, where it disappears",
     "status": "pass",
-    "pass": 63,
+    "pass": 65,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:29:27.858Z",
-    "durationMs": 5317,
+    "at": "2026-11-20T10:33:48.399Z",
+    "durationMs": 5603,
     "steps": [
       {
         "n": 1,
@@ -10299,7 +10305,7 @@
           {
             "label": "paging: the first page of two says there are more",
             "ok": true,
-            "detail": "2 2026-11-19T23:59:27.577Z",
+            "detail": "2 2026-11-20T10:03:47.984Z",
             "kind": "expect"
           },
           {
@@ -10381,13 +10387,25 @@
             "kind": "expect"
           },
           {
-            "label": "a manager can",
+            "label": "a manager can't either — deleting is for the owner and the platform admin only",
+            "ok": true,
+            "detail": "403 Your role can't do this (order:delete)",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the order is untouched after the manager's attempt",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the platform super admin can",
             "ok": true,
             "detail": "200",
             "kind": "expect"
           },
           {
-            "label": "the owner can",
+            "label": "the store owner can",
             "ok": true,
             "detail": "200",
             "kind": "expect"
@@ -10660,12 +10678,12 @@
     "id": "t30-account-orders",
     "title": "Storefront Account page — 'My orders' menu link, order history with status, payment mode & state, coins; Delete order on the dashboard",
     "status": "pass",
-    "pass": 41,
+    "pass": 42,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:30:15.440Z",
-    "durationMs": 43416,
+    "at": "2026-11-20T10:34:37.708Z",
+    "durationMs": 45133,
     "steps": [
       {
         "n": 1,
@@ -10770,7 +10788,7 @@
           {
             "label": "'View details' lists the items and the bill",
             "ok": true,
-            "detail": "2 × Veg Steamed Momos (5 pcs) ₹120 Items ₹120 Taxes ₹5.71 Total ₹120 Placed 20 Nov 2026, 5:59 am",
+            "detail": "2 × Veg Steamed Momos (5 pcs) ₹120 Items ₹120 Taxes ₹5.71 Total ₹120 Placed 20 Nov 2026, 4:03 pm",
             "kind": "expect"
           }
         ]
@@ -10782,7 +10800,7 @@
           {
             "label": "(the order is on the dashboard)",
             "ok": true,
-            "detail": "6aff947342120a5586a265f0",
+            "detail": "6b002217dc5fa1615c228c5f",
             "kind": "expect"
           },
           {
@@ -10969,6 +10987,18 @@
       },
       {
         "n": 11,
+        "title": "A manager is not offered 'Delete order' either — only the owner (and the platform admin) is",
+        "checks": [
+          {
+            "label": "the manager's menu has Edit order but no 'Delete order'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 12,
         "title": "Signing out of the Account page",
         "checks": [
           {
@@ -11741,8 +11771,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T05:44:27.734Z",
-    "durationMs": 46722,
+    "at": "2026-11-20T10:42:05.547Z",
+    "durationMs": 44810,
     "steps": [
       {
         "n": 1,
@@ -14768,8 +14798,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:34:17.440Z",
-    "durationMs": 34342,
+    "at": "2026-11-20T10:35:07.633Z",
+    "durationMs": 29901,
     "steps": [
       {
         "n": 1,
@@ -15059,8 +15089,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:34:33.829Z",
-    "durationMs": 16372,
+    "at": "2026-11-20T10:35:19.673Z",
+    "durationMs": 12014,
     "steps": [
       {
         "n": 1,
@@ -15716,8 +15746,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T05:45:17.306Z",
-    "durationMs": 17650,
+    "at": "2026-11-20T10:42:21.945Z",
+    "durationMs": 16371,
     "steps": [
       {
         "n": 1,
@@ -16742,8 +16772,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:37:47.917Z",
-    "durationMs": 41004,
+    "at": "2026-11-20T10:42:45.321Z",
+    "durationMs": 23338,
     "steps": [
       {
         "n": 1,
@@ -17207,8 +17237,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:38:08.631Z",
-    "durationMs": 20695,
+    "at": "2026-11-20T10:43:02.811Z",
+    "durationMs": 17471,
     "steps": [
       {
         "n": 1,
@@ -17711,8 +17741,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T06:40:22.053Z",
-    "durationMs": 24318,
+    "at": "2026-11-20T10:35:44.569Z",
+    "durationMs": 24877,
     "steps": [
       {
         "n": 1,
@@ -17883,7 +17913,7 @@
           {
             "label": "changing only the kitchen note sends a ticket that says what the note is now",
             "ok": true,
-            "detail": "*** ORDER CHANGED *** | Only the kitchen note changed | ------------------------------------------------ | KITCHEN ORDER | ------------------------------------------------ | Order #0006 | Takeaway | 20 Nov 2026, 12:10 pm | ------------------------------------------------ | Note is now: less spicy please | ------------------------------------------------ |",
+            "detail": "*** ORDER CHANGED *** | Only the kitchen note changed | ------------------------------------------------ | KITCHEN ORDER | ------------------------------------------------ | Order #0006 | Takeaway | 20 Nov 2026, 04:05 pm | ------------------------------------------------ | Note is now: less spicy please | ------------------------------------------------ |",
             "kind": "expect"
           },
           {
@@ -18281,6 +18311,1665 @@
           },
           {
             "label": "the browser logged no errors or warnings",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t53-orders-growth-api": {
+    "id": "t53-orders-growth-api",
+    "title": "Orders that grow the business — out for delivery with a rider, pre-orders for later, stock counts, menu hours, combos and buy-X-get-Y coupons (API rules)",
+    "status": "pass",
+    "pass": 84,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-20T10:45:09.684Z",
+    "durationMs": 7301,
+    "steps": [
+      {
+        "n": 1,
+        "title": "counted stock — orders take it, cancelling and deleting give it back",
+        "checks": [
+          {
+            "label": "a dish can be counted: the menu says 5 are left",
+            "ok": true,
+            "detail": "{\"tracked\":true,\"left\":5,\"daily\":null,\"lowAt\":3}",
+            "kind": "expect"
+          },
+          {
+            "label": "a customer orders 2 → 3 are left",
+            "ok": true,
+            "detail": "201 3",
+            "kind": "expect"
+          },
+          {
+            "label": "ordering 4 when only 3 are left is refused, saying how many are left",
+            "ok": true,
+            "detail": "409 {\"error\":\"Only 3 Veg Momos left — reduce the quantity\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "…two lines of the same dish add up (2 + 2 > 3)",
+            "ok": true,
+            "detail": "409",
+            "kind": "expect"
+          },
+          {
+            "label": "a refused order takes nothing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the last 3 sell → 0 left",
+            "ok": true,
+            "detail": "0",
+            "kind": "expect"
+          },
+          {
+            "label": "at 0 the storefront shows it as Sold out",
+            "ok": true,
+            "detail": "{\"a\":false,\"l\":\"Sold out\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "ordering a sold-out dish is refused",
+            "ok": true,
+            "detail": "409",
+            "kind": "expect"
+          },
+          {
+            "label": "cancelling the order of 3 gives them back",
+            "ok": true,
+            "detail": "3",
+            "kind": "expect"
+          },
+          {
+            "label": "…and only once",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "deleting an order that was never handed over gives its stock back too",
+            "ok": true,
+            "detail": "200 5",
+            "kind": "expect"
+          },
+          {
+            "label": "staff orders take stock too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "editing it up to 6 (only 4 + its own 1 = 5 there) is refused and changes nothing",
+            "ok": true,
+            "detail": "409 4",
+            "kind": "expect"
+          },
+          {
+            "label": "editing it up to 3 takes 2 more",
+            "ok": true,
+            "detail": "200 2",
+            "kind": "expect"
+          },
+          {
+            "label": "editing the momos out gives all 3 back",
+            "ok": true,
+            "detail": "5",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "the daily refill, and online orders nobody paid for",
+        "checks": [
+          {
+            "label": "setting today's count keeps it (the morning refill doesn't overwrite a number the owner just typed)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "on a new day the dish is refilled to its daily number when the menu is next read",
+            "ok": true,
+            "detail": "20",
+            "kind": "expect"
+          },
+          {
+            "label": "…once (reading again doesn't refill again)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an online order waiting for payment holds its stock",
+            "ok": true,
+            "detail": "16",
+            "kind": "expect"
+          },
+          {
+            "label": "…and gives it back if nobody pays within 30 minutes",
+            "ok": true,
+            "detail": "1 20",
+            "kind": "expect"
+          },
+          {
+            "label": "…only once",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "counting can be switched off again (stock: null)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "dishes with hours (a breakfast menu)",
+        "checks": [
+          {
+            "label": "a category carries its hours in the menu",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "outside its hours a dish shows when it IS available instead of a price",
+            "ok": true,
+            "detail": "Available 6:15 PM – 7:15 PM",
+            "kind": "expect"
+          },
+          {
+            "label": "…or is hidden, when the outlet chooses that",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a customer can't order it now",
+            "ok": true,
+            "detail": "409 {\"error\":\"Poha is only available 6:15 PM – 7:15 PM\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "staff at the till can still sell it",
+            "ok": true,
+            "detail": "201",
+            "kind": "expect"
+          },
+          {
+            "label": "a window that starts and ends at the same time is refused",
+            "ok": true,
+            "detail": "400",
+            "kind": "expect"
+          },
+          {
+            "label": "a day that doesn't exist is refused",
+            "ok": true,
+            "detail": "400",
+            "kind": "expect"
+          },
+          {
+            "label": "a dish's own hours win over its category's",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "pre-orders — a later pickup time for takeaway",
+        "checks": [
+          {
+            "label": "off until the outlet switches pre-orders on",
+            "ok": true,
+            "detail": "{\"enabled\":false,\"days\":[]}",
+            "kind": "expect"
+          },
+          {
+            "label": "now the outlet offers pickup times, grouped by day",
+            "ok": true,
+            "detail": "Today:28 Tomorrow:95",
+            "kind": "expect"
+          },
+          {
+            "label": "…none sooner than 30 minutes from now",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…every 15 minutes",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a customer places a takeaway for a later time",
+            "ok": true,
+            "detail": "201 2026-11-20T12:15:00.000Z",
+            "kind": "expect"
+          },
+          {
+            "label": "a time that's full (1 per time here) is refused",
+            "ok": true,
+            "detail": "409",
+            "kind": "expect"
+          },
+          {
+            "label": "…and is shown as full",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a time that isn't on offer (too soon / not a slot) is refused",
+            "ok": true,
+            "detail": "409",
+            "kind": "expect"
+          },
+          {
+            "label": "only takeaway can be placed for later",
+            "ok": true,
+            "detail": "400",
+            "kind": "expect"
+          },
+          {
+            "label": "breakfast can be pre-ordered for a time when breakfast is served (hours are checked at the pickup time)",
+            "ok": true,
+            "detail": "201 {\"order\":{\"id\":\"6b0024b2fd03524265602304\",\"orderNumber\":\"0007\",\"channel\":\"takeaway\",\"placedBy\":\"cust",
+            "kind": "expect"
+          },
+          {
+            "label": "the customer's Account page shows the pickup time",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the dashboard's order list carries it too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a store whose plan lacks Pre-orders offers no times, even with the setting on",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a pre-order nobody has accepted doesn't turn red hours ahead of its pickup time",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…its accept clock starts an hour before pickup (30 min to go = 30 min waiting)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an ordinary order still counts from when it was placed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "out for delivery, and riders",
+        "checks": [
+          {
+            "label": "only a delivery order has an 'Out for delivery' step after Ready",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a takeaway order can't go out for delivery",
+            "ok": true,
+            "detail": "409",
+            "kind": "expect"
+          },
+          {
+            "label": "…or be given a rider",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a cashier can't add riders (rider list is for managers)",
+            "ok": true,
+            "detail": "403",
+            "kind": "expect"
+          },
+          {
+            "label": "a manager adds a rider",
+            "ok": true,
+            "detail": "201",
+            "kind": "expect"
+          },
+          {
+            "label": "the same name twice is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a phone that isn't a number is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a cashier can see the riders (to hand an order over)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a store whose plan has no Delivery has no rider list",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "handing a Ready delivery order to Ramesh marks it Out for delivery with his name and number",
+            "ok": true,
+            "detail": "200 out_for_delivery",
+            "kind": "expect"
+          },
+          {
+            "label": "the customer sees it is on its way, and who is bringing it",
+            "ok": true,
+            "detail": "{\"name\":\"Ramesh\",\"phone\":\"98765 43210\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "the rider can be changed (a name typed in once works too)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a rider who isn't on the list is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "then it is marked delivered (a completed delivery is called Delivered)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "once delivered, the rider's number is no longer shown to the customer",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an order still being cooked can't go out yet",
+            "ok": true,
+            "detail": "409",
+            "kind": "expect"
+          },
+          {
+            "label": "a rider switched off in the list can't be given orders",
+            "ok": true,
+            "detail": "409",
+            "kind": "expect"
+          },
+          {
+            "label": "a rider can be removed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…orders keep the rider they went out with",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "combos — a dish made of other dishes",
+        "checks": [
+          {
+            "label": "a combo is a dish with the dishes it is made of",
+            "ok": true,
+            "detail": "201",
+            "kind": "expect"
+          },
+          {
+            "label": "the storefront can show what it saves (₹130 separately, ₹110 as a combo → saves ₹20)",
+            "ok": true,
+            "detail": "{\"parts\":[{\"itemId\":\"6b0024b2fd035242656021a1\",\"name\":\"Veg Momos\",\"variantLabel\":null,\"quantity\":1,\"missing\":false},{\"itemId\":\"6b0024b2fd035242656021a6\",\"name\":\"Masala Chai\",\"variantLabel\":null,\"quantity\":1,\"missing\":false}],\"separately\":13000,\"saves\":2000}",
+            "kind": "expect"
+          },
+          {
+            "label": "a combo can't contain itself",
+            "ok": true,
+            "detail": "400",
+            "kind": "expect"
+          },
+          {
+            "label": "a combo can't contain another combo",
+            "ok": true,
+            "detail": "400",
+            "kind": "expect"
+          },
+          {
+            "label": "a dish that is part of a combo can't become a combo itself",
+            "ok": true,
+            "detail": "400",
+            "kind": "expect"
+          },
+          {
+            "label": "an ordered combo carries what it is made of",
+            "ok": true,
+            "detail": "[{\"itemId\":\"6b0024b2fd035242656021a1\",\"name\":\"Veg Momos\",\"variantLabel\":null,\"quantity\":1},{\"itemId\":\"6b0024b2fd035242656021a6\",\"name\":\"Masala Chai\",\"variantLabel\":null,\"quantity\":1}]",
+            "kind": "expect"
+          },
+          {
+            "label": "a combo takes its parts' stock (2 combos → 2 momos)",
+            "ok": true,
+            "detail": "10 → 8",
+            "kind": "expect"
+          },
+          {
+            "label": "the KITCHEN ticket says to make the momos of the combo",
+            "ok": true,
+            "detail": "KITCHEN ORDER | ------------------------------------------------ |                   Order #0009 |                     Takeaway |",
+            "kind": "expect"
+          },
+          {
+            "label": "the BAR ticket says to make its chai",
+            "ok": true,
+            "detail": "KITCHEN ORDER | ------------------------------------------------ |                   Order #0009 |                     Takeaway |",
+            "kind": "expect"
+          },
+          {
+            "label": "a pre-order's kitchen ticket starts with PRE-ORDER and the full pickup time",
+            "ok": true,
+            "detail": "PRE-ORDER |            Pickup 5:45 PM, Fri 20 Nov | ------------------------------------------------ |                  KITCHEN ORDER",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "buy X, get Y free coupons",
+        "checks": [
+          {
+            "label": "a 'buy 1 get 1 free' coupon on the Food category is created",
+            "ok": true,
+            "detail": "201 {\"coupon\":{\"id\":\"6b0024b4fd03524265602461\",\"code\":\"B1G1MOMO\",\"description\":\"\",\"discountType\":\"bogo\",\"value\":1,\"maxDiscou",
+            "kind": "expect"
+          },
+          {
+            "label": "it reads 'Buy 1 get 1 free on chosen dishes'",
+            "ok": true,
+            "detail": "Buy 1 get 1 free on chosen dishes",
+            "kind": "expect"
+          },
+          {
+            "label": "2 momos (₹100 each) + a chai: one momo is free — ₹100 off (the chai isn't covered)",
+            "ok": true,
+            "detail": "{\"ok\":true,\"code\":\"B1G1MOMO\",\"discount\":10000,\"totals\":{\"subtotal\":23000,\"discount\":10000,\"deliveryFee\":0,\"coinsRedeemed",
+            "kind": "expect"
+          },
+          {
+            "label": "with only one covered dish it says to add one more",
+            "ok": true,
+            "detail": "Add 1 more of the offer's dishes to get one free.",
+            "kind": "expect"
+          },
+          {
+            "label": "with none of the covered dishes it says so",
+            "ok": true,
+            "detail": "This offer is for other dishes — add one of them to use it.",
+            "kind": "expect"
+          },
+          {
+            "label": "the CHEAPEST covered dish is the free one (momo ₹100 free, combo ₹110 paid)",
+            "ok": true,
+            "detail": "10000",
+            "kind": "expect"
+          },
+          {
+            "label": "'buy 2 get 1' on chai with at most 1 free: 6 chais → 1 free (₹30)",
+            "ok": true,
+            "detail": "3000",
+            "kind": "expect"
+          },
+          {
+            "label": "an order placed with it gets the same discount",
+            "ok": true,
+            "detail": "201 10000",
+            "kind": "expect"
+          },
+          {
+            "label": "buy 0 is refused",
+            "ok": true,
+            "detail": "400",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t54-engagement-api": {
+    "id": "t54-engagement-api",
+    "title": "Bringing customers back — table bookings, ratings, order again, suggestions and abandoned-cart reminders (API rules)",
+    "status": "pass",
+    "pass": 88,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-20T10:45:14.956Z",
+    "durationMs": 5247,
+    "steps": [
+      {
+        "n": 1,
+        "title": "table bookings — what can be booked",
+        "checks": [
+          {
+            "label": "booking is off until the outlet switches it on",
+            "ok": true,
+            "detail": "{\"enabled\":false,\"settings\":{\"minPartySize\":1,\"maxPartySize\":10,\"durationMinutes",
+            "kind": "expect"
+          },
+          {
+            "label": "now: today plus 7 days to choose from",
+            "ok": true,
+            "detail": "8 2026-11-21",
+            "kind": "expect"
+          },
+          {
+            "label": "tomorrow 7 PM is free for 4 (10 seats)",
+            "ok": true,
+            "detail": "{\"at\":\"2026-11-21T13:30:00.000Z\",\"label\":\"7:00 PM\",\"available\":true,\"seatsLeft\":10}",
+            "kind": "expect"
+          },
+          {
+            "label": "the guest note and party limits come with it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "nothing sooner than an hour from now is offered (minimum notice)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "booking, capacity, and what the team does",
+        "checks": [
+          {
+            "label": "booking needs the customer to be signed in",
+            "ok": true,
+            "detail": "401",
+            "kind": "expect"
+          },
+          {
+            "label": "Asha books tomorrow 7 PM for 4 — it waits for the restaurant to confirm",
+            "ok": true,
+            "detail": "201 requested B-0001",
+            "kind": "expect"
+          },
+          {
+            "label": "8 more at the same time don't fit (6 seats left)",
+            "ok": true,
+            "detail": "409 {\"error\":\"Only 6 seats are left at that time — choose another time.\",\"details\":{\"code\":\"slot_unavail",
+            "kind": "expect"
+          },
+          {
+            "label": "6 at 7:30 PM fit (they overlap Asha's 4 for an hour: 10 seats)",
+            "ok": true,
+            "detail": "201",
+            "kind": "expect"
+          },
+          {
+            "label": "now 7 PM is full for anyone else",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a time that isn't one of the slots is refused",
+            "ok": true,
+            "detail": "409",
+            "kind": "expect"
+          },
+          {
+            "label": "a party bigger than the outlet takes online is told to call",
+            "ok": true,
+            "detail": "409",
+            "kind": "expect"
+          },
+          {
+            "label": "the team can't overbook by accident…",
+            "ok": true,
+            "detail": "409",
+            "kind": "expect"
+          },
+          {
+            "label": "…but can take it anyway when they choose to (confirmed at once)",
+            "ok": true,
+            "detail": "201",
+            "kind": "expect"
+          },
+          {
+            "label": "a cashier sees tomorrow's bookings: 3 bookings, 12 guests, 2 waiting",
+            "ok": true,
+            "detail": "{\"bookings\":3,\"guests\":12,\"requested\":2,\"waitingAhead\":2}",
+            "kind": "expect"
+          },
+          {
+            "label": "the kitchen doesn't see bookings",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the sidebar count: 2 waiting to be confirmed",
+            "ok": true,
+            "detail": "{\"pending\":2}",
+            "kind": "expect"
+          },
+          {
+            "label": "a booking can't be seated before it is confirmed",
+            "ok": true,
+            "detail": "409",
+            "kind": "expect"
+          },
+          {
+            "label": "the cashier confirms Asha's booking",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and declines Ravi's, with a reason",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a declined booking frees its seats",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "when they arrive they are seated at table 7",
+            "ok": true,
+            "detail": "200 7",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the booking is completed when they leave",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "the guest's own bookings",
+        "checks": [
+          {
+            "label": "a guest can hold at most 3 upcoming bookings",
+            "ok": true,
+            "detail": "409",
+            "kind": "expect"
+          },
+          {
+            "label": "Meera sees her 3 bookings, each cancellable — and none of the team's notes",
+            "ok": true,
+            "detail": "3",
+            "kind": "expect"
+          },
+          {
+            "label": "she cancels one",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "nobody else can cancel her booking",
+            "ok": true,
+            "detail": "404",
+            "kind": "expect"
+          },
+          {
+            "label": "too close to the time, she is told to call instead",
+            "ok": true,
+            "detail": "409",
+            "kind": "expect"
+          },
+          {
+            "label": "with auto-confirm on, a booking is confirmed at once",
+            "ok": true,
+            "detail": "confirmed",
+            "kind": "expect"
+          },
+          {
+            "label": "a store whose plan lacks Table reservations can't take bookings, even with the switch on",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and has no bookings page",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and a booking sent anyway is refused",
+            "ok": true,
+            "detail": "403",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "ratings — customers rate completed orders",
+        "checks": [
+          {
+            "label": "the Account page knows the store takes ratings",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a completed order can be rated; one still cooking, or older than 30 days, can't",
+            "ok": true,
+            "detail": "[true,false,false]",
+            "kind": "expect"
+          },
+          {
+            "label": "rating an order that isn't completed is refused",
+            "ok": true,
+            "detail": "409",
+            "kind": "expect"
+          },
+          {
+            "label": "rating an order from more than 30 days ago is refused",
+            "ok": true,
+            "detail": "409",
+            "kind": "expect"
+          },
+          {
+            "label": "nobody can rate someone else's order",
+            "ok": true,
+            "detail": "404",
+            "kind": "expect"
+          },
+          {
+            "label": "Asha gives 5 stars — and is offered the store's Google review page",
+            "ok": true,
+            "detail": "200 https://g.page/r/acme/review",
+            "kind": "expect"
+          },
+          {
+            "label": "a 2-star rating is not sent to Google",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "her order now shows her rating (made-up tags are dropped) and that she can still change it",
+            "ok": true,
+            "detail": "{\"rating\":5,\"comment\":\"Best momos in town!\",\"tags\":[\"Tasty\",\"Hot & fresh\"],\"editable\":true}",
+            "kind": "expect"
+          },
+          {
+            "label": "rating again changes it (still one rating per order)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…but not after a week",
+            "ok": true,
+            "detail": "409",
+            "kind": "expect"
+          },
+          {
+            "label": "the owner's Ratings page: 2 ratings, average 4.0, one 5★ and one 3★, both with comments",
+            "ok": true,
+            "detail": "{\"days\":30,\"count\":2,\"average\":4,\"byStars\":{\"1\":0,\"2\":0,\"3\":1,\"4\":0,\"5\":1},\"withComments\":2}",
+            "kind": "expect"
+          },
+          {
+            "label": "each rating shows the customer, the order number and what was ordered",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it can show only the low ratings",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a cashier can't see ratings",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an accountant can",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a store whose plan lacks Ratings has no ratings page",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and its customers can't rate",
+            "ok": true,
+            "detail": "403",
+            "kind": "expect"
+          },
+          {
+            "label": "…nor are they asked to",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "order again",
+        "checks": [
+          {
+            "label": "Asha asks to order an old order again",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "the momos come back as they were: Full, 2 of them, with cheese and the kitchen note",
+            "ok": true,
+            "detail": "{\"itemId\":\"6b0024b9ae6ecc0e9e65111b\",\"variantId\":\"be3ebf42-cbf4-4163-83dc-55a89daf35d6\",\"modifierOptionIds\":[\"ab7b771a-da1b-4f39-9c98-cbc1b197334b\"],\"quantity\":2,\"note\":\"extra chutney\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "…and 3 chais",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the sold-out lassi and the soup that's gone are left out, with why",
+            "ok": true,
+            "detail": "[{\"name\":\"Sweet Lassi\",\"reason\":\"sold out right now\"},{\"name\":\"Seasonal Soup\",\"reason\":\"no longer on the menu\"}]",
+            "kind": "expect"
+          },
+          {
+            "label": "an add-on that isn't offered any more is dropped, and said so",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "those lines price at today's prices (₹120 + ₹20 cheese) × 2 + ₹30 × 3",
+            "ok": true,
+            "detail": "37000",
+            "kind": "expect"
+          },
+          {
+            "label": "nobody can re-order someone else's order",
+            "ok": true,
+            "detail": "404",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "'goes well with your order'",
+        "checks": [
+          {
+            "label": "the owner picks what goes with momos (the dish itself and unknown dishes are dropped)",
+            "ok": true,
+            "detail": "[\"6b0024b9ae6ecc0e9e651121\",\"6b0024b9ae6ecc0e9e651131\",\"6b0024b9ae6ecc0e9e651126\"]",
+            "kind": "expect"
+          },
+          {
+            "label": "with momos in the cart: chai and lassi are suggested (the curry needs a spice choice, so it can't be one tap)",
+            "ok": true,
+            "detail": "[\"6b0024b9ae6ecc0e9e651121\",\"6b0024b9ae6ecc0e9e651126\"]",
+            "kind": "expect"
+          },
+          {
+            "label": "under the outlet's title",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "nothing already in the cart is suggested",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a sold-out dish isn't suggested",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "with no picks, what others often ordered with it is suggested (roll → cola, ordered together 3 times)",
+            "ok": true,
+            "detail": "[{\"itemId\":\"6b0024b9ae6ecc0e9e65112b\",\"variantId\":null}]",
+            "kind": "expect"
+          },
+          {
+            "label": "switched off, nothing is suggested",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "abandoned-cart reminders",
+        "checks": [
+          {
+            "label": "while reminders are off, no cart is kept at all",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the store's settings: allowed by the plan, off, 30 minutes",
+            "ok": true,
+            "detail": "{\"enabled\":false,\"delayMinutes\":30,\"sendFrom\":\"10:00\",\"sendUntil\":\"21:00\",\"minDaysBetween\":3,\"channel\":\"auto\",\"message\":\"\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "a cashier can't change them",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "sending hours that end before they start are refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a manager switches them on for the store",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "a store whose plan lacks them can't switch them on",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and keeps no carts",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "now Asha's cart is kept: 3 items worth ₹170",
+            "ok": true,
+            "detail": "{\"n\":3,\"v\":17000}",
+            "kind": "expect"
+          },
+          {
+            "label": "nothing is sent while the cart is fresh",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "40 minutes later ONE reminder goes to Asha's number",
+            "ok": true,
+            "detail": "1 1",
+            "kind": "expect"
+          },
+          {
+            "label": "it says what she left, what it's worth, the store, and links straight to her cart",
+            "ok": true,
+            "detail": "Hi Asha, 2× Veg Momos, 1× Masala Chai (₹170) is waiting at Acme: http://localhost:3070/main/order?cart=6b0024b99c9da075689317c8",
+            "kind": "expect"
+          },
+          {
+            "label": "it is never sent twice",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the cart is marked reminded (by SMS)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the link's cart can be opened on another phone — dishes only, nothing personal",
+            "ok": true,
+            "detail": "{\"lines\":[{\"itemId\":\"6b0024b9ae6ecc0e9e65111b\",\"variantId\":\"e0bbdca6-6f54-468b-aba9-3f07f72ca564\",\"modifierOptionIds\":[]",
+            "kind": "expect"
+          },
+          {
+            "label": "she orders after the reminder → counted as won back, with the order's value",
+            "ok": true,
+            "detail": "recovered 3000",
+            "kind": "expect"
+          },
+          {
+            "label": "a new forgotten cart within 3 days of her last reminder is NOT reminded about",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…it is marked skipped",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "outside the sending hours nothing goes out",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a cart left more than a day ago is never reminded about",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "another customer's 50-minute-old cart is reminded about",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the settings page shows: 2 sent, 1 won back (with its value) and the recent ones",
+            "ok": true,
+            "detail": "{\"s\":2,\"rec\":1,\"v\":3000,\"n\":2}",
+            "kind": "expect"
+          },
+          {
+            "label": "…with phone numbers partly hidden",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an emptied cart is removed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "switched off again, carts are no longer kept",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t55-growth-dashboard": {
+    "id": "t55-growth-dashboard",
+    "title": "Dashboard: pre-orders & bookings settings, riders, out for delivery, stock / combo / hours in the menu, buy-X-get-Y coupons, bookings, ratings and cart reminders",
+    "status": "pass",
+    "pass": 26,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-20T10:45:19.677Z",
+    "durationMs": 4693,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The sidebar has Bookings and Ratings",
+        "checks": [
+          {
+            "label": "the store's sidebar shows Bookings (under Store & orders) and Ratings (under Customers & growth)",
+            "ok": true,
+            "detail": "STORE & ORDERS Take order Dashboard Orders Bookings Menu Tables Printing CUSTOMERS & GROWTH Analytics Customers Ratings Marketing Coupons SETUP Storefront Settings",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Settings → Pre-orders & bookings",
+        "checks": [
+          {
+            "label": "the tab has two cards: Pre-orders and Table bookings",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "switching pre-orders on (1 day ahead) and saving keeps it",
+            "ok": true,
+            "detail": "{\"enabled\":true,\"maxDaysAhead\":1,\"minLeadMinutes\":30,\"slotMinutes\":15,\"maxPerSlot\":0}",
+            "kind": "expect"
+          },
+          {
+            "label": "…and table bookings (20 guests at a time)",
+            "ok": true,
+            "detail": "{\"on\":true,\"g\":20}",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Settings → Ratings & suggestions",
+        "checks": [
+          {
+            "label": "the Google review link and the suggestions heading are saved",
+            "ok": true,
+            "detail": "{\"g\":\"https://g.page/r/acme-test/review\",\"t\":\"Make it a meal\"}",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Settings → Delivery riders",
+        "checks": [
+          {
+            "label": "a rider is added from the Delivery riders tab",
+            "ok": true,
+            "detail": "[{\"id\":\"6b0024bc620fe03c81234605\",\"name\":\"Ramesh\",\"phone\":\"98765 43210\",\"isActive\":true,\"createdAt\":\"2026-11-20T10:45:16.483Z\"}]",
+            "kind": "expect"
+          },
+          {
+            "label": "Delivery riders sits in the Settings tabs",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Orders → a delivery order goes out with a rider",
+        "checks": [
+          {
+            "label": "a Ready delivery order's next step is 'Out for delivery'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it asks who is taking it — Ramesh is on the list",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the row now says Out for delivery — with Ramesh",
+            "ok": true,
+            "detail": "#0001 04:15 PM UI Tester Del 1 ₹90 Out for delivery with Ramesh 0m Delivered",
+            "kind": "expect"
+          },
+          {
+            "label": "…and its next step is 'Delivered'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Orders → a pre-order shows its pickup time",
+        "checks": [
+          {
+            "label": "a pre-order is tagged with its pickup time under its number",
+            "ok": true,
+            "detail": "5:30 PM today",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "Menu → stock on a dish, a combo, hours on a category",
+        "checks": [
+          {
+            "label": "the dish form has Stock, Hours, Combo and Goes well with",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "after saving, the dish row says '3 left'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the menu counts 3",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "choosing the dishes shows what they cost separately",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a combo is created from the dish form",
+            "ok": true,
+            "detail": "{\"items\":[{\"itemId\":\"6b0024ad620fe03c81234059\",\"variantId\":null,\"quantity\":1}]}",
+            "kind": "expect"
+          },
+          {
+            "label": "a category's Edit window has Hours",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "Coupons → buy 1 get 1 free",
+        "checks": [
+          {
+            "label": "choosing 'Buy X, get Y free' asks how many to buy, how many free, and which dishes",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the coupon list says 'Buy 1 get 1 free'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 9,
+        "title": "Bookings → a booking taken over the phone",
+        "checks": [
+          {
+            "label": "the booking shows on its day, confirmed (taken by the team)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the day's counts show at the top",
+            "ok": true,
+            "detail": "1 booking",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 10,
+        "title": "Ratings and Cart reminders pages",
+        "checks": [
+          {
+            "label": "the Ratings page shows the average and how many",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Cart reminders shows a preview of the message",
+            "ok": true,
+            "detail": "PREVIEW",
+            "kind": "expect"
+          },
+          {
+            "label": "…and what reminders achieved",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser console",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t56-growth-storefront": {
+    "id": "t56-growth-storefront",
+    "title": "Storefront: only N left, combos and dish hours on the menu, suggestions, a pre-order for later, rating an order, order again and booking a table",
+    "status": "pass",
+    "pass": 22,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-20T10:45:27.518Z",
+    "durationMs": 7823,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The menu: only N left, combos, dishes with hours",
+        "checks": [
+          {
+            "label": "a counted dish running low says 'Only 3 left'",
+            "ok": true,
+            "detail": "ONLY 3 LEFT",
+            "kind": "expect"
+          },
+          {
+            "label": "a combo says Combo and what it saves (₹60 + ₹60 separately, ₹100 as a combo)",
+            "ok": true,
+            "detail": "Momo Meal COMBO · SAVE ₹20 ₹100",
+            "kind": "expect"
+          },
+          {
+            "label": "a breakfast dish outside its hours shows when it is served — and can't be opened",
+            "ok": true,
+            "detail": "Poha Available 6:15 PM – 7:15 PM",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "The dish pop-up stops at the stock",
+        "checks": [
+          {
+            "label": "the pop-up says 'Hurry — only 3 left today'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "pressing + five times stops at 3 (3 × ₹60 = ₹180)",
+            "ok": true,
+            "detail": "Add · ₹180",
+            "kind": "expect"
+          },
+          {
+            "label": "a combo's pop-up lists what's in it and what you save",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "The order page: sign in, a suggestion, a pre-order for later",
+        "checks": [
+          {
+            "label": "'Goes well with your order' suggests Masala Coke for the momos",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "one tap adds it to the order",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "choosing Later asks for a pickup time before the order can be placed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "with a time picked, the button says 'Place pre-order'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the confirmation says it is a pre-order and when to pick it up",
+            "ok": true,
+            "detail": "Order confirmed Order #0003 placed It will be ready for you at your pickup time. Order type Takeaway · pre-order Pickup 5:00 PM today Total ₹200 Payment Cash / pay at counter Back to menu Follow your order",
+            "kind": "expect"
+          },
+          {
+            "label": "the restaurant gets it with the pickup time",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the stock went down by the momos ordered — 1 plate and the 1 inside the combo (3 → 1)",
+            "ok": true,
+            "detail": "1",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Account: rate the order, then order it again",
+        "checks": [
+          {
+            "label": "after 5 stars it thanks them and offers the Google review page",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the store sees the rating, the comment and the tag",
+            "ok": true,
+            "detail": "{\"days\":30,\"count\":1,\"average\":5,\"byStars\":{\"1\":0,\"2\":0,\"3\":0,\"4\":0,\"5\":1},\"withComments\":1}",
+            "kind": "expect"
+          },
+          {
+            "label": "the order now shows 'You rated it'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Order again' puts the same dishes back in the cart and opens the order page",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Book a table",
+        "checks": [
+          {
+            "label": "the header has 'Book a table'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the booking is sent — the restaurant will confirm it",
+            "ok": true,
+            "detail": "Free delivery on orders above ₹499Order now Acme Momos Menu My orders Order at table Book a table About us Contact & hours Booking request sent 1:00 PM tomorrow · table for 2 · B-0002 The restaurant w",
+            "kind": "expect"
+          },
+          {
+            "label": "the account page lists it, waiting to be confirmed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the restaurant sees it with the guest's note",
+            "ok": true,
+            "detail": "{\"id\":\"6b0024c7620fe03c812348fc\",\"code\":\"B-0002\",\"status\":\"requested\",\"statusLabel\":\"Waiting to be confirmed\",\"at\":\"2026-11-21T07:30:00.000Z\",\"endsAt\":\"2026-11-",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser console",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t57-policy-pages": {
+    "id": "t57-policy-pages",
+    "title": "Pages for payment-gateway activation — About, Contact, Pricing, Privacy, Terms, Refunds, Delivery — and their links on the outlet picker",
+    "status": "pass",
+    "pass": 13,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-20T11:15:48.669Z",
+    "durationMs": 1377,
+    "steps": [
+      {
+        "n": 1,
+        "title": "the generated pages are valid and say what is true for the outlet",
+        "checks": [
+          {
+            "label": "every outlet gets the seven pages: about, contact, pricing, privacy-policy, terms, refund-policy, shipping-policy",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and each one passes the page schema (so it can be saved)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and each is linked in the footer",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the Pricing page quotes this outlet's real delivery fee (₹30), free-delivery limit (₹499) and minimum order (₹100)",
+            "ok": true,
+            "detail": "[{\"id\":\"blk_xfcdyixw\",\"type\":\"heading\",\"text\":\"Pricing\",\"level\":2,\"align\":\"left\"",
+            "kind": "expect"
+          },
+          {
+            "label": "an outlet that doesn't deliver says so, instead of promising delivery",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the Contact page has the outlet's phone, email and opening hours (9:00 AM to 11:00 PM)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the Refunds page says when a cancel is possible and how long a refund takes",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the Privacy policy says who processes payments and that card details are never stored",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "none of them carries the 'this is only a template' note (they are meant to be published)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "the landing page of a store with several outlets links to them",
+        "checks": [
+          {
+            "label": "the outlet picker shows the store's pages at its foot",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…including the About, Privacy and Refunds pages the test published",
+            "ok": true,
+            "detail": "About us | Contact & hours | Gallery | FAQ | Privacy policy | Terms & conditions | Refunds & cancellation | Zz About test | Zz Privacy test | Zz Refunds test",
+            "kind": "expect"
+          },
+          {
+            "label": "…each pointing at the outlet's own page address",
+            "ok": true,
+            "detail": "/main/policy-test-privacy",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the page opens",
             "ok": true,
             "detail": "",
             "kind": "expect"

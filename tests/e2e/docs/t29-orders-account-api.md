@@ -1,12 +1,12 @@
 # T29 — Order history for the storefront Account page, and deleting an order — who may, what it puts right, where it disappears
 
-**Area:** orders · **Last result:** ✅ PASSED (63 passed, 0 failed · 2026-11-20 05:59 · headless · 5.3 s)
+**Area:** orders · **Last result:** ✅ PASSED (65 passed, 0 failed · 2026-11-20 16:03 · headless · 5.6 s)
 
 **Run it alone:** `node run.mjs --only t29` (add `--visible` to watch it)
 
 ## What this test does
 
-Runs suites/orders-account.mjs: its own in-memory API with two stores (one whose plan has coins, one whose plan doesn't). Order history: a customer sees only their own orders for this store, newest first, with status, payment mode and state, items (with size and add-ons), totals, coins earned and the outlet — and nothing internal; paging works; another store's customer is refused; coins are reported only when the plan includes them AND the outlet has switched them on. Deleting: owners and managers may, cashiers and the kitchen may not; an order paid online must be refunded first; cash and test-gateway orders can be deleted; coins the order used go back and coins it earned are taken back (never below zero, never twice); a ticket waiting to print is cancelled; the order vanishes from the orders list, its page, the customer's history and every query and report, but the record stays (marked with who and when); deleting a whole store wipes its deleted orders too.
+Runs suites/orders-account.mjs: its own in-memory API with two stores (one whose plan has coins, one whose plan doesn't). Order history: a customer sees only their own orders for this store, newest first, with status, payment mode and state, items (with size and add-ons), totals, coins earned and the outlet — and nothing internal; paging works; another store's customer is refused; coins are reported only when the plan includes them AND the outlet has switched them on. Deleting: only the store owner and the platform super admin may — managers, cashiers and the kitchen get 403 and the order is untouched; an order paid online must be refunded first; cash and test-gateway orders can be deleted; coins the order used go back and coins it earned are taken back (never below zero, never twice); a ticket waiting to print is cancelled; the order vanishes from the orders list, its page, the customer's history and every query and report, but the record stays (marked with who and when); deleting a whole store wipes its deleted orders too.
 
 ## Steps
 
@@ -23,7 +23,7 @@ Runs suites/orders-account.mjs: its own in-memory API with two stores (one whose
 - A signed-out visitor gets no history; a customer sees only their own orders, newest first, with the payment mode and whether it is paid, the items and the money.
 - Paging with a date cursor returns the rest; a nonsense date is a 400; another store's customer is refused.
 - Coins are sent only when the store's plan includes them and the outlet has them on.
-- Owner and manager can delete an order; cashier and kitchen get 403; a missing order is 404; deleting twice is 404.
+- Only the store owner and the platform super admin can delete an order; manager, cashier and kitchen get 403 (and the order is untouched); a missing order is 404; deleting twice is 404.
 - An order paid online (Razorpay) can't be deleted and the message says to refund it first; cash and test-gateway orders can.
 - A customer can remove an order from their OWN account: only theirs, only their list; 401 signed out, 404 for someone else's, 403 through another store; harmless to repeat; the store still sees it (list, page, payment, coins) and the customer's own link still opens.
 - Deleting puts coins right (used coins refunded, earned coins taken back, bounded by what is left, once) and cancels a waiting print ticket.
@@ -45,7 +45,7 @@ Runs suites/orders-account.mjs: its own in-memory API with two stores (one whose
 
 _Nothing failed._
 
-### ✅ Passed (63)
+### ✅ Passed (65)
 
 **Step 1 — the customer's order history**
 
@@ -59,7 +59,7 @@ _Nothing failed._
 - staff details, the customer record and internal history are not sent
 - a customer of one store can't read orders through another store — _403_
 - …each store's customers see only their own store
-- paging: the first page of two says there are more — _2 2026-11-19T23:59:27.577Z_
+- paging: the first page of two says there are more — _2 2026-11-20T10:03:47.984Z_
 - …the second page has the rest, and no more after it — _1 null_
 - a nonsense date is a plain 400
 - an outlet that doesn't exist is a 404
@@ -77,8 +77,10 @@ _Nothing failed._
 - another store's owner can't reach it (not found) — _404_
 - nobody signed in can't delete it — _401_
 - …and it is untouched so far
-- a manager can — _200_
-- the owner can — _200_
+- a manager can't either — deleting is for the owner and the platform admin only — _403 Your role can't do this (order:delete)_
+- …and the order is untouched after the manager's attempt
+- the platform super admin can — _200_
+- the store owner can — _200_
 - deleting it again is a 404 — it is gone — _404_
 - an order that never existed is a 404
 
@@ -135,6 +137,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-20 16:03 | pass | 65 | 0 | headless | 5.6 s |
+| 2026-11-20 13:17 | pass | 64 | 0 | headless | 4.9 s |
 | 2026-11-20 05:59 | pass | 63 | 0 | headless | 5.3 s |
 | 2026-11-20 04:56 | pass | 63 | 0 | headless | 5.1 s |
 | 2026-11-20 00:24 | pass | 63 | 0 | headless | 5.3 s |

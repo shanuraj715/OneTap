@@ -92,16 +92,23 @@ password is lost), `route-inventory.js` (every API route with its limits), `norm
 
 ### Store dashboard (apps/admin)
 
-Take order (counter billing) · Dashboard · Orders (with missed-order alerts) · Menu (nested categories, sizes, add-on
-groups, photos — including paste-a-picture and AI pictures, and where each dish is prepared) · Tables and printable QR
-cards · Printing (receipts and kitchen tickets: each dish goes to its kitchen or bar printer, and the kitchen gets an
+Take order (counter billing) · Dashboard · Orders (with missed-order alerts, takeaway pre-orders for a later pickup
+time, and "out for delivery" with the rider who took it) · Table bookings (confirm, seat, no-show; phone bookings) ·
+Menu (nested categories, sizes, add-on groups, combos, "goes well with" suggestions, counted stock with a daily refill,
+dish and category hours like a breakfast menu, photos — including paste-a-picture and AI pictures, and where each dish
+is prepared) · Tables and printable QR cards · Printing (receipts and kitchen tickets: each dish — and each part of a
+combo — goes to its kitchen or bar printer, a pre-order's ticket says when it's wanted, and the kitchen gets an
 "order changed" or "order cancelled" ticket when an order is edited or cancelled; a computer switched on as a print
-station prints for browser and network printers from any dashboard page) · Coupons ·
-Customers and coin wallet · Analytics (sales, items, customers, outlet comparison, profit & loss, exports) ·
-Marketing (WhatsApp, SMS, WhatsApp Business API with filters and lists) · WhatsApp chat on the store's own numbers ·
-Storefront builder (headers, banners and carousels, store pages, theme, typography) · Settings (business identity,
-hours, order handling, kitchen and delivery, receipts and GST, features, load management) · Outlets · Payments ·
-Notifications and message sending · Users and roles.
+station prints for browser and network printers from any dashboard page) · Coupons (including "buy X, get Y free") ·
+Customers and coin wallet · Ratings (customers rate completed orders; happy ones are pointed to Google) · Analytics
+(sales, items, customers, outlet comparison, profit & loss, exports) · Marketing (WhatsApp, SMS, WhatsApp Business API
+with filters and lists) · WhatsApp chat on the store's own numbers · Storefront builder (headers, banners and
+carousels, store pages, theme, typography) · Settings (business identity, hours, order handling, kitchen and delivery,
+receipts and GST, features, pre-orders and bookings, ratings and suggestions, load management, delivery riders,
+abandoned-cart reminders) · Outlets · Payments · Notifications and message sending · Users and roles.
+
+On the storefront customers also see "only N left" and combo savings on the cards, pick a pickup time for a takeaway,
+book a table, rate an order and order it again from their Account page.
 
 ### Platform console (apps/admin, super admin only)
 
@@ -137,8 +144,9 @@ their servers use to reach the API on the same machine); the admin reads `VITE_A
 
 **Run the workers on exactly one API process.** `WHATSAPP_WORKER=on` makes a process hold the linked WhatsApp
 numbers' connections and send queued messages; `MARKETING_WORKER=on` sends queued SMS and WhatsApp Business
-marketing messages. Leave both `off` everywhere else that shares the same database — in particular your laptop if it
-points at a shared database — or two copies will fight over the same WhatsApp session.
+marketing messages. Abandoned-cart reminders are sent from whichever process has either of the two on. Leave both
+`off` everywhere else that shares the same database — in particular your laptop if it points at a shared database — or
+two copies will fight over the same WhatsApp session.
 
 ## Secrets
 

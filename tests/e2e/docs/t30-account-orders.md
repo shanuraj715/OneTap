@@ -1,12 +1,12 @@
 # T30 — Storefront Account page — 'My orders' menu link, order history with status, payment mode & state, coins; Delete order on the dashboard
 
-**Area:** storefront · **Last result:** ✅ PASSED (41 passed, 0 failed · 2026-11-20 06:00 · headless · 43.4 s)
+**Area:** storefront · **Last result:** ✅ PASSED (42 passed, 0 failed · 2026-11-20 16:04 · headless · 45.1 s)
 
 **Run it alone:** `node run.mjs --only t30` (add `--visible` to watch it) · starts from fresh fake data
 
 ## What this test does
 
-In Chrome on the Acme Momos storefront. The header menu has a 'My orders' link. Signed out, it opens the Account page with a sign-in card ('Sign in to see your orders'); signing in shows 'Your account' with the customer's name and number, a 'Your coins' card (coins are on for this store) and an empty 'No orders yet'. After ordering for takeaway paying cash, the order appears with its number, date, status Placed with a one-line explanation, payment 'Pay at the counter · To pay', the total, its items, and 'View details' with the full bill. As the owner moves it to Accepted, Preparing, Ready and Completed the card follows (progress tracker while active; by itself within about 20 seconds, or on reload), the payment becomes Paid, the details say how many coins were earned and the coins card shows them. A second order that is cancelled shows Cancelled and 'Not charged'. On the dashboard Orders page the owner opens More actions → Delete order: a dialog explains it disappears from the list, the reports and the customer's history and that the coins it earned are taken back; confirming removes the row, and on the customer's Account page the order is gone and the coins are back to what they were. A cashier's More-actions menu has no Delete option. Signing out of the Account page shows the sign-in card again.
+In Chrome on the Acme Momos storefront. The header menu has a 'My orders' link. Signed out, it opens the Account page with a sign-in card ('Sign in to see your orders'); signing in shows 'Your account' with the customer's name and number, a 'Your coins' card (coins are on for this store) and an empty 'No orders yet'. After ordering for takeaway paying cash, the order appears with its number, date, status Placed with a one-line explanation, payment 'Pay at the counter · To pay', the total, its items, and 'View details' with the full bill. As the owner moves it to Accepted, Preparing, Ready and Completed the card follows (progress tracker while active; by itself within about 20 seconds, or on reload), the payment becomes Paid, the details say how many coins were earned and the coins card shows them. A second order that is cancelled shows Cancelled and 'Not charged'. On the dashboard Orders page the owner opens More actions → Delete order: a dialog explains it disappears from the list, the reports and the customer's history and that the coins it earned are taken back; confirming removes the row, and on the customer's Account page the order is gone and the coins are back to what they were. A cashier's and a manager's More-actions menu have no Delete option — deleting an order is for the owner (and the platform admin) only. Signing out of the Account page shows the sign-in card again.
 
 ## Steps
 
@@ -20,7 +20,8 @@ In Chrome on the Acme Momos storefront. The header menu has a 'My orders' link. 
 8. On the customer's Account page the order — and its coins — are gone
 9. The customer removes the cancelled order from their own account
 10. A cashier is not offered 'Delete order' — and the store still has the order the customer removed
-11. Signing out of the Account page
+11. A manager is not offered 'Delete order' either — only the owner (and the platform admin) is
+12. Signing out of the Account page
 
 ## What to expect (these must happen)
 
@@ -34,14 +35,14 @@ In Chrome on the Acme Momos storefront. The header menu has a 'My orders' link. 
 - Owner: Orders → More actions → 'Delete order' → dialog (names the order, says it disappears and which coins are taken back) → confirm removes the row; the customer's page no longer lists it and the coins balance drops back.
 - The customer's own 'Remove' on an order asks first (says the restaurant keeps its record), 'Keep it' changes nothing, 'Remove' takes only that order off their list — still gone after a reload.
 - The store still sees the order the customer removed (Orders page), so a customer's removal never changes the store's records.
-- A cashier's More-actions menu has no 'Delete order'.
+- A cashier's and a manager's More-actions menu have no 'Delete order' (only the owner's does).
 - Sign out returns to the sign-in card.
 
 ## What must NOT happen
 
 - The Account page must NOT show anyone's orders while signed out.
 - Deleting must NOT happen without pressing the red 'Delete order' button (Enter does nothing).
-- A cashier must NOT be offered 'Delete order'.
+- A cashier or a manager must NOT be offered 'Delete order'.
 - A customer removing an order from their account must NOT remove it from the store's Orders page.
 - A deleted order must NOT stay on the customer's Account page, and the coins it earned must NOT stay.
 - The browser must NOT log JavaScript errors.
@@ -52,7 +53,7 @@ In Chrome on the Acme Momos storefront. The header menu has a 'My orders' link. 
 
 _Nothing failed._
 
-### ✅ Passed (41)
+### ✅ Passed (42)
 
 **Step 1 — The header menu has a 'My orders' link**
 
@@ -82,7 +83,7 @@ _Nothing failed._
 
 **Step 5 — The owner moves the order along; the customer's card follows**
 
-- (the order is on the dashboard) — _6aff947342120a5586a265f0_
+- (the order is on the dashboard) — _6b002217dc5fa1615c228c5f_
 - without reloading, the page picks up 'Accepted' by itself
 - after a reload it says Ready, with the pickup sentence
 - Completed
@@ -124,7 +125,11 @@ _Nothing failed._
 - the store still sees the order the customer removed from their account
 - the cashier's menu has Edit and Cancel but no 'Delete order'
 
-**Step 11 — Signing out of the Account page**
+**Step 11 — A manager is not offered 'Delete order' either — only the owner (and the platform admin) is**
+
+- the manager's menu has Edit order but no 'Delete order'
+
+**Step 12 — Signing out of the Account page**
 
 - the sign-in card is back, with no orders on screen
 
@@ -132,6 +137,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-20 16:04 | pass | 42 | 0 | headless | 45.1 s |
+| 2026-11-20 13:18 | pass | 42 | 0 | headless | 48.8 s |
 | 2026-11-20 06:00 | pass | 41 | 0 | headless | 43.4 s |
 | 2026-11-20 04:57 | pass | 41 | 0 | headless | 46.6 s |
 | 2026-11-20 00:24 | pass | 41 | 0 | headless | 43.3 s |
@@ -140,8 +147,6 @@ _Nothing failed._
 | 2026-11-19 23:08 | pass | 41 | 0 | headless | 43.1 s |
 | 2026-11-19 22:53 | pass | 41 | 0 | headless | 43.1 s |
 | 2026-11-19 22:42 | pass | 41 | 0 | headless | 46.6 s |
-| 2026-11-19 18:13 | pass | 41 | 0 | headless | 42.7 s |
-| 2026-11-19 17:50 | pass | 41 | 0 | headless | 45.5 s |
 
 ---
 _Generated by `tests/e2e/run.mjs` — edit the test file (`tests/t30-account-orders.mjs`), not this page._

@@ -1,0 +1,110 @@
+# T55 — Dashboard: pre-orders & bookings settings, riders, out for delivery, stock / combo / hours in the menu, buy-X-get-Y coupons, bookings, ratings and cart reminders
+
+**Area:** dashboard · **Last result:** ✅ PASSED (26 passed, 0 failed · 2026-11-20 16:15 · headless · 4.7 s)
+
+**Run it alone:** `node run.mjs --only t55` (add `--visible` to watch it)
+
+## What this test does
+
+Runs suites/growth-dashboard-ui.mjs in Chrome as the owner of the bench store (Acme Momos, Main): the sidebar shows Bookings and Ratings; Settings → Pre-orders & bookings switches pre-orders and table bookings on and saves their numbers; Settings → Ratings & suggestions saves the Google review link and the suggestions heading; Settings → Delivery riders adds a rider; on Orders a Ready delivery order's next step is 'Out for delivery', which asks who is taking it and then shows 'with Ramesh' and 'Delivered'; a pre-order is tagged with its pickup time; the dish form has Stock, Hours, Combo and Goes well with — stock saved shows '3 left' on the dish row, a combo is created from the form; a category's Edit window has Hours; a 'Buy X, get Y free' coupon is created and listed as 'Buy 1 get 1 free'; a phone booking is added on Bookings and shows confirmed; the Ratings page shows its summary and Cart reminders shows a message preview and its numbers. Everything it changes on the bench is put back.
+
+## Steps
+
+1. The sidebar has Bookings and Ratings
+2. Settings → Pre-orders & bookings
+3. Settings → Ratings & suggestions
+4. Settings → Delivery riders
+5. Orders → a delivery order goes out with a rider
+6. Orders → a pre-order shows its pickup time
+7. Menu → stock on a dish, a combo, hours on a category
+8. Coupons → buy 1 get 1 free
+9. Bookings → a booking taken over the phone
+10. Ratings and Cart reminders pages
+
+## What to expect (these must happen)
+
+- Settings tabs save pre-orders, table bookings, the Google link and the suggestions heading.
+- A rider can be added and an order sent out with them; the row then says who has it and offers 'Delivered'.
+- A pre-order shows its pickup time on the Orders list.
+- Stock, combos and hours can be set from the menu editor.
+- A buy-X-get-Y coupon can be created from the Coupons page.
+- Bookings, Ratings and Cart reminders pages work.
+
+## What must NOT happen
+
+- No errors in the browser console.
+- The bench must NOT be left changed (riders, coupons, dishes, settings are put back).
+
+## Result of the last run
+
+### ❌ Failed (0)
+
+_Nothing failed._
+
+### ✅ Passed (26)
+
+**Step 1 — The sidebar has Bookings and Ratings**
+
+- the store's sidebar shows Bookings (under Store & orders) and Ratings (under Customers & growth)
+
+**Step 2 — Settings → Pre-orders & bookings**
+
+- the tab has two cards: Pre-orders and Table bookings
+- switching pre-orders on (1 day ahead) and saving keeps it — _{"enabled":true,"maxDaysAhead":1,"minLeadMinutes":30,"slotMinutes":15,"maxPerSlot":0}_
+- …and table bookings (20 guests at a time) — _{"on":true,"g":20}_
+
+**Step 3 — Settings → Ratings & suggestions**
+
+- the Google review link and the suggestions heading are saved — _{"g":"https://g.page/r/acme-test/review","t":"Make it a meal"}_
+
+**Step 4 — Settings → Delivery riders**
+
+- a rider is added from the Delivery riders tab
+- Delivery riders sits in the Settings tabs
+
+**Step 5 — Orders → a delivery order goes out with a rider**
+
+- a Ready delivery order's next step is 'Out for delivery'
+- it asks who is taking it — Ramesh is on the list
+- the row now says Out for delivery — with Ramesh — _#0001 04:15 PM UI Tester Del 1 ₹90 Out for delivery with Ramesh 0m Delivered_
+- …and its next step is 'Delivered'
+
+**Step 6 — Orders → a pre-order shows its pickup time**
+
+- a pre-order is tagged with its pickup time under its number — _5:30 PM today_
+
+**Step 7 — Menu → stock on a dish, a combo, hours on a category**
+
+- the dish form has Stock, Hours, Combo and Goes well with
+- after saving, the dish row says '3 left'
+- …and the menu counts 3
+- choosing the dishes shows what they cost separately
+- a combo is created from the dish form — _{"items":[{"itemId":"6b0024ad620fe03c81234059","variantId":null,"quantity":1}]}_
+- a category's Edit window has Hours
+
+**Step 8 — Coupons → buy 1 get 1 free**
+
+- choosing 'Buy X, get Y free' asks how many to buy, how many free, and which dishes
+- the coupon list says 'Buy 1 get 1 free'
+
+**Step 9 — Bookings → a booking taken over the phone**
+
+- the booking shows on its day, confirmed (taken by the team)
+- the day's counts show at the top — _1 booking_
+
+**Step 10 — Ratings and Cart reminders pages**
+
+- the Ratings page shows the average and how many
+- Cart reminders shows a preview of the message — _PREVIEW_
+- …and what reminders achieved
+- no errors in the browser console
+
+## History (latest 10 runs)
+
+| When | Result | Passed | Failed | Mode | Time |
+|---|---|---|---|---|---|
+| 2026-11-20 16:15 | pass | 26 | 0 | headless | 4.7 s |
+| 2026-11-20 16:13 | error | 4 | 0 | headless | 1.2 s |
+
+---
+_Generated by `tests/e2e/run.mjs` — edit the test file (`tests/t55-growth-dashboard.mjs`), not this page._
