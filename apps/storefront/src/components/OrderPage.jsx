@@ -2,12 +2,13 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { formatINR, GATEWAY_LABELS, ORDER_TYPE_STORAGE_KEY } from "@onetap/config-schema";
+import { formatINR, formatWhen, GATEWAY_LABELS, ORDER_TYPE_STORAGE_KEY } from "@onetap/config-schema";
 import { DropdownSoft, fx, ProgressSteps } from "@onetap/ui";
 import { ArrowLeft, Check, ChevronRight, Coins, MapPin, ShoppingBag, Sparkles, Tag, Utensils, Wallet, X } from "lucide-react";
 import { api, payOnline } from "@/lib/clientApi";
 import { useCapacity } from "@/lib/useCapacity";
 import { useCartLines } from "@/lib/useCartLines";
+import { useCartSync } from "@/lib/useCartSync";
 import { useCustomer } from "@/lib/useCustomer";
 import { useDineInSession } from "@/lib/useDineInSession";
 import { AddressPicker } from "./AddressPicker";
@@ -41,12 +42,45 @@ export function OrderPage({
   deliveryEnabled = false,
   takeawayEnabled = true,
   couponsEnabled = true,
+  preordersEnabled = false,
   menuHref,
 }) {
   const { customer, loading: customerLoading, refresh } = useCustomer();
-  const { lines, hydrated, setQty, clear: clearCart } = useCartLines(outletId);
+  const { lines, hydrated, setQty, addLine, setAll, clear: clearCart } = useCartLines(outletId);
   const capacity = useCapacity(outletId);
   const itemsById = useMemo(() => new Map(menu.items.map((i) => [i.id, i])), [menu.items]);
+  // the store keeps a signed-in customer's cart for its forgotten-cart reminders (when it has them on)
+  useCartSync(outletId, lines, { enabled: Boolean(customer), hydrated });
+
+  // A reminder's link (".../order?cart=<id>") opened on a phone whose cart is empty brings the cart back.
+  const restored = useRef(false);
+  useEffect(() => {
+    if (!hydrated || restored.current || lines.length) return;
+    const id = new URLSearchParams(window.location.search).get("cart");
+    if (!id) return;
+    restored.current = true;
+    void api(`/api/customer/cart/${encodeURIComponent(id)}?outletId=${encodeURIComponent(outletId)}`)
+      .then((r) => r.lines?.length && setAll(r.lines))
+      .catch(() => undefined);
+  }, [hydrated, lines.length, outletId, setAll]);
+
+  // "Order again" from the Account page leaves a note of what couldn't come back (sold out, no longer on the menu)
+  const [reorderNote, setReorderNote] = useState(null);
+  useEffect(() => {
+    try {
+      const raw = window.sessionStorage.getItem(`onetap.reorderNotice.${outletId}`);
+      if (raw) {
+        setReorderNote(JSON.parse(raw));
+        window.sessionStorage.removeItem(`onetap.reorderNotice.${outletId}`);
+      }
+    } catch {
+      /* private window */
+    }
+  }, [outletId]);
+
+  // a pre-order: "now" (as soon as possible) or "later" at a pickup time the outlet offers
+  const [when, setWhen] = useState("now");
+  const [pickupAt, setPickupAt] = useState("");
 
   const [placed, setPlaced] = useState(null);
   const { sessionId, setSessionId, tab, refreshTab } = useDineInSession(dineIn, outletId, placed?.id);
@@ -77,6 +111,8 @@ export function OrderPage({
   const [priceError, setPriceError] = useState(null);
 
   const effectiveChannel = dineIn ? "dine-in" : fulfilment === "dinein" ? "dine-in" : fulfilment;
+  // only a takeaway can be for later; the chosen time travels with every quote and with the order
+  const scheduledFor = effectiveChannel === "takeaway" && when === "later" && pickupAt ? pickupAt : undefined;
   const prepaidGateways = useMemo(() => gateways.filter((g) => g !== "cod"), [gateways]);
   const deliveryAvailable = deliveryEnabled && prepaidGateways.length > 0 && !capacity?.deliveryBlocked;
   // Why Delivery can't be picked (shown under the buttons) — null when it can.
@@ -123,6 +159,7 @@ export function OrderPage({
         outletId,
         cart: { lines, couponCode: appliedCoupon?.code, redeemCoins: redeemCoins || undefined },
         channel: effectiveChannel,
+        scheduledFor,
       };
       if (effectiveChannel === "delivery" && deliveryAddress) {
         body.deliveryPoint = { lat: deliveryAddress.lat, lng: deliveryAddress.lng };
@@ -141,7 +178,7 @@ export function OrderPage({
     // Only once the customer is known — pricing before that would quote coin
     // redemption against no one and immediately show a "sign in" error that's
     // about to be replaced by the actual sign-in screen anyway.
-  }, [lines, outletId, appliedCoupon, redeemCoins, effectiveChannel, deliveryAddress]);
+  }, [lines, outletId, appliedCoupon, redeemCoins, effectiveChannel, deliveryAddress, scheduledFor]);
 
   useEffect(() => {
     if (customer) void reprice();
@@ -149,7 +186,7 @@ export function OrderPage({
 
   const applyCoupon = async (code) => {
     try {
-      const r = await api("/api/coupons/apply", { outletId, code, cart: { lines }, channel: effectiveChannel });
+      const r = await api("/api/coupons/apply", { outletId, code, cart: { lines }, channel: effectiveChannel, scheduledFor });
       if (!r.ok) return r.reason ?? "That coupon can't be used.";
       setAppliedCoupon({ code: r.code, discount: r.discount });
       return null;
@@ -215,16 +252,34 @@ export function OrderPage({
   if (placed) {
     return (
       <PageShell menuHref={menuHref} title="Order confirmed">
-        <DoneView order={placed} dineIn={dineIn} tab={tab} channel={effectiveChannel} menuHref={menuHref} />
+        <DoneView order={placed} dineIn={dineIn} tab={tab} channel={effectiveChannel} menuHref={menuHref} accountHref={dineIn ? null : `${menuHref}/account`} />
       </PageShell>
     );
   }
 
   return (
     <PageShell menuHref={menuHref} title="Your order" customer={customer} progress={journeyIndex} progressLabel={progressLabel}>
+      {reorderNote?.skipped?.length || reorderNote?.notes?.length ? (
+        <p style={reorderBanner} data-testid="reorder-notice">
+          {reorderNote.skipped?.length ? (
+            <>
+              Not added: {reorderNote.skipped.map((s) => `${s.name} (${s.reason})`).join(", ")}.{" "}
+            </>
+          ) : null}
+          {(reorderNote.notes ?? []).join(" ")}
+        </p>
+      ) : null}
       <ReviewOrder
         outletId={outletId}
         outletName={outletName}
+        menu={menu}
+        onAddSuggestion={(s) => addLine({ itemId: s.itemId, variantId: s.variantId ?? undefined, modifierOptionIds: [], quantity: 1 })}
+        preordersEnabled={preordersEnabled}
+        when={when}
+        onWhen={setWhen}
+        pickupAt={pickupAt}
+        onPickupAt={setPickupAt}
+        scheduledFor={scheduledFor}
         lines={lines}
         priced={priced}
         priceError={priceError}
@@ -268,6 +323,8 @@ export function OrderPage({
           setRedeemCoins(0);
           setDeliveryAddress(null);
           setDeliveryQuote(null);
+          setWhen("now");
+          setPickupAt("");
           void refreshTab();
         }}
       />
@@ -321,6 +378,14 @@ function EmptyCart({ menuHref }) {
 function ReviewOrder({
   outletId,
   outletName,
+  menu,
+  onAddSuggestion,
+  preordersEnabled,
+  when,
+  onWhen,
+  pickupAt,
+  onPickupAt,
+  scheduledFor,
   lines,
   priced,
   priceError,
@@ -374,6 +439,8 @@ function ReviewOrder({
 
   const deliveryBlocked = channel === "delivery" && (!deliveryAddress || !deliveryQuote?.serviceable);
   const tableMissing = fulfilment === "dinein" && !dineIn && !tableNumber.trim();
+  // "Later" chosen for a takeaway, but no pickup time picked yet
+  const pickupMissing = channel === "takeaway" && preordersEnabled && when === "later" && !pickupAt;
 
   const placeDineIn = async (session) => {
     const { order } = await api("/api/orders", { outletId, cart, channel: "dine-in", sessionId: session, note: note.trim() || undefined });
@@ -432,6 +499,7 @@ function ReviewOrder({
           gateway,
           note: note.trim() || undefined,
           deliveryAddress: channel === "delivery" ? deliveryAddress : undefined,
+          scheduledFor,
         });
         order = res.order;
         setPendingOrder(order);
@@ -443,7 +511,7 @@ function ReviewOrder({
   // tableMissing does NOT disable the button — clicking it in that state is
   // now a real action (scroll to and focus the table picker) rather than
   // nothing at all, so it stays clickable.
-  const placeDisabled = !priced || deliveryBlocked;
+  const placeDisabled = !priced || deliveryBlocked || pickupMissing;
 
   /** The bottom button's fallback action when a table hasn't been picked yet. */
   const focusTablePicker = () => {
@@ -481,6 +549,8 @@ function ReviewOrder({
         </label>
       </Section>
 
+      <Suggestions outletId={outletId} lines={lines} menu={menu} onAdd={onAddSuggestion} />
+
       {capacity?.orderMessage ? <Banner tone="warn">{capacity.orderMessage}</Banner> : null}
       {capacity?.deliveryMessage ? <Banner tone="warn">{capacity.deliveryMessage}</Banner> : null}
 
@@ -499,6 +569,10 @@ function ReviewOrder({
             <p style={{ ...muted, margin: "8px 0 0" }} data-testid="fulfilment-hint">
               {[takeawayOffReason, deliveryOffReason].filter(Boolean).join(" ")}
             </p>
+          ) : null}
+
+          {fulfilment === "takeaway" && preordersEnabled ? (
+            <PickupTime outletId={outletId} when={when} onWhen={onWhen} pickupAt={pickupAt} onPickupAt={onPickupAt} />
           ) : null}
 
           {fulfilment === "dinein" ? (
@@ -673,20 +747,24 @@ function ReviewOrder({
           <div style={bottomBarLabel}>To pay</div>
           <div style={bottomBarPrice}>{t ? formatINR(t.grandTotal) : "…"}</div>
         </div>
-        <button type="button" className="ot-fx-btn" style={fx("btn", placeBtn)} disabled={busy || placeDisabled} onClick={tableMissing ? focusTablePicker : place}>
+        <button type="button" className="ot-fx-btn" style={fx("btn", placeBtn)} disabled={busy || placeDisabled} onClick={tableMissing ? focusTablePicker : place} data-testid="place-order">
           {busy
             ? "Please wait…"
             : deliveryBlocked
               ? "Add delivery address"
               : tableMissing
                 ? "Pick your table"
-                : isDineIn
-                  ? "Send to kitchen"
-                  : pendingOrder
-                    ? "Try payment again"
-                    : gateway === "cod"
-                      ? "Place order"
-                      : "Pay & place order"}
+                : pickupMissing
+                  ? "Choose a pickup time"
+                  : isDineIn
+                    ? "Send to kitchen"
+                    : pendingOrder
+                      ? "Try payment again"
+                      : gateway === "cod"
+                        ? scheduledFor
+                          ? "Place pre-order"
+                          : "Place order"
+                        : "Pay & place order"}
           <ChevronRight size={16} />
         </button>
       </div>
@@ -696,7 +774,7 @@ function ReviewOrder({
 
 /* -------------------------------------------------------------------- done */
 
-function DoneView({ order, dineIn, tab, channel, menuHref }) {
+function DoneView({ order, dineIn, tab, channel, menuHref, accountHref }) {
   const isDineIn = Boolean(dineIn) || channel === "dine-in";
   const isDelivery = channel === "delivery";
   const gateway = order.payment?.gateway;
@@ -706,12 +784,15 @@ function DoneView({ order, dineIn, tab, channel, menuHref }) {
     ? `Sent to the kitchen${dineIn ? ` for Table ${dineIn.tableNumber}` : ""}.`
     : isDelivery
       ? "It's on its way to you."
-      : "The kitchen has it.";
+      : order.scheduledFor
+        ? "It will be ready for you at your pickup time."
+        : "The kitchen has it.";
 
   // What the customer wants to know, one fact per line — not packed into one sentence.
   const rows = [
-    ["Order type", isDineIn ? (dineIn ? `Dine-in · Table ${dineIn.tableNumber}` : "Dine-in") : isDelivery ? "Delivery" : "Takeaway"],
-    !isDineIn && order.etaMinutes ? [isDelivery ? "Arrives in" : "Ready in", `about ${order.etaMinutes} minutes`] : null,
+    ["Order type", isDineIn ? (dineIn ? `Dine-in · Table ${dineIn.tableNumber}` : "Dine-in") : isDelivery ? "Delivery" : order.scheduledFor ? "Takeaway · pre-order" : "Takeaway"],
+    order.scheduledFor ? ["Pickup", formatWhen(order.scheduledFor)] : null,
+    !isDineIn && order.etaMinutes && !order.scheduledFor ? [isDelivery ? "Arrives in" : "Ready in", `about ${order.etaMinutes} minutes`] : null,
     ["Total", formatINR(order.totals.grandTotal)],
     !isDineIn && gateway ? ["Payment", paidOnline ? "Paid online" : (GATEWAY_LABELS[gateway] ?? "")] : null,
   ].filter(Boolean);
@@ -742,7 +823,130 @@ function DoneView({ order, dineIn, tab, channel, menuHref }) {
       <Link href={menuHref} className="ot-fx-btn" style={fx("btn", doneButton)}>
         Back to menu
       </Link>
+      {accountHref ? (
+        <Link href={accountHref} style={{ marginTop: 14, fontSize: 14, fontWeight: 700, color: "var(--color-primary)" }} data-testid="done-track">
+          Follow your order
+        </Link>
+      ) : null}
     </div>
+  );
+}
+
+/* -------------------------------------------------------------- pickup time */
+
+/**
+ * Takeaway "When?": as soon as possible, or later at one of the outlet's pickup times (grouped by day). The times come
+ * from the API, so a time shown is a time the order will be accepted for (a full one is shown and can't be picked).
+ */
+function PickupTime({ outletId, when, onWhen, pickupAt, onPickupAt }) {
+  const [days, setDays] = useState(null);
+  const [day, setDay] = useState("");
+  useEffect(() => {
+    let live = true;
+    api(`/api/orders/pickup-slots?outletId=${encodeURIComponent(outletId)}`)
+      .then((r) => {
+        if (!live) return;
+        setDays(r.days ?? []);
+        setDay((d) => d || r.days?.[0]?.dayKey || "");
+      })
+      .catch(() => live && setDays([]));
+    return () => {
+      live = false;
+    };
+  }, [outletId]);
+  const shown = days?.find((d) => d.dayKey === day) ?? days?.[0];
+  return (
+    <div style={{ marginTop: 14 }} data-testid="pickup-time">
+      <p style={{ ...muted, margin: "0 0 8px", fontWeight: 600, color: "var(--color-text)" }}>When do you want it?</p>
+      <div role="group" aria-label="When" style={{ display: "flex", gap: 8 }}>
+        <ChoiceBtn testId="when-now" active={when === "now"} onClick={() => onWhen("now")} emoji="⚡" label="As soon as possible" />
+        <ChoiceBtn testId="when-later" active={when === "later"} disabledReason={days && !days.length ? "No pickup times are open right now." : null} onClick={() => onWhen("later")} emoji="🕒" label="Later" />
+      </div>
+      {when === "later" && shown ? (
+        <div style={{ marginTop: 12 }}>
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 10 }}>
+            {days.map((d) => (
+              <button key={d.dayKey} type="button" className="ot-fx-chip" data-active={d.dayKey === shown.dayKey} style={fx("chip", { ...dayChip, ...(d.dayKey === shown.dayKey ? dayChipOn : {}) })} onClick={() => { setDay(d.dayKey); onPickupAt(""); }}>
+                {d.label}
+              </button>
+            ))}
+          </div>
+          <div style={slotGrid}>
+            {shown.slots.map((s) => (
+              <button
+                key={s.at}
+                type="button"
+                disabled={s.full}
+                onClick={() => onPickupAt(s.at)}
+                className="ot-fx-chip"
+                data-testid="pickup-slot"
+                data-active={pickupAt === s.at}
+                aria-pressed={pickupAt === s.at}
+                title={s.full ? "Fully booked" : undefined}
+                style={fx("chip", { ...slotBtn, ...(pickupAt === s.at ? dayChipOn : {}), ...(s.full ? { opacity: 0.4, cursor: "not-allowed", textDecoration: "line-through" } : {}) })}
+              >
+                {s.label}
+              </button>
+            ))}
+          </div>
+          {pickupAt ? <p style={{ ...muted, margin: "8px 0 0" }}>Pickup {formatWhen(pickupAt)}. You can pay at the counter or online, as usual.</p> : null}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+/* --------------------------------------------------------------- suggestions */
+
+/**
+ * "Goes well with your order": a few dishes the store suggests for what is in the cart, one tap to add (a dish with
+ * sizes is added in its first size). Hidden when there's nothing to suggest.
+ */
+function Suggestions({ outletId, lines, menu, onAdd }) {
+  const [data, setData] = useState(null);
+  const ids = useMemo(() => [...new Set(lines.map((l) => l.itemId))], [lines]);
+  const key = ids.join(",");
+  useEffect(() => {
+    if (!ids.length) return undefined;
+    let live = true;
+    const t = setTimeout(() => {
+      api("/api/menu/suggestions", { outletId, itemIds: ids })
+        .then((r) => live && setData(r))
+        .catch(() => live && setData(null));
+    }, 250);
+    return () => {
+      live = false;
+      clearTimeout(t);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [outletId, key]);
+  const byId = useMemo(() => new Map(menu.items.map((i) => [i.id, i])), [menu.items]);
+  const items = (data?.items ?? []).map((s) => ({ s, item: byId.get(s.itemId) })).filter((x) => x.item && !ids.includes(x.s.itemId));
+  if (!items.length) return null;
+  return (
+    <Section icon={<Sparkles size={16} />} title={data.title || "Goes well with your order"}>
+      <div style={suggestRow} data-testid="suggestions">
+        {items.map(({ s, item }) => {
+          const variant = item.variants.find((v) => v.id === s.variantId);
+          const price = variant ? variant.price : item.basePrice;
+          return (
+            <div key={item.id} style={suggestCard} data-testid="suggestion" data-item={item.name}>
+              {item.images?.[0]?.url ? <img src={item.images[0].url} alt="" style={suggestImg} loading="lazy" /> : <div style={{ ...suggestImg, display: "grid", placeItems: "center", fontWeight: 800, color: "var(--color-text-muted)" }}>{item.name.slice(0, 1)}</div>}
+              <div style={{ fontSize: 13, fontWeight: 700, lineHeight: 1.3, minHeight: 34 }}>{item.name}</div>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 6, marginTop: 6 }}>
+                <span style={{ fontSize: 13, fontWeight: 700, fontVariantNumeric: "tabular-nums" }}>
+                  {formatINR(price)}
+                  {variant && item.variants.length > 1 ? <span style={{ ...muted, fontSize: 11 }}> · {variant.label}</span> : null}
+                </span>
+                <button type="button" className="ot-fx-btn" style={fx("btn", suggestAdd)} onClick={() => onAdd(s)} aria-label={`Add ${item.name}`}>
+                  + Add
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </Section>
   );
 }
 
@@ -903,4 +1107,13 @@ const doneRowRule = { borderTop: "1px solid var(--color-border)" };
 const doneLabel = { fontSize: 13.5, color: "var(--color-text-muted)" };
 const doneValue = { margin: 0, fontSize: 15, fontWeight: 700, textAlign: "right", fontVariantNumeric: "tabular-nums" };
 const doneTab = { margin: "18px 0 0", fontSize: 14.5, color: "var(--color-text-muted)" };
+const reorderBanner = { maxWidth: 640, margin: "16px auto 0", boxSizing: "border-box", fontSize: 13, lineHeight: 1.5, padding: "10px 13px", borderRadius: 10, background: "color-mix(in srgb, var(--tone-warning, #B27B1A) 14%, var(--color-surface))", color: "var(--color-text)" };
+const dayChip = { font: "inherit", fontSize: 13, fontWeight: 600, padding: "7px 13px", borderRadius: 999, border: "1.5px solid var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)", cursor: "pointer" };
+const dayChipOn = { borderColor: "var(--color-primary)", background: "color-mix(in srgb, var(--color-primary) 10%, var(--color-bg))", color: "var(--color-primary)" };
+const slotGrid = { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(86px, 1fr))", gap: 6, maxHeight: 220, overflowY: "auto", paddingRight: 2 };
+const slotBtn = { font: "inherit", fontSize: 13, fontWeight: 600, padding: "8px 6px", borderRadius: 10, border: "1.5px solid var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)", cursor: "pointer", fontVariantNumeric: "tabular-nums" };
+const suggestRow = { display: "flex", gap: 10, overflowX: "auto", paddingBottom: 4, scrollSnapType: "x mandatory" };
+const suggestCard = { flex: "0 0 150px", scrollSnapAlign: "start", border: "1px solid var(--color-border)", borderRadius: 12, padding: 8, background: "var(--color-bg)" };
+const suggestImg = { width: "100%", aspectRatio: "4 / 3", objectFit: "cover", borderRadius: 9, background: "var(--color-surface)", marginBottom: 6 };
+const suggestAdd = { font: "inherit", fontSize: 12, fontWeight: 700, padding: "5px 9px", borderRadius: 8, border: "none", background: "var(--color-primary)", color: "var(--color-on-primary)", cursor: "pointer", whiteSpace: "nowrap" };
 const doneButton = { display: "inline-block", marginTop: 32, minWidth: 220, textAlign: "center", font: "inherit", fontWeight: 700, fontSize: 15.5, padding: "14px 28px", borderRadius: 12, background: "var(--color-primary)", color: "var(--color-on-primary)", textDecoration: "none" };

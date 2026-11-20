@@ -43,8 +43,10 @@ export function useCartLines(outletId) {
     setLines((prev) => (qty <= 0 ? prev.filter((_, i) => i !== index) : prev.map((l, i) => (i === index ? { ...l, quantity: qty } : l))));
 
   const clear = () => setLines([]);
+  // "order again" and a cart reminder's link put a whole cart in at once
+  const setAll = (next) => setLines(Array.isArray(next) ? next : []);
 
   const count = lines.reduce((n, l) => n + l.quantity, 0);
 
-  return { lines, hydrated, addLine, setQty, clear, count };
+  return { lines, hydrated, addLine, setQty, clear, setAll, count };
 }

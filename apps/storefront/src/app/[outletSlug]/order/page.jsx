@@ -49,6 +49,7 @@ export default async function OutletOrderPage({ params }) {
         deliveryEnabled={features.ordering.delivery}
         takeawayEnabled={features.ordering.takeaway}
         couponsEnabled={features.coupons}
+        preordersEnabled={outlet.config.operations.scheduling.enabled}
         menuHref={`/${outletSlug}`}
       />
     </>

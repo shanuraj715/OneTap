@@ -119,3 +119,16 @@ export async function payOnline(outletId, orderId, gateway) {
 
   throw new Error(`${gateway} checkout isn't wired up yet`);
 }
+
+/** Same as `api`, but for PUT — saving a signed-in customer's cart. */
+export async function apiPut(path, body) {
+  const res = await fetch(`${getApiBase()}${path}`, {
+    method: "PUT",
+    headers: { "content-type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(body),
+  });
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok) throw apiError(json, res.status);
+  return json;
+}

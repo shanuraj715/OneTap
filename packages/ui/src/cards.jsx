@@ -29,7 +29,7 @@ export function RowCompact({ item }               ) {
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={nameStyle}>
           {item.name}
-          <Tags tags={item.tags} />
+          <Tags tags={item.tags} item={item} />
         </div>
         {item.description ? <div style={descStyle}>{item.description}</div> : null}
         <VariantLine item={item} />
@@ -49,7 +49,7 @@ export function RowThumbLeft({ item }               ) {
         <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "2px 8px", marginBottom: 2 }}>
           <FoodMark type={item.foodType} size={13} />
           <Price item={item} />
-          <Tags tags={item.tags} />
+          <Tags tags={item.tags} item={item} />
         </div>
         <div style={nameStyle}>{item.name}</div>
         {item.description ? <div style={{ ...descStyle, marginTop: 2 }}>{item.description}</div> : null}
@@ -65,7 +65,7 @@ export function RowThumbRight({ item }               ) {
       <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", justifyContent: "center" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2 }}>
           <FoodMark type={item.foodType} size={13} />
-          <Tags tags={item.tags} />
+          <Tags tags={item.tags} item={item} />
         </div>
         <div style={nameStyle}>{item.name}</div>
         {item.description ? <div style={{ ...descStyle, marginTop: 2 }}>{item.description}</div> : null}
@@ -86,7 +86,7 @@ export function ImageTop({ item }               ) {
       <div style={{ padding: 14, display: "flex", flexDirection: "column", gap: 6, flex: 1 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <FoodMark type={item.foodType} size={13} />
-          <Tags tags={item.tags} />
+          <Tags tags={item.tags} item={item} />
         </div>
         <div style={nameStyle}>{item.name}</div>
         {item.description ? <div style={descStyle}>{item.description}</div> : null}
@@ -131,7 +131,7 @@ export function ImageTopBadge({ item }               ) {
       <div style={{ padding: 14 }}>
         <div style={nameStyle}>
           {item.name}
-          <Tags tags={item.tags} />
+          <Tags tags={item.tags} item={item} />
         </div>
         {item.description ? <div style={descStyle}>{item.description}</div> : null}
       </div>
@@ -146,7 +146,7 @@ export function TextAboveImage({ item }               ) {
       <div style={{ padding: "14px 14px 12px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
           <FoodMark type={item.foodType} size={13} />
-          <Tags tags={item.tags} />
+          <Tags tags={item.tags} item={item} />
         </div>
         <div style={{ ...nameStyle, justifyContent: "space-between" }}>
           <span>{item.name}</span>
@@ -176,7 +176,7 @@ export function ImageOverlay({ item }               ) {
       >
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
           <FoodMark type={item.foodType} size={13} />
-          <Tags tags={item.tags} />
+          <Tags tags={item.tags} item={item} />
         </div>
         <div style={{ fontWeight: 700, fontSize: 16, lineHeight: 1.3 }}>{item.name}</div>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 6 }}>
@@ -200,7 +200,7 @@ export function Portrait({ item }               ) {
       <div style={{ padding: 14, textAlign: "center" }}>
         <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 6 }}>
           <FoodMark type={item.foodType} size={13} />
-          <Tags tags={item.tags} />
+          <Tags tags={item.tags} item={item} />
         </div>
         <div style={{ ...nameStyle, justifyContent: "center" }}>{item.name}</div>
         <div style={{ marginTop: 8 }}>
@@ -230,7 +230,7 @@ export function Circle({ item }               ) {
       <Photo name={item.name} src={item.images?.[0]?.url} style={{ width: 104, height: 104 }} radius="50%" />
       <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
         <FoodMark type={item.foodType} size={13} />
-        <Tags tags={item.tags} />
+        <Tags tags={item.tags} item={item} />
       </div>
       <div style={{ ...nameStyle, justifyContent: "center" }}>{item.name}</div>
       <Price item={item} />
@@ -245,7 +245,7 @@ export function MenuLine({ item }               ) {
       <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
         <FoodMark type={item.foodType} size={13} />
         <span style={{ fontWeight: 600, color: "var(--color-text)", whiteSpace: "nowrap" }}>{item.name}</span>
-        <Tags tags={item.tags} />
+        <Tags tags={item.tags} item={item} />
         <span
           aria-hidden
           style={{
@@ -272,7 +272,7 @@ export function FeaturedWide({ item }               ) {
       <div style={{ flex: 1, padding: 20, display: "flex", flexDirection: "column", justifyContent: "center", gap: 8 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <FoodMark type={item.foodType} size={14} />
-          <Tags tags={item.tags} />
+          <Tags tags={item.tags} item={item} />
         </div>
         <div style={{ ...nameStyle, fontSize: 20 }}>{item.name}</div>
         {item.description ? <div style={{ ...descStyle, fontSize: 14 }}>{item.description}</div> : null}

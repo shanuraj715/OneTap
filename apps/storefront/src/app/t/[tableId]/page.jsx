@@ -144,6 +144,8 @@ export default async function TablePage({
           toastVariant={layout?.toastVariant || "toast.solid"}
           dineIn={{ tableId: scan.table.id, tableNumber: scan.table.number, token: k }}
           orderHref={`/t/${tableId}/order?k=${encodeURIComponent(k)}`}
+          hideOutsideHours={outlet.config.menuTimes.hideOutsideHours}
+          serverNow={Date.now()}
         />
       )}
 

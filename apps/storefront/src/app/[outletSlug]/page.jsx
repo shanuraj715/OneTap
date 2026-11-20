@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { menuForNow } from "@onetap/config-schema";
 import { getVariant, Hero, MenuSections } from "@onetap/ui";
 import { StoreBottom, StoreTop } from "@/components/Chrome";
 import { Ordering } from "@/components/Ordering";
@@ -68,9 +69,11 @@ export default async function OutletHomePage({ params }) {
               popupCarouselVariant={layout?.popupCarouselVariant || layout?.carouselVariant || "carousel.slider"}
               toastVariant={layout?.toastVariant || "toast.solid"}
               orderHref={`/${outletSlug}/order`}
+              hideOutsideHours={outlet.config.menuTimes.hideOutsideHours}
+              serverNow={Date.now()}
             />
           ) : (
-            <MenuSections menu={menu} layout={resolvedMenuLayout} />
+            <MenuSections menu={menuForNow(menu, Date.now(), { hideOutsideHours: outlet.config.menuTimes.hideOutsideHours })} layout={resolvedMenuLayout} />
           )
         ) : (
           <p style={{ textAlign: "center", color: "var(--color-text-muted)" }}>Menu coming soon.</p>

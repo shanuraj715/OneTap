@@ -39,7 +39,7 @@ export default async function AccountPage({ params }) {
       <ThemeStyle theme={theme} typography={typography} effect={outlet.config.effect} branding={outlet.config.branding} />
       <StoreTop outlet={outlet} outletSlug={outletSlug} pages={pages} />
       <main>
-        <AccountView outletId={outlet.id} menuHref={`/${outletSlug}`} />
+        <AccountView outletId={outlet.id} menuHref={`/${outletSlug}`} outletSlug={outletSlug} reservationsEnabled={outlet.config.features.reservations.enabled} />
       </main>
       <StoreBottom outlet={outlet} outletSlug={outletSlug} pages={pages} />
     </>

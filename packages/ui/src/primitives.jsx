@@ -1,5 +1,5 @@
                                            
-import { itemPriceLabel,                              } from "@onetap/config-schema";
+import { formatINR, itemPriceLabel,                              } from "@onetap/config-schema";
 
 /**
  * FSSAI veg / non-veg / egg mark. These colours are fixed by regulation and must
@@ -90,12 +90,27 @@ export function Photo({
   );
 }
 
-export function Tags({ tags }) {
-  if (!tags || !Array.isArray(tags) || tags.length === 0) return null;
+export function Tags({ tags, item }) {
+  const list = Array.isArray(tags) ? tags : [];
+  // a combo (and what it saves) and "only N left" — set on the storefront by menuForNow
+  const combo = item?.comboInfo;
+  const low = item?.lowStock;
+  const hasLow = low !== null && low !== undefined;
+  if (!list.length && !combo && !hasLow) return null;
   return (
     <>
-      {tags.includes("bestseller") ? <span style={tagStyle}>Bestseller</span> : null}
-      {tags.includes("spicy") ? <span style={{ ...tagStyle, background: "#B23B3B" }}>Spicy</span> : null}
+      {list.includes("bestseller") ? <span style={tagStyle}>Bestseller</span> : null}
+      {list.includes("spicy") ? <span style={{ ...tagStyle, background: "#B23B3B" }}>Spicy</span> : null}
+      {combo ? (
+        <span style={{ ...tagStyle, background: "#5B3FD9" }} data-testid="tag-combo">
+          Combo{combo.saves > 0 ? ` · save ${formatINR(combo.saves)}` : ""}
+        </span>
+      ) : null}
+      {hasLow ? (
+        <span style={{ ...tagStyle, background: "#C2410C" }} data-testid="tag-low-stock">
+          Only {low} left
+        </span>
+      ) : null}
     </>
   );
 }
@@ -104,7 +119,8 @@ export function Price({ item, style, ...rest }) {
   if (!item) return null;
   return (
     <span style={{ ...priceStyle, ...style }} {...rest}>
-      {item.isAvailable ? itemPriceLabel(item) : "Sold out"}
+      {/* "Sold out", or when a dish with hours can be had ("Available 8 AM – 11 AM") */}
+      {item.isAvailable ? itemPriceLabel(item) : item.unavailableLabel || "Sold out"}
     </span>
   );
 }

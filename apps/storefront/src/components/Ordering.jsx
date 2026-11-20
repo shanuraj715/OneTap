@@ -2,11 +2,13 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { formatINR, itemFromPrice, menuLayoutSchema } from "@onetap/config-schema";
+import { formatINR, itemFromPrice, menuForNow, menuLayoutSchema } from "@onetap/config-schema";
 import { FoodMark, MenuSections, fx, getCarouselVariant, getVariant, Photo } from "@onetap/ui";
 import { X } from "lucide-react";
 import { api } from "@/lib/clientApi";
 import { useCartLines } from "@/lib/useCartLines";
+import { useCartSync } from "@/lib/useCartSync";
+import { useCustomer } from "@/lib/useCustomer";
 import { useDineInSession } from "@/lib/useDineInSession";
 import { Stepper } from "./Stepper";
 
@@ -30,8 +32,21 @@ export function Ordering({
   toastVariant = "toast.solid",
   dineIn,
   orderHref,
+  hideOutsideHours = false,
+  serverNow,
 }) {
-  const { lines, count, addLine } = useCartLines(outletId);
+  const { lines, count, addLine, hydrated } = useCartLines(outletId);
+  // a signed-in customer's cart is sent to the store (for its forgotten-cart reminders, when it has them on)
+  const { customer } = useCustomer();
+  useCartSync(outletId, lines, { enabled: Boolean(customer), hydrated });
+  // What can be ordered changes with the clock (breakfast ends at 11) — the menu is looked at again every minute.
+  // It starts from the server's "now" so the first paint matches the server's.
+  const [now, setNow] = useState(() => serverNow ?? Date.now());
+  useEffect(() => {
+    const t = setInterval(() => setNow(Date.now()), 60_000);
+    return () => clearInterval(t);
+  }, []);
+  const shown = useMemo(() => menuForNow(menu, now, { hideOutsideHours }), [menu, now, hideOutsideHours]);
   const [customising, setCustomising] = useState(null);
   const [addedToast, setAddedToast] = useState(null);
   const [priced, setPriced] = useState(null);
@@ -60,7 +75,7 @@ export function Ordering({
   const addToCart = (line) => {
     addLine(line);
     setCustomising(null);
-    setAddedToast(menu.items.find((i) => i.id === line.itemId)?.name ?? "Item");
+    setAddedToast(shown.items.find((i) => i.id === line.itemId)?.name ?? "Item");
   };
 
   useEffect(() => {
@@ -82,10 +97,10 @@ export function Ordering({
         </div>
       ) : null}
 
-      <MenuSections menu={menu} layout={layout} onSelectItem={setCustomising} />
+      <MenuSections menu={shown} layout={layout} onSelectItem={setCustomising} />
 
       {customising ? (
-        <Customiser item={customising} menu={menu} popupCarouselVariant={popupCarouselVariant} onCancel={() => setCustomising(null)} onAdd={addToCart} />
+        <Customiser item={customising} menu={shown} popupCarouselVariant={popupCarouselVariant} onCancel={() => setCustomising(null)} onAdd={addToCart} />
       ) : null}
 
       {addedToast ? (
@@ -284,6 +299,29 @@ function Customiser({ item, menu, popupCarouselVariant, onCancel, onAdd }) {
           </div>
           {item.description ? <p style={description}>{item.description}</p> : null}
 
+          {item.comboInfo ? (
+            <div style={comboBox} data-testid="item-modal-combo">
+              <div style={{ ...legend, marginBottom: 6 }}>In this combo</div>
+              <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 4 }}>
+                {item.comboInfo.parts.map((p) => (
+                  <li key={p.itemId} style={{ fontSize: 14 }}>
+                    {p.quantity} × {p.name}
+                    {p.variantLabel ? <span style={{ color: "var(--color-text-muted)" }}> ({p.variantLabel})</span> : null}
+                  </li>
+                ))}
+              </ul>
+              {item.comboInfo.saves > 0 ? (
+                <p style={{ margin: "8px 0 0", fontSize: 13, fontWeight: 700, color: "var(--tone-success)" }}>
+                  You save {formatINR(item.comboInfo.saves)} (₹{(item.comboInfo.separately / 100).toFixed(0)} separately)
+                </p>
+              ) : null}
+            </div>
+          ) : null}
+
+          {item.lowStock !== null && item.lowStock !== undefined ? (
+            <p style={lowStockNote} data-testid="item-modal-low-stock">Hurry — only {item.lowStock} left today.</p>
+          ) : null}
+
           {item.variants.length > 0 ? (
             <div role="group" aria-labelledby="item-modal-size" style={section}>
               <div style={sectionHead}>
@@ -335,7 +373,8 @@ function Customiser({ item, menu, popupCarouselVariant, onCancel, onAdd }) {
         {/* stays at the bottom of the pop-up while the choices scroll */}
         <div style={modalFoot}>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <Stepper value={quantity} onChange={setQuantity} />
+            {/* never more than are left of a counted dish */}
+            <Stepper value={quantity} onChange={(q) => setQuantity(Math.max(1, Math.min(q, item.stock?.tracked ? Math.max(1, item.stock.left) : 99)))} />
             <button
               type="button"
               className="ot-fx-btn"
@@ -411,6 +450,8 @@ const legend = { fontSize: 12, fontWeight: 800, textTransform: "uppercase", lett
 const pillRequired = { fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 999, background: "color-mix(in srgb, var(--color-primary) 12%, var(--color-bg))", color: "var(--color-primary)" };
 const pillOptional = { fontSize: 11, fontWeight: 600, padding: "3px 10px", borderRadius: 999, background: "var(--color-surface)", color: "var(--color-text-muted)", border: "1px solid var(--color-border)" };
 const tileList = { display: "flex", flexDirection: "column", gap: 8 };
+const comboBox = { margin: "14px 0 0", padding: "12px 14px", borderRadius: 14, background: "color-mix(in srgb, var(--color-primary) 6%, var(--color-bg))", border: "1px solid var(--color-border)" };
+const lowStockNote = { margin: "12px 0 0", fontSize: 13, fontWeight: 700, color: "#C2410C" };
 const tile = { display: "flex", alignItems: "center", gap: 12, padding: "12px 14px", fontSize: 14.5, cursor: "pointer", borderRadius: 14, borderWidth: "1.5px", borderStyle: "solid", borderColor: "var(--color-border)", background: "var(--color-bg)", transition: "border-color 140ms, background 140ms" };
 const tileOn = { borderColor: "var(--color-primary)", background: "color-mix(in srgb, var(--color-primary) 7%, var(--color-bg))" };
 const tileInput = { width: 18, height: 18, margin: 0, flexShrink: 0, accentColor: "var(--color-primary)", cursor: "pointer" };

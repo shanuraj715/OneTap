@@ -20,7 +20,8 @@ export function headerLinks({ outletSlug, config, pages, onHome }) {
     // the customer's Account page: their orders, how each is going and paid for, and their coins
     { label: "My orders", href: `/${outletSlug}/account` },
     ...(features.ordering.dineInQr ? [{ label: "Order at table", href: "#" }] : []),
-    ...(features.reservations.enabled ? [{ label: "Book a table", href: "#" }] : []),
+    // table bookings, when the outlet takes them
+    ...(features.reservations.enabled ? [{ label: "Book a table", href: `/${outletSlug}/book` }] : []),
     ...(pages ?? []).filter((p) => p.showInHeader).map((p) => ({ label: p.title, href: `/${outletSlug}/${p.slug}` })),
     // Admin-added, from Appearance → Header navigation links.
     ...layout.navLinks,
