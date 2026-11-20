@@ -1,12 +1,12 @@
 # T61 — Edit / New item is a pop-up — fixed Save and Cancel footer, scrolling body, Esc closes — and photos are saved as they change
 
-**Area:** menu · **Last result:** ✅ PASSED (33 passed, 0 failed · 2026-11-21 00:46 · headless · 9.7 s)
+**Area:** menu · **Last result:** ✅ PASSED (40 passed, 0 failed · 2026-11-21 01:33 · headless · 11.9 s)
 
 **Run it alone:** `node run.mjs --only t61` (add `--visible` to watch it)
 
 ## What this test does
 
-Runs suites/item-form-modal-ui.mjs in Chrome on a short window (so the form must scroll). Edit opens a pop-up over the still-visible item list; its body scrolls on its own while the Save changes / Cancel footer stays exactly where it was and inside the window, and the page behind doesn't scroll; a click outside does not close it, Esc and ✕ do. Typing a new name and pressing Cancel or Esc changes nothing, typing alone saves nothing, Save changes saves it and closes the pop-up, and Save is off while the name is empty. Photos: an uploaded photo is on the dish at once without pressing Save (while a name typed in the same form is still unsaved), the Photos heading says 'Saved', a second photo and a removal are saved too, closing with Esc keeps the photos and drops the unsaved name, and reopening shows them. A NEW dish says its photos are saved when it is created, shows no 'Saved' status, a photo creates nothing by itself, cancelling deletes the photo it uploaded (404 afterwards, no item left), and Create item saves the dish with its photo. The dish and its photos are put back.
+Runs suites/item-form-modal-ui.mjs in Chrome on a short window (so the form must scroll). Edit opens a pop-up over the still-visible item list; its body scrolls on its own while the Save changes / Cancel footer stays exactly where it was and inside the window, and the page behind doesn't scroll; a click outside does not close it, Esc and ✕ do. Typing a new name and pressing Cancel or Esc changes nothing, typing alone saves nothing, Save changes saves it and closes the pop-up, and Save is off while the name is empty. Photos: an uploaded photo is on the dish at once without pressing Save (while a name typed in the same form is still unsaved), the Photos heading says 'Saved', a second photo and a removal are saved too, closing with Esc keeps the photos and drops the unsaved name, and reopening shows them. A NEW dish says its photos are saved when it is created, shows no 'Saved' status, a photo creates nothing by itself, cancelling deletes the photo it uploaded (404 afterwards, no item left), and Create item saves the dish with its photo. While a photo uploads (the upload is held back on purpose), the 'Uploading…' label stays on the section that is uploading — square or landscape — however many other sections are clicked meanwhile. The dish and its photos are put back.
 
 ## Steps
 
@@ -14,18 +14,21 @@ Runs suites/item-form-modal-ui.mjs in Chrome on a short window (so the form must
 2. Esc closes it; clicking outside does not
 3. Other fields are saved with Save, and discarded with Cancel / Esc
 4. Photos are saved as they change
-5. A new dish keeps its photos until it is created
+5. The Uploading… label stays on the section that is uploading
+6. A new dish keeps its photos until it is created
 
 ## What to expect (these must happen)
 
 - The form is a pop-up; the footer buttons stay fixed while the body scrolls; Esc and ✕ close it, an outside click doesn't.
 - Photos (upload, remove) are saved immediately on an existing dish; other fields only with Save; Cancel/Esc drop unsaved fields.
 - A new dish saves its photos with Create item; cancelling leaves no orphan upload.
+- The 'Uploading…' label stays on the section that is uploading, even if another section is clicked meanwhile.
 
 ## What must NOT happen
 
 - Typing in a field must NOT save it; closing must NOT undo photos that were already saved.
 - Cancelling a new dish must NOT leave its uploaded photo on the server.
+- The label must NOT jump to the section that was clicked last; no other section may show it.
 - No errors in the browser console.
 
 ## Result of the last run
@@ -34,7 +37,7 @@ Runs suites/item-form-modal-ui.mjs in Chrome on a short window (so the form must
 
 _Nothing failed._
 
-### ✅ Passed (33)
+### ✅ Passed (40)
 
 **Step 1 — A pop-up with a fixed footer**
 
@@ -73,7 +76,17 @@ _Nothing failed._
 - reopening the dish shows the saved photo
 - the last photo removed is saved as well
 
-**Step 5 — A new dish keeps its photos until it is created**
+**Step 5 — The Uploading… label stays on the section that is uploading**
+
+- while a square photo uploads, its section says Uploading…
+- clicking another section does not move the label — it stays on the square section
+- the sections that are not uploading never show Uploading…
+- exactly one Uploading… label on the whole form
+- the square photo still ends up saved on the dish
+- when the upload ends the label is gone
+- a landscape upload keeps its label on the landscape section when the square one is clicked
+
+**Step 6 — A new dish keeps its photos until it is created**
 
 - 'Add item' opens the same pop-up as New item
 - …and says its photos are saved when it is created
@@ -88,6 +101,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-21 01:33 | pass | 40 | 0 | headless | 11.9 s |
+| 2026-11-21 01:32 | error | 29 | 0 | headless | 8.9 s |
 | 2026-11-21 00:46 | pass | 33 | 0 | headless | 9.7 s |
 | 2026-11-21 00:43 | pass | 33 | 0 | headless | 10.0 s |
 | 2026-11-21 00:42 | error | 9 | 0 | headless | 33.2 s |

@@ -15611,8 +15611,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T19:16:12.730Z",
-    "durationMs": 8983,
+    "at": "2026-11-20T20:03:28.993Z",
+    "durationMs": 8900,
     "steps": [
       {
         "n": 1,
@@ -15657,7 +15657,7 @@
           {
             "label": "it is a stored picture (not a data: link)",
             "ok": true,
-            "detail": "http://localhost:3097/uploads/6b009c1c12b2504d99282439/6b009c1d12b2504d99282440/",
+            "detail": "http://localhost:3097/uploads/6b00a1f3eae59394bc457a86/6b00a1f3eae59394bc457a8b/",
             "kind": "expect"
           }
         ]
@@ -20273,8 +20273,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T19:40:40.827Z",
-    "durationMs": 5236,
+    "at": "2026-11-20T20:03:34.832Z",
+    "durationMs": 5083,
     "steps": [
       {
         "n": 1,
@@ -20749,12 +20749,12 @@
     "id": "t61-item-form-modal",
     "title": "Edit / New item is a pop-up — fixed Save and Cancel footer, scrolling body, Esc closes — and photos are saved as they change",
     "status": "pass",
-    "pass": 33,
+    "pass": 40,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T19:16:23.277Z",
-    "durationMs": 9748,
+    "at": "2026-11-20T20:03:12.382Z",
+    "durationMs": 11869,
     "steps": [
       {
         "n": 1,
@@ -20932,6 +20932,54 @@
       },
       {
         "n": 5,
+        "title": "The Uploading… label stays on the section that is uploading",
+        "checks": [
+          {
+            "label": "while a square photo uploads, its section says Uploading…",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "clicking another section does not move the label — it stays on the square section",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the sections that are not uploading never show Uploading…",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "exactly one Uploading… label on the whole form",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the square photo still ends up saved on the dish",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "when the upload ends the label is gone",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a landscape upload keeps its label on the landscape section when the square one is clicked",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
         "title": "A new dish keeps its photos until it is created",
         "checks": [
           {

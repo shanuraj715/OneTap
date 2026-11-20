@@ -954,3 +954,7 @@
 {"id":"t58-item-image-shapes-api","status":"pass","pass":31,"fail":0,"mode":"headless","at":"2026-11-20T19:43:29.833Z","durationMs":4145}
 {"id":"t07-favicon-plan-rules","status":"pass","pass":8,"fail":0,"mode":"headless","at":"2026-11-20T19:43:40.757Z","durationMs":3982}
 {"id":"t63-card-picture-shape","status":"pass","pass":30,"fail":0,"mode":"headless","at":"2026-11-20T19:52:18.766Z","durationMs":3258}
+{"id":"t61-item-form-modal","status":"error","pass":29,"fail":0,"mode":"headless","at":"2026-11-20T20:02:31.590Z","durationMs":8889,"error":"item-form-modal-ui.mjs exited with code 1. }  Node.js v24.3.0"}
+{"id":"t61-item-form-modal","status":"pass","pass":40,"fail":0,"mode":"headless","at":"2026-11-20T20:03:12.382Z","durationMs":11869}
+{"id":"t45-paste-item-photo","status":"pass","pass":21,"fail":0,"mode":"headless","at":"2026-11-20T20:03:28.993Z","durationMs":8900}
+{"id":"t59-item-image-shapes-ui","status":"pass","pass":45,"fail":0,"mode":"headless","at":"2026-11-20T20:03:34.832Z","durationMs":5083}

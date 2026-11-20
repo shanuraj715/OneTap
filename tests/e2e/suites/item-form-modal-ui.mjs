@@ -161,6 +161,45 @@ try {
   await page.keyboard.press("Escape");
   await dlg().waitFor({ state: "hidden" });
 
+  /* ------------------------------------------------------------ the "Uploading…" label stays where the upload is */
+  console.log("== The Uploading… label stays on the section that is uploading");
+  await openDish();
+  // uploads wait at this gate until the test opens it (one route for the whole section)
+  let gate = Promise.resolve();
+  const hold = () => { let open; gate = new Promise((r) => { open = r; }); return open; };
+  await page.route("**/api/storage/upload**", async (route) => { await gate; await route.continue(); });
+  const release = hold();
+  const slotSq = page.getByTestId("photo-slot-1:1");
+  const slotLand = page.getByTestId("photo-slot-4:3");
+  await page.getByTestId("photo-file").setInputFiles(PNG.sq); // square upload starts, held back by the gate
+  await slotSq.getByTestId("photo-uploading").waitFor({ timeout: 10000 });
+  ok(await slotSq.getByText("Uploading…").count() === 1, "while a square photo uploads, its section says Uploading…");
+  await slotLand.click(); // pick another section while it is still uploading
+  await page.getByTestId("photo-slot-16:9").click();
+  await sleep(300);
+  ok(await slotSq.getByText("Uploading…").count() === 1, "clicking another section does not move the label — it stays on the square section");
+  ok(await slotLand.getByText("Uploading…").count() === 0 && await page.getByTestId("photo-slot-16:9").getByText("Uploading…").count() === 0, "the sections that are not uploading never show Uploading…");
+  ok(await page.getByTestId("photo-uploading").count() === 1, "exactly one Uploading… label on the whole form");
+  release();
+  await ui_waitFor(async () => (await dishNow()).images.some((i) => i.ratio === "1:1"), 15000);
+  ok((await dishNow()).images.some((i) => i.ratio === "1:1"), "the square photo still ends up saved on the dish");
+  ok(await page.getByTestId("photo-uploading").count() === 0, "when the upload ends the label is gone");
+  // the same for a landscape photo (it has no 'Add' tile left once filled, so start from an empty one)
+  await call("PATCH", `/api/menu/items/${dish.id}`, { images: [] });
+  await page.keyboard.press("Escape");
+  await dlg().waitFor({ state: "hidden" });
+  await openDish();
+  const release2 = hold();
+  await page.getByTestId("photo-file-4:3").setInputFiles(PNG.land);
+  await slotLand.getByTestId("photo-uploading").waitFor({ timeout: 10000 });
+  await slotSq.click();
+  await sleep(300);
+  ok(await slotLand.getByText("Uploading…").count() === 1 && await slotSq.getByText("Uploading…").count() === 0, "a landscape upload keeps its label on the landscape section when the square one is clicked");
+  release2();
+  await ui_waitFor(async () => (await dishNow()).images.some((i) => i.ratio === "4:3"), 15000);
+  await page.keyboard.press("Escape");
+  await dlg().waitFor({ state: "hidden" });
+
   /* ------------------------------------------------------------ a new dish */
   console.log("== A new dish keeps its photos until it is created");
   await page.locator('[data-testid="cat-row"][data-category="Beverages"] button', { hasText: "Beverages" }).first().click();
