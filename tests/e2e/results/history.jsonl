@@ -855,3 +855,7 @@
 {"id":"t45-paste-item-photo","status":"pass","pass":21,"fail":0,"mode":"headless","at":"2026-11-20T05:44:59.638Z","durationMs":8793}
 {"id":"t46-addon-groups","status":"pass","pass":50,"fail":0,"mode":"headless","at":"2026-11-20T05:45:17.306Z","durationMs":17650}
 {"id":"t51-kot-tickets","status":"pass","pass":62,"fail":0,"mode":"headless","at":"2026-11-20T05:45:41.695Z","durationMs":24368}
+{"id":"t52-print-station-any-page","status":"fail","pass":13,"fail":1,"mode":"headless","at":"2026-11-20T06:37:05.894Z","durationMs":69183}
+{"id":"t50-store-name","status":"pass","pass":31,"fail":0,"mode":"headless","at":"2026-11-20T06:39:57.717Z","durationMs":15684}
+{"id":"t51-kot-tickets","status":"pass","pass":62,"fail":0,"mode":"headless","at":"2026-11-20T06:40:22.053Z","durationMs":24318}
+{"id":"t52-print-station-any-page","status":"pass","pass":14,"fail":0,"mode":"headless","at":"2026-11-20T06:41:10.421Z","durationMs":48350}

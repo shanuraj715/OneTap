@@ -1,7 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { createContext, createElement, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
                                                          
 import * as api from "./api";
+import { useAuth } from "./useAuth";
+import { useOutlet } from "./useOutlet";
+import { useStorePlan } from "./useStorePlan";
                                                 
 
 const POLL_MS = 4_000;
@@ -231,10 +234,22 @@ export function usePrintRunner(outlet                    , canPrint         )   
     if (!settings.enabled || !outlet || !canPrint) return;
     void poll();
     const timer = setInterval(() => void poll(), POLL_MS);
-    return () => clearInterval(timer);
+    // A browser slows the timers of a tab you are not looking at; coming back to it (or to the window) checks at once.
+    const wake = () => {
+      if (document.visibilityState === "visible") void poll();
+    };
+    document.addEventListener("visibilitychange", wake);
+    window.addEventListener("focus", wake);
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener("visibilitychange", wake);
+      window.removeEventListener("focus", wake);
+    };
   }, [settings.enabled, outlet, canPrint, poll]);
 
   return {
+    /** this device is a print station AND may print for this store — so it is listening, whichever page is open */
+    active: Boolean(settings.enabled && outlet && canPrint),
     settings,
     setEnabled: (v) => update({ enabled: v }),
     setTargets: (t) => update({ targets: t }),
@@ -244,3 +259,29 @@ export function usePrintRunner(outlet                    , canPrint         )   
     runNow: () => void poll(),
   };
 }
+
+/* ------------------------------------------------- one station, every page */
+
+const PrintStationContext = createContext(null);
+
+/**
+ * The print station, mounted ONCE in the signed-in dashboard (not on the Printing page): if this device is a print
+ * station, tickets are picked up and printed whichever page is open — Orders, Take order, anywhere. It only listens when
+ * the device has been switched on (a per-device setting), the person may print, and the store's plan includes Printing.
+ * Close the dashboard and it stops, as before.
+ */
+export function PrintStationProvider({ children }) {
+  const { outlet } = useOutlet();
+  const { can } = useAuth();
+  const { hasFeature } = useStorePlan();
+  const runner = usePrintRunner(outlet, can("print:job") && hasFeature("printing"));
+  return createElement(PrintStationContext.Provider, { value: runner }, children);
+}
+
+/** The shared print station (see {@link PrintStationProvider}). */
+export function usePrintStation() {
+  const station = useContext(PrintStationContext);
+  if (!station) throw new Error("usePrintStation() must be called within <PrintStationProvider>");
+  return station;
+}
+

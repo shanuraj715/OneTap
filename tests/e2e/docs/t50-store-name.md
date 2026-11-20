@@ -1,6 +1,6 @@
 # T50 — Store name — the dashboard's Business identity shows the STORE name, always disabled, with a note to contact the TablePe admin; only the platform admin can rename the store (console → Stores → the store); renaming an outlet changes its display name
 
-**Area:** settings · **Last result:** ✅ PASSED (31 passed, 0 failed · 2026-11-20 06:08 · headless · 11.2 s)
+**Area:** settings · **Last result:** ✅ PASSED (31 passed, 0 failed · 2026-11-20 12:09 · headless · 15.7 s)
 
 **Run it alone:** `node run.mjs --only t50` (add `--visible` to watch it)
 
@@ -79,6 +79,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-20 12:09 | pass | 31 | 0 | headless | 15.7 s |
 | 2026-11-20 06:08 | pass | 31 | 0 | headless | 11.2 s |
 | 2026-11-20 05:36 | pass | 31 | 0 | headless | 9.0 s |
 | 2026-11-20 05:30 | pass | 31 | 0 | headless | 9.1 s |

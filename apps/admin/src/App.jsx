@@ -54,6 +54,7 @@ import {
 } from "lucide-react";
 import { useAuth, useLogout } from "./lib/useAuth";
 import { OutletSelectionProvider, useOpenStore, useOutlets } from "./lib/useOutlet";
+import { PrintStationProvider, usePrintStation } from "./lib/usePrintRunner";
 import { useLeads, useStore } from "./lib/usePlatform";
 import { useWaMe } from "./lib/useWhatsApp";
 import { WhatsAppChats } from "./routes/whatsapp/WhatsAppChats";
@@ -279,7 +280,10 @@ export function App() {
 
   return (
     <OutletSelectionProvider>
-      <Shell can={can} />
+      {/* the print station lives here, so this device prints tickets whichever page is open */}
+      <PrintStationProvider>
+        <Shell can={can} />
+      </PrintStationProvider>
     </OutletSelectionProvider>
   );
 }
@@ -488,6 +492,8 @@ function Shell({ can }                                     ) {
         </nav>
 
         <div style={{ marginTop: "auto", display: "flex", flexDirection: "column", gap: 10, alignItems: railCollapsed ? "center" : "stretch" }}>
+          <PrintStationChip collapsed={railCollapsed} />
+
           {/* One fixed storefront address — meaningless across every store, so not in the platform console. */}
           {!platformMode ? (
             <a
@@ -809,6 +815,28 @@ const navItem                = {
   fontWeight: 500,
   textDecoration: "none",
 };
+/**
+ * Shown only on a device that is a print station: "Print station on" while it is listening (so you can see, from any page,
+ * that tickets will print here), red when the last check failed. Pressing it opens the Printing page.
+ */
+function PrintStationChip({ collapsed }) {
+  const { active, busy, lastError } = usePrintStation();
+  if (!active) return null;
+  const tone = lastError ? "var(--tone-danger)" : "var(--tone-success)";
+  const label = lastError ? "Print station — problem" : busy ? "Print station — checking…" : "Print station on";
+  return (
+    <NavLink
+      to="/printing"
+      data-testid="print-station-chip"
+      title={lastError ? `Print station: ${lastError}` : "This computer prints tickets as they arrive, from any page. Press to open Printing."}
+      style={{ ...storefrontLink, justifyContent: collapsed ? "center" : "flex-start", color: tone, fontWeight: 600 }}
+    >
+      <Printer size={13} />
+      {!collapsed ? label : null}
+    </NavLink>
+  );
+}
+
 const storefrontLink                = {
   display: "inline-flex",
   alignItems: "center",

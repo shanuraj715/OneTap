@@ -17492,8 +17492,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:38:19.891Z",
-    "durationMs": 11245,
+    "at": "2026-11-20T06:39:57.717Z",
+    "durationMs": 15684,
     "steps": [
       {
         "n": 1,
@@ -17711,8 +17711,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T05:45:41.695Z",
-    "durationMs": 24368,
+    "at": "2026-11-20T06:40:22.053Z",
+    "durationMs": 24318,
     "steps": [
       {
         "n": 1,
@@ -17883,7 +17883,7 @@
           {
             "label": "changing only the kitchen note sends a ticket that says what the note is now",
             "ok": true,
-            "detail": "*** ORDER CHANGED *** | Only the kitchen note changed | ------------------------------------------------ | KITCHEN ORDER | ------------------------------------------------ | Order #0006 | Takeaway | 20 Nov 2026, 11:15 am | ------------------------------------------------ | Note is now: less spicy please | ------------------------------------------------ |",
+            "detail": "*** ORDER CHANGED *** | Only the kitchen note changed | ------------------------------------------------ | KITCHEN ORDER | ------------------------------------------------ | Order #0006 | Takeaway | 20 Nov 2026, 12:10 pm | ------------------------------------------------ | Note is now: less spicy please | ------------------------------------------------ |",
             "kind": "expect"
           },
           {
@@ -18142,6 +18142,141 @@
             "label": "…and the ticket that tells the kitchen 'order cancelled'",
             "ok": true,
             "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser logged no errors or warnings",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t52-print-station-any-page": {
+    "id": "t52-print-station-any-page",
+    "title": "Print station — a computer switched on as a print station prints tickets from ANY dashboard page (Orders, Menu, Dashboard…), once, and only when it is switched on and the plan has Printing",
+    "status": "pass",
+    "pass": 14,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-20T06:41:10.421Z",
+    "durationMs": 48350,
+    "steps": [
+      {
+        "n": 1,
+        "title": "switch the print station on (Printing page)",
+        "checks": [
+          {
+            "label": "a new device is NOT a print station, and the sidebar shows no print-station marker",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "switching it on shows 'Print station on' in the sidebar",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "tickets are printed from other pages",
+        "checks": [
+          {
+            "label": "Orders page: the order is accepted and its kitchen ticket is printed by this computer (no need to be on Printing)",
+            "ok": true,
+            "detail": "job printed",
+            "kind": "expect"
+          },
+          {
+            "label": "Menu page: the order is accepted and its kitchen ticket is printed by this computer (no need to be on Printing)",
+            "ok": true,
+            "detail": "job printed",
+            "kind": "expect"
+          },
+          {
+            "label": "Dashboard page: the order is accepted and its kitchen ticket is printed by this computer (no need to be on Printing)",
+            "ok": true,
+            "detail": "job printed",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser was asked to print",
+            "ok": true,
+            "detail": "1",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "only one poller",
+        "checks": [
+          {
+            "label": "about one check every 4 seconds on a page that is not Printing — not two pollers",
+            "ok": true,
+            "detail": "3 checks in 14 s",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "off is silent; on picks up the waiting tickets",
+        "checks": [
+          {
+            "label": "switching it off removes the sidebar marker",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "with the station off, this browser makes no print checks at all",
+            "ok": true,
+            "detail": "0 checks",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the new ticket simply waits in the queue",
+            "ok": true,
+            "detail": "queued",
+            "kind": "expect"
+          },
+          {
+            "label": "switching it back on prints the ticket that was waiting — from the Orders page",
+            "ok": true,
+            "detail": "job printed, chip 1, claims since: 14",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "remembered on this device",
+        "checks": [
+          {
+            "label": "after a reload the device is still a print station",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "a store whose plan has no Printing never checks",
+        "checks": [
+          {
+            "label": "no marker and no print checks, even if the device was switched on before",
+            "ok": true,
+            "detail": "0 checks",
             "kind": "expect"
           },
           {

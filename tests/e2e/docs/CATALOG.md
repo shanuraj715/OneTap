@@ -1,6 +1,6 @@
 # TablePe end-to-end tests — catalog
 
-**52 tests** · 52 passing · 0 failing/error · 0 not run yet
+**53 tests** · 53 passing · 0 failing/error · 0 not run yet
 
 | Test | Area | Result | Checks | Last run |
 |---|---|---|---|---|
@@ -54,8 +54,9 @@
 | [t47-storefront-pinned-bars](t47-storefront-pinned-bars.md) — Storefront — the header, the order bar (Takeaway/Delivery + outlet) and the category/filter bar stay pinned to the top while scrolling, on phone, tablet and desktop, with every header style | storefront | ✅ PASSED | 101/101 | 2026-11-20 06:07 |
 | [t48-hero-button-card-c02](t48-hero-button-card-c02.md) — Storefront — no 'Order takeaway' button at the top; card C02 (Thumbnail left) shows the price right after the veg / non-veg mark with full-width title and description; every item card cuts its description at one line with an ellipsis | storefront | ✅ PASSED | 69/69 | 2026-11-20 06:07 |
 | [t49-storefront-item-popup](t49-storefront-item-popup.md) — Storefront item pop-up — the picture is set in from the edges with rounded corners and has a close button; the name has the veg mark and the price; sizes and extras are tiles that light up; the Add row stays at the bottom while the choices scroll | storefront | ✅ PASSED | 42/42 | 2026-11-20 06:08 |
-| [t50-store-name](t50-store-name.md) — Store name — the dashboard's Business identity shows the STORE name, always disabled, with a note to contact the TablePe admin; only the platform admin can rename the store (console → Stores → the store); renaming an outlet changes its display name | settings | ✅ PASSED | 31/31 | 2026-11-20 06:08 |
-| [t51-kot-tickets](t51-kot-tickets.md) — Kitchen tickets (KOT) — each dish goes to the right printer (kitchen / bar); an order edited after its ticket went out sends an 'ORDER CHANGED' ticket with only the difference; a cancelled order withdraws a waiting ticket or sends 'ORDER CANCELLED — DO NOT COOK' | printing | ✅ PASSED | 62/62 | 2026-11-20 11:15 |
+| [t50-store-name](t50-store-name.md) — Store name — the dashboard's Business identity shows the STORE name, always disabled, with a note to contact the TablePe admin; only the platform admin can rename the store (console → Stores → the store); renaming an outlet changes its display name | settings | ✅ PASSED | 31/31 | 2026-11-20 12:09 |
+| [t51-kot-tickets](t51-kot-tickets.md) — Kitchen tickets (KOT) — each dish goes to the right printer (kitchen / bar); an order edited after its ticket went out sends an 'ORDER CHANGED' ticket with only the difference; a cancelled order withdraws a waiting ticket or sends 'ORDER CANCELLED — DO NOT COOK' | printing | ✅ PASSED | 62/62 | 2026-11-20 12:10 |
+| [t52-print-station-any-page](t52-print-station-any-page.md) — Print station — a computer switched on as a print station prints tickets from ANY dashboard page (Orders, Menu, Dashboard…), once, and only when it is switched on and the plan has Printing | printing | ✅ PASSED | 14/14 | 2026-11-20 12:11 |
 
 ## Open findings (noticed during tests, not yet fixed)
 

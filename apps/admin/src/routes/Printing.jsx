@@ -4,7 +4,7 @@ import { TARGETS,                  } from "@onetap/config-schema";
 import { FileText, ListChecks, MonitorSmartphone, Printer as PrinterIcon } from "lucide-react";
 import { useAuth } from "../lib/useAuth";
 import { useOutlet } from "../lib/useOutlet";
-import { usePrintRunner } from "../lib/usePrintRunner";
+import { usePrintStation } from "../lib/usePrintRunner";
 import { usePrinters, usePrintJobs, useTemplates } from "../lib/usePrinting";
 import { Button, Card, Checkbox, InfoHint, Note, PageHeader, Pill, Tabs, Toast } from "../ui";
 import { JobQueue } from "./printing/JobQueue";
@@ -25,7 +25,8 @@ export function Printing() {
   const printers = usePrinters(outlet, canRead);
   const templates = useTemplates(outlet, canRead);
   const jobs = usePrintJobs(outlet, canRead);
-  const runner = usePrintRunner(outlet, canPrint);
+  // the one print station of this dashboard — it keeps listening on every other page too
+  const runner = usePrintStation();
 
   if (!canRead) {
     return (
@@ -125,7 +126,7 @@ function StationPanel({
           checked={settings.enabled}
           onChange={setEnabled}
           label="Use this computer as a print station"
-          info="While this is on and the page is open, this browser checks every few seconds for slips it can print. Close the tab and it stops — which is why the till computer should keep the admin open during service."
+          info="While this is on, this browser checks every few seconds for slips it can print — whichever page of the dashboard is open (Orders, Take order…), so there is no need to stay on this page. Close the dashboard and it stops — which is why the till computer should keep the dashboard open during service. It is remembered on this device only."
         />
         {settings.enabled ? (
           <Button variant="outline" onClick={runNow} disabled={busy} style={{ fontSize: 12.5, padding: "6px 12px" }}>

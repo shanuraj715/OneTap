@@ -1,6 +1,6 @@
 # T51 — Kitchen tickets (KOT) — each dish goes to the right printer (kitchen / bar); an order edited after its ticket went out sends an 'ORDER CHANGED' ticket with only the difference; a cancelled order withdraws a waiting ticket or sends 'ORDER CANCELLED — DO NOT COOK'
 
-**Area:** printing · **Last result:** ✅ PASSED (62 passed, 0 failed · 2026-11-20 11:15 · headless · 24.4 s)
+**Area:** printing · **Last result:** ✅ PASSED (62 passed, 0 failed · 2026-11-20 12:10 · headless · 24.3 s)
 
 **Run it alone:** `node run.mjs --only t51` (add `--visible` to watch it)
 
@@ -144,6 +144,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-20 12:10 | pass | 62 | 0 | headless | 24.3 s |
 | 2026-11-20 11:15 | pass | 62 | 0 | headless | 24.4 s |
 | 2026-11-20 10:51 | pass | 62 | 0 | headless | 25.0 s |
 
