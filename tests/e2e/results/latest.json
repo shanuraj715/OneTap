@@ -20981,5 +20981,92 @@
     ],
     "findings": [],
     "problems": []
+  },
+  "t62-food-mark": {
+    "id": "t62-food-mark",
+    "title": "The veg / non-veg mark — the dot is exactly centred in its frame on the storefront and in Take order",
+    "status": "pass",
+    "pass": 9,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-20T19:26:07.499Z",
+    "durationMs": 3636,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Storefront menu (1× screen)",
+        "checks": [
+          {
+            "label": "the menu shows several veg / non-veg marks",
+            "ok": true,
+            "detail": "19 marks (Non-vegetarian,Vegetarian) at sizes 14px",
+            "kind": "expect"
+          },
+          {
+            "label": "the dot is exactly in the middle of its frame, on every mark",
+            "ok": true,
+            "detail": "worst off-centre 0.000px",
+            "kind": "expect"
+          },
+          {
+            "label": "every mark is a true square and the dot stays inside its frame",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Storefront menu (2× screen)",
+        "checks": [
+          {
+            "label": "the menu shows several veg / non-veg marks",
+            "ok": true,
+            "detail": "19 marks (Non-vegetarian,Vegetarian) at sizes 14px",
+            "kind": "expect"
+          },
+          {
+            "label": "the dot is exactly in the middle of its frame, on every mark",
+            "ok": true,
+            "detail": "worst off-centre 0.000px",
+            "kind": "expect"
+          },
+          {
+            "label": "every mark is a true square and the dot stays inside its frame",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Dashboard → Take order",
+        "checks": [
+          {
+            "label": "Take order shows veg / non-veg marks",
+            "ok": true,
+            "detail": "19 marks (non-veg,veg)",
+            "kind": "expect"
+          },
+          {
+            "label": "…each with its dot exactly centred in a square frame",
+            "ok": true,
+            "detail": "worst off-centre 0.000px",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
   }
 }

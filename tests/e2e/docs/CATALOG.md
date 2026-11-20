@@ -1,6 +1,6 @@
 # TablePe end-to-end tests — catalog
 
-**62 tests** · 62 passing · 0 failing/error · 0 not run yet
+**63 tests** · 63 passing · 0 failing/error · 0 not run yet
 
 | Test | Area | Result | Checks | Last run |
 |---|---|---|---|---|
@@ -66,6 +66,7 @@
 | [t59-item-image-shapes-ui](t59-item-image-shapes-ui.md) — Dish photos in four shapes — the dish form's four sections (upload, replace, trim warning, paste into the chosen one, remove) and the picture each card style shows | menu | ✅ PASSED | 45/45 | 2026-11-21 00:44 |
 | [t60-store-address](t60-store-address.md) — Super admin inside a store — every page is at /store/<store-name>/<store-id>/…; the store owner keeps the plain addresses | platform | ✅ PASSED | 18/18 | 2026-11-21 00:27 |
 | [t61-item-form-modal](t61-item-form-modal.md) — Edit / New item is a pop-up — fixed Save and Cancel footer, scrolling body, Esc closes — and photos are saved as they change | menu | ✅ PASSED | 33/33 | 2026-11-21 00:46 |
+| [t62-food-mark](t62-food-mark.md) — The veg / non-veg mark — the dot is exactly centred in its frame on the storefront and in Take order | storefront | ✅ PASSED | 9/9 | 2026-11-21 00:56 |
 
 ## Open findings (noticed during tests, not yet fixed)
 

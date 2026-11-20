@@ -939,3 +939,5 @@
 {"id":"t33-menu-tree","status":"pass","pass":71,"fail":0,"mode":"headless","at":"2026-11-20T19:17:51.906Z","durationMs":45571}
 {"id":"t32-menu-tree-api","status":"pass","pass":93,"fail":0,"mode":"headless","at":"2026-11-20T19:17:57.022Z","durationMs":4206}
 {"id":"t55-growth-dashboard","status":"pass","pass":26,"fail":0,"mode":"headless","at":"2026-11-20T19:19:22.508Z","durationMs":5065}
+{"id":"t62-food-mark","status":"error","pass":6,"fail":0,"mode":"headless","at":"2026-11-20T19:25:23.255Z","durationMs":18369,"error":"food-mark-ui.mjs exited with code 1. }  Node.js v24.3.0"}
+{"id":"t62-food-mark","status":"pass","pass":9,"fail":0,"mode":"headless","at":"2026-11-20T19:26:07.499Z","durationMs":3636}
