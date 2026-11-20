@@ -20,6 +20,8 @@ const categorySchema = new Schema(
     isActive: { type: Boolean, default: true },
     // where everything in this category is made ("kitchen" | "bar"); null = same as its parent category, else the kitchen
     prepStation: { type: String, default: null },
+    // the hours everything inside can be ordered ({ windows: [{ days, from, to }] }); null = same as its parent, else any time
+    availability: { type: Schema.Types.Mixed, default: null },
   },
   { timestamps: true },
 );
@@ -104,6 +106,26 @@ const itemSchema = new Schema(
     gstRatePct: { type: Number, default: 5 },
     isAvailable: { type: Boolean, default: true },
     sortOrder: { type: Number, default: 0 },
+    // counted stock; null = not counted. `resetDay` is the India-time day `left` was last refilled to `daily`.
+    stock: {
+      type: new Schema(
+        {
+          tracked: { type: Boolean, default: true },
+          left: { type: Number, default: 0, min: 0 },
+          daily: { type: Number, default: null },
+          lowAt: { type: Number, default: 5 },
+          resetDay: { type: String, default: "" },
+        },
+        { _id: false },
+      ),
+      default: null,
+    },
+    // the hours it can be ordered ({ windows: [{ days, from, to }] }); null = its category's
+    availability: { type: Schema.Types.Mixed, default: null },
+    // a combo: the dishes it is made of ({ items: [{ itemId, variantId, quantity }] }); null = a plain dish
+    combo: { type: Schema.Types.Mixed, default: null },
+    // "goes well with" — dishes suggested alongside this one
+    pairsWith: { type: [String], default: [] },
   },
   { timestamps: true },
 );

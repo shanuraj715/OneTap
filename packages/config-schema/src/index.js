@@ -39,3 +39,7 @@ export * from "./card-fonts.js";
 export * from "./customer.js";
 export * from "./qr-card-templates.js";
 export * from "./ai.js";
+export * from "./clock.js";
+export * from "./scheduling.js";
+export * from "./reservations.js";
+export * from "./growth.js";

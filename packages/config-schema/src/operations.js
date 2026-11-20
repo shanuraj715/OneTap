@@ -1,23 +1,19 @@
 import { z } from "zod";
-                                           
+import { SCHEDULED_ACCEPT_LEAD_MINUTES, scheduledOrdersSchema } from "./scheduling.js";
 
 /**
- * How long an order may sit in one status before the admin starts shouting.
- *
- * A missed order is the single most expensive failure in a small restaurant:
- * the customer is waiting, nobody knows, and the first sign of trouble is a
- * complaint. These thresholds turn "nobody noticed" into a visible warning.
+ * When the Orders screen starts shouting about an order. Only two moments count, because only these two are the
+ * restaurant's own to fix:
+ *   - a NEW order nobody has accepted (the customer is waiting and nobody knows);
+ *   - an order that has been PREPARING longer than the kitchen's own limit (a fresh timer starts when cooking starts).
+ * An accepted order that is not yet being cooked, a ready order and a completed one never warn.
  */
 export const slaSchema = z.object({
   enabled: z.boolean().default(true),
-  /** minutes a new order may stay "placed" before it counts as unaccepted */
+  /** minutes a new order may stay "placed" (nobody has accepted it) before it counts as missed */
   acceptMinutes: z.number().int().min(1).max(240).default(2),
-  /** minutes an order may stay "accepted" before someone should have started it */
-  startMinutes: z.number().int().min(1).max(240).default(5),
   /** minutes an order may stay "preparing" before the kitchen is running late */
   prepMinutes: z.number().int().min(1).max(240).default(20),
-  /** minutes food may sit "ready" before it goes cold on the pass */
-  handoverMinutes: z.number().int().min(1).max(240).default(10),
   /** play a sound as well as showing the banner */
   sound: z.boolean().default(true),
   /** keep re-alerting rather than warning once and going quiet */
@@ -25,27 +21,21 @@ export const slaSchema = z.object({
 });
                                                     
 
-/** Which SLA applies to an order sitting in a given status. */
+/** Which limit applies to an order sitting in a given status. A status that is not listed never warns. */
 export const SLA_FOR_STATUS                                                  = {
   placed: "acceptMinutes",
-  accepted: "startMinutes",
   preparing: "prepMinutes",
-  ready: "handoverMinutes",
 };
 
 export const SLA_LABELS                         = {
   acceptMinutes: "not accepted",
-  startMinutes: "not started",
   prepMinutes: "still preparing",
-  handoverMinutes: "waiting on the pass",
 };
 
 /** What the staff-facing warning says, in words that name the action. */
 export const SLA_MESSAGES                         = {
   acceptMinutes: "hasn't been accepted",
-  startMinutes: "was accepted but nobody has started cooking",
   prepMinutes: "has been cooking longer than expected",
-  handoverMinutes: "is ready and still waiting to go out",
 };
 
 /* -------------------------------------------------------------- operations */
@@ -124,6 +114,8 @@ export const operationsSchema = z.object({
   prepTime: prepTimeSchema.default({}),
   limits: orderLimitsSchema.default({}),
   receipts: receiptPolicySchema.default({}),
+  /** takeaway pre-orders (a later pickup time) — see scheduling.js */
+  scheduling: scheduledOrdersSchema.default({}),
 });
                                                           
 
@@ -167,7 +159,14 @@ export function evaluateSla(
   if (!rule) return null; // completed and cancelled orders have no clock
 
   const limitMinutes = sla[rule]          ;
-  const since = statusSince(order, now);
+  let since = statusSince(order, now);
+  // A pre-order for later isn't late just because nobody accepted it straight away: its accept clock starts an hour
+  // before its pickup time (or when it was placed, if that was later).
+  if (order.status === "placed" && order.scheduledFor) {
+    const clockFrom = new Date(order.scheduledFor).getTime() - SCHEDULED_ACCEPT_LEAD_MINUTES * 60_000;
+    since = Math.min(since, now - clockFrom);
+    if (since < 0) return null;
+  }
   const waitedMinutes = Math.floor(since / 60_000);
   if (waitedMinutes < limitMinutes) return null;
 

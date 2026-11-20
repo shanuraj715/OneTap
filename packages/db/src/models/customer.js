@@ -25,6 +25,8 @@ const customerSchema = new Schema(
     orderCount: { type: Number, default: 0 },
     lastOrderAt: Date,
     walletBalance: { type: Number, default: 0 },
+    /** when this customer was last sent an abandoned-cart reminder (at most one every few days, whatever the outlet) */
+    cartRemindedAt: { type: Date, default: null },
   },
   { timestamps: true },
 );

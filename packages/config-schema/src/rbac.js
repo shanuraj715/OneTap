@@ -17,7 +17,7 @@ export const ROLE_LABELS                       = {
 export const ROLE_DESCRIPTIONS                       = {
   super_admin: "Platform staff. Everything, across every brand.",
   owner: "Everything inside the brand, including users and billing.",
-  manager: "Menu, appearance, orders and tables — not users or payment keys.",
+  manager: "Menu, appearance, orders and tables — not users, payment keys or deleting orders.",
   staff: "Counter billing and orders.",
   kitchen: "Kitchen display only.",
   editor: "Content and appearance only.",
@@ -42,6 +42,7 @@ export const PERMISSIONS = [
   "order:update",
   "order:refund",
   // Delete an order from the Orders page (it disappears from lists and reports; coins it used or earned are put right).
+  // Owner and platform super admin ONLY — deliberately not in the manager role (see ROLE_PERMISSIONS.manager).
   "order:delete",
   "table:read",
   "table:manage",
@@ -71,6 +72,13 @@ export const PERMISSIONS = [
   "analytics:read",
   "analytics:finance",
   "analytics:export",
+  // Table bookings: see them / confirm, seat, cancel and take new ones over the phone.
+  "reservation:read",
+  "reservation:manage",
+  // Customers' ratings and comments on their orders.
+  "feedback:read",
+  // The outlet's list of delivery riders (handing an order to a rider is order:update).
+  "rider:manage",
 ]         ;
                                                       
 
@@ -79,13 +87,13 @@ const ALL = [...PERMISSIONS];
 export const ROLE_PERMISSIONS                             = {
   super_admin: ALL,
   owner: ALL,
-  manager: ["outlet:read", "menu:read", "menu:update", "order:read", "order:create", "order:update", "order:delete", "table:read", "table:manage", "payment-config:read", "printer:read", "printer:manage", "print:job", "coupon:read", "coupon:manage", "appearance:update", "page:manage", "theme:update", "settings:update", "customer:read", "notification-config:read", "notification-log:read", "dashboard:configure", "analytics:read"],
-  // A cashier must be able to reprint a torn receipt without calling a manager.
-  staff: ["outlet:read", "menu:read", "order:read", "order:create", "order:update", "table:read", "table:manage", "printer:read", "print:job", "coupon:read"],
+  manager: ["outlet:read", "menu:read", "menu:update", "order:read", "order:create", "order:update", "table:read", "table:manage", "payment-config:read", "printer:read", "printer:manage", "print:job", "coupon:read", "coupon:manage", "appearance:update", "page:manage", "theme:update", "settings:update", "customer:read", "notification-config:read", "notification-log:read", "dashboard:configure", "analytics:read", "reservation:read", "reservation:manage", "feedback:read", "rider:manage"],
+  // A cashier must be able to reprint a torn receipt without calling a manager — and runs the front desk's bookings.
+  staff: ["outlet:read", "menu:read", "order:read", "order:create", "order:update", "table:read", "table:manage", "printer:read", "print:job", "coupon:read", "reservation:read", "reservation:manage"],
   // Same for the kitchen when a KOT is lost — but they can't reconfigure printers.
   kitchen: ["outlet:read", "menu:read", "order:read", "order:update", "table:read", "printer:read", "print:job"],
   editor: ["outlet:read", "menu:read", "appearance:update", "page:manage", "theme:update"],
-  accountant: ["outlet:read", "menu:read", "order:read", "printer:read", "print:job", "coupon:read", "customer:read", "notification-log:read", "analytics:read", "analytics:finance", "analytics:export"],
+  accountant: ["outlet:read", "menu:read", "order:read", "printer:read", "print:job", "coupon:read", "customer:read", "notification-log:read", "analytics:read", "analytics:finance", "analytics:export", "feedback:read"],
 };
 
 export function permissionsForRole(role      )               {

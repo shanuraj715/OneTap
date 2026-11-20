@@ -27,6 +27,8 @@ const brandSchema = new Schema(
     whatsapp: { type: Schema.Types.Mixed, default: null },
     /** which way each kind of message is sent (see messagingSchema): { codes: { method, linkedMessage, whatsappTemplate } }. Null = never set. */
     messaging: { type: Schema.Types.Mixed, default: null },
+    /** abandoned-cart reminders for the whole store (see cartRemindersSchema). Null = never set (off). */
+    cartReminders: { type: Schema.Types.Mixed, default: null },
     /** when usage first went over a plan limit; cleared once back within it */
     overLimitSince: { type: Date, default: null },
     /**

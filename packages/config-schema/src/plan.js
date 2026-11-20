@@ -36,6 +36,14 @@ export const FEATURES = [
     label: "Analytics & reports",
     description: "Sales, items, customers and outlets analysed on charts, a profit & loss calculator, stock suggestions, and reports to export (Excel, CSV, PDF).",
   },
+  { key: "reservations", label: "Table reservations", description: "Customers book a table online; the team confirms, seats and tracks every booking." },
+  { key: "scheduledOrders", label: "Pre-orders", description: "Takeaway customers choose a later pickup time — later today or the coming days." },
+  { key: "feedback", label: "Ratings & feedback", description: "Customers rate completed orders; the store sees every rating and comment, and happy customers are pointed to its Google reviews." },
+  {
+    key: "cartReminders",
+    label: "Abandoned-cart reminders",
+    description: "A WhatsApp or SMS reminder to signed-in customers who left food in their cart without ordering.",
+  },
   { key: "favicon", label: "Own favicon", description: "The store's own icon in the browser tab, on every outlet's pages." },
   {
     key: "customDomain",
@@ -170,7 +178,14 @@ export function applyEntitlements(config, entitlements) {
         delivery: ordering.delivery && has("delivery"),
       },
       coupons: config.features.coupons !== false && has("coupons"),
+      reservations: { ...config.features.reservations, enabled: config.features.reservations.enabled && has("reservations") },
     },
+    operations: {
+      ...config.operations,
+      // pre-orders are for takeaway, so they need takeaway as well as the plan feature
+      scheduling: { ...config.operations.scheduling, enabled: config.operations.scheduling.enabled && has("scheduledOrders") && ordering.takeaway && has("takeaway") },
+    },
+    feedback: { ...config.feedback, enabled: config.feedback.enabled && has("feedback") },
     wallet: { ...config.wallet, enabled: config.wallet.enabled && has("wallet") },
     payments: { ...config.payments, enabled: gateways.length ? gateways : ["cod"] },
     effect: effectAllowed(entitlements, config.effect.style) ? config.effect : { ...config.effect, style: "none" },

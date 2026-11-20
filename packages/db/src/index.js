@@ -25,3 +25,4 @@ export { StorePageModel } from "./models/store-page.js";
 export { MarketingCampaignModel, MarketingContactModel, MarketingListModel, MarketingMessageModel } from "./models/marketing.js";
 export { WaAccountModel, WaAuthKeyModel, WaCampaignModel, WaChatModel, WaMessageModel } from "./models/whatsapp.js";
 export { QrCardDesignModel } from "./models/qr-card.js";
+export { CartModel, CartReminderModel, FeedbackModel, ReservationModel, RiderModel } from "./models/engagement.js";

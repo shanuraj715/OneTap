@@ -32,6 +32,11 @@ export const DEFAULT_FEATURE_PRICES = Object.freeze({
   whatsappChat: 150,
   marketing: 100,
   analytics: 100,
+  // added 2026-11-20 — starting guesses, not part of the Basic → Pro sum above; change them on the Price list page
+  reservations: 100,
+  scheduledOrders: 75,
+  feedback: 50,
+  cartReminders: 75,
   favicon: 50,
   customDomain: 50,
 });

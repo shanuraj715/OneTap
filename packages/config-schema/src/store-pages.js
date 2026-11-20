@@ -14,7 +14,7 @@ import { hrefSchema } from "./storefront.js";
  * A page lives at `/<outletSlug>/<pageSlug>`, right next to the app's own routes (`/<outlet>/order`…). A page
  * can never take one of those names, or that route would stop working for the outlet.
  */
-export const RESERVED_PAGE_SLUGS = ["order", "t", "p", "api", "preview", "menu", "cart", "checkout", "login", "signin", "signup", "account", "admin", "variants", "_next"];
+export const RESERVED_PAGE_SLUGS = ["order", "t", "p", "api", "preview", "menu", "cart", "checkout", "login", "signin", "signup", "account", "admin", "variants", "_next", "book"];
 
 export const pageSlugSchema = z
   .string()

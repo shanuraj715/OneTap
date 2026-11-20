@@ -1,6 +1,5 @@
 import { z } from "zod";
-                                             
-                                       
+import { comboDetails, describeWindows, stockLeft, stockNeeds, unavailability, windowsForItem } from "./menu.js";
 
 /**
  * How the order is fulfilled. "Counter" isn't here — a walk-in a cashier bills
@@ -36,30 +35,49 @@ export const ORDER_STATUSES = [
   "accepted",
   "preparing",
   "ready",
+  // delivery orders only: the rider has left with it
+  "out_for_delivery",
   "completed",
   "cancelled",
 ]         ;
 export const orderStatusSchema = z.enum(ORDER_STATUSES);
-                                                          
+
 
 export const ORDER_STATUS_LABELS                              = {
   placed: "Placed",
   accepted: "Accepted",
   preparing: "Preparing",
   ready: "Ready",
+  out_for_delivery: "Out for delivery",
   completed: "Completed",
   cancelled: "Cancelled",
 };
 
-/** Which statuses an order can move to next. */
+/** Which statuses an order can move to next. "Out for delivery" is for delivery orders only — see nextStatusesFor. */
 export const NEXT_STATUSES                                     = {
   placed: ["accepted", "cancelled"],
   accepted: ["preparing", "cancelled"],
   preparing: ["ready", "cancelled"],
-  ready: ["completed"],
+  ready: ["out_for_delivery", "completed"],
+  out_for_delivery: ["completed"],
   completed: [],
   cancelled: [],
 };
+
+/** The statuses an order of this channel can move to next — a takeaway or dine-in order never goes "out for delivery". */
+export function nextStatusesFor(status, channel) {
+  const next = NEXT_STATUSES[status] ?? [];
+  return channel === "delivery" ? next : next.filter((s) => s !== "out_for_delivery");
+}
+
+/** A status as the people of this order say it: a completed delivery is "Delivered". */
+export function statusLabelFor(status, channel) {
+  if (status === "completed" && channel === "delivery") return "Delivered";
+  return ORDER_STATUS_LABELS[status] ?? status;
+}
+
+/** Still being worked on (not finished, not cancelled). */
+export const OPEN_ORDER_STATUSES = ["placed", "accepted", "preparing", "ready", "out_for_delivery"];
 
 /* ------------------------------------------------------------------- cart in */
 
@@ -169,14 +187,28 @@ export class PricingError extends Error {}
  * is responsible for validating the coupon before passing its value here; the
  * engine just folds a trusted number into the totals.
  */
-export function priceCart(cart      , menu      , tax           , extras              = {})              {
+export function priceCart(cart      , menu      , tax           , extras              = {}, opts = {})              {
   const itemsById = new Map(menu.items.map((i) => [i.id, i]));
   const groupsById = new Map(menu.modifierGroups.map((g) => [g.id, g]));
+  const categoriesById = new Map((menu.categories ?? []).map((c) => [c.id, c]));
+  // the moment the food is wanted (a pre-order's pickup time) — what the breakfast-only hours are checked against
+  const at = opts.at ?? Date.now();
+
+  // Counted stock: the whole cart at once (two lines of the same dish, or a dish inside a combo, add up). Stock this
+  // same order already holds (an edit) is counted as still there.
+  for (const [itemId, wanted] of stockNeeds(cart.lines, menu)) {
+    const item = itemsById.get(itemId);
+    const left = (stockLeft(item) ?? 0) + (opts.stockCredit?.get(itemId) ?? 0);
+    if (wanted > left) throw new PricingError(left <= 0 ? `${item.name} is sold out` : `Only ${left} ${item.name} left — reduce the quantity`);
+  }
 
   const lines               = cart.lines.map((line) => {
     const item = itemsById.get(line.itemId);
     if (!item) throw new PricingError("An item in your cart is no longer on the menu");
-    if (!item.isAvailable) throw new PricingError(`${item.name} is sold out`);
+    const why = unavailability(item, { itemsById, categoriesById, at, ignoreTimes: opts.ignoreTimes });
+    if (why?.reason === "time") throw new PricingError(`${item.name} is only available ${describeWindows(windowsForItem(item, categoriesById))}`);
+    if (why?.reason === "combo") throw new PricingError(`${item.name} isn't available right now — part of it is ${why.label === "Sold out" ? "sold out" : "not being served now"}`);
+    if (why) throw new PricingError(`${item.name} is sold out`);
 
     let unitPrice        ;
     let variantLabel                    ;
@@ -204,7 +236,7 @@ export function priceCart(cart      , menu      , tax           , extras        
       unitPrice += opt.priceDelta;
     }
 
-    return {
+    const priced = {
       itemId: item.id,
       name: item.name,
       foodType: item.foodType,
@@ -217,6 +249,10 @@ export function priceCart(cart      , menu      , tax           , extras        
       gstRatePct: item.gstRatePct || tax.defaultGstRatePct,
       note: line.note,
     };
+    // a combo carries what it is made of, so the kitchen ticket can say what to cook (and send each part to its printer)
+    const combo = comboDetails(item, itemsById);
+    if (combo) priced.includes = combo.parts.map((p) => ({ itemId: p.itemId, name: p.name, variantLabel: p.variantLabel, quantity: p.quantity }));
+    return priced;
   });
 
   const totals = totalsFor(lines, tax, extras);

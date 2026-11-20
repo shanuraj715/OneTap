@@ -4,6 +4,8 @@ import { dashboardSettingsSchema } from "./dashboard.js";
 import { effectSchema } from "./effect.js";
 import { featureFlagsSchema } from "./features.js";
 import { shopLocationSchema } from "./geo.js";
+import { feedbackSettingsSchema, menuTimesSchema, upsellSettingsSchema } from "./growth.js";
+import { reservationSettingsSchema } from "./reservations.js";
 import { menuLayoutSchema } from "./homepage.js";
 import { layoutSchema } from "./layout.js";
 import { operationsSchema } from "./operations.js";
@@ -65,6 +67,14 @@ const outletConfigObject = z.object({
   announcement: announcementSchema.default({}),
   /** the promo carousel under the header (its style is `layout.carouselVariant`) — see storefront.js */
   carousel: carouselSchema.default({}),
+  /** table bookings (switched on by features.reservations.enabled) — see reservations.js */
+  reservations: reservationSettingsSchema.default({}),
+  /** ratings after an order — see growth.js */
+  feedback: feedbackSettingsSchema.default({}),
+  /** "goes well with your order" suggestions — see growth.js */
+  upsell: upsellSettingsSchema.default({}),
+  /** dishes with hours (breakfast, lunch…) — see growth.js */
+  menuTimes: menuTimesSchema.default({}),
 });
 
 /**

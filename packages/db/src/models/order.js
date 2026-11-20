@@ -48,6 +48,21 @@ const orderSchema = new Schema(
       default: undefined,
     },
     etaMinutes: { type: Number },
+    // a pre-order: the pickup time the customer chose (null = as soon as possible)
+    scheduledFor: { type: Date, default: null, index: true },
+    // a delivery order's rider, as they were when it was handed over (the rider list can change later)
+    rider: {
+      type: new Schema(
+        { riderId: String, name: String, phone: String, assignedAt: Date, assignedBy: String },
+        { _id: false },
+      ),
+      default: undefined,
+    },
+    // counted stock this order took off the menu (given back if it is cancelled, deleted or never paid for)
+    stockHold: {
+      type: new Schema({ held: Boolean, lines: [new Schema({ itemId: String, quantity: Number }, { _id: false })] }, { _id: false }),
+      default: undefined,
+    },
     note: String,
     // A deleted order is kept (so nothing is lost for good) but hidden from every read and write: see hideDeleted below.
     deletedAt: { type: Date },

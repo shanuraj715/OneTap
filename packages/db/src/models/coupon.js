@@ -22,6 +22,12 @@ const couponSchema = new Schema(
     channels: { type: [String], default: [] },
     active: { type: Boolean, default: true, index: true },
     redemptionCount: { type: Number, default: 0 },
+    // "buy X, get Y free" coupons only
+    buyQty: { type: Number, default: 1 },
+    getQty: { type: Number, default: 1 },
+    itemIds: { type: [String], default: [] },
+    categoryIds: { type: [String], default: [] },
+    maxFreeUnits: { type: Number, default: 0 },
   },
   { timestamps: true },
 );

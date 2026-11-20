@@ -1,12 +1,13 @@
 import { z } from "zod";
 
-export const DISCOUNT_TYPES = ["fixed", "percent"]         ;
+export const DISCOUNT_TYPES = ["fixed", "percent", "bogo"]         ;
 export const discountTypeSchema = z.enum(DISCOUNT_TYPES);
-                                                           
+
 
 export const DISCOUNT_TYPE_LABELS                               = {
   fixed: "Flat amount off",
   percent: "Percentage off",
+  bogo: "Buy X, get Y free",
 };
 
 /**
@@ -44,6 +45,17 @@ export const couponSchema = z.object({
   active: z.boolean().default(true),
   /** running total, maintained by the server on each redemption */
   redemptionCount: z.number().int().min(0).default(0),
+  /* ---- "buy X, get Y free" coupons only (discountType "bogo") ---- */
+  /** how many the customer pays for… */
+  buyQty: z.number().int().min(1).max(10).default(1),
+  /** …and how many more they get free (the cheapest ones) */
+  getQty: z.number().int().min(1).max(10).default(1),
+  /** the dishes it works on; both lists empty = every dish */
+  itemIds: z.array(z.string()).max(200).default([]),
+  /** whole categories it works on (with everything inside them) */
+  categoryIds: z.array(z.string()).max(100).default([]),
+  /** at most this many free dishes on one order; 0 = no cap */
+  maxFreeUnits: z.number().int().min(0).max(100).default(0),
 });
                                                   
 
@@ -130,6 +142,18 @@ export function evaluateCoupon(coupon        , ctx               )              
   let discount        ;
   if (coupon.discountType === "fixed") {
     discount = coupon.value;
+  } else if (coupon.discountType === "bogo") {
+    const units = ctx.eligibleUnitPrices ?? [];
+    const group = coupon.buyQty + coupon.getQty;
+    if (units.length < group) {
+      const short = group - units.length;
+      return deny(
+        units.length === 0
+          ? "This offer is for other dishes — add one of them to use it."
+          : `Add ${short} more of the offer's dishes to get ${coupon.getQty === 1 ? "one" : coupon.getQty} free.`,
+      );
+    }
+    discount = bogoDiscount(units, coupon);
   } else {
     discount = Math.round((ctx.subtotal * coupon.value) / 100);
     if (coupon.maxDiscount > 0) discount = Math.min(discount, coupon.maxDiscount);
@@ -142,10 +166,48 @@ export function evaluateCoupon(coupon        , ctx               )              
   return { ok: true, discount };
 }
 
-/** Short human summary for a coupon chip — "20% off, up to ₹100". */
+/**
+ * "Buy X, get Y free": out of every X + Y eligible dishes in the cart, the Y cheapest are free. `unitPrices` is one
+ * entry per eligible dish (a line of 3 is three entries), in paise. Free dishes are capped by `maxFreeUnits`.
+ */
+export function bogoDiscount(unitPrices, { buyQty, getQty, maxFreeUnits = 0 }) {
+  const group = buyQty + getQty;
+  let free = Math.floor(unitPrices.length / group) * getQty;
+  if (maxFreeUnits > 0) free = Math.min(free, maxFreeUnits);
+  return [...unitPrices].sort((a, b) => a - b).slice(0, free).reduce((sum, p) => sum + p, 0);
+}
+
+/**
+ * The price of every dish in a priced cart that a "buy X get Y" coupon covers — one entry per unit. A coupon with no
+ * dishes and no categories chosen covers the whole menu; a chosen category covers everything inside it too.
+ */
+export function eligibleUnitPrices(coupon, lines, menu) {
+  const itemIds = new Set(coupon.itemIds ?? []);
+  const catIds = new Set(coupon.categoryIds ?? []);
+  const everything = itemIds.size === 0 && catIds.size === 0;
+  const itemsById = new Map((menu?.items ?? []).map((i) => [i.id, i]));
+  const catsById = new Map((menu?.categories ?? []).map((c) => [c.id, c]));
+  const inChosenCategory = (categoryId) => {
+    for (let c = catsById.get(categoryId), guard = 0; c && guard < 12; c = c.parentId ? catsById.get(c.parentId) : null, guard += 1) {
+      if (catIds.has(c.id)) return true;
+    }
+    return false;
+  };
+  const out = [];
+  for (const line of lines) {
+    const item = itemsById.get(line.itemId);
+    const covered = everything || itemIds.has(line.itemId) || (item && inChosenCategory(item.categoryId));
+    if (!covered) continue;
+    for (let n = 0; n < line.quantity; n += 1) out.push(line.unitPrice);
+  }
+  return out;
+}
+
+/** Short human summary for a coupon chip — "20% off, up to ₹100", "Buy 1 get 1 free". */
 export function couponSummary(c                                                                          )         {
   const parts           = [];
   if (c.discountType === "fixed") parts.push(`₹${(c.value / 100).toFixed(0)} off`);
+  else if (c.discountType === "bogo") parts.push(`Buy ${c.buyQty ?? 1} get ${c.getQty ?? 1} free${(c.itemIds?.length || c.categoryIds?.length) ? " on chosen dishes" : ""}`);
   else parts.push(`${c.value}% off${c.maxDiscount ? `, up to ₹${(c.maxDiscount / 100).toFixed(0)}` : ""}`);
   if (c.minOrderValue) parts.push(`min ₹${(c.minOrderValue / 100).toFixed(0)}`);
   return parts.join(" · ");
