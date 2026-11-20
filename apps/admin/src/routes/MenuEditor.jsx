@@ -438,6 +438,8 @@ function ItemPhotos({ outlet, images, persisted, onChange }) {
   const [dragOver, setDragOver] = useState(null);
   // where Ctrl/⌘+V (and a slot's own Paste button) puts a picture — the last section the person clicked
   const [target, setTarget] = useState(DEFAULT_IMAGE_RATIO);
+  // which section is receiving a picture right now — the "Uploading…" label stays there even if another section is clicked
+  const [uploadingRatio, setUploadingRatio] = useState(null);
   // what to tell the person after a paste that couldn't be used (the upload hook reports its own errors)
   const [pasteNote, setPasteNote] = useState(null);
 
@@ -458,6 +460,7 @@ function ItemPhotos({ outlet, images, persisted, onChange }) {
     const replaces = meta.max === 1;
     const files = Array.from(fileList ?? []).slice(0, replaces ? 1 : Math.max(0, imageRoom(images, ratio)));
     if (!files.length) return;
+    setUploadingRatio(ratio);
     try {
       const stored = (await upload(files)).map((s) => ({ ...s, ratio }));
       if (replaces) {
@@ -466,6 +469,8 @@ function ItemPhotos({ outlet, images, persisted, onChange }) {
       } else onChange(limitImages([...of(ratio), ...stored, ...others(ratio)]));
     } catch {
       /* error surfaced by the hook */
+    } finally {
+      setUploadingRatio(null);
     }
   };
 
@@ -579,7 +584,7 @@ function ItemPhotos({ outlet, images, persisted, onChange }) {
                           ) : null}
                           {!isSquare ? (
                             <button type="button" title="Replace with another photo" style={thumbBtn} disabled={busy} onClick={() => inputs.current[ratio]?.click()} data-testid={`replace-photo${idSuffix}`}>
-                              Replace
+                              {busy && uploadingRatio === ratio ? "Uploading…" : "Replace"}
                             </button>
                           ) : null}
                           <button type="button" title="Remove" style={{ ...thumbBtn, marginLeft: "auto" }} onClick={() => remove(im)} data-testid={`remove-photo${idSuffix}`}>
@@ -611,8 +616,8 @@ function ItemPhotos({ outlet, images, persisted, onChange }) {
                       background: dragOver === ratio ? "color-mix(in srgb, var(--color-primary) 8%, var(--color-bg))" : "var(--color-bg)",
                     }}
                   >
-                    {busy && target === ratio ? <Loader size={18} /> : <ImagePlus size={18} />}
-                    <span style={{ fontSize: 11 }}>{busy && target === ratio ? "Uploading…" : isSquare ? "Add photo" : `Add ${meta.label.toLowerCase()} photo`}</span>
+                    {busy && uploadingRatio === ratio ? <Loader size={18} /> : <ImagePlus size={18} />}
+                    <span style={{ fontSize: 11 }} data-testid={busy && uploadingRatio === ratio ? "photo-uploading" : undefined}>{busy && uploadingRatio === ratio ? "Uploading…" : isSquare ? "Add photo" : `Add ${meta.label.toLowerCase()} photo`}</span>
                   </button>
                 ) : null}
 
