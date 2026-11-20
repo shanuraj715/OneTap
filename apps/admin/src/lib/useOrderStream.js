@@ -88,6 +88,12 @@ export function useOrderStream(outlet                    , enabled         )    
           void qc.invalidateQueries({ queryKey: ["orders"] });
           void qc.invalidateQueries({ queryKey: ["order-print-status"] });
         }
+        // a table booking was made or changed (by a guest or another screen)
+        if (event.type === "reservation.changed") {
+          void qc.invalidateQueries({ queryKey: ["reservations"] });
+          void qc.invalidateQueries({ queryKey: ["reservation-summary"] });
+          void qc.invalidateQueries({ queryKey: ["reservation-slots"] });
+        }
         if (event.type === "print.updated") {
           void qc.invalidateQueries({ queryKey: ["order-print-status"] });
           void qc.invalidateQueries({ queryKey: ["print-jobs"] });

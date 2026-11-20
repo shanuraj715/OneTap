@@ -17,6 +17,7 @@ import {
 } from "../lib/useMenu";
 import { CategoriesPanel } from "./menu/CategoriesPanel";
 import { ItemsPanel } from "./menu/ItemsPanel";
+import { ComboEditor, ItemHours, PairsEditor, StockEditor } from "./menu/ItemExtras";
 import { useSelection } from "./menu/shared";
 import { AwesomeLoader, Button, Card, Field, PageHeader, TextInput, Toast } from "../ui";
 
@@ -170,6 +171,11 @@ function ItemForm({
   const [tags, setTags] = useState((item?.tags ?? []).join(", "));
   // which kitchen-ticket printer makes it: "" = the same as its category
   const [prepStation, setPrepStation] = useState(item?.prepStation ?? "");
+  // counted stock, its own hours, what a combo is made of, what goes well with it
+  const [stock, setStock] = useState(item?.stock ?? null);
+  const [availability, setAvailability] = useState(item?.availability ?? null);
+  const [combo, setCombo] = useState(item?.combo ?? null);
+  const [pairsWith, setPairsWith] = useState(item?.pairsWith ?? []);
   // where the dish lives — any category in the tree, so a dish can be placed or moved
   const [catId, setCatId] = useState(item?.categoryId ?? categoryId);
   const categoryChoices = useMemo(
@@ -195,6 +201,11 @@ function ItemForm({
         .map((v) => ({ id: v.id, label: v.label.trim(), price: toPaise(v.price) })),
       modifierGroupIds: groupIds,
       prepStation: prepStation || null,
+      availability,
+      combo: combo?.items?.some((p) => p.itemId) ? { items: combo.items.filter((p) => p.itemId) } : null,
+      pairsWith,
+      // stock only when it was changed here — orders may have changed the count while the form was open
+      ...(JSON.stringify(stock) !== JSON.stringify(item?.stock ?? null) ? { stock } : {}),
     };
     if (item) update.mutate({ id: item.id, body }, { onSuccess: onDone });
     else create.mutate(body, { onSuccess: onDone });
@@ -340,6 +351,11 @@ function ItemForm({
           </div>
         </div>
       )}
+
+      <StockEditor value={stock} onChange={setStock} />
+      <ItemHours value={availability} onChange={setAvailability} />
+      <ComboEditor menu={menu} itemId={item?.id} value={combo} onChange={setCombo} price={variants.length ? Math.min(...variants.map((v) => toPaise(v.price))) : toPaise(basePrice)} />
+      <PairsEditor menu={menu} itemId={item?.id} value={pairsWith} onChange={setPairsWith} />
 
       <div style={{ display: "flex", gap: 10 }}>
         <Button onClick={save} disabled={pending}>

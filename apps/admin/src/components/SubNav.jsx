@@ -1,6 +1,8 @@
 import { NavLink } from "react-router-dom";
 import {
   Bell,
+  Bike,
+  ShoppingCart,
   Boxes,
   Building2,
   CreditCard,
@@ -68,9 +70,11 @@ export const SETTINGS_TABS = [
   { to: "/settings", label: "Outlet Settings", icon: <Building2 size={ICON_SIZE} />, end: true, permission: "settings:update" },
   { to: "/outlets", label: "Outlets", icon: <Store size={ICON_SIZE} />, permission: "outlet:manage" },
   { to: "/payments", label: "Payments", icon: <CreditCard size={ICON_SIZE} />, permission: "payment-config:read" },
+  { to: "/riders", label: "Delivery riders", icon: <Bike size={ICON_SIZE} />, permission: "rider:manage", feature: "delivery" },
   { to: "/notifications", label: "Notifications", icon: <Bell size={ICON_SIZE} />, permission: "notification-config:read", feature: "notifications" },
   // a way to send codes needs WhatsApp chat (your own number) or WhatsApp & SMS alerts (Business API / SMS) — either is enough to see the page
   { to: "/message-sending", label: "Message sending", icon: <RouteIcon size={ICON_SIZE} />, permission: "notification-config:read", feature: ["notifications", "whatsappChat"] },
+  { to: "/cart-reminders", label: "Cart reminders", icon: <ShoppingCart size={ICON_SIZE} />, permission: "settings:update", feature: "cartReminders" },
   { to: "/users", label: "Users & roles", icon: <UsersIcon size={ICON_SIZE} />, permission: "user:read" },
   { to: "/dashboard-config", label: "Configure dashboard", icon: <LayoutGrid size={ICON_SIZE} />, permission: "dashboard:configure" },
 ];

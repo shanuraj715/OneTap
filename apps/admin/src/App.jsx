@@ -51,6 +51,10 @@ import {
   MessageCircle,
   ClipboardList,
   Route as RouteIcon,
+  CalendarDays,
+  Star,
+  Bike,
+  ShoppingCart,
 } from "lucide-react";
 import { useAuth, useLogout } from "./lib/useAuth";
 import { OutletSelectionProvider, useOpenStore, useOutlets } from "./lib/useOutlet";
@@ -97,6 +101,11 @@ import { Printing } from "./routes/Printing";
 import { TableCards } from "./routes/cards/TableCards";
 import { Tables } from "./routes/Tables";
 import { Settings } from "./routes/Settings";
+import { Reservations } from "./routes/Reservations";
+import { Feedback } from "./routes/Feedback";
+import { Riders } from "./routes/Riders";
+import { CartReminders } from "./routes/CartReminders";
+import { useReservationSummary } from "./lib/useGrowth";
 import { StorePageEditor } from "./routes/StorePageEditor";
 import { StorePages } from "./routes/StorePages";
 import { StoreDisabled } from "./routes/StoreDisabled";
@@ -162,6 +171,10 @@ const ROUTE_META = {
   "/theme": { title: "Theme", icon: Palette },
   "/typography": { title: "Typography", icon: Type },
   "/settings": { title: "Settings", icon: SettingsIcon },
+  "/reservations": { title: "Table bookings", icon: CalendarDays },
+  "/feedback": { title: "Ratings", icon: Star },
+  "/riders": { title: "Delivery riders", icon: Bike },
+  "/cart-reminders": { title: "Cart reminders", icon: ShoppingCart },
   "/outlets": { title: "Outlets", icon: Building2 },
   "/dashboard-config": { title: "Configure dashboard", icon: LayoutGrid },
   "/users": { title: "Users & roles", icon: UsersIcon },
@@ -198,6 +211,7 @@ const NAV_GROUPS = [
       { to: "/take-order", label: "Take order", icon: <ConciergeBell size={ICON} />, permission: "order:create" },
       { to: "/", label: "Dashboard", icon: <LayoutDashboard size={ICON} />, end: true },
       { to: "/orders", label: "Orders", icon: <ReceiptText size={ICON} />, permission: "order:read" },
+      { to: "/reservations", label: "Bookings", icon: <CalendarDays size={ICON} />, permission: "reservation:read", feature: "reservations", badgeKey: "pendingBookings" },
       { to: "/menu", label: "Menu", icon: <UtensilsCrossed size={ICON} />, permission: "menu:read" },
       family("Tables", <QrCode size={ICON} />, TABLES_TABS),
       { to: "/printing", label: "Printing", icon: <Printer size={ICON} />, permission: "printer:read", feature: "printing" },
@@ -210,6 +224,7 @@ const NAV_GROUPS = [
     items: [
       { to: "/analytics/overview", label: "Analytics", icon: <BarChart3 size={ICON} />, permission: "analytics:read", feature: "analytics", matchPaths: ["/analytics"] },
       { to: "/customers", label: "Customers", icon: <UsersIcon size={ICON} />, permission: "customer:read" },
+      { to: "/feedback", label: "Ratings", icon: <Star size={ICON} />, permission: "feedback:read", feature: "feedback" },
       { to: "/marketing/new", label: "Marketing", icon: <Send size={ICON} />, permission: "marketing:read", feature: "marketing", matchPaths: ["/marketing"] },
       // shown to whoever the owner gave chat access (see WhatsApp → Access), when the plan includes it
       { to: "/whatsapp/chats", label: "WhatsApp", icon: <MessageCircle size={ICON} />, feature: "whatsappChat", whatsapp: true, badgeKey: "waUnread", matchPaths: ["/whatsapp"] },
@@ -373,7 +388,9 @@ function Shell({ can }                                     ) {
   // WhatsApp: the signed-in person's chat access, and how many chats have unread messages
   const waMe = useWaMe();
   const waLevel = platformMode ? "none" : (waMe.data?.level ?? "none");
-  const badges = { newLeads, waUnread: waMe.data?.unreadChats ?? 0 };
+  // table bookings waiting to be confirmed
+  const bookingsBadge = useReservationSummary(outlet, !platformMode && can("reservation:read") && storePlan.hasFeature("reservations")).data?.pending ?? 0;
+  const badges = { newLeads, waUnread: waMe.data?.unreadChats ?? 0, pendingBookings: bookingsBadge };
 
   const groups = (platformMode ? PLATFORM_NAV_GROUPS : NAV_GROUPS)
     .map((g) => ({
@@ -631,6 +648,10 @@ function Shell({ can }                                     ) {
             <Route path="/theme" element={<ThemeEditor />} />
             <Route path="/typography" element={<TypographyEditor />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/reservations" element={<Reservations />} />
+            <Route path="/feedback" element={<Feedback />} />
+            <Route path="/riders" element={<Riders />} />
+            <Route path="/cart-reminders" element={<CartReminders />} />
             <Route path="/outlets" element={<Outlets />} />
             <Route path="/dashboard-config" element={<DashboardConfig />} />
             <Route path="/users" element={<Users />} />

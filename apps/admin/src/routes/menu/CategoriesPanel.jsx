@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { categoryHeight, categoryLevel, categorySubtreeIds, flattenCategories, cleanCategoryName, duplicateCategoryName, IMAGE_RULES, MAX_CATEGORIES_AT_ONCE, MAX_CATEGORY_DEPTH, planCategoryMove, PREP_STATION_LABELS } from "@onetap/config-schema";
 import { ArrowDown, ArrowUp, Download, FolderPlus, GripVertical, ImagePlus, Loader, Minus, MoreHorizontal, Pencil, Plus, Trash2, X } from "lucide-react";
 import * as api from "../../lib/api";
+import { HoursEditor } from "./ItemExtras";
 import { useCreateCategories, useCreateCategory, useDeleteCategories, useMoveCategory, useReorderCategories, useUpdateCategory } from "../../lib/useMenu";
 import { useImageUpload } from "../../lib/useStorage";
 import { Button, Card, Checkbox, Field, Menu, Modal, TextInput, Toast } from "../../ui";
@@ -369,6 +370,8 @@ function CategoryDialog({ outlet, menu, dialog, onClose }) {
   const [isActive, setIsActive] = useState(editing.isActive ?? true);
   // which kitchen-ticket printer makes what is in here: "" = the same as the category it is inside (else the kitchen)
   const [prepStation, setPrepStation] = useState(editing.prepStation ?? "");
+  // the hours everything inside can be ordered (null = same as the category it is inside)
+  const [availability, setAvailability] = useState(editing.availability ?? null);
   const [uploaded, setUploaded] = useState([]); // pictures uploaded in this dialog (cleaned up if not saved)
   const update = useUpdateCategory(outlet);
   const { upload, busy, error: uploadError, clearError } = useImageUpload(outlet, { kind: "menu-categories" });
@@ -416,7 +419,7 @@ function CategoryDialog({ outlet, menu, dialog, onClose }) {
 
   const save = () => {
     if (!name.trim()) return;
-    const body = { name: cleanCategoryName(name), parentId: parentId || null, image: image ? { url: image.url, key: image.key ?? "", width: image.width, height: image.height } : null, isActive, prepStation: prepStation || null };
+    const body = { name: cleanCategoryName(name), parentId: parentId || null, image: image ? { url: image.url, key: image.key ?? "", width: image.width, height: image.height } : null, isActive, prepStation: prepStation || null, availability };
     update.mutate({ id: editing.id, body }, { onSuccess: onClose });
   };
 
@@ -453,6 +456,12 @@ function CategoryDialog({ outlet, menu, dialog, onClose }) {
             ))}
           </select>
         </Field>
+
+        <div>
+          <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 4 }}>Hours</div>
+          <div style={{ fontSize: 12, color: "var(--color-text-muted)", marginBottom: 8, lineHeight: 1.5 }}>When everything in here can be ordered — a Breakfast category only in the morning. A dish can still have its own hours.</div>
+          <HoursEditor value={availability} onChange={setAvailability} inheritLabel="Same as the category it is inside (any time)" testId="category-hours" />
+        </div>
 
         <div>
           <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Picture</div>

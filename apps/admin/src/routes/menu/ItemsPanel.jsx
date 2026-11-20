@@ -99,8 +99,24 @@ export function ItemsPanel({ outlet, menu, categoryId, onNew, onEdit, onImport, 
                   {it.variants.length > 1 ? ` · ${it.variants.length} sizes` : ""}
                   {it.modifierGroupIds.length ? ` · ${it.modifierGroupIds.length} add-on group` : ""}
                   {it.categoryId !== categoryId ? ` · in ${categoryPathLabel(categories, it.categoryId)}` : ""}
+                  {it.combo ? " · combo" : ""}
+                  {it.availability ? " · has hours" : ""}
                 </div>
               </div>
+              {it.stock?.tracked ? (
+                <button
+                  type="button"
+                  data-testid="item-stock-chip"
+                  title="Change how many are left"
+                  onClick={() => {
+                    const n = window.prompt(`How many ${it.name} are left?`, String(it.stock.left));
+                    if (n !== null && Number.isFinite(Number(n)) && Number(n) >= 0) update.mutate({ id: it.id, body: { stock: { ...it.stock, left: Math.round(Number(n)) } } });
+                  }}
+                  style={{ ...stockChip, ...(it.stock.left <= 0 ? stockOut : it.stock.left <= it.stock.lowAt ? stockLow : {}) }}
+                >
+                  {it.stock.left <= 0 ? "Sold out" : `${it.stock.left} left`}
+                </button>
+              ) : null}
               <label style={{ fontSize: 12, display: "flex", gap: 5, alignItems: "center" }}>
                 <input type="checkbox" checked={it.isAvailable} onChange={(e) => update.mutate({ id: it.id, body: { isAvailable: e.target.checked } })} />
                 available
@@ -188,3 +204,7 @@ const itemRow = {
   borderRadius: 8,
   background: "var(--color-bg)",
 };
+// counted stock on a dish row: plain when there's plenty, amber when running low, red when sold out
+const stockChip = { font: "inherit", fontSize: 11.5, fontWeight: 700, padding: "3px 8px", borderRadius: 999, border: "1px solid var(--color-border)", background: "var(--color-surface)", color: "var(--color-text)", cursor: "pointer", whiteSpace: "nowrap" };
+const stockLow = { background: "var(--tone-warning-wash)", color: "var(--tone-warning)", borderColor: "transparent" };
+const stockOut = { background: "var(--tone-danger-wash)", color: "var(--tone-danger)", borderColor: "transparent" };

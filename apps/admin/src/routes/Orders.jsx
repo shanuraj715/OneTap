@@ -4,11 +4,14 @@ import { useQuery } from "@tanstack/react-query";
 import {
   formatElapsed,
   formatINR,
-  NEXT_STATUSES,
+  formatWhen,
+  nextStatusesFor,
+  OPEN_ORDER_STATUSES,
   ORDER_CHANNELS,
   ORDER_STATUS_LABELS,
   ORDER_STATUSES,
   PLACED_BY_LABELS,
+  statusLabelFor,
   statusSince,
                       
                     
@@ -59,6 +62,7 @@ import { useActiveSessions, useMoveSession, useTables } from "../lib/useTables";
 import { usePrinters, usePrintOrderOn } from "../lib/usePrinting";
 import { useSlaAlerts } from "../lib/useSlaAlerts";
 import { useManualStatus } from "../lib/useOrders";
+import { RiderDialog } from "./orders/RiderDialog";
 import { AwesomeLoader, Button, Card, Empty, IconChip, Menu, Modal, MultiFilter, Pill, Select, Table, Td, TextInput, Th, Toast } from "../ui";
 import { OrderEditModal } from "./orders/OrderEditModal";
 import { TableOverviewModal } from "./orders/TableOverviewModal";
@@ -90,7 +94,7 @@ function loadPageSize()         {
   }
 }
 
-const OPEN_STATUSES                = ["placed", "accepted", "preparing", "ready"];
+const OPEN_STATUSES = OPEN_ORDER_STATUSES;
 
                                                                                         
                                                                 
@@ -120,6 +124,7 @@ const STATUS_TONE                                                               
   accepted: "info",
   preparing: "info",
   ready: "warn",
+  out_for_delivery: "info",
   completed: "ok",
   cancelled: "neutral",
 };
@@ -134,6 +139,7 @@ const ACTION_COLOR                              = {
   accepted: "var(--tone-info)",
   preparing: "var(--tone-warning)",
   ready: "var(--tone-success)",
+  out_for_delivery: "var(--tone-info)",
   completed: "var(--tone-success)",
   cancelled: "var(--tone-danger)",
 };
@@ -180,7 +186,9 @@ export function Orders() {
   const [expanded, setExpanded] = useState             (new Set());
   const [showShortcuts, setShowShortcuts] = useState(false);
   const [showTables, setShowTables] = useState(false);
-  const [confirming, setConfirming] = useState                                                                    (null);
+  const [confirming, setConfirming] = useState(null);
+  // a delivery order going out (or changing rider): who is taking it
+  const [riderFor, setRiderFor] = useState(null);
   const [pageSize, setPageSize] = useState(loadPageSize);
   const [page, setPage] = useState(1);
 
@@ -530,7 +538,8 @@ export function Orders() {
                     return next;
                   })
                 }
-                onRequestStatus={(status, isManual) => setConfirming({ order, status, manual: isManual })}
+                onRequestStatus={(status, isManual) => (status === "out_for_delivery" && !isManual ? setRiderFor({ order, sendOut: true }) : setConfirming({ order, status, manual: isManual }))}
+                onChangeRider={() => setRiderFor({ order, sendOut: false })}
                 onPrint={(printerId) => printOn.mutate({ orderId: order.id, printerId })}
                 onEdit={() => setEditing(order)}
                 onDelete={() => {
@@ -604,6 +613,8 @@ export function Orders() {
         />
       ) : null}
 
+      {riderFor && outlet ? <RiderDialog outlet={outlet} order={riderFor.order} sendOut={riderFor.sendOut} canManageRiders={can("rider:manage")} onClose={() => setRiderFor(null)} /> : null}
+
       {deleting ? (
         <DeleteOrderDialog
           order={deleting}
@@ -642,6 +653,7 @@ function OrderRow({
   onPrint,
   onEdit,
   onDelete,
+  onChangeRider,
 }   
                     
                      
@@ -659,7 +671,7 @@ function OrderRow({
                                        
                      
  ) {
-  const next = NEXT_STATUSES[order.status].filter((s) => s !== "cancelled");
+  const next = nextStatusesFor(order.status, order.channel).filter((s) => s !== "cancelled");
   const primary = next[0];
   const Icon = CHANNEL_ICON[order.channel] ?? Store;
   const elapsed = statusSince(order);
@@ -722,6 +734,11 @@ function OrderRow({
         <span style={{ display: "block", fontSize: 11, color: "var(--color-text-muted)" }}>
           {new Date(order.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
         </span>
+        {order.scheduledFor ? (
+          <span style={preorderTag} title="A pre-order: the customer collects it at this time" data-testid="order-preorder">
+            <Clock size={10} aria-hidden /> {formatWhen(order.scheduledFor)}
+          </span>
+        ) : null}
       </Td>
 
       <Td>
@@ -770,7 +787,12 @@ function OrderRow({
       </Td>
 
       <Td>
-        <Pill tone={STATUS_TONE[order.status]}>{ORDER_STATUS_LABELS[order.status]}</Pill>
+        <Pill tone={STATUS_TONE[order.status]}>{statusLabelFor(order.status, order.channel)}</Pill>
+        {order.status === "out_for_delivery" && order.rider?.name ? (
+          <span style={{ display: "block", fontSize: 11, color: "var(--color-text-muted)", marginTop: 3, whiteSpace: "nowrap" }} data-testid="order-rider">
+            with {order.rider.name}
+          </span>
+        ) : null}
         {breach ? (
           <span style={{ display: "block", fontSize: 10.5, color: "var(--tone-danger)", fontWeight: 700, marginTop: 3 }}>
             {breach.waitedMinutes}m — over {breach.limitMinutes}m limit
@@ -802,7 +824,7 @@ function OrderRow({
         >
           {canUpdate && primary ? (
             <Button onClick={() => onRequestStatus(primary, false)} style={actionStyle(primary)}>
-              {order.channel === "dine-in" && primary === "accepted" ? "Approve" : ORDER_STATUS_LABELS[primary]}
+              {order.channel === "dine-in" && primary === "accepted" ? "Approve" : statusLabelFor(primary, order.channel)}
             </Button>
           ) : null}
 
@@ -811,9 +833,9 @@ function OrderRow({
             <Menu
               header="Set status manually"
               selected={order.status}
-              options={ORDER_STATUSES.map((s) => ({
+              options={ORDER_STATUSES.filter((s) => s !== "out_for_delivery" || order.channel === "delivery").map((s) => ({
                 value: s,
-                label: ORDER_STATUS_LABELS[s],
+                label: statusLabelFor(s, order.channel),
                 description: s === order.status ? "Current" : undefined,
                 danger: s === "cancelled",
               }))}
@@ -896,7 +918,24 @@ function OrderRow({
                 label="Placed at"
                 value={new Date(order.createdAt).toLocaleString([], { dateStyle: "medium", timeStyle: "short" })}
               />
-              {order.etaMinutes ? <Fact icon={<Timer size={13} />} label="Quoted ETA" value={`${order.etaMinutes} min`} /> : null}
+              {order.scheduledFor ? <Fact icon={<Clock size={13} />} label="Pre-order — pickup" value={formatWhen(order.scheduledFor)} tone="warn" /> : null}
+              {order.etaMinutes && !order.scheduledFor ? <Fact icon={<Timer size={13} />} label="Quoted ETA" value={`${order.etaMinutes} min`} /> : null}
+              {order.channel === "delivery" ? (
+                <Fact
+                  icon={<Bike size={13} />}
+                  label="Rider"
+                  value={
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 8, flexWrap: "wrap" }} onClick={(e) => e.stopPropagation()} role="presentation">
+                      <span data-testid="order-rider-fact">{order.rider?.name ? `${order.rider.name}${order.rider.phone ? ` · ${order.rider.phone}` : ""}` : "Not given yet"}</span>
+                      {canUpdate && ["ready", "out_for_delivery"].includes(order.status) && order.rider?.name ? (
+                        <button type="button" style={linkish} onClick={onChangeRider} data-testid="order-change-rider">
+                          Change
+                        </button>
+                      ) : null}
+                    </span>
+                  }
+                />
+              ) : null}
               {order.couponCode ? (
                 <Fact
                   icon={<Tag size={13} />}
@@ -1247,7 +1286,7 @@ function ConfirmDialog({
           {isCancel ? <X size={19} /> : <CheckCircle2 size={19} />}
         </span>
         <h3 style={{ margin: "12px 0 4px", fontSize: 16, fontFamily: "var(--font-heading)" }}>
-          {isCancel ? `Cancel order #${order.orderNumber}?` : `Mark order #${order.orderNumber} as ${ORDER_STATUS_LABELS[toStatus]}?`}
+          {isCancel ? `Cancel order #${order.orderNumber}?` : `Mark order #${order.orderNumber} as ${statusLabelFor(toStatus, order.channel)}?`}
         </h3>
         <p style={{ margin: 0, fontSize: 13, color: "var(--color-text-muted)", lineHeight: 1.5 }}>
           {isCancel
@@ -1532,6 +1571,10 @@ const iconBtn                = {
   cursor: "pointer",
   flexShrink: 0,
 };
+// a pre-order's pickup time under the order number
+const preorderTag = { display: "inline-flex", alignItems: "center", gap: 3, marginTop: 3, padding: "1px 6px", borderRadius: 999, fontSize: 10.5, fontWeight: 700, whiteSpace: "nowrap", color: "var(--tone-warning)", background: "var(--tone-warning-wash)" };
+const linkish = { font: "inherit", fontSize: 12, fontWeight: 700, padding: 0, border: "none", background: "none", color: "var(--color-primary)", cursor: "pointer" };
+
 const noteFlag                = {
   display: "inline-grid",
   placeItems: "center",

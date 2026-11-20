@@ -33,7 +33,7 @@ export function MenuBrowser({ menu, lines, onCustomise, onAddPlain, onSetPlainQt
       .map((c) => ({
         cat: c,
         // sold-out dishes stay visible (staff get asked for them) but sink to the bottom
-        items: items.filter((i) => i.categoryId === c.id).sort((a, b) => Number(b.isAvailable) - Number(a.isAvailable) || a.sortOrder - b.sortOrder),
+        items: items.filter((i) => i.categoryId === c.id).sort((a, b) => Number(b.isAvailable && !(b.stock?.tracked && b.stock.left <= 0)) - Number(a.isAvailable && !(a.stock?.tracked && a.stock.left <= 0)) || a.sortOrder - b.sortOrder),
       }))
       .filter((s) => s.items.length > 0);
   }, [menu, categories, q]);
@@ -117,7 +117,8 @@ export function MenuBrowser({ menu, lines, onCustomise, onAddPlain, onSetPlainQt
 
 function ItemCard({ item, count, plainQty, onCustomise, onAddPlain, onSetPlainQty }) {
   const custom = isCustomisable(item);
-  const soldOut = !item.isAvailable;
+  // switched off, or counted stock at 0 (a dish outside its hours can still be sold at the counter)
+  const soldOut = !item.isAvailable || (item.stock?.tracked && item.stock.left <= 0);
   const img = item.images?.[0]?.url;
   const price = itemFromPrice(item);
 

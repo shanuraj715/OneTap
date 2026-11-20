@@ -888,3 +888,31 @@ export async function onboardingPdf(id) {
   const name = /filename="?([^"]+)"?/.exec(res.headers.get("content-disposition") ?? "")?.[1] ?? "onboarding.pdf";
   return { blob: await res.blob(), filename: name };
 }
+
+/* ------------------------------------------------------------- riders, bookings, ratings, cart reminders */
+
+/** Hand a delivery order to a rider (from the list, or a name + phone typed in) — `sendOut` also marks it Out for delivery. */
+export const assignRider = (o, id, body) => req(`/api/orders/${id}/rider`, { method: "PATCH", body: JSON.stringify(body), outletId: o._id });
+
+export const listRiders = (o) => req("/api/riders", { outletId: o._id });
+export const createRider = (o, body) => req("/api/riders", { method: "POST", body: JSON.stringify(body), outletId: o._id });
+export const updateRider = (o, id, body) => req(`/api/riders/${id}`, { method: "PATCH", body: JSON.stringify(body), outletId: o._id });
+export const deleteRider = (o, id) => req(`/api/riders/${id}`, { method: "DELETE", outletId: o._id });
+
+export const listReservations = (o, day) => req(`/api/reservations?day=${encodeURIComponent(day ?? "")}`, { outletId: o._id });
+export const reservationSummary = (o) => req("/api/reservations/summary", { outletId: o._id });
+export const reservationAvailability = (o, day, party) =>
+  req(`/api/reservations/availability?outletId=${encodeURIComponent(o._id)}&day=${encodeURIComponent(day ?? "")}&party=${party ?? 2}`);
+export const createStaffReservation = (o, body) => req("/api/reservations/staff", { method: "POST", body: JSON.stringify(body), outletId: o._id });
+export const updateReservation = (o, id, body) => req(`/api/reservations/${id}`, { method: "PATCH", body: JSON.stringify(body), outletId: o._id });
+
+export const listFeedback = (o, { days = 30, stars = [], withComment = false, before } = {}) => {
+  const q = new URLSearchParams({ days: String(days) });
+  if (stars.length) q.set("stars", stars.join(","));
+  if (withComment) q.set("withComment", "1");
+  if (before) q.set("before", new Date(before).toISOString());
+  return req(`/api/feedback?${q}`, { outletId: o._id });
+};
+
+export const getCartReminders = (o) => req("/api/cart-reminders", { outletId: o._id });
+export const saveCartReminders = (o, body) => req("/api/cart-reminders", { method: "PUT", body: JSON.stringify(body), outletId: o._id });

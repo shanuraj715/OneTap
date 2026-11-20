@@ -14,6 +14,7 @@ import { Plus, Tag, Trash2, X } from "lucide-react";
 import * as api from "../lib/api";
                                          
 import { useAuth } from "../lib/useAuth";
+import { useMenu } from "../lib/useMenu";
 import { useOutlet } from "../lib/useOutlet";
 import { Button, Card, Checkbox, Empty, Field, InfoHint, Note, PageHeader, Pill, Select, Table, Td, TextInput, Th, Toast } from "../ui";
 
@@ -106,7 +107,7 @@ export function Coupons() {
                 </Td>
                 <Td>
                   <strong>
-                    {c.discountType === "fixed" ? `${formatINR(c.value)} off` : `${c.value}% off`}
+                    {c.discountType === "fixed" ? `${formatINR(c.value)} off` : c.discountType === "bogo" ? `Buy ${c.buyQty} get ${c.getQty} free` : `${c.value}% off`}
                   </strong>
                   {c.discountType === "percent" && c.maxDiscount ? (
                     <span style={{ display: "block", fontSize: 11.5, color: "var(--color-text-muted)" }}>
@@ -191,6 +192,11 @@ const BLANK              = {
   newCustomersOnly: false,
   channels: [],
   active: true,
+  buyQty: 1,
+  getQty: 1,
+  itemIds: [],
+  categoryIds: [],
+  maxFreeUnits: 0,
 };
 
 /** ISO string ⇄ the value a <input type="datetime-local"> wants. */
@@ -221,6 +227,11 @@ function CouponEditor({ outlet, coupon, onClose }                               
           newCustomersOnly: coupon.newCustomersOnly,
           channels: coupon.channels,
           active: coupon.active,
+          buyQty: coupon.buyQty ?? 1,
+          getQty: coupon.getQty ?? 1,
+          itemIds: coupon.itemIds ?? [],
+          categoryIds: coupon.categoryIds ?? [],
+          maxFreeUnits: coupon.maxFreeUnits ?? 0,
         }
       : BLANK,
   );
@@ -247,6 +258,10 @@ function CouponEditor({ outlet, coupon, onClose }                               
         value: form.value ?? 0,
         maxDiscount: form.maxDiscount ?? 0,
         minOrderValue: form.minOrderValue ?? 0,
+        buyQty: form.buyQty,
+        getQty: form.getQty,
+        itemIds: form.itemIds,
+        categoryIds: form.categoryIds,
       }),
     [form],
   );
@@ -298,13 +313,25 @@ function CouponEditor({ outlet, coupon, onClose }                               
         <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
           <Field label="Type" style={narrow} info="A flat amount off, or a percentage of the item total.">
             <Select value={form.discountType} onChange={(e) => set({ discountType: e.target.value                 })}>
-              {(["fixed", "percent"]                  ).map((d) => (
+              {(["fixed", "percent", "bogo"]).map((d) => (
                 <option key={d} value={d}>{DISCOUNT_TYPE_LABELS[d]}</option>
               ))}
             </Select>
           </Field>
 
-          {form.discountType === "fixed" ? (
+          {form.discountType === "bogo" ? (
+            <>
+              <Field label="Customer buys" style={narrow} info="How many of the offer's dishes they pay for.">
+                <TextInput type="number" min={1} max={10} value={form.buyQty} onChange={(e) => set({ buyQty: Math.max(1, Math.min(10, Number(e.target.value) || 1)) })} aria-label="Customer buys" />
+              </Field>
+              <Field label="…and gets free" style={narrow} info="How many more come free — always the cheapest ones in the cart.">
+                <TextInput type="number" min={1} max={10} value={form.getQty} onChange={(e) => set({ getQty: Math.max(1, Math.min(10, Number(e.target.value) || 1)) })} aria-label="Gets free" />
+              </Field>
+              <Field label="Most free per order" style={narrow} info="0 = no cap. With buy 1 get 1 and no cap, 6 momos means 3 free.">
+                <TextInput type="number" min={0} max={100} value={form.maxFreeUnits} onChange={(e) => set({ maxFreeUnits: Math.max(0, Number(e.target.value) || 0) })} aria-label="Most free per order" />
+              </Field>
+            </>
+          ) : form.discountType === "fixed" ? (
             <Field label="Amount off (₹)" style={narrow} info="Rupees taken off the item total. Can't exceed the order value — a bigger fixed discount just brings the order to zero.">
               <TextInput type="number" min={1} value={rupees(form.value)} onChange={(e) => set({ value: paise(e.target.value) })} />
             </Field>
@@ -327,6 +354,8 @@ function CouponEditor({ outlet, coupon, onClose }                               
             <TextInput type="number" min={0} value={rupees(form.minOrderValue)} onChange={(e) => set({ minOrderValue: paise(e.target.value) })} />
           </Field>
         </div>
+
+        {form.discountType === "bogo" ? <BogoDishes outlet={outlet} form={form} set={set} /> : null}
 
         <fieldset style={fieldset}>
           <legend style={legend}>
@@ -451,6 +480,56 @@ const xBtn                = {
   cursor: "pointer",
   flexShrink: 0,
 };
+/**
+ * What a "buy X get Y free" coupon works on: every dish, whole categories (with everything inside them), or chosen
+ * dishes. Free dishes are always the cheapest of the ones it covers.
+ */
+function BogoDishes({ outlet, form, set }) {
+  const menu = useMenu(outlet);
+  const [q, setQ] = useState("");
+  const mode = form.itemIds.length ? "items" : form.categoryIds.length ? "categories" : "all";
+  const [shown, setShown] = useState(mode);
+  const categories = (menu.data?.categories ?? []).filter((c) => !q || c.name.toLowerCase().includes(q.toLowerCase()));
+  const items = (menu.data?.items ?? []).filter((i) => !i.combo && (!q || i.name.toLowerCase().includes(q.toLowerCase())));
+  const toggle = (key, id) => set({ [key]: form[key].includes(id) ? form[key].filter((x) => x !== id) : [...form[key], id] });
+  const pick = (m) => {
+    setShown(m);
+    if (m === "all") set({ itemIds: [], categoryIds: [] });
+    if (m === "categories") set({ itemIds: [] });
+    if (m === "items") set({ categoryIds: [] });
+  };
+  return (
+    <fieldset style={fieldset} data-testid="bogo-dishes">
+      <legend style={legend}>Works on</legend>
+      <div style={{ display: "flex", gap: 14, flexWrap: "wrap", fontSize: 13 }}>
+        {[["all", "Every dish"], ["categories", "Chosen categories"], ["items", "Chosen dishes"]].map(([m, label]) => (
+          <label key={m} style={{ display: "inline-flex", gap: 6, alignItems: "center", cursor: "pointer" }}>
+            <input type="radio" checked={shown === m} onChange={() => pick(m)} /> {label}
+          </label>
+        ))}
+      </div>
+      {shown !== "all" ? (
+        <>
+          <TextInput value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search…" style={{ margin: "10px 0 8px" }} aria-label="Search the menu" />
+          <div style={{ maxHeight: 200, overflowY: "auto", display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(190px, 1fr))", gap: 6 }}>
+            {(shown === "categories" ? categories : items).map((x) => {
+              const key = shown === "categories" ? "categoryIds" : "itemIds";
+              return (
+                <label key={x.id} style={{ display: "inline-flex", gap: 6, alignItems: "center", fontSize: 13, cursor: "pointer" }}>
+                  <input type="checkbox" checked={form[key].includes(x.id)} onChange={() => toggle(key, x.id)} /> {x.name}
+                </label>
+              );
+            })}
+          </div>
+          <p style={{ margin: "8px 0 0", fontSize: 12, color: "var(--color-text-muted)" }}>
+            {shown === "categories" ? `${form.categoryIds.length} chosen — everything inside them counts.` : `${form.itemIds.length} chosen.`}
+          </p>
+        </>
+      ) : null}
+    </fieldset>
+  );
+}
+
 const fieldset                = { border: "1px solid var(--color-border)", borderRadius: 10, padding: "12px 14px 14px", margin: "14px 0" };
 const legend                = { fontSize: 12.5, fontWeight: 600, padding: "0 6px", display: "inline-flex", alignItems: "center", gap: 6 };
 const narrow                = { maxWidth: 180, flex: "1 1 150px" };

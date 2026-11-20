@@ -18,6 +18,9 @@ import {
   ShoppingCart,
   ToggleLeft,
   Truck,
+  CalendarDays,
+  Star,
+  Sparkles,
 } from "lucide-react";
 import { useOutlet, usePatchConfig } from "../lib/useOutlet";
 import { useAuth } from "../lib/useAuth";
@@ -123,6 +126,11 @@ export function Settings() {
     setDraft({ ...draft, capacity: { ...draft.capacity, ...patchValue } });
     setDirty(true);
   };
+  /** one top-level config area (reservations, feedback, upsell, menuTimes) */
+  const setArea = (area, patchValue) => {
+    setDraft({ ...draft, [area]: { ...draft[area], ...patchValue } });
+    setDirty(true);
+  };
 
   const save = () =>
     patch.mutate(
@@ -134,6 +142,10 @@ export function Settings() {
           features: draft.features,
           wallet: draft.wallet,
           capacity: draft.capacity,
+          reservations: draft.reservations,
+          feedback: draft.feedback,
+          upsell: draft.upsell,
+          menuTimes: draft.menuTimes,
           // the favicon is one for the whole store — sent only when the plan includes it
           ...(hasFeature("favicon") ? { branding: draft.branding } : {}),
         },
@@ -168,6 +180,8 @@ export function Settings() {
           { id: "kitchen", label: "Kitchen & delivery", icon: <ChefHat size={14} /> },
           { id: "receipts", label: "Receipts & charges", icon: <Receipt size={14} /> },
           { id: "features", label: "Features", icon: <ToggleLeft size={14} /> },
+          { id: "bookings", label: "Pre-orders & bookings", icon: <CalendarDays size={14} /> },
+          { id: "growth", label: "Ratings & suggestions", icon: <Star size={14} /> },
           { id: "wallet", label: "Coin wallet", icon: <Coins size={14} /> },
           { id: "capacity", label: "Load management", icon: <Gauge size={14} /> },
         ]}
@@ -309,8 +323,10 @@ export function Settings() {
           <Card title="Missed-order alerts" subtitle="Warn the counter when an order has been sitting too long." icon={<AlarmClock size={15} />}>
             <Note icon={<Bell size={15} />}>
               A missed order is the most expensive thing that can go wrong in a shift — the customer is waiting, nobody
-              knows, and the first sign of trouble is a complaint. These limits turn that into a warning on the Orders
-              screen. The warning never blocks the list; staff can keep working straight through it.
+              knows, and the first sign of trouble is a complaint. Two limits turn that into a red warning on the Orders
+              screen: an order <strong>nobody has accepted</strong>, and an order that has been <strong>cooking too
+              long</strong> (its timer starts when it reaches Preparing). Accepted, Ready and Completed orders never
+              warn. The warning never blocks the list; staff can keep working straight through it.
             </Note>
 
             <Checkbox
@@ -333,30 +349,12 @@ export function Settings() {
                       <TextInput type="number" min={1} max={240} value={ops.sla.acceptMinutes} onChange={(e) => setOps("sla", { acceptMinutes: Number(e.target.value) || 1 })} />
                     </Field>
                     <Field
-                      label="Start cooking within (minutes)"
-                      hint="Accepted → preparing"
-                      info="An order can be accepted and then forgotten before anyone actually starts it. This catches that gap."
-                      style={narrow}
-                    >
-                      <TextInput type="number" min={1} max={240} value={ops.sla.startMinutes} onChange={(e) => setOps("sla", { startMinutes: Number(e.target.value) || 1 })} />
-                    </Field>
-                  </Row>
-                  <Row>
-                    <Field
                       label="Finish cooking within (minutes)"
-                      hint="Preparing → ready"
-                      info="How long the food may be in preparation before the kitchen counts as running late. Set it a little above your genuine worst case, or it will cry wolf during every rush."
+                      hint="Time in Preparing before the warning"
+                      info="How long an order may stay in Preparing before the kitchen counts as running late — for example 20 minutes. The count starts the moment the order is moved to Preparing. Set it a little above your genuine worst case, or it will cry wolf during every rush."
                       style={narrow}
                     >
                       <TextInput type="number" min={1} max={240} value={ops.sla.prepMinutes} onChange={(e) => setOps("sla", { prepMinutes: Number(e.target.value) || 1 })} />
-                    </Field>
-                    <Field
-                      label="Hand over within (minutes)"
-                      hint="Ready → collected"
-                      info="How long finished food may sit on the pass. This is the one that stops a hot order going cold because nobody carried it out."
-                      style={narrow}
-                    >
-                      <TextInput type="number" min={1} max={240} value={ops.sla.handoverMinutes} onChange={(e) => setOps("sla", { handoverMinutes: Number(e.target.value) || 1 })} />
                     </Field>
                   </Row>
                 </div>
@@ -659,13 +657,166 @@ export function Settings() {
                 </Link>
                 .
               </p>
-              <Checkbox
-                checked={draft.features.reservations.enabled}
-                onChange={(v) => setFeature("reservations", { enabled: v })}
-                label="Table reservations"
-                info="Lets customers book a table in advance. The booking screens are not built yet, so this currently only marks the outlet as wanting them."
-              />
+              <p style={{ margin: 0, fontSize: 13, color: "var(--color-text-muted)", lineHeight: 1.5 }}>
+                <strong>Table bookings</strong> and <strong>pre-orders</strong> are under the <em>Pre-orders &amp; bookings</em> tab; ratings and
+                &ldquo;goes well with&rdquo; suggestions under <em>Ratings &amp; suggestions</em>.
+              </p>
             </div>
+          </Card>
+        </>
+      ) : null}
+
+      {/* ------------------------------------------------- pre-orders & bookings */}
+
+      {tab === "bookings" ? (
+        <>
+          <Card title="Pre-orders" subtitle="Takeaway customers choose a later pickup time instead of “as soon as possible”." icon={<Clock size={15} />}>
+            {hasFeature("scheduledOrders") ? (
+              <div style={{ display: "flex", flexDirection: "column", gap: 14 }} data-testid="settings-preorders">
+                <Checkbox
+                  checked={ops.scheduling.enabled}
+                  onChange={(v) => setOps("scheduling", { enabled: v })}
+                  label="Take pre-orders for takeaway"
+                  info="At checkout, takeaway customers can pick “Later” and a pickup time. The times follow your opening hours (Opening hours tab) — from opening time plus your prep time, until closing."
+                />
+                {ops.scheduling.enabled ? (
+                  <Row>
+                    <Field label="Days ahead" info="0 = only later today. Up to 7 days." style={narrow}>
+                      <TextInput type="number" min={0} max={7} value={ops.scheduling.maxDaysAhead} onChange={(e) => setOps("scheduling", { maxDaysAhead: Math.max(0, Math.min(7, Number(e.target.value) || 0)) })} aria-label="Days ahead" />
+                    </Field>
+                    <Field label="Earliest pickup (minutes from now)" info="The soonest a pre-order can be collected — leave the kitchen enough time." style={narrow}>
+                      <TextInput type="number" min={10} max={720} value={ops.scheduling.minLeadMinutes} onChange={(e) => setOps("scheduling", { minLeadMinutes: Math.max(10, Number(e.target.value) || 30) })} aria-label="Earliest pickup minutes" />
+                    </Field>
+                    <Field label="A pickup time every" style={narrow}>
+                      <Select value={ops.scheduling.slotMinutes} onChange={(e) => setOps("scheduling", { slotMinutes: Number(e.target.value) })} aria-label="Pickup time step">
+                        {[10, 15, 20, 30, 60].map((m) => <option key={m} value={m}>{m} minutes</option>)}
+                      </Select>
+                    </Field>
+                    <Field label="Most pre-orders per time" info="0 = no limit. Stops ten orders all landing at 1:00 PM." style={narrow}>
+                      <TextInput type="number" min={0} max={500} value={ops.scheduling.maxPerSlot} onChange={(e) => setOps("scheduling", { maxPerSlot: Math.max(0, Number(e.target.value) || 0) })} aria-label="Most pre-orders per time" />
+                    </Field>
+                  </Row>
+                ) : null}
+                <Note icon={<Clock size={15} />}>
+                  A pre-order arrives on the Orders screen at once, tagged with its pickup time. It only turns red as &ldquo;not accepted&rdquo; from an hour before pickup, and its kitchen ticket starts with PRE-ORDER and the time.
+                </Note>
+              </div>
+            ) : (
+              <LockedFeature label="Pre-orders" />
+            )}
+          </Card>
+
+          <Card title="Table bookings" subtitle="Customers book a table online; you confirm, seat and track them on the Bookings page." icon={<CalendarDays size={15} />}>
+            {hasFeature("reservations") ? (
+              <div style={{ display: "flex", flexDirection: "column", gap: 14 }} data-testid="settings-bookings">
+                <Checkbox
+                  checked={draft.features.reservations.enabled}
+                  onChange={(v) => setFeature("reservations", { enabled: v })}
+                  label="Take table bookings online"
+                  info="Adds “Book a table” to the storefront header. Bookings follow your opening hours."
+                />
+                {draft.features.reservations.enabled ? (
+                  <>
+                    <Row>
+                      <Field label="A booking every" style={narrow}>
+                        <Select value={draft.reservations.slotMinutes} onChange={(e) => setArea("reservations", { slotMinutes: Number(e.target.value) })} aria-label="Booking time step">
+                          {[15, 30, 60].map((m) => <option key={m} value={m}>{m} minutes</option>)}
+                        </Select>
+                      </Field>
+                      <Field label="A table is held for (minutes)" info="How long one booking keeps its seats." style={narrow}>
+                        <TextInput type="number" min={30} max={300} value={draft.reservations.durationMinutes} onChange={(e) => setArea("reservations", { durationMinutes: Math.max(30, Number(e.target.value) || 90) })} aria-label="Table held minutes" />
+                      </Field>
+                      <Field label="Guests seated at one time" info="0 = add up the seats of your tables (Tables page). With no tables and 0, there is no limit." style={narrow}>
+                        <TextInput type="number" min={0} max={2000} value={draft.reservations.maxGuestsPerSlot} onChange={(e) => setArea("reservations", { maxGuestsPerSlot: Math.max(0, Number(e.target.value) || 0) })} aria-label="Guests at one time" />
+                      </Field>
+                    </Row>
+                    <Row>
+                      <Field label="Smallest party" style={narrow}>
+                        <TextInput type="number" min={1} max={20} value={draft.reservations.minPartySize} onChange={(e) => setArea("reservations", { minPartySize: Math.max(1, Number(e.target.value) || 1) })} aria-label="Smallest party" />
+                      </Field>
+                      <Field label="Largest party online" info="Bigger groups are asked to call you." style={narrow}>
+                        <TextInput type="number" min={1} max={50} value={draft.reservations.maxPartySize} onChange={(e) => setArea("reservations", { maxPartySize: Math.max(1, Number(e.target.value) || 10) })} aria-label="Largest party" />
+                      </Field>
+                      <Field label="Days ahead" style={narrow}>
+                        <TextInput type="number" min={0} max={60} value={draft.reservations.maxDaysAhead} onChange={(e) => setArea("reservations", { maxDaysAhead: Math.max(0, Number(e.target.value) || 0) })} aria-label="Booking days ahead" />
+                      </Field>
+                      <Field label="Book at least (minutes ahead)" style={narrow}>
+                        <TextInput type="number" min={0} max={2880} value={draft.reservations.minNoticeMinutes} onChange={(e) => setArea("reservations", { minNoticeMinutes: Math.max(0, Number(e.target.value) || 0) })} aria-label="Minimum notice" />
+                      </Field>
+                    </Row>
+                    <Row>
+                      <Field label="Last booking (minutes before closing)" style={narrow}>
+                        <TextInput type="number" min={0} max={240} value={draft.reservations.lastBookingBeforeCloseMinutes} onChange={(e) => setArea("reservations", { lastBookingBeforeCloseMinutes: Math.max(0, Number(e.target.value) || 0) })} aria-label="Last booking before closing" />
+                      </Field>
+                      <Field label="Guests can cancel until (minutes before)" style={narrow}>
+                        <TextInput type="number" min={0} max={2880} value={draft.reservations.cancelUntilMinutes} onChange={(e) => setArea("reservations", { cancelUntilMinutes: Math.max(0, Number(e.target.value) || 0) })} aria-label="Cancel until minutes" />
+                      </Field>
+                    </Row>
+                    <Checkbox
+                      checked={draft.reservations.autoConfirm}
+                      onChange={(v) => setArea("reservations", { autoConfirm: v })}
+                      label="Confirm bookings straight away"
+                      info="Off: each booking waits on the Bookings page until someone confirms it. On: a booking that fits is confirmed at once."
+                    />
+                    <Field label="Note for guests (optional)" info="Shown on the booking page, e.g. “We hold your table for 15 minutes.”" style={{ maxWidth: 560 }}>
+                      <TextInput value={draft.reservations.guestNote} maxLength={300} onChange={(e) => setArea("reservations", { guestNote: e.target.value })} aria-label="Note for guests" />
+                    </Field>
+                  </>
+                ) : null}
+              </div>
+            ) : (
+              <LockedFeature label="Table reservations" />
+            )}
+          </Card>
+        </>
+      ) : null}
+
+      {/* ------------------------------------------------- ratings & suggestions */}
+
+      {tab === "growth" ? (
+        <>
+          <Card title="Ratings" subtitle="Customers rate completed orders (1–5 stars) from their Account page." icon={<Star size={15} />}>
+            {hasFeature("feedback") ? (
+              <div style={{ display: "flex", flexDirection: "column", gap: 14 }} data-testid="settings-ratings">
+                <Checkbox checked={draft.feedback.enabled} onChange={(v) => setArea("feedback", { enabled: v })} label="Ask customers to rate their orders" />
+                <Row>
+                  <Field label="Google review link (optional)" info="Paste your “Write a review” link from Google Business Profile. Happy customers are offered it after they rate." style={{ minWidth: 320, flex: "2 1 320px" }}>
+                    <TextInput value={draft.feedback.googleReviewUrl} placeholder="https://g.page/r/…/review" onChange={(e) => setArea("feedback", { googleReviewUrl: e.target.value.trim() })} aria-label="Google review link" />
+                  </Field>
+                  <Field label="Offer it from" style={narrow}>
+                    <Select value={draft.feedback.googleMinStars} onChange={(e) => setArea("feedback", { googleMinStars: Number(e.target.value) })} aria-label="Offer Google from stars">
+                      {[3, 4, 5].map((n) => <option key={n} value={n}>{n} stars and up</option>)}
+                    </Select>
+                  </Field>
+                </Row>
+              </div>
+            ) : (
+              <LockedFeature label="Ratings & feedback" />
+            )}
+          </Card>
+
+          <Card title="Goes well with your order" subtitle="Suggestions on the order page — one tap to add." icon={<Sparkles size={15} />}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }} data-testid="settings-upsell">
+              <Checkbox checked={draft.upsell.enabled} onChange={(v) => setArea("upsell", { enabled: v })} label="Show suggestions" />
+              <Checkbox
+                checked={draft.upsell.auto}
+                onChange={(v) => setArea("upsell", { auto: v })}
+                label="Also suggest what customers often order together"
+                info="After the dishes you picked in each dish's “Goes well with”, suggest what other customers most often ordered with what's in the cart (from your last 90 days of orders)."
+              />
+              <Field label="Heading" style={{ maxWidth: 420 }}>
+                <TextInput value={draft.upsell.title} maxLength={60} onChange={(e) => setArea("upsell", { title: e.target.value })} aria-label="Suggestions heading" />
+              </Field>
+            </div>
+          </Card>
+
+          <Card title="Dishes with hours" subtitle="Breakfast, lunch specials… set a dish's or category's hours in the Menu." icon={<Clock size={15} />}>
+            <Checkbox
+              checked={draft.menuTimes.hideOutsideHours}
+              onChange={(v) => setArea("menuTimes", { hideOutsideHours: v })}
+              label="Hide dishes outside their hours"
+              info="Off: they stay on the menu, greyed, saying when they are available (e.g. “Available 8 AM – 11 AM”). On: they disappear until their hours come round."
+            />
           </Card>
         </>
       ) : null}
