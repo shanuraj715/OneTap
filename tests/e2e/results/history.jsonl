@@ -645,3 +645,182 @@
 {"id":"t39-ai-item-images","status":"pass","pass":32,"fail":0,"mode":"headless","at":"2026-11-19T20:45:32.652Z","durationMs":19294}
 {"id":"t45-paste-item-photo","status":"pass","pass":21,"fail":0,"mode":"headless","at":"2026-11-19T20:45:41.391Z","durationMs":8712}
 {"id":"t46-addon-groups","status":"pass","pass":50,"fail":0,"mode":"headless","at":"2026-11-19T20:45:57.990Z","durationMs":16581}
+{"id":"t06-storefront-header-categories","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-19T22:12:23.397Z","durationMs":36619}
+{"id":"t31-store-name-header","status":"pass","pass":12,"fail":0,"mode":"headless","at":"2026-11-19T22:12:26.650Z","durationMs":3232}
+{"id":"t35-storefront-category-bar","status":"fail","pass":33,"fail":1,"mode":"headless","at":"2026-11-19T22:12:46.706Z","durationMs":20027}
+{"id":"t37-storefront-mobile-layout","status":"fail","pass":21,"fail":3,"mode":"headless","at":"2026-11-19T22:13:21.074Z","durationMs":34349}
+{"id":"t40-react-style-warnings","status":"pass","pass":4,"fail":0,"mode":"headless","at":"2026-11-19T22:14:00.018Z","durationMs":38925}
+{"id":"t41-storefront-view-all","status":"fail","pass":54,"fail":16,"mode":"headless","at":"2026-11-19T22:14:42.924Z","durationMs":42889}
+{"id":"t42-storefront-order-type","status":"pass","pass":39,"fail":0,"mode":"headless","at":"2026-11-19T22:15:38.853Z","durationMs":55909}
+{"id":"t06-storefront-header-categories","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-19T22:18:01.075Z","durationMs":42762}
+{"id":"t31-store-name-header","status":"pass","pass":12,"fail":0,"mode":"headless","at":"2026-11-19T22:18:06.276Z","durationMs":5181}
+{"id":"t35-storefront-category-bar","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-19T22:18:32.772Z","durationMs":26479}
+{"id":"t37-storefront-mobile-layout","status":"pass","pass":45,"fail":0,"mode":"headless","at":"2026-11-19T22:18:46.206Z","durationMs":13415}
+{"id":"t40-react-style-warnings","status":"pass","pass":4,"fail":0,"mode":"headless","at":"2026-11-19T22:19:25.207Z","durationMs":38985}
+{"id":"t41-storefront-view-all","status":"pass","pass":85,"fail":0,"mode":"headless","at":"2026-11-19T22:20:43.613Z","durationMs":78388}
+{"id":"t42-storefront-order-type","status":"pass","pass":39,"fail":0,"mode":"headless","at":"2026-11-19T22:21:25.406Z","durationMs":41771}
+{"id":"t47-storefront-pinned-bars","status":"fail","pass":21,"fail":7,"mode":"headless","at":"2026-11-19T22:23:09.684Z","durationMs":51327}
+{"id":"t48-hero-button-card-c02","status":"error","pass":10,"fail":0,"mode":"headless","at":"2026-11-19T22:23:19.671Z","durationMs":9960,"error":"storefront-hero-card-c02.mjs exited with code 1. }  Node.js v22.17.0"}
+{"id":"t47-storefront-pinned-bars","status":"error","pass":28,"fail":0,"mode":"headless","at":"2026-11-19T22:27:15.401Z","durationMs":50800,"error":"storefront-pinned-bars.mjs exited with code 1. }  Node.js v22.17.0"}
+{"id":"t48-hero-button-card-c02","status":"error","pass":10,"fail":0,"mode":"headless","at":"2026-11-19T22:27:25.567Z","durationMs":10144,"error":"storefront-hero-card-c02.mjs exited with code 1. }  Node.js v22.17.0"}
+{"id":"t49-storefront-item-popup","status":"fail","pass":36,"fail":6,"mode":"headless","at":"2026-11-19T22:27:44.980Z","durationMs":19398}
+{"id":"t47-storefront-pinned-bars","status":"pass","pass":101,"fail":0,"mode":"headless","at":"2026-11-19T22:34:40.392Z","durationMs":115855}
+{"id":"t48-hero-button-card-c02","status":"fail","pass":67,"fail":2,"mode":"headless","at":"2026-11-19T22:35:27.560Z","durationMs":47139}
+{"id":"t49-storefront-item-popup","status":"fail","pass":40,"fail":2,"mode":"headless","at":"2026-11-19T22:35:48.267Z","durationMs":20688}
+{"id":"t48-hero-button-card-c02","status":"pass","pass":69,"fail":0,"mode":"headless","at":"2026-11-19T22:37:41.263Z","durationMs":44768}
+{"id":"t49-storefront-item-popup","status":"pass","pass":42,"fail":0,"mode":"headless","at":"2026-11-19T22:38:01.898Z","durationMs":20612}
+{"id":"t00-bench-smoke","status":"pass","pass":11,"fail":0,"mode":"headless","at":"2026-11-19T22:38:39.101Z","durationMs":16776}
+{"id":"t01-takeaway-order","status":"pass","pass":45,"fail":0,"mode":"headless","at":"2026-11-19T22:39:18.871Z","durationMs":35591}
+{"id":"t02-whatsapp-api","status":"pass","pass":133,"fail":0,"mode":"headless","at":"2026-11-19T22:39:32.237Z","durationMs":13346}
+{"id":"t03-whatsapp-dashboard","status":"pass","pass":44,"fail":0,"mode":"headless","at":"2026-11-19T22:39:57.177Z","durationMs":19751}
+{"id":"t04-whatsapp-manage","status":"pass","pass":20,"fail":0,"mode":"headless","at":"2026-11-19T22:40:17.951Z","durationMs":16614}
+{"id":"t05-whatsapp-chat-filters","status":"pass","pass":12,"fail":0,"mode":"headless","at":"2026-11-19T22:40:35.654Z","durationMs":13543}
+{"id":"t06-storefront-header-categories","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-19T22:41:22.005Z","durationMs":46335}
+{"id":"t07-favicon-plan-rules","status":"pass","pass":8,"fail":0,"mode":"headless","at":"2026-11-19T22:41:25.026Z","durationMs":3000}
+{"id":"t08-plans-outlets-settings","status":"pass","pass":43,"fail":0,"mode":"headless","at":"2026-11-19T22:44:35.268Z","durationMs":186037}
+{"id":"t09-store-subdomain","status":"pass","pass":36,"fail":0,"mode":"headless","at":"2026-11-19T22:45:08.056Z","durationMs":32759}
+{"id":"t10-plan-downgrade","status":"pass","pass":38,"fail":0,"mode":"headless","at":"2026-11-19T22:46:00.838Z","durationMs":52759}
+{"id":"t11-outlet-delete","status":"pass","pass":13,"fail":0,"mode":"headless","at":"2026-11-19T22:46:12.806Z","durationMs":11941}
+{"id":"t12-store-delete","status":"pass","pass":19,"fail":0,"mode":"headless","at":"2026-11-19T22:46:34.399Z","durationMs":21574}
+{"id":"t13-marketing","status":"pass","pass":70,"fail":0,"mode":"headless","at":"2026-11-19T22:48:07.030Z","durationMs":88444}
+{"id":"t14-marketing-plan","status":"pass","pass":16,"fail":0,"mode":"headless","at":"2026-11-19T22:49:15.363Z","durationMs":64147}
+{"id":"t15-login-protection","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-19T22:49:53.200Z","durationMs":33653}
+{"id":"t16-whatsapp-plan-gating","status":"pass","pass":37,"fail":0,"mode":"headless","at":"2026-11-19T22:50:32.993Z","durationMs":35606}
+{"id":"t17-analytics","status":"pass","pass":93,"fail":0,"mode":"headless","at":"2026-11-19T22:51:45.618Z","durationMs":68435}
+{"id":"t18-tables","status":"pass","pass":54,"fail":0,"mode":"headless","at":"2026-11-19T22:52:31.789Z","durationMs":41991}
+{"id":"t19-dine-in","status":"pass","pass":55,"fail":0,"mode":"headless","at":"2026-11-19T22:53:30.564Z","durationMs":54596}
+{"id":"t20-missed-order-alerts","status":"pass","pass":74,"fail":0,"mode":"headless","at":"2026-11-19T22:56:30.874Z","durationMs":175128}
+{"id":"t21-onboarding","status":"pass","pass":120,"fail":0,"mode":"headless","at":"2026-11-19T22:57:26.597Z","durationMs":51539}
+{"id":"t22-onboarding-price","status":"pass","pass":55,"fail":0,"mode":"headless","at":"2026-11-19T22:58:06.426Z","durationMs":35659}
+{"id":"t23-message-sending","status":"pass","pass":81,"fail":0,"mode":"headless","at":"2026-11-19T22:59:04.515Z","durationMs":53917}
+{"id":"t24-message-sending-api","status":"pass","pass":61,"fail":0,"mode":"headless","at":"2026-11-19T22:59:39.208Z","durationMs":34670}
+{"id":"t25-otp-resend-api","status":"pass","pass":43,"fail":0,"mode":"headless","at":"2026-11-19T22:59:43.710Z","durationMs":4479}
+{"id":"t50-store-name","status":"error","pass":7,"fail":0,"mode":"headless","at":"2026-11-19T23:01:20.329Z","durationMs":31539,"error":"store-name.mjs exited with code 1. }  Node.js v22.17.0"}
+{"id":"t00-bench-smoke","status":"pass","pass":11,"fail":0,"mode":"headless","at":"2026-11-19T23:05:01.144Z","durationMs":13540}
+{"id":"t01-takeaway-order","status":"pass","pass":45,"fail":0,"mode":"headless","at":"2026-11-19T23:05:37.929Z","durationMs":32610}
+{"id":"t02-whatsapp-api","status":"pass","pass":133,"fail":0,"mode":"headless","at":"2026-11-19T23:05:49.254Z","durationMs":11304}
+{"id":"t03-whatsapp-dashboard","status":"pass","pass":44,"fail":0,"mode":"headless","at":"2026-11-19T23:06:13.094Z","durationMs":19659}
+{"id":"t04-whatsapp-manage","status":"pass","pass":20,"fail":0,"mode":"headless","at":"2026-11-19T23:06:33.773Z","durationMs":16507}
+{"id":"t05-whatsapp-chat-filters","status":"pass","pass":12,"fail":0,"mode":"headless","at":"2026-11-19T23:06:52.360Z","durationMs":13427}
+{"id":"t06-storefront-header-categories","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-19T23:07:29.015Z","durationMs":36635}
+{"id":"t07-favicon-plan-rules","status":"pass","pass":8,"fail":0,"mode":"headless","at":"2026-11-19T23:07:31.950Z","durationMs":2917}
+{"id":"t08-plans-outlets-settings","status":"error","pass":11,"fail":0,"mode":"headless","at":"2026-11-19T23:08:38.568Z","durationMs":62442,"error":"locator.click: Timeout 30000ms exceeded. Call log:   - waiting for getByRole('button', { name: /^Save/ }).first().first()"}
+{"id":"t09-store-subdomain","status":"fail","pass":13,"fail":23,"mode":"headless","at":"2026-11-19T23:09:10.343Z","durationMs":31752}
+{"id":"t10-plan-downgrade","status":"error","pass":1,"fail":2,"mode":"headless","at":"2026-11-19T23:10:47.759Z","durationMs":97390,"error":"locator.click: Timeout 30000ms exceeded. Call log:   - waiting for getByRole('button', { name: /^Save/ }).first().first()"}
+{"id":"t11-outlet-delete","status":"error","pass":0,"fail":0,"mode":"headless","at":"2026-11-19T23:11:07.000Z","durationMs":19223,"error":"locator.waitFor: Timeout 15000ms exceeded. Call log:   - waiting for getByText('Lifecycle Third').first().locator('xpath=ancestor::*[.//button[normalize-space()=\\'Block\\' or normalize-space()=\\'Unblock\\']][1]').getByRole('button', { name: 'Unblock', exact: true }).first() to be visible"}
+{"id":"t12-store-delete","status":"fail","pass":17,"fail":2,"mode":"headless","at":"2026-11-19T23:11:28.475Z","durationMs":21458}
+{"id":"t13-marketing","status":"pass","pass":70,"fail":0,"mode":"headless","at":"2026-11-19T23:13:01.772Z","durationMs":89121}
+{"id":"t14-marketing-plan","status":"error","pass":6,"fail":0,"mode":"headless","at":"2026-11-19T23:14:03.226Z","durationMs":57281,"error":"locator.click: Timeout 30000ms exceeded. Call log:   - waiting for getByRole('button', { name: /^Save/ }).first().first()"}
+{"id":"t15-login-protection","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-19T23:14:41.548Z","durationMs":34135}
+{"id":"t16-whatsapp-plan-gating","status":"error","pass":33,"fail":0,"mode":"headless","at":"2026-11-19T23:15:41.369Z","durationMs":55649,"error":"locator.click: Timeout 30000ms exceeded. Call log:   - waiting for getByRole('button', { name: /^Save/ }).first().first()"}
+{"id":"t17-analytics","status":"error","pass":87,"fail":0,"mode":"headless","at":"2026-11-19T23:17:07.399Z","durationMs":81856,"error":"locator.click: Timeout 30000ms exceeded. Call log:   - waiting for getByRole('button', { name: /^Save/ }).first().first()"}
+{"id":"t18-tables","status":"pass","pass":54,"fail":0,"mode":"headless","at":"2026-11-19T23:17:55.607Z","durationMs":44041}
+{"id":"t19-dine-in","status":"pass","pass":55,"fail":0,"mode":"headless","at":"2026-11-19T23:18:56.337Z","durationMs":56548}
+{"id":"t20-missed-order-alerts","status":"pass","pass":74,"fail":0,"mode":"headless","at":"2026-11-19T23:21:57.683Z","durationMs":177164}
+{"id":"t21-onboarding","status":"pass","pass":120,"fail":0,"mode":"headless","at":"2026-11-19T23:22:54.019Z","durationMs":52156}
+{"id":"t22-onboarding-price","status":"pass","pass":55,"fail":0,"mode":"headless","at":"2026-11-19T23:23:34.239Z","durationMs":36049}
+{"id":"t23-message-sending","status":"pass","pass":81,"fail":0,"mode":"headless","at":"2026-11-19T23:24:32.359Z","durationMs":53952}
+{"id":"t24-message-sending-api","status":"pass","pass":61,"fail":0,"mode":"headless","at":"2026-11-19T23:25:03.695Z","durationMs":31310}
+{"id":"t25-otp-resend-api","status":"pass","pass":42,"fail":0,"mode":"headless","at":"2026-11-19T23:25:07.837Z","durationMs":4123}
+{"id":"t26-signin-resend-timer","status":"pass","pass":20,"fail":0,"mode":"headless","at":"2026-11-19T23:25:51.448Z","durationMs":39415}
+{"id":"t27-signin-codes-switch","status":"pass","pass":21,"fail":0,"mode":"headless","at":"2026-11-19T23:26:26.821Z","durationMs":31197}
+{"id":"t28-rate-limits-api","status":"pass","pass":124,"fail":0,"mode":"headless","at":"2026-11-19T23:26:34.278Z","durationMs":7434}
+{"id":"t29-orders-account-api","status":"pass","pass":63,"fail":0,"mode":"headless","at":"2026-11-19T23:26:39.420Z","durationMs":5120}
+{"id":"t30-account-orders","status":"pass","pass":41,"fail":0,"mode":"headless","at":"2026-11-19T23:27:30.193Z","durationMs":46601}
+{"id":"t31-store-name-header","status":"pass","pass":12,"fail":0,"mode":"headless","at":"2026-11-19T23:27:33.165Z","durationMs":2950}
+{"id":"t32-menu-tree-api","status":"pass","pass":93,"fail":0,"mode":"headless","at":"2026-11-19T23:27:36.581Z","durationMs":3397}
+{"id":"t33-menu-tree","status":"pass","pass":71,"fail":0,"mode":"headless","at":"2026-11-19T23:28:26.659Z","durationMs":45894}
+{"id":"t34-image-compression-api","status":"pass","pass":32,"fail":0,"mode":"headless","at":"2026-11-19T23:28:36.365Z","durationMs":9687}
+{"id":"t35-storefront-category-bar","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-19T23:28:56.682Z","durationMs":20302}
+{"id":"t36-upload-urls-api","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-19T23:29:01.469Z","durationMs":4766}
+{"id":"t37-storefront-mobile-layout","status":"pass","pass":45,"fail":0,"mode":"headless","at":"2026-11-19T23:29:08.581Z","durationMs":7092}
+{"id":"t38-ai-images-api","status":"pass","pass":82,"fail":0,"mode":"headless","at":"2026-11-19T23:29:12.573Z","durationMs":3977}
+{"id":"t39-ai-item-images","status":"pass","pass":32,"fail":0,"mode":"headless","at":"2026-11-19T23:29:35.963Z","durationMs":19201}
+{"id":"t40-react-style-warnings","status":"pass","pass":4,"fail":0,"mode":"headless","at":"2026-11-19T23:30:14.917Z","durationMs":38933}
+{"id":"t41-storefront-view-all","status":"pass","pass":85,"fail":0,"mode":"headless","at":"2026-11-19T23:30:59.254Z","durationMs":44320}
+{"id":"t42-storefront-order-type","status":"pass","pass":39,"fail":0,"mode":"headless","at":"2026-11-19T23:31:28.140Z","durationMs":28868}
+{"id":"t43-checkout-coupons","status":"pass","pass":10,"fail":0,"mode":"headless","at":"2026-11-19T23:31:39.964Z","durationMs":11807}
+{"id":"t44-website-product-menu","status":"pass","pass":53,"fail":0,"mode":"headless","at":"2026-11-19T23:31:49.223Z","durationMs":9240}
+{"id":"t45-paste-item-photo","status":"pass","pass":21,"fail":0,"mode":"headless","at":"2026-11-19T23:31:58.160Z","durationMs":8920}
+{"id":"t46-addon-groups","status":"pass","pass":50,"fail":0,"mode":"headless","at":"2026-11-19T23:32:14.907Z","durationMs":16728}
+{"id":"t47-storefront-pinned-bars","status":"pass","pass":101,"fail":0,"mode":"headless","at":"2026-11-19T23:33:32.380Z","durationMs":77454}
+{"id":"t48-hero-button-card-c02","status":"pass","pass":69,"fail":0,"mode":"headless","at":"2026-11-19T23:33:55.455Z","durationMs":23058}
+{"id":"t49-storefront-item-popup","status":"pass","pass":42,"fail":0,"mode":"headless","at":"2026-11-19T23:34:12.875Z","durationMs":17404}
+{"id":"t50-store-name","status":"pass","pass":31,"fail":0,"mode":"headless","at":"2026-11-19T23:34:21.927Z","durationMs":9036}
+{"id":"t08-plans-outlets-settings","status":"error","pass":33,"fail":1,"mode":"headless","at":"2026-11-19T23:38:12.129Z","durationMs":183667,"error":"locator.waitFor: Timeout 15000ms exceeded. Call log:   - waiting for getByText('Second', { exact: true }).last().first() to be visible"}
+{"id":"t09-store-subdomain","status":"fail","pass":13,"fail":23,"mode":"headless","at":"2026-11-19T23:38:43.953Z","durationMs":31793}
+{"id":"t10-plan-downgrade","status":"error","pass":10,"fail":1,"mode":"headless","at":"2026-11-19T23:40:28.742Z","durationMs":104765,"error":"locator.click: Timeout 30000ms exceeded. Call log:   - waiting for locator('aside button').filter({ has: locator('.lucide-chevrons-up-down') }).first().first()"}
+{"id":"t11-outlet-delete","status":"error","pass":0,"fail":0,"mode":"headless","at":"2026-11-19T23:40:48.087Z","durationMs":19324,"error":"locator.waitFor: Timeout 15000ms exceeded. Call log:   - waiting for getByText('Lifecycle Third').first().locator('xpath=ancestor::*[.//button[normalize-space()=\\'Block\\' or normalize-space()=\\'Unblock\\']][1]').getByRole('button', { name: 'Unblock', exact: true }).first() to be visible"}
+{"id":"t12-store-delete","status":"fail","pass":17,"fail":2,"mode":"headless","at":"2026-11-19T23:41:09.968Z","durationMs":21865}
+{"id":"t14-marketing-plan","status":"pass","pass":16,"fail":0,"mode":"headless","at":"2026-11-19T23:42:20.252Z","durationMs":66101}
+{"id":"t16-whatsapp-plan-gating","status":"pass","pass":37,"fail":0,"mode":"headless","at":"2026-11-19T23:43:00.954Z","durationMs":36523}
+{"id":"t17-analytics","status":"pass","pass":93,"fail":0,"mode":"headless","at":"2026-11-19T23:44:16.162Z","durationMs":71035}
+{"id":"t50-store-name","status":"pass","pass":31,"fail":0,"mode":"headless","at":"2026-11-19T23:44:25.306Z","durationMs":9122}
+{"id":"t08-plans-outlets-settings","status":"fail","pass":43,"fail":1,"mode":"headless","at":"2026-11-19T23:48:07.879Z","durationMs":193599}
+{"id":"t09-store-subdomain","status":"fail","pass":13,"fail":23,"mode":"headless","at":"2026-11-19T23:48:40.041Z","durationMs":32133}
+{"id":"t10-plan-downgrade","status":"error","pass":10,"fail":1,"mode":"headless","at":"2026-11-19T23:50:24.875Z","durationMs":104810,"error":"locator.click: Timeout 30000ms exceeded. Call log:   - waiting for locator('aside button').filter({ has: locator('.lucide-chevrons-up-down') }).first().first()"}
+{"id":"t11-outlet-delete","status":"error","pass":0,"fail":0,"mode":"headless","at":"2026-11-19T23:50:44.214Z","durationMs":19318,"error":"locator.waitFor: Timeout 15000ms exceeded. Call log:   - waiting for getByText('Lifecycle Third').first().locator('xpath=ancestor::*[.//button[normalize-space()=\\'Block\\' or normalize-space()=\\'Unblock\\']][1]').getByRole('button', { name: 'Unblock', exact: true }).first() to be visible"}
+{"id":"t12-store-delete","status":"fail","pass":17,"fail":2,"mode":"headless","at":"2026-11-19T23:51:06.085Z","durationMs":21855}
+{"id":"t08-plans-outlets-settings","status":"pass","pass":44,"fail":0,"mode":"headless","at":"2026-11-19T23:56:33.433Z","durationMs":196496}
+{"id":"t09-store-subdomain","status":"fail","pass":14,"fail":22,"mode":"headless","at":"2026-11-19T23:57:05.625Z","durationMs":32163}
+{"id":"t10-plan-downgrade","status":"error","pass":14,"fail":4,"mode":"headless","at":"2026-11-19T23:59:25.234Z","durationMs":139584,"error":"locator.isDisabled: Timeout 30000ms exceeded. Call log:   - waiting for getByRole('group', { name: 'Order type' }).getByRole('button', { name: 'Delivery' })"}
+{"id":"t11-outlet-delete","status":"error","pass":0,"fail":0,"mode":"headless","at":"2026-11-19T23:59:44.568Z","durationMs":19314,"error":"locator.waitFor: Timeout 15000ms exceeded. Call log:   - waiting for getByText('Lifecycle Third').first().locator('xpath=ancestor::*[.//button[normalize-space()=\\'Block\\' or normalize-space()=\\'Unblock\\']][1]').getByRole('button', { name: 'Unblock', exact: true }).first() to be visible"}
+{"id":"t12-store-delete","status":"fail","pass":17,"fail":2,"mode":"headless","at":"2026-11-20T00:00:06.333Z","durationMs":21749}
+{"id":"t50-store-name","status":"pass","pass":31,"fail":0,"mode":"headless","at":"2026-11-20T00:00:15.420Z","durationMs":9065}
+{"id":"t08-plans-outlets-settings","status":"pass","pass":44,"fail":0,"mode":"headless","at":"2026-11-20T00:04:08.465Z","durationMs":193730}
+{"id":"t09-store-subdomain","status":"pass","pass":36,"fail":0,"mode":"headless","at":"2026-11-20T00:04:41.542Z","durationMs":33049}
+{"id":"t10-plan-downgrade","status":"pass","pass":38,"fail":0,"mode":"headless","at":"2026-11-20T00:05:34.849Z","durationMs":53285}
+{"id":"t11-outlet-delete","status":"pass","pass":13,"fail":0,"mode":"headless","at":"2026-11-20T00:05:46.915Z","durationMs":12039}
+{"id":"t12-store-delete","status":"pass","pass":19,"fail":0,"mode":"headless","at":"2026-11-20T00:06:08.764Z","durationMs":21830}
+{"id":"t50-store-name","status":"pass","pass":31,"fail":0,"mode":"headless","at":"2026-11-20T00:06:17.804Z","durationMs":9018}
+{"id":"t00-bench-smoke","status":"pass","pass":11,"fail":0,"mode":"headless","at":"2026-11-20T00:06:45.448Z","durationMs":13684}
+{"id":"t01-takeaway-order","status":"pass","pass":45,"fail":0,"mode":"headless","at":"2026-11-20T00:07:22.084Z","durationMs":32469}
+{"id":"t02-whatsapp-api","status":"pass","pass":133,"fail":0,"mode":"headless","at":"2026-11-20T00:07:33.799Z","durationMs":11695}
+{"id":"t03-whatsapp-dashboard","status":"pass","pass":44,"fail":0,"mode":"headless","at":"2026-11-20T00:07:57.825Z","durationMs":19859}
+{"id":"t04-whatsapp-manage","status":"pass","pass":20,"fail":0,"mode":"headless","at":"2026-11-20T00:08:18.557Z","durationMs":16578}
+{"id":"t05-whatsapp-chat-filters","status":"pass","pass":12,"fail":0,"mode":"headless","at":"2026-11-20T00:08:36.178Z","durationMs":13458}
+{"id":"t06-storefront-header-categories","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-20T00:09:13.002Z","durationMs":36809}
+{"id":"t07-favicon-plan-rules","status":"pass","pass":8,"fail":0,"mode":"headless","at":"2026-11-20T00:09:15.815Z","durationMs":2797}
+{"id":"t08-plans-outlets-settings","status":"pass","pass":44,"fail":0,"mode":"headless","at":"2026-11-20T00:12:33.698Z","durationMs":192690}
+{"id":"t09-store-subdomain","status":"pass","pass":36,"fail":0,"mode":"headless","at":"2026-11-20T00:13:06.771Z","durationMs":33049}
+{"id":"t10-plan-downgrade","status":"pass","pass":38,"fail":0,"mode":"headless","at":"2026-11-20T00:14:00.248Z","durationMs":53451}
+{"id":"t11-outlet-delete","status":"pass","pass":13,"fail":0,"mode":"headless","at":"2026-11-20T00:14:12.795Z","durationMs":12525}
+{"id":"t12-store-delete","status":"pass","pass":19,"fail":0,"mode":"headless","at":"2026-11-20T00:14:34.604Z","durationMs":21785}
+{"id":"t13-marketing","status":"pass","pass":70,"fail":0,"mode":"headless","at":"2026-11-20T00:16:08.735Z","durationMs":89954}
+{"id":"t14-marketing-plan","status":"pass","pass":16,"fail":0,"mode":"headless","at":"2026-11-20T00:17:19.272Z","durationMs":66366}
+{"id":"t15-login-protection","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-20T00:17:57.905Z","durationMs":34452}
+{"id":"t16-whatsapp-plan-gating","status":"pass","pass":37,"fail":0,"mode":"headless","at":"2026-11-20T00:18:38.387Z","durationMs":36300}
+{"id":"t17-analytics","status":"pass","pass":93,"fail":0,"mode":"headless","at":"2026-11-20T00:19:53.753Z","durationMs":71198}
+{"id":"t18-tables","status":"pass","pass":54,"fail":0,"mode":"headless","at":"2026-11-20T00:20:41.874Z","durationMs":43945}
+{"id":"t19-dine-in","status":"pass","pass":55,"fail":0,"mode":"headless","at":"2026-11-20T00:21:42.993Z","durationMs":56943}
+{"id":"t20-missed-order-alerts","status":"pass","pass":74,"fail":0,"mode":"headless","at":"2026-11-20T00:24:44.929Z","durationMs":177754}
+{"id":"t21-onboarding","status":"pass","pass":120,"fail":0,"mode":"headless","at":"2026-11-20T00:25:41.701Z","durationMs":52542}
+{"id":"t22-onboarding-price","status":"pass","pass":55,"fail":0,"mode":"headless","at":"2026-11-20T00:26:21.967Z","durationMs":36096}
+{"id":"t23-message-sending","status":"pass","pass":81,"fail":0,"mode":"headless","at":"2026-11-20T00:27:20.510Z","durationMs":54378}
+{"id":"t24-message-sending-api","status":"pass","pass":61,"fail":0,"mode":"headless","at":"2026-11-20T00:27:53.833Z","durationMs":33290}
+{"id":"t25-otp-resend-api","status":"pass","pass":40,"fail":0,"mode":"headless","at":"2026-11-20T00:27:57.963Z","durationMs":4114}
+{"id":"t26-signin-resend-timer","status":"pass","pass":20,"fail":0,"mode":"headless","at":"2026-11-20T00:28:38.185Z","durationMs":36030}
+{"id":"t27-signin-codes-switch","status":"pass","pass":21,"fail":0,"mode":"headless","at":"2026-11-20T00:29:15.067Z","durationMs":32713}
+{"id":"t28-rate-limits-api","status":"pass","pass":124,"fail":0,"mode":"headless","at":"2026-11-20T00:29:22.522Z","durationMs":7432}
+{"id":"t29-orders-account-api","status":"pass","pass":63,"fail":0,"mode":"headless","at":"2026-11-20T00:29:27.858Z","durationMs":5317}
+{"id":"t30-account-orders","status":"pass","pass":41,"fail":0,"mode":"headless","at":"2026-11-20T00:30:15.440Z","durationMs":43416}
+{"id":"t31-store-name-header","status":"pass","pass":12,"fail":0,"mode":"headless","at":"2026-11-20T00:30:18.598Z","durationMs":3134}
+{"id":"t32-menu-tree-api","status":"pass","pass":93,"fail":0,"mode":"headless","at":"2026-11-20T00:30:21.812Z","durationMs":3195}
+{"id":"t33-menu-tree","status":"pass","pass":71,"fail":0,"mode":"headless","at":"2026-11-20T00:31:11.904Z","durationMs":45901}
+{"id":"t34-image-compression-api","status":"pass","pass":32,"fail":0,"mode":"headless","at":"2026-11-20T00:31:21.740Z","durationMs":9809}
+{"id":"t35-storefront-category-bar","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-20T00:31:41.764Z","durationMs":20006}
+{"id":"t36-upload-urls-api","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-20T00:31:45.452Z","durationMs":3663}
+{"id":"t37-storefront-mobile-layout","status":"pass","pass":45,"fail":0,"mode":"headless","at":"2026-11-20T00:31:52.417Z","durationMs":6937}
+{"id":"t38-ai-images-api","status":"pass","pass":82,"fail":0,"mode":"headless","at":"2026-11-20T00:31:56.510Z","durationMs":4078}
+{"id":"t39-ai-item-images","status":"pass","pass":32,"fail":0,"mode":"headless","at":"2026-11-20T00:32:19.967Z","durationMs":19267}
+{"id":"t40-react-style-warnings","status":"pass","pass":4,"fail":0,"mode":"headless","at":"2026-11-20T00:32:59.034Z","durationMs":39044}
+{"id":"t41-storefront-view-all","status":"pass","pass":85,"fail":0,"mode":"headless","at":"2026-11-20T00:33:43.079Z","durationMs":44027}
+{"id":"t42-storefront-order-type","status":"pass","pass":39,"fail":0,"mode":"headless","at":"2026-11-20T00:34:17.440Z","durationMs":34342}
+{"id":"t43-checkout-coupons","status":"pass","pass":10,"fail":0,"mode":"headless","at":"2026-11-20T00:34:33.829Z","durationMs":16372}
+{"id":"t44-website-product-menu","status":"pass","pass":53,"fail":0,"mode":"headless","at":"2026-11-20T00:34:43.126Z","durationMs":9280}
+{"id":"t45-paste-item-photo","status":"pass","pass":21,"fail":0,"mode":"headless","at":"2026-11-20T00:34:52.156Z","durationMs":9014}
+{"id":"t46-addon-groups","status":"pass","pass":50,"fail":0,"mode":"headless","at":"2026-11-20T00:35:10.090Z","durationMs":17917}
+{"id":"t47-storefront-pinned-bars","status":"pass","pass":101,"fail":0,"mode":"headless","at":"2026-11-20T00:37:06.894Z","durationMs":116788}
+{"id":"t48-hero-button-card-c02","status":"pass","pass":69,"fail":0,"mode":"headless","at":"2026-11-20T00:37:47.917Z","durationMs":41004}
+{"id":"t49-storefront-item-popup","status":"pass","pass":42,"fail":0,"mode":"headless","at":"2026-11-20T00:38:08.631Z","durationMs":20695}
+{"id":"t50-store-name","status":"pass","pass":31,"fail":0,"mode":"headless","at":"2026-11-20T00:38:19.891Z","durationMs":11245}

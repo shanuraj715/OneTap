@@ -1,6 +1,6 @@
 # T43 — Checkout — the coupon box is hidden when the platform locks Coupons for the store, and comes back when it is unlocked
 
-**Area:** storefront · **Last result:** ✅ PASSED (10 passed, 0 failed · 2026-11-20 00:29 · headless · 12.0 s)
+**Area:** storefront · **Last result:** ✅ PASSED (10 passed, 0 failed · 2026-11-20 06:04 · headless · 16.4 s)
 
 **Run it alone:** `node run.mjs --only t43` (add `--visible` to watch it)
 
@@ -61,6 +61,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-20 06:04 | pass | 10 | 0 | headless | 16.4 s |
+| 2026-11-20 05:01 | pass | 10 | 0 | headless | 11.8 s |
 | 2026-11-20 00:29 | pass | 10 | 0 | headless | 12.0 s |
 | 2026-11-20 00:00 | pass | 10 | 0 | headless | 27.8 s |
 | 2026-11-19 23:59 | fail | 7 | 3 | headless | 25.6 s |

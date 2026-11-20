@@ -1,6 +1,6 @@
 # T26 — Sign-in code — resend timer on the screen (30 s first), kept by the server: Back, reload and direct API calls can't skip it
 
-**Area:** security · **Last result:** ✅ PASSED (20 passed, 0 failed · 2026-11-20 00:23 · headless · 36.4 s)
+**Area:** security · **Last result:** ✅ PASSED (20 passed, 0 failed · 2026-11-20 05:58 · headless · 36.0 s)
 
 **Run it alone:** `node run.mjs --only t26` (add `--visible` to watch it) · starts from fresh fake data
 
@@ -74,7 +74,7 @@ _Nothing failed._
 - the button comes back when the timer ends — _Resend code_
 - pressing it sends a new code (200) — the second one — _200 · next wait 60s_
 - the button now counts down from 1 minute — _60_
-- the new code is on screen — _263326_
+- the new code is on screen — _688261_
 
 **Step 6 — The new code signs the customer in**
 
@@ -84,6 +84,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-20 05:58 | pass | 20 | 0 | headless | 36.0 s |
+| 2026-11-20 04:55 | pass | 20 | 0 | headless | 39.4 s |
 | 2026-11-20 00:23 | pass | 20 | 0 | headless | 36.4 s |
 | 2026-11-19 23:44 | pass | 20 | 0 | headless | 35.9 s |
 | 2026-11-19 23:28 | pass | 20 | 0 | headless | 38.0 s |

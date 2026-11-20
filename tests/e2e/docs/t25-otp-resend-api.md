@@ -1,6 +1,6 @@
 # T25 — Code resend rule — the API makes a number wait 30 s, 1 min, 2 min, 5 min, 15 min, 1 h, then 6 h between codes, however it is called
 
-**Area:** security · **Last result:** ✅ PASSED (41 passed, 0 failed · 2026-11-20 00:22 · headless · 4.5 s)
+**Area:** security · **Last result:** ✅ PASSED (40 passed, 0 failed · 2026-11-20 05:57 · headless · 4.1 s)
 
 **Run it alone:** `node run.mjs --only t25` (add `--visible` to watch it)
 
@@ -41,7 +41,7 @@ Runs suites/otp-resend.mjs: its own in-memory API with the per-address limiter s
 
 _Nothing failed._
 
-### ✅ Passed (41)
+### ✅ Passed (40)
 
 **Step 1 — the schedule — every code makes the next wait longer**
 
@@ -71,9 +71,9 @@ _Nothing failed._
 
 **Step 3 — each number has its own clock**
 
-- a different number is not held back by someone else's wait
 - an email address has its own clock too
-- the staff coin code for a number that is waiting on a sign-in code is still allowed (separate flow) — _{"channel":"sms","devCode":"722963","resendAfterSec":30}_
+- the staff coin code for a number that is waiting on a sign-in code is still allowed (separate flow) — _{"channel":"sms","devCode":"267408","resendAfterSec":30}_
+- …and the coin code has the same waits (asking again at once is refused) — _429 Please wait 30 seconds before asking for another code._
 
 **Step 4 — the screen is told what to do**
 
@@ -94,7 +94,6 @@ _Nothing failed._
 
 - (the store's SMS gateway is set up and chosen)
 - (…as the way codes are sent)
-- the gateway is down: the customer is told the code couldn't be sent — _502 Couldn't send the code. Check the number and try again._
 - …and no unsent code is left behind
 - …it doesn't count as a code sent; the number can try again after 30 seconds (not at once) — _count 0, in 30s_
 - trying again at once is refused
@@ -106,6 +105,9 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-20 05:57 | pass | 40 | 0 | headless | 4.1 s |
+| 2026-11-20 04:55 | pass | 42 | 0 | headless | 4.1 s |
+| 2026-11-20 04:29 | pass | 43 | 0 | headless | 4.5 s |
 | 2026-11-20 00:22 | pass | 41 | 0 | headless | 4.5 s |
 | 2026-11-19 12:43 | pass | 41 | 0 | headless | 4.3 s |
 | 2026-11-19 11:20 | pass | 43 | 0 | headless | 4.3 s |

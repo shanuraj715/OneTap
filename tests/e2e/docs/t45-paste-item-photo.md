@@ -1,6 +1,6 @@
 # T45 — Dish photos — a picture copied to the clipboard can be pasted (Ctrl/⌘+V or the 'Paste photo' button) instead of choosing a file
 
-**Area:** menu · **Last result:** ✅ PASSED (21 passed, 0 failed · 2026-11-20 02:15 · headless · 8.7 s)
+**Area:** menu · **Last result:** ✅ PASSED (21 passed, 0 failed · 2026-11-20 06:04 · headless · 9.0 s)
 
 **Run it alone:** `node run.mjs --only t45` (add `--visible` to watch it)
 
@@ -50,7 +50,7 @@ _Nothing failed._
 
 - it is added as a new photo — _1 photos_
 - the new photo really loads
-- it is a stored picture (not a data: link) — _http://localhost:3097/uploads/6aff5fd6067ee9a0ac8d9a5f/6aff5fd6067ee9a0ac8d9a63/_
+- it is a stored picture (not a data: link) — _http://localhost:3097/uploads/6aff94ff999161827cf89d00/6aff94ff999161827cf89d03/_
 
 **Step 3 — The 'Paste photo' button**
 
@@ -86,6 +86,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-20 06:04 | pass | 21 | 0 | headless | 9.0 s |
+| 2026-11-20 05:01 | pass | 21 | 0 | headless | 8.9 s |
 | 2026-11-20 02:15 | pass | 21 | 0 | headless | 8.7 s |
 | 2026-11-20 00:35 | pass | 21 | 0 | headless | 9.2 s |
 | 2026-11-20 00:35 | pass | 22 | 0 | headless | 9.2 s |

@@ -7,8 +7,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:31:08.415Z",
-    "durationMs": 14349,
+    "at": "2026-11-20T00:06:45.448Z",
+    "durationMs": 13684,
     "steps": [
       {
         "n": 1,
@@ -89,7 +89,7 @@
           {
             "label": "the code request is accepted (the test stores accept any phone)",
             "ok": true,
-            "detail": "HTTP 200 {\"channel\":\"sms\",\"devCode\":\"677989\",\"resendAfterSec\":30}",
+            "detail": "HTTP 200 {\"channel\":\"sms\",\"devCode\":\"927185\",\"resendAfterSec\":30}",
             "kind": "expect"
           },
           {
@@ -112,8 +112,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:31:47.030Z",
-    "durationMs": 33423,
+    "at": "2026-11-20T00:07:22.084Z",
+    "durationMs": 32469,
     "steps": [
       {
         "n": 1,
@@ -289,7 +289,7 @@
           {
             "label": "the new customer was saved with the details they gave",
             "ok": true,
-            "detail": "{\"id\":\"6aff4085e325ab193ebfc676\",\"name\":\"Rohan Mehta\",\"email\":\"rohan.mehta@example.com\",\"phone\":\"9811122233\",\"gender\":\"male\",\"age\":31,\"orderCount\":1,\"walletBalance\":0,\"lastOrderAt\":\"2026-11-19T18:31:38.199Z\",\"createdAt\":\"2026-11-19T18:31:33.589Z\"}",
+            "detail": "{\"id\":\"6aff8f2cc53689ad03c011fe\",\"name\":\"Rohan Mehta\",\"email\":\"rohan.mehta@example.com\",\"phone\":\"9811122233\",\"gender\":\"male\",\"age\":31,\"orderCount\":1,\"walletBalance\":0,\"lastOrderAt\":\"2026-11-20T00:07:12.949Z\",\"createdAt\":\"2026-11-20T00:07:08.312Z\"}",
             "kind": "expect"
           },
           {
@@ -313,7 +313,7 @@
           {
             "label": "the row shows the customer, phone, type, item count, total and 'Placed'",
             "ok": true,
-            "detail": " #0001 12:01 AM Rohan Mehta 9811122233 TA 8 ₹1,030 Placed 0m Accepted",
+            "detail": " #0001 05:37 AM Rohan Mehta 9811122233 TA 8 ₹1,030 Placed 0m Accepted",
             "kind": "expect"
           }
         ]
@@ -500,8 +500,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:31:59.674Z",
-    "durationMs": 12618,
+    "at": "2026-11-20T00:07:33.799Z",
+    "durationMs": 11695,
     "steps": [
       {
         "n": 1,
@@ -708,7 +708,7 @@
           {
             "label": "an attachment uploads",
             "ok": true,
-            "detail": "http://localhost:3098/uploads/6aff4095b12faf4ce22d",
+            "detail": "http://localhost:3098/uploads/6aff8f3c5757fc68d4e2",
             "kind": "expect"
           },
           {
@@ -732,7 +732,7 @@
           {
             "label": "it's quiet hours now (10 pm–9 am): first contacts wait for the morning",
             "ok": true,
-            "detail": "2026-11-20T03:40:50.379Z",
+            "detail": "2026-11-20T03:37:25.220Z",
             "kind": "expect"
           },
           {
@@ -756,7 +756,7 @@
           {
             "label": "the next first contact must wait 2–4 minutes",
             "ok": true,
-            "detail": "215 s",
+            "detail": "182 s",
             "kind": "expect"
           },
           {
@@ -780,7 +780,7 @@
           {
             "label": "15 first contacts a day per number: the rest wait for tomorrow",
             "ok": true,
-            "detail": "2026-11-20T18:31:56.151Z",
+            "detail": "2026-11-20T18:31:30.798Z",
             "kind": "expect"
           },
           {
@@ -906,13 +906,13 @@
           {
             "label": "preview: 3 people (duplicates merged), 1 opted out",
             "ok": true,
-            "detail": "{\"recipients\":3,\"optedOut\":1,\"running\":0,\"firstContact\":3,\"numbersOnline\":[{\"id\":\"6aff4096b12faf4ce22d47c9\",\"label\":\"Counter phone\"},{\"id\":\"6aff4096b12faf4ce22d47d1\",\"label\":\"Delivery phone\"}],\"estimatedDays\":1}",
+            "detail": "{\"recipients\":3,\"optedOut\":1,\"running\":0,\"firstContact\":3,\"numbersOnline\":[{\"id\":\"6aff8f3d5757fc68d4e2acd0\",\"label\":\"Counter phone\"},{\"id\":\"6aff8f3d5757fc68d4e2acd7\",\"label\":\"Delivery phone\"}],\"estimatedDays\":1}",
             "kind": "expect"
           },
           {
             "label": "a broadcast queues one message per person",
             "ok": true,
-            "detail": "{\"id\":\"6aff409eb12faf4ce22d4958\",\"text\":\"Diwali: 20% off this weekend!\\n\\nReply STOP to stop offers.\",\"media\":null,\"createdAt\":\"2026-11-19T18:31:58.715Z\",\"status\":\"sending\",\"total\":3,\"skipped\":1,\"waiting\":3,\"sent\":0,\"read\":0,\"failed\":0}",
+            "detail": "{\"id\":\"6aff8f455757fc68d4e2ae6d\",\"text\":\"Diwali: 20% off this weekend!\\n\\nReply STOP to stop offers.\",\"media\":null,\"createdAt\":\"2026-11-20T00:07:33.440Z\",\"status\":\"sending\",\"total\":3,\"skipped\":1,\"waiting\":3,\"sent\":0,\"read\":0,\"failed\":0}",
             "kind": "expect"
           },
           {
@@ -1379,8 +1379,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:32:24.898Z",
-    "durationMs": 20024,
+    "at": "2026-11-20T00:07:57.825Z",
+    "durationMs": 19859,
     "steps": [
       {
         "n": 1,
@@ -1515,7 +1515,7 @@
           {
             "label": "a paced broadcast message says when it will go",
             "ok": true,
-            "detail": "BROADCAST | Diwali special: 20% off this weekend! | Reply STOP to stop offers. | sends at 2:02 pm · | 11:32 pm",
+            "detail": "BROADCAST | Diwali special: 20% off this weekend! | Reply STOP to stop offers. | sends at 7:37 pm · | 5:07 am",
             "kind": "expect"
           },
           {
@@ -1688,8 +1688,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:32:45.729Z",
-    "durationMs": 16652,
+    "at": "2026-11-20T00:08:18.557Z",
+    "durationMs": 16578,
     "steps": [
       {
         "n": 1,
@@ -1847,8 +1847,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:33:04.676Z",
-    "durationMs": 13756,
+    "at": "2026-11-20T00:08:36.178Z",
+    "durationMs": 13458,
     "steps": [
       {
         "n": 0,
@@ -1940,8 +1940,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:33:51.230Z",
-    "durationMs": 46532,
+    "at": "2026-11-20T00:09:13.002Z",
+    "durationMs": 36809,
     "steps": [
       {
         "n": 1,
@@ -1986,7 +1986,7 @@
           {
             "label": "desktop: 'Kurkure Momos' lands just below the sticky bar",
             "ok": true,
-            "detail": "{\"top\":65,\"bar\":53}",
+            "detail": "{\"top\":239,\"bar\":227}",
             "kind": "expect"
           },
           {
@@ -2010,7 +2010,7 @@
           {
             "label": "only one message is visible at a time",
             "ok": true,
-            "detail": "[\"Free delivery on ord\"]",
+            "detail": "[\"Fresh momos, steamed\"]",
             "kind": "expect"
           },
           {
@@ -2046,13 +2046,13 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "0,0,0,3,66,376,916,1120,1170,1170,1170,1170,1170,1170",
+            "detail": "0,0,0,5,119,612,843,875,875,875,875,875,875,875",
             "kind": "expect"
           },
           {
             "label": "tablet: 'Kurkure Momos' lands just below the sticky bar",
             "ok": true,
-            "detail": "{\"top\":71,\"bar\":59}",
+            "detail": "{\"top\":245,\"bar\":232}",
             "kind": "expect"
           },
           {
@@ -2076,7 +2076,7 @@
           {
             "label": "only one message is visible at a time",
             "ok": true,
-            "detail": "[\"Free delivery on ord\"]",
+            "detail": "[\"Fresh momos, steamed\"]",
             "kind": "expect"
           },
           {
@@ -2112,13 +2112,13 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "17,17,17,17,57,201,610,1087,1391,1480,1494,1494,1494,1494",
+            "detail": "0,0,0,3,109,532,928,1081,1090,1090,1090,1090,1090,1090",
             "kind": "expect"
           },
           {
             "label": "phone: 'Kurkure Momos' lands just below the sticky bar",
             "ok": true,
-            "detail": "{\"top\":67,\"bar\":55}",
+            "detail": "{\"top\":248,\"bar\":236}",
             "kind": "expect"
           },
           {
@@ -2141,12 +2141,12 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:33:54.836Z",
-    "durationMs": 3581,
+    "at": "2026-11-20T00:09:15.815Z",
+    "durationMs": 2797,
     "steps": [
       {
-        "n": 1,
-        "title": "favicon",
+        "n": 0,
+        "title": "Setup",
         "checks": [
           {
             "label": "a store whose plan includes it can set a favicon",
@@ -2206,12 +2206,12 @@
     "id": "t08-plans-outlets-settings",
     "title": "Plans & outlets — Basic → Pro upgrade, outlets 1-3 with menus, all outlet settings, delivery distance, load management",
     "status": "pass",
-    "pass": 43,
+    "pass": 44,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:37:07.169Z",
-    "durationMs": 187123,
+    "at": "2026-11-20T00:12:33.698Z",
+    "durationMs": 192690,
     "steps": [
       {
         "n": 1,
@@ -2304,7 +2304,7 @@
           {
             "label": "the store page now shows the Pro plan and 1 of 3 outlets",
             "ok": true,
-            "detail": "Within plan People 1 / 10 Outlets 1 / 3 Plan & limits Features Owners Outlets Domains Peopl",
+            "detail": "Within plan People 1 / 10 Outlets 1 / 3 Store name Shown in the storefront header, on recei",
             "kind": "expect"
           }
         ]
@@ -2385,19 +2385,19 @@
         "title": "Reload Settings for each outlet: every value must be exactly as saved, and independent of the others",
         "checks": [
           {
-            "label": "Central: all 58 settings across 10 tabs read back exactly as saved",
+            "label": "Central: all 57 settings across 10 tabs read back exactly as saved",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "Second: all 58 settings across 10 tabs read back exactly as saved",
+            "label": "Second: all 57 settings across 10 tabs read back exactly as saved",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "Third: all 58 settings across 10 tabs read back exactly as saved",
+            "label": "Third: all 57 settings across 10 tabs read back exactly as saved",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -2406,6 +2406,18 @@
       },
       {
         "n": 9,
+        "title": "Give each outlet the name customers see — Settings → Outlets → ✎ (the Store name in Settings is the whole store's and can't be edited there)",
+        "checks": [
+          {
+            "label": "each outlet is listed under the name customers see",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 10,
         "title": "Delivery distance on the storefront: inside and outside each outlet's radius (using the browser's location)",
         "checks": [
           {
@@ -2435,7 +2447,7 @@
         ]
       },
       {
-        "n": 10,
+        "n": 11,
         "title": "Load management on Second (busy at 2 orders, stop at 4): the customer's checkout and the dashboard",
         "checks": [
           {
@@ -2489,25 +2501,25 @@
         ]
       },
       {
-        "n": 11,
+        "n": 12,
         "title": "The Pro store and the Custom store get what their plans give them",
         "checks": [
           {
             "label": "Pro store: Pro plan, up to 3 outlets and 10 people",
             "ok": true,
-            "detail": "Within plan People 1 / 10 Outlets 1 / 3 Plan & limits Features Owners O",
+            "detail": "Within plan People 1 / 10 Outlets 1 / 3 Store name Shown in the storefr",
             "kind": "expect"
           },
           {
             "label": "Custom store starts with nothing: 1 outlet, 1 person",
             "ok": true,
-            "detail": "Within plan People 1 / 1 Outlets 1 / 1 Plan & limits Features Owners Ou",
+            "detail": "Within plan People 1 / 1 Outlets 1 / 1 Store name Shown in the storefro",
             "kind": "expect"
           },
           {
             "label": "the platform sets the Custom store to 2 outlets by hand",
             "ok": true,
-            "detail": "Within plan People 1 / 1 Outlets 1 / 2 Plan & limits Features Owners Ou",
+            "detail": "Within plan People 1 / 1 Outlets 1 / 2 Store name Shown in the storefro",
             "kind": "expect"
           },
           {
@@ -2548,8 +2560,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:37:39.603Z",
-    "durationMs": 32405,
+    "at": "2026-11-20T00:13:06.771Z",
+    "durationMs": 33049,
     "steps": [
       {
         "n": 1,
@@ -2803,8 +2815,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:38:31.829Z",
-    "durationMs": 52207,
+    "at": "2026-11-20T00:14:00.248Z",
+    "durationMs": 53451,
     "steps": [
       {
         "n": 1,
@@ -2813,7 +2825,7 @@
           {
             "label": "the platform shows Pro with 3 of 3 outlets and no grace period",
             "ok": true,
-            "detail": "Within plan People 1 / 10 Outlets 3 / 3 Plan & limits Features Owners O",
+            "detail": "Within plan People 1 / 10 Outlets 3 / 3 Store name Shown in the storefr",
             "kind": "expect"
           },
           {
@@ -2861,7 +2873,7 @@
           {
             "label": "the owner's dashboard shows 'Your store has 3 outlets (plan allows 1)' and 'Everything keeps working until …'",
             "ok": true,
-            "detail": "Your store has 3 outlets (plan allows 1). Everything keeps working until Nov 27, 2026. Remove the extras, or contact TablePe to upgrade your plan. Dashboard Central Revenue t",
+            "detail": "Your store has 3 outlets (plan allows 1). Everything keeps working until Nov 27, 2026. Remove the extras, or contact TablePe to upgrade your plan. Dashboard Lifecycle Central",
             "kind": "expect"
           },
           {
@@ -3047,7 +3059,7 @@
           {
             "label": "the disabled outlet no longer counts toward the limit: 2 outlets in use",
             "ok": true,
-            "detail": "Over limit People 1 / 3 Outlets 2 / 1 1 outlet, 0 people blocked Plan & limits Featu",
+            "detail": "Over limit People 1 / 3 Outlets 2 / 1 1 outlet, 0 people blocked Store name Shown in",
             "kind": "expect"
           },
           {
@@ -3082,8 +3094,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:38:43.933Z",
-    "durationMs": 12074,
+    "at": "2026-11-20T00:14:12.795Z",
+    "durationMs": 12525,
     "steps": [
       {
         "n": 1,
@@ -3104,7 +3116,7 @@
           {
             "label": "an outlet with order history is deleted",
             "ok": true,
-            "detail": "re dashboard Outlets — 3 Multiple outlets aren't included in your plan. Ask TablePe to add more. Central CURRENT /central Second /second Third /third This outlet has order history and can't be deleted",
+            "detail": "ple outlets aren't included in your plan. Ask TablePe to add more. Lifecycle Central CURRENT /central Lifecycle Second /second Lifecycle Third /third This outlet has order history and can't be deleted",
             "kind": "never"
           },
           {
@@ -3128,7 +3140,7 @@
           {
             "label": "the Outlets page no longer lists Third",
             "ok": true,
-            "detail": "Outlets — 2 Multiple outlets aren't included in your plan. Ask TablePe to add more. Central CURRENT /central Second /second",
+            "detail": "Outlets — 2 Multiple outlets aren't included in your plan. Ask TablePe to add more. Lifecycle Central CURRENT /central Lifecycle ",
             "kind": "expect"
           }
         ]
@@ -3199,8 +3211,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:39:05.368Z",
-    "durationMs": 21402,
+    "at": "2026-11-20T00:14:34.604Z",
+    "durationMs": 21785,
     "steps": [
       {
         "n": 1,
@@ -3358,8 +3370,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:40:39.369Z",
-    "durationMs": 88757,
+    "at": "2026-11-20T00:16:08.735Z",
+    "durationMs": 89954,
     "steps": [
       {
         "n": 1,
@@ -3776,7 +3788,7 @@
           {
             "label": "Campaigns: it finishes with 2 sent, 0 waiting, 0 failed",
             "ok": true,
-            "detail": "Win-back SMS SMS · 20 Nov, 12:10 am · 2 people 2 sent · 0 waiting · 0 failed Done",
+            "detail": "Win-back SMS SMS · 20 Nov, 5:45 am · 2 people 2 sent · 0 waiting · 0 failed Done",
             "kind": "expect"
           },
           {
@@ -3836,13 +3848,13 @@
           {
             "label": "it is queued: 3 waiting, still Sending (the sending worker is off here)",
             "ok": true,
-            "detail": "Ladies offer WhatsApp (linked numbers) · 20 Nov, 12:10 am · 3 people 0 sent · 3 waiting · 0 failed Sending Cancel",
+            "detail": "Ladies offer WhatsApp (linked numbers) · 20 Nov, 5:46 am · 3 people 0 sent · 3 waiting · 0 failed Sending Cancel",
             "kind": "expect"
           },
           {
             "label": "cancelling stops it: Cancelled, nothing waiting",
             "ok": true,
-            "detail": "Ladies offer WhatsApp (linked numbers) · 20 Nov, 12:10 am · 3 people 0 sent · 0 waiting · 0 failed Cancelled",
+            "detail": "Ladies offer WhatsApp (linked numbers) · 20 Nov, 5:46 am · 3 people 0 sent · 0 waiting · 0 failed Cancelled",
             "kind": "expect"
           }
         ]
@@ -3854,7 +3866,7 @@
           {
             "label": "Ravi (24 in 2020) shows 30",
             "ok": true,
-            "detail": " Ravi Kumar — 9000000001 Male 30 3 0 22 Aug, 12:09 am",
+            "detail": " Ravi Kumar — 9000000001 Male 30 3 0 22 Aug, 5:44 am",
             "kind": "expect"
           },
           {
@@ -3883,8 +3895,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:41:48.250Z",
-    "durationMs": 64695,
+    "at": "2026-11-20T00:17:19.272Z",
+    "durationMs": 66366,
     "steps": [
       {
         "n": 1,
@@ -4036,8 +4048,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:42:28.034Z",
-    "durationMs": 35592,
+    "at": "2026-11-20T00:17:57.905Z",
+    "durationMs": 34452,
     "steps": [
       {
         "n": 1,
@@ -4148,7 +4160,7 @@
           {
             "label": "Security lists the address as Blocked, for Dashboards, blocked twice",
             "ok": true,
-            "detail": "203.0.113.50 Dashboards Blocked · 10 seconds left 0 2 20 Nov, 12:12:07 am Unblock",
+            "detail": "203.0.113.50 Dashboards Blocked · 10 seconds left 0 2 20 Nov, 5:47:38 am Unblock",
             "kind": "expect"
           },
           {
@@ -4261,8 +4273,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:43:08.896Z",
-    "durationMs": 35628,
+    "at": "2026-11-20T00:18:38.387Z",
+    "durationMs": 36300,
     "steps": [
       {
         "n": 1,
@@ -4295,13 +4307,13 @@
           {
             "label": "the browser's only websocket is the live order feed (/realtime) — WhatsApp chat doesn't open one",
             "ok": true,
-            "detail": "ws://localhost:3097/realtime?outletId=6aff4316ebab46c38ef09b78",
+            "detail": "ws://localhost:3097/realtime?outletId=6aff91b89d30a48c6bc25ac0",
             "kind": "expect"
           },
           {
             "label": "a websocket for WhatsApp is opened by the browser",
             "ok": true,
-            "detail": "ws://localhost:3097/realtime?outletId=6aff4316ebab46c38ef09b78",
+            "detail": "ws://localhost:3097/realtime?outletId=6aff91b89d30a48c6bc25ac0",
             "kind": "never"
           }
         ]
@@ -4527,8 +4539,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T19:02:15.453Z",
-    "durationMs": 69879,
+    "at": "2026-11-20T00:19:53.753Z",
+    "durationMs": 71198,
     "steps": [
       {
         "n": 1,
@@ -4777,7 +4789,7 @@
           {
             "label": "each outlet has its own best sellers (Paneer Steamed Momos — 105 and Chicken Momos — 54)",
             "ok": true,
-            "detail": " Delivery: ₹10,273 · Dine-in: ₹8,544 Marketing Mart — Second Best sellers and how the orders arrive Chicken Momos — 54 Cold Coffee — 39 Veg Steamed Momos — 39 Paneer Steamed Momos — 28 Paneer Gravy Momos — 25 30% 39% 31% Takeaway Delivery Dine-in Takeaway: ₹5,228 · Delivery: ₹6,824 · Dine-in: ₹5,440",
+            "detail": " Dine-in: ₹8,544 · Delivery: ₹10,273 Marketing Mart — Second Best sellers and how the orders arrive Chicken Momos — 54 Cold Coffee — 39 Veg Steamed Momos — 39 Paneer Steamed Momos — 28 Paneer Gravy Momos — 25 31% 30% 39% Dine-in Takeaway Delivery Dine-in: ₹5,440 · Takeaway: ₹5,228 · Delivery: ₹6,824",
             "kind": "expect"
           },
           {
@@ -5005,7 +5017,7 @@
           {
             "label": "the weekly PDF is a real PDF file",
             "ok": true,
-            "detail": "7278 bytes",
+            "detail": "7276 bytes",
             "kind": "expect"
           },
           {
@@ -5196,8 +5208,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:45:12.778Z",
-    "durationMs": 45072,
+    "at": "2026-11-20T00:20:41.874Z",
+    "durationMs": 43945,
     "steps": [
       {
         "n": 1,
@@ -5362,7 +5374,7 @@
           {
             "label": "the panel says 'Table T9' and 'Rooftop · 6 seats · Free'",
             "ok": true,
-            "detail": "Table T9 Rooftop · 6 seats · Free http://localhost:3170/t/6aff438f1c64cc150be456",
+            "detail": "Table T9 Rooftop · 6 seats · Free http://localhost:3170/t/6aff92329a836d65e07f24",
             "kind": "expect"
           },
           {
@@ -5374,7 +5386,7 @@
           {
             "label": "the address printed under it is /t/<id>?k=<code> on the store's own site",
             "ok": true,
-            "detail": "http://localhost:3170/t/6aff438f1c64cc150be45692?k=5Z75n7tVl6-qhl5yHJ6Nl-aG",
+            "detail": "http://localhost:3170/t/6aff92329a836d65e07f240e?k=Zs2j_uzabToUPB1VQ0FK5cub",
             "kind": "expect"
           },
           {
@@ -5398,7 +5410,7 @@
           {
             "label": "every table has its own address and its own code",
             "ok": true,
-            "detail": "http://localhost:3170/t/6aff438f1c64cc150be45692?k=5Z75n7tVl6-qhl5yHJ6Nl-aG | http://localhost:3170/t/6aff43901c64cc150be456a2?k=VEnyLkydcRy8LMsX-7k5z568 | http://localhost:3170/t/6aff438a1c64cc150be451fd?k=yZF-hQQ9GOJ3YiEHYEBJ-dtS",
+            "detail": "http://localhost:3170/t/6aff92329a836d65e07f240e?k=Zs2j_uzabToUPB1VQ0FK5cub | http://localhost:3170/t/6aff92339a836d65e07f241e?k=CccxNNUfMUXccvj9gHqVk3FV | http://localhost:3170/t/6aff922c9a836d65e07f1f6d?k=C-Pc9uaMEtTp7JD7kkIXWkwn",
             "kind": "expect"
           },
           {
@@ -5581,8 +5593,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:46:15.389Z",
-    "durationMs": 58429,
+    "at": "2026-11-20T00:21:42.993Z",
+    "durationMs": 56943,
     "steps": [
       {
         "n": 1,
@@ -5723,7 +5735,7 @@
           {
             "label": "'Seated now — 1' with 'Table D1 … 2 orders · tab ₹130'",
             "ok": true,
-            "detail": "Seated now — 1 Table D1 since 12:15 AM · 2 orders · tab ₹130 Move to… Table D2 Table D3 Table T1 Table T2 Table T3 Table T4 Table ",
+            "detail": "Seated now — 1 Table D1 since 05:51 AM · 2 orders · tab ₹130 Move to… Table D2 Table D3 Table T1 Table T2 Table T3 Table T4 Table ",
             "kind": "expect"
           },
           {
@@ -5735,7 +5747,7 @@
           {
             "label": "the Orders page lists both: '#0001 … Dina Diner 9877712345 DI Table D1 … ₹70 Placed' and '#0002 … ₹60'",
             "ok": true,
-            "detail": "#0001 12:15 AM Dina Diner 9877712345 DI Table D1 1 ₹70 Placed 0m Approve || #0002 12:15 AM Dina Diner 9877712345 DI Table D1 1 ₹60 Placed 0m Approve",
+            "detail": "#0001 05:51 AM Dina Diner 9877712345 DI Table D1 1 ₹70 Placed 0m Approve || #0002 05:51 AM Dina Diner 9877712345 DI Table D1 1 ₹60 Placed 0m Approve",
             "kind": "expect"
           },
           {
@@ -5759,7 +5771,7 @@
           {
             "label": "'Seated now' says 'Table D2 … moved: D1 → D2'",
             "ok": true,
-            "detail": "Seated now — 1 Table D2moved: D1 → D2 since 12:15 AM · 2 orders · tab ₹130 Move to… Table D1 Table D3 Table T1 Table T2 Table T3 Table T4 Table T5 Move Close Garden D1 Ne",
+            "detail": "Seated now — 1 Table D2moved: D1 → D2 since 05:51 AM · 2 orders · tab ₹130 Move to… Table D1 Table D3 Table T1 Table T2 Table T3 Table T4 Table T5 Move Close Garden D1 Ne",
             "kind": "expect"
           },
           {
@@ -5861,7 +5873,7 @@
           {
             "label": "after 'Cancel / void' the order #0003 is Cancelled",
             "ok": true,
-            "detail": "#0003 12:15 AM Rohan Other 9877799999 DI Table D3 1 ₹70 Cancelled —",
+            "detail": "#0003 05:51 AM Rohan Other 9877799999 DI Table D3 1 ₹70 Cancelled —",
             "kind": "expect"
           },
           {
@@ -5897,7 +5909,7 @@
           {
             "label": "the panel shows a new code for the same table",
             "ok": true,
-            "detail": "http://localhost:3170/t/6aff43c14231510d405bf490?k=HV0GxznjOBmd1WntV1sptfK0 → http://localhost:3170/t/6aff43c14231510d405bf490?k=65bonP3a-u38pNvzN2Nqigyg",
+            "detail": "http://localhost:3170/t/6aff926372616fe9443fd0d5?k=NboH-9kinF8YVYnhBdoyqm4o → http://localhost:3170/t/6aff926372616fe9443fd0d5?k=CJ6y7sVeSFU154ixLvRJt_oF",
             "kind": "expect"
           },
           {
@@ -5986,8 +5998,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:49:19.008Z",
-    "durationMs": 179426,
+    "at": "2026-11-20T00:24:44.929Z",
+    "durationMs": 177754,
     "steps": [
       {
         "n": 1,
@@ -6074,7 +6086,7 @@
           {
             "label": "the counter's Orders screen has order A as 'Placed' with its wait running ('0m')",
             "ok": true,
-            "detail": "#0001 12:16 AM Meera Late 9877700077 TA 1 ₹70 Placed 0m Accepted",
+            "detail": "#0001 05:52 AM Meera Late 9877700077 TA 1 ₹70 Placed 0m Accepted",
             "kind": "expect"
           },
           {
@@ -6086,7 +6098,7 @@
           {
             "label": "over a minute later the status still says 'Placed' and the wait shows 1m or more",
             "ok": true,
-            "detail": "#0001 12:16 AM Meera Late 9877700077 TA 1 ₹70 Placed 1m Accepted",
+            "detail": "#0001 05:52 AM Meera Late 9877700077 TA 1 ₹70 Placed 1m Accepted",
             "kind": "expect"
           },
           {
@@ -6374,7 +6386,7 @@
           {
             "label": "completed: order A has no timer and no warning",
             "ok": true,
-            "detail": "Completed · #0001 12:16 AM Meera Late 9877700077 TA 1 ₹70 Completed —",
+            "detail": "Completed · #0001 05:52 AM Meera Late 9877700077 TA 1 ₹70 Completed —",
             "kind": "expect"
           },
           {
@@ -6515,8 +6527,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:50:14.815Z",
-    "durationMs": 51585,
+    "at": "2026-11-20T00:25:41.701Z",
+    "durationMs": 52542,
     "steps": [
       {
         "n": 1,
@@ -6867,7 +6879,7 @@
           {
             "label": "Save: 'Saved.' and the form is now a saved draft with its own address",
             "ok": true,
-            "detail": "http://localhost:3171/platform/onboarding/6aff44c64ff21e0cab87a219",
+            "detail": "http://localhost:3171/platform/onboarding/6aff9364429f64d2670472ab",
             "kind": "expect"
           },
           {
@@ -7053,7 +7065,7 @@
           {
             "label": "no blank pages: every page has real content (not just a footer) — printing it gives no empty sheets",
             "ok": true,
-            "detail": "1092 / 1040 / 624",
+            "detail": "1091 / 1040 / 624",
             "kind": "expect"
           },
           {
@@ -7316,8 +7328,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:50:55.753Z",
-    "durationMs": 35734,
+    "at": "2026-11-20T00:26:21.967Z",
+    "durationMs": 36096,
     "steps": [
       {
         "n": 1,
@@ -7721,8 +7733,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:51:53.369Z",
-    "durationMs": 53428,
+    "at": "2026-11-20T00:27:20.510Z",
+    "durationMs": 54378,
     "steps": [
       {
         "n": 1,
@@ -7989,7 +8001,7 @@
           {
             "label": "…in the store's own words: three lines, with the customer's first name, the outlet, the store, the code and the minutes filled in",
             "ok": true,
-            "detail": "\"Hi Linked, welcome to Main\\n736026 is your Acme Momos code.\\nValid for 10 minutes.\"",
+            "detail": "\"Hi Linked, welcome to Main\\n171370 is your Acme Momos code.\\nValid for 10 minutes.\"",
             "kind": "expect"
           },
           {
@@ -8085,7 +8097,7 @@
           {
             "label": "the customer (Asha) got the code on WhatsApp from the store's number",
             "ok": true,
-            "detail": "572735",
+            "detail": "621243",
             "kind": "expect"
           },
           {
@@ -8151,7 +8163,7 @@
           {
             "label": "…in the 'Code message' wording",
             "ok": true,
-            "detail": "Code 323882 for Acme Momos",
+            "detail": "Code 419064 for Acme Momos",
             "kind": "expect"
           },
           {
@@ -8223,13 +8235,13 @@
           {
             "label": "…the code fills {{1}}",
             "ok": true,
-            "detail": "787017",
+            "detail": "760519",
             "kind": "expect"
           },
           {
             "label": "…and also goes to the Copy-code button",
             "ok": true,
-            "detail": "{\"type\":\"button\",\"sub_type\":\"url\",\"index\":\"0\",\"parameters\":[{\"type\":\"text\",\"text\":\"787017\"}]}",
+            "detail": "{\"type\":\"button\",\"sub_type\":\"url\",\"index\":\"0\",\"parameters\":[{\"type\":\"text\",\"text\":\"760519\"}]}",
             "kind": "expect"
           },
           {
@@ -8312,8 +8324,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:52:28.720Z",
-    "durationMs": 35322,
+    "at": "2026-11-20T00:27:53.833Z",
+    "durationMs": 33290,
     "steps": [
       {
         "n": 1,
@@ -8412,13 +8424,13 @@
           {
             "label": "…in the store's own words",
             "ok": true,
-            "detail": "Your Acme code: 624241",
+            "detail": "Your Acme code: 728363",
             "kind": "expect"
           },
           {
             "label": "…within seconds",
             "ok": true,
-            "detail": "899 ms",
+            "detail": "1234 ms",
             "kind": "expect"
           },
           {
@@ -8490,7 +8502,7 @@
           {
             "label": "every variable is filled in, the four lines arrive as four lines",
             "ok": true,
-            "detail": "\"Hi Ravi\\n616250 — Acme / Main\\nPhone 98112 00031 · 20 Nov 2026 12:21 am\\nValid 10 min · Help: +91 98765 43210\"",
+            "detail": "\"Hi Ravi\\n924404 — Acme / Main\\nPhone 98112 00031 · 20 Nov 2026 5:57 am\\nValid 10 min · Help: +91 98765 43210\"",
             "kind": "expect"
           },
           {
@@ -8538,7 +8550,7 @@
           {
             "label": "a code goes out at once even with 30 broadcast messages queued ahead of it",
             "ok": true,
-            "detail": "200 in 2047 ms",
+            "detail": "200 in 2046 ms",
             "kind": "expect"
           },
           {
@@ -8556,7 +8568,7 @@
           {
             "label": "the codes were spread over BOTH connected numbers (picked at random)",
             "ok": true,
-            "detail": "{\"919000000001\":11,\"919000000002\":7}",
+            "detail": "{\"919000000002\":8,\"919000000001\":9}",
             "kind": "expect"
           },
           {
@@ -8628,13 +8640,13 @@
           {
             "label": "the code goes through the gateway in the 'Code message' wording",
             "ok": true,
-            "detail": "200 Code 404713 for Acme",
+            "detail": "200 Code 339511 for Acme",
             "kind": "expect"
           },
           {
             "label": "an SMS 'Code message' can use the same variables",
             "ok": true,
-            "detail": "945044 is your Acme code, there (Main)",
+            "detail": "115071 is your Acme code, there (Main)",
             "kind": "expect"
           }
         ]
@@ -8747,8 +8759,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:53:14.865Z",
-    "durationMs": 36384,
+    "at": "2026-11-20T00:28:38.185Z",
+    "durationMs": 36030,
     "steps": [
       {
         "n": 1,
@@ -8889,7 +8901,7 @@
           {
             "label": "the new code is on screen",
             "ok": true,
-            "detail": "263326",
+            "detail": "688261",
             "kind": "expect"
           }
         ]
@@ -8918,8 +8930,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:53:47.875Z",
-    "durationMs": 28819,
+    "at": "2026-11-20T00:29:15.067Z",
+    "durationMs": 32713,
     "steps": [
       {
         "n": 0,
@@ -9018,7 +9030,7 @@
           {
             "label": "it arrived from one of the store's two numbers",
             "ok": true,
-            "detail": "[\"919000000003\"]",
+            "detail": "[\"919000000001\"]",
             "kind": "expect"
           }
         ]
@@ -9036,7 +9048,7 @@
           {
             "label": "both connected numbers were used (picked at random)",
             "ok": true,
-            "detail": "{\"919000000001\":6,\"919000000003\":8}",
+            "detail": "{\"919000000003\":4,\"919000000001\":10}",
             "kind": "expect"
           }
         ]
@@ -9103,12 +9115,12 @@
     "id": "t25-otp-resend-api",
     "title": "Code resend rule — the API makes a number wait 30 s, 1 min, 2 min, 5 min, 15 min, 1 h, then 6 h between codes, however it is called",
     "status": "pass",
-    "pass": 41,
+    "pass": 40,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:52:33.265Z",
-    "durationMs": 4520,
+    "at": "2026-11-20T00:27:57.963Z",
+    "durationMs": 4114,
     "steps": [
       {
         "n": 1,
@@ -9247,12 +9259,6 @@
         "title": "each number has its own clock",
         "checks": [
           {
-            "label": "a different number is not held back by someone else's wait",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
             "label": "an email address has its own clock too",
             "ok": true,
             "detail": "",
@@ -9261,7 +9267,13 @@
           {
             "label": "the staff coin code for a number that is waiting on a sign-in code is still allowed (separate flow)",
             "ok": true,
-            "detail": "{\"channel\":\"sms\",\"devCode\":\"722963\",\"resendAfterSec\":30}",
+            "detail": "{\"channel\":\"sms\",\"devCode\":\"267408\",\"resendAfterSec\":30}",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the coin code has the same waits (asking again at once is refused)",
+            "ok": true,
+            "detail": "429 Please wait 30 seconds before asking for another code.",
             "kind": "expect"
           }
         ]
@@ -9349,12 +9361,6 @@
             "kind": "expect"
           },
           {
-            "label": "the gateway is down: the customer is told the code couldn't be sent",
-            "ok": true,
-            "detail": "502 Couldn't send the code. Check the number and try again.",
-            "kind": "expect"
-          },
-          {
             "label": "…and no unsent code is left behind",
             "ok": true,
             "detail": "",
@@ -9404,8 +9410,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:53:56.902Z",
-    "durationMs": 9005,
+    "at": "2026-11-20T00:29:22.522Z",
+    "durationMs": 7432,
     "steps": [
       {
         "n": 1,
@@ -10122,7 +10128,7 @@
           {
             "label": "the inventory sees the whole API",
             "ok": true,
-            "detail": "287 routes, 167 change data",
+            "detail": "288 routes, 168 change data",
             "kind": "expect"
           },
           {
@@ -10223,8 +10229,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:54:02.260Z",
-    "durationMs": 5338,
+    "at": "2026-11-20T00:29:27.858Z",
+    "durationMs": 5317,
     "steps": [
       {
         "n": 1,
@@ -10293,7 +10299,7 @@
           {
             "label": "paging: the first page of two says there are more",
             "ok": true,
-            "detail": "2 2026-11-19T18:24:01.898Z",
+            "detail": "2 2026-11-19T23:59:27.577Z",
             "kind": "expect"
           },
           {
@@ -10658,8 +10664,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:54:50.701Z",
-    "durationMs": 43253,
+    "at": "2026-11-20T00:30:15.440Z",
+    "durationMs": 43416,
     "steps": [
       {
         "n": 1,
@@ -10764,7 +10770,7 @@
           {
             "label": "'View details' lists the items and the bill",
             "ok": true,
-            "detail": "2 × Veg Steamed Momos (5 pcs) ₹120 Items ₹120 Taxes ₹5.71 Total ₹120 Placed 20 Nov 2026, 12:24 am",
+            "detail": "2 × Veg Steamed Momos (5 pcs) ₹120 Items ₹120 Taxes ₹5.71 Total ₹120 Placed 20 Nov 2026, 5:59 am",
             "kind": "expect"
           }
         ]
@@ -10776,7 +10782,7 @@
           {
             "label": "(the order is on the dashboard)",
             "ok": true,
-            "detail": "6aff45d7de324553ecabab8a",
+            "detail": "6aff947342120a5586a265f0",
             "kind": "expect"
           },
           {
@@ -10985,8 +10991,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:54:53.780Z",
-    "durationMs": 3058,
+    "at": "2026-11-20T00:30:18.598Z",
+    "durationMs": 3134,
     "steps": [
       {
         "n": 1,
@@ -11098,12 +11104,12 @@
     "id": "t32-menu-tree-api",
     "title": "Menu categories inside categories — depth, moving, pictures, ordering, bulk delete of categories and items, import, and how the storefront builds its sections",
     "status": "pass",
-    "pass": 91,
+    "pass": 93,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:54:57.036Z",
-    "durationMs": 3239,
+    "at": "2026-11-20T00:30:21.812Z",
+    "durationMs": 3195,
     "steps": [
       {
         "n": 1,
@@ -11398,6 +11404,12 @@
             "kind": "expect"
           },
           {
+            "label": "dropping B between A1 and A2 puts it inside A, between them",
+            "ok": true,
+            "detail": "DnD A1,DnD B,DnD A2 | DnD A,DnD C",
+            "kind": "expect"
+          },
+          {
             "label": "the level it joined is renumbered 0, 1, 2",
             "ok": true,
             "detail": "",
@@ -11472,7 +11484,13 @@
           {
             "label": "three categories are made in one request (201)",
             "ok": true,
-            "detail": "201 {\"categories\":[{\"id\":\"6aff46002defaa8ebb624d2a\",\"name\":\"Bulk Dosa\",\"parentId\":\"6aff46002defaa8ebb624d24\",\"image\":{\"url\":",
+            "detail": "201 {\"categories\":[{\"id\":\"6aff949dea6c197f9dc0b393\",\"name\":\"Bulk Dosa\",\"parentId\":\"6aff949dea6c197f9dc0b38c\",\"image\":{\"url\":",
+            "kind": "expect"
+          },
+          {
+            "label": "they are in the order given, with the spaces tidied",
+            "ok": true,
+            "detail": "Bulk Dosa|Bulk Idli & Vada|Bulk Uttapam",
             "kind": "expect"
           },
           {
@@ -11729,8 +11747,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T20:45:02.997Z",
-    "durationMs": 45342,
+    "at": "2026-11-20T00:31:11.904Z",
+    "durationMs": 45901,
     "steps": [
       {
         "n": 1,
@@ -12248,8 +12266,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:55:58.656Z",
-    "durationMs": 10770,
+    "at": "2026-11-20T00:31:21.740Z",
+    "durationMs": 9809,
     "steps": [
       {
         "n": 1,
@@ -12258,7 +12276,7 @@
           {
             "label": "a 24-megapixel JPEG at quality 95 (about 19 MB) is accepted",
             "ok": true,
-            "detail": "201 19859 KB",
+            "detail": "201 19860 KB",
             "kind": "expect"
           },
           {
@@ -12268,9 +12286,9 @@
             "kind": "expect"
           },
           {
-            "label": "it is now 300 KB — under the 400 KB target and at least 20 times smaller than the original",
+            "label": "it is now 310 KB — under the 400 KB target and at least 20 times smaller than the original",
             "ok": true,
-            "detail": "19859 KB → 300 KB",
+            "detail": "19860 KB → 310 KB",
             "kind": "expect"
           },
           {
@@ -12282,13 +12300,13 @@
           {
             "label": "the answer reports the real final size, bytes and the original's bytes",
             "ok": true,
-            "detail": "{\"w\":1600,\"h\":1067,\"bytes\":307530}",
+            "detail": "{\"w\":1600,\"h\":1067,\"bytes\":317646}",
             "kind": "expect"
           },
           {
             "label": "it is stored inside this store's own folder, with a name the uploader doesn't control",
             "ok": true,
-            "detail": "6aff463640dd01bef89f98c1/6aff463640dd01bef89f98c5/menu-items/d25331f5-9527-457d-92ae-676110f0f94e.webp",
+            "detail": "6aff94d2c31b944342d7b41c/6aff94d2c31b944342d7b41f/menu-items/ff87f76a-5593-4103-8b30-e4bc0af7b056.webp",
             "kind": "expect"
           }
         ]
@@ -12348,7 +12366,7 @@
           {
             "label": "very grainy detail still ends up under the 400 KB target",
             "ok": true,
-            "detail": "12368 KB → 284 KB",
+            "detail": "12369 KB → 284 KB",
             "kind": "expect"
           },
           {
@@ -12372,7 +12390,7 @@
           {
             "label": "a \"pixel bomb\" (225 megapixels, only 672 KB on disk) is shrunk safely and quickly",
             "ok": true,
-            "detail": "201 in 402 ms",
+            "detail": "201 in 363 ms",
             "kind": "expect"
           },
           {
@@ -12432,7 +12450,7 @@
           {
             "label": "…in a reasonable time",
             "ok": true,
-            "detail": "830 ms",
+            "detail": "807 ms",
             "kind": "expect"
           },
           {
@@ -12456,7 +12474,7 @@
           {
             "label": "the platform owner can change the compression settings",
             "ok": true,
-            "detail": "200 {\"provider\":\"local\",\"updatedAt\":\"2026-11-19T18:55:57.787Z\",\"limits\":{\"maxPerItem",
+            "detail": "200 {\"provider\":\"local\",\"updatedAt\":\"2026-11-20T00:31:20.898Z\",\"limits\":{\"maxPerItem",
             "kind": "expect"
           },
           {
@@ -12497,8 +12515,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:56:23.907Z",
-    "durationMs": 4919,
+    "at": "2026-11-20T00:31:45.452Z",
+    "durationMs": 3663,
     "steps": [
       {
         "n": 1,
@@ -12507,7 +12525,7 @@
           {
             "label": "the upload's answer carries THIS deployment's domain",
             "ok": true,
-            "detail": "https://img.example.test/uploads/6aff46552381ae9bb8d2cc5a/6aff46552381ae9bb8d2cc5e/menu-items/97a6a65e-e370-45a3-a115-dfec4f06f99a.webp",
+            "detail": "https://img.example.test/uploads/6aff94f03bbf819449f62b93/6aff94f03bbf819449f62b96/menu-items/33d17a8d-1517-480c-be1e-ec8e38f664ec.webp",
             "kind": "expect"
           },
           {
@@ -12519,7 +12537,7 @@
           {
             "label": "the dashboard sent the full address — the database keeps only the path",
             "ok": true,
-            "detail": "/uploads/6aff46552381ae9bb8d2cc5a/6aff46552381ae9bb8d2cc5e/menu-items/97a6a65e-e370-45a3-a115-dfec4f06f99a.webp",
+            "detail": "/uploads/6aff94f03bbf819449f62b93/6aff94f03bbf819449f62b96/menu-items/33d17a8d-1517-480c-be1e-ec8e38f664ec.webp",
             "kind": "expect"
           },
           {
@@ -12537,7 +12555,7 @@
           {
             "label": "a category's picture is kept domain-free as well",
             "ok": true,
-            "detail": "/uploads/6aff46552381ae9bb8d2cc5a/6aff46552381ae9bb8d2cc5e/menu-items/8d3a344c-6ba5-4eb4-a4de-29d3a6b8743c.webp",
+            "detail": "/uploads/6aff94f03bbf819449f62b93/6aff94f03bbf819449f62b96/menu-items/15e85c90-2a4b-43a3-a2fe-ecf1aa66a551.webp",
             "kind": "expect"
           },
           {
@@ -12555,13 +12573,13 @@
           {
             "label": "an address saved from localhost now points at this deployment",
             "ok": true,
-            "detail": "https://img.example.test/uploads/6aff46552381ae9bb8d2cc5a/6aff46552381ae9bb8d2cc5e/menu-items/01234567-1111-4222-8333-000000000001.webp",
+            "detail": "https://img.example.test/uploads/6aff94f03bbf819449f62b93/6aff94f03bbf819449f62b96/menu-items/01234567-1111-4222-8333-000000000001.webp",
             "kind": "expect"
           },
           {
             "label": "an address saved with an OLD domain now points at this deployment",
             "ok": true,
-            "detail": "https://img.example.test/uploads/6aff46552381ae9bb8d2cc5a/6aff46552381ae9bb8d2cc5e/menu-items/01234567-1111-4222-8333-000000000002.webp",
+            "detail": "https://img.example.test/uploads/6aff94f03bbf819449f62b93/6aff94f03bbf819449f62b96/menu-items/01234567-1111-4222-8333-000000000002.webp",
             "kind": "expect"
           },
           {
@@ -12609,7 +12627,7 @@
           {
             "label": "an edit that sends the full address back still stores only the path",
             "ok": true,
-            "detail": "/uploads/6aff46552381ae9bb8d2cc5a/6aff46552381ae9bb8d2cc5e/menu-items/97a6a65e-e370-45a3-a115-dfec4f06f99a.webp",
+            "detail": "/uploads/6aff94f03bbf819449f62b93/6aff94f03bbf819449f62b96/menu-items/33d17a8d-1517-480c-be1e-ec8e38f664ec.webp",
             "kind": "expect"
           },
           {
@@ -12657,7 +12675,7 @@
           {
             "label": "the receipt preview's logo is an absolute address on this domain",
             "ok": true,
-            "detail": "<img class=\"logo\" src=\"https://img.example.test/uploads/6aff46552381ae9bb8d2cc5a/6aff46552381ae9bb8d2cc5e/menu-items/97a",
+            "detail": "<img class=\"logo\" src=\"https://img.example.test/uploads/6aff94f03bbf819449f62b93/6aff94f03bbf819449f62b96/menu-items/33d",
             "kind": "expect"
           }
         ]
@@ -12693,7 +12711,7 @@
           {
             "label": "both now keep only the path",
             "ok": true,
-            "detail": "/uploads/6aff46552381ae9bb8d2cc5a/6aff46",
+            "detail": "/uploads/6aff94f03bbf819449f62b93/6aff94",
             "kind": "expect"
           },
           {
@@ -12722,8 +12740,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:56:18.972Z",
-    "durationMs": 20293,
+    "at": "2026-11-20T00:31:41.764Z",
+    "durationMs": 20006,
     "steps": [
       {
         "n": 1,
@@ -12780,7 +12798,7 @@
           {
             "label": "choosing it scrolls the menu to that category, just under the (short) bar",
             "ok": true,
-            "detail": "{\"top\":66,\"bar\":53}",
+            "detail": "{\"top\":239,\"bar\":227}",
             "kind": "expect"
           },
           {
@@ -12846,7 +12864,7 @@
           {
             "label": "tablet: the Veg/Egg/Non-veg filter and the Categories button share the row",
             "ok": true,
-            "detail": "{\"barH\":58.75,\"btnRight\":806,\"barRight\":806,\"filterBottom\":822,\"btnTop\":783,\"filterTop\":781}",
+            "detail": "{\"barH\":58.75,\"btnRight\":806,\"barRight\":806,\"filterBottom\":738,\"btnTop\":699,\"filterTop\":698}",
             "kind": "expect"
           },
           {
@@ -12870,7 +12888,7 @@
           {
             "label": "tablet: a category picked in the sheet lands just under the bar",
             "ok": true,
-            "detail": "{\"top\":71,\"bar\":59}",
+            "detail": "{\"top\":245,\"bar\":232}",
             "kind": "expect"
           },
           {
@@ -12900,7 +12918,7 @@
           {
             "label": "phone: the Veg/Egg/Non-veg filter and the Categories button share the row",
             "ok": true,
-            "detail": "{\"barH\":54.96875,\"btnRight\":376,\"barRight\":376,\"filterBottom\":863,\"btnTop\":827,\"filterTop\":824}",
+            "detail": "{\"barH\":54.96875,\"btnRight\":376,\"barRight\":376,\"filterBottom\":716,\"btnTop\":679,\"filterTop\":676}",
             "kind": "expect"
           },
           {
@@ -12924,7 +12942,7 @@
           {
             "label": "phone: a category picked in the sheet lands just under the bar",
             "ok": true,
-            "detail": "{\"top\":67,\"bar\":55}",
+            "detail": "{\"top\":248,\"bar\":236}",
             "kind": "expect"
           },
           {
@@ -12959,8 +12977,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:56:31.344Z",
-    "durationMs": 7401,
+    "at": "2026-11-20T00:31:52.417Z",
+    "durationMs": 6937,
     "steps": [
       {
         "n": 1,
@@ -13069,15 +13087,15 @@
             "kind": "expect"
           },
           {
-            "label": "tablet: the button configured beside the title is NOT there — it is under the cards instead",
+            "label": "tablet: the button stays beside the title, as configured",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "tablet: it sits below the cards, centred on the screen",
+            "label": "tablet: and keeps its size",
             "ok": true,
-            "detail": "0.0px off centre",
+            "detail": "",
             "kind": "expect"
           },
           {
@@ -13155,7 +13173,7 @@
           {
             "label": "phone: the title is on TWO lines — parent first, then the name",
             "ok": true,
-            "detail": "884 / 899",
+            "detail": "736 / 752",
             "kind": "expect"
           },
           {
@@ -13262,8 +13280,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T20:45:08.141Z",
-    "durationMs": 5104,
+    "at": "2026-11-20T00:31:56.510Z",
+    "durationMs": 4078,
     "steps": [
       {
         "n": 1,
@@ -13410,7 +13428,7 @@
           {
             "label": "a picture is made and added to the dish",
             "ok": true,
-            "detail": "200 {\"item\":{\"id\":\"6aff5fd2e8faa3e946bfff28\",\"categoryId\":\"6aff5fd2e8faa3e946bfff23\",\"name\":\"Kadai Paneer\",\"description\":\"Pa",
+            "detail": "200 {\"item\":{\"id\":\"6aff94fb42fa739c9e4c990a\",\"categoryId\":\"6aff94fb42fa739c9e4c9905\",\"name\":\"Kadai Paneer\",\"description\":\"Pa",
             "kind": "expect"
           },
           {
@@ -13434,13 +13452,13 @@
           {
             "label": "the picture was compressed to WebP, stored in the store's own folder, and saved without a domain",
             "ok": true,
-            "detail": "/uploads/6aff5fd1e8faa3e946bffeda/6aff5fd1e8faa3e946bffedd/m",
+            "detail": "/uploads/6aff94fa42fa739c9e4c98bc/6aff94fa42fa739c9e4c98bf/m",
             "kind": "expect"
           },
           {
             "label": "…and the menu hands out a full address",
             "ok": true,
-            "detail": "http://localhost:3101/uploads/6aff5fd1e8faa3e946bf",
+            "detail": "http://localhost:3101/uploads/6aff94fa42fa739c9e4c",
             "kind": "expect"
           },
           {
@@ -13464,7 +13482,7 @@
           {
             "label": "…at the same time, not one after another (3 × 0.4 s took under 1.1 s)",
             "ok": true,
-            "detail": "489 ms",
+            "detail": "488 ms",
             "kind": "expect"
           },
           {
@@ -13752,7 +13770,7 @@
           {
             "label": "…and the answer says which key was switched away from, and which made the picture",
             "ok": true,
-            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Third\"]}",
+            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Second account\"]}",
             "kind": "expect"
           },
           {
@@ -13770,7 +13788,7 @@
           {
             "label": "…and the answer says which key was switched away from, and which made the picture",
             "ok": true,
-            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Second account\"]}",
+            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Third\"]}",
             "kind": "expect"
           },
           {
@@ -13853,8 +13871,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T20:45:32.652Z",
-    "durationMs": 19294,
+    "at": "2026-11-20T00:32:19.967Z",
+    "durationMs": 19267,
     "steps": [
       {
         "n": 1,
@@ -14114,8 +14132,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:57:37.879Z",
-    "durationMs": 38998,
+    "at": "2026-11-20T00:32:59.034Z",
+    "durationMs": 39044,
     "steps": [
       {
         "n": 0,
@@ -14153,14 +14171,14 @@
   },
   "t41-storefront-view-all": {
     "id": "t41-storefront-view-all",
-    "title": "Storefront View all — as configured on a wide screen; under the cards and centred on phones and tablets (portrait and landscape); the extra cards slide open and shut",
+    "title": "Storefront View all — as configured from 720px wide up (tablets, narrow windows, desktops); under the cards and centred under 720px; the extra cards slide open and shut",
     "status": "pass",
-    "pass": 70,
+    "pass": 85,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:58:19.413Z",
-    "durationMs": 41504,
+    "at": "2026-11-20T00:33:43.079Z",
+    "durationMs": 44027,
     "steps": [
       {
         "n": 1,
@@ -14230,34 +14248,34 @@
       },
       {
         "n": 3,
-        "title": "tablet, portrait 820px",
+        "title": "small phone 360px",
         "checks": [
           {
-            "label": "tablet, portrait: configured left → ONE button, under the cards, in the middle",
+            "label": "small phone: configured left → ONE button, under the cards, in the middle",
             "ok": true,
             "detail": "0.0px off centre, below=true, beside title=false",
             "kind": "expect"
           },
           {
-            "label": "tablet, portrait: configured centre → ONE button, under the cards, in the middle",
+            "label": "small phone: configured centre → ONE button, under the cards, in the middle",
             "ok": true,
             "detail": "0.0px off centre, below=true, beside title=false",
             "kind": "expect"
           },
           {
-            "label": "tablet, portrait: configured right → ONE button, under the cards, in the middle",
+            "label": "small phone: configured right → ONE button, under the cards, in the middle",
             "ok": true,
             "detail": "0.0px off centre, below=true, beside title=false",
             "kind": "expect"
           },
           {
-            "label": "tablet, portrait: configured beside the title → ONE button, under the cards, in the middle",
+            "label": "small phone: configured beside the title → ONE button, under the cards, in the middle",
             "ok": true,
             "detail": "0.0px off centre, below=true, beside title=false",
             "kind": "expect"
           },
           {
-            "label": "tablet, portrait: a grid of cards, configured left → ONE button, under the cards, in the middle",
+            "label": "small phone: a grid of cards, configured left → ONE button, under the cards, in the middle",
             "ok": true,
             "detail": "0.0px off centre, below=true, beside title=false",
             "kind": "expect"
@@ -14266,34 +14284,34 @@
       },
       {
         "n": 4,
-        "title": "tablet, landscape 1180px",
+        "title": "719px — one pixel under the line (mouse) 719px",
         "checks": [
           {
-            "label": "tablet, landscape: configured left → ONE button, under the cards, in the middle",
+            "label": "719px — one pixel under the line (mouse): configured left → ONE button, under the cards, in the middle",
             "ok": true,
             "detail": "0.0px off centre, below=true, beside title=false",
             "kind": "expect"
           },
           {
-            "label": "tablet, landscape: configured centre → ONE button, under the cards, in the middle",
+            "label": "719px — one pixel under the line (mouse): configured centre → ONE button, under the cards, in the middle",
             "ok": true,
             "detail": "0.0px off centre, below=true, beside title=false",
             "kind": "expect"
           },
           {
-            "label": "tablet, landscape: configured right → ONE button, under the cards, in the middle",
+            "label": "719px — one pixel under the line (mouse): configured right → ONE button, under the cards, in the middle",
             "ok": true,
             "detail": "0.0px off centre, below=true, beside title=false",
             "kind": "expect"
           },
           {
-            "label": "tablet, landscape: configured beside the title → ONE button, under the cards, in the middle",
+            "label": "719px — one pixel under the line (mouse): configured beside the title → ONE button, under the cards, in the middle",
             "ok": true,
             "detail": "0.0px off centre, below=true, beside title=false",
             "kind": "expect"
           },
           {
-            "label": "tablet, landscape: a grid of cards, configured left → ONE button, under the cards, in the middle",
+            "label": "719px — one pixel under the line (mouse): a grid of cards, configured left → ONE button, under the cards, in the middle",
             "ok": true,
             "detail": "0.0px off centre, below=true, beside title=false",
             "kind": "expect"
@@ -14302,78 +14320,186 @@
       },
       {
         "n": 5,
-        "title": "large tablet, landscape 1366px",
+        "title": "720px — exactly on the line (mouse) 720px",
         "checks": [
           {
-            "label": "large tablet, landscape: configured left → ONE button, under the cards, in the middle",
+            "label": "720px — exactly on the line (mouse): 'Bottom — left' stays at the left edge, under the cards",
             "ok": true,
-            "detail": "0.0px off centre, below=true, beside title=false",
+            "detail": "{\"count\":1,\"left\":0,\"right\":540,\"off\":269.9765625,\"below\":true,\"besideTitle\":false,\"cards\":3}",
             "kind": "expect"
           },
           {
-            "label": "large tablet, landscape: configured centre → ONE button, under the cards, in the middle",
+            "label": "720px — exactly on the line (mouse): 'Bottom — centred' is in the middle",
             "ok": true,
-            "detail": "0.0px off centre, below=true, beside title=false",
+            "detail": "0.0px off",
             "kind": "expect"
           },
           {
-            "label": "large tablet, landscape: configured right → ONE button, under the cards, in the middle",
+            "label": "720px — exactly on the line (mouse): 'Bottom — right' stays at the right edge",
             "ok": true,
-            "detail": "0.0px off centre, below=true, beside title=false",
+            "detail": "{\"count\":1,\"left\":540,\"right\":0,\"off\":269.9765625,\"below\":true,\"besideTitle\":false,\"cards\":3}",
             "kind": "expect"
           },
           {
-            "label": "large tablet, landscape: configured beside the title → ONE button, under the cards, in the middle",
+            "label": "720px — exactly on the line (mouse): 'Right side of the title' stays beside the title, with no second button under the cards",
             "ok": true,
-            "detail": "0.0px off centre, below=true, beside title=false",
+            "detail": "{\"count\":1,\"left\":558,\"right\":0,\"off\":279.2109375,\"below\":false,\"besideTitle\":true,\"cards\":3}",
             "kind": "expect"
           },
           {
-            "label": "large tablet, landscape: a grid of cards, configured left → ONE button, under the cards, in the middle",
+            "label": "720px — exactly on the line (mouse): a grid of cards, configured left, keeps its button at the left",
             "ok": true,
-            "detail": "0.0px off centre, below=true, beside title=false",
+            "detail": "{\"count\":1,\"left\":0,\"right\":540,\"off\":269.9765625,\"below\":true,\"besideTitle\":false,\"cards\":4}",
             "kind": "expect"
           }
         ]
       },
       {
         "n": 6,
-        "title": "a narrow desktop window (mouse) 900px",
+        "title": "tablet, portrait 820px",
         "checks": [
           {
-            "label": "a narrow desktop window (mouse): configured left → ONE button, under the cards, in the middle",
+            "label": "tablet, portrait: 'Bottom — left' stays at the left edge, under the cards",
             "ok": true,
-            "detail": "0.0px off centre, below=true, beside title=false",
+            "detail": "{\"count\":1,\"left\":0,\"right\":640,\"off\":319.9765625,\"below\":true,\"besideTitle\":false,\"cards\":3}",
             "kind": "expect"
           },
           {
-            "label": "a narrow desktop window (mouse): configured centre → ONE button, under the cards, in the middle",
+            "label": "tablet, portrait: 'Bottom — centred' is in the middle",
             "ok": true,
-            "detail": "0.0px off centre, below=true, beside title=false",
+            "detail": "0.0px off",
             "kind": "expect"
           },
           {
-            "label": "a narrow desktop window (mouse): configured right → ONE button, under the cards, in the middle",
+            "label": "tablet, portrait: 'Bottom — right' stays at the right edge",
             "ok": true,
-            "detail": "0.0px off centre, below=true, beside title=false",
+            "detail": "{\"count\":1,\"left\":640,\"right\":0,\"off\":319.9765625,\"below\":true,\"besideTitle\":false,\"cards\":3}",
             "kind": "expect"
           },
           {
-            "label": "a narrow desktop window (mouse): configured beside the title → ONE button, under the cards, in the middle",
+            "label": "tablet, portrait: 'Right side of the title' stays beside the title, with no second button under the cards",
             "ok": true,
-            "detail": "0.0px off centre, below=true, beside title=false",
+            "detail": "{\"count\":1,\"left\":658,\"right\":0,\"off\":329.2109375,\"below\":false,\"besideTitle\":true,\"cards\":3}",
             "kind": "expect"
           },
           {
-            "label": "a narrow desktop window (mouse): a grid of cards, configured left → ONE button, under the cards, in the middle",
+            "label": "tablet, portrait: a grid of cards, configured left, keeps its button at the left",
             "ok": true,
-            "detail": "0.0px off centre, below=true, beside title=false",
+            "detail": "{\"count\":1,\"left\":0,\"right\":640,\"off\":319.9765625,\"below\":true,\"besideTitle\":false,\"cards\":4}",
             "kind": "expect"
           }
         ]
       },
       {
         "n": 7,
+        "title": "a narrow desktop window (mouse) 900px",
+        "checks": [
+          {
+            "label": "a narrow desktop window (mouse): 'Bottom — left' stays at the left edge, under the cards",
+            "ok": true,
+            "detail": "{\"count\":1,\"left\":0,\"right\":720,\"off\":359.9765625,\"below\":true,\"besideTitle\":false,\"cards\":3}",
+            "kind": "expect"
+          },
+          {
+            "label": "a narrow desktop window (mouse): 'Bottom — centred' is in the middle",
+            "ok": true,
+            "detail": "0.0px off",
+            "kind": "expect"
+          },
+          {
+            "label": "a narrow desktop window (mouse): 'Bottom — right' stays at the right edge",
+            "ok": true,
+            "detail": "{\"count\":1,\"left\":720,\"right\":0,\"off\":359.9765625,\"below\":true,\"besideTitle\":false,\"cards\":3}",
+            "kind": "expect"
+          },
+          {
+            "label": "a narrow desktop window (mouse): 'Right side of the title' stays beside the title, with no second button under the cards",
+            "ok": true,
+            "detail": "{\"count\":1,\"left\":738,\"right\":0,\"off\":369.2109375,\"below\":false,\"besideTitle\":true,\"cards\":3}",
+            "kind": "expect"
+          },
+          {
+            "label": "a narrow desktop window (mouse): a grid of cards, configured left, keeps its button at the left",
+            "ok": true,
+            "detail": "{\"count\":1,\"left\":0,\"right\":720,\"off\":359.9765625,\"below\":true,\"besideTitle\":false,\"cards\":4}",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "tablet, landscape 1180px",
+        "checks": [
+          {
+            "label": "tablet, landscape: 'Bottom — left' stays at the left edge, under the cards",
+            "ok": true,
+            "detail": "{\"count\":1,\"left\":0,\"right\":880,\"off\":439.9765625,\"below\":true,\"besideTitle\":false,\"cards\":3}",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet, landscape: 'Bottom — centred' is in the middle",
+            "ok": true,
+            "detail": "0.0px off",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet, landscape: 'Bottom — right' stays at the right edge",
+            "ok": true,
+            "detail": "{\"count\":1,\"left\":880,\"right\":0,\"off\":439.9765625,\"below\":true,\"besideTitle\":false,\"cards\":3}",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet, landscape: 'Right side of the title' stays beside the title, with no second button under the cards",
+            "ok": true,
+            "detail": "{\"count\":1,\"left\":898,\"right\":0,\"off\":449.2109375,\"below\":false,\"besideTitle\":true,\"cards\":3}",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet, landscape: a grid of cards, configured left, keeps its button at the left",
+            "ok": true,
+            "detail": "{\"count\":1,\"left\":0,\"right\":880,\"off\":439.9765625,\"below\":true,\"besideTitle\":false,\"cards\":4}",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 9,
+        "title": "large tablet, landscape 1366px",
+        "checks": [
+          {
+            "label": "large tablet, landscape: 'Bottom — left' stays at the left edge, under the cards",
+            "ok": true,
+            "detail": "{\"count\":1,\"left\":0,\"right\":880,\"off\":439.9765625,\"below\":true,\"besideTitle\":false,\"cards\":3}",
+            "kind": "expect"
+          },
+          {
+            "label": "large tablet, landscape: 'Bottom — centred' is in the middle",
+            "ok": true,
+            "detail": "0.0px off",
+            "kind": "expect"
+          },
+          {
+            "label": "large tablet, landscape: 'Bottom — right' stays at the right edge",
+            "ok": true,
+            "detail": "{\"count\":1,\"left\":880,\"right\":0,\"off\":439.9765625,\"below\":true,\"besideTitle\":false,\"cards\":3}",
+            "kind": "expect"
+          },
+          {
+            "label": "large tablet, landscape: 'Right side of the title' stays beside the title, with no second button under the cards",
+            "ok": true,
+            "detail": "{\"count\":1,\"left\":898,\"right\":0,\"off\":449.2109375,\"below\":false,\"besideTitle\":true,\"cards\":3}",
+            "kind": "expect"
+          },
+          {
+            "label": "large tablet, landscape: a grid of cards, configured left, keeps its button at the left",
+            "ok": true,
+            "detail": "{\"count\":1,\"left\":0,\"right\":880,\"off\":439.9765625,\"below\":true,\"besideTitle\":false,\"cards\":4}",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 10,
         "title": "animation, desktop",
         "checks": [
           {
@@ -14415,7 +14541,7 @@
           {
             "label": "desktop: opening takes long enough to WATCH (about 0.8 s), without dragging",
             "ok": true,
-            "detail": "794 ms",
+            "detail": "793 ms",
             "kind": "expect"
           },
           {
@@ -14445,7 +14571,7 @@
           {
             "label": "desktop: closing is visible too (about 0.7 s)",
             "ok": true,
-            "detail": "667 ms",
+            "detail": "669 ms",
             "kind": "expect"
           },
           {
@@ -14481,7 +14607,7 @@
         ]
       },
       {
-        "n": 8,
+        "n": 11,
         "title": "animation, phone",
         "checks": [
           {
@@ -14523,7 +14649,7 @@
           {
             "label": "phone: opening takes long enough to WATCH (about 1.0 s), without dragging",
             "ok": true,
-            "detail": "1014 ms",
+            "detail": "1027 ms",
             "kind": "expect"
           },
           {
@@ -14553,7 +14679,7 @@
           {
             "label": "phone: closing is visible too (about 0.9 s)",
             "ok": true,
-            "detail": "851 ms",
+            "detail": "852 ms",
             "kind": "expect"
           },
           {
@@ -14589,7 +14715,7 @@
         ]
       },
       {
-        "n": 9,
+        "n": 12,
         "title": "the grid layout, reduced motion and the scroll position",
         "checks": [
           {
@@ -14607,7 +14733,7 @@
           {
             "label": "the 5th card carries on in the same row as the 4th — the opened cards flow on from the kept ones, exactly as one grid",
             "ok": true,
-            "detail": "[[124,200],[472,200]]",
+            "detail": "[[124,201],[472,201]]",
             "kind": "expect"
           },
           {
@@ -14619,7 +14745,7 @@
           {
             "label": "closing a section you have scrolled far down in brings its heading back into view",
             "ok": true,
-            "detail": "-6px → 72px from the top",
+            "detail": "-7px → 239px from the top",
             "kind": "expect"
           },
           {
@@ -14648,8 +14774,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:58:48.724Z",
-    "durationMs": 29292,
+    "at": "2026-11-20T00:34:17.440Z",
+    "durationMs": 34342,
     "steps": [
       {
         "n": 1,
@@ -14790,7 +14916,7 @@
           {
             "label": "the switch and its line fit the screen",
             "ok": true,
-            "detail": "374px of 390",
+            "detail": "239px of 390",
             "kind": "expect"
           },
           {
@@ -14939,8 +15065,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T18:59:00.774Z",
-    "durationMs": 12029,
+    "at": "2026-11-20T00:34:33.829Z",
+    "durationMs": 16372,
     "steps": [
       {
         "n": 1,
@@ -15038,8 +15164,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T19:02:47.196Z",
-    "durationMs": 9554,
+    "at": "2026-11-20T00:34:43.126Z",
+    "durationMs": 9280,
     "steps": [
       {
         "n": 0,
@@ -15413,8 +15539,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T20:45:41.391Z",
-    "durationMs": 8712,
+    "at": "2026-11-20T00:34:52.156Z",
+    "durationMs": 9014,
     "steps": [
       {
         "n": 1,
@@ -15459,7 +15585,7 @@
           {
             "label": "it is a stored picture (not a data: link)",
             "ok": true,
-            "detail": "http://localhost:3097/uploads/6aff5fd6067ee9a0ac8d9a5f/6aff5fd6067ee9a0ac8d9a63/",
+            "detail": "http://localhost:3097/uploads/6aff94ff999161827cf89d00/6aff94ff999161827cf89d03/",
             "kind": "expect"
           }
         ]
@@ -15596,8 +15722,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-19T20:45:57.990Z",
-    "durationMs": 16581,
+    "at": "2026-11-20T00:35:10.090Z",
+    "durationMs": 17917,
     "steps": [
       {
         "n": 1,
@@ -15912,13 +16038,13 @@
           {
             "label": "the pop-up shows the renamed group",
             "ok": true,
-            "detail": "Veg Steamed Momos Veg Steamed Momos — made fresh to order CHOOSE A SIZE 5 pcs ₹60 8 pcs ₹90 T46 DIPS & SAUCES Mint Dip +₹10 Cheese Dip +₹35 Mayonnaise +₹15 Garlic Dip +₹25 T46 REQUIRED CHOICE Veg +₹0 ",
+            "detail": "Veg Steamed Momos from ₹60 Veg Steamed Momos — made fresh to order CHOOSE A SIZE Required 5 pcs ₹60 8 pcs ₹90 T46 DIPS & SAUCES Optional Mint Dip +₹10 Cheese Dip +₹35 Mayonnaise +₹15 Garlic Dip +₹25 T",
             "kind": "expect"
           },
           {
             "label": "…with the new prices and options",
             "ok": true,
-            "detail": "Veg Steamed Momos Veg Steamed Momos — made fresh to order CHOOSE A SIZE 5 pcs ₹60 8 pcs ₹90 T46 DIPS & SAUCES Mint Dip +₹10 Cheese Dip +₹35 Mayonnaise +₹15 Garlic Dip +₹25 T46 REQUIRED CHOICE Veg +₹0 Non-veg +₹20 − 1 + Add · ₹60 Cancel",
+            "detail": "Veg Steamed Momos from ₹60 Veg Steamed Momos — made fresh to order CHOOSE A SIZE Required 5 pcs ₹60 8 pcs ₹90 T46 DIPS & SAUCES Optional Mint Dip +₹10 Cheese Dip +₹35 Mayonnaise +₹15 Garlic Dip +₹25 T46 REQUIRED CHOICE Optional Veg Free Non-veg +₹20 − 1 + Add · ₹60 Cancel",
             "kind": "expect"
           },
           {
@@ -15937,6 +16063,1644 @@
             "label": "everything the test made was removed",
             "ok": true,
             "detail": "0 left",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t47-storefront-pinned-bars": {
+    "id": "t47-storefront-pinned-bars",
+    "title": "Storefront — the header, the order bar (Takeaway/Delivery + outlet) and the category/filter bar stay pinned to the top while scrolling, on phone, tablet and desktop, with every header style",
+    "status": "pass",
+    "pass": 101,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-20T00:37:06.894Z",
+    "durationMs": 116788,
+    "steps": [
+      {
+        "n": 1,
+        "title": "phone 390px",
+        "checks": [
+          {
+            "label": "phone 390px: the header, the order bar and the category bar are all on the page",
+            "ok": true,
+            "detail": "header 34.8+120.0, order bar 154.8+61.0, category bar 669.0+55.0",
+            "kind": "expect"
+          },
+          {
+            "label": "phone 390px: at the top of the page they sit in order, header then order bar",
+            "ok": true,
+            "detail": "header 34.8+120.0, order bar 154.8+61.0, category bar 669.0+55.0",
+            "kind": "expect"
+          },
+          {
+            "label": "phone 390px: and the category bar starts lower down (it only pins once you reach it)",
+            "ok": true,
+            "detail": "header 34.8+120.0, order bar 154.8+61.0, category bar 669.0+55.0",
+            "kind": "expect"
+          },
+          {
+            "label": "phone 390px: the page is long enough to test scrolling",
+            "ok": true,
+            "detail": "2654px of scroll",
+            "kind": "expect"
+          },
+          {
+            "label": "phone 390px: scrolled 574px — all three are pinned to the top, one under the other with no gap",
+            "ok": true,
+            "detail": "header 0.0+120.0, order bar 120.0+61.0, category bar 181.0+55.0",
+            "kind": "expect"
+          },
+          {
+            "label": "phone 390px: scrolled 1592px — all three are pinned to the top, one under the other with no gap",
+            "ok": true,
+            "detail": "header 0.0+120.0, order bar 120.0+61.0, category bar 181.0+55.0",
+            "kind": "expect"
+          },
+          {
+            "label": "phone 390px: scrolled 2614px — all three are pinned to the top, one under the other with no gap",
+            "ok": true,
+            "detail": "header 0.0+120.0, order bar 120.0+61.0, category bar 181.0+55.0",
+            "kind": "expect"
+          },
+          {
+            "label": "phone 390px: the pinned stack takes 236px of 844px — a small part of the screen",
+            "ok": true,
+            "detail": "28%",
+            "kind": "expect"
+          },
+          {
+            "label": "phone 390px: choosing a category scrolls to it just under the pinned bars (not hidden behind them)",
+            "ok": true,
+            "detail": "heading at 248px, pinned bars end at 236px",
+            "kind": "expect"
+          },
+          {
+            "label": "phone 390px: jumping to #menu leaves the menu below the pinned bars",
+            "ok": true,
+            "detail": "menu at 205px, bars end at 181px",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "tablet 820px",
+        "checks": [
+          {
+            "label": "tablet 820px: the header, the order bar and the category bar are all on the page",
+            "ok": true,
+            "detail": "header 34.8+106.4, order bar 141.2+67.0, category bar 689.0+58.8",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet 820px: at the top of the page they sit in order, header then order bar",
+            "ok": true,
+            "detail": "header 34.8+106.4, order bar 141.2+67.0, category bar 689.0+58.8",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet 820px: and the category bar starts lower down (it only pins once you reach it)",
+            "ok": true,
+            "detail": "header 34.8+106.4, order bar 141.2+67.0, category bar 689.0+58.8",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet 820px: the page is long enough to test scrolling",
+            "ok": true,
+            "detail": "1489px of scroll",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet 820px: scrolled 601px — all three are pinned to the top, one under the other with no gap",
+            "ok": true,
+            "detail": "header 0.0+106.4, order bar 106.4+67.0, category bar 173.4+58.8",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet 820px: scrolled 893px — all three are pinned to the top, one under the other with no gap",
+            "ok": true,
+            "detail": "header 0.0+106.4, order bar 106.4+67.0, category bar 173.4+58.8",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet 820px: scrolled 1449px — all three are pinned to the top, one under the other with no gap",
+            "ok": true,
+            "detail": "header 0.0+106.4, order bar 106.4+67.0, category bar 173.4+58.8",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet 820px: the pinned stack takes 232px of 1100px — a small part of the screen",
+            "ok": true,
+            "detail": "21%",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet 820px: choosing a category scrolls to it just under the pinned bars (not hidden behind them)",
+            "ok": true,
+            "detail": "heading at 298px, pinned bars end at 232px",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet 820px: jumping to #menu leaves the menu below the pinned bars",
+            "ok": true,
+            "detail": "menu at 197px, bars end at 173px",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "desktop 1440px",
+        "checks": [
+          {
+            "label": "desktop 1440px: the header, the order bar and the category bar are all on the page",
+            "ok": true,
+            "detail": "header 34.8+106.4, order bar 141.2+67.0, category bar 693.4+53.5",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop 1440px: at the top of the page they sit in order, header then order bar",
+            "ok": true,
+            "detail": "header 34.8+106.4, order bar 141.2+67.0, category bar 693.4+53.5",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop 1440px: and the category bar starts lower down (it only pins once you reach it)",
+            "ok": true,
+            "detail": "header 34.8+106.4, order bar 141.2+67.0, category bar 693.4+53.5",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop 1440px: the page is long enough to test scrolling",
+            "ok": true,
+            "detail": "1521px of scroll",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop 1440px: scrolled 606px — all three are pinned to the top, one under the other with no gap",
+            "ok": true,
+            "detail": "header 0.0+106.4, order bar 106.4+67.0, category bar 173.4+53.5",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop 1440px: scrolled 913px — all three are pinned to the top, one under the other with no gap",
+            "ok": true,
+            "detail": "header 0.0+106.4, order bar 106.4+67.0, category bar 173.4+53.5",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop 1440px: scrolled 1481px — all three are pinned to the top, one under the other with no gap",
+            "ok": true,
+            "detail": "header 0.0+106.4, order bar 106.4+67.0, category bar 173.4+53.5",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop 1440px: the pinned stack takes 227px of 900px — a small part of the screen",
+            "ok": true,
+            "detail": "25%",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop 1440px: choosing a category scrolls to it just under the pinned bars (not hidden behind them)",
+            "ok": true,
+            "detail": "heading at 239px, pinned bars end at 227px",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop 1440px: jumping to #menu leaves the menu below the pinned bars",
+            "ok": true,
+            "detail": "menu at 197px, bars end at 173px",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "phone: the order bar is slim",
+        "checks": [
+          {
+            "label": "phone: the order bar is slim (the Takeaway/Delivery switch and the outlet share ONE row)",
+            "ok": true,
+            "detail": "61.0px high",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: the switch and the outlet are side by side",
+            "ok": true,
+            "detail": "{\"n\":2,\"spread\":0,\"right\":376,\"width\":390}",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: nothing runs off the screen's edge",
+            "ok": true,
+            "detail": "{\"n\":2,\"spread\":0,\"right\":376,\"width\":390}",
+            "kind": "expect"
+          },
+          {
+            "label": "a very narrow 320px phone: no sideways scroll, the outlet may drop under the switch",
+            "ok": true,
+            "detail": "0px over, bar 113px",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "overlays sit above the pinned bars",
+        "checks": [
+          {
+            "label": "the outlet dropdown opens over the category bar and can be pressed",
+            "ok": true,
+            "detail": "{\"overTool\":true,\"midIn\":true,\"top\":180}",
+            "kind": "expect"
+          },
+          {
+            "label": "an item pop-up covers the header and the bars (they do not float above it)",
+            "ok": true,
+            "detail": "{\"headerCovered\":true,\"barCovered\":true}",
+            "kind": "expect"
+          },
+          {
+            "label": "the phone menu drawer opens over the pinned header and bars",
+            "ok": true,
+            "detail": "{\"onBody\":true,\"over\":true,\"scrollLocked\":true}",
+            "kind": "expect"
+          },
+          {
+            "label": "and the page behind it stops scrolling",
+            "ok": true,
+            "detail": "{\"onBody\":true,\"over\":true,\"scrollLocked\":true}",
+            "kind": "expect"
+          },
+          {
+            "label": "Escape closes the drawer",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "other pages",
+        "checks": [
+          {
+            "label": "the customer's Account page has the pinned header too",
+            "ok": true,
+            "detail": "sticky",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "all 15 header styles, phone",
+        "checks": [
+          {
+            "label": "phone: header style \"centered\" (120px) stays pinned, with the order bar and category bar under it",
+            "ok": true,
+            "detail": "header 0.0+120.0, order bar 120.0+61.0, category bar 181.0+55.0",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: \"centered\" — the pinned bars leave most of the screen free",
+            "ok": true,
+            "detail": "236px of 844px",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: header style \"left-logo\" (69px) stays pinned, with the order bar and category bar under it",
+            "ok": true,
+            "detail": "header 0.0+69.0, order bar 69.0+61.0, category bar 130.0+55.0",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: \"left-logo\" — the pinned bars leave most of the screen free",
+            "ok": true,
+            "detail": "185px of 844px",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: header style \"split-nav\" (75px) stays pinned, with the order bar and category bar under it",
+            "ok": true,
+            "detail": "header 0.0+74.6, order bar 74.6+61.0, category bar 135.6+55.0",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: \"split-nav\" — the pinned bars leave most of the screen free",
+            "ok": true,
+            "detail": "191px of 844px",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: header style \"minimal\" (64px) stays pinned, with the order bar and category bar under it",
+            "ok": true,
+            "detail": "header 0.0+63.6, order bar 63.6+61.0, category bar 124.6+55.0",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: \"minimal\" — the pinned bars leave most of the screen free",
+            "ok": true,
+            "detail": "180px of 844px",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: header style \"banner\" is 237px tall — too tall to pin: it scrolls away and the order bar and category bar still pin to the top",
+            "ok": true,
+            "detail": "header -765.2+237.0, order bar 0.0+61.0, category bar 61.0+55.0",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: \"banner\" — the pinned bars leave most of the screen free",
+            "ok": true,
+            "detail": "116px of 844px",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: header style \"two-row\" (128px) stays pinned, with the order bar and category bar under it",
+            "ok": true,
+            "detail": "header 0.0+128.0, order bar 128.0+61.0, category bar 189.0+55.0",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: \"two-row\" — the pinned bars leave most of the screen free",
+            "ok": true,
+            "detail": "244px of 844px",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: header style \"boxed\" (73px) stays pinned, with the order bar and category bar under it",
+            "ok": true,
+            "detail": "header 0.0+73.0, order bar 73.0+61.0, category bar 134.0+55.0",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: \"boxed\" — the pinned bars leave most of the screen free",
+            "ok": true,
+            "detail": "189px of 844px",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: header style \"stacked\" is 195px tall — too tall to pin: it scrolls away and the order bar and category bar still pin to the top",
+            "ok": true,
+            "detail": "header -765.2+194.8, order bar 0.0+61.0, category bar 61.0+55.0",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: \"stacked\" — the pinned bars leave most of the screen free",
+            "ok": true,
+            "detail": "116px of 844px",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: header style \"pill-nav\" (61px) stays pinned, with the order bar and category bar under it",
+            "ok": true,
+            "detail": "header 0.0+61.0, order bar 61.0+61.0, category bar 122.0+55.0",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: \"pill-nav\" — the pinned bars leave most of the screen free",
+            "ok": true,
+            "detail": "177px of 844px",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: header style \"floating\" (74px) stays pinned, with the order bar and category bar under it",
+            "ok": true,
+            "detail": "header 0.0+74.0, order bar 74.0+61.0, category bar 135.0+55.0",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: \"floating\" — the pinned bars leave most of the screen free",
+            "ok": true,
+            "detail": "190px of 844px",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: header style \"dark\" (67px) stays pinned, with the order bar and category bar under it",
+            "ok": true,
+            "detail": "header 0.0+66.8, order bar 66.8+61.0, category bar 127.8+55.0",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: \"dark\" — the pinned bars leave most of the screen free",
+            "ok": true,
+            "detail": "183px of 844px",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: header style \"underline\" (69px) stays pinned, with the order bar and category bar under it",
+            "ok": true,
+            "detail": "header 0.0+69.0, order bar 69.0+61.0, category bar 130.0+55.0",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: \"underline\" — the pinned bars leave most of the screen free",
+            "ok": true,
+            "detail": "185px of 844px",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: header style \"burger\" (64px) stays pinned, with the order bar and category bar under it",
+            "ok": true,
+            "detail": "header 0.0+63.8, order bar 63.8+61.0, category bar 124.8+55.0",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: \"burger\" — the pinned bars leave most of the screen free",
+            "ok": true,
+            "detail": "180px of 844px",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: header style \"tagline\" (87px) stays pinned, with the order bar and category bar under it",
+            "ok": true,
+            "detail": "header 0.0+87.0, order bar 87.0+61.0, category bar 148.0+55.0",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: \"tagline\" — the pinned bars leave most of the screen free",
+            "ok": true,
+            "detail": "203px of 844px",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: header style \"call-order\" (93px) stays pinned, with the order bar and category bar under it",
+            "ok": true,
+            "detail": "header 0.0+93.0, order bar 93.0+61.0, category bar 154.0+55.0",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: \"call-order\" — the pinned bars leave most of the screen free",
+            "ok": true,
+            "detail": "209px of 844px",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "all 15 header styles, desktop",
+        "checks": [
+          {
+            "label": "desktop: header style \"centered\" (106px) stays pinned, with the order bar and category bar under it",
+            "ok": true,
+            "detail": "header 0.0+106.4, order bar 106.4+67.0, category bar 173.4+53.5",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: \"centered\" — the pinned bars leave most of the screen free",
+            "ok": true,
+            "detail": "227px of 900px",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: header style \"left-logo\" (67px) stays pinned, with the order bar and category bar under it",
+            "ok": true,
+            "detail": "header 0.0+67.0, order bar 67.0+67.0, category bar 134.0+53.5",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: \"left-logo\" — the pinned bars leave most of the screen free",
+            "ok": true,
+            "detail": "187px of 900px",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: header style \"split-nav\" (75px) stays pinned, with the order bar and category bar under it",
+            "ok": true,
+            "detail": "header 0.0+74.6, order bar 74.6+67.0, category bar 141.6+53.5",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: \"split-nav\" — the pinned bars leave most of the screen free",
+            "ok": true,
+            "detail": "195px of 900px",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: header style \"minimal\" (64px) stays pinned, with the order bar and category bar under it",
+            "ok": true,
+            "detail": "header 0.0+63.6, order bar 63.6+67.0, category bar 130.6+53.5",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: \"minimal\" — the pinned bars leave most of the screen free",
+            "ok": true,
+            "detail": "184px of 900px",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: header style \"banner\" is 223px tall — too tall to pin: it scrolls away and the order bar and category bar still pin to the top",
+            "ok": true,
+            "detail": "header -765.2+223.4, order bar 0.0+67.0, category bar 67.0+53.5",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: \"banner\" — the pinned bars leave most of the screen free",
+            "ok": true,
+            "detail": "120px of 900px",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: header style \"two-row\" (114px) stays pinned, with the order bar and category bar under it",
+            "ok": true,
+            "detail": "header 0.0+114.4, order bar 114.4+67.0, category bar 181.4+53.5",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: \"two-row\" — the pinned bars leave most of the screen free",
+            "ok": true,
+            "detail": "235px of 900px",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: header style \"boxed\" (73px) stays pinned, with the order bar and category bar under it",
+            "ok": true,
+            "detail": "header 0.0+73.0, order bar 73.0+67.0, category bar 140.0+53.5",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: \"boxed\" — the pinned bars leave most of the screen free",
+            "ok": true,
+            "detail": "193px of 900px",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: header style \"stacked\" is 178px tall — too tall to pin: it scrolls away and the order bar and category bar still pin to the top",
+            "ok": true,
+            "detail": "header -765.2+178.0, order bar 0.0+67.0, category bar 67.0+53.5",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: \"stacked\" — the pinned bars leave most of the screen free",
+            "ok": true,
+            "detail": "120px of 900px",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: header style \"pill-nav\" (71px) stays pinned, with the order bar and category bar under it",
+            "ok": true,
+            "detail": "header 0.0+70.6, order bar 70.6+67.0, category bar 137.6+53.5",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: \"pill-nav\" — the pinned bars leave most of the screen free",
+            "ok": true,
+            "detail": "191px of 900px",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: header style \"floating\" (70px) stays pinned, with the order bar and category bar under it",
+            "ok": true,
+            "detail": "header 0.0+70.0, order bar 70.0+67.0, category bar 137.0+53.5",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: \"floating\" — the pinned bars leave most of the screen free",
+            "ok": true,
+            "detail": "190px of 900px",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: header style \"dark\" (67px) stays pinned, with the order bar and category bar under it",
+            "ok": true,
+            "detail": "header 0.0+66.8, order bar 66.8+67.0, category bar 133.8+53.5",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: \"dark\" — the pinned bars leave most of the screen free",
+            "ok": true,
+            "detail": "187px of 900px",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: header style \"underline\" (67px) stays pinned, with the order bar and category bar under it",
+            "ok": true,
+            "detail": "header 0.0+67.0, order bar 67.0+67.0, category bar 134.0+53.5",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: \"underline\" — the pinned bars leave most of the screen free",
+            "ok": true,
+            "detail": "187px of 900px",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: header style \"burger\" (64px) stays pinned, with the order bar and category bar under it",
+            "ok": true,
+            "detail": "header 0.0+63.8, order bar 63.8+67.0, category bar 130.8+53.5",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: \"burger\" — the pinned bars leave most of the screen free",
+            "ok": true,
+            "detail": "184px of 900px",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: header style \"tagline\" (87px) stays pinned, with the order bar and category bar under it",
+            "ok": true,
+            "detail": "header 0.0+87.0, order bar 87.0+67.0, category bar 154.0+53.5",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: \"tagline\" — the pinned bars leave most of the screen free",
+            "ok": true,
+            "detail": "207px of 900px",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: header style \"call-order\" (71px) stays pinned, with the order bar and category bar under it",
+            "ok": true,
+            "detail": "header 0.0+70.6, order bar 70.6+67.0, category bar 137.6+53.5",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: \"call-order\" — the pinned bars leave most of the screen free",
+            "ok": true,
+            "detail": "191px of 900px",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser logged no errors or warnings",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t48-hero-button-card-c02": {
+    "id": "t48-hero-button-card-c02",
+    "title": "Storefront — no 'Order takeaway' button at the top; card C02 (Thumbnail left) shows the price right after the veg / non-veg mark with full-width title and description; every item card cuts its description at one line with an ellipsis",
+    "status": "pass",
+    "pass": 69,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-20T00:37:47.917Z",
+    "durationMs": 41004,
+    "steps": [
+      {
+        "n": 1,
+        "title": "top of the menu page: desktop",
+        "checks": [
+          {
+            "label": "desktop: the area under the store name has no button or link",
+            "ok": true,
+            "detail": "Acme Momos Steamed, fried and made to order",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: \"Order takeaway\" appears nowhere on the page",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: the Takeaway / Delivery order bar is still there (only the extra button went)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "top of the menu page: phone",
+        "checks": [
+          {
+            "label": "phone: the area under the store name has no button or link",
+            "ok": true,
+            "detail": "Acme Momos Steamed, fried and made to order",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: \"Order takeaway\" appears nowhere on the page",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: the Takeaway / Delivery order bar is still there (only the extra button went)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "top of the menu page: the other outlet",
+        "checks": [
+          {
+            "label": "the other outlet: the area under the store name has no button or link",
+            "ok": true,
+            "detail": "Acme Momos Steamed, fried and made to order",
+            "kind": "expect"
+          },
+          {
+            "label": "the other outlet: \"Order takeaway\" appears nowhere on the page",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the other outlet: the Takeaway / Delivery order bar is still there (only the extra button went)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "card C02: desktop",
+        "checks": [
+          {
+            "label": "desktop: both test dishes are shown in the Thumbnail-left card",
+            "ok": true,
+            "detail": "2",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: \"C02 Chicken Wings\" — the price (₹220) comes right after the veg / non-veg mark, on the same line",
+            "ok": true,
+            "detail": "{\"name\":\"C02 Chicken Wings\",\"children\":2,\"priceAfterMark\":true,\"priceText\":\"₹220\",\"tagAfterPrice\":null,\"nameRight\":13,\"descRight\":13,\"descLines\":1,\"textLeft\":14,\"photo\":[72,72],\"priceTopBelowName\":false,\"pad\":12,\"over\":0}",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: \"C02 Chicken Wings\" — the price is above the title, not beside it at the edge",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: \"C02 Chicken Wings\" — the title runs to the card's right padding (13px from the edge, padding 12px)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: \"C02 Chicken Wings\" — the description takes the full width too (13px from the edge)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: \"C02 Chicken Wings\" — the thumbnail is still 72×72 at the left",
+            "ok": true,
+            "detail": "72×72",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: \"C02 Paneer Tikka Platter With \" — the price (₹180) comes right after the veg / non-veg mark, on the same line",
+            "ok": true,
+            "detail": "{\"name\":\"C02 Paneer Tikka Platter With \",\"children\":2,\"priceAfterMark\":true,\"priceText\":\"₹180\",\"tagAfterPrice\":true,\"nameRight\":13,\"descRight\":13,\"descLines\":1,\"textLeft\":14,\"photo\":[72,72],\"priceTopBelowName\":false,\"pad\":12,\"over\":0}",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: \"C02 Paneer Tikka Platter With \" — the price is above the title, not beside it at the edge",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: \"C02 Paneer Tikka Platter With \" — the title runs to the card's right padding (13px from the edge, padding 12px)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: \"C02 Paneer Tikka Platter With \" — the description takes the full width too (13px from the edge)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: \"C02 Paneer Tikka Platter With \" — the thumbnail is still 72×72 at the left",
+            "ok": true,
+            "detail": "72×72",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: the \"spicy\" tag follows the price",
+            "ok": true,
+            "detail": "true",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: the very long description is cut at ONE line, inside the wide column",
+            "ok": true,
+            "detail": "1 lines",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: no sideways scroll",
+            "ok": true,
+            "detail": "0",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "card C02: phone",
+        "checks": [
+          {
+            "label": "phone: both test dishes are shown in the Thumbnail-left card",
+            "ok": true,
+            "detail": "2",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: \"C02 Chicken Wings\" — the price (₹220) comes right after the veg / non-veg mark, on the same line",
+            "ok": true,
+            "detail": "{\"name\":\"C02 Chicken Wings\",\"children\":2,\"priceAfterMark\":true,\"priceText\":\"₹220\",\"tagAfterPrice\":null,\"nameRight\":13,\"descRight\":13,\"descLines\":1,\"textLeft\":14,\"photo\":[72,72],\"priceTopBelowName\":false,\"pad\":12,\"over\":0}",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: \"C02 Chicken Wings\" — the price is above the title, not beside it at the edge",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: \"C02 Chicken Wings\" — the title runs to the card's right padding (13px from the edge, padding 12px)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: \"C02 Chicken Wings\" — the description takes the full width too (13px from the edge)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: \"C02 Chicken Wings\" — the thumbnail is still 72×72 at the left",
+            "ok": true,
+            "detail": "72×72",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: \"C02 Paneer Tikka Platter With \" — the price (₹180) comes right after the veg / non-veg mark, on the same line",
+            "ok": true,
+            "detail": "{\"name\":\"C02 Paneer Tikka Platter With \",\"children\":2,\"priceAfterMark\":true,\"priceText\":\"₹180\",\"tagAfterPrice\":true,\"nameRight\":13,\"descRight\":13,\"descLines\":1,\"textLeft\":14,\"photo\":[72,72],\"priceTopBelowName\":false,\"pad\":12,\"over\":0}",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: \"C02 Paneer Tikka Platter With \" — the price is above the title, not beside it at the edge",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: \"C02 Paneer Tikka Platter With \" — the title runs to the card's right padding (13px from the edge, padding 12px)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: \"C02 Paneer Tikka Platter With \" — the description takes the full width too (13px from the edge)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: \"C02 Paneer Tikka Platter With \" — the thumbnail is still 72×72 at the left",
+            "ok": true,
+            "detail": "72×72",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: the \"spicy\" tag follows the price",
+            "ok": true,
+            "detail": "true",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: the very long description is cut at ONE line, inside the wide column",
+            "ok": true,
+            "detail": "1 lines",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: no sideways scroll",
+            "ok": true,
+            "detail": "0",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "every item card style: the description stops at ONE line",
+        "checks": [
+          {
+            "label": "C01 row-compact: a very long description is held to ONE line",
+            "ok": true,
+            "detail": "{\"lines\":1,\"clamp\":\"1\",\"cut\":true}",
+            "kind": "expect"
+          },
+          {
+            "label": "C01 row-compact: the rest is cut off (that is where the … shows)",
+            "ok": true,
+            "detail": "{\"lines\":1,\"clamp\":\"1\",\"cut\":true}",
+            "kind": "expect"
+          },
+          {
+            "label": "C01 row-compact: a short description is left alone, on one line",
+            "ok": true,
+            "detail": "{\"lines\":1,\"clamp\":\"1\",\"cut\":false}",
+            "kind": "expect"
+          },
+          {
+            "label": "C02 row-thumb-left: a very long description is held to ONE line",
+            "ok": true,
+            "detail": "{\"lines\":1,\"clamp\":\"1\",\"cut\":true}",
+            "kind": "expect"
+          },
+          {
+            "label": "C02 row-thumb-left: the rest is cut off (that is where the … shows)",
+            "ok": true,
+            "detail": "{\"lines\":1,\"clamp\":\"1\",\"cut\":true}",
+            "kind": "expect"
+          },
+          {
+            "label": "C02 row-thumb-left: a short description is left alone, on one line",
+            "ok": true,
+            "detail": "{\"lines\":1,\"clamp\":\"1\",\"cut\":false}",
+            "kind": "expect"
+          },
+          {
+            "label": "C03 row-thumb-right: a very long description is held to ONE line",
+            "ok": true,
+            "detail": "{\"lines\":1,\"clamp\":\"1\",\"cut\":true}",
+            "kind": "expect"
+          },
+          {
+            "label": "C03 row-thumb-right: the rest is cut off (that is where the … shows)",
+            "ok": true,
+            "detail": "{\"lines\":1,\"clamp\":\"1\",\"cut\":true}",
+            "kind": "expect"
+          },
+          {
+            "label": "C03 row-thumb-right: a short description is left alone, on one line",
+            "ok": true,
+            "detail": "{\"lines\":1,\"clamp\":\"1\",\"cut\":false}",
+            "kind": "expect"
+          },
+          {
+            "label": "C04 image-top: a very long description is held to ONE line",
+            "ok": true,
+            "detail": "{\"lines\":1,\"clamp\":\"1\",\"cut\":true}",
+            "kind": "expect"
+          },
+          {
+            "label": "C04 image-top: the rest is cut off (that is where the … shows)",
+            "ok": true,
+            "detail": "{\"lines\":1,\"clamp\":\"1\",\"cut\":true}",
+            "kind": "expect"
+          },
+          {
+            "label": "C04 image-top: a short description is left alone, on one line",
+            "ok": true,
+            "detail": "{\"lines\":1,\"clamp\":\"1\",\"cut\":false}",
+            "kind": "expect"
+          },
+          {
+            "label": "C05 image-top-badge: a very long description is held to ONE line",
+            "ok": true,
+            "detail": "{\"lines\":1,\"clamp\":\"1\",\"cut\":true}",
+            "kind": "expect"
+          },
+          {
+            "label": "C05 image-top-badge: the rest is cut off (that is where the … shows)",
+            "ok": true,
+            "detail": "{\"lines\":1,\"clamp\":\"1\",\"cut\":true}",
+            "kind": "expect"
+          },
+          {
+            "label": "C05 image-top-badge: a short description is left alone, on one line",
+            "ok": true,
+            "detail": "{\"lines\":1,\"clamp\":\"1\",\"cut\":false}",
+            "kind": "expect"
+          },
+          {
+            "label": "C06 text-above-image: a very long description is held to ONE line",
+            "ok": true,
+            "detail": "{\"lines\":1,\"clamp\":\"1\",\"cut\":true}",
+            "kind": "expect"
+          },
+          {
+            "label": "C06 text-above-image: the rest is cut off (that is where the … shows)",
+            "ok": true,
+            "detail": "{\"lines\":1,\"clamp\":\"1\",\"cut\":true}",
+            "kind": "expect"
+          },
+          {
+            "label": "C06 text-above-image: a short description is left alone, on one line",
+            "ok": true,
+            "detail": "{\"lines\":1,\"clamp\":\"1\",\"cut\":false}",
+            "kind": "expect"
+          },
+          {
+            "label": "C07 image-overlay: a very long description is held to ONE line",
+            "ok": true,
+            "detail": "{\"lines\":1,\"clamp\":\"1\",\"cut\":true}",
+            "kind": "expect"
+          },
+          {
+            "label": "C07 image-overlay: the rest is cut off (that is where the … shows)",
+            "ok": true,
+            "detail": "{\"lines\":1,\"clamp\":\"1\",\"cut\":true}",
+            "kind": "expect"
+          },
+          {
+            "label": "C07 image-overlay: a short description is left alone, on one line",
+            "ok": true,
+            "detail": "{\"lines\":1,\"clamp\":\"1\",\"cut\":false}",
+            "kind": "expect"
+          },
+          {
+            "label": "C08 portrait: this card style shows no description (nothing to cut)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "C09 circle: this card style shows no description (nothing to cut)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "C10 menu-line: a very long description is held to ONE line",
+            "ok": true,
+            "detail": "{\"lines\":1,\"clamp\":\"1\",\"cut\":true}",
+            "kind": "expect"
+          },
+          {
+            "label": "C10 menu-line: the rest is cut off (that is where the … shows)",
+            "ok": true,
+            "detail": "{\"lines\":1,\"clamp\":\"1\",\"cut\":true}",
+            "kind": "expect"
+          },
+          {
+            "label": "C10 menu-line: a short description is left alone, on one line",
+            "ok": true,
+            "detail": "{\"lines\":1,\"clamp\":\"1\",\"cut\":false}",
+            "kind": "expect"
+          },
+          {
+            "label": "C11 featured-wide: a very long description is held to ONE line",
+            "ok": true,
+            "detail": "{\"lines\":1,\"clamp\":\"1\",\"cut\":true}",
+            "kind": "expect"
+          },
+          {
+            "label": "C11 featured-wide: the rest is cut off (that is where the … shows)",
+            "ok": true,
+            "detail": "{\"lines\":1,\"clamp\":\"1\",\"cut\":true}",
+            "kind": "expect"
+          },
+          {
+            "label": "C11 featured-wide: a short description is left alone, on one line",
+            "ok": true,
+            "detail": "{\"lines\":1,\"clamp\":\"1\",\"cut\":false}",
+            "kind": "expect"
+          },
+          {
+            "label": "the dish pop-up still shows the full description, not the shortened one",
+            "ok": true,
+            "detail": "as given across the card, from the picture to the right-hand edge. − 1 + Add · ₹180 Cancel",
+            "kind": "expect"
+          },
+          {
+            "label": "the test dishes are removed and the card style is put back",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser logged no errors or warnings",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t49-storefront-item-popup": {
+    "id": "t49-storefront-item-popup",
+    "title": "Storefront item pop-up — the picture is set in from the edges with rounded corners and has a close button; the name has the veg mark and the price; sizes and extras are tiles that light up; the Add row stays at the bottom while the choices scroll",
+    "status": "pass",
+    "pass": 42,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-20T00:38:08.631Z",
+    "durationMs": 20695,
+    "steps": [
+      {
+        "n": 1,
+        "title": "the item pop-up: desktop",
+        "checks": [
+          {
+            "label": "desktop: the picture does not touch the pop-up's edges (19px left, 19px right, 17px top)",
+            "ok": true,
+            "detail": "{\"left\":19,\"right\":19,\"top\":17,\"radius\":16,\"vh\":900,\"mTop\":45,\"mBottom\":855}",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: the picture has rounded corners",
+            "ok": true,
+            "detail": "16px",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: the pop-up fits inside the screen",
+            "ok": true,
+            "detail": "45–855 of 900",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: the name has the veg / non-veg mark in front",
+            "ok": true,
+            "detail": "Veg Steamed Momos",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: the price shows beside the name (\"from ₹60\" for a dish with sizes)",
+            "ok": true,
+            "detail": "Veg Steamed Momos from ₹60 Veg Steamed Momos — made fresh to order CHOOSE A SIZE Required 5 pcs ₹60 8 pcs ₹90 POP DIPS O",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: each choice section says whether it is required or optional",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: extras show \"+₹30\"; a free one says \"Free\"",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: a round close button sits at the top right of the picture",
+            "ok": true,
+            "detail": "{\"x\":877,\"y\":72,\"width\":34,\"height\":34}",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: it closes the pop-up",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: Escape closes it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: pressing outside closes it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: Cancel closes it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: the chosen size's tile is highlighted, the other is not",
+            "ok": true,
+            "detail": "[{\"border\":\"rgb(198, 54, 47)\",\"bg\":\"color(srgb 0.984353 0.944824 0.942902)\",\"on\":true},{\"border\":\"rgb(228, 228, 224)\",\"bg\":\"rgb(255, 255, 255)\",\"on\":false}]",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: choosing the other size moves the highlight",
+            "ok": true,
+            "detail": "[{\"border\":\"rgb(198, 54, 47)\",\"bg\":\"color(srgb 0.984353 0.944824 0.942902)\",\"on\":true},{\"border\":\"rgb(228, 228, 224)\",\"bg\":\"rgb(255, 255, 255)\",\"on\":false},{\"border\":\"rgb(198, 54, 47)\",\"bg\":\"color(srgb 0.984353 0.944824 0.942902)\",\"on\":true},{\"border\":\"rgb(228, 228, 224)\",\"bg\":\"rgb(255, 255, 255)\",\"on\":false}]",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: the Add button shows the price of the chosen size",
+            "ok": true,
+            "detail": "Add · ₹90",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: a ticked extra lights up the same way",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: …and its price is added to the Add button (₹90 + ₹30)",
+            "ok": true,
+            "detail": "Add · ₹120",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: a second portion doubles it",
+            "ok": true,
+            "detail": "Add · ₹240",
+            "kind": "expect"
+          },
+          {
+            "label": "desktop: Add puts it in the cart and closes the pop-up",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "the item pop-up: phone",
+        "checks": [
+          {
+            "label": "phone: the picture does not touch the pop-up's edges (19px left, 19px right, 17px top)",
+            "ok": true,
+            "detail": "{\"left\":19,\"right\":19,\"top\":17,\"radius\":16,\"vh\":844,\"mTop\":42.203125,\"mBottom\":801.796875}",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: the picture has rounded corners",
+            "ok": true,
+            "detail": "16px",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: the pop-up fits inside the screen",
+            "ok": true,
+            "detail": "42–802 of 844",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: the name has the veg / non-veg mark in front",
+            "ok": true,
+            "detail": "Veg Steamed Momos",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: the price shows beside the name (\"from ₹60\" for a dish with sizes)",
+            "ok": true,
+            "detail": "Veg Steamed Momos from ₹60 Veg Steamed Momos — made fresh to order CHOOSE A SIZE Required 5 pcs ₹60 8 pcs ₹90 POP DIPS O",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: each choice section says whether it is required or optional",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: extras show \"+₹30\"; a free one says \"Free\"",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: a round close button sits at the top right of the picture",
+            "ok": true,
+            "detail": "{\"x\":311,\"y\":69.203125,\"width\":34,\"height\":34}",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: it closes the pop-up",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: Escape closes it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: pressing outside closes it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: Cancel closes it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: the chosen size's tile is highlighted, the other is not",
+            "ok": true,
+            "detail": "[{\"border\":\"rgb(198, 54, 47)\",\"bg\":\"color(srgb 0.984353 0.944824 0.942902)\",\"on\":true},{\"border\":\"rgb(228, 228, 224)\",\"bg\":\"rgb(255, 255, 255)\",\"on\":false}]",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: choosing the other size moves the highlight",
+            "ok": true,
+            "detail": "[{\"border\":\"rgb(198, 54, 47)\",\"bg\":\"color(srgb 0.984353 0.944824 0.942902)\",\"on\":true},{\"border\":\"rgb(228, 228, 224)\",\"bg\":\"rgb(255, 255, 255)\",\"on\":false},{\"border\":\"rgb(198, 54, 47)\",\"bg\":\"color(srgb 0.984353 0.944824 0.942902)\",\"on\":true},{\"border\":\"rgb(228, 228, 224)\",\"bg\":\"rgb(255, 255, 255)\",\"on\":false}]",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: the Add button shows the price of the chosen size",
+            "ok": true,
+            "detail": "Add · ₹90",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: a ticked extra lights up the same way",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: …and its price is added to the Add button (₹90 + ₹30)",
+            "ok": true,
+            "detail": "Add · ₹120",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: a second portion doubles it",
+            "ok": true,
+            "detail": "Add · ₹240",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: Add puts it in the cart and closes the pop-up",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "a short screen: the choices scroll, the Add button stays in view",
+        "checks": [
+          {
+            "label": "the choices are taller than the pop-up, so they scroll inside it",
+            "ok": true,
+            "detail": "{\"scrolls\":true,\"addTop\":424,\"addTopAfter\":424,\"addBottom\":477,\"vh\":560,\"lastVisible\":true}",
+            "kind": "expect"
+          },
+          {
+            "label": "the Add button does not move while scrolling and is fully on the screen",
+            "ok": true,
+            "detail": "{\"scrolls\":true,\"addTop\":424,\"addTopAfter\":424,\"addBottom\":477,\"vh\":560,\"lastVisible\":true}",
+            "kind": "expect"
+          },
+          {
+            "label": "scrolled to the end, the last choice is fully visible above the Add row",
+            "ok": true,
+            "detail": "{\"scrolls\":true,\"addTop\":424,\"addTopAfter\":424,\"addBottom\":477,\"vh\":560,\"lastVisible\":true}",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser logged no errors or warnings",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t50-store-name": {
+    "id": "t50-store-name",
+    "title": "Store name — the dashboard's Business identity shows the STORE name, always disabled, with a note to contact the TablePe admin; only the platform admin can rename the store (console → Stores → the store); renaming an outlet changes its display name",
+    "status": "pass",
+    "pass": 31,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-20T00:38:19.891Z",
+    "durationMs": 11245,
+    "steps": [
+      {
+        "n": 1,
+        "title": "the store owner's Settings → Business identity",
+        "checks": [
+          {
+            "label": "the dashboard gets the store's name with the outlets",
+            "ok": true,
+            "detail": "Acme Momos",
+            "kind": "expect"
+          },
+          {
+            "label": "the first box is the STORE name, showing the store's name",
+            "ok": true,
+            "detail": "Acme Momos",
+            "kind": "expect"
+          },
+          {
+            "label": "it is called 'Store name' — there is no 'Restaurant name' box any more",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the box is disabled (greyed out)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and read-only",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a note under it says to contact the admin to update the store name",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "typing in it is refused and the name is unchanged",
+            "ok": true,
+            "detail": "Acme Momos",
+            "kind": "expect"
+          },
+          {
+            "label": "saving Settings does not change the store's name",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the card still lays out cleanly",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the platform rename route refuses a store owner",
+            "ok": true,
+            "detail": "HTTP 403",
+            "kind": "expect"
+          },
+          {
+            "label": "an owner can't slip the store name into a settings save either",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "the platform admin renames the store in the console",
+        "checks": [
+          {
+            "label": "the console store page has a 'Store name' box with the current name",
+            "ok": true,
+            "detail": "Acme Momos",
+            "kind": "expect"
+          },
+          {
+            "label": "Rename store is off until the name is changed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and stays off for a blank name",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the name is limited to 80 characters",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "changing it turns Rename store on",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "pressing it shows 'Store name changed.'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the store has the new name, with the spaces trimmed",
+            "ok": true,
+            "detail": "Acme Momos Renamed",
+            "kind": "expect"
+          },
+          {
+            "label": "the page heading shows the new name",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the server refuses an empty name and one over 80 characters",
+            "ok": true,
+            "detail": "400 / 400",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the name is unchanged by those",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the storefront heading shows the new store name straight away",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and so does the header",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the owner's Settings shows the new name, still disabled",
+            "ok": true,
+            "detail": "Acme Momos Renamed",
+            "kind": "expect"
+          },
+          {
+            "label": "the admin viewing the store's Settings is told where to rename it (the console)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "renaming an outlet (Settings → Outlets)",
+        "checks": [
+          {
+            "label": "the outlet has its new name",
+            "ok": true,
+            "detail": "T50 Renamed Outlet",
+            "kind": "expect"
+          },
+          {
+            "label": "its display name (what customers, receipts and messages show) follows",
+            "ok": true,
+            "detail": "T50 Renamed Outlet",
+            "kind": "expect"
+          },
+          {
+            "label": "the STORE's name is not touched by renaming an outlet",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the storefront's outlet picker shows the new outlet name",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the store and outlet names are put back",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser logged no errors or warnings",
+            "ok": true,
+            "detail": "",
             "kind": "expect"
           }
         ]

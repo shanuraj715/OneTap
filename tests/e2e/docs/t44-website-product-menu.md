@@ -1,6 +1,6 @@
 # T44 — Website header — the Product dropdown is wide, fits the window, and its hovered item is a soft rounded tile with a brand-filled icon (not a grey pill), in light and dark
 
-**Area:** website · **Last result:** ✅ PASSED (53 passed, 0 failed · 2026-11-20 00:32 · headless · 9.6 s)
+**Area:** website · **Last result:** ✅ PASSED (53 passed, 0 failed · 2026-11-20 06:04 · headless · 9.3 s)
 
 **Run it alone:** `node run.mjs --only t44` (add `--visible` to watch it)
 
@@ -119,6 +119,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-20 06:04 | pass | 53 | 0 | headless | 9.3 s |
+| 2026-11-20 05:01 | pass | 53 | 0 | headless | 9.2 s |
 | 2026-11-20 00:32 | pass | 53 | 0 | headless | 9.6 s |
 
 ---

@@ -1,6 +1,6 @@
 # T40 — Storefront menu — no React warnings (e.g. "Removing a style property during rerender (borderColor) when a conflicting property is set (border)") while scrolling, filtering and expanding
 
-**Area:** storefront · **Last result:** ✅ PASSED (4 passed, 0 failed · 2026-11-20 00:27 · headless · 39.0 s)
+**Area:** storefront · **Last result:** ✅ PASSED (4 passed, 0 failed · 2026-11-20 06:02 · headless · 39.0 s)
 
 **Run it alone:** `node run.mjs --only t40` (add `--visible` to watch it)
 
@@ -41,6 +41,10 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-20 06:02 | pass | 4 | 0 | headless | 39.0 s |
+| 2026-11-20 05:00 | pass | 4 | 0 | headless | 38.9 s |
+| 2026-11-20 03:49 | pass | 4 | 0 | headless | 39.0 s |
+| 2026-11-20 03:44 | pass | 4 | 0 | headless | 38.9 s |
 | 2026-11-20 00:27 | pass | 4 | 0 | headless | 39.0 s |
 | 2026-11-19 23:30 | pass | 4 | 0 | headless | 39.0 s |
 | 2026-11-19 23:09 | pass | 4 | 0 | headless | 39.2 s |

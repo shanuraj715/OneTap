@@ -1,6 +1,6 @@
 # T27 — WhatsApp → Numbers has a 'Send sign-in codes from my WhatsApp numbers' switch; with several numbers each code leaves from a random one
 
-**Area:** notifications · **Last result:** ✅ PASSED (21 passed, 0 failed · 2026-11-20 00:23 · headless · 28.8 s)
+**Area:** notifications · **Last result:** ✅ PASSED (21 passed, 0 failed · 2026-11-20 05:59 · headless · 32.7 s)
 
 **Run it alone:** `node run.mjs --only t27` (add `--visible` to watch it) · starts from fresh fake data
 
@@ -70,12 +70,12 @@ _Nothing failed._
 **Step 4 — The next customer gets the code on WhatsApp**
 
 - the screen says the code was sent on WhatsApp, and shows no code — _We sent a 6-digit code to 9811500002 on WhatsApp._
-- it arrived from one of the store's two numbers — _["919000000003"]_
+- it arrived from one of the store's two numbers — _["919000000001"]_
 
 **Step 5 — Fourteen customers ask at the same moment**
 
 - every one of them is sent a code, and none is shown on screen — _200,200,200,200,200,200,200,200,200,200,200,200,200,200_
-- both connected numbers were used (picked at random) — _{"919000000001":6,"919000000003":8}_
+- both connected numbers were used (picked at random) — _{"919000000003":4,"919000000001":10}_
 
 **Step 6 — Unticking asks first**
 
@@ -94,6 +94,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-20 05:59 | pass | 21 | 0 | headless | 32.7 s |
+| 2026-11-20 04:56 | pass | 21 | 0 | headless | 31.2 s |
 | 2026-11-20 00:23 | pass | 21 | 0 | headless | 28.8 s |
 | 2026-11-19 13:03 | pass | 21 | 0 | headless | 29.8 s |
 | 2026-11-19 12:44 | pass | 21 | 0 | headless | 33.5 s |

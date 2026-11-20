@@ -1,6 +1,6 @@
 # T46 — Add-on groups — the list is multi-column (dish editor and the groups list) and a group can be edited after creation (name, option names and prices, add/remove options)
 
-**Area:** menu · **Last result:** ✅ PASSED (50 passed, 0 failed · 2026-11-20 02:15 · headless · 16.6 s)
+**Area:** menu · **Last result:** ✅ PASSED (50 passed, 0 failed · 2026-11-20 06:05 · headless · 17.9 s)
 
 **Run it alone:** `node run.mjs --only t46` (add `--visible` to watch it)
 
@@ -119,6 +119,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-20 06:05 | pass | 50 | 0 | headless | 17.9 s |
+| 2026-11-20 05:02 | pass | 50 | 0 | headless | 16.7 s |
 | 2026-11-20 02:15 | pass | 50 | 0 | headless | 16.6 s |
 | 2026-11-20 02:13 | pass | 50 | 0 | headless | 17.3 s |
 | 2026-11-20 02:12 | fail | 48 | 2 | headless | 1 min 2 s |
