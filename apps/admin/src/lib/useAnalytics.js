@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from "./nav";
 import { DEFAULT_FOOD_COST_PCT, DEFAULT_STOCK_SAFETY_PCT, EXPENSE_LINES, presetRange } from "@onetap/config-schema";
 import * as api from "./api";
 import { useOutlet } from "./useOutlet";

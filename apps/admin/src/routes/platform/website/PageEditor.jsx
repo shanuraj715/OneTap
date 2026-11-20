@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams } from "../../../lib/nav";
 import { FOOTER_GROUPS, newSection, SECTION_META, SECTION_TYPES } from "@onetap/config-schema";
 import { ArrowDown, ArrowLeft, ArrowUp, ChevronDown, ChevronRight, ExternalLink, Eye, Plus, Trash2 } from "lucide-react";
 import * as api from "../../../lib/api";

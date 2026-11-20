@@ -1,10 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, storeUrl, useNavigate, useParams } from "../../lib/nav";
 import { CARD_TEMPLATE_FAMILIES, EFFECT_IDS, EFFECT_PRESETS, FEATURES } from "@onetap/config-schema";
 import { ArrowLeft, Ban, Check, ExternalLink, Globe, RefreshCw, Save, Store, Trash2, X } from "lucide-react";
 import * as api from "../../lib/api";
-import { useOpenStore } from "../../lib/useOutlet";
 import { usePlans, usePlatformMutation, useStore } from "../../lib/usePlatform";
 import { Button, Card, Field, Note, PageHeader, Pill, Select, Tabs, TextInput, Toast } from "../../ui";
 import { StoreCacheCard } from "./CachePanels";
@@ -31,7 +30,6 @@ const emptyAdjust = () => ({ features: { unlock: [], lock: [] }, effects: { unlo
 export function PlatformStoreDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { openStore } = useOpenStore();
   const q = useStore(id);
   const plans = usePlans();
   const store = q.data?.store;
@@ -59,10 +57,8 @@ export function PlatformStoreDetail() {
   const allPlans = plans.data?.plans ?? [];
   const selectedPlan = allPlans.find((p) => p.id === draft?.planId) ?? null;
 
-  const open = (path = "/") => {
-    openStore(id);
-    navigate(path);
-  };
+  // the store's dashboard has its own address: /store/<store-name>/<store-id>/<page>
+  const open = (path = "/") => navigate(storeUrl(store, path));
 
   if (!store || !draft) {
     return (

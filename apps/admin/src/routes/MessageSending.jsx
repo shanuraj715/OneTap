@@ -9,7 +9,7 @@ import {
   sampleCodeValues,
 } from "@onetap/config-schema";
 import { AlertTriangle, Braces, CheckCircle2, EyeOff, KeyRound, Lock, MessageCircle, MessagesSquare, Route, Smartphone } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link } from "../lib/nav";
 import { SettingsNav } from "../components/SubNav";
 import { useAuth } from "../lib/useAuth";
 import { useMessaging, useSaveMessaging } from "../lib/useNotify";

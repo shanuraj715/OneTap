@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "../../lib/nav";
 import { formatINR, TABLE_STATUS_LABELS } from "@onetap/config-schema";
 import {
   ArrowLeft,

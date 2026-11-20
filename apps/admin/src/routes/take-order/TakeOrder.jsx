@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "../../lib/nav";
 import { formatINR } from "@onetap/config-schema";
 import { ArrowLeft, ChevronDown, CircleCheckBig, ConciergeBell, ShoppingBag } from "lucide-react";
 import { useAuth } from "../../lib/useAuth";

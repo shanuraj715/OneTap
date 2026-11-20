@@ -1,7 +1,7 @@
 import { useState } from "react";
                                            
 import { useMutation } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
+import { Link } from "../lib/nav";
 import { formatINR, TABLE_STATUS_LABELS,                              } from "@onetap/config-schema";
 import { getTableQr, rotateTableQr,                    } from "../lib/api";
 import { useAuth } from "../lib/useAuth";

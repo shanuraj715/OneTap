@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "../../../lib/nav";
 import { forcedOverrides, onboardingOutletSlug, onboardingSubdomain, FEATURES } from "@onetap/config-schema";
 import { CheckCircle2, KeyRound, Store } from "lucide-react";
 import * as api from "../../../lib/api";

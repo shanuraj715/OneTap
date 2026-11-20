@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "../../lib/nav";
 import { Ban, TriangleAlert } from "lucide-react";
 import * as api from "../../lib/api";
-import { useOpenStore } from "../../lib/useOutlet";
 import { usePlatformMutation } from "../../lib/usePlatform";
 import { Button, Modal, TextInput, Toast } from "../../ui";
 import { count } from "./viz/format";
@@ -20,7 +19,6 @@ const plural = (n, one, many) => `${count(n)} ${n === 1 ? one : many}`;
  */
 export function DeleteStoreModal({ store, onClose, onDisableInstead }) {
   const navigate = useNavigate();
-  const { openStoreId, closeStore } = useOpenStore();
   const [typed, setTyped] = useState("");
   const summary = useQuery({ queryKey: ["platform", "deletion-summary", store.id], queryFn: () => api.getDeletionSummary(store.id), gcTime: 0 });
   const del = usePlatformMutation(() => api.deleteStore(store.id, typed));
@@ -29,8 +27,6 @@ export function DeleteStoreModal({ store, onClose, onDisableInstead }) {
   const n = summary.data?.counts;
 
   const leave = () => {
-    // if this store was open in the store dashboard, step back out of it
-    if (openStoreId === store.id) closeStore();
     onClose();
     navigate("/platform/stores");
   };

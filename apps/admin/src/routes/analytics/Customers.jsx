@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "../../lib/nav";
 import { Megaphone, Repeat, UserPlus, Users as UsersIcon } from "lucide-react";
 import { useAuth } from "../../lib/useAuth";
 import { useStorePlan } from "../../lib/useStorePlan";

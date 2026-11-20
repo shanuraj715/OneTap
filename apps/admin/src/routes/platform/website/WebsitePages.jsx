@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "../../../lib/nav";
 import { Copy, ExternalLink, FileText, Globe, Pencil, Plus, Settings as SettingsIcon, Trash2 } from "lucide-react";
 import * as api from "../../../lib/api";
 import { usePlatformMutation, useSitePages, useSiteSettings } from "../../../lib/usePlatform";

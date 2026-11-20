@@ -1,10 +1,9 @@
 import { useId, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { storeUrl, useNavigate } from "../../lib/nav";
 import { Ban, EllipsisVertical, ExternalLink, Power, Store, Trash2, TriangleAlert } from "lucide-react";
 import * as api from "../../lib/api";
 import { useMedia } from "../../lib/useMedia";
-import { useOpenStore } from "../../lib/useOutlet";
 import { usePlatformMutation } from "../../lib/usePlatform";
 import { Button, Menu, Modal, Toast } from "../../ui";
 import { DeleteStoreModal } from "./DeleteStoreModal";
@@ -29,7 +28,6 @@ export const MESSAGE_MAX = 500;
 /** The "⋮" button and its popup of choices. Opening the dashboard and the details page happen here; the rest ask the page to open a dialog. */
 export function StoreActionsMenu({ store, onChoose, exclude = [] }) {
   const navigate = useNavigate();
-  const { openStore } = useOpenStore();
   // a bigger target on a phone, where it's tapped rather than clicked
   const narrow = useMedia("(max-width: 767px)");
 
@@ -44,8 +42,7 @@ export function StoreActionsMenu({ store, onChoose, exclude = [] }) {
 
   const choose = (value) => {
     if (value === "open") {
-      openStore(store.id);
-      navigate("/");
+      navigate(storeUrl(store, "/"));
     } else if (value === "details") {
       navigate(`/platform/stores/${store.id}`);
     } else {

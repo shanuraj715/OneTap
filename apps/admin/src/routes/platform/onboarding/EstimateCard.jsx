@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "../../../lib/nav";
 import { estimatePrice } from "@onetap/config-schema";
 import { Calculator } from "lucide-react";
 import { Card, Field, TextInput } from "../../../ui";

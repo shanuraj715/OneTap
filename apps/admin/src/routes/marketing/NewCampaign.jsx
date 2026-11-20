@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "../../lib/nav";
 import { MARKETING_CHANNEL_LABELS, MARKETING_MAX_RECIPIENTS, MARKETING_VARIABLES, WA_PACING } from "@onetap/config-schema";
 import { AlertTriangle, CheckCircle2, Plus, Send, Upload, X } from "lucide-react";
 import * as api from "../../lib/api";

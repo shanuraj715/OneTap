@@ -1,5 +1,5 @@
 import { useId, useLayoutEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "../../../lib/nav";
 import { ArrowDown, ArrowUp, BarChart3, Minus, Table2 } from "lucide-react";
 import { niceTicks, signedPct } from "./format";
 import "./viz.css";

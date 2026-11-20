@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
-import { Navigate, NavLink, Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Navigate, NavLink, Route, Routes, storeFromPath, storeSlug, useLocation, useNavigate } from "./lib/nav";
+import { Navigate as RawNavigate, useLocation as useRouterLocation } from "react-router-dom";
 import { AwesomeLoader } from "./components/AwesomeLoader";
 import { TopProgressBar } from "./components/TopProgressBar";
 import { ROLE_LABELS } from "@onetap/config-schema";
@@ -333,11 +334,19 @@ function Shell({ can }                                     ) {
 
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { openStoreId, closeStore } = useOpenStore();
-  // The platform super admin works in their own console unless they've opened
-  // a store's dashboard — and any /platform page is always the console.
-  const platformMode = Boolean(user?.isSuperAdmin) && (!openStoreId || location.pathname.startsWith("/platform"));
+  const { openStoreId } = useOpenStore();
+  // The platform super admin works in their own console unless the address is a store's:
+  // /store/<store-name>/<store-id>/… is that store's dashboard, anything else is the console.
+  const platformMode = Boolean(user?.isSuperAdmin) && !openStoreId;
   const openedStore = useStore(user?.isSuperAdmin && !platformMode ? openStoreId : null).data?.store;
+  // the name in the address follows the store's current name (the id is what counts)
+  const rawLocation = useRouterLocation();
+  useEffect(() => {
+    const here = storeFromPath(rawLocation.pathname);
+    if (!here || !openedStore || openedStore.id !== here.id) return;
+    const want = storeSlug(openedStore.name);
+    if (here.slug !== want) navigate(`${rawLocation.pathname.replace(here.prefix, `/store/${want}/${here.id}`)}${rawLocation.search}${rawLocation.hash}`, { replace: true });
+  }, [rawLocation.pathname, rawLocation.search, rawLocation.hash, openedStore, navigate]);
   const { outlet, outlets, scope, selectOutlet } = useOutlets();
   const storePlan = useStorePlan();
   const logout = useLogout();
@@ -400,9 +409,7 @@ function Shell({ can }                                     ) {
     .filter((g) => g.items.length);
 
   const leaveStore = () => {
-    const id = openStoreId;
-    closeStore();
-    navigate(id ? `/platform/stores/${id}` : "/platform");
+    navigate(openStoreId ? `/platform/stores/${openStoreId}` : "/platform");
   };
 
   // A brand's outlets, for the switcher. An outlet's own name conventionally
@@ -624,66 +631,91 @@ function Shell({ can }                                     ) {
               <Route path="/platform/website/settings" element={<WebsiteSettings />} />
               <Route path="/platform/website/pages/:id" element={<PageEditor />} />
               <Route path="/platform/leads" element={<PlatformLeads />} />
-              <Route path="*" element={<Navigate to="/platform" replace />} />
+              <Route path="*" element={<OldStoreAddress />} />
             </Routes>
           ) : (
           <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/orders" element={<Orders />} />
-            <Route path="/menu" element={<MenuEditor />} />
-            <Route path="/components" element={<ComponentsCatalog />} />
-            <Route path="/menu-layout" element={<MenuLayout />} />
-            <Route path="/coupons" element={<Coupons />} />
-            <Route path="/tables" element={<Tables />} />
-            <Route path="/table-cards" element={<TableCards />} />
-            <Route path="/printing" element={<Printing />} />
-            <Route path="/payments" element={<Payments />} />
-            <Route path="/notifications" element={<Notifications />} />
-            <Route path="/message-sending" element={<MessageSending />} />
-            <Route path="/customers" element={<Customers />} />
-            <Route path="/appearance" element={<Appearance />} />
-            <Route path="/banners" element={<Banners />} />
-            <Route path="/pages" element={<StorePages />} />
-            <Route path="/pages/:id" element={<StorePageEditor />} />
-            <Route path="/theme" element={<ThemeEditor />} />
-            <Route path="/typography" element={<TypographyEditor />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/reservations" element={<Reservations />} />
-            <Route path="/feedback" element={<Feedback />} />
-            <Route path="/riders" element={<Riders />} />
-            <Route path="/cart-reminders" element={<CartReminders />} />
-            <Route path="/outlets" element={<Outlets />} />
-            <Route path="/dashboard-config" element={<DashboardConfig />} />
-            <Route path="/users" element={<Users />} />
-            <Route path="/take-order" element={<TakeOrder />} />
-            <Route path="/whatsapp" element={<Navigate to="/whatsapp/chats" replace />} />
-            <Route path="/whatsapp/chats" element={<WaGate need="read"><WhatsAppChats /></WaGate>} />
-            <Route path="/whatsapp/chats/:chatId" element={<WaGate need="read"><WhatsAppChats /></WaGate>} />
-            <Route path="/whatsapp/numbers" element={<WaGate need="manage"><WhatsAppNumbers /></WaGate>} />
-            <Route path="/whatsapp/broadcast" element={<WaGate need="manage"><WhatsAppBroadcast /></WaGate>} />
-            <Route path="/analytics" element={<Navigate to="/analytics/overview" replace />} />
-            <Route path="/analytics/overview" element={<Overview />} />
-            <Route path="/analytics/sales" element={<Sales />} />
-            <Route path="/analytics/items" element={<AnalyticsItems />} />
-            <Route path="/analytics/customers" element={<AnalyticsCustomers />} />
-            <Route path="/analytics/compare" element={<Compare />} />
-            <Route path="/analytics/operations" element={<Operations />} />
-            <Route path="/analytics/profit" element={<Profit />} />
-            <Route path="/analytics/reports" element={<Reports />} />
-            <Route path="/marketing" element={<Navigate to="/marketing/new" replace />} />
-            <Route path="/marketing/new" element={<NewCampaign />} />
-            <Route path="/marketing/campaigns" element={<Campaigns />} />
-            <Route path="/marketing/lists" element={<Lists />} />
-            <Route path="/whatsapp/access" element={<WaGate need="manage"><WhatsAppAccess /></WaGate>} />
-            <Route path="/whatsapp/cleanup" element={<WaGate need="manage"><WhatsAppCleanup /></WaGate>} />
-            {/* an old bookmark (the Storage page moved to the platform console) lands on the dashboard, not a blank screen */}
-            <Route path="*" element={<Navigate to="/" replace />} />
+            {/* the super admin inside a store: its dashboard under /store/<name>/<id>/… (same pages as the owner's) */}
+            {user?.isSuperAdmin ? <Route path="/store/:storeSlug/:storeId/*" element={<StoreRoutes />} /> : null}
+            {/* /store/… is the super admin's address; anyone else who lands on one goes to their own dashboard (plain redirect: the wrappers would add the prefix again) */}
+            <Route path="/store/*" element={<RawNavigate to="/" replace />} />
+            <Route path="/*" element={<StoreRoutes />} />
           </Routes>
           )}
         </div>
       </main>
     </div>
   );
+}
+
+
+/** The pages of a store's dashboard — mounted at the plain addresses for its team, and under /store/<name>/<id> for the super admin. */
+function StoreRoutes() {
+  return (
+    <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/orders" element={<Orders />} />
+              <Route path="/menu" element={<MenuEditor />} />
+              <Route path="/components" element={<ComponentsCatalog />} />
+              <Route path="/menu-layout" element={<MenuLayout />} />
+              <Route path="/coupons" element={<Coupons />} />
+              <Route path="/tables" element={<Tables />} />
+              <Route path="/table-cards" element={<TableCards />} />
+              <Route path="/printing" element={<Printing />} />
+              <Route path="/payments" element={<Payments />} />
+              <Route path="/notifications" element={<Notifications />} />
+              <Route path="/message-sending" element={<MessageSending />} />
+              <Route path="/customers" element={<Customers />} />
+              <Route path="/appearance" element={<Appearance />} />
+              <Route path="/banners" element={<Banners />} />
+              <Route path="/pages" element={<StorePages />} />
+              <Route path="/pages/:id" element={<StorePageEditor />} />
+              <Route path="/theme" element={<ThemeEditor />} />
+              <Route path="/typography" element={<TypographyEditor />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/reservations" element={<Reservations />} />
+              <Route path="/feedback" element={<Feedback />} />
+              <Route path="/riders" element={<Riders />} />
+              <Route path="/cart-reminders" element={<CartReminders />} />
+              <Route path="/outlets" element={<Outlets />} />
+              <Route path="/dashboard-config" element={<DashboardConfig />} />
+              <Route path="/users" element={<Users />} />
+              <Route path="/take-order" element={<TakeOrder />} />
+              <Route path="/whatsapp" element={<Navigate to="/whatsapp/chats" replace />} />
+              <Route path="/whatsapp/chats" element={<WaGate need="read"><WhatsAppChats /></WaGate>} />
+              <Route path="/whatsapp/chats/:chatId" element={<WaGate need="read"><WhatsAppChats /></WaGate>} />
+              <Route path="/whatsapp/numbers" element={<WaGate need="manage"><WhatsAppNumbers /></WaGate>} />
+              <Route path="/whatsapp/broadcast" element={<WaGate need="manage"><WhatsAppBroadcast /></WaGate>} />
+              <Route path="/analytics" element={<Navigate to="/analytics/overview" replace />} />
+              <Route path="/analytics/overview" element={<Overview />} />
+              <Route path="/analytics/sales" element={<Sales />} />
+              <Route path="/analytics/items" element={<AnalyticsItems />} />
+              <Route path="/analytics/customers" element={<AnalyticsCustomers />} />
+              <Route path="/analytics/compare" element={<Compare />} />
+              <Route path="/analytics/operations" element={<Operations />} />
+              <Route path="/analytics/profit" element={<Profit />} />
+              <Route path="/analytics/reports" element={<Reports />} />
+              <Route path="/marketing" element={<Navigate to="/marketing/new" replace />} />
+              <Route path="/marketing/new" element={<NewCampaign />} />
+              <Route path="/marketing/campaigns" element={<Campaigns />} />
+              <Route path="/marketing/lists" element={<Lists />} />
+              <Route path="/whatsapp/access" element={<WaGate need="manage"><WhatsAppAccess /></WaGate>} />
+              <Route path="/whatsapp/cleanup" element={<WaGate need="manage"><WhatsAppCleanup /></WaGate>} />
+              {/* an old bookmark (the Storage page moved to the platform console) lands on the dashboard, not a blank screen */}
+              <Route path="*" element={<Navigate to="/" replace />} />
+  </Routes>
+  );
+}
+
+/**
+ * An address from before a store had its own (/menu, /orders… opened by the super admin): back into the store they
+ * last had open, if any — otherwise the platform console.
+ */
+function OldStoreAddress() {
+  const { pathname, search } = useRouterLocation();
+  const { lastOpenStoreId } = useOpenStore();
+  if (lastOpenStoreId && pathname !== "/") return <Navigate to={`/store/store/${lastOpenStoreId}${pathname}${search}`} replace />;
+  return <Navigate to="/platform" replace />;
 }
 
 function NavItem({

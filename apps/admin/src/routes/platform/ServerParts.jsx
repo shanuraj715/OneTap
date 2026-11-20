@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "../../lib/nav";
 import { ArrowRight, CircleCheck, CircleX, TriangleAlert } from "lucide-react";
 import { useServerHealth } from "../../lib/usePlatform";
 import "./viz/viz.css";

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "../lib/nav";
 import { contactDetails, emptyPageBlock, MAX_PAGE_BLOCKS, PAGE_BLOCK_META, PAGE_BLOCK_TYPES, slugFromTitle } from "@onetap/config-schema";
 import { PageBlocks } from "@onetap/ui";
 import { ArrowDown, ArrowLeft, ArrowUp, ExternalLink, ImagePlus, Loader, Plus, Save, Trash2 } from "lucide-react";

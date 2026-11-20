@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "../../lib/nav";
 import { Database, Pause, Play, RefreshCw } from "lucide-react";
 import { useCacheEntries } from "../../lib/usePlatform";
 import { Button, Card, PageHeader, Select, Table, Td, TextInput, Th } from "../../ui";

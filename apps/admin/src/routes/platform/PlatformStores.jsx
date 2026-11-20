@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "../../lib/nav";
 import { Plus, Store } from "lucide-react";
 import * as api from "../../lib/api";
 import { usePlans, usePlatformMutation, usePlatformSettings, useStores } from "../../lib/usePlatform";

@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import QRCode from "qrcode";
 import { formatWaPhone, WA_NUMBER_COLORS, WA_PACING, waTextOn } from "@onetap/config-schema";
 import { AlertTriangle, ArrowRight, KeyRound, Link2, Pencil, Plus, RefreshCw, Shuffle, Smartphone, Trash2, Unlink } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link } from "../../lib/nav";
 import { useAuth } from "../../lib/useAuth";
 import { useMessaging, useSaveMessaging } from "../../lib/useNotify";
 import { useOutlet } from "../../lib/useOutlet";

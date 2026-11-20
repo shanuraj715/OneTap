@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "../../lib/nav";
 import { MARKETING_CHANNEL_LABELS } from "@onetap/config-schema";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import * as api from "../../lib/api";

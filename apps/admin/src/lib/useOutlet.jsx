@@ -1,4 +1,6 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useLocation as useRouterLocation } from "react-router-dom";
+import { storeFromPath } from "./nav";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createOutlet, deleteOutlet, listOutlets, patchOutletConfig, updateOutlet } from "./api";
 
@@ -30,34 +32,36 @@ const OutletSelectionContext = createContext(null);
 /** Wrap the signed-in app shell in this once, above every route. */
 export function OutletSelectionProvider({ children }) {
   const [selectedId, setSelectedId] = useState(() => load(SELECTED_KEY));
-  // The platform super admin's "open store dashboard": which store they're
-  // looking at, or null while they're in the platform console.
-  const [openStoreId, setOpenStoreId] = useState(() => load(OPEN_STORE_KEY));
+  // The platform super admin's "open store dashboard": which store they're looking at is in the ADDRESS
+  // (/store/<name>/<id>/…, see nav.jsx) — null while they're in the platform console.
+  const location = useRouterLocation();
+  const openStoreId = storeFromPath(location.pathname)?.id ?? null;
 
   useEffect(() => {
     if (selectedId) save(SELECTED_KEY, selectedId);
   }, [selectedId]);
-  useEffect(() => save(OPEN_STORE_KEY, openStoreId), [openStoreId]);
+  // remembered only so an old bookmark (/menu, from before stores had their own address) can find its way back
+  useEffect(() => {
+    if (openStoreId) save(OPEN_STORE_KEY, openStoreId);
+  }, [openStoreId]);
+  // another store has other outlets: forget the outlet chosen in the last one
+  const lastStore = useRef(openStoreId);
+  useEffect(() => {
+    if (lastStore.current !== openStoreId) {
+      lastStore.current = openStoreId;
+      setSelectedId(null);
+    }
+  }, [openStoreId]);
 
-  const value = useMemo(
-    () => ({ selectedId, setSelectedId, openStoreId, setOpenStoreId }),
-    [selectedId, openStoreId],
-  );
+  const value = useMemo(() => ({ selectedId, setSelectedId, openStoreId }), [selectedId, openStoreId]);
   return <OutletSelectionContext.Provider value={value}>{children}</OutletSelectionContext.Provider>;
 }
 
-/** The platform's store-viewing state — `openStore(id)` enters a store's dashboard, `closeStore()` leaves it. */
+/** The store the super admin has open (from the address), or null in the platform console. Open one by going to storeUrl(store). */
 export function useOpenStore() {
   const ctx = useContext(OutletSelectionContext);
   if (!ctx) throw new Error("useOpenStore() must be called within <OutletSelectionProvider>");
-  return {
-    openStoreId: ctx.openStoreId,
-    openStore: (id) => {
-      ctx.setSelectedId(null);
-      ctx.setOpenStoreId(id);
-    },
-    closeStore: () => ctx.setOpenStoreId(null),
-  };
+  return { openStoreId: ctx.openStoreId, lastOpenStoreId: load(OPEN_STORE_KEY) };
 }
 
 /**

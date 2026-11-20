@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "../lib/nav";
 
 /**
  * A "404" drawn inside the dashboard's content area, so the sidebar and the rest of the shell stay in place.

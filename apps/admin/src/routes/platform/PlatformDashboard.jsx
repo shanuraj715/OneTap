@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "../../lib/nav";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AlertTriangle, Building2, Inbox, LayoutDashboard, RefreshCw, ReceiptText, Store, UserRound, Users } from "lucide-react";
 import * as api from "../../lib/api";

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "../../lib/nav";
 import { ArrowRight, Database, Eraser, Eye } from "lucide-react";
 import * as api from "../../lib/api";
 import { useCacheOverview, useStoreCache, useStores, usePlatformMutation } from "../../lib/usePlatform";

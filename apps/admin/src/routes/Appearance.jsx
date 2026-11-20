@@ -1,5 +1,5 @@
 import { Component, useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "../lib/nav";
 import { Plus, Trash2 } from "lucide-react";
 import { getVariant, VARIANT_SLOTS } from "@onetap/ui";
 import { useMenu } from "../lib/useMenu";

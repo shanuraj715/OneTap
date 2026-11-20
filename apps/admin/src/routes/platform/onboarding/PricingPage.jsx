@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "../../../lib/nav";
 import { FEATURES, priceSteps, resolvePricing } from "@onetap/config-schema";
 import { ArrowLeft, Calculator, RotateCcw, Save } from "lucide-react";
 import * as api from "../../../lib/api";

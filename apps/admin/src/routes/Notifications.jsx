@@ -15,7 +15,7 @@ import {
                              
 } from "@onetap/config-schema";
 import { AlertTriangle, Bell, CheckCircle2, Filter, MessageCircle, MessagesSquare, ScrollText, Smartphone, XCircle } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link } from "../lib/nav";
 import { useStorePlan } from "../lib/useStorePlan";
 import { useWaMe } from "../lib/useWhatsApp";
                                                       
