@@ -9,30 +9,24 @@ export function FoodMark({ type, size = 14 }                                   )
   const color = type === "veg" ? "#0E8A3E" : type === "egg" ? "#C79A20" : "#B23B3B";
   const round = type !== "veg";
   const label = type === "veg" ? "Vegetarian" : type === "egg" ? "Contains egg" : "Non-vegetarian";
+  // One SVG on a 24-unit grid: the frame and the dot share the same centre (12,12), so the dot can never sit off-centre
+  // whatever the size or the browser's rounding.
   return (
-    <span
+    <svg
       role="img"
       aria-label={label}
-      style={{
-        width: size,
-        height: size,
-        flexShrink: 0,
-        border: `2px solid ${color}`,
-        borderRadius: round ? "50%" : Math.round(size / 5),
-        display: "grid",
-        placeItems: "center",
-        background: "#fff",
-      }}
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      style={{ display: "block", flexShrink: 0 }}
     >
-      <span
-        style={{
-          width: size * 0.45,
-          height: size * 0.45,
-          background: color,
-          borderRadius: round ? "50%" : 1,
-        }}
-      />
-    </span>
+      {round ? (
+        <circle cx="12" cy="12" r="10.5" fill="#fff" stroke={color} strokeWidth="3" />
+      ) : (
+        <rect x="1.5" y="1.5" width="21" height="21" rx="4" fill="#fff" stroke={color} strokeWidth="3" />
+      )}
+      {round ? <circle cx="12" cy="12" r="5.2" fill={color} /> : <rect x="7" y="7" width="10" height="10" rx="1.5" fill={color} />}
+    </svg>
   );
 }
 

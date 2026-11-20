@@ -177,10 +177,13 @@ const variantsHint = (item) =>
 /** The Indian veg / non-veg / egg mark — a square with a dot. */
 export function FoodMark({ type }) {
   const c = FOOD_COLOR[type] ?? FOOD_COLOR.veg;
+  // SVG: frame and dot share one centre, so the dot is never off-centre
   return (
-    <span aria-label={type} title={type} style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 14, height: 14, border: `1.5px solid ${c}`, borderRadius: 3, flexShrink: 0 }}>
-      <span style={{ width: 6, height: 6, borderRadius: 99, background: c }} />
-    </span>
+    <svg width={14} height={14} viewBox="0 0 24 24" role="img" aria-label={type} style={{ display: "block", flexShrink: 0 }}>
+      <title>{type}</title>
+      <rect x="1.5" y="1.5" width="21" height="21" rx="4" fill="none" stroke={c} strokeWidth="3" />
+      <circle cx="12" cy="12" r="5.2" fill={c} />
+    </svg>
   );
 }
 

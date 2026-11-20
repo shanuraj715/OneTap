@@ -461,8 +461,8 @@ p { margin: 0; text-wrap: pretty; }
 .m-thumb { width: 38px; height: 38px; border-radius: 9px; object-fit: cover; background: var(--paper); }
 .m-dish-text span { display: flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 600; line-height: 1.25; }
 .m-dish-text b { font-size: 11.5px; }
-.m-veg { width: 10px; height: 10px; border: 1.5px solid var(--veg); border-radius: 2px; display: inline-grid; place-items: center; flex-shrink: 0; }
-.m-veg::after { content: ""; width: 4px; height: 4px; border-radius: 99px; background: var(--veg); }
+.m-veg { box-sizing: border-box; width: 11px; height: 11px; border: 2px solid var(--veg); border-radius: 2px; display: inline-grid; place-items: center; flex-shrink: 0; }
+.m-veg::after { content: ""; width: 5px; height: 5px; border-radius: 99px; background: var(--veg); }
 .m-veg.non { border-color: var(--nonveg); }
 .m-veg.non::after { background: var(--nonveg); }
 .m-add { font-size: 10.5px; font-weight: 700; color: var(--brand); border: 1.5px solid var(--brand); border-radius: 8px; padding: 3px 9px; }
