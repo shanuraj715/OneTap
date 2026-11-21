@@ -8,7 +8,7 @@ import { assertNotBlocked, blockInfo, failed, floodLimiter } from "../security/l
 import { effectiveOutletConfig } from "../outlets/config.service.js";
 import { cartLinesById, saveCart } from "../carts/carts.service.js";
 import { rateOrder } from "../feedback/feedback.service.js";
-import { customerOrderHistory, hideOrderFromCustomer } from "../orders/orders.service.js";
+import { customerOrderById, customerOrderHistory, hideOrderFromCustomer } from "../orders/orders.service.js";
 import { reorderLines } from "../orders/reorder.service.js";
 import { storePlan } from "../platform/plan.service.js";
 import { completeProfile, customerFromToken, endCustomerSession, requestOtp, verifyOtp } from "./customer.service.js";
@@ -154,6 +154,25 @@ customerRouter.get("/orders", limiter("customer-orders"), async (req, res) => {
     customer: shapeCustomer(customer),
     coins: { enabled, balance: enabled ? balance : 0, valuePaise: enabled ? coinsValuePaise(balance, config.wallet) : 0 },
     feedback: { enabled: Boolean(feedback.enabled), googleReviewUrl: feedback.enabled ? feedback.googleReviewUrl : "", googleMinStars: feedback.googleMinStars },
+  });
+});
+
+/**
+ * Where one of the customer's own orders is right now — the tracking page polls this. Never cached: an order's status
+ * is read from the database every time. Only the caller's own order, only at the outlet they ask about.
+ */
+customerRouter.get("/orders/:id", limiter("order-tracking"), async (req, res) => {
+  const { customer, outlet, ctx } = await customerAt(req, typeof req.query.outletId === "string" ? req.query.outletId : "", { signInMessage: "Sign in to follow your order" });
+  const config = await effectiveOutletConfig(ctx);
+  res.json({
+    order: await customerOrderById({
+      brandId: outlet.brandId,
+      outletId: String(outlet._id),
+      customerId: String(customer._id),
+      orderId: req.params.id,
+      feedbackEnabled: Boolean(config.feedback?.enabled),
+      sla: config.operations?.sla ?? null,
+    }),
   });
 });
 

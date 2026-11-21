@@ -11,6 +11,7 @@ import { startMarketingWorker } from "./modules/marketing/worker.js";
 import { startWhatsAppWorker } from "./modules/whatsapp/worker.js";
 import { startCartReminderWorker } from "./modules/carts/carts.service.js";
 import { startStockSweeper } from "./modules/menu/stock.service.js";
+import { startMissedOrderSweeper } from "./modules/orders/orders.service.js";
 
 const DISPATCH_INTERVAL_MS = 5_000;
 let printTimer                        = null;
@@ -46,6 +47,7 @@ function main()       {
   startCartReminderWorker();
   // gives back the counted stock of online orders nobody paid for (safe in every process)
   startStockSweeper();
+  startMissedOrderSweeper();
 
   const server = app.listen(env.API_PORT);
 

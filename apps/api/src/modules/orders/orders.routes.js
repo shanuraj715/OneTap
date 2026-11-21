@@ -366,7 +366,8 @@ function shape(o                     , includeCustomer         ) {
     rider: o.rider?.name ? { riderId: o.rider.riderId ?? null, name: o.rider.name, phone: o.rider.phone ?? "", assignedAt: o.rider.assignedAt ?? null } : null,
     // The admin's SLA clock measures from the last status change, not from when
     // the order was created, so the history has to travel with the order.
-    statusHistory: o.statusHistory ?? [],
+    // (a customer is never told WHICH team member moved the order — only what happened and when)
+    statusHistory: includeCustomer ? (o.statusHistory ?? []) : (o.statusHistory ?? []).map((h) => ({ status: h.status, at: h.at, ...(h.reason ? { reason: h.reason } : {}) })),
     createdAt: o.createdAt,
   };
 }

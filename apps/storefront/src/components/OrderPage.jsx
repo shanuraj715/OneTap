@@ -44,6 +44,7 @@ export function OrderPage({
   couponsEnabled = true,
   preordersEnabled = false,
   menuHref,
+  outletSlug,
 }) {
   const { customer, loading: customerLoading, refresh } = useCustomer();
   const { lines, hydrated, setQty, addLine, setAll, clear: clearCart } = useCartLines(outletId);
@@ -252,7 +253,7 @@ export function OrderPage({
   if (placed) {
     return (
       <PageShell menuHref={menuHref} title="Order confirmed">
-        <DoneView order={placed} dineIn={dineIn} tab={tab} channel={effectiveChannel} menuHref={menuHref} accountHref={dineIn ? null : `${menuHref}/account`} />
+        <DoneView order={placed} dineIn={dineIn} tab={tab} channel={effectiveChannel} menuHref={menuHref} accountHref={dineIn ? null : `${menuHref}/account`} trackHref={outletSlug ? `/${outletSlug}/order/${placed.id}` : null} />
       </PageShell>
     );
   }
@@ -774,7 +775,7 @@ function ReviewOrder({
 
 /* -------------------------------------------------------------------- done */
 
-function DoneView({ order, dineIn, tab, channel, menuHref, accountHref }) {
+function DoneView({ order, dineIn, tab, channel, menuHref, accountHref, trackHref }) {
   const isDineIn = Boolean(dineIn) || channel === "dine-in";
   const isDelivery = channel === "delivery";
   const gateway = order.payment?.gateway;
@@ -820,12 +821,23 @@ function DoneView({ order, dineIn, tab, channel, menuHref, accountHref }) {
         </p>
       ) : null}
 
-      <Link href={menuHref} className="ot-fx-btn" style={fx("btn", doneButton)}>
-        Back to menu
-      </Link>
+      {trackHref ? (
+        <>
+          <Link href={trackHref} className="ot-fx-btn" style={fx("btn", doneButton)} data-testid="done-follow">
+            Follow your order
+          </Link>
+          <Link href={menuHref} style={{ marginTop: 14, fontSize: 14, fontWeight: 700, color: "var(--color-primary)" }}>
+            Back to menu
+          </Link>
+        </>
+      ) : (
+        <Link href={menuHref} className="ot-fx-btn" style={fx("btn", doneButton)}>
+          Back to menu
+        </Link>
+      )}
       {accountHref ? (
         <Link href={accountHref} style={{ marginTop: 14, fontSize: 14, fontWeight: 700, color: "var(--color-primary)" }} data-testid="done-track">
-          Follow your order
+          All my orders
         </Link>
       ) : null}
     </div>

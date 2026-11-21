@@ -577,6 +577,7 @@ export async function updateStatus(
   id        ,
   status             ,
   byUserId         ,
+  { reason } = {},
 ) {
   const order = await OrderModel.findOne(tenantFilter(ctx, { _id: id }));
   if (!order) throw new HttpError(404, "Order not found");
@@ -591,7 +592,7 @@ export async function updateStatus(
   }
 
   order.status = status;
-  order.statusHistory.push({ status, at: new Date(), by: byUserId });
+  order.statusHistory.push({ status, at: new Date(), by: byUserId, ...(reason ? { reason: String(reason).slice(0, 200) } : {}) });
   if (status === "completed" && order.payment.gateway === "cod" && order.payment.status === "pending") {
     order.payment.status = "paid";
   }
@@ -872,6 +873,31 @@ export async function deleteOrder(ctx, id, user) {
 
 /* ------------------------------------------------------ a customer's own order history */
 
+/** One order as its own customer sees it (the Account page's rows and the tracking page share it). */
+function shapeCustomerOrder(o, { byId, ratingOf, now, feedbackEnabled }) {
+  const f = ratingOf.get(String(o._id));
+  const recent = now - new Date(o.createdAt).getTime() < FEEDBACK_WINDOW_DAYS * 86_400_000;
+  return {
+    id: String(o._id),
+    orderNumber: o.orderNumber,
+    placedAt: o.createdAt,
+    channel: o.channel,
+    status: o.status,
+    payment: { gateway: o.payment?.gateway ?? "cod", status: o.payment?.status ?? "pending" },
+    outlet: byId.get(o.outletId) ?? { id: o.outletId, name: "", slug: "" },
+    items: (o.lines ?? []).map((l) => ({ name: l.name, variantLabel: l.variantLabel ?? null, quantity: l.quantity, lineTotal: l.lineTotal, modifiers: (l.modifiers ?? []).map((m) => m.name ?? m.label ?? "").filter(Boolean) })),
+    totals: o.totals,
+    couponCode: o.couponCode ?? null,
+    deliveryAddress: o.deliveryAddress?.text ?? null,
+    etaMinutes: o.etaMinutes ?? null,
+    scheduledFor: o.scheduledFor ?? null,
+    // the rider's name and number only while they are on the way — not for ever after
+    rider: o.status === "out_for_delivery" && o.rider?.name ? { name: o.rider.name, phone: o.rider.phone ?? "" } : null,
+    feedback: f ? { rating: f.rating, comment: f.comment ?? "", tags: f.tags ?? [], editable: now - new Date(f.createdAt).getTime() < FEEDBACK_EDIT_DAYS * 86_400_000 } : null,
+    canRate: feedbackEnabled && o.status === "completed" && recent && !f,
+  };
+}
+
 /**
  * The orders a signed-in customer has placed with this store (every outlet of it), newest first, in the form the
  * storefront's Account page shows: status, how it is paid and whether it has been, the items and the money.
@@ -895,30 +921,55 @@ export async function customerOrderHistory({ brandId, customerId, before, limit 
   const now = Date.now();
 
   return {
-    orders: page.map((o) => {
-      const f = ratingOf.get(String(o._id));
-      const recent = now - new Date(o.createdAt).getTime() < FEEDBACK_WINDOW_DAYS * 86_400_000;
-      return {
-        id: String(o._id),
-        orderNumber: o.orderNumber,
-        placedAt: o.createdAt,
-        channel: o.channel,
-        status: o.status,
-        payment: { gateway: o.payment?.gateway ?? "cod", status: o.payment?.status ?? "pending" },
-        outlet: byId.get(o.outletId) ?? { id: o.outletId, name: "", slug: "" },
-        items: (o.lines ?? []).map((l) => ({ name: l.name, variantLabel: l.variantLabel ?? null, quantity: l.quantity, lineTotal: l.lineTotal, modifiers: (l.modifiers ?? []).map((m) => m.name ?? m.label ?? "").filter(Boolean) })),
-        totals: o.totals,
-        couponCode: o.couponCode ?? null,
-        deliveryAddress: o.deliveryAddress?.text ?? null,
-        etaMinutes: o.etaMinutes ?? null,
-        scheduledFor: o.scheduledFor ?? null,
-        // the rider's name and number only while they are on the way — not for ever after
-        rider: o.status === "out_for_delivery" && o.rider?.name ? { name: o.rider.name, phone: o.rider.phone ?? "" } : null,
-        feedback: f ? { rating: f.rating, comment: f.comment ?? "", tags: f.tags ?? [], editable: now - new Date(f.createdAt).getTime() < FEEDBACK_EDIT_DAYS * 86_400_000 } : null,
-        canRate: feedbackEnabled && o.status === "completed" && recent && !f,
-      };
-    }),
+    orders: page.map((o) => shapeCustomerOrder(o, { byId, ratingOf, now, feedbackEnabled })),
     nextBefore: rows.length > take ? page.at(-1).createdAt : null,
+  };
+}
+
+/**
+ * Is this order taking longer than the store promised? Said in the customer's terms, from the same limits that raise the
+ * "missed order" alarm on the dashboard (Settings → Missed-order alerts): `accept` — nobody has accepted it yet; `prep` —
+ * accepted but not ready. Pre-orders are only counted from an hour before pickup. null = on time (or the alerts are off).
+ */
+export function lateness(order, sla, now = Date.now()) {
+  if (!sla?.enabled) return null;
+  const minutes = (from) => Math.floor((now - new Date(from).getTime()) / 60_000);
+  if (order.status === "placed") {
+    const start = order.scheduledFor ? new Date(order.scheduledFor).getTime() - 60 * 60_000 : new Date(order.createdAt).getTime();
+    const waited = minutes(start);
+    return waited > sla.acceptMinutes ? { kind: "accept", minutes: waited } : null;
+  }
+  if ((order.status === "accepted" || order.status === "preparing") && !order.scheduledFor) {
+    const accepted = (order.statusHistory ?? []).find((h) => h.status === "accepted")?.at ?? order.createdAt;
+    const waited = minutes(accepted);
+    return waited > sla.prepMinutes ? { kind: "prep", minutes: waited } : null;
+  }
+  return null;
+}
+
+/**
+ * One of the customer's OWN orders for the tracking page: the same shape as a row of their Account page, plus how it has
+ * moved so far (status and time — never who changed it) and, for a cancelled order, why. Always read from the database:
+ * where an order is right now is not something to remember.
+ */
+export async function customerOrderById({ brandId, outletId, customerId, orderId, feedbackEnabled = false, sla = null }) {
+  if (!/^[a-f\d]{24}$/i.test(String(orderId))) throw new HttpError(404, "Order not found");
+  const o = await OrderModel.findOne(brandFilter({ brandId }, { _id: orderId, outletId: String(outletId), "customer.customerId": String(customerId) })).lean();
+  if (!o) throw new HttpError(404, "Order not found");
+  const [outlet, rating] = await Promise.all([
+    OutletModel.findOne({ brandId, _id: o.outletId }).select("name slug config.identity.name").lean(),
+    FeedbackModel.findOne(brandFilter({ brandId }, { orderId: String(o._id) })).lean(),
+  ]);
+  const byId = new Map(outlet ? [[String(outlet._id), { id: String(outlet._id), name: outlet.config?.identity?.name || outlet.name, slug: outlet.slug }]] : []);
+  const ratingOf = new Map(rating ? [[String(o._id), rating]] : []);
+  const history = (o.statusHistory ?? []).map((h) => ({ status: h.status, at: h.at }));
+  const cancelled = [...(o.statusHistory ?? [])].reverse().find((h) => h.status === "cancelled");
+  return {
+    ...shapeCustomerOrder(o, { byId, ratingOf, now: Date.now(), feedbackEnabled }),
+    history,
+    cancelReason: o.status === "cancelled" ? cancelled?.reason ?? null : null,
+    late: lateness(o, sla),
+    serverNow: Date.now(),
   };
 }
 
@@ -932,4 +983,58 @@ export async function hideOrderFromCustomer({ brandId, customerId, orderId }) {
   const found = await OrderModel.updateOne(brandFilter({ brandId }, { _id: orderId, "customer.customerId": String(customerId) }), { $set: { customerHiddenAt: new Date() } });
   if (!found.matchedCount) throw new HttpError(404, "Order not found");
   return { ok: true };
+}
+
+/* ----------------------------------------------------------- nobody accepted it */
+
+/**
+ * Escalation for a missed order. Stores that switched on "Cancel an order nobody accepts after N minutes" (Settings →
+ * Missed-order alerts) have orders that stayed "placed" past that time cancelled — the customer is told through the
+ * store's usual order alerts. An order already paid online is left alone (money taken is for a person), and a pre-order
+ * only counts from an hour before its pickup time, like the alarm does. Safe to run in every API process: cancelling is
+ * one step on one order, and an order that has already moved on is simply skipped.
+ */
+export async function sweepUnacceptedOrders(now = Date.now()) {
+  // (a sweep across every store on purpose — each order is then handled inside its own store's context)
+  const outlets = await OutletModel.find({ "config.operations.sla.autoCancelMinutes": { $gt: 0 } }, null, { allowGlobalQuery: true })
+    .select("brandId config.operations.sla")
+    .lean();
+  let cancelled = 0;
+  for (const outlet of outlets) {
+    const sla = outlet.config?.operations?.sla;
+    if (!sla || sla.enabled === false || !(sla.autoCancelMinutes > 0)) continue;
+    const ctx = { brandId: String(outlet.brandId), outletId: String(outlet._id) };
+    const cutoff = new Date(now - sla.autoCancelMinutes * 60_000);
+    const stale = await OrderModel.find(
+      tenantFilter(ctx, {
+        status: "placed",
+        createdAt: { $lt: cutoff },
+        // not already paid online (an online order that failed to pay never reaches the kitchen anyway)
+        $or: [{ "payment.gateway": "cod" }, { "payment.status": { $ne: "paid" } }],
+      }),
+    )
+      .limit(50)
+      .lean();
+    for (const o of stale) {
+      const start = o.scheduledFor ? new Date(o.scheduledFor).getTime() - 60 * 60_000 : new Date(o.createdAt).getTime();
+      if (start > cutoff.getTime()) continue;
+      try {
+        await updateStatus(ctx, String(o._id), "cancelled", "system", { reason: `Nobody accepted it within ${sla.autoCancelMinutes} minutes` });
+        cancelled += 1;
+      } catch (err) {
+        if (err?.status !== 409 && err?.status !== 404) logger.error({ err, orderId: String(o._id) }, "couldn't cancel an order nobody accepted");
+      }
+    }
+  }
+  return cancelled;
+}
+
+let missedSweeper = null;
+/** Every minute, in every API process. */
+export function startMissedOrderSweeper() {
+  if (missedSweeper) return;
+  missedSweeper = setInterval(() => {
+    sweepUnacceptedOrders().catch((err) => logger.error({ err }, "missed-order sweep failed"));
+  }, 60_000);
+  missedSweeper.unref();
 }

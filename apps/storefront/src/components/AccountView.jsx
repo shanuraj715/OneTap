@@ -17,16 +17,16 @@ import { CustomerGate } from "./CustomerGate";
  * Signing in uses the same card as ordering (name + mobile + code) — there is no separate account to create.
  */
 
-const ACTIVE = ["placed", "accepted", "preparing", "ready", "out_for_delivery"];
-const STEPS = ["placed", "accepted", "preparing", "ready", "completed"];
+export const ACTIVE = ["placed", "accepted", "preparing", "ready", "out_for_delivery"];
+export const STEPS = ["placed", "accepted", "preparing", "ready", "completed"];
 // a delivery order has one more step: on its way
-const DELIVERY_STEPS = ["placed", "accepted", "preparing", "ready", "out_for_delivery", "completed"];
+export const DELIVERY_STEPS = ["placed", "accepted", "preparing", "ready", "out_for_delivery", "completed"];
 const REFRESH_MS = 20_000;
 
-const CHANNEL_LABEL = { takeaway: "Takeaway", "dine-in": "Dine-in", delivery: "Delivery" };
+export const CHANNEL_LABEL = { takeaway: "Takeaway", "dine-in": "Dine-in", delivery: "Delivery" };
 
 /** one friendly sentence for where the order is, given how it will reach the customer */
-function statusLine(order) {
+export function statusLine(order) {
   const { status, channel } = order;
   const pickup = order.scheduledFor ? formatWhen(order.scheduledFor) : null;
   if (status === "placed") return pickup ? `Pre-order for pickup ${pickup} — waiting for the restaurant to accept it.` : "We've got your order — waiting for the restaurant to accept it.";
@@ -39,10 +39,10 @@ function statusLine(order) {
   return "This order was cancelled.";
 }
 
-const STATUS_TONE = { placed: "info", accepted: "info", preparing: "warning", ready: "success", out_for_delivery: "info", completed: "success", cancelled: "danger" };
+export const STATUS_TONE = { placed: "info", accepted: "info", preparing: "warning", ready: "success", out_for_delivery: "info", completed: "success", cancelled: "danger" };
 
 /** how it is paid for, and whether it has been */
-function paymentInfo(order) {
+export function paymentInfo(order) {
   const { gateway, status } = order.payment;
   const mode =
     gateway === "razorpay"
@@ -295,6 +295,11 @@ export function AccountView({ outletId, menuHref, outletSlug, reservationsEnable
               </p>
 
               {active ? <Tracker status={o.status} channel={o.channel} /> : null}
+              {active ? (
+                <Link href={`/${o.outlet?.slug || outletSlug}/order/${o.id}`} style={{ display: "inline-block", marginTop: 10, fontSize: 13, fontWeight: 700, color: "var(--color-primary)" }} data-testid="order-follow">
+                  Follow this order →
+                </Link>
+              ) : null}
 
               {o.status === "out_for_delivery" && o.rider?.name ? (
                 <div style={riderBox} data-testid="order-rider">
@@ -435,7 +440,7 @@ export function AccountView({ outletId, menuHref, outletSlug, reservationsEnable
 
 /* ----------------------------------------------------------------------- pieces */
 
-function Tracker({ status, channel }) {
+export function Tracker({ status, channel }) {
   const steps = channel === "delivery" ? DELIVERY_STEPS : STEPS;
   const at = steps.indexOf(status);
   return (
@@ -450,7 +455,7 @@ function Tracker({ status, channel }) {
   );
 }
 
-function Details({ order: o }) {
+export function Details({ order: o }) {
   const t = o.totals;
   const row = (label, value, strong) => (
     <div style={{ ...rowBetween, fontWeight: strong ? 800 : 400, fontSize: strong ? 15 : 13 }} key={label}>
@@ -494,7 +499,7 @@ function Details({ order: o }) {
   );
 }
 
-const TONES = {
+export const TONES = {
   info: ["var(--tone-info-wash)", "var(--tone-info)"],
   warning: ["var(--tone-warning-wash)", "var(--tone-warning)"],
   success: ["var(--tone-success-wash)", "var(--tone-success)"],
@@ -502,7 +507,7 @@ const TONES = {
   neutral: ["var(--color-surface)", "var(--color-text-muted)"],
 };
 
-function Pill({ tone = "neutral", small, children, testid }) {
+export function Pill({ tone = "neutral", small, children, testid }) {
   const [bg, fg] = TONES[tone] ?? TONES.neutral;
   const Icon = tone === "success" ? CheckCircle2 : tone === "danger" ? XCircle : tone === "warning" ? Clock : null;
   return (

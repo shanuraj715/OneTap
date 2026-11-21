@@ -70,9 +70,19 @@ export async function listTableQrUrls(ctx               , storefrontOrigin      
   }));
 }
 
+/** Another table with the same number, ignoring capital letters — "T9" and "t9" are the same table to a person. */
+async function sameNumber(ctx, number, exceptId) {
+  const escaped = String(number).trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return TableModel.findOne(tenantFilter(ctx, { number: new RegExp(`^${escaped}$`, "i"), ...(exceptId ? { _id: { $ne: exceptId } } : {}) }))
+    .select("number")
+    .lean();
+}
+
 export async function createTable(ctx               , input                                                   ) {
-  const exists = await TableModel.exists(tenantFilter(ctx, { number: input.number }));
-  if (exists) throw new HttpError(409, `Table ${input.number} already exists`);
+  const twin = await sameNumber(ctx, input.number);
+  if (twin) {
+    throw new HttpError(409, twin.number === input.number ? `Table ${twin.number} already exists.` : `Table ${twin.number} already exists — table numbers don't care about capital letters, so "${input.number}" is the same table.`);
+  }
 
   const doc = await TableModel.create({
     brandId: ctx.brandId,
@@ -90,6 +100,10 @@ export async function updateTable(
   id        ,
   patch                                                                                                  ,
 ) {
+  if (patch.number !== undefined) {
+    const twin = await sameNumber(ctx, patch.number, id);
+    if (twin) throw new HttpError(409, `Table ${twin.number} already exists — table numbers don't care about capital letters.`);
+  }
   const doc = await TableModel.findOneAndUpdate(tenantFilter(ctx, { _id: id }), patch, { new: true }).lean();
   if (!doc) throw new HttpError(404, "Table not found");
   return shape(doc            );

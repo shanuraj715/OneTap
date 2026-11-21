@@ -51,6 +51,7 @@ export default async function OutletOrderPage({ params }) {
         couponsEnabled={features.coupons}
         preordersEnabled={outlet.config.operations.scheduling.enabled}
         menuHref={`/${outletSlug}`}
+        outletSlug={outletSlug}
       />
     </>
   );

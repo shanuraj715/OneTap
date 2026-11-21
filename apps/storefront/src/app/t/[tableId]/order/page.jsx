@@ -95,6 +95,7 @@ export default async function TableOrderPage({ params, searchParams }) {
         couponsEnabled={features.coupons}
         dineIn={{ tableId: scan.table.id, tableNumber: scan.table.number, token: k }}
         menuHref={`/t/${tableId}?k=${encodeURIComponent(k)}`}
+        outletSlug={outlet.slug}
       />
     </>
   );

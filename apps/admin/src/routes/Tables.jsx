@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
                                            
 import { useMutation } from "@tanstack/react-query";
 import { Link } from "../lib/nav";
@@ -28,6 +28,8 @@ export function Tables() {
   const create = useCreateTable(outlet);
   const remove = useDeleteTable(outlet);
   const [form, setForm] = useState({ number: "", zone: "", seats: "4" });
+  const [formError, setFormError] = useState(null);
+  useEffect(() => setFormError(null), [form]); // typing in a box takes the old complaint away
   const [qrFor, setQrFor] = useState              (null);
 
   if (!canRead) {
@@ -87,8 +89,14 @@ export function Tables() {
           <form
             onSubmit={(e) => {
               e.preventDefault();
+              // seats are never guessed: empty or 0 is said out loud instead of quietly becoming 4
+              const seats = form.seats.trim() === "" ? NaN : Number(form.seats);
+              if (!form.number.trim()) return setFormError("Enter the table number.");
+              if (!Number.isInteger(seats) || seats < 1) return setFormError("Seats must be a whole number, at least 1 — a table with no seats can't be used.");
+              if (seats > 50) return setFormError("A table can have at most 50 seats.");
+              setFormError(null);
               create.mutate(
-                { number: form.number.trim(), zone: form.zone.trim() || undefined, seats: Number(form.seats) || 4 },
+                { number: form.number.trim(), zone: form.zone.trim() || undefined, seats },
                 { onSuccess: () => setForm({ number: "", zone: "", seats: "4" }) },
               );
             }}
@@ -101,7 +109,8 @@ export function Tables() {
               <Button type="submit" disabled={create.isPending}>{create.isPending ? "Adding…" : "Add table"}</Button>
             </div>
           </form>
-          {create.error ? <Toast kind="error">{(create.error         ).message}</Toast> : null}
+          {formError ? <Toast kind="error">{formError}</Toast> : null}
+          {create.error && !formError ? <Toast kind="error">{(create.error         ).message}</Toast> : null}
         </Card>
       ) : null}
 

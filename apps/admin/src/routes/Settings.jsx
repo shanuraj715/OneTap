@@ -360,6 +360,17 @@ export function Settings() {
                   </Row>
                 </div>
 
+                <Row>
+                  <Field
+                    label="Cancel an order nobody accepts after (minutes)"
+                    hint="0 = never cancel — only warn"
+                    info="If a new order is still not accepted after this many minutes, it is cancelled by itself and the customer is told (when your order alerts are on) — better than leaving them waiting. Orders already paid online are never cancelled this way. Leave it at 0 to only warn the counter."
+                    style={narrow}
+                  >
+                    <TextInput type="number" min={0} max={240} value={ops.sla.autoCancelMinutes ?? 0} onChange={(e) => setOps("sla", { autoCancelMinutes: Math.max(0, Number(e.target.value) || 0) })} aria-label="Cancel an order nobody accepts after" />
+                  </Field>
+                </Row>
+
                 <div style={{ display: "flex", gap: 20, flexWrap: "wrap", marginTop: 6 }}>
                   <Checkbox
                     checked={ops.sla.sound}

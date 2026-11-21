@@ -141,6 +141,13 @@ export const POLICIES = {
     why: "A customer saving their profile or signing out: a few a day is normal, so a high rate means a script.",
     message: "Too many requests. Please wait {wait}.",
   },
+  "order-tracking": {
+    windowMs: MINUTE,
+    limit: 40,
+    key: "identity",
+    why: "The tracking page asks where one order is every few seconds while it is open. That is about ten asks a minute for one tab, so this leaves room for a few tabs and is still far too little for a script scraping orders.",
+    message: "Too many requests. Please wait {wait}.",
+  },
   "customer-orders": {
     windowMs: 10 * MINUTE,
     limit: 90,

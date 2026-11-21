@@ -51,6 +51,7 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | `coupon-guess` | visitor's address | 20 per 5 min | Coupon codes are short; without a limit a script can try thousands to find a valid one. | `POST /api/coupons/apply` |
 | `table-scan` | visitor's address | 60 per min | QR scans and table lookups are open to anyone with a link; this stops table ids or tokens being guessed at speed. A dining room's Wi-Fi scanning at once still fits. | `POST /api/tables/claim`<br>`GET /api/tables/public`<br>`GET /api/tables/scan/:tableId`<br>`POST /api/tables/scan/:tableId/session`<br>`GET /api/tables/sessions/:id/tab` |
 | `customer-account` | user, else customer, else address | 30 per 10 min | A customer saving their profile or signing out: a few a day is normal, so a high rate means a script. | `POST /api/customer/logout`<br>`DELETE /api/customer/orders/:id`<br>`PATCH /api/customer/profile`<br>`POST /api/reservations/:id/cancel` |
+| `order-tracking` | user, else customer, else address | 40 per min | The tracking page asks where one order is every few seconds while it is open. That is about ten asks a minute for one tab, so this leaves room for a few tabs and is still far too little for a script scraping orders. | `GET /api/customer/orders/:id` |
 | `customer-orders` | user, else customer, else address | 90 per 10 min | A customer's Account page (their order history). It refreshes every 20 seconds or so while an order is being prepared, which is far under this; a higher rate is a script copying history or loading the database. | `GET /api/customer/orders`<br>`POST /api/customer/orders/:id/reorder`<br>`GET /api/reservations/mine` |
 | `cart-sync` | user, else customer, else address | 120 per 10 min | A signed-in customer's cart is saved (for abandoned-cart reminders) a moment after each change. A busy customer changes it a few dozen times; more than this is a script writing to the database. | `PUT /api/customer/cart` |
 | `customer-feedback` | user, else customer, else address | 20 per 10 min | Rating an order: a customer rates a handful of orders at most; this stops a script filling the store's ratings. | `POST /api/customer/orders/:id/feedback` |
@@ -115,6 +116,7 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | GET | `/api/customer/me` | `api` |
 | GET | `/api/customer/orders` | `api`, `customer-orders` |
 | DELETE | `/api/customer/orders/:id` | `api`, `customer-account` |
+| GET | `/api/customer/orders/:id` | `api`, `order-tracking` |
 | POST | `/api/customer/orders/:id/feedback` | `api`, `customer-feedback` |
 | POST | `/api/customer/orders/:id/reorder` | `api`, `customer-orders` |
 | POST | `/api/customer/otp/request` | `api`, `otp-send-ip`, `otp-send-store`, `otp-resend-number`, `otp-flood` |

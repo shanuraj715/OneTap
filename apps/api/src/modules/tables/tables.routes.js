@@ -50,9 +50,14 @@ tablesRouter.get("/", async (req, res) => {
 });
 
 const createBody = z.object({
-  number: z.string().min(1).max(20),
-  zone: z.string().max(40).optional(),
-  seats: z.number().int().positive().max(50).optional(),
+  number: z.string().trim().min(1, "Enter the table number.").max(20, "The table number can be at most 20 characters."),
+  zone: z.string().trim().max(40, "The zone name can be at most 40 characters.").optional(),
+  seats: z
+    .number({ invalid_type_error: "Seats must be a number." })
+    .int("Seats must be a whole number.")
+    .min(1, "Seats must be at least 1 — a table with no seats can't be used.")
+    .max(50, "A table can have at most 50 seats.")
+    .optional(),
 });
 
 tablesRouter.post("/", async (req, res) => {

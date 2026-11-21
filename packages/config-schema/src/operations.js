@@ -18,6 +18,12 @@ export const slaSchema = z.object({
   sound: z.boolean().default(true),
   /** keep re-alerting rather than warning once and going quiet */
   repeatAlert: z.boolean().default(true),
+  /**
+   * Escalation: an order nobody has accepted after this many minutes is cancelled by itself (and the customer is told, when
+   * order alerts are on). 0 = never — the default; an order is then only flagged on the counter's screen. Only orders that
+   * are NOT already paid online are cancelled this way: money taken is for a person to deal with.
+   */
+  autoCancelMinutes: z.number().int().min(0).max(240).default(0),
 });
                                                     
 

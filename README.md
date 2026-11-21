@@ -108,7 +108,7 @@ receipts and GST, features, pre-orders and bookings, ratings and suggestions, lo
 abandoned-cart reminders) · Outlets · Payments · Notifications and message sending · Users and roles.
 
 On the storefront customers also see "only N left" and combo savings on the cards, pick a pickup time for a takeaway,
-book a table, rate an order and order it again from their Account page.
+book a table, rate an order and order it again from their Account page. Each order has its own page (`/<outlet>/order/<id>`) that follows it live — accepted, preparing, ready, out for delivery — and says so when the restaurant is running late.
 
 ### Platform console (apps/admin, super admin only)
 
