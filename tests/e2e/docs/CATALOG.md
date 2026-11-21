@@ -1,6 +1,6 @@
 # TablePe end-to-end tests — catalog
 
-**74 tests** · 74 passing · 0 failing/error · 0 not run yet
+**76 tests** · 76 passing · 0 failing/error · 0 not run yet
 
 | Test | Area | Result | Checks | Last run |
 |---|---|---|---|---|
@@ -32,24 +32,24 @@
 | [t25-otp-resend-api](t25-otp-resend-api.md) — Code resend rule — the API makes a number wait 30 s, 1 min, 2 min, 5 min, 15 min, 1 h, then 6 h between codes, however it is called | security | ✅ PASSED | 43/43 | 2026-11-21 13:08 |
 | [t26-signin-resend-timer](t26-signin-resend-timer.md) — Sign-in code — resend timer on the screen (30 s first), kept by the server: Back, reload and direct API calls can't skip it | security | ✅ PASSED | 20/20 | 2026-11-21 13:24 |
 | [t27-signin-codes-switch](t27-signin-codes-switch.md) — WhatsApp → Numbers has a 'Send sign-in codes from my WhatsApp numbers' switch; with several numbers each code leaves from a random one | notifications | ✅ PASSED | 21/21 | 2026-11-21 13:24 |
-| [t28-rate-limits-api](t28-rate-limits-api.md) — Request limits — every protected API stops at its limit with a clear 429, per account sign-in guard, live connections, and nothing that changes data is left unprotected | security | ✅ PASSED | 124/124 | 2026-11-21 13:09 |
+| [t28-rate-limits-api](t28-rate-limits-api.md) — Request limits — every protected API stops at its limit with a clear 429, per account sign-in guard, live connections, and nothing that changes data is left unprotected | security | ✅ PASSED | 124/124 | 2026-11-21 15:39 |
 | [t29-orders-account-api](t29-orders-account-api.md) — Order history for the storefront Account page, and deleting an order — who may, what it puts right, where it disappears | orders | ✅ PASSED | 65/65 | 2026-11-21 13:09 |
 | [t30-account-orders](t30-account-orders.md) — Storefront Account page — 'My orders' menu link, order history with status, payment mode & state, coins; Delete order on the dashboard | storefront | ✅ PASSED | 42/42 | 2026-11-21 14:26 |
 | [t31-store-name-header](t31-store-name-header.md) — Storefront — the header and the big heading say the store's name; the outlet's name is only in the outlet dropdown | storefront | ✅ PASSED | 12/12 | 2026-11-21 13:13 |
 | [t32-menu-tree-api](t32-menu-tree-api.md) — Menu categories inside categories — depth, moving, pictures, ordering, bulk delete of categories and items, import, and how the storefront builds its sections | menu | ✅ PASSED | 93/93 | 2026-11-21 13:08 |
 | [t33-menu-tree](t33-menu-tree.md) — Menu — categories inside categories, category pictures, and multi-select delete for categories and items | menu | ✅ PASSED | 71/71 | 2026-11-21 15:07 |
-| [t34-image-compression-api](t34-image-compression-api.md) — Pictures are compressed and optimised on the server when uploaded — size, shape, rotation, privacy, limits and settings | storage | ✅ PASSED | 32/32 | 2026-11-21 13:08 |
+| [t34-image-compression-api](t34-image-compression-api.md) — Pictures are compressed and optimised on the server when uploaded — size, shape, rotation, privacy, limits and settings | storage | ✅ PASSED | 32/32 | 2026-11-21 15:40 |
 | [t35-storefront-category-bar](t35-storefront-category-bar.md) — Storefront — with 30+ categories the sticky category bar stays ONE short row that scrolls sideways, and phones keep one short bar with a Categories sheet | storefront | ✅ PASSED | 34/34 | 2026-11-21 15:07 |
-| [t36-upload-urls-api](t36-upload-urls-api.md) — Pictures are stored without a domain and get the current domain when sent out — so a new domain or machine never breaks them | storage | ✅ PASSED | 28/28 | 2026-11-21 13:08 |
+| [t36-upload-urls-api](t36-upload-urls-api.md) — Pictures are stored without a domain and get the current domain when sent out — so a new domain or machine never breaks them | storage | ✅ PASSED | 28/28 | 2026-11-21 15:40 |
 | [t37-storefront-mobile-layout](t37-storefront-mobile-layout.md) — Storefront — page side padding is smaller on phones and tablets (desktop unchanged); on phones a path title is two lines with a smaller View all button | storefront | ✅ PASSED | 45/45 | 2026-11-21 15:08 |
-| [t38-ai-images-api](t38-ai-images-api.md) — AI dish pictures — several Gemini keys used in turn, only the super admin can use them, and what is made is saved to the dish | menu | ✅ PASSED | 88/88 | 2026-11-21 13:08 |
+| [t38-ai-images-api](t38-ai-images-api.md) — AI dish pictures — several Gemini keys used in turn, only the super admin can use them, and what is made is saved to the dish | menu | ✅ PASSED | 88/88 | 2026-11-21 15:41 |
 | [t39-ai-item-images](t39-ai-item-images.md) — AI dish pictures — keys added in the platform console, a sparkles button on the dish row (super admin only), shape and count chosen in a pop-up, pictures saved to the dish | menu | ✅ PASSED | 32/32 | 2026-11-21 04:55 |
 | [t40-react-style-warnings](t40-react-style-warnings.md) — Storefront menu — no React warnings (e.g. "Removing a style property during rerender (borderColor) when a conflicting property is set (border)") while scrolling, filtering and expanding | storefront | ✅ PASSED | 4/4 | 2026-11-21 04:56 |
 | [t41-storefront-view-all](t41-storefront-view-all.md) — Storefront View all — as configured from 720px wide up (tablets, narrow windows, desktops); under the cards and centred under 720px; the extra cards slide open and shut | storefront | ✅ PASSED | 85/85 | 2026-11-21 15:08 |
 | [t42-storefront-order-type](t42-storefront-order-type.md) — Storefront — the Takeaway / Delivery choice (menu page and checkout) always shows both; one the outlet doesn't offer is shown greyed out and can't be chosen | storefront | ✅ PASSED | 39/39 | 2026-11-21 15:09 |
 | [t43-checkout-coupons](t43-checkout-coupons.md) — Checkout — the coupon box is hidden when the platform locks Coupons for the store, and comes back when it is unlocked | storefront | ✅ PASSED | 10/10 | 2026-11-21 13:14 |
 | [t44-website-product-menu](t44-website-product-menu.md) — Website header — the Product dropdown is wide, fits the window, and its hovered item is a soft rounded tile with a brand-filled icon (not a grey pill), in light and dark | website | ✅ PASSED | 53/53 | 2026-11-21 04:57 |
-| [t45-paste-item-photo](t45-paste-item-photo.md) — Dish photos — a picture copied to the clipboard can be pasted (Ctrl/⌘+V or the 'Paste photo' button) instead of choosing a file | menu | ✅ PASSED | 21/21 | 2026-11-21 04:57 |
+| [t45-paste-item-photo](t45-paste-item-photo.md) — Dish photos — a picture copied to the clipboard can be pasted (Ctrl/⌘+V or the 'Paste photo' button) instead of choosing a file | menu | ✅ PASSED | 21/21 | 2026-11-21 15:41 |
 | [t46-addon-groups](t46-addon-groups.md) — Add-on groups — the list is multi-column (dish editor and the groups list) and a group can be edited after creation (name, option names and prices, add/remove options) | menu | ✅ PASSED | 50/50 | 2026-11-21 04:58 |
 | [t47-storefront-pinned-bars](t47-storefront-pinned-bars.md) — Storefront — the header, the order bar (Takeaway/Delivery + outlet) and the category/filter bar stay pinned to the top while scrolling, on phone, tablet and desktop, with every header style | storefront | ✅ PASSED | 101/101 | 2026-11-21 15:11 |
 | [t48-hero-button-card-c02](t48-hero-button-card-c02.md) — Storefront — no 'Order takeaway' button at the top; card C02 (Thumbnail left) shows the price right after the veg / non-veg mark with full-width title and description; every item card cuts its description at one line with an ellipsis | storefront | ✅ PASSED | 69/69 | 2026-11-21 15:11 |
@@ -78,6 +78,8 @@
 | [t71-soft-navigation](t71-soft-navigation.md) — Storefront links move between pages without reloading the app (header, Order button, footer pages, message bar, phone menu) | storefront | ✅ PASSED | 14/14 | 2026-11-21 15:12 |
 | [t72-menu-chunks](t72-menu-chunks.md) — The storefront menu is drawn in chunks as the diner scrolls | storefront | ✅ PASSED | 15/15 | 2026-11-21 15:05 |
 | [t73-reorder-notice](t73-reorder-notice.md) — 'Order again' says clearly which dishes couldn't be added, with space below | storefront | ✅ PASSED | 9/9 | 2026-11-21 15:05 |
+| [t74-storage-api](t74-storage-api.md) — Storage — try any storage without switching it on, count what is stored where, and move the files between this server's disk and S3-compatible buckets | platform | ✅ PASSED | 65/65 | 2026-11-21 15:38 |
+| [t75-storage-tools-ui](t75-storage-tools-ui.md) — The Storage page — Test connection under the list, files per store and outlet, move files with progress | platform | ✅ PASSED | 30/30 | 2026-11-21 15:41 |
 
 ## Open findings (noticed during tests, not yet fixed)
 

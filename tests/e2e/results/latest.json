@@ -9422,8 +9422,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T07:39:18.915Z",
-    "durationMs": 8015,
+    "at": "2026-11-21T10:09:53.262Z",
+    "durationMs": 9390,
     "steps": [
       {
         "n": 1,
@@ -10140,7 +10140,7 @@
           {
             "label": "the inventory sees the whole API",
             "ok": true,
-            "detail": "313 routes, 182 change data",
+            "detail": "319 routes, 186 change data",
             "kind": "expect"
           },
           {
@@ -12302,8 +12302,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T07:38:42.269Z",
-    "durationMs": 10290,
+    "at": "2026-11-21T10:10:21.117Z",
+    "durationMs": 10859,
     "steps": [
       {
         "n": 1,
@@ -12322,9 +12322,9 @@
             "kind": "expect"
           },
           {
-            "label": "it is now 305 KB — under the 400 KB target and at least 20 times smaller than the original",
+            "label": "it is now 303 KB — under the 400 KB target and at least 20 times smaller than the original",
             "ok": true,
-            "detail": "19859 KB → 305 KB",
+            "detail": "19859 KB → 303 KB",
             "kind": "expect"
           },
           {
@@ -12336,13 +12336,13 @@
           {
             "label": "the answer reports the real final size, bytes and the original's bytes",
             "ok": true,
-            "detail": "{\"w\":1600,\"h\":1067,\"bytes\":312592}",
+            "detail": "{\"w\":1600,\"h\":1067,\"bytes\":309826}",
             "kind": "expect"
           },
           {
             "label": "it is stored inside this store's own folder, with a name the uploader doesn't control",
             "ok": true,
-            "detail": "6b014a7a67bc91685774a446/6b014a7a67bc91685774a449/menu-items/8d360b66-80c0-4723-b806-3cd1ae13abc7.webp",
+            "detail": "6b016e05c329599937817919/6b016e05c32959993781791c/menu-items/1bc60255-ab06-43b2-bfcf-6bc33ef05121.webp",
             "kind": "expect"
           }
         ]
@@ -12402,7 +12402,7 @@
           {
             "label": "very grainy detail still ends up under the 400 KB target",
             "ok": true,
-            "detail": "12369 KB → 285 KB",
+            "detail": "12369 KB → 284 KB",
             "kind": "expect"
           },
           {
@@ -12426,7 +12426,7 @@
           {
             "label": "a \"pixel bomb\" (225 megapixels, only 672 KB on disk) is shrunk safely and quickly",
             "ok": true,
-            "detail": "201 in 378 ms",
+            "detail": "201 in 379 ms",
             "kind": "expect"
           },
           {
@@ -12486,7 +12486,7 @@
           {
             "label": "…in a reasonable time",
             "ok": true,
-            "detail": "872 ms",
+            "detail": "831 ms",
             "kind": "expect"
           },
           {
@@ -12510,7 +12510,7 @@
           {
             "label": "the platform owner can change the compression settings",
             "ok": true,
-            "detail": "200 {\"provider\":\"local\",\"updatedAt\":\"2026-11-21T07:38:41.461Z\",\"limits\":{\"maxPerItem",
+            "detail": "200 {\"provider\":\"local\",\"updatedAt\":\"2026-11-21T10:10:20.295Z\",\"limits\":{\"maxPerItem",
             "kind": "expect"
           },
           {
@@ -12551,8 +12551,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T07:38:47.094Z",
-    "durationMs": 3807,
+    "at": "2026-11-21T10:10:42.435Z",
+    "durationMs": 4379,
     "steps": [
       {
         "n": 1,
@@ -12561,7 +12561,7 @@
           {
             "label": "the upload's answer carries THIS deployment's domain",
             "ok": true,
-            "detail": "https://img.example.test/uploads/6b014a86e7e741316c8c6af4/6b014a86e7e741316c8c6af7/menu-items/112169ef-2374-4592-a22c-8c29e39bf5c0.webp",
+            "detail": "https://img.example.test/uploads/6b016e215a0d5cecf3c3e9d3/6b016e215a0d5cecf3c3e9d6/menu-items/776e7dad-ae85-433f-aca0-e4f98ae58ac6.webp",
             "kind": "expect"
           },
           {
@@ -12573,7 +12573,7 @@
           {
             "label": "the dashboard sent the full address — the database keeps only the path",
             "ok": true,
-            "detail": "/uploads/6b014a86e7e741316c8c6af4/6b014a86e7e741316c8c6af7/menu-items/112169ef-2374-4592-a22c-8c29e39bf5c0.webp",
+            "detail": "/uploads/6b016e215a0d5cecf3c3e9d3/6b016e215a0d5cecf3c3e9d6/menu-items/776e7dad-ae85-433f-aca0-e4f98ae58ac6.webp",
             "kind": "expect"
           },
           {
@@ -12591,7 +12591,7 @@
           {
             "label": "a category's picture is kept domain-free as well",
             "ok": true,
-            "detail": "/uploads/6b014a86e7e741316c8c6af4/6b014a86e7e741316c8c6af7/menu-items/9ef4a060-7ff1-4b32-a632-57bb1628d76d.webp",
+            "detail": "/uploads/6b016e215a0d5cecf3c3e9d3/6b016e215a0d5cecf3c3e9d6/menu-items/dbd87b6a-e2a0-4ad9-b108-8494c1d23288.webp",
             "kind": "expect"
           },
           {
@@ -12609,13 +12609,13 @@
           {
             "label": "an address saved from localhost now points at this deployment",
             "ok": true,
-            "detail": "https://img.example.test/uploads/6b014a86e7e741316c8c6af4/6b014a86e7e741316c8c6af7/menu-items/01234567-1111-4222-8333-000000000001.webp",
+            "detail": "https://img.example.test/uploads/6b016e215a0d5cecf3c3e9d3/6b016e215a0d5cecf3c3e9d6/menu-items/01234567-1111-4222-8333-000000000001.webp",
             "kind": "expect"
           },
           {
             "label": "an address saved with an OLD domain now points at this deployment",
             "ok": true,
-            "detail": "https://img.example.test/uploads/6b014a86e7e741316c8c6af4/6b014a86e7e741316c8c6af7/menu-items/01234567-1111-4222-8333-000000000002.webp",
+            "detail": "https://img.example.test/uploads/6b016e215a0d5cecf3c3e9d3/6b016e215a0d5cecf3c3e9d6/menu-items/01234567-1111-4222-8333-000000000002.webp",
             "kind": "expect"
           },
           {
@@ -12663,7 +12663,7 @@
           {
             "label": "an edit that sends the full address back still stores only the path",
             "ok": true,
-            "detail": "/uploads/6b014a86e7e741316c8c6af4/6b014a86e7e741316c8c6af7/menu-items/112169ef-2374-4592-a22c-8c29e39bf5c0.webp",
+            "detail": "/uploads/6b016e215a0d5cecf3c3e9d3/6b016e215a0d5cecf3c3e9d6/menu-items/776e7dad-ae85-433f-aca0-e4f98ae58ac6.webp",
             "kind": "expect"
           },
           {
@@ -12711,7 +12711,7 @@
           {
             "label": "the receipt preview's logo is an absolute address on this domain",
             "ok": true,
-            "detail": "<img class=\"logo\" src=\"https://img.example.test/uploads/6b014a86e7e741316c8c6af4/6b014a86e7e741316c8c6af7/menu-items/112",
+            "detail": "<img class=\"logo\" src=\"https://img.example.test/uploads/6b016e215a0d5cecf3c3e9d3/6b016e215a0d5cecf3c3e9d6/menu-items/776",
             "kind": "expect"
           }
         ]
@@ -12747,7 +12747,7 @@
           {
             "label": "both now keep only the path",
             "ok": true,
-            "detail": "/uploads/6b014a86e7e741316c8c6af4/6b014a",
+            "detail": "/uploads/6b016e215a0d5cecf3c3e9d3/6b016e",
             "kind": "expect"
           },
           {
@@ -13316,8 +13316,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T07:38:52.333Z",
-    "durationMs": 4434,
+    "at": "2026-11-21T10:11:05.003Z",
+    "durationMs": 5348,
     "steps": [
       {
         "n": 1,
@@ -13464,7 +13464,7 @@
           {
             "label": "a picture is made and added to the dish",
             "ok": true,
-            "detail": "200 {\"item\":{\"id\":\"6b014a8a71944d4fe23a59a2\",\"categoryId\":\"6b014a8a71944d4fe23a59a0\",\"name\":\"Kadai Paneer\",\"description\":\"Pa",
+            "detail": "200 {\"item\":{\"id\":\"6b016e37858f4d57982aeefb\",\"categoryId\":\"6b016e37858f4d57982aeef8\",\"name\":\"Kadai Paneer\",\"description\":\"Pa",
             "kind": "expect"
           },
           {
@@ -13488,13 +13488,13 @@
           {
             "label": "the picture was compressed to WebP, stored in the store's own folder, and saved without a domain",
             "ok": true,
-            "detail": "/uploads/6b014a8a71944d4fe23a595f/6b014a8a71944d4fe23a5962/m",
+            "detail": "/uploads/6b016e37858f4d57982aeeaf/6b016e37858f4d57982aeeb2/m",
             "kind": "expect"
           },
           {
             "label": "…and the menu hands out a full address",
             "ok": true,
-            "detail": "http://localhost:3101/uploads/6b014a8a71944d4fe23a",
+            "detail": "http://localhost:3101/uploads/6b016e37858f4d57982a",
             "kind": "expect"
           },
           {
@@ -13518,7 +13518,7 @@
           {
             "label": "…at the same time, not one after another (3 × 0.4 s took under 1.1 s)",
             "ok": true,
-            "detail": "437 ms",
+            "detail": "461 ms",
             "kind": "expect"
           },
           {
@@ -13806,7 +13806,7 @@
           {
             "label": "…and the answer says which key was switched away from, and which made the picture",
             "ok": true,
-            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Second account\"]}",
+            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Third\"]}",
             "kind": "expect"
           },
           {
@@ -13824,7 +13824,7 @@
           {
             "label": "…and the answer says which key was switched away from, and which made the picture",
             "ok": true,
-            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Third\"]}",
+            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Second account\"]}",
             "kind": "expect"
           },
           {
@@ -15617,8 +15617,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T23:27:59.880Z",
-    "durationMs": 9358,
+    "at": "2026-11-21T10:11:53.446Z",
+    "durationMs": 9326,
     "steps": [
       {
         "n": 1,
@@ -15663,7 +15663,7 @@
           {
             "label": "it is a stored picture (not a data: link)",
             "ok": true,
-            "detail": "http://localhost:3097/uploads/6b00d6cf63f068be118b233d/6b00d6cf63f068be118b2340/",
+            "detail": "http://localhost:3097/uploads/6b016dd4817160efe102f3cf/6b016dd4817160efe102f3d3/",
             "kind": "expect"
           }
         ]
@@ -23488,6 +23488,660 @@
             "label": "the notice can be dismissed",
             "ok": true,
             "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t74-storage-api": {
+    "id": "t74-storage-api",
+    "title": "Storage — try any storage without switching it on, count what is stored where, and move the files between this server's disk and S3-compatible buckets",
+    "status": "pass",
+    "pass": 65,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-21T10:08:51.576Z",
+    "durationMs": 12674,
+    "steps": [
+      {
+        "n": 1,
+        "title": "the S3 signature is the one AWS documents",
+        "checks": [
+          {
+            "label": "a bucket listing (with a query) is signed exactly like AWS's own worked example",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and goes to the right address",
+            "ok": true,
+            "detail": "https://examplebucket.s3.amazonaws.com/?max-keys=2&prefix=J",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "try a storage without switching it on",
+        "checks": [
+          {
+            "label": "to start with, pictures are on this server's disk and nothing is saved",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "typed-in bucket details are tried (and work)",
+            "ok": true,
+            "detail": "200 {\"ok\":true,\"publicOk\":true,\"provider\":\"s3\",\"label\":\"S3-compatible storage · media\",\"ms\":5,\"steps\":[{\"id\":\"write\",\"label\":\"Save a test file (your keys are accept",
+            "kind": "expect"
+          },
+          {
+            "label": "every step is reported: save, read back, open from the public address, delete",
+            "ok": true,
+            "detail": "write:true read:true public:true delete:true",
+            "kind": "expect"
+          },
+          {
+            "label": "…including that a customer's browser could open it",
+            "ok": true,
+            "detail": "http://127.0.0.1:60866/media/platform/_probe/f63efe1a-074f-4751-8f7a-d22e3fca9039.txt",
+            "kind": "expect"
+          },
+          {
+            "label": "the test file is deleted again — nothing is left in the bucket",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "trying it did NOT switch anything on or save anything",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "wrong keys: the first step fails and says what the service answered",
+            "ok": true,
+            "detail": "S3 PUT failed (403): The access key you provided does not exist.",
+            "kind": "expect"
+          },
+          {
+            "label": "…and nothing else is tried after it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a bucket that doesn't exist is named in the answer",
+            "ok": true,
+            "detail": "S3 PUT failed (404): The specified bucket does not exist",
+            "kind": "expect"
+          },
+          {
+            "label": "missing details are asked for by name",
+            "ok": true,
+            "detail": "Fill in Region, Access key ID, Secret access key first.",
+            "kind": "expect"
+          },
+          {
+            "label": "a bucket that takes uploads but isn't public passes the keys test and fails the public one",
+            "ok": true,
+            "detail": "ok=true public=false",
+            "kind": "expect"
+          },
+          {
+            "label": "…with a plain explanation",
+            "ok": true,
+            "detail": "http://127.0.0.1:60866/media/platform/_probe/da83e449-4895-47cf-83e9-2ddeee494c17.txt answered 403. Pictures won't show",
+            "kind": "expect"
+          },
+          {
+            "label": "this server's disk can be tried the same way",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a blank secret means 'the saved one' when that storage is the one saved",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "with no details it tries what is saved and in use",
+            "ok": true,
+            "detail": "S3-compatible storage · media",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "what is stored where",
+        "checks": [
+          {
+            "label": "the scan covers this server's disk and the storage in use",
+            "ok": true,
+            "detail": "local,cloud",
+            "kind": "expect"
+          },
+          {
+            "label": "…counting the files and bytes on the disk exactly",
+            "ok": true,
+            "detail": "5 files 69 B",
+            "kind": "expect"
+          },
+          {
+            "label": "…and in the bucket (listed over several pages)",
+            "ok": true,
+            "detail": "1 S3-compatible storage · media",
+            "kind": "expect"
+          },
+          {
+            "label": "the whole app: every file in every place",
+            "ok": true,
+            "detail": "6",
+            "kind": "expect"
+          },
+          {
+            "label": "per store: Acme has 4 files on the disk and 1 in the bucket",
+            "ok": true,
+            "detail": "{\"local\":{\"files\":4,\"bytes\":60},\"cloud\":{\"files\":1,\"bytes\":20}}",
+            "kind": "expect"
+          },
+          {
+            "label": "per outlet: Main holds its pictures, 'Store-wide files' holds the logo",
+            "ok": true,
+            "detail": "Main:3 Store-wide files:1",
+            "kind": "expect"
+          },
+          {
+            "label": "Beta has 1",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "per kind of file: menu pictures and logos",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a picture a store uses but that is NOWHERE is reported (and which store)",
+            "ok": true,
+            "detail": "{\"key\":\"6b016dac5086921df8250a10/6b016dac5086921df8250a13/menu-items/dfc827da-6d69-479d-99a5-93d7665b30e0.webp\",\"store\":\"Beta\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "a file nothing refers to (older than a day) is counted as unused; a fresh one isn't",
+            "ok": true,
+            "detail": "{\"files\":1,\"bytes\":14}",
+            "kind": "expect"
+          },
+          {
+            "label": "files on the disk that are not in the bucket yet are counted (what a move would copy)",
+            "ok": true,
+            "detail": "{\"files\":5,\"bytes\":69}",
+            "kind": "expect"
+          },
+          {
+            "label": "the last scan can be read back without scanning again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "moving the files from this server's disk to the bucket",
+        "checks": [
+          {
+            "label": "moving a storage onto itself is refused",
+            "ok": true,
+            "detail": "That is the same storage — choose a different destination.",
+            "kind": "expect"
+          },
+          {
+            "label": "a destination with missing details is refused by name",
+            "ok": true,
+            "detail": "The destination: fill in Region, Access key ID, Secret access key first.",
+            "kind": "expect"
+          },
+          {
+            "label": "the preview says how many files would move",
+            "ok": true,
+            "detail": "{\"files\":5,\"bytes\":69,\"toCopy\":5,\"toCopyBytes\":69,\"alreadyThere\":0}",
+            "kind": "expect"
+          },
+          {
+            "label": "…and how many stored picture addresses would be rewritten (4: A's two pictures, A's logo, B's picture)",
+            "ok": true,
+            "detail": "4",
+            "kind": "expect"
+          },
+          {
+            "label": "the preview changed nothing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "starting a move answers at once (it runs in the background)",
+            "ok": true,
+            "detail": "202 running",
+            "kind": "expect"
+          },
+          {
+            "label": "a second move can't start while one is running",
+            "ok": true,
+            "detail": "409",
+            "kind": "expect"
+          },
+          {
+            "label": "the move finishes",
+            "ok": true,
+            "detail": "done done",
+            "kind": "expect"
+          },
+          {
+            "label": "every file was copied, with the byte count",
+            "ok": true,
+            "detail": "{\"done\":5,\"copied\":5,\"skipped\":0,\"failed\":0,\"bytesCopied\":69,\"linksUpdated\":4,\"deleted\":0}",
+            "kind": "expect"
+          },
+          {
+            "label": "each file in the bucket is identical to the original",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and has the right content type",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the menu pictures now point at the bucket (the old domain-free and old-domain forms alike)",
+            "ok": true,
+            "detail": "http://127.0.0.1:60866/media/6b016dac5086921df8250a01/6b016dac5086921df8250a04/menu-items/b4ae44b8-d32e-4ab2-97af-f33b12c94a6d.webp | http://127.0.0.1:60866/media/6b016dac5086921df8250a01/6b016dac5086921df8250a04/menu-items/e3d03976-c1e7-4c2a-8b27-f4540142cbfd.webp | https://example.com/not-ours/cat.png",
+            "kind": "expect"
+          },
+          {
+            "label": "a picture from another website is left alone",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the stored keys are unchanged",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a logo (any field of any collection) is rewritten too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Beta's picture moves; the one whose file doesn't exist is left as it was (nothing to point at)",
+            "ok": true,
+            "detail": "http://127.0.0.1:60866/media/6b016dac5086921df8250a10/6b016dac5086921df8250a13/menu-items/65edf82f-e16f-498f-8b7b-e797383689f1.webp | /uploads/6b016dac5086921df8250a10/6b016dac5086921df8250a13/menu-items/dfc827da-6d69-479d-99a5-93d7665b30e0.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "four addresses were updated and the originals are still on the disk (nothing deleted)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "moving again copies nothing (all 5 are already there)",
+            "ok": true,
+            "detail": "{\"done\":5,\"copied\":0,\"skipped\":5,\"failed\":0,\"bytesCopied\":0,\"linksUpdated\":0,\"deleted\":0}",
+            "kind": "expect"
+          },
+          {
+            "label": "'delete the old copies' removes the verified files from the disk",
+            "ok": true,
+            "detail": "{\"done\":5,\"copied\":0,\"skipped\":5,\"failed\":0,\"bytesCopied\":0,\"linksUpdated\":0,\"deleted\":5}",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the bucket still has all of them",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "moving them back, one store at a time, and what goes wrong",
+        "checks": [
+          {
+            "label": "one store only: just Beta's file comes back to the disk",
+            "ok": true,
+            "detail": "{\"done\":1,\"copied\":1,\"skipped\":0,\"failed\":0,\"bytesCopied\":9,\"linksUpdated\":1,\"deleted\":0}",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the record says which store",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Beta's address is domain-free again; Acme's still points at the bucket",
+            "ok": true,
+            "detail": "/uploads/6b016dac5086921df8250a10/6b016dac5086921df8250a13/menu-items/65edf82f-e16f-498f-8b7b-e797383689f1.webp | http://127.0.0.1:60866/media/6b016dac5086921df8250a01/6b016dac5086921df8250a04/menu-items/b4ae44b8-d32e-4ab2-97af-f33b12c94a6d.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "a file the bucket refuses is listed with why, and the move says 'done with errors'",
+            "ok": true,
+            "detail": "done_with_errors {\"key\":\"6b016dac5086921df8250a01/6b016dac5086921df8250a04/menu-items/3912daef-62b0-4018-8738-3d1e673e6db7.webp\",\"error\":\"S3 PUT failed (500): try again later\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "…it is NOT deleted from the disk, even though deleting was asked for",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and its address is not rewritten (it still works from the disk)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the other files were linked (and their old copies deleted) regardless of that one failure",
+            "ok": true,
+            "detail": "{\"done\":2,\"copied\":0,\"skipped\":1,\"failed\":1,\"bytesCopied\":0,\"linksUpdated\":1,\"deleted\":1} http://127.0.0.1:60866/media/6b016dac5086921df8250a10/6b016dac5086921df8250a13/menu-items/65edf82f-e16f-498f-8b7b-e797383689f1.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "starting it again finishes just that file (the rest is skipped)",
+            "ok": true,
+            "detail": "done {\"done\":1,\"copied\":1,\"skipped\":0,\"failed\":0,\"bytesCopied\":27,\"linksUpdated\":1,\"deleted\":1}",
+            "kind": "expect"
+          },
+          {
+            "label": "a running move can be cancelled",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it stops before the end and says 'cancelled'",
+            "ok": true,
+            "detail": "cancelled 11",
+            "kind": "expect"
+          },
+          {
+            "label": "a move whose server died is marked interrupted, not 'running' for ever",
+            "ok": true,
+            "detail": "interrupted",
+            "kind": "expect"
+          },
+          {
+            "label": "'make it the storage for new uploads' saves the destination as the platform's",
+            "ok": true,
+            "detail": "s3 saved=true",
+            "kind": "expect"
+          },
+          {
+            "label": "…with its details (the secret stays hidden)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "from the storage in use to ANOTHER bucket (S3 → S3)",
+            "ok": true,
+            "detail": "done 30 vs 30 {\"done\":30,\"copied\":30,\"skipped\":0,\"failed\":0,\"bytesCopied\":254,\"linksUpdated\":5,\"deleted\":0}",
+            "kind": "expect"
+          },
+          {
+            "label": "the addresses follow the files to the other bucket",
+            "ok": true,
+            "detail": "http://127.0.0.1:60931/backup/6b016dac5086921df8250a01/6b016dac5086921df8250a04/menu-items/b4ae44b8-d32e-4ab2-97af-f33b12c94a6d.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "the page can show the latest move and the earlier ones",
+            "ok": true,
+            "detail": "5",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t75-storage-tools-ui": {
+    "id": "t75-storage-tools-ui",
+    "title": "The Storage page — Test connection under the list, files per store and outlet, move files with progress",
+    "status": "pass",
+    "pass": 30,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-21T10:11:32.843Z",
+    "durationMs": 10657,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Test connection, right after the list of storages",
+        "checks": [
+          {
+            "label": "the Test connection button sits directly under the list of storages",
+            "ok": true,
+            "detail": "list ends 395, button at 409",
+            "kind": "expect"
+          },
+          {
+            "label": "…above the settings fields (so any storage can be tried without scrolling past them)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it says which storage it will try",
+            "ok": true,
+            "detail": "Test connection — This server (local disk)",
+            "kind": "expect"
+          },
+          {
+            "label": "this server's disk works (saved, read back, opened from its public address, deleted)",
+            "ok": true,
+            "detail": "This server's disk works: files can be saved, read back and opened from their public address (6 ms).",
+            "kind": "expect"
+          },
+          {
+            "label": "choosing S3 and testing with nothing filled in says what is missing (it doesn't pretend)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the typed-in bucket works and is public",
+            "ok": true,
+            "detail": "S3-compatible storage · stc works: files can be saved, read back and opened from their public address (6 ms).",
+            "kind": "expect"
+          },
+          {
+            "label": "all four steps are shown with a tick",
+            "ok": true,
+            "detail": "write:ok read:ok public:ok delete:ok",
+            "kind": "expect"
+          },
+          {
+            "label": "nothing was saved or switched on, and the bucket was left clean",
+            "ok": true,
+            "detail": "local, 0 objects",
+            "kind": "expect"
+          },
+          {
+            "label": "a bucket that isn't public is a warning, not a pass: 'pictures would not show yet'",
+            "ok": true,
+            "detail": "Open it from its public address (how a customer's browser will) http://127.0.0.1:62153/stc/platform/_probe/7fd567e1-ae33",
+            "kind": "expect"
+          },
+          {
+            "label": "wrong keys: the first step fails and shows the service's own words",
+            "ok": true,
+            "detail": "Save a test file (your keys are accepted) S3 PUT failed (403): The access key you provided does not",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "What is stored where",
+        "checks": [
+          {
+            "label": "the scan shows the total for everything",
+            "ok": true,
+            "detail": "Everything 105 files · 13 KB across every place and store",
+            "kind": "expect"
+          },
+          {
+            "label": "…and this server's disk on its own",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the test store has its 3 files",
+            "ok": true,
+            "detail": "Storage Test Co 3 files · 742 B",
+            "kind": "expect"
+          },
+          {
+            "label": "opening it shows the outlet ('Counter') and its files",
+            "ok": true,
+            "detail": "Counter 3 files · 742 B",
+            "kind": "expect"
+          },
+          {
+            "label": "files are also counted by kind",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Move the test store's files to the bucket",
+        "checks": [
+          {
+            "label": "the destination can be tried before anything moves",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Move files' stays off until you have looked at what would happen",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Check what would move' says 3 files to copy and 3 addresses to update — and only for this store",
+            "ok": true,
+            "detail": "This server's disk S3-compatible storage · stc · Storage Test Co only: 3 files (742 B) to copy, 0 already there, 3 stored picture addresses to update.",
+            "kind": "expect"
+          },
+          {
+            "label": "checking changed nothing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the move runs and finishes by itself",
+            "ok": true,
+            "detail": "done",
+            "kind": "expect"
+          },
+          {
+            "label": "the numbers say 3 copied, 3 addresses updated",
+            "ok": true,
+            "detail": "3 of 3 checked · 3 copied (742 B) · 0 already there · 0 failed · 3 addresses updated",
+            "kind": "expect"
+          },
+          {
+            "label": "the bucket holds exactly that store's 3 files",
+            "ok": true,
+            "detail": "b8bb841cd.webp 8436d2f04.webp 68a1ca327.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "the dish's pictures now come from the bucket",
+            "ok": true,
+            "detail": "http://127.0.0.1:62153/stc/6b016e4a817160efe102f9cc/6b016e4a817160efe102f9cf/menu-items/ddea4319-4a73-49cc-bf47-69f68a1ca327.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "…and really open from there",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "after the move the test store's files no longer count as waiting to be moved",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "A file the bucket refuses",
+        "checks": [
+          {
+            "label": "the move says it finished with problems",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the file that failed is listed with the service's answer",
+            "ok": true,
+            "detail": "6b016e4a817160efe102f9cc/6b016e4a817160efe102f9cf/menu-items/c9b93eec-b4f7-4649-9160-114101155bb8.webp — S3 PUT failed (",
+            "kind": "expect"
+          },
+          {
+            "label": "starting again finishes the rest (only that file is copied)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…it says 1 copied",
+            "ok": true,
+            "detail": "4 of 4 checked · 1 copied (138 B) · 3 already there · 0 failed · 1 addresses updated",
             "kind": "expect"
           },
           {

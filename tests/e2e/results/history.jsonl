@@ -1137,3 +1137,13 @@
 {"id":"t63-card-picture-shape","status":"pass","pass":30,"fail":0,"mode":"headless","at":"2026-11-21T09:42:22.849Z","durationMs":3440}
 {"id":"t68-order-tracking-ui","status":"pass","pass":23,"fail":0,"mode":"headless","at":"2026-11-21T09:42:46.701Z","durationMs":23171}
 {"id":"t71-soft-navigation","status":"pass","pass":14,"fail":0,"mode":"headless","at":"2026-11-21T09:42:51.196Z","durationMs":3611}
+{"id":"t74-storage-api","status":"pass","pass":65,"fail":0,"mode":"headless","at":"2026-11-21T10:06:14.990Z","durationMs":12224}
+{"id":"t75-storage-tools-ui","status":"error","pass":5,"fail":0,"mode":"headless","at":"2026-11-21T10:06:46.876Z","durationMs":31853,"error":"storage-tools-ui.mjs exited with code 1. }  Node.js v24.3.0"}
+{"id":"t74-storage-api","status":"pass","pass":65,"fail":0,"mode":"headless","at":"2026-11-21T10:08:51.576Z","durationMs":12674}
+{"id":"t75-storage-tools-ui","status":"pass","pass":30,"fail":0,"mode":"headless","at":"2026-11-21T10:09:02.977Z","durationMs":10566}
+{"id":"t28-rate-limits-api","status":"pass","pass":124,"fail":0,"mode":"headless","at":"2026-11-21T10:09:53.262Z","durationMs":9390}
+{"id":"t34-image-compression-api","status":"pass","pass":32,"fail":0,"mode":"headless","at":"2026-11-21T10:10:21.117Z","durationMs":10859}
+{"id":"t36-upload-urls-api","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-21T10:10:42.435Z","durationMs":4379}
+{"id":"t38-ai-images-api","status":"pass","pass":88,"fail":0,"mode":"headless","at":"2026-11-21T10:11:05.003Z","durationMs":5348}
+{"id":"t75-storage-tools-ui","status":"pass","pass":30,"fail":0,"mode":"headless","at":"2026-11-21T10:11:32.843Z","durationMs":10657}
+{"id":"t45-paste-item-photo","status":"pass","pass":21,"fail":0,"mode":"headless","at":"2026-11-21T10:11:53.446Z","durationMs":9326}
