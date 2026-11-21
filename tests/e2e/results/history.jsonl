@@ -1148,3 +1148,17 @@
 {"id":"t75-storage-tools-ui","status":"pass","pass":30,"fail":0,"mode":"headless","at":"2026-11-21T10:11:32.843Z","durationMs":10657}
 {"id":"t45-paste-item-photo","status":"pass","pass":21,"fail":0,"mode":"headless","at":"2026-11-21T10:11:53.446Z","durationMs":9326}
 {"id":"t75-storage-tools-ui","status":"pass","pass":31,"fail":0,"mode":"headless","at":"2026-11-21T10:19:34.047Z","durationMs":11787}
+{"id":"t76-storage-optimize-api","status":"pass","pass":73,"fail":0,"mode":"headless","at":"2026-11-21T10:35:46.758Z","durationMs":6862}
+{"id":"t76-storage-optimize-api","status":"pass","pass":73,"fail":0,"mode":"headless","at":"2026-11-21T10:36:01.516Z","durationMs":6766}
+{"id":"t77-storage-optimize-ui","status":"error","pass":3,"fail":0,"mode":"headless","at":"2026-11-21T10:38:46.431Z","durationMs":35354,"error":"storage-optimize-ui.mjs exited with code 1. }  Node.js v22.17.0"}
+{"id":"t77-storage-optimize-ui","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-21T10:39:53.692Z","durationMs":8394}
+{"id":"t77-storage-optimize-ui","status":"fail","pass":35,"fail":1,"mode":"headless","at":"2026-11-21T10:40:43.645Z","durationMs":7927}
+{"id":"t77-storage-optimize-ui","status":"fail","pass":34,"fail":2,"mode":"headless","at":"2026-11-21T10:41:06.656Z","durationMs":8117}
+{"id":"t77-storage-optimize-ui","status":"fail","pass":2,"fail":1,"mode":"headless","at":"2026-11-21T10:41:40.231Z","durationMs":32731}
+{"id":"t77-storage-optimize-ui","status":"error","pass":3,"fail":0,"mode":"headless","at":"2026-11-21T10:42:29.484Z","durationMs":33482,"error":"storage-optimize-ui.mjs exited with code 1. }  Node.js v22.17.0"}
+{"id":"t28-rate-limits-api","status":"pass","pass":124,"fail":0,"mode":"headless","at":"2026-11-21T10:44:05.851Z","durationMs":8738}
+{"id":"t76-storage-optimize-api","status":"pass","pass":73,"fail":0,"mode":"headless","at":"2026-11-21T10:44:13.003Z","durationMs":7066}
+{"id":"t77-storage-optimize-ui","status":"pass","pass":37,"fail":0,"mode":"headless","at":"2026-11-21T10:44:20.867Z","durationMs":7799}
+{"id":"t74-storage-api","status":"pass","pass":65,"fail":0,"mode":"headless","at":"2026-11-21T10:44:41.894Z","durationMs":12067}
+{"id":"t75-storage-tools-ui","status":"pass","pass":31,"fail":0,"mode":"headless","at":"2026-11-21T10:44:52.775Z","durationMs":10813}
+{"id":"t77-storage-optimize-ui","status":"pass","pass":37,"fail":0,"mode":"headless","at":"2026-11-21T10:45:00.348Z","durationMs":7500}

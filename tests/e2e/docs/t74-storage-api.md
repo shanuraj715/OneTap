@@ -1,6 +1,6 @@
 # T74 — Storage — try any storage without switching it on, count what is stored where, and move the files between this server's disk and S3-compatible buckets
 
-**Area:** platform · **Last result:** ✅ PASSED (65 passed, 0 failed · 2026-11-21 15:38 · headless · 12.7 s)
+**Area:** platform · **Last result:** ✅ PASSED (65 passed, 0 failed · 2026-11-21 16:14 · headless · 12.1 s)
 
 **Run it alone:** `node run.mjs --only t74` (add `--visible` to watch it)
 
@@ -46,7 +46,7 @@ _Nothing failed._
 - to start with, pictures are on this server's disk and nothing is saved
 - typed-in bucket details are tried (and work)
 - every step is reported: save, read back, open from the public address, delete — _write:true read:true public:true delete:true_
-- …including that a customer's browser could open it — _http://127.0.0.1:60866/media/platform/_probe/f63efe1a-074f-4751-8f7a-d22e3fca9039.txt_
+- …including that a customer's browser could open it — _http://127.0.0.1:55228/media/platform/_probe/ab52a1af-1394-4b85-876d-e351ef18f61a.txt_
 - the test file is deleted again — nothing is left in the bucket
 - trying it did NOT switch anything on or save anything
 - wrong keys: the first step fails and says what the service answered — _S3 PUT failed (403): The access key you provided does not exist._
@@ -120,6 +120,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-21 16:14 | pass | 65 | 0 | headless | 12.1 s |
 | 2026-11-21 15:38 | pass | 65 | 0 | headless | 12.7 s |
 | 2026-11-21 15:36 | pass | 65 | 0 | headless | 12.2 s |
 

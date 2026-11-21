@@ -1,6 +1,6 @@
 # T75 — The Storage page — Test connection under the list, files per store and outlet, move files with progress
 
-**Area:** platform · **Last result:** ✅ PASSED (31 passed, 0 failed · 2026-11-21 15:49 · headless · 11.8 s)
+**Area:** platform · **Last result:** ✅ PASSED (31 passed, 0 failed · 2026-11-21 16:14 · headless · 10.8 s)
 
 **Run it alone:** `node run.mjs --only t75` (add `--visible` to watch it)
 
@@ -37,7 +37,7 @@ _Nothing failed._
 
 **Step 1 — Test connection, right after the list of storages**
 
-- the Test connection button sits directly under the list of storages — _list ends 395, button at 409_
+- the Test connection button sits directly under the list of storages — _list ends 344, button at 358_
 - …above the settings fields (so any storage can be tried without scrolling past them)
 - it says which storage it will try — _Test connection — This server (local disk)_
 - this server's disk works (saved, read back, opened from its public address, deleted)
@@ -50,7 +50,7 @@ _Nothing failed._
 
 **Step 2 — What is stored where**
 
-- the scan shows the total for everything — _Everything 105 files · 13 KB across every place and store_
+- the scan shows the total for everything — _Everything 590 files · 12.4 MB across every place and store_
 - …and this server's disk on its own
 - the test store has its 3 files — _Storage Test Co 3 files · 742 B_
 - opening it shows the outlet ('Counter') and its files — _Counter 3 files · 742 B_
@@ -65,7 +65,7 @@ _Nothing failed._
 - the 'what would move' box has room (≥ 12 px) below the buttons — it does not touch them — _gap 20px_
 - the move runs and finishes by itself — _done_
 - the numbers say 3 copied, 3 addresses updated — _3 of 3 checked · 3 copied (742 B) · 0 already there · 0 failed · 3 addresses updated_
-- the bucket holds exactly that store's 3 files — _29fd134f5.webp 16b583e57.webp 3997ee212.webp_
+- the bucket holds exactly that store's 3 files — _9eb2d222f.webp 63bc4c84d.webp 01114fee4.webp_
 - the dish's pictures now come from the bucket
 - …and really open from there
 - after the move the test store's files no longer count as waiting to be moved
@@ -82,6 +82,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-21 16:14 | pass | 31 | 0 | headless | 10.8 s |
 | 2026-11-21 15:49 | pass | 31 | 0 | headless | 11.8 s |
 | 2026-11-21 15:41 | pass | 30 | 0 | headless | 10.7 s |
 | 2026-11-21 15:39 | pass | 30 | 0 | headless | 10.6 s |

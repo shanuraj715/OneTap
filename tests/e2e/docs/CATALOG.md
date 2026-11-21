@@ -1,6 +1,6 @@
 # TablePe end-to-end tests — catalog
 
-**76 tests** · 76 passing · 0 failing/error · 0 not run yet
+**78 tests** · 78 passing · 0 failing/error · 0 not run yet
 
 | Test | Area | Result | Checks | Last run |
 |---|---|---|---|---|
@@ -32,7 +32,7 @@
 | [t25-otp-resend-api](t25-otp-resend-api.md) — Code resend rule — the API makes a number wait 30 s, 1 min, 2 min, 5 min, 15 min, 1 h, then 6 h between codes, however it is called | security | ✅ PASSED | 43/43 | 2026-11-21 13:08 |
 | [t26-signin-resend-timer](t26-signin-resend-timer.md) — Sign-in code — resend timer on the screen (30 s first), kept by the server: Back, reload and direct API calls can't skip it | security | ✅ PASSED | 20/20 | 2026-11-21 13:24 |
 | [t27-signin-codes-switch](t27-signin-codes-switch.md) — WhatsApp → Numbers has a 'Send sign-in codes from my WhatsApp numbers' switch; with several numbers each code leaves from a random one | notifications | ✅ PASSED | 21/21 | 2026-11-21 13:24 |
-| [t28-rate-limits-api](t28-rate-limits-api.md) — Request limits — every protected API stops at its limit with a clear 429, per account sign-in guard, live connections, and nothing that changes data is left unprotected | security | ✅ PASSED | 124/124 | 2026-11-21 15:39 |
+| [t28-rate-limits-api](t28-rate-limits-api.md) — Request limits — every protected API stops at its limit with a clear 429, per account sign-in guard, live connections, and nothing that changes data is left unprotected | security | ✅ PASSED | 124/124 | 2026-11-21 16:14 |
 | [t29-orders-account-api](t29-orders-account-api.md) — Order history for the storefront Account page, and deleting an order — who may, what it puts right, where it disappears | orders | ✅ PASSED | 65/65 | 2026-11-21 13:09 |
 | [t30-account-orders](t30-account-orders.md) — Storefront Account page — 'My orders' menu link, order history with status, payment mode & state, coins; Delete order on the dashboard | storefront | ✅ PASSED | 42/42 | 2026-11-21 14:26 |
 | [t31-store-name-header](t31-store-name-header.md) — Storefront — the header and the big heading say the store's name; the outlet's name is only in the outlet dropdown | storefront | ✅ PASSED | 12/12 | 2026-11-21 13:13 |
@@ -78,8 +78,10 @@
 | [t71-soft-navigation](t71-soft-navigation.md) — Storefront links move between pages without reloading the app (header, Order button, footer pages, message bar, phone menu) | storefront | ✅ PASSED | 14/14 | 2026-11-21 15:12 |
 | [t72-menu-chunks](t72-menu-chunks.md) — The storefront menu is drawn in chunks as the diner scrolls | storefront | ✅ PASSED | 15/15 | 2026-11-21 15:05 |
 | [t73-reorder-notice](t73-reorder-notice.md) — 'Order again' says clearly which dishes couldn't be added, with space below | storefront | ✅ PASSED | 9/9 | 2026-11-21 15:05 |
-| [t74-storage-api](t74-storage-api.md) — Storage — try any storage without switching it on, count what is stored where, and move the files between this server's disk and S3-compatible buckets | platform | ✅ PASSED | 65/65 | 2026-11-21 15:38 |
-| [t75-storage-tools-ui](t75-storage-tools-ui.md) — The Storage page — Test connection under the list, files per store and outlet, move files with progress | platform | ✅ PASSED | 31/31 | 2026-11-21 15:49 |
+| [t74-storage-api](t74-storage-api.md) — Storage — try any storage without switching it on, count what is stored where, and move the files between this server's disk and S3-compatible buckets | platform | ✅ PASSED | 65/65 | 2026-11-21 16:14 |
+| [t75-storage-tools-ui](t75-storage-tools-ui.md) — The Storage page — Test connection under the list, files per store and outlet, move files with progress | platform | ✅ PASSED | 31/31 | 2026-11-21 16:14 |
+| [t76-storage-optimize-api](t76-storage-optimize-api.md) — Storage — find the pictures bigger than the size limit and compress the chosen ones; every stored address follows | platform | ✅ PASSED | 73/73 | 2026-11-21 16:14 |
+| [t77-storage-optimize-ui](t77-storage-optimize-ui.md) — The Storage page — find the pictures bigger than the size limit in a grid, select them and optimize | platform | ✅ PASSED | 37/37 | 2026-11-21 16:15 |
 
 ## Open findings (noticed during tests, not yet fixed)
 
