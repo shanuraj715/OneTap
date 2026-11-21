@@ -228,6 +228,13 @@ export const POLICIES = {
     why: "Making dish pictures with Gemini. Every picture is a paid call to Google, one request can make up to four, and only the platform's super admin can start one — this is a brake on a stuck button or a script, not on normal use.",
     message: "That's a lot of AI pictures in a short time. Please wait {wait}.",
   },
+  "storage-heavy": {
+    windowMs: 10 * MINUTE,
+    limit: 60,
+    key: "user",
+    why: "Scanning the storage for pictures that are too big, and starting an optimize run. A scan reads every stored file's name and every collection of the database, and a run compresses pictures (a few at a time) — only the platform's super admin can start either, so this is a brake on a stuck button or a script, not on normal use.",
+    message: "That's a lot of storage scans in a short time. Please wait {wait}.",
+  },
   "secrets": {
     windowMs: 10 * MINUTE,
     limit: 30,

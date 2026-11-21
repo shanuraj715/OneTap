@@ -1,5 +1,5 @@
 import { STORAGE_FIELDS, STORAGE_REQUIRED_FIELDS } from "@onetap/config-schema";
-import { BrandModel, StorageMigrationModel } from "@onetap/db";
+import { BrandModel, StorageMigrationModel, StorageOptimizeModel } from "@onetap/db";
 import { decryptSecret, encryptSecret } from "../../lib/crypto.js";
 import { logger } from "../../logger.js";
 import { HttpError } from "../../middleware/error.js";
@@ -77,7 +77,7 @@ async function resolveEnd(desc, which) {
 }
 
 /** The web-address prefixes a storage's files are known by (so old stored addresses can be recognised). */
-function oldForms(cfg) {
+export function oldForms(cfg) {
   if (cfg.provider === "local") return { local: true, bases: cfg.publicBaseUrl ? [cfg.publicBaseUrl.replace(/\/$/, "")] : [] };
   const adapter = providerFor("s3");
   const cut = (url) => url.slice(0, -"/x".length);
@@ -172,6 +172,7 @@ export async function cancelMove(id) {
 export async function startMove(input, userId) {
   await markInterruptedMoves();
   if (await StorageMigrationModel.exists({ status: "running" })) throw new HttpError(409, "A move is already running — wait for it to finish, or cancel it.");
+  if (await StorageOptimizeModel.exists({ status: "running" })) throw new HttpError(409, "Pictures are being optimized right now — wait for that to finish (or cancel it) before moving files.");
   const [source, target, scope] = [await resolveEnd(input.source, "source"), await resolveEnd(input.target, "target"), await scopeOf(input)];
   if (storageIdentity(await working(source)) === storageIdentity(await working(target))) throw new HttpError(400, "That is the same storage — choose a different destination.");
   const options = { deleteSource: Boolean(input.options?.deleteSource), activate: Boolean(input.options?.activate) && target.type === "s3" };

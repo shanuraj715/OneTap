@@ -111,3 +111,98 @@ export async function applyLinkChanges(changes) {
   }
   return changed;
 }
+
+/* ------------------------------------------------------ a file replaced by another */
+
+const isPlain = (v) => v && typeof v === "object" && !Array.isArray(v) && !v._bsontype && !(v instanceof Date);
+const join = (path, part) => (path ? `${path}.${part}` : String(part));
+
+/**
+ * The new text of one stored string when the file it names has been replaced by a new one, or null when it names none of them.
+ * A whole address of the file's place (or the bare key) becomes the new file's address (or key); a longer text that merely
+ * contains the key has just that part swapped.
+ * @param {Map<string, { key: string, url: string, forms: object }>} replacements  old key → the new file
+ */
+function rewriteText(text, replacements) {
+  const keys = keysIn(text).filter((k) => replacements.has(k));
+  if (!keys.length) return null;
+  let next = text;
+  if (keys.length === 1) {
+    const rep = replacements.get(keys[0]);
+    if (text === keys[0]) next = rep.key;
+    else if (keyOfAddress(text, rep.forms) === keys[0]) next = rep.url;
+    else next = text.split(keys[0]).join(rep.key);
+    return { next, rep: replacements.get(keys[0]) };
+  }
+  for (const k of keys) next = next.split(k).join(replacements.get(k).key);
+  return { next, rep: replacements.get(keys[0]) };
+}
+
+/**
+ * Work out what has to change in the database now that some files were replaced by new ones (a picture re-compressed into a
+ * new file): every address or `key` that names an old file is pointed at its new file, and a `width`/`height` sitting next to
+ * it is brought in line with the new picture. Nothing is written.
+ * @param {{ replacements: Map<string, { key: string, url: string, forms: object, width?: number, height?: number }> }} input
+ * @returns {Promise<{ changes: Array<{ collection: string, id: any, path: string, old: any, next: any }> }>}
+ */
+export async function planKeyReplacements({ replacements }) {
+  const changes = [];
+  for await (const { collection, doc } of documents()) {
+    const visit = (node, path) => {
+      if (Array.isArray(node)) {
+        node.forEach((v, i) => {
+          if (typeof v === "string") {
+            const hit = v.length < 2000 ? rewriteText(v, replacements) : null;
+            if (hit && hit.next !== v) changes.push({ collection, id: doc._id, path: join(path, i), old: v, next: hit.next });
+          } else visit(v, join(path, i));
+        });
+        return;
+      }
+      if (!isPlain(node)) return;
+      let described = null; // the replacement of the picture this object describes
+      for (const [k, v] of Object.entries(node)) {
+        if (k.includes(".") || k.startsWith("$")) continue;
+        if (typeof v === "string") {
+          const hit = v.length < 2000 ? rewriteText(v, replacements) : null;
+          if (hit && hit.next !== v) {
+            changes.push({ collection, id: doc._id, path: join(path, k), old: v, next: hit.next });
+            described ??= hit.rep;
+          }
+        } else visit(v, join(path, k));
+      }
+      if (described) {
+        for (const dim of ["width", "height"]) {
+          if (typeof node[dim] === "number" && described[dim] && node[dim] !== described[dim]) changes.push({ collection, id: doc._id, path: join(path, dim), old: node[dim], next: described[dim] });
+        }
+      }
+    };
+    visit(doc, "");
+  }
+  return { changes };
+}
+
+/**
+ * Write changes — but only where the stored value is still the one that was planned for. A store owner who saved something else
+ * in between keeps their change (that document is left for next time). Returns how many values were written and how many
+ * documents were left alone.
+ */
+export async function applyChangesIfUnchanged(changes) {
+  const db = mongoose.connection.db;
+  const perDoc = new Map();
+  for (const c of changes) {
+    const id = `${c.collection}|${c.id}`;
+    const entry = perDoc.get(id) ?? { collection: c.collection, id: c.id, filter: {}, $set: {}, n: 0 };
+    entry.filter[c.path] = c.old;
+    entry.$set[c.path] = c.next;
+    entry.n += 1;
+    perDoc.set(id, entry);
+  }
+  let changed = 0;
+  let skipped = 0;
+  for (const { collection, id, filter, $set, n } of perDoc.values()) {
+    const r = await db.collection(collection).updateOne({ _id: id, ...filter }, { $set });
+    if (r.modifiedCount) changed += n;
+    else skipped += 1;
+  }
+  return { changed, skipped };
+}

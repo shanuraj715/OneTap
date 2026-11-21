@@ -8,6 +8,7 @@ import { checkLabel, hostStatus, probeBase, subdomainInfo } from "../outlets/sub
 import * as storage from "../storage/storage.service.js";
 import * as storageMove from "../storage/storage-migrate.js";
 import * as storageOps from "../storage/storage-ops.js";
+import * as storageOptimize from "../storage/storage-optimize.js";
 import * as ai from "../ai/ai.service.js";
 import * as cacheAdmin from "./cache.service.js";
 import * as cacheInspect from "./cache-inspect.service.js";
@@ -168,6 +169,29 @@ platformRouter.post("/storage/move", limiter("secrets"), async (req, res) => {
 });
 platformRouter.post("/storage/move/:id/cancel", async (req, res) => {
   res.json(await storageMove.cancelMove(req.params.id));
+});
+
+/* Optimizing pictures that are bigger than the size limit (compress them with the saved compression settings). */
+const optimizeBody = z.object({
+  keys: z.array(z.string().min(1).max(300)).max(5000).optional(),
+  all: z.boolean().optional(),
+  brandId: z.string().min(1).max(40).optional(),
+  options: z.object({ deleteOriginals: z.boolean().optional() }).optional(),
+});
+platformRouter.get("/storage/optimize", async (_req, res) => {
+  res.json(await storageOptimize.optimizeStatus());
+});
+platformRouter.get("/storage/optimize/scan", async (_req, res) => {
+  res.json({ scan: storageOptimize.lastOptimizeScan() });
+});
+platformRouter.post("/storage/optimize/scan", limiter("storage-heavy"), async (_req, res) => {
+  res.json({ scan: await storageOptimize.scanForOptimizing() });
+});
+platformRouter.post("/storage/optimize", limiter("storage-heavy"), async (req, res) => {
+  res.status(202).json({ job: await storageOptimize.startOptimize(optimizeBody.parse(req.body), String(requireSuperAdmin(req)._id)) });
+});
+platformRouter.post("/storage/optimize/:id/cancel", async (req, res) => {
+  res.json(await storageOptimize.cancelOptimize(req.params.id));
 });
 
 /* ----------------------------------------------------------------- AI pictures */

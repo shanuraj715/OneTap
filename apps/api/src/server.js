@@ -13,6 +13,7 @@ import { startCartReminderWorker } from "./modules/carts/carts.service.js";
 import { startStockSweeper } from "./modules/menu/stock.service.js";
 import { startMissedOrderSweeper } from "./modules/orders/orders.service.js";
 import { markInterruptedMoves } from "./modules/storage/storage-migrate.js";
+import { markInterruptedOptimizations } from "./modules/storage/storage-optimize.js";
 
 const DISPATCH_INTERVAL_MS = 5_000;
 let printTimer                        = null;
@@ -50,6 +51,7 @@ function main()       {
   startStockSweeper();
   startMissedOrderSweeper();
   void markInterruptedMoves().catch(() => undefined); // a move that was running when the last process stopped can't still be running
+  void markInterruptedOptimizations().catch(() => undefined); // …and neither can an optimize run
 
   const server = app.listen(env.API_PORT);
 

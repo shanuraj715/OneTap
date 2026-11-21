@@ -86,3 +86,44 @@ const storageMigrationSchema = new Schema(
 );
 
 export const StorageMigrationModel = models.StorageMigration ?? model("StorageMigration", storageMigrationSchema);
+
+/**
+ * One "optimize the pictures" job (platform console → Storage): pictures bigger than the platform's size limit are re-compressed
+ * with the compression settings and the stores' picture addresses follow. Not tenant-scoped.
+ *
+ * `processing` is what the job ran with (the settings at the moment it started); `progress` counts what happened to each
+ * picture: optimized, unchanged (could not get meaningfully smaller), failed, skipped (changed while the job ran).
+ */
+const storageOptimizeSchema = new Schema(
+  {
+    status: { type: String, enum: ["running", "done", "done_with_errors", "failed", "cancelled", "interrupted"], default: "running", index: true },
+    stage: { type: String, default: "reading" }, // reading → links → cleanup → done
+    options: { type: Schema.Types.Mixed, default: {} }, // { deleteOriginals }
+    processing: { type: Schema.Types.Mixed, default: {} },
+    plan: { type: Schema.Types.Mixed, default: {} }, // { files, bytes }
+    progress: { type: Schema.Types.Mixed, default: {} }, // { done, optimized, unchanged, skipped, failed, bytesBefore, bytesAfter, linksUpdated, deleted, kept }
+    failures: { type: [Schema.Types.Mixed], default: [] }, // first few { key, error }
+    error: { type: String, default: "" },
+    cancelRequested: { type: Boolean, default: false },
+    startedBy: String,
+    finishedAt: Date,
+  },
+  { timestamps: true },
+);
+
+export const StorageOptimizeModel = models.StorageOptimize ?? model("StorageOptimize", storageOptimizeSchema);
+
+/**
+ * Pictures that were re-compressed and could not get meaningfully smaller (a noisy photo already at the smallest size and
+ * quality allowed). Remembered — per file size and compression settings — so the next scan doesn't list them again and again.
+ */
+const storageSettledSchema = new Schema(
+  {
+    key: { type: String, required: true, unique: true },
+    size: { type: Number, required: true },
+    fingerprint: { type: String, required: true },
+  },
+  { timestamps: true },
+);
+
+export const StorageSettledModel = models.StorageSettled ?? model("StorageSettled", storageSettledSchema);
