@@ -60,10 +60,10 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | `payment` | user, else customer, else address | 40 per 10 min | Starting and confirming a payment calls the payment gateway; this stops a script burning the store's gateway quota. | `POST /api/payments/intent`<br>`POST /api/payments/verify` |
 | `webhook` | visitor's address | 240 per min | Payment gateways call this with a signature we check — but a flood of forged calls would still cost a signature check and a database read each. A gateway's servers speak for every merchant it has, so the ceiling is generous (4 a second per address) — raise RATE_LIMIT_SCALE if the platform grows to many busy stores. | `POST /api/payments/webhook/:gateway` |
 | `print-agent` | visitor's address | 300 per min | The little program at a restaurant's printer asks for jobs every second or two with its own token. 300 a minute leaves room for several printers; it stops a leaked token being used to hammer the queue. | `GET /api/printing/agent/jobs`<br>`POST /api/printing/agent/jobs/:id/result` |
-| `team-write` | signed-in user (else address) | 240 per min | Every change a team member makes to the dashboard (menu, outlets, orders, tables, pages, settings…). 240 a minute is four a second — more than any person — so a stolen session can't mass-delete or mass-edit in a blink. | 165 routes (see the full list below) |
+| `team-write` | signed-in user (else address) | 240 per min | Every change a team member makes to the dashboard (menu, outlets, orders, tables, pages, settings…). 240 a minute is four a second — more than any person — so a stolen session can't mass-delete or mass-edit in a blink. | 169 routes (see the full list below) |
 | `account-write` | signed-in user (else address) | 30 per 10 min | Creating team members, changing roles and resetting passwords. Takeover of accounts is the worst thing that can happen to a store, so it is slow on purpose. | `POST /api/platform/stores/:id/owners`<br>`DELETE /api/platform/stores/:id/owners/:userId`<br>`PATCH /api/platform/stores/:id/owners/:userId`<br>`DELETE /api/platform/stores/:id/people/:userId`<br>`POST /api/platform/stores/:id/people/:userId/block`<br>`POST /api/platform/stores/:id/people/:userId/unblock`<br>`POST /api/users`<br>`DELETE /api/users/:id`<br>`PATCH /api/users/:id` |
 | `ai-images` | signed-in user (else address) | 15 per 10 min | Making dish pictures with Gemini. Every picture is a paid call to Google, one request can make up to four, and only the platform's super admin can start one — this is a brake on a stuck button or a script, not on normal use. | `POST /api/menu/items/:id/generate-images` |
-| `secrets` | signed-in user (else address) | 30 per 10 min | Saving or revealing payment-gateway keys, SMS / WhatsApp connections, storage credentials and printer-agent tokens. They are rarely touched; a flood means something is wrong. | 15 routes (see the full list below) |
+| `secrets` | signed-in user (else address) | 30 per 10 min | Saving or revealing payment-gateway keys, SMS / WhatsApp connections, storage credentials and printer-agent tokens. They are rarely touched; a flood means something is wrong. | 18 routes (see the full list below) |
 | `pii-read` | signed-in user (else address) | 120 per min | Looking up customers and their wallets by phone number. A person looks one up at a time; a loop is someone (or a stolen session) copying the customer list or trying phone numbers to see who has coins. | `GET /api/customers`<br>`GET /api/customers/:id/wallet`<br>`GET /api/orders/staff/customer`<br>`GET /api/orders/staff/customers` |
 | `upload` | signed-in user (else address) | 60 per 10 min | Uploads write files to storage and cost bandwidth (images, menu imports, contact files). Stops a session filling the store's disk or bill. | `POST /api/marketing/contacts/parse`<br>`POST /api/menu/import`<br>`POST /api/platform/site/upload`<br>`PUT /api/qr-cards/design`<br>`POST /api/storage/upload`<br>`POST /api/whatsapp/media` |
 | `report` | signed-in user (else address) | 120 per min | Analytics screens run aggregations over a store's whole order history. A person opening screens and changing filters stays well under two a second; a loop does not. | 20 routes (see the full list below) |
@@ -264,7 +264,13 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | GET | `/api/platform/storage` | `api` |
 | PUT | `/api/platform/storage` | `api`, `team-write`, `secrets` |
 | POST | `/api/platform/storage/adopt/:brandId` | `api`, `team-write`, `secrets` |
+| GET | `/api/platform/storage/move` | `api` |
+| POST | `/api/platform/storage/move` | `api`, `team-write`, `secrets` |
+| POST | `/api/platform/storage/move/:id/cancel` | `api`, `team-write` |
+| POST | `/api/platform/storage/move/preview` | `api`, `team-write`, `secrets` |
 | POST | `/api/platform/storage/test` | `api`, `team-write`, `secrets` |
+| GET | `/api/platform/storage/usage` | `api` |
+| POST | `/api/platform/storage/usage/scan` | `api`, `team-write`, `secrets` |
 | GET | `/api/platform/stores` | `api` |
 | DELETE | `/api/platform/stores/:id` | `api`, `team-write`, `destructive` |
 | GET | `/api/platform/stores/:id` | `api` |

@@ -6,6 +6,8 @@ import { requireBrandContext, requireSuperAdmin } from "../../middleware/auth.js
 import { HttpError } from "../../middleware/error.js";
 import { checkLabel, hostStatus, probeBase, subdomainInfo } from "../outlets/subdomains.js";
 import * as storage from "../storage/storage.service.js";
+import * as storageMove from "../storage/storage-migrate.js";
+import * as storageOps from "../storage/storage-ops.js";
 import * as ai from "../ai/ai.service.js";
 import * as cacheAdmin from "./cache.service.js";
 import * as cacheInspect from "./cache-inspect.service.js";
@@ -97,8 +99,11 @@ platformRouter.put("/settings", async (req, res) => {
  * compressed. One setting for the whole platform; store owners never see it. Secrets are encrypted and never
  * sent back.
  */
+/** The storage settings as the console shows them, plus what to call the storage in use ("Cloudflare R2 · my-bucket"). */
+const storageView = async () => ({ ...(await storage.getStorageConfig()), inUseLabel: storageOps.describeStorage(await storageOps.activeConfig()) });
+
 platformRouter.get("/storage", async (_req, res) => {
-  res.json(await storage.getStorageConfig());
+  res.json(await storageView());
 });
 
 const storageBody = z.object({
@@ -111,22 +116,58 @@ platformRouter.put("/storage", limiter("secrets"), async (req, res) => {
   const body = storageBody.parse(req.body);
   if (!body.provider && !body.processing) throw new HttpError(400, "Nothing to save");
   await storage.saveStorageConfig(body, String(requireSuperAdmin(req)._id));
-  res.json(await storage.getStorageConfig());
+  res.json(await storageView());
 });
 
 /** Back to this server's disk (compression settings are kept). */
 platformRouter.delete("/storage", limiter("secrets"), async (req, res) => {
   await storage.resetStorageConfig(String(requireSuperAdmin(req)._id));
-  res.json(await storage.getStorageConfig());
+  res.json(await storageView());
 });
 
-platformRouter.post("/storage/test", limiter("secrets"), async (_req, res) => {
+/**
+ * Try a storage WITHOUT switching it on: with `{ provider, values }` it tries those details (a blank secret keeps the saved
+ * one); with no body it tries what is saved and in use.
+ */
+const testBody = z.object({ provider: storageProviderSchema, values: z.record(z.string(), z.string().nullable()).optional() }).partial();
+platformRouter.post("/storage/test", limiter("secrets"), async (req, res) => {
+  const body = testBody.parse(req.body ?? {});
   try {
-    res.json(await storage.testStorageConfig());
+    res.json(await storageOps.testStorage(body.provider ? { provider: body.provider, values: body.values ?? {} } : undefined));
   } catch (err) {
     // A bad key or an unreachable bucket is the point of this endpoint — report it, don't 500.
+    if (err instanceof HttpError) throw err;
     throw new HttpError(400, err instanceof Error ? err.message : "Storage test failed");
   }
+});
+
+/** What is stored where — per place, store, outlet and kind — and how it compares with what the stores use. */
+platformRouter.get("/storage/usage", async (_req, res) => {
+  res.json({ usage: storageOps.lastStorageScan() });
+});
+platformRouter.post("/storage/usage/scan", limiter("secrets"), async (_req, res) => {
+  res.json({ usage: await storageOps.scanStorage() });
+});
+
+/* Moving the files to another storage (this server's disk ⇄ any S3-compatible bucket). */
+const endBody = z.object({ type: z.enum(["local", "active", "s3"]), values: z.record(z.string(), z.string().nullable()).optional() });
+const moveBody = z.object({
+  source: endBody,
+  target: endBody,
+  scope: z.object({ brandId: z.string().min(1).max(40).optional() }).optional(),
+  options: z.object({ deleteSource: z.boolean().optional(), activate: z.boolean().optional() }).optional(),
+});
+platformRouter.get("/storage/move", async (_req, res) => {
+  res.json(await storageMove.migrationStatus());
+});
+platformRouter.post("/storage/move/preview", limiter("secrets"), async (req, res) => {
+  res.json({ preview: await storageMove.previewMove(moveBody.parse(req.body)) });
+});
+platformRouter.post("/storage/move", limiter("secrets"), async (req, res) => {
+  res.status(202).json({ move: await storageMove.startMove(moveBody.parse(req.body), String(requireSuperAdmin(req)._id)) });
+});
+platformRouter.post("/storage/move/:id/cancel", async (req, res) => {
+  res.json(await storageMove.cancelMove(req.params.id));
 });
 
 /* ----------------------------------------------------------------- AI pictures */
@@ -169,7 +210,7 @@ platformRouter.post("/ai/keys/:id/test", limiter("secrets"), async (req, res) =>
 /** Use one store's own (older) storage settings as the platform's. The secret stays encrypted. */
 platformRouter.post("/storage/adopt/:brandId", limiter("secrets"), async (req, res) => {
   await storage.adoptStoreStorage(req.params.brandId, String(requireSuperAdmin(req)._id));
-  res.json(await storage.getStorageConfig());
+  res.json(await storageView());
 });
 
 /* ------------------------------------------------------------------ server */

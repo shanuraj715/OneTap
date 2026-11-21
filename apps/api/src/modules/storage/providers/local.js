@@ -1,4 +1,4 @@
-import { mkdir, rm, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { dirname, join, normalize, resolve, sep } from "node:path";
 
 /** Keys are always "/"-joined; use forward slashes in the URL regardless of OS. */
@@ -36,6 +36,50 @@ export const localProvider = {
     } catch {
       /* already gone — deletion is best-effort */
     }
+  },
+
+  /** The file's bytes. */
+  async get(cfg, key) {
+    return readFile(safeAbsolute(cfg.uploadsRoot ?? "", key));
+  },
+
+  /** `{ size, modifiedAt }`, or null when there is no such file. */
+  async head(cfg, key) {
+    try {
+      const info = await stat(safeAbsolute(cfg.uploadsRoot ?? "", key));
+      return info.isFile() ? { size: info.size, modifiedAt: info.mtime } : null;
+    } catch {
+      return null;
+    }
+  },
+
+  /** Every file under the uploads folder (or under `prefix`), one `{ key, size, modifiedAt }` at a time. */
+  async *list(cfg, { prefix = "" } = {}) {
+    const root = cfg.uploadsRoot ?? "";
+    const start = prefix ? safeAbsolute(root, prefix.replace(/\/+$/, "")) : root;
+    async function* walk(dir) {
+      let entries;
+      try {
+        entries = await readdir(dir, { withFileTypes: true });
+      } catch {
+        return; // the folder doesn't exist (yet): nothing stored
+      }
+      for (const entry of entries) {
+        const abs = join(dir, entry.name);
+        if (entry.isDirectory()) yield* walk(abs);
+        else if (entry.isFile()) {
+          const info = await stat(abs);
+          yield { key: abs.slice(root.length + 1).split(sep).join("/"), size: info.size, modifiedAt: info.mtime };
+        }
+      }
+    }
+    yield* walk(start);
+  },
+
+  /** Where a stored file is opened from (the form that is kept in the database). */
+  urlFor(cfg, key) {
+    const base = cfg.publicBaseUrl?.replace(/\/$/, "");
+    return base ? `${base}/${keyToUrlPath(key)}` : `/uploads/${keyToUrlPath(key)}`;
   },
 };
 

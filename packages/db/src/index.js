@@ -19,7 +19,7 @@ export { MenuCategoryModel, MenuItemModel, ModifierGroupModel } from "./models/m
 export { CouponModel, CouponRedemptionModel } from "./models/coupon.js";
 export { WalletLedgerModel } from "./models/wallet.js";
 export { NotificationCredentialModel, NotificationLogModel } from "./models/notify.js";
-export { PlatformStorageModel, StorageConfigModel } from "./models/storage.js";
+export { PlatformStorageModel, StorageConfigModel, StorageMigrationModel } from "./models/storage.js";
 export { PlatformAiModel } from "./models/ai.js";
 export { StorePageModel } from "./models/store-page.js";
 export { MarketingCampaignModel, MarketingContactModel, MarketingListModel, MarketingMessageModel } from "./models/marketing.js";

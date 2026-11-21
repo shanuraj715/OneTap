@@ -175,7 +175,14 @@ export const generateItemImages = (o, id, body) =>
 
 export const resetPlatformStorage = () => req("/api/platform/storage", json("DELETE"));
 
-export const testPlatformStorage = () => req("/api/platform/storage/test", json("POST"));
+/** Try a storage: with { provider, values } the typed-in details (nothing is saved or switched on); with nothing, the saved one. */
+export const testPlatformStorage = (body) => req("/api/platform/storage/test", json("POST", body ?? {}));
+export const getStorageUsage = () => req("/api/platform/storage/usage");
+export const scanStorageUsage = () => req("/api/platform/storage/usage/scan", json("POST"));
+export const getStorageMove = () => req("/api/platform/storage/move");
+export const previewStorageMove = (body) => req("/api/platform/storage/move/preview", json("POST", body));
+export const startStorageMove = (body) => req("/api/platform/storage/move", json("POST", body));
+export const cancelStorageMove = (id) => req(`/api/platform/storage/move/${id}/cancel`, json("POST"));
 
 /** Use one store's own (older) storage settings as the platform's. */
 export const adoptStoreStorage = (brandId) => req(`/api/platform/storage/adopt/${brandId}`, json("POST"));

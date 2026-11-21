@@ -115,7 +115,7 @@ book a table, rate an order and order it again from their Account page. Each ord
 Stores (plan, limits, features, owners, people, outlets, domains and TablePe address, store name, disable or delete) ·
 Plans and the price list · Client **onboarding form** (record a client's requirements, export to PDF, publish as a
 store) · Marketing website pages and settings · Leads · Cache (lifetimes, expire, viewer) · Server monitor ·
-Security (sign-in blocks) · Storage (where pictures live) · AI pictures (Gemini keys) · Settings (grace period…) ·
+Security (sign-in blocks) · Storage (where pictures live — try any storage without switching it on, see what is stored per store and outlet, and move the files between this server's disk and Cloudflare R2 / S3 with the stored picture addresses following) · AI pictures (Gemini keys) · Settings (grace period…) ·
 Login activity.
 
 ## Configuration

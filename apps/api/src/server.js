@@ -12,6 +12,7 @@ import { startWhatsAppWorker } from "./modules/whatsapp/worker.js";
 import { startCartReminderWorker } from "./modules/carts/carts.service.js";
 import { startStockSweeper } from "./modules/menu/stock.service.js";
 import { startMissedOrderSweeper } from "./modules/orders/orders.service.js";
+import { markInterruptedMoves } from "./modules/storage/storage-migrate.js";
 
 const DISPATCH_INTERVAL_MS = 5_000;
 let printTimer                        = null;
@@ -48,6 +49,7 @@ function main()       {
   // gives back the counted stock of online orders nobody paid for (safe in every process)
   startStockSweeper();
   startMissedOrderSweeper();
+  void markInterruptedMoves().catch(() => undefined); // a move that was running when the last process stopped can't still be running
 
   const server = app.listen(env.API_PORT);
 

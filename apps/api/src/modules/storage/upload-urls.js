@@ -10,11 +10,11 @@ import { publicApiUrl } from "../../env.js";
  * "http://localhost:3072/uploads/…", an old domain, or already domain-free — and leave every other address alone
  * (a logo pasted from another site, a CDN link, a data: URL).
  */
-const KEY = "[A-Za-z0-9_-]+/[A-Za-z0-9_-]+/[a-z0-9-]+/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\\.[a-z0-9]{1,8}";
+export const UPLOAD_KEY_SOURCE = "[A-Za-z0-9_-]+/[A-Za-z0-9_-]+/[a-z0-9-]+/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\\.[a-z0-9]{1,8}";
 /** a whole string value: an optional origin, then /uploads/<key> and nothing else */
-const WHOLE = new RegExp(`^(?:https?://[^/\\s"\\\\]+)?(/uploads/${KEY})$`);
+const WHOLE = new RegExp(`^(?:https?://[^/\\s"\\\\]+)?(/uploads/${UPLOAD_KEY_SOURCE})$`);
 /** the same, found inside JSON text: only where the string value starts and ends exactly there */
-const IN_JSON = new RegExp(`(?<=")(?:https?://[^"\\\\\\s/]+)?(/uploads/${KEY})(?=")`, "g");
+const IN_JSON = new RegExp(`(?<=")(?:https?://[^"\\\\\\s/]+)?(/uploads/${UPLOAD_KEY_SOURCE})(?=")`, "g");
 
 /** "/uploads/<key>" if this is one of our own pictures (any domain, or none), else null */
 export function uploadPathOf(value) {

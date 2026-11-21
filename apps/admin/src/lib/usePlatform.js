@@ -48,6 +48,10 @@ export const useStoreCache = (id) => useQuery({ queryKey: ["platform", "store-ca
 
 /** Where every store's images are kept (the platform's one setting) — and which stores still have older settings of their own. */
 export const usePlatformStorage = () => useQuery({ queryKey: ["platform", "storage"], queryFn: api.getPlatformStorage });
+export const useStorageUsage = () => useQuery({ queryKey: ["platform", "storage-usage"], queryFn: api.getStorageUsage });
+/** The latest "move the files" job — refreshed every second and a half while one is running. */
+export const useStorageMove = () =>
+  useQuery({ queryKey: ["platform", "storage-move"], queryFn: api.getStorageMove, refetchInterval: (q) => (q.state.data?.current?.status === "running" ? 1500 : false) });
 
 /** The Gemini keys that make AI dish pictures (masked) and the model they use. */
 export const usePlatformAi = () => useQuery({ queryKey: ["platform", "ai"], queryFn: api.getPlatformAi });

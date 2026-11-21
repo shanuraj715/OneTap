@@ -56,3 +56,33 @@ const platformStorageSchema = new Schema(
 
 export const PlatformStorageModel =
   models.PlatformStorage ?? model("PlatformStorage", platformStorageSchema);
+
+/**
+ * One "move the files to another storage" job (platform console → Storage). Not tenant-scoped: it moves every store's files
+ * (or one store's, `scope.brandId`). The destination's (or source's) secret key is kept encrypted, like the platform's own
+ * storage settings, because the job keeps running after the request that started it has ended.
+ *
+ * `source` / `target`: { type: "local" | "active" | "s3", label, provider, publicFields, encryptedFields } — "active" is
+ * resolved from the platform's storage settings when the job starts and then written here, so the record says exactly what
+ * was used.
+ */
+const storageMigrationSchema = new Schema(
+  {
+    status: { type: String, enum: ["running", "done", "done_with_errors", "failed", "cancelled", "interrupted"], default: "running", index: true },
+    stage: { type: String, default: "listing" }, // listing → copying → links → cleanup → done
+    source: { type: Schema.Types.Mixed, default: {} },
+    target: { type: Schema.Types.Mixed, default: {} },
+    scope: { type: Schema.Types.Mixed, default: {} }, // { brandId?: string, brandName?: string }
+    options: { type: Schema.Types.Mixed, default: {} }, // { deleteSource, activate }
+    plan: { type: Schema.Types.Mixed, default: {} }, // { files, bytes, toCopy, toCopyBytes }
+    progress: { type: Schema.Types.Mixed, default: {} }, // { done, copied, skipped, failed, bytesCopied, linksUpdated, deleted }
+    failures: { type: [Schema.Types.Mixed], default: [] }, // first few { key, error }
+    error: { type: String, default: "" },
+    cancelRequested: { type: Boolean, default: false },
+    startedBy: String,
+    finishedAt: Date,
+  },
+  { timestamps: true },
+);
+
+export const StorageMigrationModel = models.StorageMigration ?? model("StorageMigration", storageMigrationSchema);

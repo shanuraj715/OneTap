@@ -5,11 +5,12 @@ import {
   STORAGE_PROVIDER_LABELS,
   STORAGE_PROVIDERS,
 } from "@onetap/config-schema";
-import { Check, Cloud, HardDrive, Loader, RotateCcw } from "lucide-react";
+import { Check, Cloud, HardDrive, Loader, PlugZap, RotateCcw } from "lucide-react";
 import * as api from "../../lib/api";
-import { usePlatformMutation, usePlatformStorage } from "../../lib/usePlatform";
+import { usePlatformMutation, usePlatformStorage, useStores } from "../../lib/usePlatform";
 import { Button, Card, Field, Note, PageHeader, Pill, TextInput, Toast } from "../../ui";
 import { fmtDate, muted } from "./shared";
+import { MoveCard, TestResult, UsageCard } from "./StorageTools";
 
 const ICONS = { local: HardDrive, s3: Cloud };
 
@@ -23,6 +24,7 @@ export function PlatformStorage() {
   const save = usePlatformMutation(api.savePlatformStorage);
   const reset = usePlatformMutation(api.resetPlatformStorage);
   const test = usePlatformMutation(api.testPlatformStorage);
+  const storesQ = useStores();
   const adopt = usePlatformMutation(api.adoptStoreStorage);
 
   const [choice, setChoice] = useState(null);
@@ -172,6 +174,23 @@ export function PlatformStorage() {
             );
           })}
         </div>
+
+        {/* try ANY storage right here, without switching it on or saving it */}
+        <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap", marginTop: 14 }}>
+          <Button
+            variant="outline"
+            onClick={() => test.mutate({ provider: activeProvider, values })}
+            disabled={test.isPending}
+            data-testid="storage-test"
+            style={{ display: "inline-flex", gap: 6, alignItems: "center" }}
+          >
+            {test.isPending ? <Loader size={13} className="ot-spin" /> : <PlugZap size={14} />}
+            {test.isPending ? "Testing…" : `Test connection — ${STORAGE_PROVIDER_LABELS[activeProvider]}`}
+          </Button>
+          <span style={hint}>Tries the one selected above with the details filled in below. Nothing is saved or switched on. A blank secret key means the saved one.</span>
+        </div>
+        {test.error ? <Toast kind="error">{test.error.message}</Toast> : null}
+        <TestResult result={test.data} />
       </Card>
 
       {activeSpec && activeSpec.fields.length > 0 ? (
@@ -190,7 +209,7 @@ export function PlatformStorage() {
           </div>
           {activeProvider === "s3" ? (
             <p style={hint}>
-              The key needs only <code>PutObject</code> and <code>DeleteObject</code> on this one bucket. Objects must be publicly readable (bucket policy /
+              The key needs to read, write, delete and list objects (<code>GetObject</code>, <code>PutObject</code>, <code>DeleteObject</code>, <code>ListBucket</code> — for R2 an “Object Read &amp; Write” token) on this one bucket: uploads need write and delete, Test and “Move files” also read and list. Objects must be publicly readable (bucket policy /
               “public bucket”), or point <em>Public base URL</em> at a CDN in front of the bucket. Every store&apos;s pictures go in this bucket, each under its own folder.
             </p>
           ) : null}
@@ -202,10 +221,6 @@ export function PlatformStorage() {
           <Button onClick={doSave} disabled={save.isPending || (!dirty && cfg.saved)}>
             {save.isPending ? "Saving…" : cfg.saved ? "Save storage settings" : "Save as the platform's storage"}
           </Button>
-          <Button variant="outline" onClick={() => test.mutate()} disabled={test.isPending} style={{ display: "inline-flex", gap: 6, alignItems: "center" }}>
-            {test.isPending ? <Loader size={13} /> : null}
-            {test.isPending ? "Testing…" : "Test connection"}
-          </Button>
           {cfg.saved && cfg.provider !== "local" ? (
             <Button variant="outline" onClick={() => window.confirm("Switch every store back to this server's disk?") && reset.mutate()}>
               Reset to this server's disk
@@ -213,20 +228,14 @@ export function PlatformStorage() {
           ) : null}
           {dirty ? <span style={hint}>Unsaved changes</span> : null}
         </div>
-        <p style={hint}>
-          “Test connection” tries what is <strong>saved</strong> — save first if you just changed something.
-        </p>
-
-        {test.data ? (
-          <Toast kind="ok">
-            {STORAGE_PROVIDER_LABELS[test.data.provider]} works — round-tripped a test file in {test.data.ms} ms.
-          </Toast>
-        ) : null}
-        {test.error ? <Toast kind="error">{test.error.message}</Toast> : null}
         {save.isSuccess && save.variables?.provider ? <Toast kind="ok">Saved. Secret keys are encrypted at rest.</Toast> : null}
         {save.error && save.variables?.provider ? <Toast kind="error">{save.error.message}</Toast> : null}
         {reset.error ? <Toast kind="error">{reset.error.message}</Toast> : null}
       </Card>
+
+      <UsageCard />
+
+      <MoveCard cfg={cfg} stores={(storesQ.data?.stores ?? []).map((st) => ({ id: String(st.id ?? st._id), name: st.name }))} />
 
       {proc ? (
         <Card title="Image compression">
@@ -277,7 +286,7 @@ export function PlatformStorage() {
           <li>Each store&apos;s files live in a folder named after the store, so one bucket can serve every store without mixing them.</li>
           <li>Only the finished public image address is saved on a menu item or page; the storefront never sees storage keys.</li>
           <li>The secret access key is encrypted (AES-256-GCM) before it touches the database and is never sent back here.</li>
-          <li>Changing storage only affects new uploads — pictures already uploaded keep working from wherever they are.</li>
+          <li>Changing storage only affects new uploads — pictures already uploaded keep working from wherever they are. To bring the old ones along, use “Move files to another storage” above: it copies them, checks the copies, and updates every store's picture addresses.</li>
         </ul>
       </Card>
     </>

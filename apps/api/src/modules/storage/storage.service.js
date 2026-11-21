@@ -347,17 +347,3 @@ export async function removeObject(ctx, key) {
     logger.warn({ err, key }, "storage object delete failed (ignored)");
   }
 }
-
-/** Round-trip a tiny object to prove the platform's credentials work. */
-export async function testStorageConfig() {
-  const ctx = { brandId: "platform", outletId: "probe" };
-  const cfg = await resolveStorage(ctx);
-  const missing = missingOf(cfg);
-  if (missing.length) throw new HttpError(409, `Storage isn't fully set up — missing ${missing.join(", ")}.`);
-  const provider = providerFor(cfg.provider);
-  const key = `platform/.probe/${randomUUID()}.txt`;
-  const started = Date.now();
-  const { url } = await provider.put(cfg, { key, body: Buffer.from("tablepe storage probe"), contentType: "text/plain" });
-  await provider.remove(cfg, key).catch(() => undefined);
-  return { ok: true, provider: cfg.provider, ms: Date.now() - started, sampleUrl: url };
-}
