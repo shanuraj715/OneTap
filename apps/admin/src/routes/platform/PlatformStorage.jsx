@@ -11,6 +11,7 @@ import { usePlatformMutation, usePlatformStorage, useStores } from "../../lib/us
 import { Button, Card, Field, Note, PageHeader, Pill, TextInput, Toast } from "../../ui";
 import { fmtDate, muted } from "./shared";
 import { MoveCard, TestResult, UsageCard } from "./StorageTools";
+import { OptimizeCard } from "./StorageOptimize";
 
 const ICONS = { local: HardDrive, s3: Cloud };
 
@@ -240,8 +241,8 @@ export function PlatformStorage() {
       {proc ? (
         <Card title="Image compression">
           <p style={{ ...hint, margin: "0 0 12px" }}>
-            Every uploaded photo — whatever format it arrives in — is scaled down and re-encoded by the server to these settings. Applies to new uploads; existing
-            images are untouched.
+            Every uploaded photo — whatever format it arrives in — is scaled down and re-encoded by the server to these settings. Applies to new uploads; pictures already
+            stored stay as they are — use “Optimize pictures” below to compress the big ones.
           </p>
 
           <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
@@ -279,6 +280,8 @@ export function PlatformStorage() {
         </Card>
       ) : null}
 
+      <OptimizeCard />
+
       <Card title="How it works">
         <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13.5, lineHeight: 1.8, color: "var(--color-text-muted)" }}>
           <li>Store owners just upload photos — menu items, banners, pages. They are never asked where to keep them.</li>
@@ -287,6 +290,7 @@ export function PlatformStorage() {
           <li>Only the finished public image address is saved on a menu item or page; the storefront never sees storage keys.</li>
           <li>The secret access key is encrypted (AES-256-GCM) before it touches the database and is never sent back here.</li>
           <li>Changing storage only affects new uploads — pictures already uploaded keep working from wherever they are. To bring the old ones along, use “Move files to another storage” above: it copies them, checks the copies, and updates every store's picture addresses.</li>
+          <li>Pictures uploaded before a size limit was set (or never compressed) stay big until you run “Optimize pictures” above: it lists the ones over the limit and compresses the ones you choose.</li>
         </ul>
       </Card>
     </>

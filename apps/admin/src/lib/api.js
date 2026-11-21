@@ -183,6 +183,11 @@ export const getStorageMove = () => req("/api/platform/storage/move");
 export const previewStorageMove = (body) => req("/api/platform/storage/move/preview", json("POST", body));
 export const startStorageMove = (body) => req("/api/platform/storage/move", json("POST", body));
 export const cancelStorageMove = (id) => req(`/api/platform/storage/move/${id}/cancel`, json("POST"));
+export const getOptimizeScan = () => req("/api/platform/storage/optimize/scan");
+export const scanForOptimizing = () => req("/api/platform/storage/optimize/scan", json("POST"));
+export const getStorageOptimize = () => req("/api/platform/storage/optimize");
+export const startStorageOptimize = (body) => req("/api/platform/storage/optimize", json("POST", body));
+export const cancelStorageOptimize = (id) => req(`/api/platform/storage/optimize/${id}/cancel`, json("POST"));
 
 /** Use one store's own (older) storage settings as the platform's. */
 export const adoptStoreStorage = (brandId) => req(`/api/platform/storage/adopt/${brandId}`, json("POST"));

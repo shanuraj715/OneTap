@@ -60,7 +60,7 @@ export function UsageCard() {
       icon={<ScanSearch size={16} />}
       subtitle="Counts every file on this server's disk and in the cloud storage, per store and per outlet, and checks it against what the stores actually use."
       action={
-        <Button onClick={() => scan.mutate()} disabled={scan.isPending} data-testid="storage-scan" style={{ display: "inline-flex", gap: 6, alignItems: "center" }}>
+        <Button onClick={() => scan.mutate()} disabled={scan.isPending} data-testid="storage-scan" style={{ display: "inline-flex", gap: 6, alignItems: "center", whiteSpace: "nowrap" }}>
           {scan.isPending ? <Loader size={14} className="ot-spin" /> : <ScanSearch size={14} />} {scan.isPending ? "Counting…" : usage ? "Scan again" : "Scan storage"}
         </Button>
       }

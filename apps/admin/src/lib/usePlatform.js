@@ -52,6 +52,10 @@ export const useStorageUsage = () => useQuery({ queryKey: ["platform", "storage-
 /** The latest "move the files" job — refreshed every second and a half while one is running. */
 export const useStorageMove = () =>
   useQuery({ queryKey: ["platform", "storage-move"], queryFn: api.getStorageMove, refetchInterval: (q) => (q.state.data?.current?.status === "running" ? 1500 : false) });
+/** The pictures bigger than the size limit found by the last scan, and the latest "optimize" job (refreshed while one runs). */
+export const useOptimizeScan = () => useQuery({ queryKey: ["platform", "storage-optimize-scan"], queryFn: api.getOptimizeScan });
+export const useStorageOptimize = () =>
+  useQuery({ queryKey: ["platform", "storage-optimize"], queryFn: api.getStorageOptimize, refetchInterval: (q) => (q.state.data?.current?.status === "running" ? 1500 : false) });
 
 /** The Gemini keys that make AI dish pictures (masked) and the model they use. */
 export const usePlatformAi = () => useQuery({ queryKey: ["platform", "ai"], queryFn: api.getPlatformAi });
