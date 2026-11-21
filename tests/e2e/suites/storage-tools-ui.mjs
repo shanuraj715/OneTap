@@ -152,6 +152,13 @@ try {
   const prev = (await page.getByTestId("move-preview-result").innerText()).replace(/\s+/g, " ");
   ok(/3 files? \(.* to copy, 0 already there, 3 stored picture addresses to update/.test(prev), "'Check what would move' says 3 files to copy and 3 addresses to update — and only for this store", prev);
   ok(s3.store.size === 0 && (await imagesOf())[0].includes("/uploads/"), "checking changed nothing");
+  {
+    // the result box must not touch the buttons above it
+    const btnBox = await page.getByTestId("move-start").boundingBox();
+    const noteBox = await page.getByTestId("move-preview-result").locator("xpath=../..").boundingBox(); // the blue box itself, not the text inside it
+    const gap = Math.round(noteBox.y - (btnBox.y + btnBox.height));
+    ok(gap >= 12, "the 'what would move' box has room (≥ 12 px) below the buttons — it does not touch them", `gap ${gap}px`);
+  }
   await page.getByTestId("move-start").click();
   await page.getByTestId("move-job").waitFor({ timeout: 15000 });
   console.log("   (job right after start:", JSON.stringify((await sa("GET", "/api/platform/storage/move")).json.current).slice(0, 300), ")");

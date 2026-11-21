@@ -306,7 +306,7 @@ export function MoveCard({ cfg, stores }) {
         </div>
       </div>
 
-      <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center", marginTop: 10 }}>
+      <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center", marginTop: 18 }}>
         <Button variant="outline" onClick={() => preview.mutate(body)} disabled={preview.isPending || running} data-testid="move-preview">
           {preview.isPending ? "Checking…" : "Check what would move"}
         </Button>
@@ -315,16 +315,20 @@ export function MoveCard({ cfg, stores }) {
         </Button>
         {!p && !running ? <span style={muted}>Check first — it shows exactly what would happen.</span> : null}
       </div>
-      {preview.error ? <Toast kind="error">{preview.error.message}</Toast> : null}
-      {start.error ? <Toast kind="error">{start.error.message}</Toast> : null}
-      {p ? (
-        <Note>
-          <span data-testid="move-preview-result">
-            {p.source.label} <ArrowRight size={12} style={{ verticalAlign: -1 }} /> {p.target.label}{p.scope?.brandName ? ` · ${p.scope.brandName} only` : ""}:{" "}
-            <strong>{count(p.plan.toCopy)}</strong> file{p.plan.toCopy === 1 ? "" : "s"} ({bytes(p.plan.toCopyBytes)}) to copy, {count(p.plan.alreadyThere)} already there,{" "}
-            <strong>{count(p.linksToUpdate)}</strong> stored picture address{p.linksToUpdate === 1 ? "" : "es"} to update.
-          </span>
-        </Note>
+      {preview.error || start.error || p ? (
+        <div style={{ display: "flex", flexDirection: "column", gap: 12, marginTop: 20, lineHeight: 1.6 }}>
+          {preview.error ? <Toast kind="error">{preview.error.message}</Toast> : null}
+          {start.error ? <Toast kind="error">{start.error.message}</Toast> : null}
+          {p ? (
+            <Note>
+              <span data-testid="move-preview-result">
+                {p.source.label} <ArrowRight size={12} style={{ verticalAlign: -1 }} /> {p.target.label}{p.scope?.brandName ? ` · ${p.scope.brandName} only` : ""}:{" "}
+                <strong>{count(p.plan.toCopy)}</strong> file{p.plan.toCopy === 1 ? "" : "s"} ({bytes(p.plan.toCopyBytes)}) to copy, {count(p.plan.alreadyThere)} already there,{" "}
+                <strong>{count(p.linksToUpdate)}</strong> stored picture address{p.linksToUpdate === 1 ? "" : "es"} to update.
+              </span>
+            </Note>
+          ) : null}
+        </div>
       ) : null}
 
       {job ? (

@@ -79,7 +79,7 @@
 | [t72-menu-chunks](t72-menu-chunks.md) — The storefront menu is drawn in chunks as the diner scrolls | storefront | ✅ PASSED | 15/15 | 2026-11-21 15:05 |
 | [t73-reorder-notice](t73-reorder-notice.md) — 'Order again' says clearly which dishes couldn't be added, with space below | storefront | ✅ PASSED | 9/9 | 2026-11-21 15:05 |
 | [t74-storage-api](t74-storage-api.md) — Storage — try any storage without switching it on, count what is stored where, and move the files between this server's disk and S3-compatible buckets | platform | ✅ PASSED | 65/65 | 2026-11-21 15:38 |
-| [t75-storage-tools-ui](t75-storage-tools-ui.md) — The Storage page — Test connection under the list, files per store and outlet, move files with progress | platform | ✅ PASSED | 30/30 | 2026-11-21 15:41 |
+| [t75-storage-tools-ui](t75-storage-tools-ui.md) — The Storage page — Test connection under the list, files per store and outlet, move files with progress | platform | ✅ PASSED | 31/31 | 2026-11-21 15:49 |
 
 ## Open findings (noticed during tests, not yet fixed)
 

@@ -23941,12 +23941,12 @@
     "id": "t75-storage-tools-ui",
     "title": "The Storage page — Test connection under the list, files per store and outlet, move files with progress",
     "status": "pass",
-    "pass": 30,
+    "pass": 31,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T10:11:32.843Z",
-    "durationMs": 10657,
+    "at": "2026-11-21T10:19:34.047Z",
+    "durationMs": 11787,
     "steps": [
       {
         "n": 1,
@@ -23973,7 +23973,7 @@
           {
             "label": "this server's disk works (saved, read back, opened from its public address, deleted)",
             "ok": true,
-            "detail": "This server's disk works: files can be saved, read back and opened from their public address (6 ms).",
+            "detail": "This server's disk works: files can be saved, read back and opened from their public address (4 ms).",
             "kind": "expect"
           },
           {
@@ -23985,7 +23985,7 @@
           {
             "label": "the typed-in bucket works and is public",
             "ok": true,
-            "detail": "S3-compatible storage · stc works: files can be saved, read back and opened from their public address (6 ms).",
+            "detail": "S3-compatible storage · stc works: files can be saved, read back and opened from their public address (13 ms).",
             "kind": "expect"
           },
           {
@@ -24003,7 +24003,7 @@
           {
             "label": "a bucket that isn't public is a warning, not a pass: 'pictures would not show yet'",
             "ok": true,
-            "detail": "Open it from its public address (how a customer's browser will) http://127.0.0.1:62153/stc/platform/_probe/7fd567e1-ae33",
+            "detail": "Open it from its public address (how a customer's browser will) http://127.0.0.1:64268/stc/platform/_probe/b83a755a-c669",
             "kind": "expect"
           },
           {
@@ -24079,6 +24079,12 @@
             "kind": "expect"
           },
           {
+            "label": "the 'what would move' box has room (≥ 12 px) below the buttons — it does not touch them",
+            "ok": true,
+            "detail": "gap 20px",
+            "kind": "expect"
+          },
+          {
             "label": "the move runs and finishes by itself",
             "ok": true,
             "detail": "done",
@@ -24093,13 +24099,13 @@
           {
             "label": "the bucket holds exactly that store's 3 files",
             "ok": true,
-            "detail": "b8bb841cd.webp 8436d2f04.webp 68a1ca327.webp",
+            "detail": "29fd134f5.webp 16b583e57.webp 3997ee212.webp",
             "kind": "expect"
           },
           {
             "label": "the dish's pictures now come from the bucket",
             "ok": true,
-            "detail": "http://127.0.0.1:62153/stc/6b016e4a817160efe102f9cc/6b016e4a817160efe102f9cf/menu-items/ddea4319-4a73-49cc-bf47-69f68a1ca327.webp",
+            "detail": "http://127.0.0.1:64268/stc/6b01702b817160efe102ff67/6b01702b817160efe102ff6a/menu-items/4d764d65-50b6-4e16-b4ee-e9329fd134f5.webp",
             "kind": "expect"
           },
           {
@@ -24129,7 +24135,7 @@
           {
             "label": "the file that failed is listed with the service's answer",
             "ok": true,
-            "detail": "6b016e4a817160efe102f9cc/6b016e4a817160efe102f9cf/menu-items/c9b93eec-b4f7-4649-9160-114101155bb8.webp — S3 PUT failed (",
+            "detail": "6b01702b817160efe102ff67/6b01702b817160efe102ff6a/menu-items/f30e907a-ddb1-4204-8476-25ba05dc6462.webp — S3 PUT failed (",
             "kind": "expect"
           },
           {

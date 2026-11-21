@@ -1,6 +1,6 @@
 # T75 — The Storage page — Test connection under the list, files per store and outlet, move files with progress
 
-**Area:** platform · **Last result:** ✅ PASSED (30 passed, 0 failed · 2026-11-21 15:41 · headless · 10.7 s)
+**Area:** platform · **Last result:** ✅ PASSED (31 passed, 0 failed · 2026-11-21 15:49 · headless · 11.8 s)
 
 **Run it alone:** `node run.mjs --only t75` (add `--visible` to watch it)
 
@@ -33,7 +33,7 @@ Runs suites/storage-tools-ui.mjs in Chrome as the platform super admin on the be
 
 _Nothing failed._
 
-### ✅ Passed (30)
+### ✅ Passed (31)
 
 **Step 1 — Test connection, right after the list of storages**
 
@@ -62,9 +62,10 @@ _Nothing failed._
 - 'Move files' stays off until you have looked at what would happen
 - 'Check what would move' says 3 files to copy and 3 addresses to update — and only for this store
 - checking changed nothing
+- the 'what would move' box has room (≥ 12 px) below the buttons — it does not touch them — _gap 20px_
 - the move runs and finishes by itself — _done_
 - the numbers say 3 copied, 3 addresses updated — _3 of 3 checked · 3 copied (742 B) · 0 already there · 0 failed · 3 addresses updated_
-- the bucket holds exactly that store's 3 files — _b8bb841cd.webp 8436d2f04.webp 68a1ca327.webp_
+- the bucket holds exactly that store's 3 files — _29fd134f5.webp 16b583e57.webp 3997ee212.webp_
 - the dish's pictures now come from the bucket
 - …and really open from there
 - after the move the test store's files no longer count as waiting to be moved
@@ -81,6 +82,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-21 15:49 | pass | 31 | 0 | headless | 11.8 s |
 | 2026-11-21 15:41 | pass | 30 | 0 | headless | 10.7 s |
 | 2026-11-21 15:39 | pass | 30 | 0 | headless | 10.6 s |
 | 2026-11-21 15:36 | error | 5 | 0 | headless | 31.9 s |
