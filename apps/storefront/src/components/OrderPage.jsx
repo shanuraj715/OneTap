@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { formatINR, formatWhen, GATEWAY_LABELS, itemImageUrl, ORDER_TYPE_STORAGE_KEY } from "@onetap/config-schema";
 import { DropdownSoft, fx, ProgressSteps } from "@onetap/ui";
-import { ArrowLeft, Check, ChevronRight, Coins, MapPin, ShoppingBag, Sparkles, Tag, Utensils, Wallet, X } from "lucide-react";
+import { AlertTriangle, ArrowLeft, Check, ChevronRight, Coins, MapPin, ShoppingBag, Sparkles, Tag, Utensils, Wallet, X } from "lucide-react";
 import { api, payOnline } from "@/lib/clientApi";
 import { useCapacity } from "@/lib/useCapacity";
 import { useCartLines } from "@/lib/useCartLines";
@@ -261,14 +261,32 @@ export function OrderPage({
   return (
     <PageShell menuHref={menuHref} title="Your order" customer={customer} progress={journeyIndex} progressLabel={progressLabel}>
       {reorderNote?.skipped?.length || reorderNote?.notes?.length ? (
-        <p style={reorderBanner} data-testid="reorder-notice">
-          {reorderNote.skipped?.length ? (
-            <>
-              Not added: {reorderNote.skipped.map((s) => `${s.name} (${s.reason})`).join(", ")}.{" "}
-            </>
-          ) : null}
-          {(reorderNote.notes ?? []).join(" ")}
-        </p>
+        // what "Order again" couldn't bring back — loud enough to be seen, with room below before the order itself
+        <div style={reorderBanner} role="alert" data-testid="reorder-notice">
+          <span style={reorderIcon} aria-hidden="true">
+            <AlertTriangle size={20} />
+          </span>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            {reorderNote.skipped?.length ? (
+              <>
+                <strong style={reorderTitle} data-testid="reorder-notice-title">
+                  {reorderNote.skipped.length === 1 ? "1 dish couldn't be added to your order" : `${reorderNote.skipped.length} dishes couldn't be added to your order`}
+                </strong>
+                <ul style={reorderList} data-testid="reorder-notice-list">
+                  {reorderNote.skipped.map((s, i) => (
+                    <li key={`${s.name}-${i}`}>
+                      <strong>{s.name}</strong> — {s.reason}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            ) : null}
+            {(reorderNote.notes ?? []).length ? <p style={reorderNotes}>{(reorderNote.notes ?? []).join(" ")}</p> : null}
+          </div>
+          <button type="button" onClick={() => setReorderNote(null)} style={reorderClose} aria-label="Dismiss this message" data-testid="reorder-notice-close">
+            <X size={16} />
+          </button>
+        </div>
       ) : null}
       <ReviewOrder
         outletId={outletId}
@@ -1119,7 +1137,12 @@ const doneRowRule = { borderTop: "1px solid var(--color-border)" };
 const doneLabel = { fontSize: 13.5, color: "var(--color-text-muted)" };
 const doneValue = { margin: 0, fontSize: 15, fontWeight: 700, textAlign: "right", fontVariantNumeric: "tabular-nums" };
 const doneTab = { margin: "18px 0 0", fontSize: 14.5, color: "var(--color-text-muted)" };
-const reorderBanner = { maxWidth: 640, margin: "16px auto 0", boxSizing: "border-box", fontSize: 13, lineHeight: 1.5, padding: "10px 13px", borderRadius: 10, background: "color-mix(in srgb, var(--tone-warning, #B27B1A) 14%, var(--color-surface))", color: "var(--color-text)" };
+const reorderBanner = { maxWidth: 640, margin: "16px auto 24px", boxSizing: "border-box", display: "flex", alignItems: "flex-start", gap: 12, padding: "14px 14px 14px 16px", borderRadius: 14, border: "2px solid var(--tone-warning, #B27B1A)", background: "color-mix(in srgb, var(--tone-warning, #B27B1A) 16%, var(--color-bg))", color: "var(--color-text)", boxShadow: "0 6px 18px color-mix(in srgb, var(--tone-warning, #B27B1A) 22%, transparent)" };
+const reorderIcon = { display: "grid", placeItems: "center", width: 34, height: 34, borderRadius: 999, flexShrink: 0, background: "var(--tone-warning, #B27B1A)", color: "#fff" };
+const reorderTitle = { display: "block", fontSize: 15.5, fontWeight: 800, lineHeight: 1.3 };
+const reorderList = { margin: "6px 0 0", paddingLeft: 18, fontSize: 14, lineHeight: 1.55 };
+const reorderNotes = { margin: "8px 0 0", fontSize: 13.5, lineHeight: 1.5 };
+const reorderClose = { display: "grid", placeItems: "center", width: 30, height: 30, flexShrink: 0, border: "none", borderRadius: 8, background: "transparent", color: "var(--color-text-muted)", cursor: "pointer" };
 const dayChip = { font: "inherit", fontSize: 13, fontWeight: 600, padding: "7px 13px", borderRadius: 999, border: "1.5px solid var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)", cursor: "pointer" };
 const dayChipOn = { borderColor: "var(--color-primary)", background: "color-mix(in srgb, var(--color-primary) 10%, var(--color-bg))", color: "var(--color-primary)" };
 const slotGrid = { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(86px, 1fr))", gap: 6, maxHeight: 220, overflowY: "auto", paddingRight: 2 };

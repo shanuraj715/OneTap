@@ -172,6 +172,7 @@
 .ot-swap { animation: ot-fade var(--motion-slow) var(--ease-out) both; }
 
 /* Work-in-progress spinner — a job printing, a queue refreshing. */
+@keyframes ot-more-pulse { 0%, 100% { transform: translateY(0); opacity: 0.35; } 50% { transform: translateY(-5px); opacity: 0.9; } }
 @keyframes ot-spin {
   to { transform: rotate(360deg); }
 }

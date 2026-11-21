@@ -272,7 +272,7 @@ export function MenuLayout() {
                   color: themeVars["--color-text"] || "var(--color-text)",
                 }}
               >
-                <MenuSections menu={menu.data} layout={menuLayoutSchema.parse(layout)} />
+                <MenuSections menu={menu.data} layout={menuLayoutSchema.parse(layout)} chunkItems={Infinity} />
               </div>
             ) : (
               <p style={{ color: "var(--color-text-muted)" }}>Loading menu…</p>
@@ -313,7 +313,7 @@ export function MenuLayout() {
               }}
             >
               <div style={{ maxWidth: 1080, margin: "0 auto" }}>
-                <MenuSections menu={menu.data} layout={menuLayoutSchema.parse(layout)} />
+                <MenuSections menu={menu.data} layout={menuLayoutSchema.parse(layout)} chunkItems={Infinity} />
               </div>
             </div>
           </Modal>

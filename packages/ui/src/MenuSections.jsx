@@ -13,6 +13,10 @@ import {
 import { fx } from "./fx";
 import { getItemCardVariant, gridPropsFor } from "./registry";
 
+/** Cards drawn when the menu first opens, and drawn more of each time the end comes near. */
+const FIRST_CHUNK = 24;
+const NEXT_CHUNK = 24;
+
 const FOOD_LABELS                           = { veg: "Veg", "non-veg": "Non-veg", egg: "Egg" };
 const FOOD_ORDER             = ["veg", "egg", "non-veg"];
 
@@ -28,6 +32,7 @@ export function MenuSections({
   menu,
   layout,
   onSelectItem,
+  chunkItems = FIRST_CHUNK,
 }   
              
                      
@@ -35,6 +40,12 @@ export function MenuSections({
                                           
  ) {
   const [foodFilter, setFoodFilter] = useState                 (null);
+  // The menu is drawn in chunks: the first screens' worth of dishes now, and the next chunk each time the diner scrolls
+  // near the end. A long menu then opens fast (fewer cards to draw and to make interactive, and only the pictures of
+  // dishes that are actually reached are asked for). `chunkItems={Infinity}` draws everything (the admin's previews).
+  const [budget, setBudget] = useState(chunkItems);
+  const sentinelRef = useRef(null);
+  const completeRef = useRef(true);
   // Which collapsible sections the diner has expanded, by section id.
   const [expanded, setExpanded] = useState({});
   // phones and tablets: the categories open in a sheet instead of a wall of chips
@@ -50,6 +61,52 @@ export function MenuSections({
     return pruneEmptySections(sections.map((s) => ({ ...s, items: s.items.filter((i) => i.foodType === foodFilter) })));
   }, [sections, foodFilter]);
 
+  // how many cards a section shows while closed ("View all" sections show only their first few until opened)
+  const drawn = (sec) => (sec.headingOnly ? 0 : sec.collapsible && sec.items.length > sec.initialItems && expanded[sec.id] !== true ? sec.initialItems : sec.items.length);
+  // which sections are drawn so far, and how many cards of each — in order, until the budget of cards is used up
+  const plan = useMemo(() => {
+    const shown = [];
+    let left = budget;
+    let complete = true;
+    for (const sec of visibleSections) {
+      if (left <= 0) {
+        complete = false;
+        break;
+      }
+      const want = drawn(sec);
+      const count = Math.min(want, left);
+      shown.push({ section: sec, count });
+      left -= count;
+      if (count < want) {
+        complete = false;
+        break;
+      }
+    }
+    return { shown, complete };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visibleSections, budget, expanded]);
+  completeRef.current = plan.complete;
+
+  // the end of what is drawn: when it comes near the screen, draw the next chunk (and look again after each chunk, so a tall
+  // screen keeps filling until the end is below it)
+  useEffect(() => {
+    if (plan.complete) return undefined;
+    const el = sentinelRef.current;
+    if (!el) return undefined;
+    if (typeof IntersectionObserver === "undefined") {
+      setBudget(Infinity); // an old browser: draw it all rather than leave the menu short
+      return undefined;
+    }
+    const watcher = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) setBudget((b) => b + NEXT_CHUNK);
+      },
+      { rootMargin: "900px 0px" },
+    );
+    watcher.observe(el);
+    return () => watcher.disconnect();
+  }, [plan.complete, budget]);
+
   // Categories inside categories: the top-level ones are the main chips; the one in view gets a second row of chips
   // for what is inside it.
   const nested = visibleSections.some((s) => (s.depth ?? 0) > 0);
@@ -61,6 +118,12 @@ export function MenuSections({
     setSheetOpen(false);
     const target = visibleSections.find((s) => s.id === id);
     if (target) setActiveRoot(target.rootId);
+    // a category further down than what is drawn so far: draw everything up to and including it first
+    const upTo = visibleSections.findIndex((s) => s.id === id);
+    if (upTo >= 0) {
+      const needed = visibleSections.slice(0, upTo + 1).reduce((n, sec) => n + drawn(sec), 0);
+      setBudget((b) => Math.max(b, needed));
+    }
     window.setTimeout(() => glideTo(document.getElementById(`sec-${id}`), toolbarRef.current), 500);
   };
 
@@ -81,7 +144,7 @@ export function MenuSections({
           else break;
         }
         // at the very bottom the last categories can't reach the top of the screen — the last one is the one being read
-        if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) current = visibleSections[visibleSections.length - 1]?.rootId ?? current;
+        if (completeRef.current && window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) current = visibleSections[visibleSections.length - 1]?.rootId ?? current;
         setActiveRoot(current);
       });
     };
@@ -180,7 +243,7 @@ export function MenuSections({
 
       {sheetOpen ? <CategorySheet sections={visibleSections} onPick={goTo} onClose={() => setSheetOpen(false)} /> : null}
 
-      {visibleSections.map((section) => {
+      {plan.shown.map(({ section, count }) => {
         const variant = getItemCardVariant(section.cardVariant);
         const Card = variant.Component;
         const gridProps = gridPropsFor(variant, section.columns);
@@ -274,7 +337,9 @@ export function MenuSections({
             )}
             {section.headingOnly ? null : (
             (() => {
-              const cards = section.items.map((item) =>
+              // a "View all" section keeps ALL its dishes once its first few are drawn (the rest slide open from them)
+              const upTo = section.collapsible && section.items.length > section.initialItems && count >= section.initialItems ? section.items.length : count;
+              const cards = section.items.slice(0, upTo).map((item) =>
                 onSelectItem && item.isAvailable ? (
                   <div
                     key={item.id}
@@ -340,6 +405,13 @@ export function MenuSections({
           </section>
         );
       })}
+      {plan.complete ? null : (
+        <div ref={sentinelRef} data-testid="menu-more" aria-hidden="true" style={moreRow}>
+          <span style={moreDot} />
+          <span style={{ ...moreDot, animationDelay: "0.15s" }} />
+          <span style={{ ...moreDot, animationDelay: "0.3s" }} />
+        </div>
+      )}
     </div>
   );
 }
@@ -779,3 +851,6 @@ const viewAllTitleBtn = {
   whiteSpace: "nowrap",
   flexShrink: 0,
 };
+
+const moreRow = { display: "flex", justifyContent: "center", gap: 6, padding: "28px 0 40px", minHeight: 24 };
+const moreDot = { width: 8, height: 8, borderRadius: 99, background: "var(--color-text-muted)", opacity: 0.55, animation: "ot-more-pulse 0.9s infinite ease-in-out" };
