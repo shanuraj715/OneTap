@@ -1,6 +1,6 @@
 # T54 — Bringing customers back — table bookings, ratings, order again, suggestions and abandoned-cart reminders (API rules)
 
-**Area:** customers · **Last result:** ✅ PASSED (88 passed, 0 failed · 2026-11-20 16:15 · headless · 5.2 s)
+**Area:** customers · **Last result:** ✅ PASSED (89 passed, 0 failed · 2026-11-21 13:02 · headless · 5.3 s)
 
 **Run it alone:** `node run.mjs --only t54` (add `--visible` to watch it)
 
@@ -40,13 +40,13 @@ Runs suites/engagement-api.mjs: its own in-memory API, a store on a plan with ev
 
 _Nothing failed._
 
-### ✅ Passed (88)
+### ✅ Passed (89)
 
 **Step 1 — table bookings — what can be booked**
 
 - booking is off until the outlet switches it on — _{"enabled":false,"settings":{"minPartySize":1,"maxPartySize":10,"durationMinutes_
-- now: today plus 7 days to choose from — _8 2026-11-21_
-- tomorrow 7 PM is free for 4 (10 seats) — _{"at":"2026-11-21T13:30:00.000Z","label":"7:00 PM","available":true,"seatsLeft":10}_
+- now: today plus 7 days to choose from — _8 2026-11-22_
+- tomorrow 7 PM is free for 4 (10 seats) — _{"at":"2026-11-22T13:30:00.000Z","label":"7:00 PM","available":true,"seatsLeft":10}_
 - the guest note and party limits come with it
 - nothing sooner than an hour from now is offered (minimum notice)
 
@@ -77,7 +77,8 @@ _Nothing failed._
 - Meera sees her 3 bookings, each cancellable — and none of the team's notes — _3_
 - she cancels one
 - nobody else can cancel her booking — _404_
-- too close to the time, she is told to call instead — _409_
+- she books tomorrow evening — _201_
+- too close to the time (inside the 2-day window), she is told to call instead — _409_
 - with auto-confirm on, a booking is confirmed at once — _confirmed_
 - a store whose plan lacks Table reservations can't take bookings, even with the switch on
 - …and has no bookings page
@@ -116,12 +117,12 @@ _Nothing failed._
 
 **Step 6 — 'goes well with your order'**
 
-- the owner picks what goes with momos (the dish itself and unknown dishes are dropped) — _["6b0024b9ae6ecc0e9e651121","6b0024b9ae6ecc0e9e651131","6b0024b9ae6ecc0e9e651126"]_
-- with momos in the cart: chai and lassi are suggested (the curry needs a spice choice, so it can't be one tap) — _["6b0024b9ae6ecc0e9e651121","6b0024b9ae6ecc0e9e651126"]_
+- the owner picks what goes with momos (the dish itself and unknown dishes are dropped) — _["6b01491ed6065da5d8205aba","6b01491ed6065da5d8205ac1","6b01491ed6065da5d8205abc"]_
+- with momos in the cart: chai and lassi are suggested (the curry needs a spice choice, so it can't be one tap) — _["6b01491ed6065da5d8205aba","6b01491ed6065da5d8205abc"]_
 - under the outlet's title
 - nothing already in the cart is suggested
 - a sold-out dish isn't suggested
-- with no picks, what others often ordered with it is suggested (roll → cola, ordered together 3 times) — _[{"itemId":"6b0024b9ae6ecc0e9e65112b","variantId":null}]_
+- with no picks, what others often ordered with it is suggested (roll → cola, ordered together 3 times) — _[{"itemId":"6b01491ed6065da5d8205abe","variantId":null}]_
 - switched off, nothing is suggested
 
 **Step 7 — abandoned-cart reminders**
@@ -155,6 +156,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-21 13:02 | pass | 89 | 0 | headless | 5.3 s |
+| 2026-11-21 05:02 | fail | 87 | 1 | headless | 5.7 s |
 | 2026-11-20 16:15 | pass | 88 | 0 | headless | 5.2 s |
 | 2026-11-20 16:13 | pass | 88 | 0 | headless | 5.5 s |
 

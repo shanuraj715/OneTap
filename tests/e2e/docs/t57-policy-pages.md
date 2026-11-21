@@ -1,6 +1,6 @@
 # T57 — Pages for payment-gateway activation — About, Contact, Pricing, Privacy, Terms, Refunds, Delivery — and their links on the outlet picker
 
-**Area:** storefront · **Last result:** ✅ PASSED (13 passed, 0 failed · 2026-11-20 16:45 · headless · 1.4 s)
+**Area:** storefront · **Last result:** ✅ PASSED (13 passed, 0 failed · 2026-11-21 05:02 · headless · 1.8 s)
 
 **Run it alone:** `node run.mjs --only t57` (add `--visible` to watch it)
 
@@ -38,7 +38,7 @@ _Nothing failed._
 - every outlet gets the seven pages: about, contact, pricing, privacy-policy, terms, refund-policy, shipping-policy
 - …and each one passes the page schema (so it can be saved)
 - …and each is linked in the footer
-- the Pricing page quotes this outlet's real delivery fee (₹30), free-delivery limit (₹499) and minimum order (₹100) — _[{"id":"blk_xfcdyixw","type":"heading","text":"Pricing","level":2,"align":"left"_
+- the Pricing page quotes this outlet's real delivery fee (₹30), free-delivery limit (₹499) and minimum order (₹100) — _[{"id":"blk_6wzwh1tw","type":"heading","text":"Pricing","level":2,"align":"left"_
 - an outlet that doesn't deliver says so, instead of promising delivery
 - the Contact page has the outlet's phone, email and opening hours (9:00 AM to 11:00 PM)
 - the Refunds page says when a cancel is possible and how long a refund takes
@@ -56,6 +56,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-21 05:02 | pass | 13 | 0 | headless | 1.8 s |
 | 2026-11-20 16:45 | pass | 13 | 0 | headless | 1.4 s |
 | 2026-11-20 16:45 | error | 11 | 0 | headless | 1.4 s |
 

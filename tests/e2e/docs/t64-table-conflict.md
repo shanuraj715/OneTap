@@ -1,6 +1,6 @@
 # T64 — Two staff taking an order for the same table — the second is told the table is no longer free and can move the order to a free table
 
-**Area:** tables · **Last result:** ✅ PASSED (22 passed, 0 failed · 2026-11-21 03:19 · headless · 1.9 s)
+**Area:** tables · **Last result:** ✅ PASSED (22 passed, 0 failed · 2026-11-21 13:14 · headless · 1.5 s)
 
 **Run it alone:** `node run.mjs --only t64` (add `--visible` to watch it)
 
@@ -37,7 +37,7 @@ _Nothing failed._
 **Step 1 — API: two orders for one free table at the same moment**
 
 - the bench has tables T1, T2, T3
-- exactly one of the two simultaneous orders is accepted, the other refused — _409 / 201_
+- exactly one of the two simultaneous orders is accepted, the other refused — _201 / 409_
 - the refused one says the table is taken — _Table T1 was just taken by someone else._
 - only ONE party is seated at the table (no double session) — _1_
 - and only one order exists for that table
@@ -69,6 +69,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-21 13:14 | pass | 22 | 0 | headless | 1.5 s |
+| 2026-11-21 05:03 | pass | 22 | 0 | headless | 2.0 s |
 | 2026-11-21 03:19 | pass | 22 | 0 | headless | 1.9 s |
 | 2026-11-21 03:19 | fail | 19 | 1 | headless | 31.6 s |
 | 2026-11-21 03:18 | fail | 2 | 10 | headless | 31.6 s |

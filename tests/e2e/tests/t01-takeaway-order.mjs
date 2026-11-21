@@ -229,9 +229,9 @@ export async function run(d, h) {
 
   /* ───────────────────────────── the customer collects */
   await d.tab("customer", "Customer · restaurant website");
-  await d.say("Meanwhile the customer's screen: it still just says the order was placed — it doesn't update by itself.", 2200);
+  await d.say("Meanwhile the customer's screen: it says the order was placed, and has a button to follow it.", 2200);
   body = await d.page.locator("body").innerText();
-  if (/Order #\d+ placed/.test(body)) d.finding("The customer has NO order-tracking page: their confirmation screen never moves past “Order #… placed”, even when the order is Ready. Progress only reaches them through WhatsApp/SMS alerts, which are off by default. (GET /api/orders/:id already lets a signed-in customer read their own order, so a tracking page is feasible.)");
+  d.check("the confirmation screen has a 'Follow your order' button — an order page that moves by itself (T68 checks it)", (await d.page.getByTestId("done-follow").count()) === 1);
 
   await d.tab("staff", "Restaurant staff · dashboard");
   await d.say("The customer arrives, pays ₹" + toPay.toLocaleString("en-IN") + " in cash and takes the food.", 2000);

@@ -1,6 +1,6 @@
 # T47 — Storefront — the header, the order bar (Takeaway/Delivery + outlet) and the category/filter bar stay pinned to the top while scrolling, on phone, tablet and desktop, with every header style
 
-**Area:** storefront · **Last result:** ✅ PASSED (101 passed, 0 failed · 2026-11-21 01:12 · headless · 1 min 23 s)
+**Area:** storefront · **Last result:** ✅ PASSED (101 passed, 0 failed · 2026-11-21 04:59 · headless · 1 min 25 s)
 
 **Run it alone:** `node run.mjs --only t47` (add `--visible` to watch it)
 
@@ -173,6 +173,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-21 04:59 | pass | 101 | 0 | headless | 1 min 25 s |
 | 2026-11-21 01:12 | pass | 101 | 0 | headless | 1 min 23 s |
 | 2026-11-21 00:15 | pass | 101 | 0 | headless | 1 min 22 s |
 | 2026-11-20 06:07 | pass | 101 | 0 | headless | 1 min 57 s |

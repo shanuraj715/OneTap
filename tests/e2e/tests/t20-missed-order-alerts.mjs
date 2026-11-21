@@ -125,8 +125,8 @@ export async function run(d, h) {
   d.check("typing 0 minutes gives 1 (never 0)", (await value("Accept within (minutes)")) === "1", await value("Accept within (minutes)"));
   await ui.fill(d, "Accept within (minutes)", "241");
   await save();
-  d.check("241 minutes is refused ('Validation failed')", /Validation failed/.test(await page()));
-  d.finding("Missed-order alerts: a limit over 240 minutes is refused with only 'Validation failed' — it doesn't say which box or what the maximum is.");
+  d.check("241 minutes is refused, and says which box and the most allowed: 'Accept minutes can be at most 240.'", /Accept minutes can be at most 240\./.test(await page()), (await page()).match(/Accept minutes[^.]*\./)?.[0]);
+  d.never("the refusal says only 'Validation failed'", /Validation failed/.test(await page()));
   await d.page.reload({ waitUntil: "load" });
   await alertsTab();
   d.never("the refused value 241 was saved", (await value("Accept within (minutes)")) === "241");
@@ -172,8 +172,9 @@ export async function run(d, h) {
   const dashOff = await dashboard();
   d.check("the dashboard says 'In the queue 1' and 'Missed orders 0'", dashOff?.queue === 1 && dashOff?.missed === 0, JSON.stringify(dashOff));
   await atCounter(OWNER);
-  d.check("after all that time the order is still just 'Placed' (not accepted, not cancelled by itself)", (await statusCell(a.no)) === "Placed" || /^Placed \d/.test(await statusCell(a.no)), await statusCell(a.no));
-  d.finding("A missed order is never escalated: nobody is messaged and it is not cancelled — the only signs are the Orders screen alerts and the dashboard's 'Missed orders'.");
+  d.check("after all that time the order is still just 'Placed' (not accepted, not cancelled by itself — the store hasn't switched on auto-cancel)", (await statusCell(a.no)) === "Placed" || /^Placed \d/.test(await statusCell(a.no)), await statusCell(a.no));
+  await openAlertSettings();
+  d.check("by default nothing is escalated by itself: 'Cancel an order nobody accepts after (minutes)' is 0 — the choice to cancel is the store's (see T67 for what it does when set)", (await value("Cancel an order nobody accepts after (minutes)")) === "0", await value("Cancel an order nobody accepts after (minutes)"));
   const aCustomer = await (async () => { await d.tab("customer", "Customer · Meera"); await ui.visit(d, BENCH.storefront + "/main"); return norm(await page()); })();
   d.never("the customer's store page mentions the delay", /\b(delayed|sorry|taking longer|running late|missed)\b/i.test(aCustomer));
 
@@ -315,7 +316,7 @@ export async function run(d, h) {
   const strip = (t, no) => t.replace(new RegExp(`#${no}`, "g"), "#N").replace(/about \d+ minutes/, "about N minutes"); // the quoted ready time depends on how busy the kitchen is
   d.check("a customer can still order while orders are late; their confirmation reads exactly like before the alerts were on", strip(c.text, c.no) === strip(a.text, a.no), `${strip(a.text, a.no)} || ${strip(c.text, c.no)}`);
   d.never("the customer's confirmation mentions a delay or a late order", /\b(delayed|sorry|taking longer|running late|missed)\b/i.test(c.text));
-  d.finding("The customer has no way to see that their order is waiting or late — their confirmation never changes (see also T01: there is no order-tracking page).");
+  d.check("the confirmation now has 'Follow your order' — the page that tells the customer if their order is waiting or late (T67 / T68 cover what it shows)", (await d.page.getByTestId("done-follow").count()) === 1);
   await atCounter(OWNER);
   d.check("their new order simply appears on the Orders screen like any other", /Placed/.test(await rowText(c.no)));
 

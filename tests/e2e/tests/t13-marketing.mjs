@@ -54,7 +54,7 @@ export async function run(d, h) {
     /* ----------------------------------------------------------------- sidebar */
     await d.step("The sidebar: running the store above a divider, everything else below it");
     const groups = await ui.sidebarGroups(d);
-    d.check("first group 'Store & orders': Take order, Dashboard, Orders, Menu, Tables, Printing", groups[0]?.group === "Store & orders" && JSON.stringify(groups[0].items) === JSON.stringify(["Take order", "Dashboard", "Orders", "Menu", "Tables", "Printing"].filter((n) => groups[0].items.includes(n))) && ["Take order", "Dashboard", "Orders", "Menu", "Tables"].every((n) => groups[0].items.includes(n)), JSON.stringify(groups[0]));
+    d.check("first group 'Store & orders': Take order, Dashboard, Orders, Kitchen display, Bookings, Menu, Tables, Printing", groups[0]?.group === "Store & orders" && JSON.stringify(groups[0].items) === JSON.stringify(["Take order", "Dashboard", "Orders", "Kitchen display", "Bookings", "Menu", "Tables", "Printing"].filter((n) => groups[0].items.includes(n))) && ["Take order", "Dashboard", "Orders", "Menu", "Tables"].every((n) => groups[0].items.includes(n)), JSON.stringify(groups[0]));
     d.check("a divider comes before the second group", groups[1]?.divider === true && groups[0]?.divider === false, JSON.stringify(groups.map((g) => [g.group, g.divider])));
     d.check("second group 'Customers & growth': Customers, Marketing, WhatsApp, Coupons", ["Customers", "Marketing", "WhatsApp", "Coupons"].every((n) => groups[1]?.items.includes(n)), JSON.stringify(groups[1]));
     d.check("third group 'Setup': Storefront and Settings", groups[2]?.group === "Setup" && groups[2].items.includes("Storefront") && groups[2].items.includes("Settings"), JSON.stringify(groups[2]));

@@ -1,6 +1,6 @@
 # T61 — Edit / New item is a pop-up — fixed Save and Cancel footer, scrolling body, Esc closes — and photos are saved as they change
 
-**Area:** menu · **Last result:** ✅ PASSED (40 passed, 0 failed · 2026-11-21 01:33 · headless · 11.9 s)
+**Area:** menu · **Last result:** ✅ PASSED (40 passed, 0 failed · 2026-11-21 05:03 · headless · 12.0 s)
 
 **Run it alone:** `node run.mjs --only t61` (add `--visible` to watch it)
 
@@ -101,6 +101,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-21 05:03 | pass | 40 | 0 | headless | 12.0 s |
 | 2026-11-21 01:33 | pass | 40 | 0 | headless | 11.9 s |
 | 2026-11-21 01:32 | error | 29 | 0 | headless | 8.9 s |
 | 2026-11-21 00:46 | pass | 33 | 0 | headless | 9.7 s |

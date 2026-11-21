@@ -1,6 +1,6 @@
 # T60 — Super admin inside a store — every page is at /store/<store-name>/<store-id>/…; the store owner keeps the plain addresses
 
-**Area:** platform · **Last result:** ✅ PASSED (18 passed, 0 failed · 2026-11-21 00:27 · headless · 4.5 s)
+**Area:** platform · **Last result:** ✅ PASSED (18 passed, 0 failed · 2026-11-21 13:14 · headless · 4.6 s)
 
 **Run it alone:** `node run.mjs --only t60` (add `--visible` to watch it)
 
@@ -39,28 +39,28 @@ _Nothing failed._
 
 **Step 1 — The super admin opens a store**
 
-- 'Open store dashboard' lands on /store/<store-name>/<store-id> — _/store/acme-momos/6b00966c4d4320b22f126524_
+- 'Open store dashboard' lands on /store/<store-name>/<store-id> — _/store/acme-momos/6b014b5c31af39c0744cb871_
 
 **Step 2 — Every page of the store keeps that address**
 
-- the sidebar's Menu goes to …/menu — _/store/acme-momos/6b00966c4d4320b22f126524/menu_
+- the sidebar's Menu goes to …/menu — _/store/acme-momos/6b014b5c31af39c0744cb871/menu_
 - …and it is the store's menu
-- Orders goes to …/orders — _/store/acme-momos/6b00966c4d4320b22f126524/orders_
-- Settings goes to …/settings — _/store/acme-momos/6b00966c4d4320b22f126524/settings_
-- a tab inside Settings (Payments) keeps the prefix too — _/store/acme-momos/6b00966c4d4320b22f126524/payments_
+- Orders goes to …/orders — _/store/acme-momos/6b014b5c31af39c0744cb871/orders_
+- Settings goes to …/settings — _/store/acme-momos/6b014b5c31af39c0744cb871/settings_
+- a tab inside Settings (Payments) keeps the prefix too — _/store/acme-momos/6b014b5c31af39c0744cb871/payments_
 - the sidebar marks the section you are in (Settings, on its Payments tab) and not the others
 
 **Step 3 — Reload, shared and old addresses**
 
-- reloading a store page stays on it (a bookmark or a link to another admin works) — _/store/acme-momos/6b00966c4d4320b22f126524/menu_
-- a wrong or old store name in the address is corrected to the current one — _/store/acme-momos/6b00966c4d4320b22f126524/orders_
-- an old plain address (/orders) opened by the super admin goes to the store they last had open — _/store/acme-momos/6b00966c4d4320b22f126524/orders_
-- an address with another store's id shows THAT store (the id decides, the name follows) — _/store/beta-bites/6b00966d4d4320b22f126582/menu_
+- reloading a store page stays on it (a bookmark or a link to another admin works) — _/store/acme-momos/6b014b5c31af39c0744cb871/menu_
+- a wrong or old store name in the address is corrected to the current one — _/store/acme-momos/6b014b5c31af39c0744cb871/orders_
+- an old plain address (/orders) opened by the super admin goes to the store they last had open — _/store/acme-momos/6b014b5c31af39c0744cb871/orders_
+- an address with another store's id shows THAT store (the id decides, the name follows) — _/store/beta-bites/6b014b5d31af39c0744cb8c5/menu_
 - …and the page says it is Beta Bites
 
 **Step 4 — Leaving the store**
 
-- 'Back to my dashboard' leaves the store (no /store in the address) — _/platform/stores/6b00966d4d4320b22f126582_
+- 'Back to my dashboard' leaves the store (no /store in the address) — _/platform/stores/6b014b5d31af39c0744cb8c5_
 - the platform console is at /platform, not under a store
 
 **Step 5 — A store owner keeps the plain addresses**
@@ -74,6 +74,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-21 13:14 | pass | 18 | 0 | headless | 4.6 s |
+| 2026-11-21 05:03 | pass | 18 | 0 | headless | 5.1 s |
 | 2026-11-21 00:27 | pass | 18 | 0 | headless | 4.5 s |
 | 2026-11-21 00:27 | fail | 17 | 1 | headless | 4.6 s |
 | 2026-11-21 00:27 | fail | 16 | 2 | headless | 4.7 s |

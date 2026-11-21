@@ -73,7 +73,8 @@ async function signUp(store, phone, name) {
 const asha = await signUp(A, "9811700001", "Asha Rao");
 const ravi = await signUp(A, "9811700002", "Ravi Kumar");
 const bela = await signUp(B, "9811700003", "Bela Shah");
-const setCoins = (c, n) => raw("customers").updateOne({ _id: oid(c.id) }, { $set: { walletBalance: n } });
+// (through the model, like the app does — a customer's sign-in is remembered for a few seconds and dropped when the customer is written to)
+const setCoins = (c, n) => db.CustomerModel.updateOne({ _id: oid(c.id) }, { $set: { walletBalance: n } });
 const balanceOf = async (c) => (await raw("customers").findOne({ _id: oid(c.id) })).walletBalance;
 
 let counter = 100;

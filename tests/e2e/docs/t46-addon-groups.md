@@ -1,6 +1,6 @@
 # T46 — Add-on groups — the list is multi-column (dish editor and the groups list) and a group can be edited after creation (name, option names and prices, add/remove options)
 
-**Area:** menu · **Last result:** ✅ PASSED (50 passed, 0 failed · 2026-11-21 00:44 · headless · 16.6 s)
+**Area:** menu · **Last result:** ✅ PASSED (50 passed, 0 failed · 2026-11-21 04:58 · headless · 19.1 s)
 
 **Run it alone:** `node run.mjs --only t46` (add `--visible` to watch it)
 
@@ -47,7 +47,7 @@ _Nothing failed._
 **Step 1 — The dish editor's Add-on groups list runs across several columns**
 
 - every group is listed — _16 of 16_
-- the list uses several columns on a wide screen — _4 columns, 4 rows, 16 groups_
+- the list uses several columns on a wide screen — _5 columns, 4 rows, 16 groups_
 - did not happen: the list is one long column on a wide screen
 - nothing crosses the edge of its box — _0 crossing_
 - one option reads '1 option' — _T46 One 1 option_
@@ -119,6 +119,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-21 04:58 | pass | 50 | 0 | headless | 19.1 s |
 | 2026-11-21 00:44 | pass | 50 | 0 | headless | 16.6 s |
 | 2026-11-21 00:36 | pass | 50 | 0 | headless | 16.7 s |
 | 2026-11-20 16:12 | pass | 50 | 0 | headless | 16.4 s |

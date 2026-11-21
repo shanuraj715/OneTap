@@ -1,6 +1,6 @@
 # T58 — Dish pictures in four shapes — square (default), landscape 4:3, wide 16:9, portrait 3:4 — stored, limited and chosen per card; existing square pictures untouched
 
-**Area:** menu · **Last result:** ✅ PASSED (31 passed, 0 failed · 2026-11-21 01:13 · headless · 4.1 s)
+**Area:** menu · **Last result:** ✅ PASSED (31 passed, 0 failed · 2026-11-21 13:09 · headless · 3.6 s)
 
 **Run it alone:** `node run.mjs --only t58` (add `--visible` to watch it)
 
@@ -91,6 +91,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-21 13:09 | pass | 31 | 0 | headless | 3.6 s |
+| 2026-11-21 05:02 | pass | 31 | 0 | headless | 4.2 s |
 | 2026-11-21 01:13 | pass | 31 | 0 | headless | 4.1 s |
 | 2026-11-21 01:10 | fail | 29 | 1 | headless | 3.7 s |
 | 2026-11-21 00:20 | pass | 30 | 0 | headless | 3.6 s |

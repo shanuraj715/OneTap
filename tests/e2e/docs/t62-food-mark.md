@@ -1,6 +1,6 @@
 # T62 — The veg / non-veg mark — the dot is exactly centred in its frame on the storefront and in Take order
 
-**Area:** storefront · **Last result:** ✅ PASSED (9 passed, 0 failed · 2026-11-21 00:56 · headless · 3.6 s)
+**Area:** storefront · **Last result:** ✅ PASSED (9 passed, 0 failed · 2026-11-21 05:03 · headless · 4.3 s)
 
 **Run it alone:** `node run.mjs --only t62` (add `--visible` to watch it)
 
@@ -34,19 +34,19 @@ _Nothing failed._
 
 **Step 1 — Storefront menu (1× screen)**
 
-- the menu shows several veg / non-veg marks — _19 marks (Non-vegetarian,Vegetarian) at sizes 14px_
+- the menu shows several veg / non-veg marks — _18 marks (Non-vegetarian,Vegetarian) at sizes 14px_
 - the dot is exactly in the middle of its frame, on every mark — _worst off-centre 0.000px_
 - every mark is a true square and the dot stays inside its frame
 
 **Step 2 — Storefront menu (2× screen)**
 
-- the menu shows several veg / non-veg marks — _19 marks (Non-vegetarian,Vegetarian) at sizes 14px_
+- the menu shows several veg / non-veg marks — _18 marks (Non-vegetarian,Vegetarian) at sizes 14px_
 - the dot is exactly in the middle of its frame, on every mark — _worst off-centre 0.000px_
 - every mark is a true square and the dot stays inside its frame
 
 **Step 3 — Dashboard → Take order**
 
-- Take order shows veg / non-veg marks — _19 marks (non-veg,veg)_
+- Take order shows veg / non-veg marks — _18 marks (non-veg,veg)_
 - …each with its dot exactly centred in a square frame — _worst off-centre 0.000px_
 - no errors in the browser
 
@@ -54,6 +54,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-21 05:03 | pass | 9 | 0 | headless | 4.3 s |
 | 2026-11-21 00:56 | pass | 9 | 0 | headless | 3.6 s |
 | 2026-11-21 00:55 | error | 6 | 0 | headless | 18.4 s |
 

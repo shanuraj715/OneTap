@@ -1,6 +1,6 @@
 # T66 — Completed dine-in order frees the table (no Needs cleaning) · phone layouts · platform live-updates switch · print station every 8 s with check, loader and countdown
 
-**Area:** operations · **Last result:** ✅ PASSED (47 passed, 0 failed · 2026-11-21 04:17 · headless · 1 min 51 s)
+**Area:** operations · **Last result:** ✅ PASSED (47 passed, 0 failed · 2026-11-21 13:04 · headless · 1 min 51 s)
 
 **Run it alone:** `node run.mjs --only t66` (add `--visible` to watch it)
 
@@ -84,7 +84,7 @@ _Nothing failed._
 - the platform setting is ON by default
 - Platform settings → Live order updates: the switch is on
 - switching it off is saved
-- the page explains what off means
+- the page explains what off means (it updates a moment after the save)
 - a new live connection is refused while it is off — _refused_
 - an open Orders page switches itself to 'Refreshing every 5s' (within a minute)
 - it asks the API for the order list every ~5 seconds — _2 requests in 11.5 s_
@@ -116,6 +116,9 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-21 13:04 | pass | 47 | 0 | headless | 1 min 51 s |
+| 2026-11-21 05:07 | fail | 46 | 1 | headless | 1 min 53 s |
+| 2026-11-21 05:05 | fail | 46 | 1 | headless | 1 min 52 s |
 | 2026-11-21 04:17 | pass | 47 | 0 | headless | 1 min 51 s |
 | 2026-11-21 04:15 | fail | 46 | 1 | headless | 1 min 51 s |
 | 2026-11-21 04:10 | error | 40 | 0 | headless | 1 min 14 s |

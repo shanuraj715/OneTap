@@ -184,8 +184,12 @@ say("3. the guest's own bookings");
   r = await call("POST", `/api/reservations/${mine[1].id}/cancel`, { cookie: asha.cookie, body: { outletId: A.outlet } });
   ok(r.status === 404, "nobody else can cancel her booking", `${r.status}`);
   await must(own("PATCH", `/api/outlets/${A.outlet}/config`, { reservations: { cancelUntilMinutes: 2880 } }), "cancel window 2 days");
-  r = await call("POST", `/api/reservations/${mine[1].id}/cancel`, { cookie: meera.cookie, body: { outletId: A.outlet } });
-  ok(r.status === 409 && /call the restaurant/.test(JSON.stringify(r.json)), "too close to the time, she is told to call instead", `${r.status}`);
+  // a booking for TOMORROW evening is always within the 2-day window, whatever time of day the test runs (the day-after-tomorrow
+  // booking above is more than 2 days away in the morning, which made this check depend on the clock)
+  const soon = await book(meera, schema.istDate(schema.shiftDay(schema.istDayKey(), 1), 20 * 60).toISOString(), 2);
+  ok(soon.status === 201, "she books tomorrow evening", `${soon.status} ${soon.json.error ?? ""}`);
+  r = await call("POST", `/api/reservations/${soon.json.reservation?.id}/cancel`, { cookie: meera.cookie, body: { outletId: A.outlet } });
+  ok(r.status === 409 && /call the restaurant/.test(JSON.stringify(r.json)), "too close to the time (inside the 2-day window), she is told to call instead", `${r.status}`);
   await must(own("PATCH", `/api/outlets/${A.outlet}/config`, { reservations: { autoConfirm: true, cancelUntilMinutes: 60 } }), "auto-confirm");
   r = await book(asha, schema.istDate(day2, 20 * 60).toISOString(), 2);
   ok(r.status === 201 && r.json.reservation.status === "confirmed", "with auto-confirm on, a booking is confirmed at once", `${r.json.reservation?.status}`);

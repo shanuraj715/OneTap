@@ -1,6 +1,6 @@
 # T59 — Dish photos in four shapes — the dish form's four sections (upload, replace, trim warning, paste into the chosen one, remove) and the picture each card style shows
 
-**Area:** menu · **Last result:** ✅ PASSED (45 passed, 0 failed · 2026-11-21 01:33 · headless · 5.1 s)
+**Area:** menu · **Last result:** ✅ PASSED (45 passed, 0 failed · 2026-11-21 05:02 · headless · 5.5 s)
 
 **Run it alone:** `node run.mjs --only t59` (add `--visible` to watch it)
 
@@ -108,6 +108,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-21 05:02 | pass | 45 | 0 | headless | 5.5 s |
 | 2026-11-21 01:33 | pass | 45 | 0 | headless | 5.1 s |
 | 2026-11-21 01:10 | pass | 45 | 0 | headless | 5.2 s |
 | 2026-11-21 00:44 | pass | 45 | 0 | headless | 5.2 s |

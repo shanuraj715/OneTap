@@ -1,6 +1,6 @@
 # T63 — C07 uses the wide 16:9 picture — and Appearance has a Picture shape field per card style that resets on a new card and can be overridden
 
-**Area:** storefront · **Last result:** ✅ PASSED (30 passed, 0 failed · 2026-11-21 01:22 · headless · 3.3 s)
+**Area:** storefront · **Last result:** ✅ PASSED (30 passed, 0 failed · 2026-11-21 05:03 · headless · 4.4 s)
 
 **Run it alone:** `node run.mjs --only t63` (add `--visible` to watch it)
 
@@ -13,7 +13,7 @@ Runs suites/card-picture-shape-ui.mjs in Chrome on the bench store. A dish with 
 1. C07 uses the wide 16:9 picture
 2. Appearance: Picture shape field
 3. Overriding it
-4. Another card resets it; 'back to the card's own' clears it
+4. Another card resets it
 5. Menu layout: the same field for the default card and for each section
 6. A card with no picture
 
@@ -63,7 +63,7 @@ _Nothing failed._
 - after reloading Appearance the override is still 4:3
 - overriding to Square shows the square picture — _https://img.test/cs-sq.png_
 
-**Step 4 — Another card resets it; 'back to the card's own' clears it**
+**Step 4 — Another card resets it**
 
 - choosing C08 after an override resets the field to C08's own (Portrait), with no override left
 - saved: C08 with no override (empty = its own) — _card.portrait / ""_
@@ -89,6 +89,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-21 05:03 | pass | 30 | 0 | headless | 4.4 s |
 | 2026-11-21 01:22 | pass | 30 | 0 | headless | 3.3 s |
 | 2026-11-21 01:10 | pass | 29 | 0 | headless | 3.3 s |
 | 2026-11-21 01:10 | error | 27 | 0 | headless | 33.4 s |

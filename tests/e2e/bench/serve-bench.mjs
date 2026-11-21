@@ -81,6 +81,29 @@ await db.connectDb({ uri: mongod.getUri(), dbName: "bench" });
 const { createApp } = await import(`${API}/src/app.js`);
 const server = createApp().listen(3097);
 await new Promise((r) => server.once("listening", r));
+// DB-CALL RECORDER (for the cache audit, tests/e2e/audit/db-calls.mjs): a request that carries an `x-audit: <label>` header gets
+// every database operation it causes written down (collection.method). Read them on :3189  GET /audit  (add ?clear=1 to empty it).
+{
+  const { AsyncLocalStorage } = await import("node:async_hooks");
+  const http = await import("node:http");
+  const als = new AsyncLocalStorage();
+  const mongoose = (await import(pathToFileURL(createRequire(`${REPO}/packages/db/package.json`).resolve("mongoose")).href)).default;
+  mongoose.set("debug", (collection, method) => { als.getStore()?.ops.push(`${collection}.${method}`); });
+  const recorded = [];
+  server.prependListener("request", (rq, rs) => {
+    const label = rq.headers["x-audit"];
+    if (!label) return;
+    const rec = { label: String(label), method: rq.method, url: rq.url.split("?")[0], ops: [] };
+    als.enterWith(rec);
+    rs.on("finish", () => { rec.status = rs.statusCode; recorded.push(rec); });
+  });
+  http.createServer((rq, rs) => {
+    const u = new URL(rq.url, "http://x");
+    rs.setHeader("content-type", "application/json");
+    rs.end(JSON.stringify(recorded));
+    if (u.searchParams.get("clear")) recorded.length = 0;
+  }).listen(3189, "127.0.0.1");
+}
 // the live order feed (/realtime) and the live menu preview, attached the way the real server.js does
 (await import(`${API}/src/realtime/hub.js`)).attachRealtime(server);
 (await import(`${API}/src/realtime/preview.js`)).attachPreview(server);

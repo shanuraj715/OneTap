@@ -63,3 +63,11 @@ Stand-alone script suites live in `suites/` and are wrapped by a tiny test file 
 - `t02` skips its one check that asks WhatsApp's real servers for a link QR (nothing gets linked, but it is a real network call). Run it with `WA_REAL_QR=1 node run.mjs --only t02`.
 - The storefront bench build imports `lucide-react`, which `apps/storefront/package.json` does not declare (it only resolves through pnpm hoisting) — the bench starts Next through the pnpm launcher for that reason.
 - This folder is **not** a pnpm workspace package, so it never ships with the apps; exclude `tests/` when you rsync the repo to a server.
+
+## The cache audit
+
+`node audit/db-calls.mjs` (with the bench running) asks every GET read of the API twice and prints how many database
+operations each one caused the first and the second time — what is remembered shows `0` the second time, what must be
+live (orders, tables, bookings, the kitchen…) shows its reads every time. The bench API records them for any request that
+carries an `x-audit` header (port 3189). `t69` checks the same rules, and that every remembered thing is dropped the moment
+it changes, on its own in-memory API.

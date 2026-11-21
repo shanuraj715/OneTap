@@ -7,8 +7,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:06:45.448Z",
-    "durationMs": 13684,
+    "at": "2026-11-20T22:58:39.813Z",
+    "durationMs": 14582,
     "steps": [
       {
         "n": 1,
@@ -89,7 +89,7 @@
           {
             "label": "the code request is accepted (the test stores accept any phone)",
             "ok": true,
-            "detail": "HTTP 200 {\"channel\":\"sms\",\"devCode\":\"927185\",\"resendAfterSec\":30}",
+            "detail": "HTTP 200 {\"channel\":\"sms\",\"devCode\":\"769966\",\"resendAfterSec\":30}",
             "kind": "expect"
           },
           {
@@ -112,8 +112,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T10:30:32.600Z",
-    "durationMs": 32891,
+    "at": "2026-11-20T22:59:18.296Z",
+    "durationMs": 33211,
     "steps": [
       {
         "n": 1,
@@ -289,7 +289,7 @@
           {
             "label": "the new customer was saved with the details they gave",
             "ok": true,
-            "detail": "{\"id\":\"6b00213aa7c033c8ad39ca2a\",\"name\":\"Rohan Mehta\",\"email\":\"rohan.mehta@example.com\",\"phone\":\"9811122233\",\"gender\":\"male\",\"age\":31,\"orderCount\":1,\"walletBalance\":0,\"lastOrderAt\":\"2026-11-20T10:30:23.675Z\",\"createdAt\":\"2026-11-20T10:30:18.996Z\"}",
+            "detail": "{\"id\":\"6b00d0b818f7c17523f93caf\",\"name\":\"Rohan Mehta\",\"email\":\"rohan.mehta@example.com\",\"phone\":\"9811122233\",\"gender\":\"male\",\"age\":31,\"orderCount\":1,\"walletBalance\":0,\"lastOrderAt\":\"2026-11-20T22:59:08.914Z\",\"createdAt\":\"2026-11-20T22:59:04.186Z\"}",
             "kind": "expect"
           },
           {
@@ -313,7 +313,7 @@
           {
             "label": "the row shows the customer, phone, type, item count, total and 'Placed'",
             "ok": true,
-            "detail": " #0001 04:00 PM Rohan Mehta 9811122233 TA 8 ₹1,030 Placed 0m Accepted",
+            "detail": " #0001 04:29 AM Rohan Mehta 9811122233 TA 8 ₹1,030 Placed 0m Accepted",
             "kind": "expect"
           }
         ]
@@ -496,12 +496,12 @@
     "id": "t02-whatsapp-api",
     "title": "WhatsApp chat — API rules and the careful-pace sending worker",
     "status": "pass",
-    "pass": 133,
+    "pass": 132,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:07:33.799Z",
-    "durationMs": 11695,
+    "at": "2026-11-21T07:37:29.529Z",
+    "durationMs": 11982,
     "steps": [
       {
         "n": 1,
@@ -708,7 +708,7 @@
           {
             "label": "an attachment uploads",
             "ok": true,
-            "detail": "http://localhost:3098/uploads/6aff8f3c5757fc68d4e2",
+            "detail": "http://localhost:3098/uploads/6b014a30f24efca9a781",
             "kind": "expect"
           },
           {
@@ -730,12 +730,6 @@
         "title": "the worker sends — at a careful pace",
         "checks": [
           {
-            "label": "it's quiet hours now (10 pm–9 am): first contacts wait for the morning",
-            "ok": true,
-            "detail": "2026-11-20T03:37:25.220Z",
-            "kind": "expect"
-          },
-          {
             "label": "one message goes out, to the right number",
             "ok": true,
             "detail": "919876543210@s.whatsapp.net",
@@ -756,7 +750,7 @@
           {
             "label": "the next first contact must wait 2–4 minutes",
             "ok": true,
-            "detail": "182 s",
+            "detail": "141 s",
             "kind": "expect"
           },
           {
@@ -780,7 +774,7 @@
           {
             "label": "15 first contacts a day per number: the rest wait for tomorrow",
             "ok": true,
-            "detail": "2026-11-20T18:31:30.798Z",
+            "detail": "2026-11-22T03:39:27.306Z",
             "kind": "expect"
           },
           {
@@ -906,13 +900,13 @@
           {
             "label": "preview: 3 people (duplicates merged), 1 opted out",
             "ok": true,
-            "detail": "{\"recipients\":3,\"optedOut\":1,\"running\":0,\"firstContact\":3,\"numbersOnline\":[{\"id\":\"6aff8f3d5757fc68d4e2acd0\",\"label\":\"Counter phone\"},{\"id\":\"6aff8f3d5757fc68d4e2acd7\",\"label\":\"Delivery phone\"}],\"estimatedDays\":1}",
+            "detail": "{\"recipients\":3,\"optedOut\":1,\"running\":0,\"firstContact\":3,\"numbersOnline\":[{\"id\":\"6b014a31f24efca9a7811013\",\"label\":\"Counter phone\"},{\"id\":\"6b014a31f24efca9a7811017\",\"label\":\"Delivery phone\"}],\"estimatedDays\":1}",
             "kind": "expect"
           },
           {
             "label": "a broadcast queues one message per person",
             "ok": true,
-            "detail": "{\"id\":\"6aff8f455757fc68d4e2ae6d\",\"text\":\"Diwali: 20% off this weekend!\\n\\nReply STOP to stop offers.\",\"media\":null,\"createdAt\":\"2026-11-20T00:07:33.440Z\",\"status\":\"sending\",\"total\":3,\"skipped\":1,\"waiting\":3,\"sent\":0,\"read\":0,\"failed\":0}",
+            "detail": "{\"id\":\"6b014a38f24efca9a7811149\",\"text\":\"Diwali: 20% off this weekend!\\n\\nReply STOP to stop offers.\",\"media\":null,\"createdAt\":\"2026-11-21T07:37:28.983Z\",\"status\":\"sending\",\"total\":3,\"skipped\":1,\"waiting\":3,\"sent\":0,\"read\":0,\"failed\":0}",
             "kind": "expect"
           },
           {
@@ -1379,8 +1373,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:07:57.825Z",
-    "durationMs": 19859,
+    "at": "2026-11-21T07:56:33.823Z",
+    "durationMs": 19967,
     "steps": [
       {
         "n": 1,
@@ -1515,7 +1509,7 @@
           {
             "label": "a paced broadcast message says when it will go",
             "ok": true,
-            "detail": "BROADCAST | Diwali special: 20% off this weekend! | Reply STOP to stop offers. | sends at 7:37 pm · | 5:07 am",
+            "detail": "BROADCAST | Diwali special: 20% off this weekend! | Reply STOP to stop offers. | sends tomorrow 3:26 am · | 12:56 pm",
             "kind": "expect"
           },
           {
@@ -1688,8 +1682,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:08:18.557Z",
-    "durationMs": 16578,
+    "at": "2026-11-20T23:00:22.553Z",
+    "durationMs": 17289,
     "steps": [
       {
         "n": 1,
@@ -1818,7 +1812,7 @@
           {
             "label": "older than 30 days: 2 messages in 1 chat",
             "ok": true,
-            "detail": "2 messages from before Oct 22, 2026, in 1 chat.",
+            "detail": "2 messages from before Oct 23, 2026, in 1 chat.",
             "kind": "expect"
           },
           {
@@ -1847,8 +1841,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:08:36.178Z",
-    "durationMs": 13458,
+    "at": "2026-11-20T23:00:42.208Z",
+    "durationMs": 14416,
     "steps": [
       {
         "n": 0,
@@ -1940,8 +1934,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T18:42:35.104Z",
-    "durationMs": 36898,
+    "at": "2026-11-20T23:01:20.886Z",
+    "durationMs": 38612,
     "steps": [
       {
         "n": 1,
@@ -2046,7 +2040,7 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "0,0,0,0,83,435,823,875,875,875,875,875,875,875",
+            "detail": "0,0,0,1,122,532,844,875,875,875,875,875,875,875",
             "kind": "expect"
           },
           {
@@ -2112,7 +2106,7 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "0,0,0,1,77,347,876,1057,1090,1090,1090,1090,1090,1090",
+            "detail": "0,0,0,4,80,446,883,1073,1090,1090,1090,1090,1090,1090",
             "kind": "expect"
           },
           {
@@ -2141,8 +2135,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T19:43:40.757Z",
-    "durationMs": 3982,
+    "at": "2026-11-21T07:40:15.047Z",
+    "durationMs": 3816,
     "steps": [
       {
         "n": 1,
@@ -2210,8 +2204,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T22:06:32.883Z",
-    "durationMs": 188894,
+    "at": "2026-11-21T07:47:50.132Z",
+    "durationMs": 190794,
     "steps": [
       {
         "n": 1,
@@ -2560,8 +2554,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:13:06.771Z",
-    "durationMs": 33049,
+    "at": "2026-11-21T07:48:23.377Z",
+    "durationMs": 33215,
     "steps": [
       {
         "n": 1,
@@ -2815,8 +2809,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T22:07:26.006Z",
-    "durationMs": 52243,
+    "at": "2026-11-21T07:49:15.617Z",
+    "durationMs": 52218,
     "steps": [
       {
         "n": 1,
@@ -3094,8 +3088,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:14:12.795Z",
-    "durationMs": 12525,
+    "at": "2026-11-21T07:49:27.667Z",
+    "durationMs": 12023,
     "steps": [
       {
         "n": 1,
@@ -3211,8 +3205,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:14:34.604Z",
-    "durationMs": 21785,
+    "at": "2026-11-21T07:49:49.057Z",
+    "durationMs": 21368,
     "steps": [
       {
         "n": 1,
@@ -3370,17 +3364,17 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:16:08.735Z",
-    "durationMs": 89954,
+    "at": "2026-11-21T07:37:08.551Z",
+    "durationMs": 88510,
     "steps": [
       {
         "n": 1,
         "title": "The sidebar: running the store above a divider, everything else below it",
         "checks": [
           {
-            "label": "first group 'Store & orders': Take order, Dashboard, Orders, Menu, Tables, Printing",
+            "label": "first group 'Store & orders': Take order, Dashboard, Orders, Kitchen display, Bookings, Menu, Tables, Printing",
             "ok": true,
-            "detail": "{\"group\":\"Store & orders\",\"divider\":false,\"items\":[\"Take order\",\"Dashboard\",\"Orders\",\"Menu\",\"Tables\",\"Printing\"]}",
+            "detail": "{\"group\":\"Store & orders\",\"divider\":false,\"items\":[\"Take order\",\"Dashboard\",\"Orders\",\"Kitchen display\",\"Bookings\",\"Menu\",\"Tables\",\"Printing\"]}",
             "kind": "expect"
           },
           {
@@ -3392,7 +3386,7 @@
           {
             "label": "second group 'Customers & growth': Customers, Marketing, WhatsApp, Coupons",
             "ok": true,
-            "detail": "{\"group\":\"Customers & growth\",\"divider\":true,\"items\":[\"Analytics\",\"Customers\",\"Marketing\",\"WhatsApp\",\"Coupons\"]}",
+            "detail": "{\"group\":\"Customers & growth\",\"divider\":true,\"items\":[\"Analytics\",\"Customers\",\"Ratings\",\"Marketing\",\"WhatsApp\",\"Coupons\"]}",
             "kind": "expect"
           },
           {
@@ -3404,7 +3398,7 @@
           {
             "label": "Marketing or WhatsApp is mixed in with the store-and-orders group",
             "ok": true,
-            "detail": "Take order, Dashboard, Orders, Menu, Tables, Printing",
+            "detail": "Take order, Dashboard, Orders, Kitchen display, Bookings, Menu, Tables, Printing",
             "kind": "never"
           }
         ]
@@ -3788,7 +3782,7 @@
           {
             "label": "Campaigns: it finishes with 2 sent, 0 waiting, 0 failed",
             "ok": true,
-            "detail": "Win-back SMS SMS · 20 Nov, 5:45 am · 2 people 2 sent · 0 waiting · 0 failed Done",
+            "detail": "Win-back SMS SMS · 21 Nov, 1:06 pm · 2 people 2 sent · 0 waiting · 0 failed Done",
             "kind": "expect"
           },
           {
@@ -3848,13 +3842,13 @@
           {
             "label": "it is queued: 3 waiting, still Sending (the sending worker is off here)",
             "ok": true,
-            "detail": "Ladies offer WhatsApp (linked numbers) · 20 Nov, 5:46 am · 3 people 0 sent · 3 waiting · 0 failed Sending Cancel",
+            "detail": "Ladies offer WhatsApp (linked numbers) · 21 Nov, 1:07 pm · 3 people 0 sent · 3 waiting · 0 failed Sending Cancel",
             "kind": "expect"
           },
           {
             "label": "cancelling stops it: Cancelled, nothing waiting",
             "ok": true,
-            "detail": "Ladies offer WhatsApp (linked numbers) · 20 Nov, 5:46 am · 3 people 0 sent · 0 waiting · 0 failed Cancelled",
+            "detail": "Ladies offer WhatsApp (linked numbers) · 21 Nov, 1:07 pm · 3 people 0 sent · 0 waiting · 0 failed Cancelled",
             "kind": "expect"
           }
         ]
@@ -3866,7 +3860,7 @@
           {
             "label": "Ravi (24 in 2020) shows 30",
             "ok": true,
-            "detail": " Ravi Kumar — 9000000001 Male 30 3 0 22 Aug, 5:44 am",
+            "detail": " Ravi Kumar — 9000000001 Male 30 3 0 23 Aug, 1:05 pm",
             "kind": "expect"
           },
           {
@@ -3895,8 +3889,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:17:19.272Z",
-    "durationMs": 66366,
+    "at": "2026-11-21T07:41:35.119Z",
+    "durationMs": 64089,
     "steps": [
       {
         "n": 1,
@@ -3935,7 +3929,7 @@
           {
             "label": "Marketing is in the sidebar of a store whose plan lacks it",
             "ok": true,
-            "detail": "[{\"group\":\"Store & orders\",\"divider\":false,\"items\":[\"Take order\",\"Dashboard\",\"Orders\",\"Menu\",\"Tables\"]},{\"group\":\"Customers & growth\",\"divider\":true,\"items\":[\"Customers\",\"Coupons\"]},{\"group\":\"Setup\",\"divider\":false,\"items\":[\"Storefront\",\"Settings\"]}]",
+            "detail": "[{\"group\":\"Store & orders\",\"divider\":false,\"items\":[\"Take order\",\"Dashboard\",\"Orders\",\"Kitchen display\",\"Bookings\",\"Menu\",\"Tables\"]},{\"group\":\"Customers & growth\",\"divider\":true,\"items\":[\"Customers\",\"Ratings\",\"Coupons\"]},{\"group\":\"Setup\",\"divider\":false,\"items\":[\"Storefront\",\"Settings\"]}]",
             "kind": "never"
           },
           {
@@ -4048,8 +4042,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:17:57.905Z",
-    "durationMs": 34452,
+    "at": "2026-11-21T07:40:10.349Z",
+    "durationMs": 34095,
     "steps": [
       {
         "n": 1,
@@ -4160,7 +4154,7 @@
           {
             "label": "Security lists the address as Blocked, for Dashboards, blocked twice",
             "ok": true,
-            "detail": "203.0.113.50 Dashboards Blocked · 10 seconds left 0 2 20 Nov, 5:47:38 am Unblock",
+            "detail": "203.0.113.50 Dashboards Blocked · 10 seconds left 0 2 21 Nov, 1:09:51 pm Unblock",
             "kind": "expect"
           },
           {
@@ -4273,8 +4267,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:18:38.387Z",
-    "durationMs": 36300,
+    "at": "2026-11-21T07:42:16.679Z",
+    "durationMs": 35518,
     "steps": [
       {
         "n": 1,
@@ -4307,13 +4301,13 @@
           {
             "label": "the browser's only websocket is the live order feed (/realtime) — WhatsApp chat doesn't open one",
             "ok": true,
-            "detail": "ws://localhost:3097/realtime?outletId=6aff91b89d30a48c6bc25ac0",
+            "detail": "ws://localhost:3097/realtime?outletId=6b014b3315f2e8962569a83f",
             "kind": "expect"
           },
           {
             "label": "a websocket for WhatsApp is opened by the browser",
             "ok": true,
-            "detail": "ws://localhost:3097/realtime?outletId=6aff91b89d30a48c6bc25ac0",
+            "detail": "ws://localhost:3097/realtime?outletId=6b014b3315f2e8962569a83f",
             "kind": "never"
           }
         ]
@@ -4539,8 +4533,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:19:53.753Z",
-    "durationMs": 71198,
+    "at": "2026-11-21T07:56:07.834Z",
+    "durationMs": 69750,
     "steps": [
       {
         "n": 1,
@@ -4549,13 +4543,13 @@
           {
             "label": "Analytics is the first item of 'Customers & growth'",
             "ok": true,
-            "detail": "[[\"Store & orders\",[\"Take order\",\"Dashboard\",\"Orders\",\"Menu\",\"Tables\",\"Printing\"]],[\"Customers & growth\",[\"Analytics\",\"Customers\",\"Marketing\",\"WhatsApp\",\"Coupons\"]],[\"Setup\",[\"Storefront\",\"Settings\"]]]",
+            "detail": "[[\"Store & orders\",[\"Take order\",\"Dashboard\",\"Orders\",\"Kitchen display\",\"Bookings\",\"Menu\",\"Tables\",\"Printing\"]],[\"Customers & growth\",[\"Analytics\",\"Customers\",\"Ratings\",\"Marketing\",\"WhatsApp\",\"Coupons\"]],[\"Setup\",[\"Storefront\",\"Settings\"]]]",
             "kind": "expect"
           },
           {
             "label": "the tabs are Overview, Sales, Items & stock, Customers, Compare outlets, Operations, Profit & loss, Reports",
             "ok": true,
-            "detail": "Take order | Dashboard | Orders | Menu | Tables | Printing | Analytics | Customers | Marketing | WhatsApp | Coupons | Storefront | Settings | View storefront | Overview | Sales | Items & stock | Customers | Compare outlets | Operations | Profit & loss | Reports",
+            "detail": "Take order | Dashboard | Orders | Kitchen display | Bookings | Menu | Tables | Printing | Analytics | Customers | Ratings | Marketing | WhatsApp | Coupons | Storefront | Settings | View storefront | Overview | Sales | Items & stock | Customers | Compare outlets | Operations | Profit & loss | Reports",
             "kind": "expect"
           }
         ]
@@ -4565,21 +4559,21 @@
         "title": "Overview: the last 30 days match the totals worked out from the stored orders",
         "checks": [
           {
-            "label": "the figures equal the worked-out totals (Sales ₹50,909, Net sales ₹48,523, Orders 283, Items sold 547, Cancelled 31, Discounts given ₹561, Average order ₹180)",
+            "label": "the figures equal the worked-out totals (Sales ₹52,164, Net sales ₹49,719, Orders 285, Items sold 558, Cancelled 32, Discounts given ₹496, Average order ₹183)",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "Sales says how it moved against the 30 days before (-0.9%)",
+            "label": "Sales says how it moved against the 30 days before (-0.8%)",
             "ok": true,
-            "detail": "Sales ₹50,909 −0.9% vs the period before incl. GST",
+            "detail": "Sales ₹52,164 −0.8% vs the period before incl. GST",
             "kind": "expect"
           },
           {
             "label": "the range shown is the last 30 days",
             "ok": true,
-            "detail": "22 Oct 2026 – 20 Nov 2026 · 30 days",
+            "detail": "23 Oct 2026 – 21 Nov 2026 · 30 days",
             "kind": "expect"
           },
           {
@@ -4589,15 +4583,15 @@
             "kind": "never"
           },
           {
-            "label": "the day-by-day table has 30 days that add up to 283 orders",
+            "label": "the day-by-day table has 30 days that add up to 285 orders",
             "ok": true,
-            "detail": "30 rows, 283 orders",
+            "detail": "30 rows, 285 orders",
             "kind": "expect"
           },
           {
-            "label": "the hour-by-hour table adds up to 283 orders",
+            "label": "the hour-by-hour table adds up to 285 orders",
             "ok": true,
-            "detail": "11 hours",
+            "detail": "10 hours",
             "kind": "expect"
           },
           {
@@ -4619,13 +4613,13 @@
             "kind": "expect"
           },
           {
-            "label": "Marketing Mart — Main alone: ₹33,417 and 178 orders",
+            "label": "Marketing Mart — Main alone: ₹32,874 and 177 orders",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "Marketing Mart — Second alone: ₹17,492 and 105 orders",
+            "label": "Marketing Mart — Second alone: ₹19,290 and 108 orders",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -4637,7 +4631,7 @@
             "kind": "never"
           },
           {
-            "label": "Last 7 days: ₹10,342, 56 orders",
+            "label": "Last 7 days: ₹9,828, 54 orders",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -4651,11 +4645,11 @@
           {
             "label": "picking an earlier start date in the calendar widens the figures",
             "ok": true,
-            "detail": "487 orders from 2026-10-01",
+            "detail": "499 orders from 2026-10-01",
             "kind": "expect"
           },
           {
-            "label": "custom dates 2026-11-14 to 2026-11-20, picked in the calendar, give the same ₹10,342 as 'Last 7 days'",
+            "label": "custom dates 2026-11-15 to 2026-11-21, picked in the calendar, give the same ₹9,828 as 'Last 7 days'",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -4675,25 +4669,25 @@
           {
             "label": "the chart has a line for each outlet (their names are in the legend)",
             "ok": true,
-            "detail": "Sales by outlet Each day — one line per outlet Table Marketing Mart — Main Marketing Mart — Second ₹0 ₹500 ₹1,000 ₹1,500 ₹2,000 23 Oct 27 Oct 31 Oct 4 Nov 8 Nov",
+            "detail": "Sales by outlet Each day — one line per outlet Table Marketing Mart — Main Marketing Mart — Second ₹0 ₹500 ₹1,000 ₹1,500 ₹2,000 24 Oct 28 Oct 1 Nov 5 Nov 9 Nov ",
             "kind": "expect"
           },
           {
-            "label": "the order-types table adds up to 283 orders",
+            "label": "the order-types table adds up to 285 orders",
             "ok": true,
-            "detail": "283",
+            "detail": "285",
             "kind": "expect"
           },
           {
-            "label": "takeaway ₹19828, delivery ₹17097, dine-in ₹13984 (store totals)",
+            "label": "takeaway ₹20688, delivery ₹18594, dine-in ₹12882 (store totals)",
             "ok": true,
-            "detail": "{\"t\":19828,\"d\":17097,\"i\":13984}",
+            "detail": "{\"t\":20688,\"d\":18594,\"i\":12882}",
             "kind": "expect"
           },
           {
-            "label": "Marketing Mart — Main's rows add up to 178 orders",
+            "label": "Marketing Mart — Main's rows add up to 177 orders",
             "ok": true,
-            "detail": "178",
+            "detail": "177",
             "kind": "expect"
           },
           {
@@ -4709,37 +4703,37 @@
         "title": "Items & stock: best sellers, and how much to prepare",
         "checks": [
           {
-            "label": "the best sellers run Paneer Steamed Momos 133, Cold Coffee 133, Chicken Momos 128",
+            "label": "the best sellers run Paneer Steamed Momos 139, Cold Coffee 137, Chicken Momos 132",
             "ok": true,
-            "detail": "Best sellers By quantity sold in this period — with the change against the period before Paneer Steamed Momos 133 sold · ₹11,970 −1.5% Cold Coffee 133 sold · ₹9,330 −0.7% Chicken Momos 128 sold · ₹12,800 −5.2% Veg Steamed Momos 87 sold · ₹7,000 +4.8% Paneer Gr",
+            "detail": "Best sellers By quantity sold in this period — with the change against the period before Paneer Steamed Momos 139 sold · ₹12,510 −1.4% Cold Coffee 137 sold · ₹9,610 −0.7% Chicken Momos 132 sold · ₹13,200 −3.6% Veg Steamed Momos 83 sold · ₹6,680 +2.5% Paneer Gr",
             "kind": "expect"
           },
           {
-            "label": "'Every item' lists each item with its quantity (Paneer Steamed Momos = 133)",
+            "label": "'Every item' lists each item with its quantity (Paneer Steamed Momos = 139)",
             "ok": true,
-            "detail": "[[\"1\",\"Paneer Steamed Momos\",\"133\",\"₹11,970\",\"4.4\",\"24.3%\",\"−1.5%\"],[\"2\",\"Cold Coffee\",\"133\",\"₹9,330\",\"4.4\",\"24.3%\",\"−0.7%\"]]",
+            "detail": "[[\"1\",\"Paneer Steamed Momos\",\"139\",\"₹12,510\",\"4.6\",\"24.9%\",\"−1.4%\"],[\"2\",\"Cold Coffee\",\"137\",\"₹9,610\",\"4.6\",\"24.6%\",\"−0.7%\"]]",
             "kind": "expect"
           },
           {
-            "label": "the prep list is for tomorrow, Saturday",
+            "label": "the prep list is for tomorrow, Sunday",
             "ok": true,
-            "detail": "Tomorrow (Saturday): prepare about",
+            "detail": "Tomorrow (Sunday): prepare about",
             "kind": "expect"
           },
           {
-            "label": "tomorrow's list matches the worked-out numbers (Paneer Steamed Momos 7, Paneer Gravy Momos 3, Veg Steamed Momos 3, Chicken Momos 4, Cold Coffee 6)",
+            "label": "tomorrow's list matches the worked-out numbers (Paneer Steamed Momos 6, Paneer Gravy Momos 2, Veg Steamed Momos 3, Chicken Momos 5, Cold Coffee 5)",
             "ok": true,
-            "detail": "[[\"Paneer Steamed Momos\",\"7\",\"6\",\"6\"],[\"Cold Coffee\",\"6\",\"5.2\",\"6\"],[\"Chicken Momos\",\"4\",\"3\",\"4\"],[\"Veg Steamed Momos\",\"3\",\"2.5\",\"3\"],[\"Paneer Gravy Momos\",\"3\",\"2\",\"2\"]]",
+            "detail": "[[\"Paneer Steamed Momos\",\"6\",\"5\",\"6\"],[\"Cold Coffee\",\"5\",\"4.2\",\"5\"],[\"Chicken Momos\",\"5\",\"4\",\"4\"],[\"Veg Steamed Momos\",\"3\",\"2\",\"2\"],[\"Paneer Gravy Momos\",\"2\",\"1.5\",\"2\"]]",
             "kind": "expect"
           },
           {
             "label": "every item's seven weekday numbers match the worked-out suggestions (average of the last 6 weeks + 15%, rounded up)",
             "ok": true,
-            "detail": "[[\"Paneer Steamed Momos\",\"3\",\"3\",\"5\",\"4\",\"4\",\"7\",\"6\"],[\"Cold Coffee\",\"3\",\"3\",\"4\",\"3\",\"5\",\"6\",\"6\"]]",
+            "detail": "[[\"Paneer Steamed Momos\",\"3\",\"3\",\"4\",\"5\",\"5\",\"6\",\"6\"],[\"Cold Coffee\",\"3\",\"3\",\"3\",\"4\",\"5\",\"6\",\"5\"]]",
             "kind": "expect"
           },
           {
-            "label": "a bigger safety margin gives a bigger number (Paneer Steamed Momos on Saturday: 7 → 10)",
+            "label": "a bigger safety margin gives a bigger number (Paneer Steamed Momos on Saturday: 6 → 8)",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -4769,27 +4763,27 @@
         "title": "Compare outlets: side by side for the same dates",
         "checks": [
           {
-            "label": "Sales: Marketing Mart — Main ₹33,417, Marketing Mart — Second ₹17,492",
+            "label": "Sales: Marketing Mart — Main ₹32,874, Marketing Mart — Second ₹19,290",
             "ok": true,
-            "detail": "[\"Sales\",\"₹33,417\",\"₹17,492 −48% vs Marketing Mart — Main\"]",
+            "detail": "[\"Sales\",\"₹32,874\",\"₹19,290 −41% vs Marketing Mart — Main\"]",
             "kind": "expect"
           },
           {
-            "label": "Orders: 178 and 105",
+            "label": "Orders: 177 and 108",
             "ok": true,
-            "detail": "[\"Orders\",\"178\",\"105 −41% vs Marketing Mart — Main\"]",
+            "detail": "[\"Orders\",\"177\",\"108 −39% vs Marketing Mart — Main\"]",
             "kind": "expect"
           },
           {
-            "label": "the second outlet's sales are compared with the first (-48%)",
+            "label": "the second outlet's sales are compared with the first (-41%)",
             "ok": true,
-            "detail": "₹17,492 −48% vs Marketing Mart — Main",
+            "detail": "₹19,290 −41% vs Marketing Mart — Main",
             "kind": "expect"
           },
           {
-            "label": "each outlet has its own best sellers (Paneer Steamed Momos — 105 and Chicken Momos — 54)",
+            "label": "each outlet has its own best sellers (Paneer Steamed Momos — 105 and Chicken Momos — 62)",
             "ok": true,
-            "detail": " Dine-in: ₹8,544 · Delivery: ₹10,273 Marketing Mart — Second Best sellers and how the orders arrive Chicken Momos — 54 Cold Coffee — 39 Veg Steamed Momos — 39 Paneer Steamed Momos — 28 Paneer Gravy Momos — 25 31% 30% 39% Dine-in Takeaway Delivery Dine-in: ₹5,440 · Takeaway: ₹5,228 · Delivery: ₹6,824",
+            "detail": " Delivery: ₹11,116 · Dine-in: ₹7,090 Marketing Mart — Second Best sellers and how the orders arrive Chicken Momos — 62 Cold Coffee — 46 Paneer Steamed Momos — 34 Veg Steamed Momos — 31 Paneer Gravy Momos — 29 31% 39% 30% Takeaway Delivery Dine-in Takeaway: ₹6,020 · Delivery: ₹7,478 · Dine-in: ₹5,792",
             "kind": "expect"
           },
           {
@@ -4799,9 +4793,9 @@
             "kind": "expect"
           },
           {
-            "label": "for 2026-11-14 to 2026-11-20, picked in the calendar, the two outlets add up to the store's ₹10,342",
+            "label": "for 2026-11-15 to 2026-11-21, picked in the calendar, the two outlets add up to the store's ₹9,828",
             "ok": true,
-            "detail": "10342",
+            "detail": "9828",
             "kind": "expect"
           }
         ]
@@ -4811,15 +4805,15 @@
         "title": "Operations: cancellations and discounts",
         "checks": [
           {
-            "label": "31 orders were cancelled, 9.9% of 314",
+            "label": "32 orders were cancelled, 10.1% of 317",
             "ok": true,
-            "detail": "Cancelled orders 31 9.9% of 314 orders",
+            "detail": "Cancelled orders 32 10.1% of 317 orders",
             "kind": "expect"
           },
           {
-            "label": "coupon discounts are ₹561",
+            "label": "coupon discounts are ₹496",
             "ok": true,
-            "detail": "Discounts in total Coupons and coin discounts together Coupon discounts ₹561 Coin discounts ₹0 Orders with a coupon 31 of 283 Coupon discounts as a share of sales before discount 1.2%",
+            "detail": "Discounts in total Coupons and coin discounts together Coupon discounts ₹496 Coin discounts ₹0 Orders with a coupon 31 of 285 Coupon discounts as a share of sales before discount 1.0%",
             "kind": "expect"
           },
           {
@@ -4841,9 +4835,9 @@
             "kind": "expect"
           },
           {
-            "label": "net profit = 48523 net sales − 35% food − 22500 a month × 0.989 months = ₹9282",
+            "label": "net profit = 49719 net sales − 35% food − 22500 a month × 0.990 months = ₹10035",
             "ok": true,
-            "detail": "saw 9282",
+            "detail": "saw 10035",
             "kind": "expect"
           },
           {
@@ -4855,31 +4849,31 @@
           {
             "label": "the table lists every bill by name with its share for these days",
             "ok": true,
-            "detail": "Where the money goes Every expense for these days (monthly amounts shared out by the day) Net sales (without GST) ₹48,523 Food cost (35%) − ₹16,983 Gross profit ₹31,540 Marketing & ads − ₹2,473 Rent —",
+            "detail": "Where the money goes Every expense for these days (monthly amounts shared out by the day) Net sales (without GST) ₹49,719 Food cost (35%) − ₹17,401 Gross profit ₹32,317 Marketing & ads − ₹2,476 Rent —",
             "kind": "expect"
           },
           {
-            "label": "profit by outlet: Marketing Mart — Main ≈ ₹6227, Marketing Mart — Second ≈ ₹3055 (own bills + a share of the shared ones by sales)",
+            "label": "profit by outlet: Marketing Mart — Main ≈ ₹5940, Marketing Mart — Second ≈ ₹4094 (own bills + a share of the shared ones by sales)",
             "ok": true,
-            "detail": "[[\"Marketing Mart — Main\",\"₹31,864\",\"₹11,152\",\"₹14,484\",\"₹6,227\",\"19.5%\"],[\"Marketing Mart — Second\",\"₹16,659\",\"₹5,831\",\"₹7,774\",\"₹3,055\",\"18.3%\"]]",
+            "detail": "[[\"Marketing Mart — Main\",\"₹31,347\",\"₹10,971\",\"₹14,435\",\"₹5,940\",\"19.0%\"],[\"Marketing Mart — Second\",\"₹18,372\",\"₹6,430\",\"₹7,847\",\"₹4,094\",\"22.3%\"]]",
             "kind": "expect"
           },
           {
             "label": "a bill added by hand counts (₹1,000 a month more)",
             "ok": true,
-            "detail": "saw 8293",
+            "detail": "saw 9044",
             "kind": "expect"
           },
           {
             "label": "the removed bill still counts in the profit",
             "ok": true,
-            "detail": "saw 9282",
+            "detail": "saw 10035",
             "kind": "never"
           },
           {
             "label": "food cost 30% instead of 35% raises the profit to match",
             "ok": true,
-            "detail": "saw 11708",
+            "detail": "saw 12521",
             "kind": "expect"
           }
         ]
@@ -4897,7 +4891,7 @@
           {
             "label": "…and so is the profit",
             "ok": true,
-            "detail": "saw 9282",
+            "detail": "saw 10035",
             "kind": "expect"
           },
           {
@@ -4915,19 +4909,19 @@
           {
             "label": "…and the profit is the same again",
             "ok": true,
-            "detail": "saw 9282",
+            "detail": "saw 10035",
             "kind": "expect"
           },
           {
             "label": "changing a bill changes the profit",
             "ok": true,
-            "detail": "saw 4337",
+            "detail": "saw 5084",
             "kind": "expect"
           },
           {
             "label": "'Use the version saved to my store' puts the saved bill back",
             "ok": true,
-            "detail": "saw 9282",
+            "detail": "saw 10035",
             "kind": "expect"
           }
         ]
@@ -4951,7 +4945,7 @@
           {
             "label": "the file is named like a report and ends .xlsx",
             "ok": true,
-            "detail": "tablepe-marketing-mart-2026-10-22_to_2026-11-20.xlsx",
+            "detail": "tablepe-marketing-mart-2026-10-23_to_2026-11-21.xlsx",
             "kind": "expect"
           },
           {
@@ -4967,27 +4961,27 @@
             "kind": "never"
           },
           {
-            "label": "Summary: sales 50909, net 48523.31, GST 2385.69, orders 283, cancelled 31",
+            "label": "Summary: sales 52164, net 49718.57, GST 2445.43, orders 285, cancelled 32",
             "ok": true,
-            "detail": "[[\"Measure\",\"This period\",\"Previous period\"],[\"Sales (incl. GST)\",50909,51374],[\"Net sales (excl. GST)\",48523.31,48947.13],[\"GST collected\",2385.69,2426.87],[\"Orders\",283,285]]",
+            "detail": "[[\"Measure\",\"This period\",\"Previous period\"],[\"Sales (incl. GST)\",52164,52604],[\"Net sales (excl. GST)\",49718.57,50118.57],[\"GST collected\",2445.43,2485.43],[\"Orders\",285,288]]",
             "kind": "expect"
           },
           {
-            "label": "'Sales by day' has 30 days adding up to ₹50909",
+            "label": "'Sales by day' has 30 days adding up to ₹52164",
             "ok": true,
             "detail": "30 rows",
             "kind": "expect"
           },
           {
-            "label": "the GST sheet's days add up to ₹2385.69 GST, and its Total row says ₹2385.69 too",
+            "label": "the GST sheet's days add up to ₹2445.43 GST, and its Total row says ₹2445.43 too",
             "ok": true,
-            "detail": "29 days, total row [\"Total\",283,47723.31,1192.24,1193.45,2385.69,0,50909]",
+            "detail": "29 days, total row [\"Total\",285,48918.57,1222.08,1223.35,2445.43,0,52164]",
             "kind": "expect"
           },
           {
-            "label": "the Profit & loss sheet uses the bills typed earlier: net profit ≈ ₹9282",
+            "label": "the Profit & loss sheet uses the bills typed earlier: net profit ≈ ₹10035",
             "ok": true,
-            "detail": "sheet says 9282.09",
+            "detail": "sheet says 10034.81",
             "kind": "expect"
           }
         ]
@@ -5003,7 +4997,7 @@
             "kind": "expect"
           },
           {
-            "label": "Marketing Mart — Main's CSV adds up to ₹33417 and 178 orders (not the whole store's)",
+            "label": "Marketing Mart — Main's CSV adds up to ₹32874 and 177 orders (not the whole store's)",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -5017,7 +5011,7 @@
           {
             "label": "the weekly PDF is a real PDF file",
             "ok": true,
-            "detail": "7276 bytes",
+            "detail": "7337 bytes",
             "kind": "expect"
           },
           {
@@ -5029,7 +5023,7 @@
           {
             "label": "…and its summary holds at least the last 30 days' sales (the whole year includes them)",
             "ok": true,
-            "detail": "123960",
+            "detail": "125855",
             "kind": "expect"
           }
         ]
@@ -5039,15 +5033,15 @@
         "title": "GST and the daily cash close agree",
         "checks": [
           {
-            "label": "the GST total row: 283 orders, taxable ₹47,723, CGST ₹1,192, SGST ₹1,193, GST ₹2,386",
+            "label": "the GST total row: 285 orders, taxable ₹48,919, CGST ₹1,222, SGST ₹1,223, GST ₹2,445",
             "ok": true,
-            "detail": "Total 283 ₹47,723 ₹1,192 ₹1,193 ₹2,386 ₹50,909",
+            "detail": "Total 285 ₹48,919 ₹1,222 ₹1,223 ₹2,445 ₹52,164",
             "kind": "expect"
           },
           {
-            "label": "the cash close for 2026-11-19, picked in the calendar, equals that day's invoice total in the GST table (₹1565)",
+            "label": "the cash close for 2026-11-20, picked in the calendar, equals that day's invoice total in the GST table (₹2062)",
             "ok": true,
-            "detail": "₹1,565 vs 1565",
+            "detail": "₹2,062 vs 2062",
             "kind": "expect"
           }
         ]
@@ -5071,11 +5065,11 @@
           {
             "label": "the manager is offered Profit & loss or Reports",
             "ok": true,
-            "detail": "Take order | Dashboard | Orders | Menu | Tables | Printing | Analytics | Customers | Coupons | Storefront | Settings | View storefront | Overview | Sales | Items & stock | Customers | Compare outlets | Operations",
+            "detail": "Take order | Dashboard | Orders | Kitchen display | Bookings | Menu | Tables | Printing | Analytics | Customers | Ratings | Coupons | Storefront | Settings | View storefront | Overview | Sales | Items & stock | Customers | Compare outlets | Operations",
             "kind": "never"
           },
           {
-            "label": "…and sees the same sales (₹50,909)",
+            "label": "…and sees the same sales (₹52,164)",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -5107,7 +5101,7 @@
           {
             "label": "the accountant has every tab, including Profit & loss and Reports",
             "ok": true,
-            "detail": "Dashboard | Orders | Menu | Printing | Analytics | Customers | Coupons | Storefront | View storefront | Overview | Sales | Items & stock | Customers | Compare outlets | Operations | Profit & loss | Reports",
+            "detail": "Dashboard | Orders | Kitchen display | Menu | Printing | Analytics | Customers | Ratings | Coupons | Storefront | View storefront | Overview | Sales | Items & stock | Customers | Compare outlets | Operations | Profit & loss | Reports",
             "kind": "expect"
           },
           {
@@ -5119,7 +5113,7 @@
           {
             "label": "the cashier has Analytics in the sidebar",
             "ok": true,
-            "detail": "Take order, Dashboard, Orders, Menu, Tables, Printing, Coupons, Storefront",
+            "detail": "Take order, Dashboard, Orders, Kitchen display, Bookings, Menu, Tables, Printing, Coupons, Storefront",
             "kind": "never"
           },
           {
@@ -5208,8 +5202,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T22:48:52.769Z",
-    "durationMs": 42442,
+    "at": "2026-11-20T23:13:09.303Z",
+    "durationMs": 44746,
     "steps": [
       {
         "n": 1,
@@ -5374,7 +5368,7 @@
           {
             "label": "the panel says 'Table T9' and 'Rooftop · 6 seats · Free'",
             "ok": true,
-            "detail": "Table T9 Rooftop · 6 seats · Free http://localhost:3170/t/6b00ce2ebb39252e9f0625",
+            "detail": "Table T9 Rooftop · 6 seats · Free http://localhost:3170/t/6b00d3ddc7ea431ff66b6f",
             "kind": "expect"
           },
           {
@@ -5386,7 +5380,7 @@
           {
             "label": "the address printed under it is /t/<id>?k=<code> on the store's own site",
             "ok": true,
-            "detail": "http://localhost:3170/t/6b00ce2ebb39252e9f0625dc?k=W4S6axvE-HHOIh09WvGj-oDw",
+            "detail": "http://localhost:3170/t/6b00d3ddc7ea431ff66b6f86?k=3Bh-lveUcDIuhBv0kwH39mBg",
             "kind": "expect"
           },
           {
@@ -5410,7 +5404,7 @@
           {
             "label": "every table has its own address and its own code",
             "ok": true,
-            "detail": "http://localhost:3170/t/6b00ce2ebb39252e9f0625dc?k=W4S6axvE-HHOIh09WvGj-oDw | http://localhost:3170/t/6b00ce2fbb39252e9f0625ee?k=MlS0stT7xW0qNgVZi7MRgD5V | http://localhost:3170/t/6b00ce29bb39252e9f062124?k=6V4qfo323ERXVrTOVR-Ig3it",
+            "detail": "http://localhost:3170/t/6b00d3ddc7ea431ff66b6f86?k=3Bh-lveUcDIuhBv0kwH39mBg | http://localhost:3170/t/6b00d3dec7ea431ff66b6f96?k=PgJKmH8hl28guoB0rRsYh7Nx | http://localhost:3170/t/6b00d3d7c7ea431ff66b6ac0?k=cbwsF1Vg4nNWhK5orZ7e9bKN",
             "kind": "expect"
           },
           {
@@ -5593,8 +5587,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T22:48:04.265Z",
-    "durationMs": 54050,
+    "at": "2026-11-21T07:50:56.192Z",
+    "durationMs": 55212,
     "steps": [
       {
         "n": 1,
@@ -5663,13 +5657,13 @@
           {
             "label": "'Order #… placed' — 'Sent to the kitchen for Table D1.'",
             "ok": true,
-            "detail": "Order confirmed Order #0001 placed Sent to the kitchen for Table D1. Order type Dine-in · Table D1 Total ₹70 Running tab ₹70 Back to menu",
+            "detail": "Order confirmed Order #0001 placed Sent to the kitchen for Table D1. Order type Dine-in · Table D1 Total ₹70 Running tab ₹70 Follow your order Back to menu",
             "kind": "expect"
           },
           {
             "label": "it is a dine-in order for the table: 'Dine-in · Table D1', total ₹70, 'Running tab ₹70'",
             "ok": true,
-            "detail": "Order confirmed Order #0001 placed Sent to the kitchen for Table D1. Order type Dine-in · Table D1 Total ₹70 Running tab ₹70 Back to menu",
+            "detail": "Order confirmed Order #0001 placed Sent to the kitchen for Table D1. Order type Dine-in · Table D1 Total ₹70 Running tab ₹70 Follow your order Back to menu",
             "kind": "expect"
           }
         ]
@@ -5693,7 +5687,7 @@
           {
             "label": "the second order is ₹60 and the running tab becomes ₹130",
             "ok": true,
-            "detail": "Order confirmed Order #0002 placed Sent to the kitchen for Table D1. Order type Dine-in · Table D1 Total ₹60 Running tab ₹130 Back to menu",
+            "detail": "Order confirmed Order #0002 placed Sent to the kitchen for Table D1. Order type Dine-in · Table D1 Total ₹60 Running tab ₹130 Follow your order Back to menu",
             "kind": "expect"
           },
           {
@@ -5735,7 +5729,7 @@
           {
             "label": "'Seated now — 1' with 'Table D1 … 2 orders · tab ₹130'",
             "ok": true,
-            "detail": "Seated now — 1 Table D1 since 04:17 AM · 2 orders · tab ₹130 Move to… Table D2 Table D3 Table T1 Table T2 Table T3 Table T4 Table ",
+            "detail": "Seated now — 1 Table D1 since 01:20 PM · 2 orders · tab ₹130 Move to… Table D2 Table D3 Table T1 Table T2 Table T3 Table T4 Table ",
             "kind": "expect"
           },
           {
@@ -5747,7 +5741,7 @@
           {
             "label": "the Orders page lists both: '#0001 … Dina Diner 9877712345 DI Table D1 … ₹70 Placed' and '#0002 … ₹60'",
             "ok": true,
-            "detail": "#0001 04:17 AM Dina Diner 9877712345 DI Table D1 1 ₹70 Placed 0m Approve || #0002 04:17 AM Dina Diner 9877712345 DI Table D1 1 ₹60 Placed 0m Approve",
+            "detail": "#0001 01:20 PM Dina Diner 9877712345 DI Table D1 1 ₹70 Placed 0m Approve || #0002 01:20 PM Dina Diner 9877712345 DI Table D1 1 ₹60 Placed 0m Approve",
             "kind": "expect"
           },
           {
@@ -5771,7 +5765,7 @@
           {
             "label": "'Seated now' says 'Table D2 … moved: D1 → D2'",
             "ok": true,
-            "detail": "Seated now — 1 Table D2moved: D1 → D2 since 04:17 AM · 2 orders · tab ₹130 Move to… Table D1 Table D3 Table T1 Table T2 Table T3 Table T4 Table T5 Move Close Garden D1 Fr",
+            "detail": "Seated now — 1 Table D2moved: D1 → D2 since 01:20 PM · 2 orders · tab ₹130 Move to… Table D1 Table D3 Table T1 Table T2 Table T3 Table T4 Table T5 Move Close Garden D1 Fr",
             "kind": "expect"
           },
           {
@@ -5843,7 +5837,7 @@
           {
             "label": "the new diner's order goes to D3 ('Sent to the kitchen for Table D3', 'Running tab ₹70')",
             "ok": true,
-            "detail": "Order confirmed Order #0003 placed Sent to the kitchen for Table D3. Order type Dine-in · Table D3 Total ₹70 Running tab ₹70 Back to menu",
+            "detail": "Order confirmed Order #0003 placed Sent to the kitchen for Table D3. Order type Dine-in · Table D3 Total ₹70 Running tab ₹70 Follow your order Back to menu",
             "kind": "expect"
           },
           {
@@ -5867,7 +5861,7 @@
           {
             "label": "after 'Cancel / void' the order #0003 is Cancelled",
             "ok": true,
-            "detail": "#0003 04:17 AM Rohan Other 9877799999 DI Table D3 1 ₹70 Cancelled —",
+            "detail": "#0003 01:20 PM Rohan Other 9877799999 DI Table D3 1 ₹70 Cancelled —",
             "kind": "expect"
           },
           {
@@ -5903,7 +5897,7 @@
           {
             "label": "the panel shows a new code for the same table",
             "ok": true,
-            "detail": "http://localhost:3170/t/6b00cdf3553f97dc7b29adf4?k=aJBUOekhGOHrCX2emXvNU2zn → http://localhost:3170/t/6b00cdf3553f97dc7b29adf4?k=BQJOeW5uMnU84H3z_8RntzFj",
+            "detail": "http://localhost:3170/t/6b014d2e58255bfb222aa43f?k=L3zoLET5thsiDI2KyVCYpIAX → http://localhost:3170/t/6b014d2e58255bfb222aa43f?k=GIYKLQEhxnys2Fo834yTJQhO",
             "kind": "expect"
           },
           {
@@ -5992,8 +5986,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T22:54:44.741Z",
-    "durationMs": 175063,
+    "at": "2026-11-20T23:17:15.740Z",
+    "durationMs": 179321,
     "steps": [
       {
         "n": 1,
@@ -6086,7 +6080,7 @@
           {
             "label": "the counter's Orders screen has order A as 'Placed' with its wait running ('0m')",
             "ok": true,
-            "detail": "#0001 04:22 AM Meera Late 9877700077 TA 1 ₹70 Placed 0m Accepted",
+            "detail": "#0001 04:44 AM Meera Late 9877700077 TA 1 ₹70 Placed 0m Accepted",
             "kind": "expect"
           },
           {
@@ -6098,7 +6092,7 @@
           {
             "label": "over a minute later the status still says 'Placed' and the wait shows 1m or more",
             "ok": true,
-            "detail": "#0001 04:22 AM Meera Late 9877700077 TA 1 ₹70 Placed 1m Accepted",
+            "detail": "#0001 04:44 AM Meera Late 9877700077 TA 1 ₹70 Placed 1m Accepted",
             "kind": "expect"
           },
           {
@@ -6386,7 +6380,7 @@
           {
             "label": "completed: order A has no timer and no warning",
             "ok": true,
-            "detail": "Completed · #0001 04:22 AM Meera Late 9877700077 TA 1 ₹70 Completed —",
+            "detail": "Completed · #0001 04:44 AM Meera Late 9877700077 TA 1 ₹70 Completed —",
             "kind": "expect"
           },
           {
@@ -6527,8 +6521,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T19:03:51.891Z",
-    "durationMs": 52370,
+    "at": "2026-11-21T07:51:53.642Z",
+    "durationMs": 51448,
     "steps": [
       {
         "n": 1,
@@ -6633,7 +6627,7 @@
           {
             "label": "each locked one has ONE box: 'Add … for this client' (with what it costs a month)",
             "ok": true,
-            "detail": "{\"lockedCount\":13,\"addBoxes\":1,\"marketingRow\":\"Marketing Not in the Starter plan Add for this client · +₹100 a month\"}",
+            "detail": "{\"lockedCount\":14,\"addBoxes\":1,\"marketingRow\":\"Marketing Not in the Starter plan Add for this client · +₹100 a month\"}",
             "kind": "expect"
           },
           {
@@ -6879,7 +6873,7 @@
           {
             "label": "Save: 'Saved.' and the form is now a saved draft with its own address",
             "ok": true,
-            "detail": "http://localhost:3171/platform/onboarding/6b009977c8e7f487fc9f67d1",
+            "detail": "http://localhost:3171/platform/onboarding/6b014d79a99bf3a7791d3767",
             "kind": "expect"
           },
           {
@@ -7065,7 +7059,7 @@
           {
             "label": "no blank pages: every page has real content (not just a footer) — printing it gives no empty sheets",
             "ok": true,
-            "detail": "1166 / 1040 / 624",
+            "detail": "1187 / 1040 / 624",
             "kind": "expect"
           },
           {
@@ -7328,8 +7322,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T19:04:32.377Z",
-    "durationMs": 35292,
+    "at": "2026-11-21T07:52:34.938Z",
+    "durationMs": 35276,
     "steps": [
       {
         "n": 1,
@@ -7733,8 +7727,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:27:20.510Z",
-    "durationMs": 54378,
+    "at": "2026-11-21T07:53:33.942Z",
+    "durationMs": 52984,
     "steps": [
       {
         "n": 1,
@@ -8001,7 +7995,7 @@
           {
             "label": "…in the store's own words: three lines, with the customer's first name, the outlet, the store, the code and the minutes filled in",
             "ok": true,
-            "detail": "\"Hi Linked, welcome to Main\\n171370 is your Acme Momos code.\\nValid for 10 minutes.\"",
+            "detail": "\"Hi Linked, welcome to Main\\n919057 is your Acme Momos code.\\nValid for 10 minutes.\"",
             "kind": "expect"
           },
           {
@@ -8097,7 +8091,7 @@
           {
             "label": "the customer (Asha) got the code on WhatsApp from the store's number",
             "ok": true,
-            "detail": "621243",
+            "detail": "164058",
             "kind": "expect"
           },
           {
@@ -8163,7 +8157,7 @@
           {
             "label": "…in the 'Code message' wording",
             "ok": true,
-            "detail": "Code 419064 for Acme Momos",
+            "detail": "Code 495900 for Acme Momos",
             "kind": "expect"
           },
           {
@@ -8235,13 +8229,13 @@
           {
             "label": "…the code fills {{1}}",
             "ok": true,
-            "detail": "760519",
+            "detail": "482582",
             "kind": "expect"
           },
           {
             "label": "…and also goes to the Copy-code button",
             "ok": true,
-            "detail": "{\"type\":\"button\",\"sub_type\":\"url\",\"index\":\"0\",\"parameters\":[{\"type\":\"text\",\"text\":\"760519\"}]}",
+            "detail": "{\"type\":\"button\",\"sub_type\":\"url\",\"index\":\"0\",\"parameters\":[{\"type\":\"text\",\"text\":\"482582\"}]}",
             "kind": "expect"
           },
           {
@@ -8324,8 +8318,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:27:53.833Z",
-    "durationMs": 33290,
+    "at": "2026-11-21T07:38:04.252Z",
+    "durationMs": 33856,
     "steps": [
       {
         "n": 1,
@@ -8424,13 +8418,13 @@
           {
             "label": "…in the store's own words",
             "ok": true,
-            "detail": "Your Acme code: 728363",
+            "detail": "Your Acme code: 636611",
             "kind": "expect"
           },
           {
             "label": "…within seconds",
             "ok": true,
-            "detail": "1234 ms",
+            "detail": "1238 ms",
             "kind": "expect"
           },
           {
@@ -8502,7 +8496,7 @@
           {
             "label": "every variable is filled in, the four lines arrive as four lines",
             "ok": true,
-            "detail": "\"Hi Ravi\\n924404 — Acme / Main\\nPhone 98112 00031 · 20 Nov 2026 5:57 am\\nValid 10 min · Help: +91 98765 43210\"",
+            "detail": "\"Hi Ravi\\n500529 — Acme / Main\\nPhone 98112 00031 · 21 Nov 2026 1:07 pm\\nValid 10 min · Help: +91 98765 43210\"",
             "kind": "expect"
           },
           {
@@ -8550,7 +8544,7 @@
           {
             "label": "a code goes out at once even with 30 broadcast messages queued ahead of it",
             "ok": true,
-            "detail": "200 in 2046 ms",
+            "detail": "200 in 2035 ms",
             "kind": "expect"
           },
           {
@@ -8568,7 +8562,7 @@
           {
             "label": "the codes were spread over BOTH connected numbers (picked at random)",
             "ok": true,
-            "detail": "{\"919000000002\":8,\"919000000001\":9}",
+            "detail": "{\"919000000002\":9,\"919000000001\":8}",
             "kind": "expect"
           },
           {
@@ -8640,13 +8634,13 @@
           {
             "label": "the code goes through the gateway in the 'Code message' wording",
             "ok": true,
-            "detail": "200 Code 339511 for Acme",
+            "detail": "200 Code 939728 for Acme",
             "kind": "expect"
           },
           {
             "label": "an SMS 'Code message' can use the same variables",
             "ok": true,
-            "detail": "115071 is your Acme code, there (Main)",
+            "detail": "971362 is your Acme code, there (Main)",
             "kind": "expect"
           }
         ]
@@ -8759,8 +8753,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:28:38.185Z",
-    "durationMs": 36030,
+    "at": "2026-11-21T07:54:17.096Z",
+    "durationMs": 37126,
     "steps": [
       {
         "n": 1,
@@ -8841,7 +8835,7 @@
           {
             "label": "a fresh page, same number: refused (429) and taken to the code step with the countdown still running",
             "ok": true,
-            "detail": "429 · 24s",
+            "detail": "429 · 25s",
             "kind": "expect"
           }
         ]
@@ -8901,7 +8895,7 @@
           {
             "label": "the new code is on screen",
             "ok": true,
-            "detail": "688261",
+            "detail": "124092",
             "kind": "expect"
           }
         ]
@@ -8930,8 +8924,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:29:15.067Z",
-    "durationMs": 32713,
+    "at": "2026-11-21T07:54:53.064Z",
+    "durationMs": 29953,
     "steps": [
       {
         "n": 0,
@@ -9030,7 +9024,7 @@
           {
             "label": "it arrived from one of the store's two numbers",
             "ok": true,
-            "detail": "[\"919000000001\"]",
+            "detail": "[\"919000000003\"]",
             "kind": "expect"
           }
         ]
@@ -9048,7 +9042,7 @@
           {
             "label": "both connected numbers were used (picked at random)",
             "ok": true,
-            "detail": "{\"919000000003\":4,\"919000000001\":10}",
+            "detail": "{\"919000000001\":7,\"919000000003\":7}",
             "kind": "expect"
           }
         ]
@@ -9115,12 +9109,12 @@
     "id": "t25-otp-resend-api",
     "title": "Code resend rule — the API makes a number wait 30 s, 1 min, 2 min, 5 min, 15 min, 1 h, then 6 h between codes, however it is called",
     "status": "pass",
-    "pass": 40,
+    "pass": 43,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:27:57.963Z",
-    "durationMs": 4114,
+    "at": "2026-11-21T07:38:09.911Z",
+    "durationMs": 4752,
     "steps": [
       {
         "n": 1,
@@ -9241,6 +9235,12 @@
             "kind": "expect"
           },
           {
+            "label": "100 requests in a row for one number: only the first one sends a code",
+            "ok": true,
+            "detail": "1 sent",
+            "kind": "expect"
+          },
+          {
             "label": "writing the same number another way (+91, 0091, spaces, dashes, a leading 0) does NOT get another code",
             "ok": true,
             "detail": "429,429,429,429,429,429,429",
@@ -9259,6 +9259,12 @@
         "title": "each number has its own clock",
         "checks": [
           {
+            "label": "a different number is not held back by someone else's wait",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
             "label": "an email address has its own clock too",
             "ok": true,
             "detail": "",
@@ -9267,7 +9273,7 @@
           {
             "label": "the staff coin code for a number that is waiting on a sign-in code is still allowed (separate flow)",
             "ok": true,
-            "detail": "{\"channel\":\"sms\",\"devCode\":\"267408\",\"resendAfterSec\":30}",
+            "detail": "{\"channel\":\"sms\",\"devCode\":\"093401\",\"resendAfterSec\":30}",
             "kind": "expect"
           },
           {
@@ -9361,6 +9367,12 @@
             "kind": "expect"
           },
           {
+            "label": "the gateway is down: the customer is told the code couldn't be sent",
+            "ok": true,
+            "detail": "502 Couldn't send the code. Check the number and try again.",
+            "kind": "expect"
+          },
+          {
             "label": "…and no unsent code is left behind",
             "ok": true,
             "detail": "",
@@ -9410,8 +9422,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T22:50:05.404Z",
-    "durationMs": 9888,
+    "at": "2026-11-21T07:39:18.915Z",
+    "durationMs": 8015,
     "steps": [
       {
         "n": 1,
@@ -10128,7 +10140,7 @@
           {
             "label": "the inventory sees the whole API",
             "ok": true,
-            "detail": "312 routes, 182 change data",
+            "detail": "313 routes, 182 change data",
             "kind": "expect"
           },
           {
@@ -10229,8 +10241,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T10:33:48.399Z",
-    "durationMs": 5603,
+    "at": "2026-11-21T07:39:25.371Z",
+    "durationMs": 5653,
     "steps": [
       {
         "n": 1,
@@ -10299,7 +10311,7 @@
           {
             "label": "paging: the first page of two says there are more",
             "ok": true,
-            "detail": "2 2026-11-20T10:03:47.984Z",
+            "detail": "2 2026-11-21T07:09:24.996Z",
             "kind": "expect"
           },
           {
@@ -10676,8 +10688,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T10:34:37.708Z",
-    "durationMs": 45133,
+    "at": "2026-11-21T07:43:08.435Z",
+    "durationMs": 45738,
     "steps": [
       {
         "n": 1,
@@ -10782,7 +10794,7 @@
           {
             "label": "'View details' lists the items and the bill",
             "ok": true,
-            "detail": "2 × Veg Steamed Momos (5 pcs) ₹120 Items ₹120 Taxes ₹5.71 Total ₹120 Placed 20 Nov 2026, 4:03 pm",
+            "detail": "2 × Veg Steamed Momos (5 pcs) ₹120 Items ₹120 Taxes ₹5.71 Total ₹120 Placed 21 Nov 2026, 1:12 pm",
             "kind": "expect"
           }
         ]
@@ -10794,7 +10806,7 @@
           {
             "label": "(the order is on the dashboard)",
             "ok": true,
-            "detail": "6b002217dc5fa1615c228c5f",
+            "detail": "6b014b6631af39c0744cbe05",
             "kind": "expect"
           },
           {
@@ -11015,8 +11027,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:30:18.598Z",
-    "durationMs": 3134,
+    "at": "2026-11-21T07:43:12.789Z",
+    "durationMs": 3449,
     "steps": [
       {
         "n": 1,
@@ -11132,8 +11144,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T19:17:57.022Z",
-    "durationMs": 4206,
+    "at": "2026-11-21T07:38:31.163Z",
+    "durationMs": 3780,
     "steps": [
       {
         "n": 1,
@@ -11508,7 +11520,7 @@
           {
             "label": "three categories are made in one request (201)",
             "ok": true,
-            "detail": "201 {\"categories\":[{\"id\":\"6b009ce450422bcd60b6cc0d\",\"name\":\"Bulk Dosa\",\"parentId\":\"6b009ce450422bcd60b6cc07\",\"image\":{\"url\":",
+            "detail": "201 {\"categories\":[{\"id\":\"6b014a76d21a7ba8694a5d12\",\"name\":\"Bulk Dosa\",\"parentId\":\"6b014a76d21a7ba8694a5d0f\",\"image\":{\"url\":",
             "kind": "expect"
           },
           {
@@ -11771,8 +11783,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T19:17:51.906Z",
-    "durationMs": 45571,
+    "at": "2026-11-20T23:24:07.120Z",
+    "durationMs": 47509,
     "steps": [
       {
         "n": 1,
@@ -12290,8 +12302,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:31:21.740Z",
-    "durationMs": 9809,
+    "at": "2026-11-21T07:38:42.269Z",
+    "durationMs": 10290,
     "steps": [
       {
         "n": 1,
@@ -12300,7 +12312,7 @@
           {
             "label": "a 24-megapixel JPEG at quality 95 (about 19 MB) is accepted",
             "ok": true,
-            "detail": "201 19860 KB",
+            "detail": "201 19859 KB",
             "kind": "expect"
           },
           {
@@ -12310,9 +12322,9 @@
             "kind": "expect"
           },
           {
-            "label": "it is now 310 KB — under the 400 KB target and at least 20 times smaller than the original",
+            "label": "it is now 305 KB — under the 400 KB target and at least 20 times smaller than the original",
             "ok": true,
-            "detail": "19860 KB → 310 KB",
+            "detail": "19859 KB → 305 KB",
             "kind": "expect"
           },
           {
@@ -12324,13 +12336,13 @@
           {
             "label": "the answer reports the real final size, bytes and the original's bytes",
             "ok": true,
-            "detail": "{\"w\":1600,\"h\":1067,\"bytes\":317646}",
+            "detail": "{\"w\":1600,\"h\":1067,\"bytes\":312592}",
             "kind": "expect"
           },
           {
             "label": "it is stored inside this store's own folder, with a name the uploader doesn't control",
             "ok": true,
-            "detail": "6aff94d2c31b944342d7b41c/6aff94d2c31b944342d7b41f/menu-items/ff87f76a-5593-4103-8b30-e4bc0af7b056.webp",
+            "detail": "6b014a7a67bc91685774a446/6b014a7a67bc91685774a449/menu-items/8d360b66-80c0-4723-b806-3cd1ae13abc7.webp",
             "kind": "expect"
           }
         ]
@@ -12390,7 +12402,7 @@
           {
             "label": "very grainy detail still ends up under the 400 KB target",
             "ok": true,
-            "detail": "12369 KB → 284 KB",
+            "detail": "12369 KB → 285 KB",
             "kind": "expect"
           },
           {
@@ -12414,7 +12426,7 @@
           {
             "label": "a \"pixel bomb\" (225 megapixels, only 672 KB on disk) is shrunk safely and quickly",
             "ok": true,
-            "detail": "201 in 363 ms",
+            "detail": "201 in 378 ms",
             "kind": "expect"
           },
           {
@@ -12474,7 +12486,7 @@
           {
             "label": "…in a reasonable time",
             "ok": true,
-            "detail": "807 ms",
+            "detail": "872 ms",
             "kind": "expect"
           },
           {
@@ -12498,7 +12510,7 @@
           {
             "label": "the platform owner can change the compression settings",
             "ok": true,
-            "detail": "200 {\"provider\":\"local\",\"updatedAt\":\"2026-11-20T00:31:20.898Z\",\"limits\":{\"maxPerItem",
+            "detail": "200 {\"provider\":\"local\",\"updatedAt\":\"2026-11-21T07:38:41.461Z\",\"limits\":{\"maxPerItem",
             "kind": "expect"
           },
           {
@@ -12539,8 +12551,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:31:45.452Z",
-    "durationMs": 3663,
+    "at": "2026-11-21T07:38:47.094Z",
+    "durationMs": 3807,
     "steps": [
       {
         "n": 1,
@@ -12549,7 +12561,7 @@
           {
             "label": "the upload's answer carries THIS deployment's domain",
             "ok": true,
-            "detail": "https://img.example.test/uploads/6aff94f03bbf819449f62b93/6aff94f03bbf819449f62b96/menu-items/33d17a8d-1517-480c-be1e-ec8e38f664ec.webp",
+            "detail": "https://img.example.test/uploads/6b014a86e7e741316c8c6af4/6b014a86e7e741316c8c6af7/menu-items/112169ef-2374-4592-a22c-8c29e39bf5c0.webp",
             "kind": "expect"
           },
           {
@@ -12561,7 +12573,7 @@
           {
             "label": "the dashboard sent the full address — the database keeps only the path",
             "ok": true,
-            "detail": "/uploads/6aff94f03bbf819449f62b93/6aff94f03bbf819449f62b96/menu-items/33d17a8d-1517-480c-be1e-ec8e38f664ec.webp",
+            "detail": "/uploads/6b014a86e7e741316c8c6af4/6b014a86e7e741316c8c6af7/menu-items/112169ef-2374-4592-a22c-8c29e39bf5c0.webp",
             "kind": "expect"
           },
           {
@@ -12579,7 +12591,7 @@
           {
             "label": "a category's picture is kept domain-free as well",
             "ok": true,
-            "detail": "/uploads/6aff94f03bbf819449f62b93/6aff94f03bbf819449f62b96/menu-items/15e85c90-2a4b-43a3-a2fe-ecf1aa66a551.webp",
+            "detail": "/uploads/6b014a86e7e741316c8c6af4/6b014a86e7e741316c8c6af7/menu-items/9ef4a060-7ff1-4b32-a632-57bb1628d76d.webp",
             "kind": "expect"
           },
           {
@@ -12597,13 +12609,13 @@
           {
             "label": "an address saved from localhost now points at this deployment",
             "ok": true,
-            "detail": "https://img.example.test/uploads/6aff94f03bbf819449f62b93/6aff94f03bbf819449f62b96/menu-items/01234567-1111-4222-8333-000000000001.webp",
+            "detail": "https://img.example.test/uploads/6b014a86e7e741316c8c6af4/6b014a86e7e741316c8c6af7/menu-items/01234567-1111-4222-8333-000000000001.webp",
             "kind": "expect"
           },
           {
             "label": "an address saved with an OLD domain now points at this deployment",
             "ok": true,
-            "detail": "https://img.example.test/uploads/6aff94f03bbf819449f62b93/6aff94f03bbf819449f62b96/menu-items/01234567-1111-4222-8333-000000000002.webp",
+            "detail": "https://img.example.test/uploads/6b014a86e7e741316c8c6af4/6b014a86e7e741316c8c6af7/menu-items/01234567-1111-4222-8333-000000000002.webp",
             "kind": "expect"
           },
           {
@@ -12651,7 +12663,7 @@
           {
             "label": "an edit that sends the full address back still stores only the path",
             "ok": true,
-            "detail": "/uploads/6aff94f03bbf819449f62b93/6aff94f03bbf819449f62b96/menu-items/33d17a8d-1517-480c-be1e-ec8e38f664ec.webp",
+            "detail": "/uploads/6b014a86e7e741316c8c6af4/6b014a86e7e741316c8c6af7/menu-items/112169ef-2374-4592-a22c-8c29e39bf5c0.webp",
             "kind": "expect"
           },
           {
@@ -12699,7 +12711,7 @@
           {
             "label": "the receipt preview's logo is an absolute address on this domain",
             "ok": true,
-            "detail": "<img class=\"logo\" src=\"https://img.example.test/uploads/6aff94f03bbf819449f62b93/6aff94f03bbf819449f62b96/menu-items/33d",
+            "detail": "<img class=\"logo\" src=\"https://img.example.test/uploads/6b014a86e7e741316c8c6af4/6b014a86e7e741316c8c6af7/menu-items/112",
             "kind": "expect"
           }
         ]
@@ -12735,7 +12747,7 @@
           {
             "label": "both now keep only the path",
             "ok": true,
-            "detail": "/uploads/6aff94f03bbf819449f62b93/6aff94",
+            "detail": "/uploads/6b014a86e7e741316c8c6af4/6b014a",
             "kind": "expect"
           },
           {
@@ -12764,8 +12776,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T19:43:17.490Z",
-    "durationMs": 21433,
+    "at": "2026-11-20T23:24:39.713Z",
+    "durationMs": 21420,
     "steps": [
       {
         "n": 1,
@@ -12774,7 +12786,7 @@
           {
             "label": "all 30+ categories are in the bar",
             "ok": true,
-            "detail": "35",
+            "detail": "36",
             "kind": "expect"
           },
           {
@@ -12792,7 +12804,7 @@
           {
             "label": "more chips than fit: the row scrolls sideways instead of wrapping",
             "ok": true,
-            "detail": "5177px of chips in 768px",
+            "detail": "5282px of chips in 768px",
             "kind": "expect"
           },
           {
@@ -12822,7 +12834,7 @@
           {
             "label": "choosing it scrolls the menu to that category, just under the (short) bar",
             "ok": true,
-            "detail": "{\"top\":238,\"bar\":227}",
+            "detail": "{\"top\":239,\"bar\":227}",
             "kind": "expect"
           },
           {
@@ -12900,7 +12912,7 @@
           {
             "label": "tablet: the sheet fits the screen and lists every category",
             "ok": true,
-            "detail": "792px of 1100px, 36 buttons",
+            "detail": "792px of 1100px, 37 buttons",
             "kind": "expect"
           },
           {
@@ -12912,7 +12924,7 @@
           {
             "label": "tablet: a category picked in the sheet lands just under the bar",
             "ok": true,
-            "detail": "{\"top\":244,\"bar\":232}",
+            "detail": "{\"top\":245,\"bar\":232}",
             "kind": "expect"
           },
           {
@@ -12954,7 +12966,7 @@
           {
             "label": "phone: the sheet fits the screen and lists every category",
             "ok": true,
-            "detail": "608px of 844px, 36 buttons",
+            "detail": "608px of 844px, 37 buttons",
             "kind": "expect"
           },
           {
@@ -13001,8 +13013,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T18:42:42.812Z",
-    "durationMs": 7687,
+    "at": "2026-11-20T23:24:54.592Z",
+    "durationMs": 8348,
     "steps": [
       {
         "n": 1,
@@ -13304,8 +13316,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T19:15:03.713Z",
-    "durationMs": 5306,
+    "at": "2026-11-21T07:38:52.333Z",
+    "durationMs": 4434,
     "steps": [
       {
         "n": 1,
@@ -13452,7 +13464,7 @@
           {
             "label": "a picture is made and added to the dish",
             "ok": true,
-            "detail": "200 {\"item\":{\"id\":\"6b009c35d7fb339023460cbb\",\"categoryId\":\"6b009c35d7fb339023460cb5\",\"name\":\"Kadai Paneer\",\"description\":\"Pa",
+            "detail": "200 {\"item\":{\"id\":\"6b014a8a71944d4fe23a59a2\",\"categoryId\":\"6b014a8a71944d4fe23a59a0\",\"name\":\"Kadai Paneer\",\"description\":\"Pa",
             "kind": "expect"
           },
           {
@@ -13476,13 +13488,13 @@
           {
             "label": "the picture was compressed to WebP, stored in the store's own folder, and saved without a domain",
             "ok": true,
-            "detail": "/uploads/6b009c35d7fb339023460c74/6b009c35d7fb339023460c77/m",
+            "detail": "/uploads/6b014a8a71944d4fe23a595f/6b014a8a71944d4fe23a5962/m",
             "kind": "expect"
           },
           {
             "label": "…and the menu hands out a full address",
             "ok": true,
-            "detail": "http://localhost:3101/uploads/6b009c35d7fb33902346",
+            "detail": "http://localhost:3101/uploads/6b014a8a71944d4fe23a",
             "kind": "expect"
           },
           {
@@ -13506,7 +13518,7 @@
           {
             "label": "…at the same time, not one after another (3 × 0.4 s took under 1.1 s)",
             "ok": true,
-            "detail": "458 ms",
+            "detail": "437 ms",
             "kind": "expect"
           },
           {
@@ -13794,7 +13806,7 @@
           {
             "label": "…and the answer says which key was switched away from, and which made the picture",
             "ok": true,
-            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Third\"]}",
+            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Second account\"]}",
             "kind": "expect"
           },
           {
@@ -13812,7 +13824,7 @@
           {
             "label": "…and the answer says which key was switched away from, and which made the picture",
             "ok": true,
-            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Second account\"]}",
+            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Third\"]}",
             "kind": "expect"
           },
           {
@@ -13830,7 +13842,7 @@
           {
             "label": "…and the answer says which key was switched away from, and which made the picture",
             "ok": true,
-            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Third\"]}",
+            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Second account\"]}",
             "kind": "expect"
           },
           {
@@ -13848,7 +13860,7 @@
           {
             "label": "…and the answer says which key was switched away from, and which made the picture",
             "ok": true,
-            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Second account\"]}",
+            "detail": "{\"rested\":[\"Main account\"],\"used\":[\"Third\"]}",
             "kind": "expect"
           },
           {
@@ -13937,8 +13949,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T19:14:57.586Z",
-    "durationMs": 18998,
+    "at": "2026-11-20T23:25:24.946Z",
+    "durationMs": 19788,
     "steps": [
       {
         "n": 1,
@@ -14198,8 +14210,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:32:59.034Z",
-    "durationMs": 39044,
+    "at": "2026-11-20T23:26:04.569Z",
+    "durationMs": 39553,
     "steps": [
       {
         "n": 0,
@@ -14243,8 +14255,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T18:44:18.278Z",
-    "durationMs": 46949,
+    "at": "2026-11-20T23:26:53.179Z",
+    "durationMs": 48540,
     "steps": [
       {
         "n": 1,
@@ -14607,7 +14619,7 @@
           {
             "label": "desktop: opening takes long enough to WATCH (about 0.8 s), without dragging",
             "ok": true,
-            "detail": "792 ms",
+            "detail": "799 ms",
             "kind": "expect"
           },
           {
@@ -14637,7 +14649,7 @@
           {
             "label": "desktop: closing is visible too (about 0.7 s)",
             "ok": true,
-            "detail": "664 ms",
+            "detail": "662 ms",
             "kind": "expect"
           },
           {
@@ -14715,7 +14727,7 @@
           {
             "label": "phone: opening takes long enough to WATCH (about 1.0 s), without dragging",
             "ok": true,
-            "detail": "1011 ms",
+            "detail": "1019 ms",
             "kind": "expect"
           },
           {
@@ -14743,9 +14755,9 @@
             "kind": "expect"
           },
           {
-            "label": "phone: closing is visible too (about 0.8 s)",
+            "label": "phone: closing is visible too (about 0.9 s)",
             "ok": true,
-            "detail": "846 ms",
+            "detail": "870 ms",
             "kind": "expect"
           },
           {
@@ -14840,8 +14852,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T10:35:07.633Z",
-    "durationMs": 29901,
+    "at": "2026-11-21T07:43:46.806Z",
+    "durationMs": 33353,
     "steps": [
       {
         "n": 1,
@@ -15131,8 +15143,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T10:35:19.673Z",
-    "durationMs": 12014,
+    "at": "2026-11-21T07:44:01.914Z",
+    "durationMs": 13938,
     "steps": [
       {
         "n": 1,
@@ -15230,8 +15242,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T00:34:43.126Z",
-    "durationMs": 9280,
+    "at": "2026-11-20T23:27:50.456Z",
+    "durationMs": 10080,
     "steps": [
       {
         "n": 0,
@@ -15605,8 +15617,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T20:03:28.993Z",
-    "durationMs": 8900,
+    "at": "2026-11-20T23:27:59.880Z",
+    "durationMs": 9358,
     "steps": [
       {
         "n": 1,
@@ -15651,7 +15663,7 @@
           {
             "label": "it is a stored picture (not a data: link)",
             "ok": true,
-            "detail": "http://localhost:3097/uploads/6b00a1f3eae59394bc457a86/6b00a1f3eae59394bc457a8b/",
+            "detail": "http://localhost:3097/uploads/6b00d6cf63f068be118b233d/6b00d6cf63f068be118b2340/",
             "kind": "expect"
           }
         ]
@@ -15788,8 +15800,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T19:14:26.583Z",
-    "durationMs": 16633,
+    "at": "2026-11-20T23:28:19.018Z",
+    "durationMs": 19074,
     "steps": [
       {
         "n": 1,
@@ -15804,13 +15816,13 @@
           {
             "label": "the list uses several columns on a wide screen",
             "ok": true,
-            "detail": "4 columns, 4 rows, 16 groups",
+            "detail": "5 columns, 4 rows, 16 groups",
             "kind": "expect"
           },
           {
             "label": "the list is one long column on a wide screen",
             "ok": true,
-            "detail": "4 columns",
+            "detail": "5 columns",
             "kind": "never"
           },
           {
@@ -16104,13 +16116,13 @@
           {
             "label": "the pop-up shows the renamed group",
             "ok": true,
-            "detail": "‹ › Veg Steamed Momos Veg Steamed Momos from ₹60 Veg Steamed Momos — made fresh to order CHOOSE A SIZE Required 5 pcs ₹60 8 pcs ₹90 T46 DIPS & SAUCES Optional Mint Dip +₹10 Cheese Dip +₹35 Mayonnaise ",
+            "detail": "Veg Steamed Momos from ₹60 Veg Steamed Momos — made fresh to order CHOOSE A SIZE Required 5 pcs ₹60 8 pcs ₹90 T46 DIPS & SAUCES Optional Mint Dip +₹10 Cheese Dip +₹35 Mayonnaise +₹15 Garlic Dip +₹25 T",
             "kind": "expect"
           },
           {
             "label": "…with the new prices and options",
             "ok": true,
-            "detail": "‹ › Veg Steamed Momos Veg Steamed Momos from ₹60 Veg Steamed Momos — made fresh to order CHOOSE A SIZE Required 5 pcs ₹60 8 pcs ₹90 T46 DIPS & SAUCES Optional Mint Dip +₹10 Cheese Dip +₹35 Mayonnaise +₹15 Garlic Dip +₹25 T46 REQUIRED CHOICE Optional Veg Free Non-veg +₹20 − 1 + Add · ₹60 Cancel",
+            "detail": "Veg Steamed Momos from ₹60 Veg Steamed Momos — made fresh to order CHOOSE A SIZE Required 5 pcs ₹60 8 pcs ₹90 T46 DIPS & SAUCES Optional Mint Dip +₹10 Cheese Dip +₹35 Mayonnaise +₹15 Garlic Dip +₹25 T46 REQUIRED CHOICE Optional Veg Free Non-veg +₹20 − 1 + Add · ₹60 Cancel",
             "kind": "expect"
           },
           {
@@ -16145,8 +16157,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T19:42:09.191Z",
-    "durationMs": 83151,
+    "at": "2026-11-20T23:29:43.768Z",
+    "durationMs": 84675,
     "steps": [
       {
         "n": 1,
@@ -16814,8 +16826,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T19:42:36.669Z",
-    "durationMs": 26563,
+    "at": "2026-11-20T23:30:11.808Z",
+    "durationMs": 27962,
     "steps": [
       {
         "n": 1,
@@ -17279,8 +17291,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T19:42:55.099Z",
-    "durationMs": 17608,
+    "at": "2026-11-20T23:30:31.060Z",
+    "durationMs": 19180,
     "steps": [
       {
         "n": 1,
@@ -17564,8 +17576,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T19:06:13.183Z",
-    "durationMs": 9438,
+    "at": "2026-11-20T23:30:41.747Z",
+    "durationMs": 10616,
     "steps": [
       {
         "n": 1,
@@ -17783,8 +17795,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T19:15:29.647Z",
-    "durationMs": 25067,
+    "at": "2026-11-20T23:31:08.036Z",
+    "durationMs": 26220,
     "steps": [
       {
         "n": 1,
@@ -17955,7 +17967,7 @@
           {
             "label": "changing only the kitchen note sends a ticket that says what the note is now",
             "ok": true,
-            "detail": "*** ORDER CHANGED *** | Only the kitchen note changed | ------------------------------------------------ | KITCHEN ORDER | ------------------------------------------------ | Order #0006 | Takeaway | 21 Nov 2026, 12:45 am | ------------------------------------------------ | Note is now: less spicy please | ------------------------------------------------ |",
+            "detail": "*** ORDER CHANGED *** | Only the kitchen note changed | ------------------------------------------------ | KITCHEN ORDER | ------------------------------------------------ | Order #0006 | Takeaway | 21 Nov 2026, 05:00 am | ------------------------------------------------ | Note is now: less spicy please | ------------------------------------------------ |",
             "kind": "expect"
           },
           {
@@ -18236,8 +18248,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T22:51:39.894Z",
-    "durationMs": 67200,
+    "at": "2026-11-21T07:57:41.177Z",
+    "durationMs": 66564,
     "steps": [
       {
         "n": 1,
@@ -18371,8 +18383,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T22:50:23.924Z",
-    "durationMs": 7625,
+    "at": "2026-11-21T07:38:59.206Z",
+    "durationMs": 6060,
     "steps": [
       {
         "n": 1,
@@ -18531,7 +18543,7 @@
           {
             "label": "outside its hours a dish shows when it IS available instead of a price",
             "ok": true,
-            "detail": "Available 6:20 AM – 7:20 AM",
+            "detail": "Available 3:08 PM – 4:08 PM",
             "kind": "expect"
           },
           {
@@ -18543,7 +18555,7 @@
           {
             "label": "a customer can't order it now",
             "ok": true,
-            "detail": "409 {\"error\":\"Poha is only available 6:20 AM – 7:20 AM\"}",
+            "detail": "409 {\"error\":\"Poha is only available 3:08 PM – 4:08 PM\"}",
             "kind": "expect"
           },
           {
@@ -18585,7 +18597,7 @@
           {
             "label": "now the outlet offers pickup times, grouped by day",
             "ok": true,
-            "detail": "Today:76 Tomorrow:95",
+            "detail": "Today:41 Tomorrow:95",
             "kind": "expect"
           },
           {
@@ -18603,7 +18615,7 @@
           {
             "label": "a customer places a takeaway for a later time",
             "ok": true,
-            "detail": "201 2026-11-21T00:15:00.000Z",
+            "detail": "201 2026-11-21T09:00:00.000Z",
             "kind": "expect"
           },
           {
@@ -18633,7 +18645,7 @@
           {
             "label": "breakfast can be pre-ordered for a time when breakfast is served (hours are checked at the pickup time)",
             "ok": true,
-            "detail": "201 {\"order\":{\"id\":\"6b00ceac0530bd1b85fc466f\",\"orderNumber\":\"0007\",\"channel\":\"takeaway\",\"placedBy\":\"cust",
+            "detail": "201 {\"order\":{\"id\":\"6b014a9094256176cbfb5713\",\"orderNumber\":\"0007\",\"channel\":\"takeaway\",\"placedBy\":\"cust",
             "kind": "expect"
           },
           {
@@ -18807,7 +18819,7 @@
           {
             "label": "the storefront can show what it saves (₹130 separately, ₹110 as a combo → saves ₹20)",
             "ok": true,
-            "detail": "{\"parts\":[{\"itemId\":\"6b00ceac0530bd1b85fc4504\",\"name\":\"Veg Momos\",\"variantLabel\":null,\"quantity\":1,\"missing\":false},{\"itemId\":\"6b00ceac0530bd1b85fc450b\",\"name\":\"Masala Chai\",\"variantLabel\":null,\"quantity\":1,\"missing\":false}],\"separately\":13000,\"saves\":2000}",
+            "detail": "{\"parts\":[{\"itemId\":\"6b014a9094256176cbfb561d\",\"name\":\"Veg Momos\",\"variantLabel\":null,\"quantity\":1,\"missing\":false},{\"itemId\":\"6b014a9094256176cbfb561f\",\"name\":\"Masala Chai\",\"variantLabel\":null,\"quantity\":1,\"missing\":false}],\"separately\":13000,\"saves\":2000}",
             "kind": "expect"
           },
           {
@@ -18831,7 +18843,7 @@
           {
             "label": "an ordered combo carries what it is made of",
             "ok": true,
-            "detail": "[{\"itemId\":\"6b00ceac0530bd1b85fc4504\",\"name\":\"Veg Momos\",\"variantLabel\":null,\"quantity\":1},{\"itemId\":\"6b00ceac0530bd1b85fc450b\",\"name\":\"Masala Chai\",\"variantLabel\":null,\"quantity\":1}]",
+            "detail": "[{\"itemId\":\"6b014a9094256176cbfb561d\",\"name\":\"Veg Momos\",\"variantLabel\":null,\"quantity\":1},{\"itemId\":\"6b014a9094256176cbfb561f\",\"name\":\"Masala Chai\",\"variantLabel\":null,\"quantity\":1}]",
             "kind": "expect"
           },
           {
@@ -18855,7 +18867,7 @@
           {
             "label": "a pre-order's kitchen ticket starts with PRE-ORDER and the full pickup time",
             "ok": true,
-            "detail": "PRE-ORDER |            Pickup 5:45 AM, Sat 21 Nov | ------------------------------------------------ |                  KITCHEN ORDER",
+            "detail": "PRE-ORDER |            Pickup 2:30 PM, Sat 21 Nov | ------------------------------------------------ |                  KITCHEN ORDER",
             "kind": "expect"
           }
         ]
@@ -18867,7 +18879,7 @@
           {
             "label": "a 'buy 1 get 1 free' coupon on the Food category is created",
             "ok": true,
-            "detail": "201 {\"coupon\":{\"id\":\"6b00ceae0530bd1b85fc47cc\",\"code\":\"B1G1MOMO\",\"description\":\"\",\"discountType\":\"bogo\",\"value\":1,\"maxDiscou",
+            "detail": "201 {\"coupon\":{\"id\":\"6b014a9294256176cbfb5815\",\"code\":\"B1G1MOMO\",\"description\":\"\",\"discountType\":\"bogo\",\"value\":1,\"maxDiscou",
             "kind": "expect"
           },
           {
@@ -18928,12 +18940,12 @@
     "id": "t54-engagement-api",
     "title": "Bringing customers back — table bookings, ratings, order again, suggestions and abandoned-cart reminders (API rules)",
     "status": "pass",
-    "pass": 88,
+    "pass": 89,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T10:45:14.956Z",
-    "durationMs": 5247,
+    "at": "2026-11-21T07:32:47.962Z",
+    "durationMs": 5259,
     "steps": [
       {
         "n": 1,
@@ -18948,13 +18960,13 @@
           {
             "label": "now: today plus 7 days to choose from",
             "ok": true,
-            "detail": "8 2026-11-21",
+            "detail": "8 2026-11-22",
             "kind": "expect"
           },
           {
             "label": "tomorrow 7 PM is free for 4 (10 seats)",
             "ok": true,
-            "detail": "{\"at\":\"2026-11-21T13:30:00.000Z\",\"label\":\"7:00 PM\",\"available\":true,\"seatsLeft\":10}",
+            "detail": "{\"at\":\"2026-11-22T13:30:00.000Z\",\"label\":\"7:00 PM\",\"available\":true,\"seatsLeft\":10}",
             "kind": "expect"
           },
           {
@@ -19114,7 +19126,13 @@
             "kind": "expect"
           },
           {
-            "label": "too close to the time, she is told to call instead",
+            "label": "she books tomorrow evening",
+            "ok": true,
+            "detail": "201",
+            "kind": "expect"
+          },
+          {
+            "label": "too close to the time (inside the 2-day window), she is told to call instead",
             "ok": true,
             "detail": "409",
             "kind": "expect"
@@ -19272,7 +19290,7 @@
           {
             "label": "the momos come back as they were: Full, 2 of them, with cheese and the kitchen note",
             "ok": true,
-            "detail": "{\"itemId\":\"6b0024b9ae6ecc0e9e65111b\",\"variantId\":\"be3ebf42-cbf4-4163-83dc-55a89daf35d6\",\"modifierOptionIds\":[\"ab7b771a-da1b-4f39-9c98-cbc1b197334b\"],\"quantity\":2,\"note\":\"extra chutney\"}",
+            "detail": "{\"itemId\":\"6b01491ed6065da5d8205ab8\",\"variantId\":\"8f35c10c-ad90-4e7d-9888-abc9108eadbc\",\"modifierOptionIds\":[\"278e55fe-92a7-4aaa-8a52-55d46810501b\"],\"quantity\":2,\"note\":\"extra chutney\"}",
             "kind": "expect"
           },
           {
@@ -19314,13 +19332,13 @@
           {
             "label": "the owner picks what goes with momos (the dish itself and unknown dishes are dropped)",
             "ok": true,
-            "detail": "[\"6b0024b9ae6ecc0e9e651121\",\"6b0024b9ae6ecc0e9e651131\",\"6b0024b9ae6ecc0e9e651126\"]",
+            "detail": "[\"6b01491ed6065da5d8205aba\",\"6b01491ed6065da5d8205ac1\",\"6b01491ed6065da5d8205abc\"]",
             "kind": "expect"
           },
           {
             "label": "with momos in the cart: chai and lassi are suggested (the curry needs a spice choice, so it can't be one tap)",
             "ok": true,
-            "detail": "[\"6b0024b9ae6ecc0e9e651121\",\"6b0024b9ae6ecc0e9e651126\"]",
+            "detail": "[\"6b01491ed6065da5d8205aba\",\"6b01491ed6065da5d8205abc\"]",
             "kind": "expect"
           },
           {
@@ -19344,7 +19362,7 @@
           {
             "label": "with no picks, what others often ordered with it is suggested (roll → cola, ordered together 3 times)",
             "ok": true,
-            "detail": "[{\"itemId\":\"6b0024b9ae6ecc0e9e65112b\",\"variantId\":null}]",
+            "detail": "[{\"itemId\":\"6b01491ed6065da5d8205abe\",\"variantId\":null}]",
             "kind": "expect"
           },
           {
@@ -19422,7 +19440,7 @@
           {
             "label": "it says what she left, what it's worth, the store, and links straight to her cart",
             "ok": true,
-            "detail": "Hi Asha, 2× Veg Momos, 1× Masala Chai (₹170) is waiting at Acme: http://localhost:3070/main/order?cart=6b0024b99c9da075689317c8",
+            "detail": "Hi Asha, 2× Veg Momos, 1× Masala Chai (₹170) is waiting at Acme: http://localhost:3070/main/order?cart=6b01491e9727e4dacb74ac31",
             "kind": "expect"
           },
           {
@@ -19440,7 +19458,7 @@
           {
             "label": "the link's cart can be opened on another phone — dishes only, nothing personal",
             "ok": true,
-            "detail": "{\"lines\":[{\"itemId\":\"6b0024b9ae6ecc0e9e65111b\",\"variantId\":\"e0bbdca6-6f54-468b-aba9-3f07f72ca564\",\"modifierOptionIds\":[]",
+            "detail": "{\"lines\":[{\"itemId\":\"6b01491ed6065da5d8205ab8\",\"variantId\":\"78b32548-bf7e-47a4-9356-ec2d84f7488e\",\"modifierOptionIds\":[]",
             "kind": "expect"
           },
           {
@@ -19517,8 +19535,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T22:54:50.620Z",
-    "durationMs": 5018,
+    "at": "2026-11-20T23:32:35.126Z",
+    "durationMs": 5646,
     "steps": [
       {
         "n": 1,
@@ -19575,7 +19593,7 @@
           {
             "label": "a rider is added from the Delivery riders tab",
             "ok": true,
-            "detail": "[{\"id\":\"6b00cfb65c8b088635dfb3f2\",\"name\":\"Ramesh\",\"phone\":\"98765 43210\",\"isActive\":true,\"createdAt\":\"2026-11-20T22:54:46.989Z\"}]",
+            "detail": "[{\"id\":\"6b00d88f63f068be118b4043\",\"name\":\"Ramesh\",\"phone\":\"98765 43210\",\"isActive\":true,\"createdAt\":\"2026-11-20T23:32:31.374Z\"}]",
             "kind": "expect"
           },
           {
@@ -19605,7 +19623,7 @@
           {
             "label": "the row now says Out for delivery — with Ramesh",
             "ok": true,
-            "detail": "#0005 04:24 AM UI Tester Del 1 ₹90 Out for delivery with Ramesh 0m Delivered",
+            "detail": "#0006 05:02 AM UI Tester Del 1 ₹90 Out for delivery with Ramesh 0m Delivered",
             "kind": "expect"
           },
           {
@@ -19659,7 +19677,7 @@
           {
             "label": "a combo is created from the dish form",
             "ok": true,
-            "detail": "{\"items\":[{\"itemId\":\"6b00cf045c8b088635dfa1a7\",\"variantId\":null,\"quantity\":1}]}",
+            "detail": "{\"items\":[{\"itemId\":\"6b00d6cf63f068be118b24a0\",\"variantId\":null,\"quantity\":1}]}",
             "kind": "expect"
           },
           {
@@ -19748,8 +19766,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T10:45:27.518Z",
-    "durationMs": 7823,
+    "at": "2026-11-21T07:44:11.459Z",
+    "durationMs": 8754,
     "steps": [
       {
         "n": 1,
@@ -19770,7 +19788,7 @@
           {
             "label": "a breakfast dish outside its hours shows when it is served — and can't be opened",
             "ok": true,
-            "detail": "Poha Available 6:15 PM – 7:15 PM",
+            "detail": "Poha Available 3:14 PM – 4:14 PM",
             "kind": "expect"
           }
         ]
@@ -19830,7 +19848,7 @@
           {
             "label": "the confirmation says it is a pre-order and when to pick it up",
             "ok": true,
-            "detail": "Order confirmed Order #0003 placed It will be ready for you at your pickup time. Order type Takeaway · pre-order Pickup 5:00 PM today Total ₹200 Payment Cash / pay at counter Back to menu Follow your order",
+            "detail": "Order confirmed Order #0003 placed It will be ready for you at your pickup time. Order type Takeaway · pre-order Pickup 1:45 PM today Total ₹200 Payment Cash / pay at counter Follow your order Back to menu All my orders",
             "kind": "expect"
           },
           {
@@ -19890,7 +19908,7 @@
           {
             "label": "the booking is sent — the restaurant will confirm it",
             "ok": true,
-            "detail": "Free delivery on orders above ₹499Order now Acme Momos Menu My orders Order at table Book a table About us Contact & hours Booking request sent 1:00 PM tomorrow · table for 2 · B-0002 The restaurant w",
+            "detail": "Free delivery on orders above ₹499Order now Acme Momos Menu My orders Order at table Book a table About us Contact & hours Booking request sent 1:00 PM tomorrow · table for 2 · B-0001 The restaurant w",
             "kind": "expect"
           },
           {
@@ -19902,7 +19920,7 @@
           {
             "label": "the restaurant sees it with the guest's note",
             "ok": true,
-            "detail": "{\"id\":\"6b0024c7620fe03c812348fc\",\"code\":\"B-0002\",\"status\":\"requested\",\"statusLabel\":\"Waiting to be confirmed\",\"at\":\"2026-11-21T07:30:00.000Z\",\"endsAt\":\"2026-11-",
+            "detail": "{\"id\":\"6b014bcb31af39c0744cc312\",\"code\":\"B-0001\",\"status\":\"requested\",\"statusLabel\":\"Waiting to be confirmed\",\"at\":\"2026-11-22T07:30:00.000Z\",\"endsAt\":\"2026-11-",
             "kind": "expect"
           },
           {
@@ -19925,8 +19943,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T11:15:48.669Z",
-    "durationMs": 1377,
+    "at": "2026-11-20T23:32:45.459Z",
+    "durationMs": 1757,
     "steps": [
       {
         "n": 1,
@@ -19953,7 +19971,7 @@
           {
             "label": "the Pricing page quotes this outlet's real delivery fee (₹30), free-delivery limit (₹499) and minimum order (₹100)",
             "ok": true,
-            "detail": "[{\"id\":\"blk_xfcdyixw\",\"type\":\"heading\",\"text\":\"Pricing\",\"level\":2,\"align\":\"left\"",
+            "detail": "[{\"id\":\"blk_6wzwh1tw\",\"type\":\"heading\",\"text\":\"Pricing\",\"level\":2,\"align\":\"left\"",
             "kind": "expect"
           },
           {
@@ -20030,8 +20048,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T19:43:29.833Z",
-    "durationMs": 4145,
+    "at": "2026-11-21T07:39:03.429Z",
+    "durationMs": 3556,
     "steps": [
       {
         "n": 1,
@@ -20267,8 +20285,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T20:03:34.832Z",
-    "durationMs": 5083,
+    "at": "2026-11-20T23:32:55.257Z",
+    "durationMs": 5471,
     "steps": [
       {
         "n": 1,
@@ -20594,8 +20612,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T18:57:37.953Z",
-    "durationMs": 4514,
+    "at": "2026-11-21T07:44:16.854Z",
+    "durationMs": 4577,
     "steps": [
       {
         "n": 1,
@@ -20604,7 +20622,7 @@
           {
             "label": "'Open store dashboard' lands on /store/<store-name>/<store-id>",
             "ok": true,
-            "detail": "/store/acme-momos/6b00966c4d4320b22f126524",
+            "detail": "/store/acme-momos/6b014b5c31af39c0744cb871",
             "kind": "expect"
           }
         ]
@@ -20616,7 +20634,7 @@
           {
             "label": "the sidebar's Menu goes to …/menu",
             "ok": true,
-            "detail": "/store/acme-momos/6b00966c4d4320b22f126524/menu",
+            "detail": "/store/acme-momos/6b014b5c31af39c0744cb871/menu",
             "kind": "expect"
           },
           {
@@ -20628,19 +20646,19 @@
           {
             "label": "Orders goes to …/orders",
             "ok": true,
-            "detail": "/store/acme-momos/6b00966c4d4320b22f126524/orders",
+            "detail": "/store/acme-momos/6b014b5c31af39c0744cb871/orders",
             "kind": "expect"
           },
           {
             "label": "Settings goes to …/settings",
             "ok": true,
-            "detail": "/store/acme-momos/6b00966c4d4320b22f126524/settings",
+            "detail": "/store/acme-momos/6b014b5c31af39c0744cb871/settings",
             "kind": "expect"
           },
           {
             "label": "a tab inside Settings (Payments) keeps the prefix too",
             "ok": true,
-            "detail": "/store/acme-momos/6b00966c4d4320b22f126524/payments",
+            "detail": "/store/acme-momos/6b014b5c31af39c0744cb871/payments",
             "kind": "expect"
           },
           {
@@ -20658,25 +20676,25 @@
           {
             "label": "reloading a store page stays on it (a bookmark or a link to another admin works)",
             "ok": true,
-            "detail": "/store/acme-momos/6b00966c4d4320b22f126524/menu",
+            "detail": "/store/acme-momos/6b014b5c31af39c0744cb871/menu",
             "kind": "expect"
           },
           {
             "label": "a wrong or old store name in the address is corrected to the current one",
             "ok": true,
-            "detail": "/store/acme-momos/6b00966c4d4320b22f126524/orders",
+            "detail": "/store/acme-momos/6b014b5c31af39c0744cb871/orders",
             "kind": "expect"
           },
           {
             "label": "an old plain address (/orders) opened by the super admin goes to the store they last had open",
             "ok": true,
-            "detail": "/store/acme-momos/6b00966c4d4320b22f126524/orders",
+            "detail": "/store/acme-momos/6b014b5c31af39c0744cb871/orders",
             "kind": "expect"
           },
           {
             "label": "an address with another store's id shows THAT store (the id decides, the name follows)",
             "ok": true,
-            "detail": "/store/beta-bites/6b00966d4d4320b22f126582/menu",
+            "detail": "/store/beta-bites/6b014b5d31af39c0744cb8c5/menu",
             "kind": "expect"
           },
           {
@@ -20694,7 +20712,7 @@
           {
             "label": "'Back to my dashboard' leaves the store (no /store in the address)",
             "ok": true,
-            "detail": "/platform/stores/6b00966d4d4320b22f126582",
+            "detail": "/platform/stores/6b014b5d31af39c0744cb8c5",
             "kind": "expect"
           },
           {
@@ -20747,8 +20765,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T20:03:12.382Z",
-    "durationMs": 11869,
+    "at": "2026-11-20T23:33:12.506Z",
+    "durationMs": 12015,
     "steps": [
       {
         "n": 1,
@@ -21038,8 +21056,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T19:26:07.499Z",
-    "durationMs": 3636,
+    "at": "2026-11-20T23:33:16.904Z",
+    "durationMs": 4331,
     "steps": [
       {
         "n": 1,
@@ -21048,7 +21066,7 @@
           {
             "label": "the menu shows several veg / non-veg marks",
             "ok": true,
-            "detail": "19 marks (Non-vegetarian,Vegetarian) at sizes 14px",
+            "detail": "18 marks (Non-vegetarian,Vegetarian) at sizes 14px",
             "kind": "expect"
           },
           {
@@ -21072,7 +21090,7 @@
           {
             "label": "the menu shows several veg / non-veg marks",
             "ok": true,
-            "detail": "19 marks (Non-vegetarian,Vegetarian) at sizes 14px",
+            "detail": "18 marks (Non-vegetarian,Vegetarian) at sizes 14px",
             "kind": "expect"
           },
           {
@@ -21096,7 +21114,7 @@
           {
             "label": "Take order shows veg / non-veg marks",
             "ok": true,
-            "detail": "19 marks (non-veg,veg)",
+            "detail": "18 marks (non-veg,veg)",
             "kind": "expect"
           },
           {
@@ -21125,8 +21143,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T19:52:18.766Z",
-    "durationMs": 3258,
+    "at": "2026-11-20T23:33:21.396Z",
+    "durationMs": 4395,
     "steps": [
       {
         "n": 1,
@@ -21250,7 +21268,7 @@
       },
       {
         "n": 4,
-        "title": "Another card resets it; 'back to the card's own' clears it",
+        "title": "Another card resets it",
         "checks": [
           {
             "label": "choosing C08 after an override resets the field to C08's own (Portrait), with no override left",
@@ -21356,8 +21374,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T21:49:39.347Z",
-    "durationMs": 1924,
+    "at": "2026-11-21T07:44:19.029Z",
+    "durationMs": 1485,
     "steps": [
       {
         "n": 1,
@@ -21372,7 +21390,7 @@
           {
             "label": "exactly one of the two simultaneous orders is accepted, the other refused",
             "ok": true,
-            "detail": "409 / 201",
+            "detail": "201 / 409",
             "kind": "expect"
           },
           {
@@ -21402,7 +21420,7 @@
           {
             "label": "an order started on a FREE table is refused once the table is taken (occupied: true)",
             "ok": true,
-            "detail": "409 {\"code\":\"table_taken\",\"tableId\":\"6b00c05f2b87ab677694f96b\",\"tableNumber\":\"T1\",\"occupied\":true}",
+            "detail": "409 {\"code\":\"table_taken\",\"tableId\":\"6b014b5d31af39c0744cb99e\",\"tableNumber\":\"T1\",\"occupied\":true}",
             "kind": "expect"
           },
           {
@@ -21426,7 +21444,7 @@
           {
             "label": "an order started on a seated table that has since emptied is refused (occupied: false)",
             "ok": true,
-            "detail": "409 {\"code\":\"table_taken\",\"tableId\":\"6b00c05f2b87ab677694f971\",\"tableNumber\":\"T2\",\"occupied\":false}",
+            "detail": "409 {\"code\":\"table_taken\",\"tableId\":\"6b014b5d31af39c0744cb9a2\",\"tableNumber\":\"T2\",\"occupied\":false}",
             "kind": "expect"
           },
           {
@@ -21521,8 +21539,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T22:50:15.485Z",
-    "durationMs": 9230,
+    "at": "2026-11-21T07:44:28.802Z",
+    "durationMs": 9090,
     "steps": [
       {
         "n": 1,
@@ -21753,7 +21771,7 @@
           {
             "label": "bell ON: the waiter's screen shows 'Table T4 — Order #… Everything is ready'",
             "ok": true,
-            "detail": "Table T4 — Order #0007 Everything is ready — take it out.",
+            "detail": "Table T4 — Order #0012 Everything is ready — take it out.",
             "kind": "expect"
           },
           {
@@ -21824,8 +21842,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T22:47:04.198Z",
-    "durationMs": 110611,
+    "at": "2026-11-21T07:34:39.619Z",
+    "durationMs": 110853,
     "steps": [
       {
         "n": 1,
@@ -22030,7 +22048,7 @@
             "kind": "expect"
           },
           {
-            "label": "the page explains what off means",
+            "label": "the page explains what off means (it updates a moment after the save)",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -22147,6 +22165,1008 @@
             "label": "the store name has room (it isn't squeezed into a thin column)",
             "ok": true,
             "detail": "343px wide",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t67-order-tracking-api": {
+    "id": "t67-order-tracking-api",
+    "title": "Following an order — the tracking API, lateness, cancelling an order nobody accepts, and error messages that name the box",
+    "status": "pass",
+    "pass": 50,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-21T07:29:28.880Z",
+    "durationMs": 6102,
+    "steps": [
+      {
+        "n": 1,
+        "title": "following one order (GET /api/customer/orders/:id)",
+        "checks": [
+          {
+            "label": "without signing in there is nothing to follow",
+            "ok": true,
+            "detail": "401",
+            "kind": "expect"
+          },
+          {
+            "label": "a made-up order id is a plain 404",
+            "ok": true,
+            "detail": "404",
+            "kind": "expect"
+          },
+          {
+            "label": "another customer of the same store can't follow it",
+            "ok": true,
+            "detail": "404",
+            "kind": "expect"
+          },
+          {
+            "label": "a customer of ANOTHER store is turned away",
+            "ok": true,
+            "detail": "403",
+            "kind": "expect"
+          },
+          {
+            "label": "…and asking through another store's outlet is refused too",
+            "ok": true,
+            "detail": "403",
+            "kind": "expect"
+          },
+          {
+            "label": "the customer follows their own order",
+            "ok": true,
+            "detail": "200 preparing",
+            "kind": "expect"
+          },
+          {
+            "label": "it says what happened, in order",
+            "ok": true,
+            "detail": "[\"placed\",\"accepted\",\"preparing\"]",
+            "kind": "expect"
+          },
+          {
+            "label": "…with a time for each — and never WHICH team member did it",
+            "ok": true,
+            "detail": "[\"status\",\"at\"]",
+            "kind": "expect"
+          },
+          {
+            "label": "it carries the items, the money, how it is paid and the outlet",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "staff details and the internal history are not sent",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "GET /api/orders/:id for a customer also leaves out who changed the status",
+            "ok": true,
+            "detail": "{\"status\":\"accepted\",\"at\":\"2026-11-21T07:24:28.308Z\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "…while the team still sees it",
+            "ok": true,
+            "detail": "3",
+            "kind": "expect"
+          },
+          {
+            "label": "staff mark the order ready",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the customer's next look says Ready — straight away",
+            "ok": true,
+            "detail": "ready",
+            "kind": "expect"
+          },
+          {
+            "label": "…because the order itself is read from the database on every ask (never a saved copy)",
+            "ok": true,
+            "detail": "printers.find, outlets.findOne, orders.findOne, outlets.findOne, feedbacks.findOne",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "running late",
+        "checks": [
+          {
+            "label": "an order nobody has accepted for longer than the limit (2 min) says so",
+            "ok": true,
+            "detail": "{\"kind\":\"accept\",\"minutes\":5}",
+            "kind": "expect"
+          },
+          {
+            "label": "a new order is not 'late'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an accepted order still not ready after the cooking limit (20 min) says so",
+            "ok": true,
+            "detail": "{\"kind\":\"prep\",\"minutes\":25}",
+            "kind": "expect"
+          },
+          {
+            "label": "a pre-order for later today is not late while its pickup is hours away",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a finished order is never late",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "with the missed-order alerts switched off the customer isn't told either",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "a missed order is cancelled when the store asks for it",
+        "checks": [
+          {
+            "label": "by default nothing is ever cancelled by itself (the setting is 0 = never)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…an old unaccepted order just stays placed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "more than 240 minutes is refused and says which box and what the most is",
+            "ok": true,
+            "detail": "Auto cancel minutes can be at most 240.",
+            "kind": "expect"
+          },
+          {
+            "label": "with 'cancel after 5 minutes' on, exactly one order is cancelled",
+            "ok": true,
+            "detail": "1",
+            "kind": "expect"
+          },
+          {
+            "label": "the unaccepted order is cancelled, and the history says why",
+            "ok": true,
+            "detail": "Nobody accepted it within 5 minutes",
+            "kind": "expect"
+          },
+          {
+            "label": "an order already paid online is left for a person",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an order younger than the limit is left alone",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an order that was accepted is left alone",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a pre-order for later is left alone (its clock starts an hour before pickup)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "another store's order is never touched (its setting is 0)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "running it again cancels nothing more",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the customer's page says it was cancelled, and why",
+            "ok": true,
+            "detail": "Nobody accepted it within 5 minutes",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the Account page lists it as cancelled",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "a refused request says WHICH box is wrong",
+        "checks": [
+          {
+            "label": "a 21-character table number",
+            "ok": true,
+            "detail": "The table number can be at most 20 characters.",
+            "kind": "expect"
+          },
+          {
+            "label": "no table number",
+            "ok": true,
+            "detail": "Enter the table number.",
+            "kind": "expect"
+          },
+          {
+            "label": "51 seats",
+            "ok": true,
+            "detail": "A table can have at most 50 seats.",
+            "kind": "expect"
+          },
+          {
+            "label": "0 seats is refused, not turned into 4",
+            "ok": true,
+            "detail": "Seats must be at least 1 — a table with no seats can't be used.",
+            "kind": "expect"
+          },
+          {
+            "label": "2.5 seats",
+            "ok": true,
+            "detail": "Seats must be a whole number.",
+            "kind": "expect"
+          },
+          {
+            "label": "text for seats",
+            "ok": true,
+            "detail": "Seats must be a number.",
+            "kind": "expect"
+          },
+          {
+            "label": "T9 is created",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "T9 again",
+            "ok": true,
+            "detail": "Table T9 already exists.",
+            "kind": "expect"
+          },
+          {
+            "label": "'t9' is the same table as 'T9' (capital letters don't make a new table)",
+            "ok": true,
+            "detail": "Table T9 already exists — table numbers don't care about capital letters, so \"t9\" is the same table.",
+            "kind": "expect"
+          },
+          {
+            "label": "…spaces round it don't either",
+            "ok": true,
+            "detail": "409",
+            "kind": "expect"
+          },
+          {
+            "label": "renaming a table to an existing number (in other capitals) is refused",
+            "ok": true,
+            "detail": "Table T9 already exists — table numbers don't care about capital letters.",
+            "kind": "expect"
+          },
+          {
+            "label": "…but saving a table under its own number is fine",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Settings → Missed-order alerts: 241 minutes",
+            "ok": true,
+            "detail": "Accept minutes can be at most 240.",
+            "kind": "expect"
+          },
+          {
+            "label": "…and 0 minutes",
+            "ok": true,
+            "detail": "Accept minutes must be at least 1.",
+            "kind": "expect"
+          },
+          {
+            "label": "any other form gets a sentence about its box too",
+            "ok": true,
+            "detail": "Code can be at most 24 characters.",
+            "kind": "expect"
+          },
+          {
+            "label": "(the detailed list is still sent along for anything that wants it)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t69-cache-audit-api": {
+    "id": "t69-cache-audit-api",
+    "title": "Cache audit — what is remembered is dropped the moment it changes; orders, tables and bookings are always read live",
+    "status": "pass",
+    "pass": 55,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-21T07:29:35.255Z",
+    "durationMs": 6345,
+    "steps": [
+      {
+        "n": 1,
+        "title": "who is signed in is remembered — and forgotten at once when it changes",
+        "checks": [
+          {
+            "label": "the first request reads the session and the person (2 reads)",
+            "ok": true,
+            "detail": "sessions.findOne, users.findOne",
+            "kind": "expect"
+          },
+          {
+            "label": "the next one reads NOTHING from the database",
+            "ok": true,
+            "detail": "0 reads",
+            "kind": "expect"
+          },
+          {
+            "label": "a dashboard read no longer spends reads on the session, the person or the outlet check — only its own data",
+            "ok": true,
+            "detail": "orders.find, orders.countDocuments",
+            "kind": "expect"
+          },
+          {
+            "label": "a second sign-in works (and is remembered too)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "signing out takes effect on the very next request",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a cashier can read orders (and is remembered)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "switching a person off locks them out on the very next request",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a manager can open the coupons (remembered)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "changing someone's role takes effect on the very next request",
+            "ok": true,
+            "detail": "403",
+            "kind": "expect"
+          },
+          {
+            "label": "the kitchen user can read orders (remembered)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "pausing a person's access takes effect on the very next request",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an owner session (remembered)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(a change made behind the app's back — straight in the database — is only noticed after at most 30 seconds)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…while a change made through the app is seen at once (an expired session is refused)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "an outlet that is blocked is refused at once",
+        "checks": [
+          {
+            "label": "the outlet check is remembered (no outlet read on the second request)",
+            "ok": true,
+            "detail": "orders.find, orders.countDocuments",
+            "kind": "expect"
+          },
+          {
+            "label": "blocking the outlet turns the team away on the very next request",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "unblocking lets them back in at once",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "a store's settings are remembered — and a change shows at once",
+        "checks": [
+          {
+            "label": "pickup times for a store that has none cost no database read the second time",
+            "ok": true,
+            "detail": "0 reads",
+            "kind": "expect"
+          },
+          {
+            "label": "switching pre-orders on shows pickup times on the very next request",
+            "ok": true,
+            "detail": "true 3",
+            "kind": "expect"
+          },
+          {
+            "label": "a changed delivery distance shows at once",
+            "ok": true,
+            "detail": "5 → 7",
+            "kind": "expect"
+          },
+          {
+            "label": "…and is then remembered again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "the offers a storefront advertises",
+        "checks": [
+          {
+            "label": "the (empty) list is remembered",
+            "ok": true,
+            "detail": "0 reads",
+            "kind": "expect"
+          },
+          {
+            "label": "a new coupon appears on the very next request",
+            "ok": true,
+            "detail": "WELCOME10",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the list is remembered again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "when its last use is taken it disappears from the list at once",
+            "ok": true,
+            "detail": "0",
+            "kind": "expect"
+          },
+          {
+            "label": "a coupon whose date has passed is left out (dates are checked fresh every time)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "a customer's sign-in is remembered, their coins never late",
+        "checks": [
+          {
+            "label": "the second request spends no reads on who the customer is",
+            "ok": true,
+            "detail": "outlets.findOne, orders.find",
+            "kind": "expect"
+          },
+          {
+            "label": "(no coins yet)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "coins added to their wallet show on the very next request",
+            "ok": true,
+            "detail": "250",
+            "kind": "expect"
+          },
+          {
+            "label": "…and coins spent too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a changed name shows at once (the profile edit works on the stored record)",
+            "ok": true,
+            "detail": "200 Asha R.",
+            "kind": "expect"
+          },
+          {
+            "label": "signing out takes effect on the very next request",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "things that must be LIVE are read from the database every time",
+        "checks": [
+          {
+            "label": "the order list: every request reads orders from the database",
+            "ok": true,
+            "detail": "orders.find+orders.countDocuments / orders.find+orders.countDocuments",
+            "kind": "expect"
+          },
+          {
+            "label": "one order's status (customer): every request reads orders from the database",
+            "ok": true,
+            "detail": "orders.findOne / orders.findOne",
+            "kind": "expect"
+          },
+          {
+            "label": "the kitchen screen: every request reads orders from the database",
+            "ok": true,
+            "detail": "orders.find / orders.find",
+            "kind": "expect"
+          },
+          {
+            "label": "the tables: every request reads tables from the database",
+            "ok": true,
+            "detail": "tables.find / tables.find",
+            "kind": "expect"
+          },
+          {
+            "label": "which tables are taken (storefront): every request reads tables from the database",
+            "ok": true,
+            "detail": "tables.find / tables.find",
+            "kind": "expect"
+          },
+          {
+            "label": "running tables: every request reads tablesessions from the database",
+            "ok": true,
+            "detail": "tablesessions.find / tablesessions.find",
+            "kind": "expect"
+          },
+          {
+            "label": "the bookings: every request reads reservations from the database",
+            "ok": true,
+            "detail": "reservations.find+reservations.countDocuments / reservations.find+reservations.countDocuments",
+            "kind": "expect"
+          },
+          {
+            "label": "booking summary: every request reads reservations from the database",
+            "ok": true,
+            "detail": "reservations.countDocuments / reservations.countDocuments",
+            "kind": "expect"
+          },
+          {
+            "label": "print jobs: every request reads printjobs from the database",
+            "ok": true,
+            "detail": "printjobs.find / printjobs.find",
+            "kind": "expect"
+          },
+          {
+            "label": "the dashboard numbers: every request reads orders from the database",
+            "ok": true,
+            "detail": "orders.aggregate+orders.aggregate+orders.aggregate+orders.aggregate+orders.aggregate+orders.aggregate+orders.countDocuments+orders.find+orders.countDocuments+orders.find / orders.aggregate+orders.aggregate+orders.aggregate+orders.aggregate+orders.aggregate+orders.aggregate+orders.countDocuments+orders.find+orders.countDocuments+orders.find",
+            "kind": "expect"
+          },
+          {
+            "label": "riders: every request reads riders from the database",
+            "ok": true,
+            "detail": "riders.find / riders.find",
+            "kind": "expect"
+          },
+          {
+            "label": "an order moved by staff is seen by the customer on the very next read",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a new table is on the storefront's list at once",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a table that just got taken shows as taken on the very next read",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "the console's cache pages",
+        "checks": [
+          {
+            "label": "sign-in entries are never listed (they are about people)",
+            "ok": true,
+            "detail": "cfg,menu,outlet,outletaccess,plan",
+            "kind": "expect"
+          },
+          {
+            "label": "the new kinds (settings, access check, offers) are listed with words, not codes",
+            "ok": true,
+            "detail": "cfg,menu,outlet,outletaccess,plan",
+            "kind": "expect"
+          },
+          {
+            "label": "Store by store: Acme has remembered items",
+            "ok": true,
+            "detail": "{\"id\":\"6b01485d6ee7ce68736e54fc\",\"name\":\"Acme\",\"entries\":5,\"bytes\":7341}",
+            "kind": "expect"
+          },
+          {
+            "label": "an item can be opened and read",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a sign-in item can never be opened",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "clearing ONE store's cache removes its items",
+            "ok": true,
+            "detail": "{\"scope\":\"store\",\"store\":{\"id\":\"6b01485d6ee7ce68736e54fc\",\"name\":\"Acme\"},\"removed\":5,\"at\":\"2026-11-21T07:29:34.704Z\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "…and Acme's row shrinks (or goes) in the list",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "other stores keep what they had when one store is cleared",
+            "ok": true,
+            "detail": "{\"id\":\"6b01485d6ee7ce68736e550c\",\"name\":\"Beta\",\"entries\":2,\"bytes\":124}",
+            "kind": "expect"
+          },
+          {
+            "label": "after clearing, the store's team is not signed out and everything still works",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t68-order-tracking-ui": {
+    "id": "t68-order-tracking-ui",
+    "title": "Following an order on the storefront — a page that moves by itself, links from Order placed and Account, cancelled, someone else's link, a phone",
+    "status": "pass",
+    "pass": 23,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-21T07:35:07.826Z",
+    "durationMs": 27298,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The order page moves by itself",
+        "checks": [
+          {
+            "label": "a placed order says Placed",
+            "ok": true,
+            "detail": "Placed",
+            "kind": "expect"
+          },
+          {
+            "label": "…and what that means in a sentence",
+            "ok": true,
+            "detail": "We've got your order — waiting for the restaurant to accept it.",
+            "kind": "expect"
+          },
+          {
+            "label": "a step-by-step bar shows where it is",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Updated just now · refreshes by itself' is shown while it is going",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "when staff accept it the page changes to Accepted by itself (no reload)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Check now' looks straight away: Preparing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Ready — by itself again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a takeaway order says it can be collected",
+            "ok": true,
+            "detail": "Ready — you can collect it now.",
+            "kind": "expect"
+          },
+          {
+            "label": "'What happened' lists each step with its time",
+            "ok": true,
+            "detail": "Order placed 1:04 pm Accepted 1:04 pm Preparing 1:04 pm Ready 1:04 pm",
+            "kind": "expect"
+          },
+          {
+            "label": "the items and total are on the page",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Completed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and it stops refreshing once the order is finished",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "A cancelled order",
+        "checks": [
+          {
+            "label": "says Cancelled, and what it means for the money",
+            "ok": true,
+            "detail": "You haven't been charged.",
+            "kind": "expect"
+          },
+          {
+            "label": "no progress bar and no refreshing for it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "From the 'order placed' screen and the Account page",
+        "checks": [
+          {
+            "label": "an order still going has 'Follow this order →' on the Account page",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…which opens that order's page",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the 'Order placed' screen has a 'Follow your order' button",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…that goes to this order's own page",
+            "ok": true,
+            "detail": "/main/order/6b0149a538c12d69fd902b9a",
+            "kind": "expect"
+          },
+          {
+            "label": "…and it opens",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Not your order",
+        "checks": [
+          {
+            "label": "another customer opening the link sees 'We can't find that order' and nothing of it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "someone not signed in is asked to sign in",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "On a phone",
+        "checks": [
+          {
+            "label": "the page doesn't scroll sideways on a phone",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t70-cache-console-ui": {
+    "id": "t70-cache-console-ui",
+    "title": "Cache page store by store — see what each store has remembered and clear one store's cache",
+    "status": "pass",
+    "pass": 12,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-21T07:35:10.530Z",
+    "durationMs": 1863,
+    "steps": [
+      {
+        "n": 0,
+        "title": "Setup",
+        "checks": [
+          {
+            "label": "Cache page has a 'Store by store' table",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "each store that has something remembered has its own row",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…with how many items and how big",
+            "ok": true,
+            "detail": "Acme Momos 8 42 KB View items Clear this store's cache",
+            "kind": "expect"
+          },
+          {
+            "label": "…a 'View items' button and a 'Clear this store's cache' button",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'View items' lists only that store's items",
+            "ok": true,
+            "detail": "ITEM STORE SIZE REMEMBERED RELOADS IN USED Menu Only Beta Bites 1.8 KB 0 s ago 5 min 0 Outlet's store Only Beta Bites 76",
+            "kind": "expect"
+          },
+          {
+            "label": "'Clear this store's cache' says how much it cleared",
+            "ok": true,
+            "detail": "Acme Momos: 8 items cleared. Its next visitor loads fresh data.",
+            "kind": "expect"
+          },
+          {
+            "label": "Acme's remembered items are gone from the server",
+            "ok": true,
+            "detail": "1",
+            "kind": "expect"
+          },
+          {
+            "label": "Beta Bites kept everything it had",
+            "ok": true,
+            "detail": "4 → 4",
+            "kind": "expect"
+          },
+          {
+            "label": "the table updates by itself",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Acme's storefront still works right after (it reloads from the database)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the store's own page (Cache tab) has its cache and the same clear button too",
+            "ok": true,
+            "detail": "",
             "kind": "expect"
           },
           {

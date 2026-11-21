@@ -16,7 +16,7 @@ export const meta = {
     "The Tables & QR page lists Ground floor (T1 4 seats, T2 2 seats, T3 6 seats) and Terrace (T4, T5 4 seats each), all 'Free'.",
     "Adding T9 / Rooftop / 6 seats shows a new 'Rooftop' group with 'T9 Free 6 seats' and empties the form (seats back to 4).",
     "A table added with no zone and no seats is in the 'Main' group with 4 seats; '  T11  ' is saved as 'T11'.",
-    "A number already in use is refused with 'Table T9 already exists' and no second tile; an empty number is not submitted; 21 characters and 51 seats are refused; 50 seats is accepted.",
+    "A number already in use is refused with 'Table T9 already exists' and no second tile; an empty number is not submitted; 21 characters and 51 seats are refused, each saying which box is wrong; 0 seats is refused instead of becoming 4; 't9' is refused as the same table as 'T9'; 50 seats is accepted.",
     "A table's panel shows 'Rooftop · 6 seats · Free', a QR image, an address of the form /t/<24 hex>?k=<24 characters> that differs for every table, a 'Download PNG' that really downloads a PNG, 'Rotate code', 'Remove table' and a link to the card designer.",
     "Removing a free table makes its tile disappear and its old code say 'That table code isn't valid'.",
     "The other outlet starts with no tables and can have its own T1 without clashing with Main's T1.",
@@ -88,20 +88,19 @@ export async function run(d, h) {
   d.never("an empty number created a table", (await tiles()).length !== before);
   d.check("the browser asks for the number ('Please fill out this field')", (await (await addForm("Number")).evaluate((e) => e.required && !e.validity.valid)));
   await ui.addTable(d, { number: "ABCDEFGHIJKLMNOPQRSTU", zone: "", seats: 4 });
-  d.check("a number of 21 characters is refused", /Validation failed/.test(await page()) && (await tiles()).length === before, (await page()).match(/Validation failed/)?.[0]);
+  d.check("a number of 21 characters is refused, and says why: 'The table number can be at most 20 characters.'", /The table number can be at most 20 characters\./.test(await page()) && (await tiles()).length === before, (await page()).match(/The table number[^.]*\./)?.[0]);
   d.never("the 21-character number was saved", (await numbers()).includes("ABCDEFGHIJKLMNOPQRSTU"));
   await ui.addTable(d, { number: "BIG", zone: "", seats: 51 });
-  d.check("51 seats is refused", /Validation failed/.test(await page()) && !(await numbers()).includes("BIG"));
+  d.check("51 seats is refused, and says why: 'A table can have at most 50 seats.'", /A table can have at most 50 seats\./.test(await page()) && !(await numbers()).includes("BIG"));
   await ui.addTable(d, { number: "BIG", zone: "Hall", seats: 50 });
   d.check("50 seats is accepted", (await tileOf("BIG"))?.seats === 50, (await tileOf("BIG"))?.text);
-  d.finding("A refused table (too long a number, too many seats) says only 'Validation failed' — it doesn't say which box is wrong.");
+  d.never("a refused table says only 'Validation failed'", /Validation failed/.test(await page()));
   await ui.addTable(d, { number: "Z0", zone: "Hall", seats: 0 });
   const z0 = await tileOf("Z0");
-  d.check("0 seats is not refused — it becomes the default 4", z0?.seats === 4, z0?.text);
-  d.finding("Typing 0 (or nothing) as the seats quietly saves 4 seats instead of saying 0 isn't allowed.");
+  d.check("0 seats is refused out loud ('Seats must be a whole number, at least 1'), not turned into 4", z0 === undefined && /Seats must be a whole number, at least 1/.test(await page()), z0?.text);
+  d.never("Z0 was saved with a made-up 4 seats", z0?.seats === 4);
   await ui.addTable(d, { number: "t9", zone: "Rooftop", seats: 4 });
-  d.check("numbers are case-sensitive: 't9' is accepted next to 'T9'", (await numbers()).includes("t9") && (await numbers()).includes("T9"));
-  d.finding("'T9' and 't9' count as different tables — two tables that look alike to a person can both exist.");
+  d.check("'t9' is the same table as 'T9': refused with 'Table T9 already exists — table numbers don't care about capital letters'", !(await numbers()).includes("t9") && /Table T9 already exists — table numbers don't care about capital letters/.test(await page()), (await page()).match(/Table T9 already exists[^"]*/)?.[0]);
 
   // ------------------------------------------------------------------------------------------------------------- 4
   await d.step("A table's panel: QR image, address, download, rotate, remove");

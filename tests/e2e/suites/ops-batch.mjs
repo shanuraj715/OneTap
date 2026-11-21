@@ -171,7 +171,7 @@ try {
   await sw.click(); // saves on the click, so the box flips once the server has answered
   await until(async () => (await sup("GET", "/api/platform/settings")).json.settings.realtimeWebsocket === false);
   ok((await sup("GET", "/api/platform/settings")).json.settings.realtimeWebsocket === false, "switching it off is saved");
-  ok(/Off — every dashboard refreshes/.test(await sa.getByTestId("realtime-state").innerText()), "the page explains what off means");
+  ok(await until(async () => /Off — every dashboard refreshes/.test(await sa.getByTestId("realtime-state").innerText()), 5000), "the page explains what off means (it updates a moment after the save)");
   const sock = await dp.evaluate(() => new Promise((res) => { const w = new WebSocket(`${location.protocol === "https:" ? "wss" : "ws"}://localhost:3097/realtime?outletId=x`); w.onopen = () => res("open"); w.onerror = () => res("refused"); w.onclose = () => res("closed"); setTimeout(() => res("timeout"), 4000); }));
   ok(sock !== "open", "a new live connection is refused while it is off", sock);
   ok(await until(async () => /Refreshing every 5s/.test(await dp.locator("h1").locator("..").innerText()), 70000), "an open Orders page switches itself to 'Refreshing every 5s' (within a minute)");

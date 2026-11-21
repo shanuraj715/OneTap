@@ -1,6 +1,6 @@
 # T52 — Print station — a computer switched on as a print station prints tickets from ANY dashboard page (Orders, Menu, Dashboard…), once, and only when it is switched on and the plan has Printing
 
-**Area:** printing · **Last result:** ✅ PASSED (14 passed, 0 failed · 2026-11-21 04:21 · headless · 1 min 7 s)
+**Area:** printing · **Last result:** ✅ PASSED (14 passed, 0 failed · 2026-11-21 13:27 · headless · 1 min 7 s)
 
 **Run it alone:** `node run.mjs --only t52` (add `--visible` to watch it)
 
@@ -74,6 +74,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-21 13:27 | pass | 14 | 0 | headless | 1 min 7 s |
+| 2026-11-21 05:02 | pass | 14 | 0 | headless | 1 min 8 s |
 | 2026-11-21 04:21 | pass | 14 | 0 | headless | 1 min 7 s |
 | 2026-11-21 04:19 | fail | 13 | 1 | headless | 1 min 1 s |
 | 2026-11-21 03:38 | pass | 14 | 0 | headless | 48.5 s |
