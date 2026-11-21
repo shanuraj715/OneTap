@@ -27,3 +27,4 @@ build/
 coverage/
 .DS_Store
 .onetap-preview-*.png
+tests/e2e/audit/db-calls.json

@@ -8,7 +8,7 @@ import { cache } from "./cache.js";
  */
 
 /** Everything the storefront keeps about stores. */
-const STORE_FAMILY = ["ns:host", "ns:store", "ns:plan", "ns:menu", "ns:outlet", "ns:cap", "ns:pages"];
+const STORE_FAMILY = ["ns:host", "ns:store", "ns:plan", "ns:menu", "ns:outlet", "ns:outletaccess", "ns:cfg", "ns:cap", "ns:pages", "ns:coupons"];
 
 export function expireForWrite(event) {
   switch (event.model) {
@@ -31,6 +31,24 @@ export function expireForWrite(event) {
     case "ModifierGroup":
       if (event.outletId) cache.expireTag(`menu:${event.outletId}`);
       else cache.expireTag("ns:menu");
+      break;
+    case "User":
+    case "Session":
+      // who is signed in (and what they may do) — any change to a person or a sign-in drops every remembered sign-in
+      cache.expireTag("ns:auth");
+      break;
+    case "Customer":
+      // one customer changed (their coins, their name…) → only theirs; a bulk change → all of them
+      if (event.id) cache.expireTag(`cauth:${event.id}`);
+      else cache.expireTag("ns:cauth");
+      break;
+    case "CustomerSession":
+      cache.expireTag("ns:cauth");
+      break;
+    case "Coupon":
+      // the offers a storefront shows (and how many are left) for one outlet
+      if (event.outletId) cache.expireTag(`coupons:${event.outletId}`);
+      else cache.expireTag("ns:coupons");
       break;
     case "StorePage":
       // an outlet's published pages (and the links to them)

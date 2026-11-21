@@ -11,6 +11,14 @@ import { notifyWebsite } from "../site/revalidate.js";
 
 const NEGATIVE_MS = 60_000;
 
+/**
+ * Who is signed in (staff and customers) is kept too, but never shown here: the keys are derived from session tokens and
+ * the data is about people. They still count in the totals.
+ */
+export const HIDDEN_KINDS = new Set(["auth", "cauth"]);
+export const visibleEntries = (items) => items.filter((e) => !HIDDEN_KINDS.has(e.namespace));
+
+
 /** How long an entry may live right now, in ms. */
 export const lifetimeOf = (entry, ttlSeconds) => entry.fixedMs ?? (entry.negative ? Math.min(ttlSeconds * 1000, NEGATIVE_MS) : ttlSeconds * 1000);
 
@@ -20,7 +28,7 @@ export async function cacheOverview() {
 
   // entries per store
   const perStore = new Map();
-  for (const entry of cache.describe()) {
+  for (const entry of visibleEntries(cache.describe())) {
     const brandTag = entry.tags.find((t) => t.startsWith("brand:"));
     if (!brandTag) continue;
     const id = brandTag.slice("brand:".length);
@@ -95,8 +103,7 @@ export async function expireCache({ scope, storeId }) {
 export async function storeCache(storeId) {
   const name = await loadStoreName(storeId);
   const config = await platformConfig();
-  const entries = cache
-    .describe(`brand:${storeId}`)
+  const entries = visibleEntries(cache.describe(`brand:${storeId}`))
     .map((e) => ({
       key: e.key,
       kind: e.namespace,

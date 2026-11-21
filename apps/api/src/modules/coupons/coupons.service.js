@@ -17,6 +17,7 @@ import {
                      
 } from "@onetap/db";
 import { HttpError } from "../../middleware/error.js";
+import { cache } from "../cache/cache.js";
 import { getMenu } from "../menu/menu.service.js";
 import { storePlan } from "../platform/plan.service.js";
 
@@ -217,9 +218,14 @@ export async function recordRedemption(input
 export async function publicCoupons(ctx               )                    {
   if (!(await entitled(ctx.brandId, "coupons"))) return [];
   const now = Date.now();
-  const docs = await CouponModel.find(tenantFilter(ctx, { active: true }));
-  return docs
-    .map((d) => shapeCoupon(d))
+  // the active coupons are remembered until any coupon of the outlet changes (a redemption counts as a change), so a page
+  // view costs no database read; whether one is still in its dates is worked out fresh each time, below
+  const all = await cache.wrap(
+    `coupons:${ctx.outletId}`,
+    async () => (await CouponModel.find(tenantFilter(ctx, { active: true })).lean()).map((d) => shapeCoupon(d)),
+    { maxAgeMs: 60_000, tags: [`brand:${ctx.brandId}`, `coupons:${ctx.outletId}`, "ns:coupons"] },
+  );
+  return all
     .filter((c) => {
       if (c.validFrom && now < Date.parse(c.validFrom)) return false;
       if (c.validUntil && now > Date.parse(c.validUntil)) return false;

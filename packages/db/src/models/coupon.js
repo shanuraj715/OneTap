@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { DISCOUNT_TYPES } from "@onetap/config-schema";
 import { tenantScope } from "../tenant-scope.js";
+import { writeEvents } from "../write-events.js";
 
 const { Schema, model, models } = mongoose;
 
@@ -32,6 +33,8 @@ const couponSchema = new Schema(
   { timestamps: true },
 );
 couponSchema.plugin(tenantScope);
+// the offers list a storefront shows is kept (modules/coupons) — any change to a coupon, or a redemption counted, drops it
+couponSchema.plugin(writeEvents, { model: "Coupon", brandFrom: "brandId", outletFrom: "outletId" });
 couponSchema.index({ brandId: 1, outletId: 1, code: 1 }, { unique: true });
 
 export const CouponModel = models.Coupon ?? model("Coupon", couponSchema);

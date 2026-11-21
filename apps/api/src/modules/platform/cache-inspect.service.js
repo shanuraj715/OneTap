@@ -3,7 +3,7 @@ import { HttpError } from "../../middleware/error.js";
 import { cache } from "../cache/cache.js";
 import { platformConfig } from "../cache/platform-config.js";
 import { presentValue } from "./cache-present.js";
-import { lifetimeOf } from "./cache.service.js";
+import { HIDDEN_KINDS, lifetimeOf, visibleEntries } from "./cache.service.js";
 
 /**
  * Looking inside the cache from the console: what is remembered right now, for which store, how big it is, how
@@ -28,7 +28,11 @@ export const KINDS = {
   cap: { label: "Kitchen load", what: "How many orders an outlet has in progress, to show the \"busy\" banner" },
   site: { label: "Website", what: "The TablePe website's pages, settings and pricing" },
   dash: { label: "Dashboard", what: "This console's dashboard numbers" },
+  cfg: { label: "Outlet settings", what: "An outlet's settings as they apply under its plan — read by orders, payments and alerts" },
+  outletaccess: { label: "Outlet access check", what: "Whether an outlet is blocked, checked on every dashboard request" },
+  coupons: { label: "Offers", what: "The coupons a storefront advertises for an outlet" },
 };
+
 
 /** The store and the outlet an entry is about, found from its tags and its key. */
 function idsOf(e) {
@@ -36,7 +40,7 @@ function idsOf(e) {
   const brandId = tag ? tag.slice("brand:".length) : null;
   let outletId = null;
   if (e.namespace === "menu") outletId = e.key.split(":")[2] ?? null; // menu:<store>:<outlet>
-  else if (e.namespace === "outlet" || e.namespace === "cap" || e.namespace === "pages") outletId = e.key.slice(e.namespace.length + 1);
+  else if (["outlet", "cap", "pages", "cfg", "outletaccess", "coupons"].includes(e.namespace)) outletId = e.key.slice(e.namespace.length + 1);
   return { brandId, outletId };
 }
 
@@ -62,6 +66,12 @@ function titleOf(e, store, outlet) {
       return { label: "Kitchen load", subject: outlet?.name ?? rest };
     case "pages":
       return { label: "Store pages", subject: outlet?.name ?? rest };
+    case "cfg":
+      return { label: "Outlet settings", subject: outlet?.name ?? rest };
+    case "outletaccess":
+      return { label: "Outlet access check", subject: outlet?.name ?? rest };
+    case "coupons":
+      return { label: "Offers", subject: outlet?.name ?? rest };
     case "site":
       if (rest.startsWith("page:")) return { label: "Website page", subject: `/${rest.slice("page:".length)}` };
       return { label: SITE_TITLES[rest] ?? "Website", subject: rest };
@@ -115,7 +125,7 @@ async function describeRows(items, ttlSeconds) {
 /** Everything that is cached right now, one row each, plus the totals and the lists the console filters by. */
 export async function listEntries() {
   const config = await platformConfig();
-  const rows = await describeRows(cache.describe(), config.cacheTtlSeconds);
+  const rows = await describeRows(visibleEntries(cache.describe()), config.cacheTtlSeconds);
   rows.sort((a, b) => {
     if (Boolean(a.store) !== Boolean(b.store)) return a.store ? -1 : 1; // stores first, platform-wide last
     return (a.store?.name ?? "").localeCompare(b.store?.name ?? "") || a.kind.localeCompare(b.kind) || a.subject.localeCompare(b.subject);
@@ -163,6 +173,7 @@ export async function listEntries() {
 /** One cached item with its data (secrets hidden, very long lists cut short). */
 export async function getEntry(key) {
   const found = cache.peek(key);
+  if (found && HIDDEN_KINDS.has(found.namespace)) throw new HttpError(404, "That item isn't shown — it is about who is signed in.");
   if (!found) throw new HttpError(404, "That item isn't in the cache any more — it expired or was replaced. Refresh the list.");
   const config = await platformConfig();
   const [row] = await describeRows([found], config.cacheTtlSeconds);

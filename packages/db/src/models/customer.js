@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { CUSTOMER_GENDERS } from "@onetap/config-schema";
+import { writeEvents } from "../write-events.js";
 
 const { Schema, model, models } = mongoose;
 
@@ -37,6 +38,8 @@ customerSchema.pre("save", function stampAgeYear() {
 customerSchema.index({ brandId: 1, phone: 1 });
 customerSchema.index({ brandId: 1, email: 1 });
 
+// who a signed-in customer is is kept for a few seconds (modules/customer) — any change to them drops it at once
+customerSchema.plugin(writeEvents, { model: "Customer", brandFrom: "brandId" });
 export const CustomerModel = models.Customer ?? model("Customer", customerSchema);
 
 /* ---------------------------------------------------------------------- otp */
@@ -99,5 +102,6 @@ const customerSessionSchema = new Schema(
 );
 customerSessionSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
+customerSessionSchema.plugin(writeEvents, { model: "CustomerSession" });
 export const CustomerSessionModel =
   models.CustomerSession ?? model("CustomerSession", customerSessionSchema);

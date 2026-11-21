@@ -1,6 +1,7 @@
 import { applyEntitlements, outletConfigSchema } from "@onetap/config-schema";
 import { OutletModel } from "@onetap/db";
 import { HttpError } from "../../middleware/error.js";
+import { cache } from "../cache/cache.js";
 import { storePlan } from "../platform/plan.service.js";
 
 /**
@@ -51,9 +52,19 @@ export async function effectiveConfig(outlet) {
 
 /** `effectiveConfig` for the outlet in a request context. */
 export async function effectiveOutletConfig(ctx) {
-  const outlet = await OutletModel.findOne({ _id: ctx.outletId }, null, { allowGlobalQuery: true }).lean();
-  if (!outlet) throw new HttpError(404, "Outlet not found");
-  return effectiveConfig(outlet);
+  // Order placement, payments, notifications, the kitchen screen and most customer routes all ask for this. The answer
+  // (settings within the plan) only changes when the outlet, its store or its plan is written to, which drops it at once;
+  // 30 seconds is the longest it is reused regardless. Each caller gets its own copy, so changing it can't leak.
+  const found = await cache.wrap(
+    `cfg:${ctx.outletId}`,
+    async () => {
+      const outlet = await OutletModel.findOne({ _id: ctx.outletId }, null, { allowGlobalQuery: true }).lean();
+      return outlet ? { brandId: outlet.brandId, config: await effectiveConfig(outlet) } : null;
+    },
+    { cacheNull: false, maxAgeMs: 30_000, tags: (v) => (v ? [`brand:${v.brandId}`, "ns:cfg"] : []) },
+  );
+  if (!found) throw new HttpError(404, "Outlet not found");
+  return structuredClone(found.config);
 }
 
 export const OUTLET_UNAVAILABLE = "This outlet is temporarily unavailable.";

@@ -1,7 +1,7 @@
                                                                
 import { permissionsForRole,                            } from "@onetap/config-schema";
-import { OutletModel,                                                   } from "@onetap/db";
 import { userFromToken } from "../modules/auth/auth.service.js";
+import { outletAccess } from "../modules/outlets/outlet-cache.js";
 import { assertStoreEnabled } from "../modules/platform/plan.service.js";
 import { HttpError } from "./error.js";
 
@@ -63,7 +63,7 @@ export async function requireOutletContext(
     (typeof req.query.outletId === "string" ? req.query.outletId : "");
   if (!outletId) throw new HttpError(400, "No outlet selected");
 
-  const outlet = await OutletModel.findOne({ _id: outletId }, null, { allowGlobalQuery: true }).lean();
+  const outlet = await outletAccess(outletId); // { brandId, blocked } — remembered briefly, dropped when the outlet changes
   if (!outlet) throw new HttpError(404, "Outlet not found");
 
   const membership = membershipFor(user, outlet.brandId);

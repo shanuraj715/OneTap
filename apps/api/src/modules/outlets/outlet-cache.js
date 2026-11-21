@@ -69,6 +69,23 @@ export function outletBrand(outletId) {
 }
 
 /**
+ * What the dashboard's request check needs to know about an outlet: which store it is, and whether it is blocked.
+ * Every dashboard request asks, so the answer is kept (at most a minute — any change to the outlet drops it at once).
+ */
+export function outletAccess(outletId) {
+  const id = String(outletId ?? "").toLowerCase();
+  if (!OBJECT_ID.test(id)) return Promise.resolve(null);
+  return cache.wrap(
+    `outletaccess:${id}`,
+    async () => {
+      const outlet = await OutletModel.findOne({ _id: id }, null, { allowGlobalQuery: true }).select("brandId blocked").lean();
+      return outlet ? { brandId: outlet.brandId, blocked: Boolean(outlet.blocked) } : null;
+    },
+    { cacheNull: false, maxAgeMs: 60_000, tags: (found) => (found ? [`brand:${found.brandId}`, "ns:outletaccess"] : []) },
+  );
+}
+
+/**
  * Everything the storefront shows about one store: its name, and every outlet
  * (blocked ones included, flagged) with its config as customers see it —
  * the brand's shared look, limited to what the plan unlocks.

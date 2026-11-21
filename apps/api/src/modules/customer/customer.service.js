@@ -6,6 +6,7 @@ import {
   OtpChallengeModel,
 } from "@onetap/db";
 import { isProd } from "../../env.js";
+import { cache } from "../cache/cache.js";
 import { HttpError } from "../../middleware/error.js";
 import { sendOtp } from "../notifications/notify.js";
 import { codeSender } from "../notify/notify.service.js";
@@ -204,7 +205,10 @@ export async function verifyOtp(input) {
  * but still fails `isProfileComplete` — fills in the rest without going
  * through OTP again, since owning the session cookie already proves identity.
  */
-export async function completeProfile(customer, input) {
+export async function completeProfile(signedIn, input) {
+  // the signed-in copy is read-only: the edit is made on the stored document
+  const customer = await CustomerModel.findOne({ _id: signedIn._id });
+  if (!customer) throw new HttpError(404, "We couldn't find your account. Please sign in again.");
   requireSignupFields({
     name: input.name ?? customer.name,
     gender: input.gender ?? customer.gender,
@@ -218,11 +222,27 @@ export async function completeProfile(customer, input) {
   return customer;
 }
 
+/**
+ * Who a customer's sign-in cookie belongs to (a plain, read-only copy). Every customer request needs it — the Account
+ * page, the tracking page, checkout — and it cost two database reads each time. It is kept for up to 30 seconds and
+ * thrown away the moment that customer (their coins, their name…) or any sign-in is written to, so a balance or a
+ * sign-out is never shown late.
+ */
 export async function customerFromToken(token                    )                              {
   if (!token) return null;
-  const session = await CustomerSessionModel.findOne({ tokenHash: sha(token) }).lean();
-  if (!session || session.expiresAt.getTime() < Date.now()) return null;
-  return CustomerModel.findOne({ _id: session.customerId });
+  const hash = sha(token);
+  const found = await cache.wrap(
+    `cauth:${hash}`,
+    async () => {
+      const session = await CustomerSessionModel.findOne({ tokenHash: hash }).lean();
+      if (!session) return null;
+      const customer = await CustomerModel.findOne({ _id: session.customerId }).lean();
+      return customer ? { expiresAt: new Date(session.expiresAt).getTime(), customer } : null;
+    },
+    { cacheNull: false, maxAgeMs: 30_000, tags: (v) => (v ? [`cauth:${v.customer._id}`, "ns:cauth"] : []) },
+  );
+  if (!found || found.expiresAt < Date.now()) return null;
+  return found.customer;
 }
 
 export async function endCustomerSession(token                    )                {

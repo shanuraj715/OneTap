@@ -6,6 +6,7 @@ import {
 } from "@onetap/config-schema";
 import { SessionModel, UserModel,              } from "@onetap/db";
 import { HttpError } from "../../middleware/error.js";
+import { cache } from "../cache/cache.js";
 import { platformConfig } from "../cache/platform-config.js";
 import { storePlan } from "../platform/plan.service.js";
 import { recordLogin } from "./login-log.js";
@@ -65,13 +66,31 @@ export async function logout(token                    )                {
   await SessionModel.deleteOne({ tokenHash: hashToken(token) });
 }
 
+/** How long a remembered sign-in may be reused at most — a change to the person or the sign-in drops it sooner. */
+const AUTH_MS = 30_000;
+
+/**
+ * Who a session cookie belongs to. Every dashboard request needs this, and it used to cost two database reads each time
+ * (the session, then the person). The answer is kept for up to 30 seconds and thrown away the moment a user or a sign-in
+ * is written to — signing out, blocking someone, changing a role all take effect at once. The password hash is never kept.
+ * A session's own expiry is checked on every request.
+ */
 export async function userFromToken(token                    )                          {
   if (!token) return null;
-  const session = await SessionModel.findOne({ tokenHash: hashToken(token) }).lean();
-  if (!session || session.expiresAt.getTime() < Date.now()) return null;
-
-  const user = await UserModel.findOne({ _id: session.userId });
-  return user && user.isActive ? user : null;
+  const hash = hashToken(token);
+  const found = await cache.wrap(
+    `auth:${hash}`,
+    async () => {
+      const session = await SessionModel.findOne({ tokenHash: hash }).lean();
+      if (!session) return null;
+      const user = await UserModel.findOne({ _id: session.userId }).select("-passwordHash").lean();
+      if (!user || !user.isActive) return null;
+      return { expiresAt: new Date(session.expiresAt).getTime(), user };
+    },
+    { cacheNull: false, maxAgeMs: AUTH_MS, tags: ["ns:auth"] },
+  );
+  if (!found || found.expiresAt < Date.now()) return null;
+  return found.user;
 }
 
 /** Flatten a user to what the admin needs. Single-brand for now. */

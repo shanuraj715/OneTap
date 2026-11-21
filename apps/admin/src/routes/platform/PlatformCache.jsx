@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "../../lib/nav";
-import { Database, Pause, Play, RefreshCw } from "lucide-react";
-import { useCacheEntries } from "../../lib/usePlatform";
-import { Button, Card, PageHeader, Select, Table, Td, TextInput, Th } from "../../ui";
+import { Database, Eraser, Pause, Play, RefreshCw } from "lucide-react";
+import * as api from "../../lib/api";
+import { useCacheEntries, usePlatformMutation } from "../../lib/usePlatform";
+import { Button, Card, PageHeader, Select, Table, Td, TextInput, Th, Toast } from "../../ui";
 import { duration } from "./CachePanels";
 import { CacheEntryModal } from "./CacheViewer";
 import { ago, bytes, count, span } from "./viz/format";
@@ -37,6 +38,8 @@ export function PlatformCache() {
   const [sort, setSort] = useState("store");
   const [shown, setShown] = useState(PAGE);
   const [openKey, setOpenKey] = useState(null);
+  // clearing ONE store's remembered data (the same action as on the store's own page)
+  const clearStore = usePlatformMutation((s) => api.expireCache({ scope: "store", storeId: s.id }).then((r) => ({ ...r, name: s.name })));
 
   const filtered = useMemo(() => {
     if (!d) return [];
@@ -141,6 +144,60 @@ export function PlatformCache() {
             <div className="viz-tile-note">everything at once (Settings → Cache)</div>
           </div>
         </div>
+
+        <Card
+          title="Store by store"
+          subtitle="What is remembered for each store, and a way to clear just that store's memory — its next visitor then loads everything fresh. Other stores are not touched."
+        >
+          {d.stores.length === 0 ? (
+            <p style={muted} data-testid="cache-stores-empty">No store has anything remembered right now.</p>
+          ) : (
+            <Table minWidth={520}>
+              <thead>
+                <tr>
+                  <Th>Store</Th>
+                  <Th align="right" width={90}>Items</Th>
+                  <Th align="right" width={110}>Size</Th>
+                  <Th width={290}> </Th>
+                </tr>
+              </thead>
+              <tbody>
+                {d.stores.map((s) => (
+                  <tr key={s.id} data-testid="cache-store-row" data-store={s.name}>
+                    <Td>
+                      <strong>{s.name}</strong>
+                    </Td>
+                    <Td align="right">{count(s.entries)}</Td>
+                    <Td align="right">{bytes(s.bytes)}</Td>
+                    <Td align="right">
+                      <span style={{ display: "inline-flex", gap: 8 }}>
+                        <Button variant="outline" onClick={() => { setStore(s.id); setShown(PAGE); }} style={{ padding: "5px 10px", fontSize: 12.5 }} data-testid="cache-store-view">
+                          View items
+                        </Button>
+                        <Button variant="outline" disabled={clearStore.isPending} onClick={() => clearStore.mutate(s)} style={{ padding: "5px 10px", fontSize: 12.5, display: "inline-flex", gap: 5, alignItems: "center" }} data-testid="cache-store-clear">
+                          <Eraser size={13} /> Clear this store's cache
+                        </Button>
+                      </span>
+                    </Td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          )}
+          {d.platformWide.entries > 0 ? (
+            <p style={{ ...muted, margin: "10px 0 0", fontSize: 12.5 }}>
+              Not tied to one store: {count(d.platformWide.entries)} {d.platformWide.entries === 1 ? "item" : "items"} ({bytes(d.platformWide.bytes)}) — web addresses, the website and this console's own numbers.
+            </p>
+          ) : null}
+          {clearStore.error ? <Toast kind="error">{clearStore.error.message}</Toast> : null}
+          {clearStore.data ? (
+            <Toast kind="ok">
+              <span data-testid="cache-store-cleared">
+                {clearStore.data.name}: {count(clearStore.data.result.removed)} {clearStore.data.result.removed === 1 ? "item" : "items"} cleared. Its next visitor loads fresh data.
+              </span>
+            </Toast>
+          ) : null}
+        </Card>
 
         <Card
           title="Everything that is remembered"

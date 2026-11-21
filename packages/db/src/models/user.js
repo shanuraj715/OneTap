@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { ROLES } from "@onetap/config-schema";
+import { writeEvents } from "../write-events.js";
 
 const { Schema, model, models } = mongoose;
 
@@ -35,6 +36,8 @@ const userSchema = new Schema(
   { timestamps: true },
 );
 
+// who a session belongs to is kept for a few seconds (modules/auth) — any change to a user drops it at once
+userSchema.plugin(writeEvents, { model: "User", ignore: ["lastLoginAt"] });
 export const UserModel = models.User ?? model("User", userSchema);
 
 /* ------------------------------------------------------------------ session */
@@ -53,4 +56,5 @@ const sessionSchema = new Schema(
 // Mongo drops expired sessions on its own.
 sessionSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
+sessionSchema.plugin(writeEvents, { model: "Session" });
 export const SessionModel = models.Session ?? model("Session", sessionSchema);
