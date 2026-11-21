@@ -1109,3 +1109,15 @@
 {"id":"t17-analytics","status":"pass","pass":93,"fail":0,"mode":"headless","at":"2026-11-21T07:56:07.834Z","durationMs":69750}
 {"id":"t03-whatsapp-dashboard","status":"pass","pass":44,"fail":0,"mode":"headless","at":"2026-11-21T07:56:33.823Z","durationMs":19967}
 {"id":"t52-print-station-any-page","status":"pass","pass":14,"fail":0,"mode":"headless","at":"2026-11-21T07:57:41.177Z","durationMs":66564}
+{"id":"t71-soft-navigation","status":"fail","pass":7,"fail":7,"mode":"headless","at":"2026-11-21T08:51:39.966Z","durationMs":3978}
+{"id":"t71-soft-navigation","status":"pass","pass":14,"fail":0,"mode":"headless","at":"2026-11-21T08:52:08.914Z","durationMs":3697}
+{"id":"t06-storefront-header-categories","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-21T08:52:54.217Z","durationMs":37910}
+{"id":"t35-storefront-category-bar","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-21T08:53:17.632Z","durationMs":22514}
+{"id":"t37-storefront-mobile-layout","status":"pass","pass":45,"fail":0,"mode":"headless","at":"2026-11-21T08:53:26.164Z","durationMs":7620}
+{"id":"t41-storefront-view-all","status":"pass","pass":85,"fail":0,"mode":"headless","at":"2026-11-21T08:54:16.887Z","durationMs":49799}
+{"id":"t47-storefront-pinned-bars","status":"pass","pass":101,"fail":0,"mode":"headless","at":"2026-11-21T08:55:55.815Z","durationMs":98022}
+{"id":"t57-policy-pages","status":"pass","pass":13,"fail":0,"mode":"headless","at":"2026-11-21T08:55:58.198Z","durationMs":1460}
+{"id":"t30-account-orders","status":"pass","pass":42,"fail":0,"mode":"headless","at":"2026-11-21T08:56:49.756Z","durationMs":45467}
+{"id":"t56-growth-storefront","status":"pass","pass":22,"fail":0,"mode":"headless","at":"2026-11-21T08:56:58.934Z","durationMs":8310}
+{"id":"t68-order-tracking-ui","status":"pass","pass":23,"fail":0,"mode":"headless","at":"2026-11-21T08:57:21.460Z","durationMs":21729}
+{"id":"t63-card-picture-shape","status":"pass","pass":30,"fail":0,"mode":"headless","at":"2026-11-21T08:57:36.515Z","durationMs":3469}

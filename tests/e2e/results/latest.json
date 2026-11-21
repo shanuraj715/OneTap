@@ -1934,8 +1934,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T23:01:20.886Z",
-    "durationMs": 38612,
+    "at": "2026-11-21T08:52:54.217Z",
+    "durationMs": 37910,
     "steps": [
       {
         "n": 1,
@@ -2040,7 +2040,7 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "0,0,0,1,122,532,844,875,875,875,875,875,875,875",
+            "detail": "0,0,0,1,80,529,820,875,875,875,875,875,875,875",
             "kind": "expect"
           },
           {
@@ -2106,7 +2106,7 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "0,0,0,4,80,446,883,1073,1090,1090,1090,1090,1090,1090",
+            "detail": "0,0,0,8,106,631,1070,1090,1090,1090,1090,1090,1090,1090",
             "kind": "expect"
           },
           {
@@ -10688,8 +10688,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T07:43:08.435Z",
-    "durationMs": 45738,
+    "at": "2026-11-21T08:56:49.756Z",
+    "durationMs": 45467,
     "steps": [
       {
         "n": 1,
@@ -10794,7 +10794,7 @@
           {
             "label": "'View details' lists the items and the bill",
             "ok": true,
-            "detail": "2 × Veg Steamed Momos (5 pcs) ₹120 Items ₹120 Taxes ₹5.71 Total ₹120 Placed 21 Nov 2026, 1:12 pm",
+            "detail": "2 × Veg Steamed Momos (5 pcs) ₹120 Items ₹120 Taxes ₹5.71 Total ₹120 Placed 21 Nov 2026, 2:26 pm",
             "kind": "expect"
           }
         ]
@@ -10806,7 +10806,7 @@
           {
             "label": "(the order is on the dashboard)",
             "ok": true,
-            "detail": "6b014b6631af39c0744cbe05",
+            "detail": "6b015cac997696ac4c7bb98b",
             "kind": "expect"
           },
           {
@@ -12776,8 +12776,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T23:24:39.713Z",
-    "durationMs": 21420,
+    "at": "2026-11-21T08:53:17.632Z",
+    "durationMs": 22514,
     "steps": [
       {
         "n": 1,
@@ -12786,7 +12786,7 @@
           {
             "label": "all 30+ categories are in the bar",
             "ok": true,
-            "detail": "36",
+            "detail": "35",
             "kind": "expect"
           },
           {
@@ -12804,7 +12804,7 @@
           {
             "label": "more chips than fit: the row scrolls sideways instead of wrapping",
             "ok": true,
-            "detail": "5282px of chips in 768px",
+            "detail": "5177px of chips in 768px",
             "kind": "expect"
           },
           {
@@ -12834,7 +12834,7 @@
           {
             "label": "choosing it scrolls the menu to that category, just under the (short) bar",
             "ok": true,
-            "detail": "{\"top\":239,\"bar\":227}",
+            "detail": "{\"top\":238,\"bar\":227}",
             "kind": "expect"
           },
           {
@@ -12912,7 +12912,7 @@
           {
             "label": "tablet: the sheet fits the screen and lists every category",
             "ok": true,
-            "detail": "792px of 1100px, 37 buttons",
+            "detail": "792px of 1100px, 36 buttons",
             "kind": "expect"
           },
           {
@@ -12924,7 +12924,7 @@
           {
             "label": "tablet: a category picked in the sheet lands just under the bar",
             "ok": true,
-            "detail": "{\"top\":245,\"bar\":232}",
+            "detail": "{\"top\":244,\"bar\":232}",
             "kind": "expect"
           },
           {
@@ -12966,7 +12966,7 @@
           {
             "label": "phone: the sheet fits the screen and lists every category",
             "ok": true,
-            "detail": "608px of 844px, 37 buttons",
+            "detail": "608px of 844px, 36 buttons",
             "kind": "expect"
           },
           {
@@ -13013,8 +13013,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T23:24:54.592Z",
-    "durationMs": 8348,
+    "at": "2026-11-21T08:53:26.164Z",
+    "durationMs": 7620,
     "steps": [
       {
         "n": 1,
@@ -14255,8 +14255,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T23:26:53.179Z",
-    "durationMs": 48540,
+    "at": "2026-11-21T08:54:16.887Z",
+    "durationMs": 49799,
     "steps": [
       {
         "n": 1,
@@ -14565,7 +14565,7 @@
           {
             "label": "large tablet, landscape: 'Right side of the title' stays beside the title, with no second button under the cards",
             "ok": true,
-            "detail": "{\"count\":1,\"left\":898,\"right\":0,\"off\":449.2109375,\"below\":false,\"besideTitle\":true,\"cards\":3}",
+            "detail": "{\"count\":1,\"left\":898,\"right\":0,\"off\":449.21875,\"below\":false,\"besideTitle\":true,\"cards\":3}",
             "kind": "expect"
           },
           {
@@ -14619,7 +14619,7 @@
           {
             "label": "desktop: opening takes long enough to WATCH (about 0.8 s), without dragging",
             "ok": true,
-            "detail": "799 ms",
+            "detail": "793 ms",
             "kind": "expect"
           },
           {
@@ -14649,7 +14649,7 @@
           {
             "label": "desktop: closing is visible too (about 0.7 s)",
             "ok": true,
-            "detail": "662 ms",
+            "detail": "665 ms",
             "kind": "expect"
           },
           {
@@ -14727,7 +14727,7 @@
           {
             "label": "phone: opening takes long enough to WATCH (about 1.0 s), without dragging",
             "ok": true,
-            "detail": "1019 ms",
+            "detail": "1007 ms",
             "kind": "expect"
           },
           {
@@ -14757,7 +14757,7 @@
           {
             "label": "phone: closing is visible too (about 0.9 s)",
             "ok": true,
-            "detail": "870 ms",
+            "detail": "853 ms",
             "kind": "expect"
           },
           {
@@ -16157,8 +16157,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T23:29:43.768Z",
-    "durationMs": 84675,
+    "at": "2026-11-21T08:55:55.815Z",
+    "durationMs": 98022,
     "steps": [
       {
         "n": 1,
@@ -19766,8 +19766,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T07:44:11.459Z",
-    "durationMs": 8754,
+    "at": "2026-11-21T08:56:58.934Z",
+    "durationMs": 8310,
     "steps": [
       {
         "n": 1,
@@ -19788,7 +19788,7 @@
           {
             "label": "a breakfast dish outside its hours shows when it is served — and can't be opened",
             "ok": true,
-            "detail": "Poha Available 3:14 PM – 4:14 PM",
+            "detail": "Poha Available 4:26 PM – 5:26 PM",
             "kind": "expect"
           }
         ]
@@ -19848,7 +19848,7 @@
           {
             "label": "the confirmation says it is a pre-order and when to pick it up",
             "ok": true,
-            "detail": "Order confirmed Order #0003 placed It will be ready for you at your pickup time. Order type Takeaway · pre-order Pickup 1:45 PM today Total ₹200 Payment Cash / pay at counter Follow your order Back to menu All my orders",
+            "detail": "Order confirmed Order #0003 placed It will be ready for you at your pickup time. Order type Takeaway · pre-order Pickup 3:00 PM today Total ₹200 Payment Cash / pay at counter Follow your order Back to menu All my orders",
             "kind": "expect"
           },
           {
@@ -19920,7 +19920,7 @@
           {
             "label": "the restaurant sees it with the guest's note",
             "ok": true,
-            "detail": "{\"id\":\"6b014bcb31af39c0744cc312\",\"code\":\"B-0001\",\"status\":\"requested\",\"statusLabel\":\"Waiting to be confirmed\",\"at\":\"2026-11-22T07:30:00.000Z\",\"endsAt\":\"2026-11-",
+            "detail": "{\"id\":\"6b015cda997696ac4c7bbbc2\",\"code\":\"B-0001\",\"status\":\"requested\",\"statusLabel\":\"Waiting to be confirmed\",\"at\":\"2026-11-22T07:30:00.000Z\",\"endsAt\":\"2026-11-",
             "kind": "expect"
           },
           {
@@ -19943,8 +19943,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T23:32:45.459Z",
-    "durationMs": 1757,
+    "at": "2026-11-21T08:55:58.198Z",
+    "durationMs": 1460,
     "steps": [
       {
         "n": 1,
@@ -19971,7 +19971,7 @@
           {
             "label": "the Pricing page quotes this outlet's real delivery fee (₹30), free-delivery limit (₹499) and minimum order (₹100)",
             "ok": true,
-            "detail": "[{\"id\":\"blk_6wzwh1tw\",\"type\":\"heading\",\"text\":\"Pricing\",\"level\":2,\"align\":\"left\"",
+            "detail": "[{\"id\":\"blk_0968lr9h\",\"type\":\"heading\",\"text\":\"Pricing\",\"level\":2,\"align\":\"left\"",
             "kind": "expect"
           },
           {
@@ -21143,8 +21143,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T23:33:21.396Z",
-    "durationMs": 4395,
+    "at": "2026-11-21T08:57:36.515Z",
+    "durationMs": 3469,
     "steps": [
       {
         "n": 1,
@@ -22913,8 +22913,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T07:35:07.826Z",
-    "durationMs": 27298,
+    "at": "2026-11-21T08:57:21.460Z",
+    "durationMs": 21729,
     "steps": [
       {
         "n": 1,
@@ -22971,7 +22971,7 @@
           {
             "label": "'What happened' lists each step with its time",
             "ok": true,
-            "detail": "Order placed 1:04 pm Accepted 1:04 pm Preparing 1:04 pm Ready 1:04 pm",
+            "detail": "Order placed 2:27 pm Accepted 2:27 pm Preparing 2:27 pm Ready 2:27 pm",
             "kind": "expect"
           },
           {
@@ -23037,7 +23037,7 @@
           {
             "label": "…that goes to this order's own page",
             "ok": true,
-            "detail": "/main/order/6b0149a538c12d69fd902b9a",
+            "detail": "/main/order/6b015cf0997696ac4c7bbccd",
             "kind": "expect"
           },
           {
@@ -23165,6 +23165,123 @@
           },
           {
             "label": "the store's own page (Cache tab) has its cache and the same clear button too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t71-soft-navigation": {
+    "id": "t71-soft-navigation",
+    "title": "Storefront links move between pages without reloading the app (header, Order button, footer pages, message bar, phone menu)",
+    "status": "pass",
+    "pass": 14,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-21T08:52:08.914Z",
+    "durationMs": 3697,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Desktop",
+        "checks": [
+          {
+            "label": "header 'My orders' goes to the Account page",
+            "ok": true,
+            "detail": "/main/account",
+            "kind": "expect"
+          },
+          {
+            "label": "…without reloading the app (the page was not loaded again)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "header 'Menu' goes back to the menu",
+            "ok": true,
+            "detail": "/main",
+            "kind": "expect"
+          },
+          {
+            "label": "…without reloading",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a footer page link opens that page",
+            "ok": true,
+            "detail": "/main/about-soft",
+            "kind": "expect"
+          },
+          {
+            "label": "…without reloading",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the message bar's link opens the Account page",
+            "ok": true,
+            "detail": "/main/account",
+            "kind": "expect"
+          },
+          {
+            "label": "…without reloading",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(this header style has no Order button)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "The menu link on the menu page, and the page-load count",
+        "checks": [
+          {
+            "label": "clicking 'Menu' while already on the menu stays put and doesn't reload",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser loaded the page exactly once in the whole walk",
+            "ok": true,
+            "detail": "1 loads",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Phone menu",
+        "checks": [
+          {
+            "label": "the phone menu's 'My orders' opens the Account page",
+            "ok": true,
+            "detail": "/main/account",
+            "kind": "expect"
+          },
+          {
+            "label": "…without reloading",
             "ok": true,
             "detail": "",
             "kind": "expect"
