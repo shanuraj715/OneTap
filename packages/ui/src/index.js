@@ -5,6 +5,7 @@ export { Hero,                } from "./Hero";
 export { MenuList } from "./MenuList";
 export { MenuSections } from "./MenuSections";
 export { StickyBar } from "./StickyBar";
+export { AppLink, LinkProvider } from "./link";
 export { PageBlocks } from "./PageBlocks";
 export { ProgressSteps } from "./variants/progress";
 export { DropdownSoft } from "./variants/dropdowns";

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { haversineKm } from "@onetap/config-schema";
 
@@ -97,9 +98,9 @@ export function OutletPicker({ brand, outlets, cookieName, pageLinks = [] }) {
         {pageLinks.length ? (
           <nav aria-label="About this store" style={footerNav} data-testid="picker-pages">
             {pageLinks.map((l) => (
-              <a key={l.href} href={l.href} style={footerLink}>
+              <Link key={l.href} href={l.href} style={footerLink}>
                 {l.label}
-              </a>
+              </Link>
             ))}
           </nav>
         ) : null}

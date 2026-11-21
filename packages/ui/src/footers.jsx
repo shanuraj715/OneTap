@@ -1,4 +1,7 @@
+"use client";
+
 import { fx } from "./fx";
+import { AppLink } from "./link";
 
 
 const shell                = {
@@ -44,9 +47,9 @@ function PageLinksRow({ links, align = "left", column = false, inverted = false,
       }}
     >
       {links.map((l) => (
-        <a key={`${l.href}-${l.label}`} href={l.href} style={{ fontSize: 13, fontWeight: 600, color: inverted ? "var(--color-bg)" : "var(--color-text)", opacity: inverted ? 0.85 : 1, textDecoration: "none" }}>
+        <AppLink key={`${l.href}-${l.label}`} href={l.href} style={{ fontSize: 13, fontWeight: 600, color: inverted ? "var(--color-bg)" : "var(--color-text)", opacity: inverted ? 0.85 : 1, textDecoration: "none" }}>
           {l.label}
-        </a>
+        </AppLink>
       ))}
     </nav>
   );

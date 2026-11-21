@@ -1,5 +1,6 @@
 import "@onetap/ui/tokens.css";
 import "./globals.css";
+import { RouterLinks } from "@/components/RouterLinks";
                                      
                                        
 
@@ -11,7 +12,9 @@ export const metadata           = {
 export default function RootLayout({ children }                         ) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <RouterLinks>{children}</RouterLinks>
+      </body>
     </html>
   );
 }

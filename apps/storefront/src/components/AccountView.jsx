@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FEEDBACK_TAGS, formatINR, formatWhen, GATEWAY_LABELS, statusLabelFor } from "@onetap/config-schema";
 import { fx } from "@onetap/ui";
 import { Banknote, Bike, CalendarDays, CheckCircle2, ChevronDown, Clock, Coins, CreditCard, LogOut, Phone, Receipt, RotateCcw, ShoppingBag, Star, Trash2, XCircle } from "lucide-react";
@@ -65,6 +66,7 @@ const when = (iso) =>
   new Date(iso).toLocaleString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "numeric", minute: "2-digit" });
 
 export function AccountView({ outletId, menuHref, outletSlug, reservationsEnabled = false }) {
+  const router = useRouter();
   const { customer, loading, refresh, logout } = useCustomer();
   const [orders, setOrders] = useState(null);
   const [coins, setCoins] = useState({ enabled: false, balance: 0, valuePaise: 0 });
@@ -102,7 +104,7 @@ export function AccountView({ outletId, menuHref, outletSlug, reservationsEnable
       }
       window.localStorage.setItem(key, JSON.stringify([...(Array.isArray(cart) ? cart : []), ...r.lines]));
       if (r.skipped.length || r.notes.length) window.sessionStorage.setItem(`onetap.reorderNotice.${r.outletId}`, JSON.stringify({ skipped: r.skipped, notes: r.notes }));
-      window.location.assign(`/${r.outletSlug}/order`);
+      router.push(`/${r.outletSlug}/order`);
     } catch (e) {
       setAgainError({ id: o.id, message: e.message });
       setAgain(null);

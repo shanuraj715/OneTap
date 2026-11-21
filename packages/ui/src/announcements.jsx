@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { safeHref } from "@onetap/config-schema";
+import { AppLink } from "./link";
 import { useSlides } from "./hooks";
 
 /**
@@ -105,18 +106,18 @@ function Message({ m, link }) {
   const href = safeHref(m.linkHref);
   if (href && !m.linkLabel) {
     return (
-      <a href={href} style={{ ...linkOn(), fontWeight: 500, textDecoration: "none" }}>
+      <AppLink href={href} style={{ ...linkOn(), fontWeight: 500, textDecoration: "none" }}>
         {m.text}
-      </a>
+      </AppLink>
     );
   }
   return (
     <>
       <span>{m.text}</span>
       {href && m.linkLabel ? (
-        <a href={href} style={{ marginLeft: 8, ...linkOn(link) }}>
+        <AppLink href={href} style={{ marginLeft: 8, ...linkOn(link) }}>
           {m.linkLabel}
-        </a>
+        </AppLink>
       ) : null}
     </>
   );
@@ -353,7 +354,7 @@ function ButtonMessage({ m }) {
     <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "6px 14px", flexWrap: "wrap" }}>
       <span style={{ fontWeight: 600 }}>{m.text}</span>
       {href ? (
-        <a
+        <AppLink
           href={href}
           style={{
             fontSize: 12,
@@ -367,7 +368,7 @@ function ButtonMessage({ m }) {
           }}
         >
           {m.linkLabel || "Learn more"}
-        </a>
+        </AppLink>
       ) : null}
     </span>
   );

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { fx } from "./fx";
+import { AppLink } from "./link";
 
 /**
  * The storefront header — sixteen styles that all take the same props:
@@ -134,9 +135,9 @@ function Nav({ links, mobileLinks, showToggle = true, collapsed = false, style, 
       {!collapsed && links?.length ? (
         <nav className="ot-nav-inline" style={{ gap: 20, flexWrap: "wrap", ...style }}>
           {links.map((l) => (
-            <a key={l.label} href={l.href} className={linkClass} style={{ ...linkStyle, ...linkOverride }}>
+            <AppLink key={l.label} href={l.href} className={linkClass} style={{ ...linkStyle, ...linkOverride }}>
               {l.label}
-            </a>
+            </AppLink>
           ))}
         </nav>
       ) : null}
@@ -164,9 +165,9 @@ function Nav({ links, mobileLinks, showToggle = true, collapsed = false, style, 
               <div className="ot-anim-fade" style={navBackdrop} onClick={() => setOpen(false)} aria-hidden="true" />
               <nav className="ot-anim-slide-in ot-fx-modal" style={fx("modal", navDrawer)} aria-label="Site menu">
                 {drawerLinks.map((l) => (
-                  <a key={l.label} href={l.href} style={navDrawerLink} onClick={() => setOpen(false)}>
+                  <AppLink key={l.label} href={l.href} style={navDrawerLink} onClick={() => setOpen(false)}>
                     {l.label}
-                  </a>
+                  </AppLink>
                 ))}
               </nav>
             </>,
@@ -215,9 +216,9 @@ const telHref = (phone) => `tel:${String(phone).replace(/[^+\d]/g, "")}`;
 /** The "Order" button several styles carry. */
 function OrderButton({ href = "#menu", style, className }) {
   return (
-    <a href={href} className={className ? `ot-fx-btn ${className}` : "ot-fx-btn"} style={fx("btn", { ...cta, ...style })}>
+    <AppLink href={href} className={className ? `ot-fx-btn ${className}` : "ot-fx-btn"} style={fx("btn", { ...cta, ...style })}>
       Order
-    </a>
+    </AppLink>
   );
 }
 

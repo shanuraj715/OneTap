@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { safeHref } from "@onetap/config-schema";
+import { AppLink } from "../link";
 import { useReducedMotion, useSlides } from "../hooks";
 import { Photo } from "../primitives";
 
@@ -70,9 +71,9 @@ function Cta({ item, style }) {
   const href = safeHref(item.href);
   if (!href || !item.ctaLabel) return null;
   return (
-    <a href={href} style={{ ...ctaStyle, ...style }}>
+    <AppLink href={href} style={{ ...ctaStyle, ...style }}>
       {item.ctaLabel}
-    </a>
+    </AppLink>
   );
 }
 
@@ -87,9 +88,9 @@ function Linked({ item, style, className, children, label }) {
     );
   }
   return (
-    <a href={href} className={className} style={{ color: "inherit", textDecoration: "none", display: "block", ...style }} aria-label={label}>
+    <AppLink href={href} className={className} style={{ color: "inherit", textDecoration: "none", display: "block", ...style }} aria-label={label}>
       {children}
-    </a>
+    </AppLink>
   );
 }
 
