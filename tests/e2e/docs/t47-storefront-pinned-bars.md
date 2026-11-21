@@ -1,6 +1,6 @@
 # T47 — Storefront — the header, the order bar (Takeaway/Delivery + outlet) and the category/filter bar stay pinned to the top while scrolling, on phone, tablet and desktop, with every header style
 
-**Area:** storefront · **Last result:** ✅ PASSED (101 passed, 0 failed · 2026-11-21 14:25 · headless · 1 min 38 s)
+**Area:** storefront · **Last result:** ✅ PASSED (101 passed, 0 failed · 2026-11-21 15:11 · headless · 1 min 41 s)
 
 **Run it alone:** `node run.mjs --only t47` (add `--visible` to watch it)
 
@@ -49,10 +49,10 @@ _Nothing failed._
 - phone 390px: the header, the order bar and the category bar are all on the page — _header 34.8+120.0, order bar 154.8+61.0, category bar 669.0+55.0_
 - phone 390px: at the top of the page they sit in order, header then order bar — _header 34.8+120.0, order bar 154.8+61.0, category bar 669.0+55.0_
 - phone 390px: and the category bar starts lower down (it only pins once you reach it) — _header 34.8+120.0, order bar 154.8+61.0, category bar 669.0+55.0_
-- phone 390px: the page is long enough to test scrolling — _2654px of scroll_
+- phone 390px: the page is long enough to test scrolling — _2807px of scroll_
 - phone 390px: scrolled 574px — all three are pinned to the top, one under the other with no gap — _header 0.0+120.0, order bar 120.0+61.0, category bar 181.0+55.0_
-- phone 390px: scrolled 1592px — all three are pinned to the top, one under the other with no gap — _header 0.0+120.0, order bar 120.0+61.0, category bar 181.0+55.0_
-- phone 390px: scrolled 2614px — all three are pinned to the top, one under the other with no gap — _header 0.0+120.0, order bar 120.0+61.0, category bar 181.0+55.0_
+- phone 390px: scrolled 1684px — all three are pinned to the top, one under the other with no gap — _header 0.0+120.0, order bar 120.0+61.0, category bar 181.0+55.0_
+- phone 390px: scrolled 2767px — all three are pinned to the top, one under the other with no gap — _header 0.0+120.0, order bar 120.0+61.0, category bar 181.0+55.0_
 - phone 390px: the pinned stack takes 236px of 844px — a small part of the screen — _28%_
 - phone 390px: choosing a category scrolls to it just under the pinned bars (not hidden behind them) — _heading at 248px, pinned bars end at 236px_
 - phone 390px: jumping to #menu leaves the menu below the pinned bars — _menu at 205px, bars end at 181px_
@@ -62,12 +62,12 @@ _Nothing failed._
 - tablet 820px: the header, the order bar and the category bar are all on the page — _header 34.8+106.4, order bar 141.2+67.0, category bar 689.0+58.8_
 - tablet 820px: at the top of the page they sit in order, header then order bar — _header 34.8+106.4, order bar 141.2+67.0, category bar 689.0+58.8_
 - tablet 820px: and the category bar starts lower down (it only pins once you reach it) — _header 34.8+106.4, order bar 141.2+67.0, category bar 689.0+58.8_
-- tablet 820px: the page is long enough to test scrolling — _1489px of scroll_
+- tablet 820px: the page is long enough to test scrolling — _1643px of scroll_
 - tablet 820px: scrolled 601px — all three are pinned to the top, one under the other with no gap — _header 0.0+106.4, order bar 106.4+67.0, category bar 173.4+58.8_
-- tablet 820px: scrolled 893px — all three are pinned to the top, one under the other with no gap — _header 0.0+106.4, order bar 106.4+67.0, category bar 173.4+58.8_
-- tablet 820px: scrolled 1449px — all three are pinned to the top, one under the other with no gap — _header 0.0+106.4, order bar 106.4+67.0, category bar 173.4+58.8_
+- tablet 820px: scrolled 986px — all three are pinned to the top, one under the other with no gap — _header 0.0+106.4, order bar 106.4+67.0, category bar 173.4+58.8_
+- tablet 820px: scrolled 1603px — all three are pinned to the top, one under the other with no gap — _header 0.0+106.4, order bar 106.4+67.0, category bar 173.4+58.8_
 - tablet 820px: the pinned stack takes 232px of 1100px — a small part of the screen — _21%_
-- tablet 820px: choosing a category scrolls to it just under the pinned bars (not hidden behind them) — _heading at 298px, pinned bars end at 232px_
+- tablet 820px: choosing a category scrolls to it just under the pinned bars (not hidden behind them) — _heading at 244px, pinned bars end at 232px_
 - tablet 820px: jumping to #menu leaves the menu below the pinned bars — _menu at 197px, bars end at 173px_
 
 **Step 3 — desktop 1440px**
@@ -75,10 +75,10 @@ _Nothing failed._
 - desktop 1440px: the header, the order bar and the category bar are all on the page — _header 34.8+106.4, order bar 141.2+67.0, category bar 693.4+53.5_
 - desktop 1440px: at the top of the page they sit in order, header then order bar — _header 34.8+106.4, order bar 141.2+67.0, category bar 693.4+53.5_
 - desktop 1440px: and the category bar starts lower down (it only pins once you reach it) — _header 34.8+106.4, order bar 141.2+67.0, category bar 693.4+53.5_
-- desktop 1440px: the page is long enough to test scrolling — _1521px of scroll_
+- desktop 1440px: the page is long enough to test scrolling — _1675px of scroll_
 - desktop 1440px: scrolled 606px — all three are pinned to the top, one under the other with no gap — _header 0.0+106.4, order bar 106.4+67.0, category bar 173.4+53.5_
-- desktop 1440px: scrolled 913px — all three are pinned to the top, one under the other with no gap — _header 0.0+106.4, order bar 106.4+67.0, category bar 173.4+53.5_
-- desktop 1440px: scrolled 1481px — all three are pinned to the top, one under the other with no gap — _header 0.0+106.4, order bar 106.4+67.0, category bar 173.4+53.5_
+- desktop 1440px: scrolled 1005px — all three are pinned to the top, one under the other with no gap — _header 0.0+106.4, order bar 106.4+67.0, category bar 173.4+53.5_
+- desktop 1440px: scrolled 1635px — all three are pinned to the top, one under the other with no gap — _header 0.0+106.4, order bar 106.4+67.0, category bar 173.4+53.5_
 - desktop 1440px: the pinned stack takes 227px of 900px — a small part of the screen — _25%_
 - desktop 1440px: choosing a category scrolls to it just under the pinned bars (not hidden behind them) — _heading at 239px, pinned bars end at 227px_
 - desktop 1440px: jumping to #menu leaves the menu below the pinned bars — _menu at 197px, bars end at 173px_
@@ -173,6 +173,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-21 15:11 | pass | 101 | 0 | headless | 1 min 41 s |
 | 2026-11-21 14:25 | pass | 101 | 0 | headless | 1 min 38 s |
 | 2026-11-21 04:59 | pass | 101 | 0 | headless | 1 min 25 s |
 | 2026-11-21 01:12 | pass | 101 | 0 | headless | 1 min 23 s |

@@ -1934,8 +1934,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T08:52:54.217Z",
-    "durationMs": 37910,
+    "at": "2026-11-21T09:36:38.175Z",
+    "durationMs": 38655,
     "steps": [
       {
         "n": 1,
@@ -2040,7 +2040,7 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "0,0,0,1,80,529,820,875,875,875,875,875,875,875",
+            "detail": "0,0,0,1,80,528,820,875,875,875,875,875,875,875",
             "kind": "expect"
           },
           {
@@ -2106,7 +2106,7 @@
           {
             "label": "it glides there (several in-between positions)",
             "ok": true,
-            "detail": "0,0,0,8,106,631,1070,1090,1090,1090,1090,1090,1090,1090",
+            "detail": "0,0,0,1,50,346,810,1057,1090,1090,1090,1090,1090,1090",
             "kind": "expect"
           },
           {
@@ -11783,8 +11783,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T23:24:07.120Z",
-    "durationMs": 47509,
+    "at": "2026-11-21T09:37:30.385Z",
+    "durationMs": 46136,
     "steps": [
       {
         "n": 1,
@@ -12776,8 +12776,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T08:53:17.632Z",
-    "durationMs": 22514,
+    "at": "2026-11-21T09:37:52.581Z",
+    "durationMs": 21277,
     "steps": [
       {
         "n": 1,
@@ -12786,7 +12786,7 @@
           {
             "label": "all 30+ categories are in the bar",
             "ok": true,
-            "detail": "35",
+            "detail": "36",
             "kind": "expect"
           },
           {
@@ -12804,7 +12804,7 @@
           {
             "label": "more chips than fit: the row scrolls sideways instead of wrapping",
             "ok": true,
-            "detail": "5177px of chips in 768px",
+            "detail": "5282px of chips in 768px",
             "kind": "expect"
           },
           {
@@ -12834,7 +12834,7 @@
           {
             "label": "choosing it scrolls the menu to that category, just under the (short) bar",
             "ok": true,
-            "detail": "{\"top\":238,\"bar\":227}",
+            "detail": "{\"top\":239,\"bar\":227}",
             "kind": "expect"
           },
           {
@@ -12912,7 +12912,7 @@
           {
             "label": "tablet: the sheet fits the screen and lists every category",
             "ok": true,
-            "detail": "792px of 1100px, 36 buttons",
+            "detail": "792px of 1100px, 37 buttons",
             "kind": "expect"
           },
           {
@@ -12924,7 +12924,7 @@
           {
             "label": "tablet: a category picked in the sheet lands just under the bar",
             "ok": true,
-            "detail": "{\"top\":244,\"bar\":232}",
+            "detail": "{\"top\":245,\"bar\":232}",
             "kind": "expect"
           },
           {
@@ -12966,7 +12966,7 @@
           {
             "label": "phone: the sheet fits the screen and lists every category",
             "ok": true,
-            "detail": "608px of 844px, 36 buttons",
+            "detail": "608px of 844px, 37 buttons",
             "kind": "expect"
           },
           {
@@ -13013,8 +13013,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T08:53:26.164Z",
-    "durationMs": 7620,
+    "at": "2026-11-21T09:38:01.273Z",
+    "durationMs": 7894,
     "steps": [
       {
         "n": 1,
@@ -14255,8 +14255,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T08:54:16.887Z",
-    "durationMs": 49799,
+    "at": "2026-11-21T09:38:51.995Z",
+    "durationMs": 49936,
     "steps": [
       {
         "n": 1,
@@ -14565,7 +14565,7 @@
           {
             "label": "large tablet, landscape: 'Right side of the title' stays beside the title, with no second button under the cards",
             "ok": true,
-            "detail": "{\"count\":1,\"left\":898,\"right\":0,\"off\":449.21875,\"below\":false,\"besideTitle\":true,\"cards\":3}",
+            "detail": "{\"count\":1,\"left\":898,\"right\":0,\"off\":449.2109375,\"below\":false,\"besideTitle\":true,\"cards\":3}",
             "kind": "expect"
           },
           {
@@ -14619,7 +14619,7 @@
           {
             "label": "desktop: opening takes long enough to WATCH (about 0.8 s), without dragging",
             "ok": true,
-            "detail": "793 ms",
+            "detail": "795 ms",
             "kind": "expect"
           },
           {
@@ -14649,7 +14649,7 @@
           {
             "label": "desktop: closing is visible too (about 0.7 s)",
             "ok": true,
-            "detail": "665 ms",
+            "detail": "663 ms",
             "kind": "expect"
           },
           {
@@ -14709,7 +14709,7 @@
           {
             "label": "phone: opening SLIDES — several in-between heights, not an instant jump",
             "ok": true,
-            "detail": "55 in-between heights: 191, 192, 194, 196, 198, 201, 204, 209…",
+            "detail": "55 in-between heights: 191, 192, 194, 196, 198, 201, 204, 208…",
             "kind": "expect"
           },
           {
@@ -14727,7 +14727,7 @@
           {
             "label": "phone: opening takes long enough to WATCH (about 1.0 s), without dragging",
             "ok": true,
-            "detail": "1007 ms",
+            "detail": "1016 ms",
             "kind": "expect"
           },
           {
@@ -14755,9 +14755,9 @@
             "kind": "expect"
           },
           {
-            "label": "phone: closing is visible too (about 0.9 s)",
+            "label": "phone: closing is visible too (about 0.8 s)",
             "ok": true,
-            "detail": "853 ms",
+            "detail": "847 ms",
             "kind": "expect"
           },
           {
@@ -14852,8 +14852,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T07:43:46.806Z",
-    "durationMs": 33353,
+    "at": "2026-11-21T09:39:29.153Z",
+    "durationMs": 36055,
     "steps": [
       {
         "n": 1,
@@ -16157,8 +16157,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T08:55:55.815Z",
-    "durationMs": 98022,
+    "at": "2026-11-21T09:41:11.274Z",
+    "durationMs": 101246,
     "steps": [
       {
         "n": 1,
@@ -16185,7 +16185,7 @@
           {
             "label": "phone 390px: the page is long enough to test scrolling",
             "ok": true,
-            "detail": "2654px of scroll",
+            "detail": "2807px of scroll",
             "kind": "expect"
           },
           {
@@ -16195,13 +16195,13 @@
             "kind": "expect"
           },
           {
-            "label": "phone 390px: scrolled 1592px — all three are pinned to the top, one under the other with no gap",
+            "label": "phone 390px: scrolled 1684px — all three are pinned to the top, one under the other with no gap",
             "ok": true,
             "detail": "header 0.0+120.0, order bar 120.0+61.0, category bar 181.0+55.0",
             "kind": "expect"
           },
           {
-            "label": "phone 390px: scrolled 2614px — all three are pinned to the top, one under the other with no gap",
+            "label": "phone 390px: scrolled 2767px — all three are pinned to the top, one under the other with no gap",
             "ok": true,
             "detail": "header 0.0+120.0, order bar 120.0+61.0, category bar 181.0+55.0",
             "kind": "expect"
@@ -16251,7 +16251,7 @@
           {
             "label": "tablet 820px: the page is long enough to test scrolling",
             "ok": true,
-            "detail": "1489px of scroll",
+            "detail": "1643px of scroll",
             "kind": "expect"
           },
           {
@@ -16261,13 +16261,13 @@
             "kind": "expect"
           },
           {
-            "label": "tablet 820px: scrolled 893px — all three are pinned to the top, one under the other with no gap",
+            "label": "tablet 820px: scrolled 986px — all three are pinned to the top, one under the other with no gap",
             "ok": true,
             "detail": "header 0.0+106.4, order bar 106.4+67.0, category bar 173.4+58.8",
             "kind": "expect"
           },
           {
-            "label": "tablet 820px: scrolled 1449px — all three are pinned to the top, one under the other with no gap",
+            "label": "tablet 820px: scrolled 1603px — all three are pinned to the top, one under the other with no gap",
             "ok": true,
             "detail": "header 0.0+106.4, order bar 106.4+67.0, category bar 173.4+58.8",
             "kind": "expect"
@@ -16281,7 +16281,7 @@
           {
             "label": "tablet 820px: choosing a category scrolls to it just under the pinned bars (not hidden behind them)",
             "ok": true,
-            "detail": "heading at 298px, pinned bars end at 232px",
+            "detail": "heading at 244px, pinned bars end at 232px",
             "kind": "expect"
           },
           {
@@ -16317,7 +16317,7 @@
           {
             "label": "desktop 1440px: the page is long enough to test scrolling",
             "ok": true,
-            "detail": "1521px of scroll",
+            "detail": "1675px of scroll",
             "kind": "expect"
           },
           {
@@ -16327,13 +16327,13 @@
             "kind": "expect"
           },
           {
-            "label": "desktop 1440px: scrolled 913px — all three are pinned to the top, one under the other with no gap",
+            "label": "desktop 1440px: scrolled 1005px — all three are pinned to the top, one under the other with no gap",
             "ok": true,
             "detail": "header 0.0+106.4, order bar 106.4+67.0, category bar 173.4+53.5",
             "kind": "expect"
           },
           {
-            "label": "desktop 1440px: scrolled 1481px — all three are pinned to the top, one under the other with no gap",
+            "label": "desktop 1440px: scrolled 1635px — all three are pinned to the top, one under the other with no gap",
             "ok": true,
             "detail": "header 0.0+106.4, order bar 106.4+67.0, category bar 173.4+53.5",
             "kind": "expect"
@@ -16826,8 +16826,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T23:30:11.808Z",
-    "durationMs": 27962,
+    "at": "2026-11-21T09:41:42.892Z",
+    "durationMs": 30736,
     "steps": [
       {
         "n": 1,
@@ -17291,8 +17291,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T23:30:31.060Z",
-    "durationMs": 19180,
+    "at": "2026-11-21T09:42:03.094Z",
+    "durationMs": 19338,
     "steps": [
       {
         "n": 1,
@@ -19766,8 +19766,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T08:56:58.934Z",
-    "durationMs": 8310,
+    "at": "2026-11-21T09:42:12.629Z",
+    "durationMs": 8703,
     "steps": [
       {
         "n": 1,
@@ -19788,7 +19788,7 @@
           {
             "label": "a breakfast dish outside its hours shows when it is served — and can't be opened",
             "ok": true,
-            "detail": "Poha Available 4:26 PM – 5:26 PM",
+            "detail": "Poha Available 5:12 PM – 6:12 PM",
             "kind": "expect"
           }
         ]
@@ -19848,7 +19848,7 @@
           {
             "label": "the confirmation says it is a pre-order and when to pick it up",
             "ok": true,
-            "detail": "Order confirmed Order #0003 placed It will be ready for you at your pickup time. Order type Takeaway · pre-order Pickup 3:00 PM today Total ₹200 Payment Cash / pay at counter Follow your order Back to menu All my orders",
+            "detail": "Order confirmed Order #0001 placed It will be ready for you at your pickup time. Order type Takeaway · pre-order Pickup 3:45 PM today Total ₹200 Payment Cash / pay at counter Follow your order Back to menu All my orders",
             "kind": "expect"
           },
           {
@@ -19920,7 +19920,7 @@
           {
             "label": "the restaurant sees it with the guest's note",
             "ok": true,
-            "detail": "{\"id\":\"6b015cda997696ac4c7bbbc2\",\"code\":\"B-0001\",\"status\":\"requested\",\"statusLabel\":\"Waiting to be confirmed\",\"at\":\"2026-11-22T07:30:00.000Z\",\"endsAt\":\"2026-11-",
+            "detail": "{\"id\":\"6b0167743fc0914059bd7c71\",\"code\":\"B-0001\",\"status\":\"requested\",\"statusLabel\":\"Waiting to be confirmed\",\"at\":\"2026-11-22T07:30:00.000Z\",\"endsAt\":\"2026-11-",
             "kind": "expect"
           },
           {
@@ -20285,8 +20285,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T23:32:55.257Z",
-    "durationMs": 5471,
+    "at": "2026-11-21T09:42:18.608Z",
+    "durationMs": 5168,
     "steps": [
       {
         "n": 1,
@@ -21143,8 +21143,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T08:57:36.515Z",
-    "durationMs": 3469,
+    "at": "2026-11-21T09:42:22.849Z",
+    "durationMs": 3440,
     "steps": [
       {
         "n": 1,
@@ -22913,8 +22913,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T08:57:21.460Z",
-    "durationMs": 21729,
+    "at": "2026-11-21T09:42:46.701Z",
+    "durationMs": 23171,
     "steps": [
       {
         "n": 1,
@@ -22971,7 +22971,7 @@
           {
             "label": "'What happened' lists each step with its time",
             "ok": true,
-            "detail": "Order placed 2:27 pm Accepted 2:27 pm Preparing 2:27 pm Ready 2:27 pm",
+            "detail": "Order placed 3:12 pm Accepted 3:12 pm Preparing 3:12 pm Ready 3:12 pm",
             "kind": "expect"
           },
           {
@@ -23037,7 +23037,7 @@
           {
             "label": "…that goes to this order's own page",
             "ok": true,
-            "detail": "/main/order/6b015cf0997696ac4c7bbccd",
+            "detail": "/main/order/6b0167943fc0914059bd7ff1",
             "kind": "expect"
           },
           {
@@ -23189,8 +23189,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T08:52:08.914Z",
-    "durationMs": 3697,
+    "at": "2026-11-21T09:42:51.196Z",
+    "durationMs": 3611,
     "steps": [
       {
         "n": 1,
@@ -23282,6 +23282,210 @@
           },
           {
             "label": "…without reloading",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t72-menu-chunks": {
+    "id": "t72-menu-chunks",
+    "title": "The storefront menu is drawn in chunks as the diner scrolls",
+    "status": "pass",
+    "pass": 15,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-21T09:35:49.017Z",
+    "durationMs": 10173,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Desktop",
+        "checks": [
+          {
+            "label": "the menu has more than 100 dishes to show",
+            "ok": true,
+            "detail": "107 dishes",
+            "kind": "expect"
+          },
+          {
+            "label": "the menu opens with only the first chunk of dishes drawn",
+            "ok": true,
+            "detail": "23 of 107",
+            "kind": "expect"
+          },
+          {
+            "label": "…and a 'more is coming' marker at the end",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "each scroll to the end draws more dishes (never fewer)",
+            "ok": true,
+            "detail": "23 → 95 → 107",
+            "kind": "expect"
+          },
+          {
+            "label": "once everything is drawn the marker goes away",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "every available dish ends up on the page — none are lost",
+            "ok": true,
+            "detail": "107 of 107",
+            "kind": "expect"
+          },
+          {
+            "label": "…and none is drawn twice",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "A category further down",
+        "checks": [
+          {
+            "label": "(back to the first chunk)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "choosing the LAST category jumps straight to it, although it hadn't been drawn yet",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…with its dishes drawn",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…resting just under the category bar",
+            "ok": true,
+            "detail": "239px from the top",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "The vegetarian filter still works with chunks",
+        "checks": [
+          {
+            "label": "'Veg' shows exactly the vegetarian dishes after scrolling",
+            "ok": true,
+            "detail": "103 of 103",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "A phone",
+        "checks": [
+          {
+            "label": "on a phone too the menu opens with the first chunk",
+            "ok": true,
+            "detail": "23 of 107",
+            "kind": "expect"
+          },
+          {
+            "label": "…and scrolling brings the rest",
+            "ok": true,
+            "detail": "107 of 107",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t73-reorder-notice": {
+    "id": "t73-reorder-notice",
+    "title": "'Order again' says clearly which dishes couldn't be added, with space below",
+    "status": "pass",
+    "pass": 9,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-21T09:35:50.321Z",
+    "durationMs": 1280,
+    "steps": [
+      {
+        "n": 0,
+        "title": "Setup",
+        "checks": [
+          {
+            "label": "the notice says how many dishes were left out",
+            "ok": true,
+            "detail": "2 dishes couldn't be added to your order",
+            "kind": "expect"
+          },
+          {
+            "label": "…each dish on its own line with the reason",
+            "ok": true,
+            "detail": "Cold Coffee — sold out right now | Masala Coke — sold out right now",
+            "kind": "expect"
+          },
+          {
+            "label": "…the dish name in bold",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it is a bordered, raised alert (not a thin line of small text)",
+            "ok": true,
+            "detail": "{\"border\":2,\"shadow\":true,\"role\":\"alert\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "…with a warning icon",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "there is clear space between the notice and the order below it",
+            "ok": true,
+            "detail": "24px",
+            "kind": "expect"
+          },
+          {
+            "label": "the dish that could come back is in the order",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the notice can be dismissed",
             "ok": true,
             "detail": "",
             "kind": "expect"

@@ -1,6 +1,6 @@
 # T63 — C07 uses the wide 16:9 picture — and Appearance has a Picture shape field per card style that resets on a new card and can be overridden
 
-**Area:** storefront · **Last result:** ✅ PASSED (30 passed, 0 failed · 2026-11-21 14:27 · headless · 3.5 s)
+**Area:** storefront · **Last result:** ✅ PASSED (30 passed, 0 failed · 2026-11-21 15:12 · headless · 3.4 s)
 
 **Run it alone:** `node run.mjs --only t63` (add `--visible` to watch it)
 
@@ -89,6 +89,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-21 15:12 | pass | 30 | 0 | headless | 3.4 s |
 | 2026-11-21 14:27 | pass | 30 | 0 | headless | 3.5 s |
 | 2026-11-21 05:03 | pass | 30 | 0 | headless | 4.4 s |
 | 2026-11-21 01:22 | pass | 30 | 0 | headless | 3.3 s |

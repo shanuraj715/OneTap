@@ -1,6 +1,6 @@
 # T49 — Storefront item pop-up — the picture is set in from the edges with rounded corners and has a close button; the name has the veg mark and the price; sizes and extras are tiles that light up; the Add row stays at the bottom while the choices scroll
 
-**Area:** storefront · **Last result:** ✅ PASSED (42 passed, 0 failed · 2026-11-21 05:00 · headless · 19.2 s)
+**Area:** storefront · **Last result:** ✅ PASSED (42 passed, 0 failed · 2026-11-21 15:12 · headless · 19.3 s)
 
 **Run it alone:** `node run.mjs --only t49` (add `--visible` to watch it)
 
@@ -91,6 +91,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-21 15:12 | pass | 42 | 0 | headless | 19.3 s |
 | 2026-11-21 05:00 | pass | 42 | 0 | headless | 19.2 s |
 | 2026-11-21 01:12 | pass | 42 | 0 | headless | 17.6 s |
 | 2026-11-21 00:16 | pass | 42 | 0 | headless | 17.5 s |
