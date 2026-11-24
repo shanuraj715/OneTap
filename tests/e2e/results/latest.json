@@ -5587,8 +5587,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T07:50:56.192Z",
-    "durationMs": 55212,
+    "at": "2026-11-24T21:36:19.550Z",
+    "durationMs": 56236,
     "steps": [
       {
         "n": 1,
@@ -5729,7 +5729,7 @@
           {
             "label": "'Seated now — 1' with 'Table D1 … 2 orders · tab ₹130'",
             "ok": true,
-            "detail": "Seated now — 1 Table D1 since 01:20 PM · 2 orders · tab ₹130 Move to… Table D2 Table D3 Table T1 Table T2 Table T3 Table T4 Table ",
+            "detail": "Seated now — 1 Table D1 since 03:05 AM · 2 orders · tab ₹130 Move to… Table D2 Table D3 Table T1 Table T2 Table T3 Table T4 Table ",
             "kind": "expect"
           },
           {
@@ -5741,7 +5741,7 @@
           {
             "label": "the Orders page lists both: '#0001 … Dina Diner 9877712345 DI Table D1 … ₹70 Placed' and '#0002 … ₹60'",
             "ok": true,
-            "detail": "#0001 01:20 PM Dina Diner 9877712345 DI Table D1 1 ₹70 Placed 0m Approve || #0002 01:20 PM Dina Diner 9877712345 DI Table D1 1 ₹60 Placed 0m Approve",
+            "detail": "#0001 03:05 AM Dina Diner 9877712345 DI Table D1 1 ₹70 Placed 0m Approve || #0002 03:05 AM Dina Diner 9877712345 DI Table D1 1 ₹60 Placed 0m Approve",
             "kind": "expect"
           },
           {
@@ -5765,7 +5765,7 @@
           {
             "label": "'Seated now' says 'Table D2 … moved: D1 → D2'",
             "ok": true,
-            "detail": "Seated now — 1 Table D2moved: D1 → D2 since 01:20 PM · 2 orders · tab ₹130 Move to… Table D1 Table D3 Table T1 Table T2 Table T3 Table T4 Table T5 Move Close Garden D1 Fr",
+            "detail": "Seated now — 1 Table D2moved: D1 → D2 since 03:05 AM · 2 orders · tab ₹130 Move to… Table D1 Table D3 Table T1 Table T2 Table T3 Table T4 Table T5 Move Close Garden D1 Fr",
             "kind": "expect"
           },
           {
@@ -5861,7 +5861,7 @@
           {
             "label": "after 'Cancel / void' the order #0003 is Cancelled",
             "ok": true,
-            "detail": "#0003 01:20 PM Rohan Other 9877799999 DI Table D3 1 ₹70 Cancelled —",
+            "detail": "#0003 03:05 AM Rohan Other 9877799999 DI Table D3 1 ₹70 Cancelled —",
             "kind": "expect"
           },
           {
@@ -5897,7 +5897,7 @@
           {
             "label": "the panel shows a new code for the same table",
             "ok": true,
-            "detail": "http://localhost:3170/t/6b014d2e58255bfb222aa43f?k=L3zoLET5thsiDI2KyVCYpIAX → http://localhost:3170/t/6b014d2e58255bfb222aa43f?k=GIYKLQEhxnys2Fo834yTJQhO",
+            "detail": "http://localhost:3170/t/6b0603215be5b9c78324f29e?k=Yocu_Fx8zfN9VFOSC1IPdENU → http://localhost:3170/t/6b0603215be5b9c78324f29e?k=29O_EXsF4n7HuFt-0MHbj3mZ",
             "kind": "expect"
           },
           {
@@ -10241,8 +10241,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T07:39:25.371Z",
-    "durationMs": 5653,
+    "at": "2026-11-24T21:36:25.608Z",
+    "durationMs": 5950,
     "steps": [
       {
         "n": 1,
@@ -10311,7 +10311,7 @@
           {
             "label": "paging: the first page of two says there are more",
             "ok": true,
-            "detail": "2 2026-11-21T07:09:24.996Z",
+            "detail": "2 2026-11-24T21:06:25.353Z",
             "kind": "expect"
           },
           {
@@ -21374,8 +21374,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T07:44:19.029Z",
-    "durationMs": 1485,
+    "at": "2026-11-24T21:36:27.880Z",
+    "durationMs": 2214,
     "steps": [
       {
         "n": 1,
@@ -21420,7 +21420,7 @@
           {
             "label": "an order started on a FREE table is refused once the table is taken (occupied: true)",
             "ok": true,
-            "detail": "409 {\"code\":\"table_taken\",\"tableId\":\"6b014b5d31af39c0744cb99e\",\"tableNumber\":\"T1\",\"occupied\":true}",
+            "detail": "409 {\"code\":\"table_taken\",\"tableId\":\"6b06031a5be5b9c78324ee43\",\"tableNumber\":\"T1\",\"occupied\":true}",
             "kind": "expect"
           },
           {
@@ -21444,7 +21444,7 @@
           {
             "label": "an order started on a seated table that has since emptied is refused (occupied: false)",
             "ok": true,
-            "detail": "409 {\"code\":\"table_taken\",\"tableId\":\"6b014b5d31af39c0744cb9a2\",\"tableNumber\":\"T2\",\"occupied\":false}",
+            "detail": "409 {\"code\":\"table_taken\",\"tableId\":\"6b06031a5be5b9c78324ee46\",\"tableNumber\":\"T2\",\"occupied\":false}",
             "kind": "expect"
           },
           {
@@ -23189,8 +23189,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T09:42:51.196Z",
-    "durationMs": 3611,
+    "at": "2026-11-24T21:36:32.008Z",
+    "durationMs": 4053,
     "steps": [
       {
         "n": 1,
@@ -23306,8 +23306,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T09:35:49.017Z",
-    "durationMs": 10173,
+    "at": "2026-11-24T21:36:40.995Z",
+    "durationMs": 8915,
     "steps": [
       {
         "n": 1,
@@ -24938,6 +24938,153 @@
         "checks": [
           {
             "label": "it says a size limit is needed (and where to put it) instead of listing everything",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t78-storefront-title": {
+    "id": "t78-storefront-title",
+    "title": "The storefront's browser-tab title is the store's name (and follows a rename)",
+    "status": "pass",
+    "pass": 16,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-24T21:35:06.851Z",
+    "durationMs": 3115,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The tab shows the store's name",
+        "checks": [
+          {
+            "label": "the platform admin renames the store",
+            "ok": true,
+            "detail": "Acme Momos → Title Test Cafe",
+            "kind": "expect"
+          },
+          {
+            "label": "the home page's tab title is the store's name",
+            "ok": true,
+            "detail": "Title Test Cafe",
+            "kind": "expect"
+          },
+          {
+            "label": "…exactly the same words as the big heading on the page",
+            "ok": true,
+            "detail": "\"Title Test Cafe\"",
+            "kind": "expect"
+          },
+          {
+            "label": "…and no longer the one fixed product name every store used to show",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the page description talks about the store, not about the platform",
+            "ok": true,
+            "detail": "Steamed, fried and made to order",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "A rename shows at once",
+        "checks": [
+          {
+            "label": "the store is renamed again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the next visit already has the new name in the tab (nothing is remembered from before)",
+            "ok": true,
+            "detail": "Renamed Again Co",
+            "kind": "expect"
+          },
+          {
+            "label": "…and in the heading",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Every outlet of the store",
+        "checks": [
+          {
+            "label": "the other outlet (/second) has the same store title",
+            "ok": true,
+            "detail": "Renamed Again Co",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "The other pages still name the store",
+        "checks": [
+          {
+            "label": "the Account page: 'Your account — <store>'",
+            "ok": true,
+            "detail": "Your account — Renamed Again Co",
+            "kind": "expect"
+          },
+          {
+            "label": "a page of the store: '<page> — <store>'",
+            "ok": true,
+            "detail": "About us — Renamed Again Co",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "A table's QR page",
+        "checks": [
+          {
+            "label": "the table page's title is 'Table <number> — <store>'",
+            "ok": true,
+            "detail": "Table T1 — Renamed Again Co",
+            "kind": "expect"
+          },
+          {
+            "label": "a wrong or old code gets a plain title (and shows nothing about the store)",
+            "ok": true,
+            "detail": "This code didn't work",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "The outlet picker",
+        "checks": [
+          {
+            "label": "a store with several outlets: the picker's tab title is the store's name too",
+            "ok": true,
+            "detail": "Renamed Again Co",
+            "kind": "expect"
+          },
+          {
+            "label": "…not the fixed product name",
             "ok": true,
             "detail": "",
             "kind": "expect"

@@ -1,6 +1,6 @@
 # T71 — Storefront links move between pages without reloading the app (header, Order button, footer pages, message bar, phone menu)
 
-**Area:** storefront · **Last result:** ✅ PASSED (14 passed, 0 failed · 2026-11-21 15:12 · headless · 3.6 s)
+**Area:** storefront · **Last result:** ✅ PASSED (14 passed, 0 failed · 2026-11-25 03:06 · headless · 4.1 s)
 
 **Run it alone:** `node run.mjs --only t71` (add `--visible` to watch it)
 
@@ -59,6 +59,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-25 03:06 | pass | 14 | 0 | headless | 4.1 s |
 | 2026-11-21 15:12 | pass | 14 | 0 | headless | 3.6 s |
 | 2026-11-21 14:22 | pass | 14 | 0 | headless | 3.7 s |
 | 2026-11-21 14:21 | fail | 7 | 7 | headless | 4.0 s |

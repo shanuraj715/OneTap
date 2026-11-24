@@ -1162,3 +1162,9 @@
 {"id":"t74-storage-api","status":"pass","pass":65,"fail":0,"mode":"headless","at":"2026-11-21T10:44:41.894Z","durationMs":12067}
 {"id":"t75-storage-tools-ui","status":"pass","pass":31,"fail":0,"mode":"headless","at":"2026-11-21T10:44:52.775Z","durationMs":10813}
 {"id":"t77-storage-optimize-ui","status":"pass","pass":37,"fail":0,"mode":"headless","at":"2026-11-21T10:45:00.348Z","durationMs":7500}
+{"id":"t78-storefront-title","status":"pass","pass":16,"fail":0,"mode":"headless","at":"2026-11-24T21:35:06.851Z","durationMs":3115}
+{"id":"t19-dine-in","status":"pass","pass":54,"fail":0,"mode":"headless","at":"2026-11-24T21:36:19.550Z","durationMs":56236}
+{"id":"t29-orders-account-api","status":"pass","pass":65,"fail":0,"mode":"headless","at":"2026-11-24T21:36:25.608Z","durationMs":5950}
+{"id":"t64-table-conflict","status":"pass","pass":22,"fail":0,"mode":"headless","at":"2026-11-24T21:36:27.880Z","durationMs":2214}
+{"id":"t71-soft-navigation","status":"pass","pass":14,"fail":0,"mode":"headless","at":"2026-11-24T21:36:32.008Z","durationMs":4053}
+{"id":"t72-menu-chunks","status":"pass","pass":15,"fail":0,"mode":"headless","at":"2026-11-24T21:36:40.995Z","durationMs":8915}

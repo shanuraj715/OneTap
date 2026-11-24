@@ -1,6 +1,6 @@
-# TablePe end-to-end tests — catalog
+# Rasoi Pulse end-to-end tests — catalog
 
-**78 tests** · 78 passing · 0 failing/error · 0 not run yet
+**79 tests** · 79 passing · 0 failing/error · 0 not run yet
 
 | Test | Area | Result | Checks | Last run |
 |---|---|---|---|---|
@@ -23,7 +23,7 @@
 | [t16-whatsapp-plan-gating](t16-whatsapp-plan-gating.md) — WhatsApp chat off (plan or per-store lock) — numbers unlinked at once, no WhatsApp requests, every WhatsApp address is a 404 | whatsapp | ✅ PASSED | 37/37 | 2026-11-21 13:12 |
 | [t17-analytics](t17-analytics.md) — Analytics — sales, per-outlet graphs, compare outlets, best sellers + what to prepare, profit & loss, weekly/monthly/yearly exports, plan and role access | analytics | ✅ PASSED | 93/93 | 2026-11-21 13:26 |
 | [t18-tables](t18-tables.md) — Tables — add a table (number, zone, seats), zones, limits and duplicates, QR panel, remove, per-outlet and per-store, who can manage | tables | ✅ PASSED | 54/54 | 2026-11-21 04:43 |
-| [t19-dine-in](t19-dine-in.md) — Dine-in at a table — create tables, scan the QR, order onto a running tab, staff move / settle / void, occupied tables, rotated codes, switch-off | tables | ✅ PASSED | 54/54 | 2026-11-21 13:20 |
+| [t19-dine-in](t19-dine-in.md) — Dine-in at a table — create tables, scan the QR, order onto a running tab, staff move / settle / void, occupied tables, rotated codes, switch-off | tables | ✅ PASSED | 54/54 | 2026-11-25 03:06 |
 | [t20-missed-order-alerts](t20-missed-order-alerts.md) — Missed-order alerts — with the feature off nothing warns anyone; with it on: banner, red row, sound, repeat, per-status messages, roles, dashboard, customer | orders | ✅ PASSED | 75/75 | 2026-11-21 04:47 |
 | [t21-onboarding](t21-onboarding.md) — Client onboarding form — plan first, plan-fit alerts and 'allow anyway', full form, save / reset / cancel, PDF + print, publish as store | onboarding | ✅ PASSED | 120/120 | 2026-11-21 13:21 |
 | [t22-onboarding-price](t22-onboarding-price.md) — Onboarding price estimate — price list, plan + extras, Custom starts above the dearest plan, discount / GST / yearly, the Custom plan, plan dialog | onboarding | ✅ PASSED | 55/55 | 2026-11-21 13:22 |
@@ -33,7 +33,7 @@
 | [t26-signin-resend-timer](t26-signin-resend-timer.md) — Sign-in code — resend timer on the screen (30 s first), kept by the server: Back, reload and direct API calls can't skip it | security | ✅ PASSED | 20/20 | 2026-11-21 13:24 |
 | [t27-signin-codes-switch](t27-signin-codes-switch.md) — WhatsApp → Numbers has a 'Send sign-in codes from my WhatsApp numbers' switch; with several numbers each code leaves from a random one | notifications | ✅ PASSED | 21/21 | 2026-11-21 13:24 |
 | [t28-rate-limits-api](t28-rate-limits-api.md) — Request limits — every protected API stops at its limit with a clear 429, per account sign-in guard, live connections, and nothing that changes data is left unprotected | security | ✅ PASSED | 124/124 | 2026-11-21 16:14 |
-| [t29-orders-account-api](t29-orders-account-api.md) — Order history for the storefront Account page, and deleting an order — who may, what it puts right, where it disappears | orders | ✅ PASSED | 65/65 | 2026-11-21 13:09 |
+| [t29-orders-account-api](t29-orders-account-api.md) — Order history for the storefront Account page, and deleting an order — who may, what it puts right, where it disappears | orders | ✅ PASSED | 65/65 | 2026-11-25 03:06 |
 | [t30-account-orders](t30-account-orders.md) — Storefront Account page — 'My orders' menu link, order history with status, payment mode & state, coins; Delete order on the dashboard | storefront | ✅ PASSED | 42/42 | 2026-11-21 14:26 |
 | [t31-store-name-header](t31-store-name-header.md) — Storefront — the header and the big heading say the store's name; the outlet's name is only in the outlet dropdown | storefront | ✅ PASSED | 12/12 | 2026-11-21 13:13 |
 | [t32-menu-tree-api](t32-menu-tree-api.md) — Menu categories inside categories — depth, moving, pictures, ordering, bulk delete of categories and items, import, and how the storefront builds its sections | menu | ✅ PASSED | 93/93 | 2026-11-21 13:08 |
@@ -54,7 +54,7 @@
 | [t47-storefront-pinned-bars](t47-storefront-pinned-bars.md) — Storefront — the header, the order bar (Takeaway/Delivery + outlet) and the category/filter bar stay pinned to the top while scrolling, on phone, tablet and desktop, with every header style | storefront | ✅ PASSED | 101/101 | 2026-11-21 15:11 |
 | [t48-hero-button-card-c02](t48-hero-button-card-c02.md) — Storefront — no 'Order takeaway' button at the top; card C02 (Thumbnail left) shows the price right after the veg / non-veg mark with full-width title and description; every item card cuts its description at one line with an ellipsis | storefront | ✅ PASSED | 69/69 | 2026-11-21 15:11 |
 | [t49-storefront-item-popup](t49-storefront-item-popup.md) — Storefront item pop-up — the picture is set in from the edges with rounded corners and has a close button; the name has the veg mark and the price; sizes and extras are tiles that light up; the Add row stays at the bottom while the choices scroll | storefront | ✅ PASSED | 42/42 | 2026-11-21 15:12 |
-| [t50-store-name](t50-store-name.md) — Store name — the dashboard's Business identity shows the STORE name, always disabled, with a note to contact the TablePe admin; only the platform admin can rename the store (console → Stores → the store); renaming an outlet changes its display name | settings | ✅ PASSED | 31/31 | 2026-11-21 05:00 |
+| [t50-store-name](t50-store-name.md) — Store name — the dashboard's Business identity shows the STORE name, always disabled, with a note to contact the Rasoi Pulse admin; only the platform admin can rename the store (console → Stores → the store); renaming an outlet changes its display name | settings | ✅ PASSED | 31/31 | 2026-11-21 05:00 |
 | [t51-kot-tickets](t51-kot-tickets.md) — Kitchen tickets (KOT) — each dish goes to the right printer (kitchen / bar); an order edited after its ticket went out sends an 'ORDER CHANGED' ticket with only the difference; a cancelled order withdraws a waiting ticket or sends 'ORDER CANCELLED — DO NOT COOK' | printing | ✅ PASSED | 62/62 | 2026-11-21 05:01 |
 | [t52-print-station-any-page](t52-print-station-any-page.md) — Print station — a computer switched on as a print station prints tickets from ANY dashboard page (Orders, Menu, Dashboard…), once, and only when it is switched on and the plan has Printing | printing | ✅ PASSED | 14/14 | 2026-11-21 13:27 |
 | [t53-orders-growth-api](t53-orders-growth-api.md) — Orders that grow the business — out for delivery with a rider, pre-orders for later, stock counts, menu hours, combos and buy-X-get-Y coupons (API rules) | orders | ✅ PASSED | 84/84 | 2026-11-21 13:08 |
@@ -68,20 +68,21 @@
 | [t61-item-form-modal](t61-item-form-modal.md) — Edit / New item is a pop-up — fixed Save and Cancel footer, scrolling body, Esc closes — and photos are saved as they change | menu | ✅ PASSED | 40/40 | 2026-11-21 05:03 |
 | [t62-food-mark](t62-food-mark.md) — The veg / non-veg mark — the dot is exactly centred in its frame on the storefront and in Take order | storefront | ✅ PASSED | 9/9 | 2026-11-21 05:03 |
 | [t63-card-picture-shape](t63-card-picture-shape.md) — C07 uses the wide 16:9 picture — and Appearance has a Picture shape field per card style that resets on a new card and can be overridden | storefront | ✅ PASSED | 30/30 | 2026-11-21 15:12 |
-| [t64-table-conflict](t64-table-conflict.md) — Two staff taking an order for the same table — the second is told the table is no longer free and can move the order to a free table | tables | ✅ PASSED | 22/22 | 2026-11-21 13:14 |
+| [t64-table-conflict](t64-table-conflict.md) — Two staff taking an order for the same table — the second is told the table is no longer free and can move the order to a free table | tables | ✅ PASSED | 22/22 | 2026-11-25 03:06 |
 | [t65-kitchen-display](t65-kitchen-display.md) — Kitchen display (/kitchen) — orders by station, Start / Ready, late colours, and the waiter's bell (off by default) | kitchen | ✅ PASSED | 43/43 | 2026-11-21 13:14 |
 | [t66-ops-batch](t66-ops-batch.md) — Completed dine-in order frees the table (no Needs cleaning) · phone layouts · platform live-updates switch · print station every 8 s with check, loader and countdown | operations | ✅ PASSED | 47/47 | 2026-11-21 13:04 |
 | [t67-order-tracking-api](t67-order-tracking-api.md) — Following an order — the tracking API, lateness, cancelling an order nobody accepts, and error messages that name the box | orders | ✅ PASSED | 50/50 | 2026-11-21 12:59 |
 | [t68-order-tracking-ui](t68-order-tracking-ui.md) — Following an order on the storefront — a page that moves by itself, links from Order placed and Account, cancelled, someone else's link, a phone | storefront | ✅ PASSED | 23/23 | 2026-11-21 15:12 |
 | [t69-cache-audit-api](t69-cache-audit-api.md) — Cache audit — what is remembered is dropped the moment it changes; orders, tables and bookings are always read live | platform | ✅ PASSED | 55/55 | 2026-11-21 12:59 |
 | [t70-cache-console-ui](t70-cache-console-ui.md) — Cache page store by store — see what each store has remembered and clear one store's cache | platform | ✅ PASSED | 12/12 | 2026-11-21 13:05 |
-| [t71-soft-navigation](t71-soft-navigation.md) — Storefront links move between pages without reloading the app (header, Order button, footer pages, message bar, phone menu) | storefront | ✅ PASSED | 14/14 | 2026-11-21 15:12 |
-| [t72-menu-chunks](t72-menu-chunks.md) — The storefront menu is drawn in chunks as the diner scrolls | storefront | ✅ PASSED | 15/15 | 2026-11-21 15:05 |
+| [t71-soft-navigation](t71-soft-navigation.md) — Storefront links move between pages without reloading the app (header, Order button, footer pages, message bar, phone menu) | storefront | ✅ PASSED | 14/14 | 2026-11-25 03:06 |
+| [t72-menu-chunks](t72-menu-chunks.md) — The storefront menu is drawn in chunks as the diner scrolls | storefront | ✅ PASSED | 15/15 | 2026-11-25 03:06 |
 | [t73-reorder-notice](t73-reorder-notice.md) — 'Order again' says clearly which dishes couldn't be added, with space below | storefront | ✅ PASSED | 9/9 | 2026-11-21 15:05 |
 | [t74-storage-api](t74-storage-api.md) — Storage — try any storage without switching it on, count what is stored where, and move the files between this server's disk and S3-compatible buckets | platform | ✅ PASSED | 65/65 | 2026-11-21 16:14 |
 | [t75-storage-tools-ui](t75-storage-tools-ui.md) — The Storage page — Test connection under the list, files per store and outlet, move files with progress | platform | ✅ PASSED | 31/31 | 2026-11-21 16:14 |
 | [t76-storage-optimize-api](t76-storage-optimize-api.md) — Storage — find the pictures bigger than the size limit and compress the chosen ones; every stored address follows | platform | ✅ PASSED | 73/73 | 2026-11-21 16:14 |
 | [t77-storage-optimize-ui](t77-storage-optimize-ui.md) — The Storage page — find the pictures bigger than the size limit in a grid, select them and optimize | platform | ✅ PASSED | 37/37 | 2026-11-21 16:15 |
+| [t78-storefront-title](t78-storefront-title.md) — The storefront's browser-tab title is the store's name (and follows a rename) | storefront | ✅ PASSED | 16/16 | 2026-11-25 03:05 |
 
 ## Open findings (noticed during tests, not yet fixed)
 
