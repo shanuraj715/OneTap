@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { apiServerUrl } from "@/lib/api-config";
 import { StoreBottom, StoreTop } from "@/components/Chrome";
 import { Ordering } from "@/components/Ordering";
@@ -19,7 +20,7 @@ const API_BASE = apiServerUrl();
  
 
 /** Validates the signed QR before revealing anything about the restaurant. */
-async function resolveScan(tableId        , token        )                                          {
+async function checkScan(tableId        , token        )                                          {
   try {
     const res = await fetch(`${API_BASE}/api/tables/scan/${tableId}?k=${encodeURIComponent(token)}`, {
       cache: "no-store",
@@ -31,6 +32,20 @@ async function resolveScan(tableId        , token        )                      
   } catch {
     return { error: "Couldn't reach the restaurant. Check your connection." };
   }
+}
+
+// The scan is checked once per request, whoever asks first (the tab title or the page): the scan endpoint is rate limited.
+const resolveScan = cache(checkScan);
+
+/** "Table 5 — Store name": the same store name the page shows. A bad or expired code just gets a plain title. */
+export async function generateMetadata({ params, searchParams }) {
+  const { tableId } = await params;
+  const { k = "" } = await searchParams;
+  const scan = await resolveScan(tableId, k);
+  if ("error" in scan) return { title: "This code didn't work", robots: { index: false } };
+  const outlet = await getOutletById(scan.outletId);
+  if (!outlet) return { title: "Restaurant unavailable", robots: { index: false } };
+  return { title: `Table ${scan.table.number} — ${storeName(outlet)}`, robots: { index: false } };
 }
 
 export default async function TablePage({
