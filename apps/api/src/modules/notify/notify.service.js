@@ -15,7 +15,7 @@ import {
                           
                       
                    
-} from "@onetap/config-schema";
+} from "@rasoipulse/config-schema";
 import {
   BrandModel,
   brandFilter,
@@ -27,7 +27,7 @@ import {
   WaAccountModel,
 
 
-} from "@onetap/db";
+} from "@rasoipulse/db";
 import { decryptSecret, encryptSecret, maskSecret } from "../../lib/crypto.js";
 import { logger } from "../../logger.js";
 import { HttpError } from "../../middleware/error.js";

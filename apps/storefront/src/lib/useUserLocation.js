@@ -13,7 +13,7 @@ import { useCallback, useEffect, useState } from "react";
  *   point   { lat, lng } or null
  *   request()  ask the browser now (shows its permission prompt the first time)
  */
-const KEY = "onetap.userLocation";
+const KEY = "rasoipulse.userLocation";
 const FRESH_MS = 6 * 60 * 60 * 1000;
 
 function readSaved() {

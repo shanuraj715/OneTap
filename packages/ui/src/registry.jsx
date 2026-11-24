@@ -1,7 +1,7 @@
                                                       
                                                       
                                              
-import { LEGACY_VARIANT_IDS } from "@onetap/config-schema";
+import { LEGACY_VARIANT_IDS } from "@rasoipulse/config-schema";
 import * as announcements from "./announcements";
 import * as cards from "./cards";
                                              

@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from "react";
                                                                  
 import { createPortal } from "react-dom";
-import { Button as BaseButton,                  } from "@onetap/ui";
+import { Button as BaseButton,                  } from "@rasoipulse/ui";
 import { Check, ChevronDown, Info, X } from "lucide-react";
 
 /**
  * The admin panel's own `Button` — every screen here is a dense operator
  * console, not a marketing page, so admin defaults to the small size. Any
  * call site that needs otherwise still can (`size="md"` overrides this).
- * Import `Button` from here, not `@onetap/ui`, everywhere under `routes/`.
+ * Import `Button` from here, not `@rasoipulse/ui`, everywhere under `routes/`.
  */
 export { AwesomeLoader } from "./components/AwesomeLoader";
 export { TopProgressBar } from "./components/TopProgressBar";

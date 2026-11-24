@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
-import { notifyChannelSchema, orderStatusSchema } from "@onetap/config-schema";
+import { notifyChannelSchema, orderStatusSchema } from "@rasoipulse/config-schema";
 import { requireOutletContext, requireUser } from "../../middleware/auth.js";
 import {
   clearNotifyCredentials,

@@ -28,7 +28,7 @@ const brandId = String(made.brand?._id ?? made.brand?.id ?? made.brandId);
 const outletId = String(made.outlet?._id ?? made.outlet?.id ?? made.outletId);
 const owner = await login("o@otc.test", "Owner123!");
 const own = async (method, path, body, raw) => {
-  const r = await fetch(API + path, { method, headers: { ...(raw ? {} : { "content-type": "application/json" }), cookie: owner, "x-onetap-outlet": outletId, ...(raw ? { "content-type": "image/png" } : {}) }, body: raw ?? (body ? JSON.stringify(body) : undefined) });
+  const r = await fetch(API + path, { method, headers: { ...(raw ? {} : { "content-type": "application/json" }), cookie: owner, "x-rasoipulse-outlet": outletId, ...(raw ? { "content-type": "image/png" } : {}) }, body: raw ?? (body ? JSON.stringify(body) : undefined) });
   let json = {}; try { json = await r.json(); } catch {}
   return { status: r.status, json };
 };

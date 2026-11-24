@@ -1,5 +1,5 @@
-import { STORAGE_FIELDS, STORAGE_REQUIRED_FIELDS } from "@onetap/config-schema";
-import { BrandModel, StorageMigrationModel, StorageOptimizeModel } from "@onetap/db";
+import { STORAGE_FIELDS, STORAGE_REQUIRED_FIELDS } from "@rasoipulse/config-schema";
+import { BrandModel, StorageMigrationModel, StorageOptimizeModel } from "@rasoipulse/db";
 import { decryptSecret, encryptSecret } from "../../lib/crypto.js";
 import { logger } from "../../logger.js";
 import { HttpError } from "../../middleware/error.js";

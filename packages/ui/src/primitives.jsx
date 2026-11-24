@@ -1,5 +1,5 @@
                                            
-import { formatINR, itemPriceLabel,                              } from "@onetap/config-schema";
+import { formatINR, itemPriceLabel,                              } from "@rasoipulse/config-schema";
 
 /**
  * FSSAI veg / non-veg / egg mark. These colours are fixed by regulation and must

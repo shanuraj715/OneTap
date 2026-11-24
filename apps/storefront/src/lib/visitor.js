@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 
 /** The cookie the API sets when a diner verifies their phone (see CUSTOMER_COOKIE in the API's customer routes). */
-const CUSTOMER_COOKIE = "onetap_customer";
+const CUSTOMER_COOKIE = "rasoipulse_customer";
 
 /**
  * The visitor's own sign-in, as headers for a server-side call to the API. A page is built on the server, so the

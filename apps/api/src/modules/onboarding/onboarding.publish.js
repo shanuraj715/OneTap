@@ -9,8 +9,8 @@ import {
   planFit,
   slugifyName,
   validateOnboarding,
-} from "@onetap/config-schema";
-import { OnboardingModel } from "@onetap/db";
+} from "@rasoipulse/config-schema";
+import { OnboardingModel } from "@rasoipulse/db";
 import { logger } from "../../logger.js";
 import { HttpError } from "../../middleware/error.js";
 import { createBrand } from "../brands/brands.service.js";
@@ -88,7 +88,7 @@ export async function publishForm(id, { ownerPassword }, userId) {
     // 4) the look, which every outlet shares
     await updateOutletConfig(ctx, outletIds[0], lookPatch(data));
 
-    // 5) the client's own domain, next to the TablePe address
+    // 5) the client's own domain, next to the Rasoi Pulse address
     const own = data.address.ownDomain.trim();
     if (own) {
       const current = (await platform.getStore(brandId)).domains;

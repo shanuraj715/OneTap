@@ -1,5 +1,5 @@
-import { OrderModel, TableModel, tenantFilter } from "@onetap/db";
-import { slowestStage } from "@onetap/config-schema";
+import { OrderModel, TableModel, tenantFilter } from "@rasoipulse/db";
+import { slowestStage } from "@rasoipulse/config-schema";
 import { HttpError } from "../../middleware/error.js";
 import { broadcast } from "../../realtime/hub.js";
 import { effectiveOutletConfig } from "../outlets/config.service.js";

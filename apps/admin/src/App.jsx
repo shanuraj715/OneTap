@@ -4,7 +4,7 @@ import { Navigate, NavLink, Route, Routes, storeFromPath, storeSlug, useLocation
 import { Navigate as RawNavigate, useLocation as useRouterLocation } from "react-router-dom";
 import { AwesomeLoader } from "./components/AwesomeLoader";
 import { TopProgressBar } from "./components/TopProgressBar";
-import { ROLE_LABELS } from "@onetap/config-schema";
+import { ROLE_LABELS } from "@rasoipulse/config-schema";
 import {
   AlertTriangle,
   ArrowLeft,
@@ -288,12 +288,12 @@ export function App() {
   const { user, isLoading, can } = useAuth();
 
   if (isLoading) {
-    return <AwesomeLoader fullScreen label="Loading TablePe" subtext="Preparing your workspace…" />;
+    return <AwesomeLoader fullScreen label="Loading Rasoi Pulse" subtext="Preparing your workspace…" />;
   }
   if (!user) {
     return <Login />;
   }
-  // TablePe has switched the whole store off (a late payment, say): say so, instead of a screen full of errors
+  // Rasoi Pulse has switched the whole store off (a late payment, say): say so, instead of a screen full of errors
   if (user.storeDisabled && !user.isSuperAdmin) {
     return <StoreDisabled user={user} />;
   }
@@ -313,7 +313,7 @@ export function App() {
   );
 }
 
-const COLLAPSE_KEY = "onetap.sidebarCollapsed";
+const COLLAPSE_KEY = "rasoipulse.sidebarCollapsed";
 
 function Shell({ can }                                     ) {
   const location = useLocation();
@@ -453,7 +453,7 @@ function Shell({ can }                                     ) {
         <div style={{ display: "flex", alignItems: "center", justifyContent: railCollapsed ? "center" : "space-between", gap: 8 }}>
           {!railCollapsed ? (
             <div style={brand}>
-              TablePe<span style={{ color: "var(--color-text-muted)", fontWeight: 400 }}> admin</span>
+              Rasoi Pulse<span style={{ color: "var(--color-text-muted)", fontWeight: 400 }}> admin</span>
             </div>
           ) : null}
           {narrow ? (
@@ -567,7 +567,7 @@ function Shell({ can }                                     ) {
               <MenuIcon size={19} />
             </button>
             <span style={{ flex: 1, minWidth: 0, fontWeight: 700, fontSize: 15, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-              {platformMode ? "Platform" : outlet?.name ?? "TablePe"}
+              {platformMode ? "Platform" : outlet?.name ?? "Rasoi Pulse"}
             </span>
             {canTakeOrders ? (
               <NavLink to="/take-order" style={mobileTakeOrder}>
@@ -1018,8 +1018,8 @@ function OverLimitBanner({ plan }) {
       <span>
         Your store has {parts.join(" and ")}.{" "}
         {plan.grace.ended
-          ? `The grace period ended on ${fmtDay(plan.grace.until)} — extra outlets or people may be blocked by TablePe.`
-          : `Everything keeps working until ${fmtDay(plan.grace.until)}. Remove the extras, or contact TablePe to upgrade your plan.`}
+          ? `The grace period ended on ${fmtDay(plan.grace.until)} — extra outlets or people may be blocked by Rasoi Pulse.`
+          : `Everything keeps working until ${fmtDay(plan.grace.until)}. Remove the extras, or contact Rasoi Pulse to upgrade your plan.`}
       </span>
     </div>
   );

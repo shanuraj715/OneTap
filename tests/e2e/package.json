@@ -1,9 +1,9 @@
 {
-  "name": "@onetap/e2e",
+  "name": "@rasoipulse/e2e",
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "End-to-end tests for TablePe: a throwaway bench (in-memory database + fake stores) driven in a real Chrome window. Standalone — not part of the pnpm workspace, so it never ships with the apps.",
+  "description": "End-to-end tests for Rasoi Pulse: a throwaway bench (in-memory database + fake stores) driven in a real Chrome window. Standalone — not part of the pnpm workspace, so it never ships with the apps.",
   "scripts": {
     "bench:up": "node bench/bench.mjs up",
     "bench:down": "node bench/bench.mjs down",

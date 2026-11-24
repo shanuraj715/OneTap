@@ -12,7 +12,7 @@ import { useStorePlan } from "./useStorePlan";
 /** How often this station asks the server for new tickets — and never more often than this, whatever wakes the tab. */
 export const PRINT_POLL_MS = 8_000;
 const POLL_MS = PRINT_POLL_MS;
-const STORAGE_KEY = "onetap.printStation";
+const STORAGE_KEY = "rasoipulse.printStation";
 
 /**
  * Whether this browser acts as a print station. Off by default and remembered

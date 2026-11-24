@@ -22,7 +22,7 @@ import {
                     
                    
                      
-} from "@onetap/config-schema";
+} from "@rasoipulse/config-schema";
 import {
   AlertTriangle,
   CheckCircle2,

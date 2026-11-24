@@ -1,4 +1,4 @@
-import { evaluateSla,                     } from "@onetap/config-schema";
+import { evaluateSla,                     } from "@rasoipulse/config-schema";
 import {
   CouponRedemptionModel,
   CustomerModel,
@@ -8,7 +8,7 @@ import {
   tenantFilter,
   WalletLedgerModel,
                      
-} from "@onetap/db";
+} from "@rasoipulse/db";
 import { outletConfigFor, QUEUE_STATUSES, UNPAID_PREPAID } from "../orders/orders.service.js";
 
 /** Midnight, server-local time — the same "today" the daily order-number counter uses. */

@@ -1,5 +1,5 @@
 import QRCode from "qrcode";
-import { QR_QUIET_MODULES } from "@onetap/config-schema";
+import { QR_QUIET_MODULES } from "@rasoipulse/config-schema";
 
 /**
  * The QR is drawn from its module matrix rather than from `QRCode.toDataURL`.

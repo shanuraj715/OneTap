@@ -66,7 +66,7 @@ const owner = await login("o@acme.test", "Owner123!");
 // one team member per check, so no check eats another's budget
 const team = [];
 for (let i = 0; i < 26; i++) {
-  await call("POST", "/api/users", { cookie: owner, headers: { "x-onetap-brand": brand }, body: { email: `u${i}@acme.test`, name: `User ${i}`, password: "Manager123!", role: "manager" } });
+  await call("POST", "/api/users", { cookie: owner, headers: { "x-rasoipulse-brand": brand }, body: { email: `u${i}@acme.test`, name: `User ${i}`, password: "Manager123!", role: "manager" } });
   team.push(await login(`u${i}@acme.test`, "Manager123!"));
 }
 let nextUser = 0;
@@ -130,9 +130,9 @@ say("2. sign-in codes — per address, and per store");
 
 say("3. signed-in people — each kind of action has its own limit (a different team member for each)");
 { const c = user(); await exercise("team-write", () => call("PATCH", "/api/menu/categories/000000000000000000000000", { cookie: c, body: {} }), { label: "team-write (changes)" }); }
-{ const c = user(); const answers = []; for (let i = 0; i < 40; i++) answers.push(await call("GET", "/api/menu", { cookie: c, headers: { "x-onetap-outlet": outlet } })); ok(answers.every((a) => a.status !== 429), "team-write: reading is not counted — 40 reads in a row are fine"); }
-{ const c = user(); await exercise("report", () => call("GET", "/api/analytics/overview", { cookie: c, headers: { "x-onetap-outlet": outlet } })); }
-{ const c = user(); await exercise("pii-read", () => call("GET", "/api/customers", { cookie: c, headers: { "x-onetap-outlet": outlet } })); }
+{ const c = user(); const answers = []; for (let i = 0; i < 40; i++) answers.push(await call("GET", "/api/menu", { cookie: c, headers: { "x-rasoipulse-outlet": outlet } })); ok(answers.every((a) => a.status !== 429), "team-write: reading is not counted — 40 reads in a row are fine"); }
+{ const c = user(); await exercise("report", () => call("GET", "/api/analytics/overview", { cookie: c, headers: { "x-rasoipulse-outlet": outlet } })); }
+{ const c = user(); await exercise("pii-read", () => call("GET", "/api/customers", { cookie: c, headers: { "x-rasoipulse-outlet": outlet } })); }
 { const c = user(); await exercise("account-write", () => call("POST", "/api/users", { cookie: c, body: {} })); }
 { const c = user(); await exercise("secrets", () => call("PUT", "/api/notify/config/sms", { cookie: c, body: {} })); }
 { const c = user(); await exercise("upload", () => call("POST", "/api/storage/upload", { cookie: c, rawBody: "x", headers: { "content-type": "application/octet-stream" } })); }
@@ -237,7 +237,7 @@ say("8. live connections (WebSockets)");
   const lots = [];
   for (let i = 0; i < limit * 3; i++) lots.push((await open(`/realtime?outletId=${outlet}`)).status);
   ok(lots.every((s) => s === 401), "our own network is never limited by address", [...new Set(lots)].join(","));
-  const prev = await call("POST", "/api/preview", { cookie: owner, headers: { "x-onetap-outlet": outlet }, body: { layout: {} } });
+  const prev = await call("POST", "/api/preview", { cookie: owner, headers: { "x-rasoipulse-outlet": outlet }, body: { layout: {} } });
   const viewer = await open(`/preview?id=${prev.json.id}&role=viewer`);
   ok(viewer.status === 101, "a preview viewer connects", `${viewer.status}`);
   const closed = viewer.ws ? await new Promise((resolve) => { viewer.ws.on("close", (code) => resolve(code)); viewer.ws.send("x".repeat(1100 * 1024)); setTimeout(() => resolve("still open"), 4000); }) : "no socket";

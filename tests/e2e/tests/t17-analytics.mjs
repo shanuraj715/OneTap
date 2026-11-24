@@ -311,7 +311,7 @@ export async function run(d, h) {
   d.check("…and so is the profit", await profitIs(want1), `saw ${await readProfit()}`);
   await d.click(d.page.getByRole("button", { name: "Save to my store" }), { after: 900 });
   d.check("'Save to my store' says it was saved", await ui.until(async () => /Saved to your store/.test(await d.page.locator("[data-finance-note]").innerText()), 8000), await d.page.locator("[data-finance-note]").innerText());
-  await d.page.evaluate(() => { for (const k of Object.keys(localStorage)) if (k.startsWith("tablepe.analytics.finance.")) localStorage.removeItem(k); });
+  await d.page.evaluate(() => { for (const k of Object.keys(localStorage)) if (k.startsWith("rasoipulse.analytics.finance.")) localStorage.removeItem(k); });
   await d.page.reload({ waitUntil: "load" });
   await outletTab(/Main/).waitFor({ timeout: 15000 });
   await d.pause(800);

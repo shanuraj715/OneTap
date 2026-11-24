@@ -178,7 +178,7 @@ export const POLICIES = {
   },
   "order-place": {
     windowMs: 10 * MINUTE,
-    limit: (req) => (req.header("x-onetap-outlet") ? 150 : 12),
+    limit: (req) => (req.header("x-rasoipulse-outlet") ? 150 : 12),
     allows: "12 per 10 min for a customer · 150 per 10 min for staff at the till",
     key: "identity",
     why: "A customer placing orders: a dozen in ten minutes is generous, more is a script flooding the kitchen. Staff at the till (who send the outlet header) get a much bigger budget.",
@@ -352,7 +352,7 @@ const keyOf = {
   user: (req) => (req.user?._id ? `user:${req.user._id}` : `ip:${addressOf(req)}`),
   identity: (req) => {
     if (req.user?._id) return `user:${req.user._id}`;
-    const cookie = req.cookies?.onetap_customer; // the customer's sign-in cookie (customer.routes.js CUSTOMER_COOKIE)
+    const cookie = req.cookies?.rasoipulse_customer; // the customer's sign-in cookie (customer.routes.js CUSTOMER_COOKIE)
     return cookie ? `customer:${sha(cookie)}` : `ip:${addressOf(req)}`;
   },
   store: (req) => `store:${String(req.body?.outletId ?? req.query?.outletId ?? "unknown").slice(0, 40)}`,

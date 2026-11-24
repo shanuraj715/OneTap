@@ -1,5 +1,5 @@
 import { BufferJSON, initAuthCreds, proto } from "@whiskeysockets/baileys";
-import { WaAuthKeyModel } from "@onetap/db";
+import { WaAuthKeyModel } from "@rasoipulse/db";
 import { decryptSecret, encryptSecret } from "../../lib/crypto.js";
 import { logger } from "../../logger.js";
 

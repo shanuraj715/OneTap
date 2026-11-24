@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { currentAge } from "@onetap/config-schema";
-import { CustomerModel } from "@onetap/db";
+import { currentAge } from "@rasoipulse/config-schema";
+import { CustomerModel } from "@rasoipulse/db";
 import { requireOutletContext } from "../../middleware/auth.js";
 import { ledgerFor } from "../wallet/wallet.service.js";
 import { limiter } from "../../middleware/rate-limit.js";

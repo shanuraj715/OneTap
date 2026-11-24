@@ -631,7 +631,7 @@ function ApiCard({ d }) {
   const r5 = a.requests.last5min;
   const r60 = a.requests.lastHour;
   return (
-    <Figure title="API and database" subtitle="The TablePe API process answering this console, and the database it talks to.">
+    <Figure title="API and database" subtitle="The Rasoi Pulse API process answering this console, and the database it talks to.">
       <div className="srv-stats">
         <Stat label="Database" value={a.db.ok ? `${a.db.ms} ms` : "Not reachable"} sub={a.db.ok ? "to answer a ping" : a.db.error} />
         <Stat label="API lag" value={`${a.loop?.p99 ?? 0} ms`} sub="how late its timers run (slowest 1 in 100)" />

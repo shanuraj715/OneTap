@@ -1,7 +1,7 @@
 import { cache } from "react";
 import { notFound } from "next/navigation";
-import { PageBlocks } from "@onetap/ui";
-import { contactDetails } from "@onetap/config-schema";
+import { PageBlocks } from "@rasoipulse/ui";
+import { contactDetails } from "@rasoipulse/config-schema";
 import { StoreBottom, StoreTop } from "@/components/Chrome";
 import { OutletUnavailable } from "@/components/OutletUnavailable";
 import { ThemeStyle } from "@/components/ThemeStyle";

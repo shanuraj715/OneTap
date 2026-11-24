@@ -9,7 +9,7 @@ if (isProd && env.ENCRYPTION_KEY === DEV_ENCRYPTION_KEY) {
   process.exit(1);
 }
 
-const key = scryptSync(env.ENCRYPTION_KEY, "onetap.payment-credentials.v1", 32);
+const key = scryptSync(env.ENCRYPTION_KEY, "rasoipulse.payment-credentials.v1", 32);
 
 /**
  * AES-256-GCM envelope for gateway secrets at rest. Format:

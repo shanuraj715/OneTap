@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { formatWhen } from "@onetap/config-schema";
-import { fx } from "@onetap/ui";
+import { formatWhen } from "@rasoipulse/config-schema";
+import { fx } from "@rasoipulse/ui";
 import { CalendarCheck2, CalendarDays, Clock, Phone, Users } from "lucide-react";
 import { api } from "@/lib/clientApi";
 import { useCustomer } from "@/lib/useCustomer";

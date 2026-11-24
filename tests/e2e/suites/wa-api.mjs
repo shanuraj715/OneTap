@@ -32,7 +32,7 @@ let OUTLET = null;
 const call = async (method, path, { body, cookie, headers = {}, rawBody } = {}) => {
   const r = await fetch(base + path, {
     method,
-    headers: { ...(rawBody ? {} : { "content-type": "application/json" }), ...(cookie ? { cookie } : {}), ...(OUTLET ? { "x-onetap-outlet": OUTLET } : {}), ...headers },
+    headers: { ...(rawBody ? {} : { "content-type": "application/json" }), ...(cookie ? { cookie } : {}), ...(OUTLET ? { "x-rasoipulse-outlet": OUTLET } : {}), ...headers },
     body: rawBody ?? (body ? JSON.stringify(body) : undefined),
   });
   const text = await r.text(); let json = {}; try { json = JSON.parse(text); } catch {}
@@ -52,8 +52,8 @@ const brandA = String(a.brand?._id ?? a.brand?.id ?? a.brandId);
 OUTLET = String(a.outlet?._id ?? a.outlet?.id ?? a.outletId);
 const OUTLET_A = OUTLET;
 const owner = await login("o@acme.test", "Owner123!");
-await must(call("POST", "/api/users", { cookie: owner, headers: { "x-onetap-brand": brandA }, body: { email: "m@acme.test", name: "Manager", password: "Manager123!", role: "manager" } }), "manager");
-await must(call("POST", "/api/users", { cookie: owner, headers: { "x-onetap-brand": brandA }, body: { email: "s@acme.test", name: "Staff", password: "Staff1234!", role: "staff" } }), "staff");
+await must(call("POST", "/api/users", { cookie: owner, headers: { "x-rasoipulse-brand": brandA }, body: { email: "m@acme.test", name: "Manager", password: "Manager123!", role: "manager" } }), "manager");
+await must(call("POST", "/api/users", { cookie: owner, headers: { "x-rasoipulse-brand": brandA }, body: { email: "s@acme.test", name: "Staff", password: "Staff1234!", role: "staff" } }), "staff");
 const manager = await login("m@acme.test", "Manager123!");
 const staff = await login("s@acme.test", "Staff1234!");
 const plan = (await must(call("POST", "/api/platform/plans", { cookie: su, body: { name: "No chat", entitlements: { features: schema.FEATURE_KEYS.filter((k) => k !== "whatsappChat") } } }), "plan")).json.plan;

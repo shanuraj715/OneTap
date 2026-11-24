@@ -12,7 +12,7 @@ import {
   planAllowances,
   planFit,
   wantedFeatures,
-} from "@onetap/config-schema";
+} from "@rasoipulse/config-schema";
 
 /**
  * The onboarding form as a document, for the client to read and sign and for the file. One renderer serves both the PDF
@@ -34,7 +34,7 @@ const mode = (id) => THEME_MODES.find((m) => m.id === id)?.label ?? id;
 
 export function renderOnboardingPdf({ form, data, plan }) {
   return new Promise((resolve, reject) => {
-    const doc = new PDFDocument({ size: "A4", margin: MARGIN, bufferPages: true, info: { Title: `TablePe onboarding — ${data.business.storeName || "new client"}`, Author: "TablePe" } });
+    const doc = new PDFDocument({ size: "A4", margin: MARGIN, bufferPages: true, info: { Title: `Rasoi Pulse onboarding — ${data.business.storeName || "new client"}`, Author: "Rasoi Pulse" } });
     const chunks = [];
     doc.on("data", (c) => chunks.push(c));
     doc.on("end", () => resolve(Buffer.concat(chunks)));
@@ -114,7 +114,7 @@ export function renderOnboardingPdf({ form, data, plan }) {
     const forced = new Set(fit.issues.filter((i) => i.forced).map((i) => i.key));
 
     // ---- header
-    doc.fillColor(RED).font("Helvetica-Bold").fontSize(22).text("TablePe", { continued: true }).fillColor(INK).text("  client onboarding form");
+    doc.fillColor(RED).font("Helvetica-Bold").fontSize(22).text("Rasoi Pulse", { continued: true }).fillColor(INK).text("  client onboarding form");
     doc.font("Helvetica").fontSize(11).fillColor(MUTED).text(`${data.business.storeName || "New client"}   ·   ${form.status === "published" ? "Published as a store" : "Draft"}`);
     doc.fontSize(9).text(`Made ${new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata", dateStyle: "medium", timeStyle: "short" })} (India time)`);
     doc.moveDown(0.3);
@@ -211,7 +211,7 @@ export function renderOnboardingPdf({ form, data, plan }) {
     field("Look they like", data.look.references);
 
     section("8. Addresses");
-    field("TablePe address", onboardingSubdomain(data) ? `${onboardingSubdomain(data)}  (the platform adds its domain)` : "");
+    field("Rasoi Pulse address", onboardingSubdomain(data) ? `${onboardingSubdomain(data)}  (the platform adds its domain)` : "");
     field("Own domain", data.address.ownDomain);
 
     section("9. Setting up", 175);
@@ -224,7 +224,7 @@ export function renderOnboardingPdf({ form, data, plan }) {
     ensure(120);
     section("10. Sign-off");
     const y = doc.y + 24;
-    for (const [i, who] of ["TablePe representative", "Client"].entries()) {
+    for (const [i, who] of ["Rasoi Pulse representative", "Client"].entries()) {
       const x = MARGIN + i * (W / 2 + 6);
       const w = W / 2 - 6;
       doc.lineWidth(0.7).strokeColor("#8a847a").moveTo(x, y).lineTo(x + w, y).stroke();
@@ -234,7 +234,7 @@ export function renderOnboardingPdf({ form, data, plan }) {
     }
     doc.y = y + 60;
 
-    // footers: "TablePe client onboarding · Page 2 of 3".
+    // footers: "Rasoi Pulse client onboarding · Page 2 of 3".
     // The footer sits in the bottom margin. Text written below the bottom margin makes the library start a NEW page, so
     // each footer would add a blank page of its own (printing then shows empty pages with only a footer) — the bottom
     // margin is set to 0 while the footer is written, so it stays on the page it belongs to.
@@ -244,7 +244,7 @@ export function renderOnboardingPdf({ form, data, plan }) {
       const keep = doc.page.margins.bottom;
       doc.page.margins.bottom = 0;
       doc.font("Helvetica").fontSize(8).fillColor(MUTED);
-      doc.text(`TablePe client onboarding · ${data.business.storeName || "new client"} · Page ${i + 1} of ${pages.count}`, MARGIN, doc.page.height - 36, { width: W, align: "center", lineBreak: false });
+      doc.text(`Rasoi Pulse client onboarding · ${data.business.storeName || "new client"} · Page ${i + 1} of ${pages.count}`, MARGIN, doc.page.height - 36, { width: W, align: "center", lineBreak: false });
       doc.page.margins.bottom = keep;
     }
     doc.end();

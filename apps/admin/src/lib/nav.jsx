@@ -14,7 +14,7 @@ export * from "react-router-dom";
  * Where a store's dashboard lives for the platform's super admin.
  *
  * A store owner's dashboard is at the plain addresses (/menu, /orders…). When the super admin opens a STORE, every one of
- * its pages is under  /store/<store-name>/<store-id>/…  — /store/tablepe/6afd…/menu — so the address says which store
+ * its pages is under  /store/<store-name>/<store-id>/…  — /store/rasoi-pulse/6afd…/menu — so the address says which store
  * you are in, can be bookmarked or shared with another admin, and a reload stays in that store. The id is what counts;
  * the name is only there to read (a wrong or old name is corrected in the address bar).
  *
@@ -38,7 +38,7 @@ export function storeSlug(name) {
   return slug || "store";
 }
 
-/** The address of a page of a store, for the super admin: storeUrl({ id, name }, "/menu") → /store/tablepe/6afd…/menu */
+/** The address of a page of a store, for the super admin: storeUrl({ id, name }, "/menu") → /store/rasoi-pulse/6afd…/menu */
 export function storeUrl(store, path = "/") {
   const base = `/store/${storeSlug(store?.name)}/${store?.id}`;
   return path === "/" || path === "" ? base : `${base}${path.startsWith("/") ? path : `/${path}`}`;

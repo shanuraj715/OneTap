@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ROLE_LABELS, WA_ACCESS_LABELS, WA_ACCESS_LEVELS, WA_DELEGABLE_ROLES } from "@onetap/config-schema";
+import { ROLE_LABELS, WA_ACCESS_LABELS, WA_ACCESS_LEVELS, WA_DELEGABLE_ROLES } from "@rasoipulse/config-schema";
 import * as api from "../../lib/api";
 import { useOutlet } from "../../lib/useOutlet";
 import { useWaAction } from "../../lib/useWhatsApp";
@@ -21,7 +21,7 @@ export function WhatsAppAccess() {
   return (
     <>
       <WaHeader subtitle="Choose who on your team can read and answer WhatsApp chats." />
-      <Card title="Who can use WhatsApp chat" subtitle="You, the owner, can always do everything: link numbers, send broadcasts and change this. TablePe's own support staff can read chats.">
+      <Card title="Who can use WhatsApp chat" subtitle="You, the owner, can always do everything: link numbers, send broadcasts and change this. Rasoi Pulse's own support staff can read chats.">
         {!draft ? <p style={{ fontSize: 13, color: "var(--color-text-muted)" }}>Loading…</p> : null}
         {draft ? (
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>

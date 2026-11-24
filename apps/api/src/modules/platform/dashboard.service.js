@@ -1,4 +1,4 @@
-import { planMarketingSchema, planPrices } from "@onetap/config-schema";
+import { planMarketingSchema, planPrices } from "@rasoipulse/config-schema";
 import {
   CustomerModel,
   LeadModel,
@@ -10,20 +10,20 @@ import {
   PlanModel,
   TableModel,
   UserModel,
-} from "@onetap/db";
+} from "@rasoipulse/db";
 import { cache } from "../cache/cache.js";
 import { listStores } from "./platform.service.js";
 
 /**
  * The platform dashboard: what is happening across every store — sales going
- * through TablePe month by month, how this month and year compare with the
+ * through Rasoi Pulse month by month, how this month and year compare with the
  * last, which stores sell the most, how many stores are set up, and what the
  * subscriptions add up to.
  *
  * Two different "revenue"s, kept apart on purpose:
  *   sales          the value of orders customers placed with the stores
  *                  (cancelled ones left out). Real data, from the orders.
- *   subscriptions  what the stores pay TablePe, ESTIMATED from each plan's
+ *   subscriptions  what the stores pay Rasoi Pulse, ESTIMATED from each plan's
  *                  listed monthly price × the stores on it. There is no
  *                  billing in the app yet, so there are no payment records
  *                  and no history — only today's picture.

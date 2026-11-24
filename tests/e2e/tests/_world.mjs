@@ -8,7 +8,7 @@ export const W = {
   slug: "lifecycle",
   ownerEmail: "owner@lifecycle.test",
   ownerPassword: "Owner123!",
-  label: "lifecycle", // the store's TablePe address:  lifecycle.<base>
+  label: "lifecycle", // the store's Rasoi Pulse address:  lifecycle.<base>
 };
 export const SUB_HOST = `${W.label}.localhost:3170`;
 export const SUB_URL = `http://${SUB_HOST}`;

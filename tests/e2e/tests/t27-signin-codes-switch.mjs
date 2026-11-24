@@ -45,7 +45,7 @@ export async function run(d, h) {
   // a customer asking for a code on the storefront; returns the text of the screen they land on
   const customerAsks = async (phone) => {
     await d.tab("customer", "Customer · Acme Momos storefront");
-    await d.context.clearCookies({ name: "onetap_customer" });
+    await d.context.clearCookies({ name: "rasoipulse_customer" });
     await d.goto(BENCH.storefront + "/main", 300);
     const group = d.page.getByRole("group", { name: "Order type" });
     if (await group.isVisible().catch(() => false)) await d.click(group.getByRole("button", { name: "Takeaway" }), { after: 300 });

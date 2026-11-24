@@ -2,8 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { formatINR, formatWhen, GATEWAY_LABELS, itemImageUrl, ORDER_TYPE_STORAGE_KEY } from "@onetap/config-schema";
-import { DropdownSoft, fx, ProgressSteps } from "@onetap/ui";
+import { formatINR, formatWhen, GATEWAY_LABELS, itemImageUrl, ORDER_TYPE_STORAGE_KEY } from "@rasoipulse/config-schema";
+import { DropdownSoft, fx, ProgressSteps } from "@rasoipulse/ui";
 import { AlertTriangle, ArrowLeft, Check, ChevronRight, Coins, MapPin, ShoppingBag, Sparkles, Tag, Utensils, Wallet, X } from "lucide-react";
 import { api, payOnline } from "@/lib/clientApi";
 import { useCapacity } from "@/lib/useCapacity";
@@ -69,10 +69,10 @@ export function OrderPage({
   const [reorderNote, setReorderNote] = useState(null);
   useEffect(() => {
     try {
-      const raw = window.sessionStorage.getItem(`onetap.reorderNotice.${outletId}`);
+      const raw = window.sessionStorage.getItem(`rasoipulse.reorderNotice.${outletId}`);
       if (raw) {
         setReorderNote(JSON.parse(raw));
-        window.sessionStorage.removeItem(`onetap.reorderNotice.${outletId}`);
+        window.sessionStorage.removeItem(`rasoipulse.reorderNotice.${outletId}`);
       }
     } catch {
       /* private window */

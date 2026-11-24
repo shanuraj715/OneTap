@@ -1,5 +1,5 @@
 import { apiPublicUrl, apiServerUrl } from "@/lib/api-config";
-import { parseOutletConfig, menuLayoutSchema } from "@onetap/config-schema";
+import { parseOutletConfig, menuLayoutSchema } from "@rasoipulse/config-schema";
 import { ThemeStyle } from "@/components/ThemeStyle";
 import { getMenu } from "@/lib/menu";
 import { LivePreview } from "./LivePreview";

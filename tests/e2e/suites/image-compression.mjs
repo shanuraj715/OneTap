@@ -28,7 +28,7 @@ const { DEFAULT_IMAGE_PROCESSING } = await import(`${REPO}/packages/config-schem
 
 const base = `http://127.0.0.1:${PORT}`;
 const call = async (method, path, { body, cookie, outlet } = {}) => {
-  const r = await fetch(base + path, { method, headers: { "content-type": "application/json", ...(cookie ? { cookie } : {}), ...(outlet ? { "x-onetap-outlet": outlet } : {}) }, body: body ? JSON.stringify(body) : undefined });
+  const r = await fetch(base + path, { method, headers: { "content-type": "application/json", ...(cookie ? { cookie } : {}), ...(outlet ? { "x-rasoipulse-outlet": outlet } : {}) }, body: body ? JSON.stringify(body) : undefined });
   const text = await r.text(); let json = {}; try { json = JSON.parse(text); } catch {}
   return { status: r.status, json };
 };
@@ -49,7 +49,7 @@ const kitchen = await login("k@acme.test", "Password123!");
 
 const upload = async (buf, { cookie = owner, o = outlet, kind = "menu-items" } = {}) => {
   const t = Date.now();
-  const r = await fetch(`${base}/api/storage/upload?kind=${kind}`, { method: "POST", headers: { "content-type": "application/octet-stream", ...(cookie ? { cookie } : {}), ...(o ? { "x-onetap-outlet": o } : {}) }, body: buf });
+  const r = await fetch(`${base}/api/storage/upload?kind=${kind}`, { method: "POST", headers: { "content-type": "application/octet-stream", ...(cookie ? { cookie } : {}), ...(o ? { "x-rasoipulse-outlet": o } : {}) }, body: buf });
   const text = await r.text(); let json = {}; try { json = JSON.parse(text); } catch {}
   return { status: r.status, json, ms: Date.now() - t };
 };

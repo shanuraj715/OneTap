@@ -4,8 +4,8 @@ import { z } from "zod";
 const schema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
   API_PORT: z.coerce.number().int().positive().default(3072),
-  MONGODB_URI: z.string().min(1).default("mongodb://127.0.0.1:27017/onetap_dev"),
-  MONGODB_DB: z.string().min(1).default("onetap_dev"),
+  MONGODB_URI: z.string().min(1).default("mongodb://127.0.0.1:27017/rasoipulse_dev"),
+  MONGODB_DB: z.string().min(1).default("rasoipulse_dev"),
   CORS_ORIGINS: z.string().default("http://localhost:3070,http://localhost:3071"),
   /** encrypts payment gateway credentials at rest — MUST be changed for production */
   ENCRYPTION_KEY: z.string().min(16).default("dev-only-insecure-encryption-key-change-me"),
@@ -28,7 +28,7 @@ const schema = z.object({
    */
   STOREFRONT_ORIGIN: z.string().url().default("http://localhost:3070"),
   /**
-   * The TablePe marketing website (apps/website). After any change to its
+   * The Rasoi Pulse marketing website (apps/website). After any change to its
    * pages, settings or public plans, the API asks it to refresh right away;
    * the shared secret proves the request came from here. Without it, the
    * website still refreshes on its own every few minutes.
@@ -80,12 +80,12 @@ const schema = z.object({
    * secret key stays here.
    */
   /**
-   * The domain stores' TablePe addresses live under — a store "acme" opens on
+   * The domain stores' Rasoi Pulse addresses live under — a store "acme" opens on
    * acme.<this>. A server setting rather than a database one because local
    * development and production share one database but not one domain:
-   * tablepe.in in production, localhost:3070 on a developer's machine
+   * rasoipulse.in in production, localhost:3070 on a developer's machine
    * (acme.localhost:3070 opens in a browser with no DNS at all). Empty = the
-   * platform offers no TablePe addresses.
+   * platform offers no Rasoi Pulse addresses.
    */
   STORE_SUBDOMAIN_BASE: z.string().default(""),
   TURNSTILE_SITE_KEY: z.string().default(""),
@@ -118,13 +118,13 @@ if (isProd && /^https?:\/\/(localhost|127\.0\.0\.1|0\.0\.0\.0|\[::1\]|192\.168\.
 const subdomainBase = env.STORE_SUBDOMAIN_BASE.trim().toLowerCase();
 const LOCAL_BASE = /^localhost(?::\d{2,5})?$/;
 if (subdomainBase && !LOCAL_BASE.test(subdomainBase) && !/^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z][a-z0-9-]+$/.test(subdomainBase)) {
-  console.error(`Invalid environment: STORE_SUBDOMAIN_BASE is "${env.STORE_SUBDOMAIN_BASE}", which isn't a domain. Use something like tablepe.in (no https://, no path).`);
+  console.error(`Invalid environment: STORE_SUBDOMAIN_BASE is "${env.STORE_SUBDOMAIN_BASE}", which isn't a domain. Use something like rasoipulse.in (no https://, no path).`);
   process.exit(1);
 }
 if (isProd && LOCAL_BASE.test(subdomainBase)) {
   console.error(
     `Invalid environment: STORE_SUBDOMAIN_BASE is "${env.STORE_SUBDOMAIN_BASE}" in production.\n` +
-      "Every store's TablePe address would be built on it, and none would open. Set it to your real domain (e.g. tablepe.in) and restart.",
+      "Every store's Rasoi Pulse address would be built on it, and none would open. Set it to your real domain (e.g. rasoipulse.in) and restart.",
   );
   process.exit(1);
 }

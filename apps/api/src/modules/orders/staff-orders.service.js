@@ -1,5 +1,5 @@
 import { createHmac } from "node:crypto";
-import { CustomerModel, TableModel, TableSessionModel, tenantFilter } from "@onetap/db";
+import { CustomerModel, TableModel, TableSessionModel, tenantFilter } from "@rasoipulse/db";
 import { env } from "../../env.js";
 import { safeEqual } from "../../lib/crypto.js";
 import { logger } from "../../logger.js";

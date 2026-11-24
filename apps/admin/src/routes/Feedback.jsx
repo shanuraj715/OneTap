@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { formatINR } from "@onetap/config-schema";
+import { formatINR } from "@rasoipulse/config-schema";
 import { MessageSquareText, Star } from "lucide-react";
 import { useAuth } from "../lib/useAuth";
 import { useFeedback } from "../lib/useGrowth";

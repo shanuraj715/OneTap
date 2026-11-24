@@ -18,7 +18,7 @@ const loginLogSchema = new Schema(
     /** why a failed attempt failed: wrong_password · unknown_account · inactive · paused */
     reason: { type: String, default: "" },
     isSuperAdmin: { type: Boolean, default: false },
-    /** "platform" = the TablePe console, "store" = a restaurant's own dashboard */
+    /** "platform" = the Rasoi Pulse console, "store" = a restaurant's own dashboard */
     scope: { type: String, enum: ["platform", "store", "unknown"], default: "unknown" },
     brandId: { type: String },
     /** kept as it was when the sign-in happened */

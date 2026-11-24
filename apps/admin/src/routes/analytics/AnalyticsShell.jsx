@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { DatePickerInput, formatDate } from "@onetap/ui";
-import { daysBetween, RANGE_PRESETS } from "@onetap/config-schema";
+import { DatePickerInput, formatDate } from "@rasoipulse/ui";
+import { daysBetween, RANGE_PRESETS } from "@rasoipulse/config-schema";
 import { BarChart3, Calculator, Clock, FileDown, Lock, Package, Scale, TrendingUp, Users as UsersIcon } from "lucide-react";
 import { NotFoundSection } from "../../components/NotFoundSection";
 import { SubNav } from "../../components/SubNav";
@@ -30,7 +30,7 @@ export function AnalyticsShell({ children, needs, subtitle = "How the store is d
         <PageHeader title="Analytics" icon={<BarChart3 size={23} />} subtitle={subtitle} />
         <Card>
           <Empty icon={<Lock size={26} />} title="Analytics isn't in your plan">
-            Ask TablePe to add it to your plan and this page will open — your sales data is already being collected.
+            Ask Rasoi Pulse to add it to your plan and this page will open — your sales data is already being collected.
           </Empty>
         </Card>
       </>

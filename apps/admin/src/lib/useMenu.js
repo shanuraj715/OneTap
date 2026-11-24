@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { planCategoryMove } from "@onetap/config-schema";
+import { planCategoryMove } from "@rasoipulse/config-schema";
 import * as api from "./api";
                                     
 

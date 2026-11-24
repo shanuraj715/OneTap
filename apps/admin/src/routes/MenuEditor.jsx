@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { DEFAULT_IMAGE_RATIO, flattenCategories, formatINR, IMAGE_RULES, imageRatioMeta, imageRatioOf, imageRoom, ITEM_IMAGE_RATIOS, limitImages, modifierRuleText, PREP_STATION_LABELS } from "@onetap/config-schema";
+import { DEFAULT_IMAGE_RATIO, flattenCategories, formatINR, IMAGE_RULES, imageRatioMeta, imageRatioOf, imageRoom, ITEM_IMAGE_RATIOS, limitImages, modifierRuleText, PREP_STATION_LABELS } from "@rasoipulse/config-schema";
 import { ClipboardPaste, Download, ImagePlus, Loader, Star, X } from "lucide-react";
 import * as api from "../lib/api";
 import { ImportMenuModal } from "../components/ImportMenuModal";
@@ -319,7 +319,7 @@ function ItemForm({
         <div style={{ fontSize: 12, color: "var(--color-text-muted)", marginBottom: 10, lineHeight: 1.5 }}>
           Menu cards come in different shapes, so a dish can have a picture for each: <strong>square</strong>, <strong>landscape 4:3</strong>,{" "}
           <strong>wide 16:9</strong> and <strong>portrait 3:4</strong>. A card shows the picture of its own shape; if the dish has none for it, the
-          square one is used. Any format (JPEG, PNG, WebP, AVIF, HEIC…) — compressed automatically. TablePe sets where photos are kept and how
+          square one is used. Any format (JPEG, PNG, WebP, AVIF, HEIC…) — compressed automatically. Rasoi Pulse sets where photos are kept and how
           small they are made. Copied a picture? Press Ctrl+V (⌘V on a Mac) here, or use Paste.{" "}
           <strong>{item ? "Photos are saved as soon as you add, change or remove them — you don't need to press Save for them." : "Photos are saved when you create the item."}</strong>
         </div>

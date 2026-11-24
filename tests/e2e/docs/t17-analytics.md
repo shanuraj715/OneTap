@@ -153,7 +153,7 @@ _Nothing failed._
 
 **Step 12 — Reports: Excel — a sheet per section with the right totals**
 
-- the file is named like a report and ends .xlsx — _tablepe-marketing-mart-2026-10-23_to_2026-11-21.xlsx_
+- the file is named like a report and ends .xlsx — _rasoipulse-marketing-mart-2026-10-23_to_2026-11-21.xlsx_
 - there is a sheet for each chosen section
 - did not happen: a section that was not chosen (Sales by hour, Every order) is in the file
 - Summary: sales 52164, net 49718.57, GST 2445.43, orders 285, cancelled 32

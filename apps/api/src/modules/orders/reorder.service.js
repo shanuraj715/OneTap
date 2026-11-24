@@ -1,5 +1,5 @@
-import { menuForNow } from "@onetap/config-schema";
-import { brandFilter, OrderModel, OutletModel } from "@onetap/db";
+import { menuForNow } from "@rasoipulse/config-schema";
+import { brandFilter, OrderModel, OutletModel } from "@rasoipulse/db";
 import { HttpError } from "../../middleware/error.js";
 import { getMenu } from "../menu/menu.service.js";
 

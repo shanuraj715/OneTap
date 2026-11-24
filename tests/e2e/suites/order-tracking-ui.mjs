@@ -15,7 +15,7 @@ const outlets = await (await fetch(`${API}/api/outlets`, { headers: { cookie } }
 const main = (outlets.outlets ?? outlets).find((o) => o.slug === "main");
 const outletId = String(main._id ?? main.id);
 const staff = async (method, path, body) => {
-  const r = await fetch(API + path, { method, headers: { "content-type": "application/json", cookie, "x-onetap-outlet": outletId }, body: body ? JSON.stringify(body) : undefined });
+  const r = await fetch(API + path, { method, headers: { "content-type": "application/json", cookie, "x-rasoipulse-outlet": outletId }, body: body ? JSON.stringify(body) : undefined });
   let json = {}; try { json = await r.json(); } catch {}
   return { status: r.status, json };
 };
@@ -27,7 +27,7 @@ const dish = menu.items.find((i) => i.isAvailable && (i.variants ?? []).length =
 async function customer(phone, name) {
   const asked = await (await fetch(`${API}/api/customer/otp/request`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ outletId, destination: phone, name }) })).json();
   const v = await fetch(`${API}/api/customer/otp/verify`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ outletId, destination: phone, code: asked.devCode ?? "123456", name, gender: "female", age: 30 }) });
-  const set = v.headers.getSetCookie().find((c) => /^onetap_customer=/.test(c));
+  const set = v.headers.getSetCookie().find((c) => /^rasoipulse_customer=/.test(c));
   const [k, val] = set.split(";")[0].split("=");
   return { name, cookie: { name: k, value: val, domain: "localhost", path: "/" } };
 }

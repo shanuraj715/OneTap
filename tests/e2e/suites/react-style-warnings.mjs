@@ -17,7 +17,7 @@ const ok = (c, l, x = "") => { c ? pass++ : fail++; console.log(`${c ? "PASS" : 
 const entry = `
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { menuLayoutSchema } from "@onetap/config-schema";
+import { menuLayoutSchema } from "@rasoipulse/config-schema";
 import { MenuSections } from "${REPO}/packages/ui/src/MenuSections.jsx";
 
 const names = ["Soups", "Starters", "Dosa", "Idli & Vada", "Uttapam", "Thali", "Pizza", "Pasta", "Burgers", "Rolls", "Momos", "Biryani", "Desserts", "Drinks"];

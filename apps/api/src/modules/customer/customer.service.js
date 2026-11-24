@@ -1,10 +1,10 @@
 import { createHash, randomBytes, randomInt } from "node:crypto";
-import { OTP_VALID_MINUTES, otpResendWait } from "@onetap/config-schema";
+import { OTP_VALID_MINUTES, otpResendWait } from "@rasoipulse/config-schema";
 import {
   CustomerModel,
   CustomerSessionModel,
   OtpChallengeModel,
-} from "@onetap/db";
+} from "@rasoipulse/db";
 import { isProd } from "../../env.js";
 import { cache } from "../cache/cache.js";
 import { HttpError } from "../../middleware/error.js";

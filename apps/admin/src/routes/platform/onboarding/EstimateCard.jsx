@@ -1,5 +1,5 @@
 import { Link } from "../../../lib/nav";
-import { estimatePrice } from "@onetap/config-schema";
+import { estimatePrice } from "@rasoipulse/config-schema";
 import { Calculator } from "lucide-react";
 import { Card, Field, TextInput } from "../../../ui";
 import { subtle } from "./parts";
@@ -7,7 +7,7 @@ import { subtle } from "./parts";
 const rs = (n) => `₹${new Intl.NumberFormat("en-IN").format(Math.round(n))}`;
 
 /**
- * The estimated monthly price for what the form asks for, line by line (only for the people at TablePe — it is not printed).
+ * The estimated monthly price for what the form asks for, line by line (only for the people at Rasoi Pulse — it is not printed).
  * A standard plan: the plan's own price plus whatever was allowed beyond it. The Custom plan: the dearest plan's price plus
  * the outlets and people beyond that plan's limits, so it always costs more than every standard plan.
  */

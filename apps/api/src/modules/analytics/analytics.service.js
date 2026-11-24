@@ -10,8 +10,8 @@ import {
   SALES_MATCH,
   WEEKDAYS,
   weekdayOf,
-} from "@onetap/config-schema";
-import { CustomerModel, MenuItemModel, OrderModel, OutletModel } from "@onetap/db";
+} from "@rasoipulse/config-schema";
+import { CustomerModel, MenuItemModel, OrderModel, OutletModel } from "@rasoipulse/db";
 import { HttpError } from "../../middleware/error.js";
 
 /**

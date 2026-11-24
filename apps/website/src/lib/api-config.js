@@ -1,5 +1,5 @@
 /**
- * Which TablePe API this website reads its pages from — the one place it's
+ * Which Rasoi Pulse API this website reads its pages from — the one place it's
  * set. The address ships with the app, so deploying the website needs no API
  * setting; override per deployment if you need to:
  *   NEXT_PUBLIC_API_URL  the API's public address (build time)

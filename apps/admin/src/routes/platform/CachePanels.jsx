@@ -70,7 +70,7 @@ export function CacheSettingsCard() {
     <Card
       title="Cache"
       icon={<Database size={16} />}
-      subtitle="So pages open fast, TablePe remembers each store's look, settings and menu for a while instead of reading the database for every visitor. When the time is up, the next visitor loads it fresh and the memory fills up again."
+      subtitle="So pages open fast, Rasoi Pulse remembers each store's look, settings and menu for a while instead of reading the database for every visitor. When the time is up, the next visitor loads it fresh and the memory fills up again."
       action={
         <Button variant="outline" onClick={() => navigate("/platform/cache")} style={{ display: "inline-flex", gap: 6, alignItems: "center" }}>
           <Eye size={14} /> View what's cached
@@ -225,7 +225,7 @@ export function StoreCacheCard({ store }) {
     <Card
       title={`Cache — ${store.name}`}
       icon={<Database size={16} />}
-      subtitle="What TablePe is remembering for this store so its pages open fast. Expire it to make the next visitor load everything fresh."
+      subtitle="What Rasoi Pulse is remembering for this store so its pages open fast. Expire it to make the next visitor load everything fresh."
       action={
         <Button disabled={expire.isPending} onClick={() => expire.mutate()} style={{ display: "inline-flex", gap: 6, alignItems: "center" }}>
           <Eraser size={14} /> {expire.isPending ? "Expiring…" : "Expire this store's cache"}

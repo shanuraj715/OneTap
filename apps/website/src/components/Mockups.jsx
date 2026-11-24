@@ -103,7 +103,7 @@ export function DashboardMock() {
   ];
   const label = { new: "New", accepted: "Accepted", preparing: "Preparing", ready: "Ready" };
   return (
-    <Browser url="admin.tablepe.com/orders">
+    <Browser url="admin.rasoipulse.com/orders">
       <div className="m-dash-top">
         <b>Live orders</b>
         <span className="m-live">● Live</span>

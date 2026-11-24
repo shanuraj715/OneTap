@@ -1,4 +1,4 @@
-import { smsNumber } from "@onetap/config-schema";
+import { smsNumber } from "@rasoipulse/config-schema";
 import { logger } from "../../logger.js";
 import { storePlan } from "../platform/plan.service.js";
 import { queueCustomerText } from "../whatsapp/whatsapp.service.js";

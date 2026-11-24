@@ -33,7 +33,7 @@ let OUTLET = null;
 const call = async (method, path, { body, cookie, headers = {}, rawBody } = {}) => {
   const r = await fetch(base + path, {
     method,
-    headers: { ...(rawBody ? {} : { "content-type": "application/json" }), ...(cookie ? { cookie } : {}), ...(OUTLET ? { "x-onetap-outlet": OUTLET } : {}), ...headers },
+    headers: { ...(rawBody ? {} : { "content-type": "application/json" }), ...(cookie ? { cookie } : {}), ...(OUTLET ? { "x-rasoipulse-outlet": OUTLET } : {}), ...headers },
     body: rawBody ?? (body ? JSON.stringify(body) : undefined),
   });
   const text = await r.text(); let json = {}; try { json = JSON.parse(text); } catch {}
@@ -70,7 +70,7 @@ const meta = [];
 const fakeMeta = http.createServer((rq, rs) => { let b = ""; rq.on("data", (c) => (b += c)); rq.on("end", () => { meta.push({ path: rq.url, body: JSON.parse(b || "{}") }); rs.setHeader("content-type", "application/json"); rs.end(JSON.stringify({ messages: [{ id: "wamid.1" }] })); }); });
 await new Promise((r) => fakeMeta.listen(3093, "127.0.0.1", r));
 
-await must(call("POST", "/api/users", { cookie: owner, headers: { "x-onetap-brand": brandA }, body: { email: "m@acme.test", name: "Manager", password: "Manager123!", role: "manager" } }), "manager");
+await must(call("POST", "/api/users", { cookie: owner, headers: { "x-rasoipulse-brand": brandA }, body: { email: "m@acme.test", name: "Manager", password: "Manager123!", role: "manager" } }), "manager");
 const manager = await login("m@acme.test", "Manager123!");
 const acc = (await must(call("POST", "/api/whatsapp/accounts", { cookie: owner, body: { label: "Counter phone" } }))).json.account.id;
 const mapping = (method, extra = {}) => ({ codes: { method, linkedMessage: "", whatsappTemplate: { name: "", language: "en", copyButton: false }, ...extra } });

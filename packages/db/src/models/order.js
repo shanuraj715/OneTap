@@ -5,7 +5,7 @@ import {
   ORDER_STATUSES,
   PAYMENT_STATUSES,
   PLACED_BY_VALUES,
-} from "@onetap/config-schema";
+} from "@rasoipulse/config-schema";
 import { tenantScope } from "../tenant-scope.js";
 
 const { Schema, model, models } = mongoose;

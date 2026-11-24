@@ -5,7 +5,7 @@ import {
   CARD_SIZES,
   cardSizeById,
   qrCardSpecSchema,
-} from "@onetap/config-schema";
+} from "@rasoipulse/config-schema";
 import { IdCard, LayoutTemplate, Plus, RotateCcw, RotateCw, Save } from "lucide-react";
 import { useCardDesign, useResetCardDesign, useSaveCardDesign, useTableQrUrls } from "../../lib/useCardDesign";
 import { useOutlet } from "../../lib/useOutlet";

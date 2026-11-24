@@ -31,7 +31,7 @@ export function MarketingGate({ children }) {
         <PageHeader title="Marketing" icon={<Megaphone size={23} />} subtitle="Send an offer or an announcement to your customers." />
         <Card>
           <Empty icon={<Lock size={26} />} title="Marketing isn't in your plan">
-            Ask TablePe to add it to your plan and this page will open — nothing you have set up is lost.
+            Ask Rasoi Pulse to add it to your plan and this page will open — nothing you have set up is lost.
           </Empty>
         </Card>
       </>

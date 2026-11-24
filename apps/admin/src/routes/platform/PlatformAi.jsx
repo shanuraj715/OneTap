@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AI_IMAGE_MODELS } from "@onetap/config-schema";
+import { AI_IMAGE_MODELS } from "@rasoipulse/config-schema";
 import { KeyRound, Pause, Play, Plus, Sparkles, Trash2, Zap } from "lucide-react";
 import * as api from "../../lib/api";
 import { usePlatformAi, usePlatformMutation } from "../../lib/usePlatform";

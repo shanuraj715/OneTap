@@ -6,7 +6,7 @@ import {
   QR_QUIET_MODULES,
   interpolateCardText,
   isRiskyEyePairing,
-} from "@onetap/config-schema";
+} from "@rasoipulse/config-schema";
 import { applyTextStyle, ensureFonts, transformText } from "./cardFonts.js";
 import { drawIcon, hasIcon } from "./cardIcons.js";
 import { contrastRatio, isDarkOn, paintQr, parseColor, roundRectPath, buildMatrix } from "./qrMatrix.js";

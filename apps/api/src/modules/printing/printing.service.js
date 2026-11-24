@@ -15,7 +15,7 @@ import {
                     
                    
                      
-} from "@onetap/config-schema";
+} from "@rasoipulse/config-schema";
 import {
   OrderModel,
   OutletModel,
@@ -30,7 +30,7 @@ import {
                         
                         
                      
-} from "@onetap/db";
+} from "@rasoipulse/db";
 import { encryptSecret, maskSecret } from "../../lib/crypto.js";
 import { logger } from "../../logger.js";
 import { HttpError } from "../../middleware/error.js";

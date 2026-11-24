@@ -10,8 +10,8 @@ import {
   DEFAULT_AI_IMAGE_MODEL,
   imageRatioMeta,
   imageRoom,
-} from "@onetap/config-schema";
-import { MenuCategoryModel, MenuItemModel, PlatformAiModel, tenantFilter } from "@onetap/db";
+} from "@rasoipulse/config-schema";
+import { MenuCategoryModel, MenuItemModel, PlatformAiModel, tenantFilter } from "@rasoipulse/db";
 import { logger } from "../../logger.js";
 import { HttpError } from "../../middleware/error.js";
 import { decryptSecret, encryptSecret, maskSecret } from "../../lib/crypto.js";

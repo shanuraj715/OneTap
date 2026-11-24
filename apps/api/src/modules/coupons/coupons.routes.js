@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
-import { cartSchema, couponInputSchema, orderChannelSchema } from "@onetap/config-schema";
+import { cartSchema, couponInputSchema, orderChannelSchema } from "@rasoipulse/config-schema";
 import { outletBrand } from "../outlets/outlet-cache.js";
 import { requireOutletContext } from "../../middleware/auth.js";
 import { requireFeature } from "../platform/plan.service.js";

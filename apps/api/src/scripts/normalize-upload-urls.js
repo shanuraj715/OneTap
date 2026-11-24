@@ -1,6 +1,6 @@
 import { existsSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { connectDb, disconnectDb, mongoose } from "@onetap/db";
+import { connectDb, disconnectDb, mongoose } from "@rasoipulse/db";
 import { env } from "../env.js";
 import { uploadPathOf } from "../modules/storage/upload-urls.js";
 

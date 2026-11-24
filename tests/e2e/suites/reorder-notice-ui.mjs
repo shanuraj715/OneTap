@@ -12,7 +12,7 @@ const outlets = await (await fetch(`${API}/api/outlets`, { headers: { cookie } }
 const main = (outlets.outlets ?? outlets).find((o) => o.slug === "main");
 const outletId = String(main._id ?? main.id);
 const staff = async (method, path, body) => {
-  const r = await fetch(API + path, { method, headers: { "content-type": "application/json", cookie, "x-onetap-outlet": outletId }, body: body ? JSON.stringify(body) : undefined });
+  const r = await fetch(API + path, { method, headers: { "content-type": "application/json", cookie, "x-rasoipulse-outlet": outletId }, body: body ? JSON.stringify(body) : undefined });
   let json = {}; try { json = await r.json(); } catch {}
   return { status: r.status, json };
 };
@@ -22,7 +22,7 @@ const [gone, gone2, kept] = plain;
 
 const asked = await (await fetch(`${API}/api/customer/otp/request`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ outletId, destination: "9811330001", name: "Again Tester" }) })).json();
 const v = await fetch(`${API}/api/customer/otp/verify`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ outletId, destination: "9811330001", code: asked.devCode ?? "123456", name: "Again Tester", gender: "female", age: 30 }) });
-const [ck, cv] = v.headers.getSetCookie().find((c) => /^onetap_customer=/.test(c)).split(";")[0].split("=");
+const [ck, cv] = v.headers.getSetCookie().find((c) => /^rasoipulse_customer=/.test(c)).split(";")[0].split("=");
 const lines = [gone, gone2, kept].map((d) => ({ itemId: d.id, modifierOptionIds: [], quantity: 1 }));
 const placed = (await (await fetch(`${API}/api/orders`, { method: "POST", headers: { "content-type": "application/json", cookie: `${ck}=${cv}` }, body: JSON.stringify({ outletId, cart: { lines }, channel: "takeaway", gateway: "cod" }) })).json()).order;
 await staff("PATCH", `/api/orders/${placed.id}/status`, { status: "cancelled" });

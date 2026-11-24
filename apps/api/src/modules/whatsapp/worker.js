@@ -16,8 +16,8 @@ import {
   waAfterQuietHours,
   waLocalClock,
   waNextLocalDay,
-} from "@onetap/config-schema";
-import { WaAccountModel, WaChatModel, WaMessageModel } from "@onetap/db";
+} from "@rasoipulse/config-schema";
+import { WaAccountModel, WaChatModel, WaMessageModel } from "@rasoipulse/db";
 import { env } from "../../env.js";
 import { logger } from "../../logger.js";
 import { putFile, readFile, removeObject } from "../storage/storage.service.js";

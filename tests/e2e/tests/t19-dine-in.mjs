@@ -39,7 +39,7 @@ const OWNER = ["o@acme.test", "Owner123!"];
 const DINA = { name: "Dina Diner", phone: "9877712345" };
 const ROHAN = { name: "Rohan Other", phone: "9877799999" };
 const norm = (t) => t.replace(/\s+/g, " ").trim();
-const CUSTOMER_COOKIE = "onetap_customer";
+const CUSTOMER_COOKIE = "rasoipulse_customer";
 
 export async function run(d, h) {
   const page = () => ui.text(d);

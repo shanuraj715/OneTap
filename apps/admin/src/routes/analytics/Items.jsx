@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DEFAULT_STOCK_SAFETY_PCT, WEEKDAYS } from "@onetap/config-schema";
+import { DEFAULT_STOCK_SAFETY_PCT, WEEKDAYS } from "@rasoipulse/config-schema";
 import { useAn, useAnFilters } from "../../lib/useAnalytics";
 import { Field, Select, TextInput } from "../../ui";
 import { Delta, Figure, RankedBars } from "../platform/viz/charts";

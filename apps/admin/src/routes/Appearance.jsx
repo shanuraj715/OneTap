@@ -1,7 +1,7 @@
 import { Component, useEffect, useMemo, useState } from "react";
 import { Link } from "../lib/nav";
 import { Plus, Trash2 } from "lucide-react";
-import { getVariant, VARIANT_SLOTS } from "@onetap/ui";
+import { getVariant, VARIANT_SLOTS } from "@rasoipulse/ui";
 import { useMenu } from "../lib/useMenu";
 import { useOutlet, usePatchConfig } from "../lib/useOutlet";
 import { StorePreviewFrame } from "../lib/storePreview";

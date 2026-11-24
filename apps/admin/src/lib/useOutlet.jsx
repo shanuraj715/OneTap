@@ -4,8 +4,8 @@ import { storeFromPath } from "./nav";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createOutlet, deleteOutlet, listOutlets, patchOutletConfig, updateOutlet } from "./api";
 
-const SELECTED_KEY = "onetap.selectedOutletId";
-const OPEN_STORE_KEY = "onetap.openStoreId";
+const SELECTED_KEY = "rasoipulse.selectedOutletId";
+const OPEN_STORE_KEY = "rasoipulse.openStoreId";
 
 const load = (key) => {
   try {

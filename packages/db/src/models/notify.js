@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { NOTIFY_CHANNELS, ORDER_STATUSES } from "@onetap/config-schema";
+import { NOTIFY_CHANNELS, ORDER_STATUSES } from "@rasoipulse/config-schema";
 import { tenantScope } from "../tenant-scope.js";
 
 const { Schema, model, models } = mongoose;

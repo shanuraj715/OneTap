@@ -4,7 +4,7 @@ import {
   clampCardFontWeight,
   fontIsItalicOnly,
   parseFontSpec,
-} from "@onetap/config-schema";
+} from "@rasoipulse/config-schema";
 
 /**
  * Canvas text falls back silently. Ask for a face the browser has not loaded

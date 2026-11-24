@@ -19,7 +19,7 @@ import {
   DatePickerInput,
   StatCard,
   AnalyticsChart,
-} from "@onetap/ui";
+} from "@rasoipulse/ui";
 import { useOutlet } from "../lib/useOutlet";
 import { StorefrontNav } from "../components/SubNav";
 

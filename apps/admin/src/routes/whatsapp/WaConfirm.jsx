@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { waTextOn } from "@onetap/config-schema";
+import { waTextOn } from "@rasoipulse/config-schema";
 import { Button, Modal } from "../../ui";
 
 /**

@@ -114,7 +114,7 @@ export function useOrderStream(outlet                    , enabled         )    
 
       socket.onclose = (e) => {
         socketRef.current = null;
-        // TablePe just switched this store off (the server closes with 4403): re-read who we are, so the app
+        // Rasoi Pulse just switched this store off (the server closes with 4403): re-read who we are, so the app
         // shows the "store is disabled" notice straight away instead of at the next click or refresh.
         if (e.code === 4403) void qc.invalidateQueries({ queryKey: ["me"] });
         // the platform just switched live updates off (4410): re-read the switch, then ask on a timer instead of reconnecting

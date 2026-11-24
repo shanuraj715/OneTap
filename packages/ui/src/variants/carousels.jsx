@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { safeHref } from "@onetap/config-schema";
+import { safeHref } from "@rasoipulse/config-schema";
 import { AppLink } from "../link";
 import { useReducedMotion, useSlides } from "../hooks";
 import { Photo } from "../primitives";

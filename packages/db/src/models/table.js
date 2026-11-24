@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import {
   SESSION_STATUSES,
   TABLE_STATUSES,
-} from "@onetap/config-schema";
+} from "@rasoipulse/config-schema";
 import { tenantScope } from "../tenant-scope.js";
 
 const { Schema, model, models } = mongoose;

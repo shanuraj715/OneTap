@@ -1,5 +1,5 @@
 import { createHmac } from "node:crypto";
-import { OutletModel,                    } from "@onetap/db";
+import { OutletModel,                    } from "@rasoipulse/db";
 import { env } from "../../env.js";
 import { safeEqual } from "../../lib/crypto.js";
 import { HttpError } from "../../middleware/error.js";

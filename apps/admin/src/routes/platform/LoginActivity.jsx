@@ -11,7 +11,7 @@ const REASONS = {
   wrong_password: "Wrong password",
   unknown_account: "No account with that email",
   inactive: "Account switched off",
-  paused: "Access paused by TablePe",
+  paused: "Access paused by Rasoi Pulse",
 };
 
 const FILTERS = [

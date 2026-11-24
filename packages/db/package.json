@@ -1,5 +1,5 @@
 {
-  "name": "@onetap/db",
+  "name": "@rasoipulse/db",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -11,7 +11,7 @@
     "clean": "rm -rf dist .turbo"
   },
   "dependencies": {
-    "@onetap/config-schema": "workspace:*",
+    "@rasoipulse/config-schema": "workspace:*",
     "mongoose": "^8.9.3"
   }
 }

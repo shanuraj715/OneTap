@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { defaultQrCardSpec } from "@onetap/config-schema";
+import { defaultQrCardSpec } from "@rasoipulse/config-schema";
 import { tenantScope } from "../tenant-scope.js";
 
 const { Schema, model, models } = mongoose;

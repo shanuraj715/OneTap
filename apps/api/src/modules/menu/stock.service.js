@@ -1,5 +1,5 @@
-import { istDayKey } from "@onetap/config-schema";
-import { MenuItemModel, OrderModel, tenantFilter } from "@onetap/db";
+import { istDayKey } from "@rasoipulse/config-schema";
+import { MenuItemModel, OrderModel, tenantFilter } from "@rasoipulse/db";
 import { logger } from "../../logger.js";
 import { HttpError } from "../../middleware/error.js";
 

@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
  * rather than left as page-local state.
  */
 export function useCartLines(outletId) {
-  const storageKey = `onetap.cart.${outletId}`;
+  const storageKey = `rasoipulse.cart.${outletId}`;
   const [lines, setLines] = useState([]);
   const [hydrated, setHydrated] = useState(false);
 

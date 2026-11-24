@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
-import { onboardingSchema } from "@onetap/config-schema";
+import { onboardingSchema } from "@rasoipulse/config-schema";
 import { requireUser } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import { resolveMapsLink } from "./maps-resolve.js";

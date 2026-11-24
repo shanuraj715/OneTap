@@ -1,6 +1,6 @@
 import os from "node:os";
 import { monitorEventLoopDelay, performance } from "node:perf_hooks";
-import { mongoose } from "@onetap/db";
+import { mongoose } from "@rasoipulse/db";
 import { cache } from "../cache/cache.js";
 import { existingScanRoots, measureFolders, readMounts, readPm2, readProcesses, readStaticInfo, readSystem } from "./collect.js";
 import { scoreHealth } from "./health.js";

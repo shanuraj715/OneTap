@@ -7,7 +7,7 @@ import {
   MESSAGE_METHOD_LABELS,
   renderCodeMessage,
   sampleCodeValues,
-} from "@onetap/config-schema";
+} from "@rasoipulse/config-schema";
 import { AlertTriangle, Braces, CheckCircle2, EyeOff, KeyRound, Lock, MessageCircle, MessagesSquare, Route, Smartphone } from "lucide-react";
 import { Link } from "../lib/nav";
 import { SettingsNav } from "../components/SubNav";

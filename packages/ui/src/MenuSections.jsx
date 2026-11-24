@@ -9,7 +9,7 @@ import {
             
                 
                   
-} from "@onetap/config-schema";
+} from "@rasoipulse/config-schema";
 import { fx } from "./fx";
 import { getItemCardVariant, gridPropsFor } from "./registry";
 

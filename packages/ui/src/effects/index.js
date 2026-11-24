@@ -1,6 +1,6 @@
 /**
  * Storefront visual effects. One small module per effect, loaded on demand —
- * never re-exported from `@onetap/ui`'s main index, so a client bundle only
+ * never re-exported from `@rasoipulse/ui`'s main index, so a client bundle only
  * ever contains the effect it asked for (the storefront asks on the server,
  * and the browser receives just the resulting string; the admin's live
  * preview dynamic-imports one effect chunk at a time).

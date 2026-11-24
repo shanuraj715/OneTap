@@ -1,5 +1,5 @@
 // The STORE's name (not an outlet's): in the store dashboard (Settings → Business identity) it is shown but can never be edited by the
-// store — a note says to contact the TablePe admin — and only the platform admin can rename it, in the console (Stores → the store).
+// store — a note says to contact the Rasoi Pulse admin — and only the platform admin can rename it, in the console (Stores → the store).
 // Also: renaming an OUTLET (Settings → Outlets) changes the outlet's name everywhere, including the display name Settings used to edit.
 import { chromium } from "playwright";
 const AD = "http://localhost:3171";
@@ -13,7 +13,7 @@ const login = async (email, password) => (await fetch(`${API}/api/auth/login`, {
 const ownerCookie = await login("o@acme.test", "Owner123!");
 const superCookie = await login("super@sandbox.test", "Super123!");
 const call = async (cookie, method, path, body, outletId) => {
-  const r = await fetch(API + path, { method, headers: { "content-type": "application/json", cookie, ...(outletId ? { "x-onetap-outlet": outletId } : {}) }, body: body ? JSON.stringify(body) : undefined });
+  const r = await fetch(API + path, { method, headers: { "content-type": "application/json", cookie, ...(outletId ? { "x-rasoipulse-outlet": outletId } : {}) }, body: body ? JSON.stringify(body) : undefined });
   let json = {}; try { json = await r.json(); } catch {}
   return { status: r.status, json };
 };
@@ -57,7 +57,7 @@ try {
     ok((await page.getByText("Store name", { exact: true }).count()) >= 1 && (await page.getByText("Restaurant name").count()) === 0, "it is called 'Store name' — there is no 'Restaurant name' box any more");
     ok(await box.isDisabled(), "the box is disabled (greyed out)");
     ok((await box.getAttribute("readonly")) !== null, "…and read-only");
-    ok(/Contact the TablePe admin to update the store name\./.test(await page.locator("body").innerText()), "a note under it says to contact the admin to update the store name");
+    ok(/Contact the Rasoi Pulse admin to update the store name\./.test(await page.locator("body").innerText()), "a note under it says to contact the admin to update the store name");
     // a browser can't edit a disabled box (Playwright refuses too) — and what is typed on the page body must not reach it either
     const refused = await box.fill("Hacked name", { timeout: 1500 }).then(() => false, () => true);
     ok(refused && (await box.inputValue()) === STORE, "typing in it is refused and the name is unchanged", await box.inputValue());

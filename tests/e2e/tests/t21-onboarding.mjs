@@ -249,9 +249,9 @@ export async function run(d, h) {
     d.check("the 'Fresh green' colour scheme fills the colours (brand colour #2E7D46) and shows a preview", (await ui.F(d, "Brand colour").then((e) => e.inputValue()).catch(() => "")).toUpperCase() === "#2E7D46" || /#2E7D46/i.test(await d.page.locator("[data-look-preview]").evaluate((e) => e.innerHTML)), "");
     await ui.pick(d, "Light or dark", "Always light");
     await ui.pick(d, "Font", "Poppins");
-    await d.page.getByLabel("TablePe address", { exact: true }).fill("onboardcafe");
+    await d.page.getByLabel("Rasoi Pulse address", { exact: true }).fill("onboardcafe");
     await d.page.locator("[data-address-check]").waitFor({ timeout: 10000 });
-    d.check("the TablePe address is checked live: 'onboardcafe.localhost:3170 is free'", await ui.until(async () => /onboardcafe\.localhost:3170 is free/.test(await d.page.locator("[data-address-check]").innerText()), 8000), await d.page.locator("[data-address-check]").innerText());
+    d.check("the Rasoi Pulse address is checked live: 'onboardcafe.localhost:3170 is free'", await ui.until(async () => /onboardcafe\.localhost:3170 is free/.test(await d.page.locator("[data-address-check]").innerText()), 8000), await d.page.locator("[data-address-check]").innerText());
     await ui.pick(d, "The menu will come from", "Client sends photos / PDF");
     await ui.fill(d, "About how many menu items", "60");
     await ui.fill(d, "Kitchen printers", "1 per outlet");
@@ -344,7 +344,7 @@ export async function run(d, h) {
       ["the common hours", /10:00 – 23:00/],
       ["the brand colour", /#2E7D46/i],
       ["what was added for this client beyond the plan", /added for this client/i],
-      ["the sign-off lines", /TablePe representative — name and signature/],
+      ["the sign-off lines", /Rasoi Pulse representative — name and signature/],
     ]) d.check(`the PDF holds ${what}`, rx.test(text), text.length > 0 ? "" : "no text");
     const pages = await pdfPages(pdf.path);
     d.check("no blank pages: every page has real content (not just a footer) — printing it gives no empty sheets", pages.length >= 2 && pages.length <= 4 && pages.every((p) => p.length > 250), pages.map((p) => p.length).join(" / "));
@@ -436,13 +436,13 @@ export async function run(d, h) {
     await d.goto(`${BENCH.admin}/platform/onboarding/new`, 800);
     await ui.pick(d, "Plan", "Starter");
     for (const [label, value] of [["Store name", "Onboard Cafe"], ["Owner's name", "Another Owner"], ["Owner's phone", "9876511111"], ["Owner's email (their sign-in)", OWNER_EMAIL]]) await ui.fill(d, label, value);
-    await d.page.getByLabel("TablePe address", { exact: true }).fill("onboardcafe");
+    await d.page.getByLabel("Rasoi Pulse address", { exact: true }).fill("onboardcafe");
     await ui.fill(d, "Outlet name", "Dup Outlet", card(0));
     await d.page.getByLabel("Outlet 1 address").fill("Somewhere in Delhi");
     await d.click(d.page.getByRole("button", { name: "Save", exact: true }), { after: 1800 });
     await ui.until(async () => (await d.page.locator("[data-publish-blockers]").getAttribute("data-publish-blockers").catch(() => "0")) !== "0", 12000);
     const blockText = await d.page.locator("[data-publish-blockers]").innerText();
-    d.check("it lists what is taken: the store name, the owner's email and the address", /already exists on TablePe/.test(blockText) && /already has a TablePe account/.test(blockText) && /already used by another store/.test(blockText), blockText);
+    d.check("it lists what is taken: the store name, the owner's email and the address", /already exists on Rasoi Pulse/.test(blockText) && /already has a Rasoi Pulse account/.test(blockText) && /already used by another store/.test(blockText), blockText);
     d.check("Publish as store stays disabled", await publishBtn().isDisabled());
     await ui.openPlatform(d, "/stores");
     d.check("no second store was created", (await d.page.locator("a", { hasText: /Within plan|Over limit|In grace/ }).count()) === storesBefore, `${storesBefore} stores before`);

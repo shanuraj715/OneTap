@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CUSTOMER_GENDER_LABELS, CUSTOMER_GENDERS, MARKETING_ORDER_TYPE_LABELS, MARKETING_ORDER_TYPES, TIME_UNITS } from "@onetap/config-schema";
+import { CUSTOMER_GENDER_LABELS, CUSTOMER_GENDERS, MARKETING_ORDER_TYPE_LABELS, MARKETING_ORDER_TYPES, TIME_UNITS } from "@rasoipulse/config-schema";
 import { Plus, X } from "lucide-react";
 import { Checkbox, Field, Select, TextInput } from "../../ui";
 

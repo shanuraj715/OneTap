@@ -9,8 +9,8 @@ import {
   reservationDays,
   reservationSlots,
   shiftDay,
-} from "@onetap/config-schema";
-import { brandFilter, nextSequence, OutletModel, ReservationModel, TableModel, tenantFilter } from "@onetap/db";
+} from "@rasoipulse/config-schema";
+import { brandFilter, nextSequence, OutletModel, ReservationModel, TableModel, tenantFilter } from "@rasoipulse/db";
 import { logger } from "../../logger.js";
 import { HttpError } from "../../middleware/error.js";
 import { broadcast } from "../../realtime/hub.js";

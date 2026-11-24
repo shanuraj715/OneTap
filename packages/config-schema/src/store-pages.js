@@ -4,7 +4,7 @@ import { hrefSchema } from "./storefront.js";
 /**
  * A store's own pages on its storefront — About us, Contact, Gallery, FAQ, policies, or anything the owner
  * adds. Every outlet has its own set (`/<outlet>/about`). A page is a stack of simple blocks, the same idea as
- * the TablePe marketing site's pages but much smaller: text, a photo, a gallery, an FAQ, a "find us" card, a
+ * the Rasoi Pulse marketing site's pages but much smaller: text, a photo, a gallery, an FAQ, a "find us" card, a
  * button.
  */
 

@@ -3,8 +3,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FEEDBACK_TAGS, formatINR, formatWhen, GATEWAY_LABELS, statusLabelFor } from "@onetap/config-schema";
-import { fx } from "@onetap/ui";
+import { FEEDBACK_TAGS, formatINR, formatWhen, GATEWAY_LABELS, statusLabelFor } from "@rasoipulse/config-schema";
+import { fx } from "@rasoipulse/ui";
 import { Banknote, Bike, CalendarDays, CheckCircle2, ChevronDown, Clock, Coins, CreditCard, LogOut, Phone, Receipt, RotateCcw, ShoppingBag, Star, Trash2, XCircle } from "lucide-react";
 import { api, apiDelete } from "@/lib/clientApi";
 import { useCustomer } from "@/lib/useCustomer";
@@ -95,7 +95,7 @@ export function AccountView({ outletId, menuHref, outletSlug, reservationsEnable
     try {
       const r = await api(`/api/customer/orders/${o.id}/reorder`, { outletId });
       if (!r.lines.length) throw new Error(r.skipped.length ? `None of these dishes can be ordered right now (${r.skipped.map((s) => s.name).join(", ")}).` : "Nothing to add.");
-      const key = `onetap.cart.${r.outletId}`;
+      const key = `rasoipulse.cart.${r.outletId}`;
       let cart = [];
       try {
         cart = JSON.parse(window.localStorage.getItem(key) || "[]");
@@ -103,7 +103,7 @@ export function AccountView({ outletId, menuHref, outletSlug, reservationsEnable
         cart = [];
       }
       window.localStorage.setItem(key, JSON.stringify([...(Array.isArray(cart) ? cart : []), ...r.lines]));
-      if (r.skipped.length || r.notes.length) window.sessionStorage.setItem(`onetap.reorderNotice.${r.outletId}`, JSON.stringify({ skipped: r.skipped, notes: r.notes }));
+      if (r.skipped.length || r.notes.length) window.sessionStorage.setItem(`rasoipulse.reorderNotice.${r.outletId}`, JSON.stringify({ skipped: r.skipped, notes: r.notes }));
       router.push(`/${r.outletSlug}/order`);
     } catch (e) {
       setAgainError({ id: o.id, message: e.message });

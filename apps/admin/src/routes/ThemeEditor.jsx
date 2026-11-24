@@ -20,8 +20,8 @@ import {
                 
              
                    
-} from "@onetap/config-schema";
-import { fx, getItemCardVariant, getVariant } from "@onetap/ui";
+} from "@rasoipulse/config-schema";
+import { fx, getItemCardVariant, getVariant } from "@rasoipulse/ui";
 import { Moon, Palette, RotateCcw, Save, Sparkles, Sun, Undo2 } from "lucide-react";
 import { useOutlet, usePatchConfig } from "../lib/useOutlet";
 import { useStorePlan } from "../lib/useStorePlan";

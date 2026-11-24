@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { safeHref } from "@onetap/config-schema";
+import { safeHref } from "@rasoipulse/config-schema";
 import { AppLink } from "./link";
 import { useSlides } from "./hooks";
 
@@ -17,7 +17,7 @@ import { useSlides } from "./hooks";
  * Colours come only from the store's theme tokens, so every style follows the store's palette.
  */
 
-const STORAGE_KEY = "onetap.announcement.dismissed";
+const STORAGE_KEY = "rasoipulse.announcement.dismissed";
 
 const hashOf = (messages) => {
   const s = messages.map((m) => `${m.text}|${m.linkHref}`).join("§");

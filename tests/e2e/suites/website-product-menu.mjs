@@ -20,7 +20,7 @@ const entry = `
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { SiteHeader } from "${WEB}/src/components/Chrome.jsx";
-const settings = { brandName: "TablePe", logoUrl: "", announcement: { show: false, text: "", href: "" }, contact: { phone: "" } };
+const settings = { brandName: "Rasoi Pulse", logoUrl: "", announcement: { show: false, text: "", href: "" }, contact: { phone: "" } };
 const pages = [
   { slug: "home", title: "Home", nav: { show: true, label: "Home", order: 0 } },
   { slug: "pricing", title: "Pricing", nav: { show: true, label: "Pricing", order: 10 } },
@@ -38,7 +38,7 @@ const product = [
 ];
 export const html = renderToStaticMarkup(<SiteHeader settings={settings} pages={pages} product={product} />);
 `;
-const out = `${WEB}/.onetap-test-header.cjs`;
+const out = `${WEB}/.rasoipulse-test-header.cjs`;
 await esbuild.build({
   stdin: { contents: entry, resolveDir: WEB, loader: "jsx", sourcefile: "entry.jsx" },
   absWorkingDir: WEB, bundle: true, write: true, outfile: out, format: "cjs", platform: "node", packages: "external",

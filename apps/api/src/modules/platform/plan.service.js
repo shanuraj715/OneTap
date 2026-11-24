@@ -1,5 +1,5 @@
-import { outletLimit, resolvePlan, userLimit } from "@onetap/config-schema";
-import { BrandModel, OutletModel, PlanModel, UserModel } from "@onetap/db";
+import { outletLimit, resolvePlan, userLimit } from "@rasoipulse/config-schema";
+import { BrandModel, OutletModel, PlanModel, UserModel } from "@rasoipulse/db";
 import { HttpError } from "../../middleware/error.js";
 import { cache } from "../cache/cache.js";
 import { platformConfig } from "../cache/platform-config.js";
@@ -92,7 +92,7 @@ async function loadStorePlan(key) {
 }
 
 /** What the API says (and the admin looks for) when a store's team is turned away because the store is switched off. */
-export const STORE_DISABLED = { status: 403, code: "store_disabled", message: "This store is disabled. Please contact TablePe to turn it back on." };
+export const STORE_DISABLED = { status: 403, code: "store_disabled", message: "This store is disabled. Please contact Rasoi Pulse to turn it back on." };
 
 /**
  * Turns a store's team away while the platform has the store switched off. The platform's own super admin

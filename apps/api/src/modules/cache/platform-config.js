@@ -1,4 +1,4 @@
-import { PlatformSettingsModel } from "@onetap/db";
+import { PlatformSettingsModel } from "@rasoipulse/db";
 
 /**
  * The platform's settings document, kept in memory.

@@ -24,7 +24,7 @@ await ensureSuperAdmin({ email: "super@sandbox.test", name: "Super", password: "
 
 const base = `http://127.0.0.1:${PORT}`;
 const call = async (method, path, { body, cookie, outlet } = {}) => {
-  const r = await fetch(base + path, { method, headers: { "content-type": "application/json", ...(cookie ? { cookie } : {}), ...(outlet ? { "x-onetap-outlet": outlet } : {}) }, body: body ? JSON.stringify(body) : undefined });
+  const r = await fetch(base + path, { method, headers: { "content-type": "application/json", ...(cookie ? { cookie } : {}), ...(outlet ? { "x-rasoipulse-outlet": outlet } : {}) }, body: body ? JSON.stringify(body) : undefined });
   const text = await r.text(); let json = {}; try { json = JSON.parse(text); } catch {}
   return { status: r.status, json };
 };

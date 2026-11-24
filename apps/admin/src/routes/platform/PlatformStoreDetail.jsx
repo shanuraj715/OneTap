@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link, storeUrl, useNavigate, useParams } from "../../lib/nav";
-import { CARD_TEMPLATE_FAMILIES, EFFECT_IDS, EFFECT_PRESETS, FEATURES } from "@onetap/config-schema";
+import { CARD_TEMPLATE_FAMILIES, EFFECT_IDS, EFFECT_PRESETS, FEATURES } from "@rasoipulse/config-schema";
 import { ArrowLeft, Ban, Check, ExternalLink, Globe, RefreshCw, Save, Store, Trash2, X } from "lucide-react";
 import * as api from "../../lib/api";
 import { useMedia } from "../../lib/useMedia";
@@ -160,7 +160,7 @@ export function PlatformStoreDetail() {
 
 /**
  * The store's name — the one in every storefront header, on receipts and in customer messages. Only the platform admin can
- * change it: the store's owner sees it in Settings, greyed out, with a note to contact TablePe.
+ * change it: the store's owner sees it in Settings, greyed out, with a note to contact Rasoi Pulse.
  */
 function StoreNameCard({ store }) {
   const [name, setName] = useState(store.name);
@@ -457,7 +457,7 @@ function DomainsTab({ store }) {
         {!store.canUseOwnDomain ? (
           <div style={{ marginBottom: 12 }}>
             <Note>
-              {store.plan?.name ?? "This plan"} doesn't include an own domain name, so this store uses its TablePe address. To add one, unlock “Own domain name” for this store on the{" "}
+              {store.plan?.name ?? "This plan"} doesn't include an own domain name, so this store uses its Rasoi Pulse address. To add one, unlock “Own domain name” for this store on the{" "}
               <strong>Features</strong> tab, or move it to a plan that has it.
             </Note>
           </div>
@@ -470,9 +470,9 @@ function DomainsTab({ store }) {
                 <input type="radio" name="primary-domain" checked={primary === h} onChange={() => setPrimary(h)} style={{ accentColor: "var(--color-primary)" }} />
                 <span style={{ fontWeight: 600, fontFamily: "ui-monospace, monospace", fontSize: 13.5 }}>{h}</span>
                 {primary === h ? <Pill tone="ok">Main</Pill> : null}
-                {h === sub.host ? <Pill>TablePe address</Pill> : null}
+                {h === sub.host ? <Pill>Rasoi Pulse address</Pill> : null}
               </label>
-              {/* the TablePe address is created and removed in its own card above */}
+              {/* the Rasoi Pulse address is created and removed in its own card above */}
               {h === sub.host ? null : (
                 <Button variant="outline" onClick={() => remove(h)} aria-label={`Remove ${h}`} style={{ display: "inline-flex", alignItems: "center" }}>
                   <Trash2 size={13} />
@@ -511,7 +511,7 @@ function DomainsTab({ store }) {
       </Card>
 
       {store.canUseOwnDomain ? (
-      <Card title="Connecting an own domain" subtitle="What the store (or whoever manages their domain) does, and what you do. A TablePe address needs none of this.">
+      <Card title="Connecting an own domain" subtitle="What the store (or whoever manages their domain) does, and what you do. A Rasoi Pulse address needs none of this.">
         <ol style={{ margin: 0, paddingLeft: 18, lineHeight: 1.8, fontSize: 13.5 }}>
           <li>
             At their domain registrar, add an <strong>A record</strong> for the domain (and for <code>www</code>) pointing to your server's IP address.
@@ -533,7 +533,7 @@ function DomainsTab({ store }) {
   );
 }
 
-/* ------------------------------------------------- the TablePe address card */
+/* ------------------------------------------------- the Rasoi Pulse address card */
 
 const addressSlug = (text) =>
   String(text ?? "")
@@ -607,7 +607,7 @@ function SubdomainCard({ store }) {
 
   if (!sub.base) {
     return (
-      <Card title="TablePe address" icon={<Globe size={16} />} subtitle="A free address on your own domain — acme.yourdomain.com — for stores without a domain of their own.">
+      <Card title="Rasoi Pulse address" icon={<Globe size={16} />} subtitle="A free address on your own domain — acme.yourdomain.com — for stores without a domain of their own.">
         <Note>
           This server has no base domain for store addresses yet — see <Link to="/platform/settings">Platform settings</Link> for the one setting to add.
         </Note>
@@ -617,7 +617,7 @@ function SubdomainCard({ store }) {
 
   return (
     <Card
-      title="TablePe address"
+      title="Rasoi Pulse address"
       icon={<Globe size={16} />}
       subtitle="Where this store opens when it has no domain of its own. Created here in a moment — nothing to set up on the server for each store."
     >
@@ -761,7 +761,7 @@ function OwnersTab({ store }) {
         {update.isSuccess && !update.isPending ? <Toast kind="ok">Saved.</Toast> : null}
       </Card>
 
-      <Card title="Add an owner" subtitle="An email that already has a TablePe login just gains access to this store — its password stays as it is.">
+      <Card title="Add an owner" subtitle="An email that already has a Rasoi Pulse login just gains access to this store — its password stays as it is.">
         <form
           onSubmit={(e) => {
             e.preventDefault();

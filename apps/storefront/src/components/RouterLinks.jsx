@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { LinkProvider } from "@onetap/ui";
+import { LinkProvider } from "@rasoipulse/ui";
 
 /**
  * Hands Next's <Link> to the shared header, footer, message bar and carousels, so their links to pages of the store ("My

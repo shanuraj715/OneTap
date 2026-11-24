@@ -1,4 +1,4 @@
-import { mongoose } from "@onetap/db";
+import { mongoose } from "@rasoipulse/db";
 import { UPLOAD_KEY_SOURCE } from "./upload-urls.js";
 
 /**

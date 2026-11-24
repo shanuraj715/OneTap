@@ -1,4 +1,4 @@
-import { PRODUCT_VISUAL_LABELS, PRODUCT_VISUALS } from "@onetap/config-schema";
+import { PRODUCT_VISUAL_LABELS, PRODUCT_VISUALS } from "@rasoipulse/config-schema";
 import { Checkbox, Note } from "../../../ui";
 import { IconPicker, ImageField, LinkField, ListEditor, Row, Text } from "./fields";
 
@@ -11,7 +11,7 @@ function Header({ s, set, intro = true }) {
   return (
     <>
       <Row>
-        <Text label="Small label above the heading" value={s.eyebrow} onChange={(v) => set({ eyebrow: v })} max={60} placeholder="e.g. Why TablePe" />
+        <Text label="Small label above the heading" value={s.eyebrow} onChange={(v) => set({ eyebrow: v })} max={60} placeholder="e.g. Why Rasoi Pulse" />
         <Text label="Anchor (for links like #pricing)" value={s.anchor} onChange={(v) => set({ anchor: v.toLowerCase().replace(/[^a-z0-9-]/g, "") })} max={40} placeholder="optional" />
       </Row>
       <Text label="Heading" value={s.heading} onChange={(v) => set({ heading: v })} max={140} />
@@ -62,7 +62,7 @@ const FORMS = {
   ),
   stats: ({ s, set }) => (
     <>
-      <Note>Use numbers that are true for TablePe — they're presented as facts.</Note>
+      <Note>Use numbers that are true for Rasoi Pulse — they're presented as facts.</Note>
       <Header s={s} set={set} intro={false} />
       <ListEditor label="Numbers" items={s.items} onChange={(v) => set({ items: v })} newItem={() => ({ value: "", label: "" })} max={6} itemTitle={(i) => i.value}>
         {(it, up) => (
@@ -147,7 +147,7 @@ const FORMS = {
           <>
             <IconPicker value={it.icon} onChange={(v) => up({ icon: v })} />
             <Text label="When…" value={it.when} onChange={(v) => up({ when: v })} max={80} placeholder="When the queue is out the door" />
-            <Text label="How TablePe helps" value={it.text} onChange={(v) => up({ text: v })} max={300} multiline rows={2} />
+            <Text label="How Rasoi Pulse helps" value={it.text} onChange={(v) => up({ text: v })} max={300} multiline rows={2} />
           </>
         )}
       </ListEditor>

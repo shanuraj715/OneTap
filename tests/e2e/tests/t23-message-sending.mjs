@@ -70,7 +70,7 @@ export async function run(d, h) {
     // a fresh customer on the storefront: opens the menu, adds an item, and arrives at "Sign in to order"
     const customerAsks = async ({ name, phone }) => {
       await d.tab("customer", "Customer · Acme Momos storefront");
-      await d.context.clearCookies({ name: "onetap_customer" });
+      await d.context.clearCookies({ name: "rasoipulse_customer" });
       await d.goto(BENCH.storefront + "/main", 300);
       const group = d.page.getByRole("group", { name: "Order type" });
       if (await group.isVisible().catch(() => false)) await d.click(group.getByRole("button", { name: "Takeaway" }), { after: 300 });

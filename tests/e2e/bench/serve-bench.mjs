@@ -1,4 +1,4 @@
-// TEST BENCH API — a complete throwaway TablePe API on an in-memory database, seeded through the real API with two
+// TEST BENCH API — a complete throwaway Rasoi Pulse API on an in-memory database, seeded through the real API with two
 // fake stores. Nothing real is touched: no .env is read (we chdir away), the database lives in memory and dies with
 // this process. Run it, then use the admin console (:3171) and storefront (:3170) pointed at it.
 //
@@ -171,7 +171,7 @@ const base = "http://127.0.0.1:3097";
 const call = async (method, path, { body, cookie, outlet, brand } = {}) => {
   const r = await fetch(base + path, {
     method,
-    headers: { "content-type": "application/json", ...(cookie ? { cookie } : {}), ...(outlet ? { "x-onetap-outlet": outlet } : {}), ...(brand ? { "x-onetap-brand": brand } : {}) },
+    headers: { "content-type": "application/json", ...(cookie ? { cookie } : {}), ...(outlet ? { "x-rasoipulse-outlet": outlet } : {}), ...(brand ? { "x-rasoipulse-brand": brand } : {}) },
     body: body ? JSON.stringify(body) : undefined,
   });
   const t = await r.text();

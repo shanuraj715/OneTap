@@ -104,7 +104,7 @@ function writeDocs(tests, latest) {
   }
 
   // the overview
-  const C = ["# TablePe end-to-end tests — catalog", ""];
+  const C = ["# Rasoi Pulse end-to-end tests — catalog", ""];
   const ran = tests.map((t) => latest[t.meta.id]).filter(Boolean);
   const bad = ran.filter((r) => r.status !== "pass");
   C.push(`**${tests.length} tests** · ${ran.length - bad.length} passing · ${bad.length} failing/error · ${tests.length - ran.length} not run yet`, "");

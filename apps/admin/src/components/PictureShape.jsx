@@ -1,4 +1,4 @@
-import { defaultCardImageRatio, ITEM_IMAGE_RATIOS } from "@onetap/config-schema";
+import { defaultCardImageRatio, ITEM_IMAGE_RATIOS } from "@rasoipulse/config-schema";
 import { Field, Select } from "../ui";
 
 /**

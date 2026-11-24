@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { RESERVATION_STATUSES } from "@onetap/config-schema";
+import { RESERVATION_STATUSES } from "@rasoipulse/config-schema";
 import { tenantScope } from "../tenant-scope.js";
 
 const { Schema, model, models } = mongoose;

@@ -1,4 +1,4 @@
-import { WEEKDAYS } from "@onetap/config-schema";
+import { WEEKDAYS } from "@rasoipulse/config-schema";
 import { Lightbulb } from "lucide-react";
 import { count, rupees } from "../platform/viz/format";
 

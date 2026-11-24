@@ -87,7 +87,7 @@ outletsRouter.patch("/:id", async (req, res) => {
   const ctx = await requireOutletContext(req, "outlet:manage");
   const body = updateOutletBody.parse(req.body);
   if (body.hostnames !== undefined && !req.user?.isSuperAdmin) {
-    throw new HttpError(403, "Domains are managed by TablePe.");
+    throw new HttpError(403, "Domains are managed by Rasoi Pulse.");
   }
   const outlet = await updateOutlet(ctx, req.params.id, body);
   res.json({ outlet });

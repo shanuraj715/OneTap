@@ -146,9 +146,9 @@ function download(filename, text) {
 
 /** Why there is no data, in words. */
 function notFoundText(kind) {
-  if (kind === "host") return "No store uses this web address, so there is nothing to show. TablePe remembers that answer for up to a minute, so people (or bots) trying made-up addresses don't make the database work every time.";
-  if (kind === "brandslug") return "No store has this short name. TablePe remembers that answer for up to a minute.";
-  return "The answer was “nothing found”. TablePe remembers that for up to a minute, so asking again and again doesn't make the database work every time.";
+  if (kind === "host") return "No store uses this web address, so there is nothing to show. Rasoi Pulse remembers that answer for up to a minute, so people (or bots) trying made-up addresses don't make the database work every time.";
+  if (kind === "brandslug") return "No store has this short name. Rasoi Pulse remembers that answer for up to a minute.";
+  return "The answer was “nothing found”. Rasoi Pulse remembers that for up to a minute, so asking again and again doesn't make the database work every time.";
 }
 
 function Fact({ label, children, title }) {

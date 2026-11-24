@@ -6,7 +6,7 @@ import {
   visibleWidgetsFor,
                       
                          
-} from "@onetap/config-schema";
+} from "@rasoipulse/config-schema";
 import {
   AlertTriangle,
   BarChart3,
@@ -50,7 +50,7 @@ export function Dashboard() {
           <p style={{ color: "var(--color-text-muted)", marginTop: 0 }}>
             {user?.isSuperAdmin
               ? "No brand or outlet exists yet for this account to manage."
-              : "Your account isn't attached to a brand or outlet yet. Ask your TablePe superadmin."}
+              : "Your account isn't attached to a brand or outlet yet. Ask your Rasoi Pulse superadmin."}
           </p>
         </Card>
       </>

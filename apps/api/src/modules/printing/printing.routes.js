@@ -12,8 +12,8 @@ import {
   PRINT_TARGETS,
   sizeSchema,
                    
-} from "@onetap/config-schema";
-import { PrinterModel, tenantFilter } from "@onetap/db";
+} from "@rasoipulse/config-schema";
+import { PrinterModel, tenantFilter } from "@rasoipulse/db";
 import { requireOutletContext, requireUser } from "../../middleware/auth.js";
 import { requireFeature } from "../platform/plan.service.js";
 import { HttpError } from "../../middleware/error.js";
@@ -184,7 +184,7 @@ printingRouter.post("/preview", async (req, res) => {
   const ctx = await requireOutletContext(req, "printer:read");
   const body = previewBody.parse(req.body);
 
-  const { printTemplateSchema } = await import("@onetap/config-schema");
+  const { printTemplateSchema } = await import("@rasoipulse/config-schema");
   const template = printTemplateSchema.parse({ id: "preview", ...body.template });
 
   const input = await buildRenderInput(ctx, template, sampleOrder(), { isReprint: body.isReprint });
@@ -306,7 +306,7 @@ printingRouter.get("/printers/:id/endpoint", async (req, res) => {
 
 /** The agent authenticates with its own signed token, not a staff session. */
 async function agentContext(req                           ) {
-  const header = req.header("x-onetap-agent");
+  const header = req.header("x-rasoipulse-agent");
   if (!header) throw new HttpError(401, "Missing agent token");
   return verifyAgentToken(header);
 }

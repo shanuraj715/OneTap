@@ -30,7 +30,7 @@ const urls = await import(`${API}/src/modules/storage/upload-urls.js`);
 
 const base = `http://127.0.0.1:${PORT}`;
 const call = async (method, path, { body, cookie, outlet } = {}) => {
-  const r = await fetch(base + path, { method, headers: { "content-type": "application/json", ...(cookie ? { cookie } : {}), ...(outlet ? { "x-onetap-outlet": outlet } : {}) }, body: body ? JSON.stringify(body) : undefined });
+  const r = await fetch(base + path, { method, headers: { "content-type": "application/json", ...(cookie ? { cookie } : {}), ...(outlet ? { "x-rasoipulse-outlet": outlet } : {}) }, body: body ? JSON.stringify(body) : undefined });
   const text = await r.text(); let json = {}; try { json = JSON.parse(text); } catch {}
   return { status: r.status, json, text };
 };
@@ -53,7 +53,7 @@ function idOf(r, k) { return r.json[k].id; }
 const menu = async () => (await call("GET", `/api/menu?outletId=${outlet}`)).json;
 const upload = async () => {
   const buf = await sharp({ create: { width: 64, height: 48, channels: 3, background: "#cc5533" } }).png().toBuffer();
-  const r = await fetch(`${base}/api/storage/upload?kind=menu-items`, { method: "POST", headers: { "content-type": "application/octet-stream", cookie: owner, "x-onetap-outlet": outlet }, body: buf });
+  const r = await fetch(`${base}/api/storage/upload?kind=menu-items`, { method: "POST", headers: { "content-type": "application/octet-stream", cookie: owner, "x-rasoipulse-outlet": outlet }, body: buf });
   return { status: r.status, json: await r.json() };
 };
 const KEYS = (n) => `${brand}/${outlet}/menu-items/${"0123456789abcdef".repeat(2).slice(0, 8)}-1111-4222-8333-${String(n).padStart(12, "0")}.webp`;
@@ -116,7 +116,7 @@ ok(!(await menu()).items.some((i) => i.images.some((im) => /localhost/.test(im.u
 say("5. a new domain needs no data changes");
 const stored = "/uploads/" + up.json.key;
 const doc = JSON.stringify({ images: [{ url: stored }], other: "https://cdn.other-site.example/x.png" });
-ok(urls.rewriteJsonText(doc, "https://api.new-domain.example").includes(`"https://api.new-domain.example${stored}"`) && urls.rewriteJsonText(doc, "https://tablepe.in").includes(`"https://tablepe.in${stored}"`), "the same stored data comes out on whichever domain the API is configured with");
+ok(urls.rewriteJsonText(doc, "https://api.new-domain.example").includes(`"https://api.new-domain.example${stored}"`) && urls.rewriteJsonText(doc, "https://rasoipulse.in").includes(`"https://rasoipulse.in${stored}"`), "the same stored data comes out on whichever domain the API is configured with");
 ok(urls.toPublicUrl(stored, "https://a.example") === `https://a.example${stored}` && urls.toPublicUrl("https://x.example/y.png", "https://a.example") === "https://x.example/y.png", "toPublicUrl adds the domain to ours and leaves others");
 ok(urls.toStoredUrl(`https://anything.example/uploads/${up.json.key}`) === stored, "toStoredUrl removes whatever domain was there");
 

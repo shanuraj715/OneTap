@@ -40,7 +40,7 @@ const checkout = async (viewport = { width: 1280, height: 900 }) => {
   page.on("pageerror", (e) => problems.push(`pageerror: ${String(e).slice(0, 200)}`));
   const line = await plainLine();
   await page.goto(`${SF}/main`, { waitUntil: "networkidle", timeout: 90000 });
-  await page.evaluate(([id, ln]) => localStorage.setItem(`onetap.cart.${id}`, JSON.stringify([{ ...ln, quantity: 1, modifierOptionIds: [] }])), [mainId, line]);
+  await page.evaluate(([id, ln]) => localStorage.setItem(`rasoipulse.cart.${id}`, JSON.stringify([{ ...ln, quantity: 1, modifierOptionIds: [] }])), [mainId, line]);
   await page.goto(`${SF}/main/order`, { waitUntil: "networkidle", timeout: 90000 });
   await page.getByText("Sign in to order").first().waitFor({ timeout: 20000 });
   const phone = `97${String(Date.now()).slice(-6)}${String(++phoneSeq).padStart(2, "0")}`.slice(0, 10);

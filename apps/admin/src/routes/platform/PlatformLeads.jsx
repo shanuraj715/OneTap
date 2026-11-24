@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LEAD_STATUSES } from "@onetap/config-schema";
+import { LEAD_STATUSES } from "@rasoipulse/config-schema";
 import { Inbox, Mail, MessageCircle, Phone } from "lucide-react";
 import * as api from "../../lib/api";
 import { useLeads, usePlatformMutation } from "../../lib/usePlatform";

@@ -9,7 +9,7 @@ import {
                    
                     
                      
-} from "@onetap/config-schema";
+} from "@rasoipulse/config-schema";
 
 /* ------------------------------------------------------------------ inputs */
 

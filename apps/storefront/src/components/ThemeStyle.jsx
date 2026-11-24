@@ -1,5 +1,5 @@
-import { effectPreset, googleFontsUrl, themeCss, typographyCss } from "@onetap/config-schema";
-import { loadEffectCss } from "@onetap/ui/effects";
+import { effectPreset, googleFontsUrl, themeCss, typographyCss } from "@rasoipulse/config-schema";
+import { loadEffectCss } from "@rasoipulse/ui/effects";
 
 /**
  * Everything that makes the storefront look like *this* restaurant, emitted

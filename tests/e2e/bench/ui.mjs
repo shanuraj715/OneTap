@@ -137,9 +137,9 @@ export async function createStore(d, { name, slug, plan, outletName = "Central",
   if (plan) await pick(d, "Plan", plan, form);
   await fill(d, "First outlet's name", outletName, form);
   await fill(d, "Outlet URL slug", outletSlug, form);
-  // the form suggests a TablePe address from the store name: leave it (address undefined), replace it, or empty it ("")
-  if (address === "") { const el = await F(d, "TablePe address", form); await d.click(el, { after: 100 }); await d.page.keyboard.press("ControlOrMeta+a"); await d.page.keyboard.press("Backspace"); }
-  else if (address) await fill(d, "TablePe address", address, form);
+  // the form suggests a Rasoi Pulse address from the store name: leave it (address undefined), replace it, or empty it ("")
+  if (address === "") { const el = await F(d, "Rasoi Pulse address", form); await d.click(el, { after: 100 }); await d.page.keyboard.press("ControlOrMeta+a"); await d.page.keyboard.press("Backspace"); }
+  else if (address) await fill(d, "Rasoi Pulse address", address, form);
   if (ownDomain) await fill(d, "Own domain", ownDomain, form);
   await fill(d, "Owner name", ownerName, form);
   await fill(d, "Owner email", ownerEmail, form);
@@ -254,7 +254,7 @@ export async function tryAddressName(d, storeName, label) {
   await sleep(1100);
   return text(d);
 }
-/** Domains tab: create (or change) the store's TablePe address. */
+/** Domains tab: create (or change) the store's Rasoi Pulse address. */
 export async function setAddress(d, storeName, label) {
   await openStore(d, storeName, "Domains");
   await fill(d, await addressBox(d), label);
@@ -399,7 +399,7 @@ export async function enableTestGateway(d) {
   if (await save.isEnabled().catch(() => false)) await d.click(save, { after: 900 });
 }
 
-/** Domains tab → Remove address (the store's TablePe address) */
+/** Domains tab → Remove address (the store's Rasoi Pulse address) */
 export async function removeAddress(d, storeName) {
   await openStore(d, storeName, "Domains");
   await d.click(d.page.getByRole("button", { name: "Remove address" }), { after: 400 });

@@ -1,5 +1,5 @@
-import { applyEntitlements, outletConfigSchema } from "@onetap/config-schema";
-import { OutletModel } from "@onetap/db";
+import { applyEntitlements, outletConfigSchema } from "@rasoipulse/config-schema";
+import { OutletModel } from "@rasoipulse/db";
 import { HttpError } from "../../middleware/error.js";
 import { cache } from "../cache/cache.js";
 import { storePlan } from "../platform/plan.service.js";

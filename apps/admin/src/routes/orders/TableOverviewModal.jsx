@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "../../lib/nav";
-import { formatINR, TABLE_STATUS_LABELS } from "@onetap/config-schema";
+import { formatINR, TABLE_STATUS_LABELS } from "@rasoipulse/config-schema";
 import {
   ArrowLeft,
   Ban,

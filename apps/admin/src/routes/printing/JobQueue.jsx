@@ -8,7 +8,7 @@ import {
   TARGETS,
                       
                     
-} from "@onetap/config-schema";
+} from "@rasoipulse/config-schema";
 import {
   AlertTriangle,
   Ban,

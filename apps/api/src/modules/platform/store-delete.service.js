@@ -9,7 +9,7 @@ import {
   SessionModel,
   TableModel,
   UserModel,
-} from "@onetap/db";
+} from "@rasoipulse/db";
 import { logger } from "../../logger.js";
 import { HttpError } from "../../middleware/error.js";
 import { expireStore } from "../cache/cache.js";

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { formatINR, modifierRuleText, modifierSelectionErrors } from "@onetap/config-schema";
+import { formatINR, modifierRuleText, modifierSelectionErrors } from "@rasoipulse/config-schema";
 import { Check, Minus, Plus, X } from "lucide-react";
 import { FoodMark } from "./MenuBrowser";
 import { input, label, muted, primaryBtn } from "./styles";

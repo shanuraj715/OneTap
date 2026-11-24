@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
-import { coinsValuePaise, currentAge, customerAgeSchema, customerEmailSchema, customerGenderSchema, customerNameSchema, feedbackInputSchema, isProfileComplete } from "@onetap/config-schema";
-import { OutletModel } from "@onetap/db";
+import { coinsValuePaise, currentAge, customerAgeSchema, customerEmailSchema, customerGenderSchema, customerNameSchema, feedbackInputSchema, isProfileComplete } from "@rasoipulse/config-schema";
+import { OutletModel } from "@rasoipulse/db";
 import { isProd } from "../../env.js";
 import { HttpError } from "../../middleware/error.js";
 import { assertNotBlocked, blockInfo, failed, floodLimiter } from "../security/login-guard.js";
@@ -14,7 +14,7 @@ import { storePlan } from "../platform/plan.service.js";
 import { completeProfile, customerFromToken, endCustomerSession, requestOtp, verifyOtp } from "./customer.service.js";
 import { limiter, usesPolicy } from "../../middleware/rate-limit.js";
 
-export const CUSTOMER_COOKIE = "onetap_customer";
+export const CUSTOMER_COOKIE = "rasoipulse_customer";
 
 export const customerRouter         = Router();
 

@@ -18,7 +18,7 @@ const main = (await outletsOf(cookie)).find((o) => o.slug === "main");
 const outletId = String(main._id ?? main.id);
 const configBefore = main.config.kitchenDisplay;
 const callAs = (ck, oid) => async (method, path, body) => {
-  const r = await fetch(API + path, { method, headers: { "content-type": "application/json", cookie: ck, "x-onetap-outlet": oid }, body: body ? JSON.stringify(body) : undefined });
+  const r = await fetch(API + path, { method, headers: { "content-type": "application/json", cookie: ck, "x-rasoipulse-outlet": oid }, body: body ? JSON.stringify(body) : undefined });
   let json = {}; try { json = await r.json(); } catch {}
   return { status: r.status, json };
 };

@@ -7,8 +7,8 @@ import {
   isSafeHref,
   MAX_ANNOUNCEMENT_MESSAGES,
   MAX_CAROUSEL_SLIDES,
-} from "@onetap/config-schema";
-import { announcementVariants, carouselVariants, getVariant } from "@onetap/ui";
+} from "@rasoipulse/config-schema";
+import { announcementVariants, carouselVariants, getVariant } from "@rasoipulse/ui";
 import { ArrowDown, ArrowUp, Megaphone, Plus, Trash2 } from "lucide-react";
 import { useOutlet, usePatchConfig } from "../lib/useOutlet";
 import { Button, Card, Checkbox, Field, PageHeader, Select, STICKY_HEADER_CLEARANCE, TextInput, Toast } from "../ui";

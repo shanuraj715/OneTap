@@ -2,9 +2,9 @@
 
 import { useCallback, useEffect, useState } from "react";
                                            
-import { formatINR } from "@onetap/config-schema";
+import { formatINR } from "@rasoipulse/config-schema";
 
-import { fx } from "@onetap/ui";
+import { fx } from "@rasoipulse/ui";
 import { getApiBase } from "@/lib/clientApi";
 
                                   
@@ -49,7 +49,7 @@ const Alert = ({ size = 15 }                   ) => (
   </svg>
 );
 const Spinner = ({ size = 15 }                   ) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden style={{ animation: "onetap-spin 0.8s linear infinite" }}>
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden style={{ animation: "rasoipulse-spin 0.8s linear infinite" }}>
     <path d="M21 12a9 9 0 1 1-6.219-8.56" />
   </svg>
 );
@@ -148,7 +148,7 @@ export function AddressPicker({
 
   return (
     <div style={{ marginTop: 10 }}>
-      <style>{`@keyframes onetap-spin { to { transform: rotate(360deg); } }`}</style>
+      <style>{`@keyframes rasoipulse-spin { to { transform: rotate(360deg); } }`}</style>
 
       {/* --- share-location control / captured state --- */}
       {loc === "captured" && point ? (

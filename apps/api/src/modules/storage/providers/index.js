@@ -7,7 +7,7 @@ export const STORAGE_PROVIDERS_IMPL = {
   s3: s3Provider,
 };
 
-/** @param {import("@onetap/config-schema").StorageProvider} provider */
+/** @param {import("@rasoipulse/config-schema").StorageProvider} provider */
 export const providerFor = (provider) => STORAGE_PROVIDERS_IMPL[provider] ?? localProvider;
 
 export * from "./types.js";

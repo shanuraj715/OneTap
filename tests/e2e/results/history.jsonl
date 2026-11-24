@@ -1162,3 +1162,4 @@
 {"id":"t74-storage-api","status":"pass","pass":65,"fail":0,"mode":"headless","at":"2026-11-21T10:44:41.894Z","durationMs":12067}
 {"id":"t75-storage-tools-ui","status":"pass","pass":31,"fail":0,"mode":"headless","at":"2026-11-21T10:44:52.775Z","durationMs":10813}
 {"id":"t77-storage-optimize-ui","status":"pass","pass":37,"fail":0,"mode":"headless","at":"2026-11-21T10:45:00.348Z","durationMs":7500}
+{"id":"t78-storefront-title","status":"fail","pass":10,"fail":1,"mode":"headless","at":"2026-11-24T21:33:39.367Z","durationMs":18964}

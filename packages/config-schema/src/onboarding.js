@@ -5,7 +5,7 @@ import { FONT_FAMILIES } from "./typography.js";
 import { isReservedOutletSlug, slugSchema } from "./slug.js";
 
 /**
- * The client onboarding form: everything a TablePe representative asks a new restaurant, kept as a draft, printed, and finally
+ * The client onboarding form: everything a Rasoi Pulse representative asks a new restaurant, kept as a draft, printed, and finally
  * turned into a real store (brand + outlets + owner + settings).
  *
  * This file is the one definition of the form. The console draws it, the API validates and publishes it, and the PDF prints it.
@@ -43,7 +43,7 @@ const ORDERING_FEATURES = ORDER_MODES.map((m) => m.feature);
 export const CHECKLIST_FEATURES = FEATURES.filter((f) => !ORDERING_FEATURES.includes(f.key));
 
 export const BUSINESS_TYPES = ["Café", "Quick-service restaurant", "Cloud kitchen", "Restaurant with seating", "Restaurant chain", "Bakery / sweets", "Other"];
-export const MENU_SOURCES = ["Client enters it themselves", "Client sends photos / PDF", "Client sends an Excel / CSV", "TablePe enters it", "Not decided yet"];
+export const MENU_SOURCES = ["Client enters it themselves", "Client sends photos / PDF", "Client sends an Excel / CSV", "Rasoi Pulse enters it", "Not decided yet"];
 export const THEME_MODES = [
   { id: "system", label: "Follow the visitor's device" },
   { id: "light", label: "Always light" },
@@ -367,8 +367,8 @@ export function validateOnboarding(data) {
   if (!EMAIL.test(b.ownerEmail.trim())) bad("business.ownerEmail", "Enter the owner's email — it is their sign-in.");
   if (b.ownerPhone.replace(/\D/g, "").length < 10) bad("business.ownerPhone", "Enter the owner's phone number (at least 10 digits).");
 
-  if (!onboardingSubdomain(data) && !data.address.ownDomain.trim()) bad("address.subdomain", "Give the store a TablePe address or its own domain.");
-  else if (onboardingSubdomain(data) && !slugSchema.safeParse(onboardingSubdomain(data)).success) bad("address.subdomain", "The TablePe address can only have letters, numbers and single hyphens.");
+  if (!onboardingSubdomain(data) && !data.address.ownDomain.trim()) bad("address.subdomain", "Give the store a Rasoi Pulse address or its own domain.");
+  else if (onboardingSubdomain(data) && !slugSchema.safeParse(onboardingSubdomain(data)).success) bad("address.subdomain", "The Rasoi Pulse address can only have letters, numbers and single hyphens.");
 
   const timeOk = (t) => HHMM.test(t);
   if (!timeOk(data.common.hours.opensAt) || !timeOk(data.common.hours.closesAt)) bad("common.hours", "Enter the common opening and closing times (like 11:00 and 23:00).");

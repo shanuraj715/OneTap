@@ -49,7 +49,7 @@ function makePng(path, w = 96, h = 96, rgb = [214, 82, 38]) {
 }
 
 export async function run(d) {
-  const png = makePng(join(tmpdir(), "onetap-test-category.png"));
+  const png = makePng(join(tmpdir(), "rasoipulse-test-category.png"));
   await d.tab("owner", "Store dashboard · owner of Acme Momos");
   await ui.signIn(d, "owner");
   await d.goto(BENCH.admin + "/menu", 600);

@@ -1,6 +1,6 @@
-# TablePe end-to-end tests — catalog
+# Rasoi Pulse end-to-end tests — catalog
 
-**78 tests** · 78 passing · 0 failing/error · 0 not run yet
+**79 tests** · 78 passing · 1 failing/error · 0 not run yet
 
 | Test | Area | Result | Checks | Last run |
 |---|---|---|---|---|
@@ -54,7 +54,7 @@
 | [t47-storefront-pinned-bars](t47-storefront-pinned-bars.md) — Storefront — the header, the order bar (Takeaway/Delivery + outlet) and the category/filter bar stay pinned to the top while scrolling, on phone, tablet and desktop, with every header style | storefront | ✅ PASSED | 101/101 | 2026-11-21 15:11 |
 | [t48-hero-button-card-c02](t48-hero-button-card-c02.md) — Storefront — no 'Order takeaway' button at the top; card C02 (Thumbnail left) shows the price right after the veg / non-veg mark with full-width title and description; every item card cuts its description at one line with an ellipsis | storefront | ✅ PASSED | 69/69 | 2026-11-21 15:11 |
 | [t49-storefront-item-popup](t49-storefront-item-popup.md) — Storefront item pop-up — the picture is set in from the edges with rounded corners and has a close button; the name has the veg mark and the price; sizes and extras are tiles that light up; the Add row stays at the bottom while the choices scroll | storefront | ✅ PASSED | 42/42 | 2026-11-21 15:12 |
-| [t50-store-name](t50-store-name.md) — Store name — the dashboard's Business identity shows the STORE name, always disabled, with a note to contact the TablePe admin; only the platform admin can rename the store (console → Stores → the store); renaming an outlet changes its display name | settings | ✅ PASSED | 31/31 | 2026-11-21 05:00 |
+| [t50-store-name](t50-store-name.md) — Store name — the dashboard's Business identity shows the STORE name, always disabled, with a note to contact the Rasoi Pulse admin; only the platform admin can rename the store (console → Stores → the store); renaming an outlet changes its display name | settings | ✅ PASSED | 31/31 | 2026-11-21 05:00 |
 | [t51-kot-tickets](t51-kot-tickets.md) — Kitchen tickets (KOT) — each dish goes to the right printer (kitchen / bar); an order edited after its ticket went out sends an 'ORDER CHANGED' ticket with only the difference; a cancelled order withdraws a waiting ticket or sends 'ORDER CANCELLED — DO NOT COOK' | printing | ✅ PASSED | 62/62 | 2026-11-21 05:01 |
 | [t52-print-station-any-page](t52-print-station-any-page.md) — Print station — a computer switched on as a print station prints tickets from ANY dashboard page (Orders, Menu, Dashboard…), once, and only when it is switched on and the plan has Printing | printing | ✅ PASSED | 14/14 | 2026-11-21 13:27 |
 | [t53-orders-growth-api](t53-orders-growth-api.md) — Orders that grow the business — out for delivery with a rider, pre-orders for later, stock counts, menu hours, combos and buy-X-get-Y coupons (API rules) | orders | ✅ PASSED | 84/84 | 2026-11-21 13:08 |
@@ -82,6 +82,7 @@
 | [t75-storage-tools-ui](t75-storage-tools-ui.md) — The Storage page — Test connection under the list, files per store and outlet, move files with progress | platform | ✅ PASSED | 31/31 | 2026-11-21 16:14 |
 | [t76-storage-optimize-api](t76-storage-optimize-api.md) — Storage — find the pictures bigger than the size limit and compress the chosen ones; every stored address follows | platform | ✅ PASSED | 73/73 | 2026-11-21 16:14 |
 | [t77-storage-optimize-ui](t77-storage-optimize-ui.md) — The Storage page — find the pictures bigger than the size limit in a grid, select them and optimize | platform | ✅ PASSED | 37/37 | 2026-11-21 16:15 |
+| [t78-storefront-title](t78-storefront-title.md) — The storefront's browser-tab title is the store's name (and follows a rename) | storefront | ❌ FAILED | 10/11 | 2026-11-25 03:03 |
 
 ## Open findings (noticed during tests, not yet fixed)
 

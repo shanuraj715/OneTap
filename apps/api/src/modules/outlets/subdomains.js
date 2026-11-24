@@ -2,13 +2,13 @@ import dns from "node:dns/promises";
 import http from "node:http";
 import https from "node:https";
 import { randomBytes } from "node:crypto";
-import { hasFeature } from "@onetap/config-schema";
+import { hasFeature } from "@rasoipulse/config-schema";
 import { HttpError } from "../../middleware/error.js";
 import { storePlan } from "../platform/plan.service.js";
 import { assertHostnamesFree, configuredBase, isLocalHost, isPublicHost, setStoreDomains, storeDomains } from "./domains.js";
 
 /**
- * A store's TablePe address — acme.<base domain> — and who may have their own
+ * A store's Rasoi Pulse address — acme.<base domain> — and who may have their own
  * domain instead.
  *
  * There is nothing to install per store. The storefront already finds a
@@ -21,15 +21,15 @@ import { assertHostnamesFree, configuredBase, isLocalHost, isPublicHost, setStor
  *
  * An own domain (dominos.com) needs the restaurant's DNS and a certificate of
  * its own, so it is a plan feature (`customDomain`): without it a store gets a
- * TablePe address only.
+ * Rasoi Pulse address only.
  */
 
-/** Names that would look official or collide with TablePe's own addresses. */
+/** Names that would look official or collide with Rasoi Pulse's own addresses. */
 const RESERVED_LABELS = new Set([
   "www", "api", "admin", "app", "apps", "mail", "email", "smtp", "imap", "pop", "ftp", "sftp", "ssh", "ns", "ns1", "ns2", "dns",
   "cdn", "static", "assets", "img", "images", "media", "files", "status", "support", "help", "docs", "blog", "dashboard", "console",
   "portal", "login", "signin", "signup", "auth", "account", "accounts", "billing", "pay", "payments", "checkout", "store", "stores",
-  "shop", "test", "demo", "dev", "staging", "stage", "prod", "root", "localhost", "tablepe", "onetap", "food", "website", "web",
+  "shop", "test", "demo", "dev", "staging", "stage", "prod", "root", "localhost", "rasoipulse", "rasoi-pulse", "rasoi", "food", "website", "web",
   "preview", "internal", "secure", "security", "abuse", "postmaster", "webmaster", "hostmaster", "noreply", "no-reply",
 ]);
 
@@ -42,21 +42,21 @@ export function normalizeLabel(raw) {
   if (label.length > 40) throw new HttpError(400, "The address can be at most 40 characters.");
   if (!LABEL_RE.test(label)) throw new HttpError(400, "Use only lowercase letters, numbers and hyphens, and don't start or end with a hyphen.");
   if (label.startsWith("xn--") || label.includes("--")) throw new HttpError(400, "Two hyphens in a row aren't allowed.");
-  if (RESERVED_LABELS.has(label)) throw new HttpError(400, `"${label}" is kept for TablePe itself. Choose another name.`);
+  if (RESERVED_LABELS.has(label)) throw new HttpError(400, `"${label}" is kept for Rasoi Pulse itself. Choose another name.`);
   return label;
 }
 
 /** Exactly one label below the base — what a wildcard certificate (*.base) covers. */
 export const isUnderBase = (host, base) => Boolean(base) && host.endsWith(`.${base}`) && !host.slice(0, -(base.length + 1)).includes(".");
 
-/** The store's TablePe address among its domains, if it has one. */
+/** The store's Rasoi Pulse address among its domains, if it has one. */
 export const subdomainOf = (hostnames, base) => hostnames.find((h) => isUnderBase(h, base)) ?? null;
 const labelOf = (host, base) => host.slice(0, -(base.length + 1));
 
 const base = async () => configuredBase();
-const NO_BASE = "This server has no base domain for store addresses. Set STORE_SUBDOMAIN_BASE (for example tablepe.in) in the API's .env and restart it.";
+const NO_BASE = "This server has no base domain for store addresses. Set STORE_SUBDOMAIN_BASE (for example rasoipulse.in) in the API's .env and restart it.";
 
-/** What the console shows about a store's TablePe address. */
+/** What the console shows about a store's Rasoi Pulse address. */
 export async function subdomainInfo(brandId) {
   const b = await base();
   const { hostnames } = await storeDomains(brandId);
@@ -84,7 +84,7 @@ export async function checkLabel(rawLabel, brandId) {
   return { available: true, host };
 }
 
-/** Give a store its TablePe address, or change it. */
+/** Give a store its Rasoi Pulse address, or change it. */
 export async function setStoreSubdomain(brandId, rawLabel) {
   const b = await base();
   if (!b) throw new HttpError(400, NO_BASE);
@@ -101,12 +101,12 @@ export async function setStoreSubdomain(brandId, rawLabel) {
   return setStoreDomains(brandId, { hostnames, primary });
 }
 
-/** Take the TablePe address away. The store's other domains, if any, keep working. */
+/** Take the Rasoi Pulse address away. The store's other domains, if any, keep working. */
 export async function removeStoreSubdomain(brandId) {
   const b = await base();
   const current = await storeDomains(brandId);
   const old = b ? subdomainOf(current.hostnames, b) : null;
-  if (!old) throw new HttpError(404, "This store has no TablePe address.");
+  if (!old) throw new HttpError(404, "This store has no Rasoi Pulse address.");
   const hostnames = current.hostnames.filter((h) => h !== old);
   const primary = current.primary === old ? hostnames.find(isPublicHost) ?? hostnames[0] ?? "" : current.primary;
   return setStoreDomains(brandId, { hostnames, primary });
@@ -125,7 +125,7 @@ export function assertOwnDomainsAllowed(hostnames, { entitlements, base: b, curr
   throw new HttpError(
     403,
     `${planName ? `The ${planName} plan doesn't` : "This plan doesn't"} include an own domain name, so ${added[0]} can't be added. ` +
-      "Give the store a TablePe address instead, or unlock “Own domain name” for this store on its Features tab.",
+      "Give the store a Rasoi Pulse address instead, or unlock “Own domain name” for this store on its Features tab.",
   );
 }
 

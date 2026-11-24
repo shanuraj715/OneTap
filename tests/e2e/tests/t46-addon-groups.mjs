@@ -32,7 +32,7 @@ export async function run(d) {
   const outlets = await (await fetch(`${BENCH.api}/api/outlets`, { headers: { cookie: ownerCookie } })).json();
   const main = (outlets.outlets ?? outlets).find((o) => o.slug === "main");
   const outletId = String(main._id ?? main.id);
-  const hdr = { "content-type": "application/json", cookie: ownerCookie, "x-onetap-outlet": outletId };
+  const hdr = { "content-type": "application/json", cookie: ownerCookie, "x-rasoipulse-outlet": outletId };
   const menuNow = async () => (await (await fetch(`${BENCH.api}/api/menu?outletId=${outletId}`)).json());
   const groupNamed = async (name) => (await menuNow()).modifierGroups.find((g) => g.name === name);
   const makeGroup = async (body) => (await (await fetch(`${BENCH.api}/api/menu/modifier-groups`, { method: "POST", headers: hdr, body: JSON.stringify(body) })).json()).group;

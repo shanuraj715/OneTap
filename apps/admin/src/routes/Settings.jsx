@@ -197,11 +197,11 @@ export function Settings() {
               {/* the STORE's name (one for every outlet): shown here, never editable by the store — only the platform admin renames a store */}
               <Field
                 label="Store name"
-                info="The name of your whole store — shown in the storefront header, on receipts and in order messages, the same for every outlet. It is set by TablePe and can't be changed here. To rename just one outlet, use Settings → Outlets."
+                info="The name of your whole store — shown in the storefront header, on receipts and in order messages, the same for every outlet. It is set by Rasoi Pulse and can't be changed here. To rename just one outlet, use Settings → Outlets."
                 hint={
                   isSuperAdmin
                     ? "Change it in the platform console: Stores → this store → Store name."
-                    : "Contact the TablePe admin to update the store name."
+                    : "Contact the Rasoi Pulse admin to update the store name."
                 }
                 style={{ maxWidth: "none" }}
               >
@@ -210,7 +210,7 @@ export function Settings() {
                   disabled
                   readOnly
                   data-testid="store-name"
-                  aria-label="Store name (only the TablePe admin can change it)"
+                  aria-label="Store name (only the Rasoi Pulse admin can change it)"
                   style={{ background: "var(--color-surface)", color: "var(--color-text-muted)", cursor: "not-allowed" }}
                 />
               </Field>

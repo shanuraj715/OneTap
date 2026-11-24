@@ -1,6 +1,6 @@
 import { useState } from "react";
                                            
-import { ROLE_DESCRIPTIONS, ROLE_LABELS, ROLES,           } from "@onetap/config-schema";
+import { ROLE_DESCRIPTIONS, ROLE_LABELS, ROLES,           } from "@rasoipulse/config-schema";
 import { useAuth, useCreateUser, useDeleteUser, useUpdateUser, useUsers } from "../lib/useAuth";
 import { useOutlet } from "../lib/useOutlet";
 import { useStorePlan } from "../lib/useStorePlan";
@@ -8,7 +8,7 @@ import { Button, Card, Field, PageHeader, TextInput, Toast } from "../ui";
 import { SettingsNav } from "../components/SubNav";
 
 const ALL_ASSIGNABLE = ROLES.filter((r) => r !== "super_admin");
-// Store owners are added and managed by TablePe from the platform console,
+// Store owners are added and managed by Rasoi Pulse from the platform console,
 // so the store's own dashboard can't hand out (or take away) the owner role.
 const STORE_ASSIGNABLE = ALL_ASSIGNABLE.filter((r) => r !== "owner");
 
@@ -69,7 +69,7 @@ export function Users() {
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {users.map((u) => {
               const isMe = u.id === me?.id;
-              // owner rows are read-only here — TablePe manages them
+              // owner rows are read-only here — Rasoi Pulse manages them
               const platformManaged = u.role === "owner" && !me?.isSuperAdmin;
               return (
                 <div key={u.id} style={row}>
@@ -79,7 +79,7 @@ export function Users() {
                       {isMe ? <span style={youChip}>you</span> : null}
                       {!u.isActive ? <span style={{ ...youChip, background: "var(--color-text-muted)" }}>disabled</span> : null}
                       {u.blockedAt ? (
-                        <span style={{ ...youChip, background: "var(--tone-danger, #b42318)" }} title="Paused by TablePe — the store is over its plan's people limit">
+                        <span style={{ ...youChip, background: "var(--tone-danger, #b42318)" }} title="Paused by Rasoi Pulse — the store is over its plan's people limit">
                           paused
                         </span>
                       ) : null}
@@ -91,7 +91,7 @@ export function Users() {
                     <span style={{ fontSize: 12.5, color: "var(--color-text-muted)", textAlign: "right" }}>
                       <strong style={{ color: "var(--color-text)" }}>{ROLE_LABELS.owner}</strong>
                       <br />
-                      Managed by TablePe
+                      Managed by Rasoi Pulse
                     </span>
                   ) : (
                   <select
@@ -143,7 +143,7 @@ export function Users() {
           subtitle={
             canAddPerson
               ? undefined
-              : `Your plan allows ${plan?.max.users} people and all are in use. Remove someone, or ask TablePe to raise the limit.`
+              : `Your plan allows ${plan?.max.users} people and all are in use. Remove someone, or ask Rasoi Pulse to raise the limit.`
           }
         >
           <form onSubmit={submit}>

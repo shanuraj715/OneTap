@@ -15,9 +15,9 @@ const entries = async () => (await (await fetch(`${API}/api/platform/cache/entri
 const stores = (await (await fetch(`${API}/api/platform/stores`, { headers: { cookie: sup } })).json()).stores;
 const acme = stores.find((s) => s.name === "Acme Momos");
 const beta = stores.find((s) => s.name === "Beta Bites");
-const outlets = await (await fetch(`${API}/api/outlets?brandId=${acme.id}`, { headers: { cookie: sup, "x-onetap-brand": String(acme.id) } })).json();
+const outlets = await (await fetch(`${API}/api/outlets?brandId=${acme.id}`, { headers: { cookie: sup, "x-rasoipulse-brand": String(acme.id) } })).json();
 const acmeOutlet = String(((outlets.outlets ?? outlets)[0])._id ?? ((outlets.outlets ?? outlets)[0]).id);
-const betaOutlets = await (await fetch(`${API}/api/outlets?brandId=${beta.id}`, { headers: { cookie: sup, "x-onetap-brand": String(beta.id) } })).json();
+const betaOutlets = await (await fetch(`${API}/api/outlets?brandId=${beta.id}`, { headers: { cookie: sup, "x-rasoipulse-brand": String(beta.id) } })).json();
 const betaOutlet = String(((betaOutlets.outlets ?? betaOutlets)[0])._id ?? ((betaOutlets.outlets ?? betaOutlets)[0]).id);
 
 const browser = await chromium.launch();

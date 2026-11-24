@@ -13,7 +13,7 @@ const apiTarget = apiServerUrl();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ["@onetap/ui", "@onetap/config-schema"],
+  transpilePackages: ["@rasoipulse/ui", "@rasoipulse/config-schema"],
   outputFileTracingRoot: workspaceRoot,
   // local trials of store addresses open on acme.localhost:3070; the dev server should treat those as its own
   allowedDevOrigins: ["*.localhost"],

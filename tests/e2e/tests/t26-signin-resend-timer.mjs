@@ -43,7 +43,7 @@ export async function run(d, h) {
 
   // a new customer on the order page, details typed, 'Send code' pressed
   const openSignIn = async () => {
-    await d.context.clearCookies({ name: "onetap_customer" });
+    await d.context.clearCookies({ name: "rasoipulse_customer" });
     await d.goto(BENCH.storefront + "/main", 300);
     const group = d.page.getByRole("group", { name: "Order type" });
     if (await group.isVisible().catch(() => false)) await d.click(group.getByRole("button", { name: "Takeaway" }), { after: 300 });

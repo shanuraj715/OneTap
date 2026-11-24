@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 
 // Remembers a diner's outlet choice so a later "/" visit skips straight past
 // the picker instead of asking every time.
-const CHOICE_COOKIE = "onetap_outlet_slug";
+const CHOICE_COOKIE = "rasoipulse_outlet_slug";
 
 /**
  * No outlet in the URL yet. A single-outlet brand (still the common case)

@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { defaultOutletConfig } from "@onetap/config-schema";
+import { defaultOutletConfig } from "@rasoipulse/config-schema";
 import { tenantScope } from "../tenant-scope.js";
 import { writeEvents } from "../write-events.js";
 

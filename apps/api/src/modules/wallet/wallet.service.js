@@ -3,13 +3,13 @@ import {
   coinsEarnedFor,
                    
                       
-} from "@onetap/config-schema";
+} from "@rasoipulse/config-schema";
 import {
   CustomerModel,
   WalletLedgerModel,
                 
                      
-} from "@onetap/db";
+} from "@rasoipulse/db";
 import { logger } from "../../logger.js";
 import { effectiveOutletConfig } from "../outlets/config.service.js";
 

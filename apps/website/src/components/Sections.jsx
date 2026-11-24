@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Check, Clock, Mail, MapPin, MessageCircle, Minus, Phone } from "lucide-react";
-import { FEATURES, renderMarkdown, slugifyHeading } from "@onetap/config-schema";
+import { FEATURES, renderMarkdown, slugifyHeading } from "@rasoipulse/config-schema";
 import { getPricing } from "@/lib/site";
 import { inr } from "@/lib/money";
 import { Billing } from "./Billing";

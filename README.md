@@ -1,4 +1,4 @@
-# TablePe
+# Rasoi Pulse
 
 Multi-tenant restaurant ordering platform. One codebase serves many restaurants: each **store** gets its own
 storefront, team dashboard, menu, orders and look — switched on and limited by the **plan** it is on.
@@ -6,7 +6,7 @@ storefront, team dashboard, menu, orders and look — switched on and limited by
 - **Diners** order takeaway, delivery or dine-in (scanning the QR on their table) from the store's storefront.
 - **The restaurant's team** runs the day from the store dashboard: orders, menu, tables, printing, customers,
   analytics, marketing and WhatsApp chat.
-- **The TablePe operator** (platform super admin) creates stores, sets plans and limits, and manages the platform and
+- **The Rasoi Pulse operator** (platform super admin) creates stores, sets plans and limits, and manages the platform and
   the marketing website from the **platform console**.
 
 ## What's in the repo
@@ -16,7 +16,7 @@ storefront, team dashboard, menu, orders and look — switched on and limited by
 | `apps/storefront` | Next.js (App Router) — the customer site: menu, checkout, account, table ordering | **3070** |
 | `apps/admin` | React + Vite SPA — the store dashboard **and** the platform console | **3071** |
 | `apps/api` | Node + Express (JavaScript, ESM) + MongoDB — the one API behind everything | **3072** |
-| `apps/website` | Next.js — the TablePe marketing website, edited from the platform console | **3073** |
+| `apps/website` | Next.js — the Rasoi Pulse marketing website, edited from the platform console | **3073** |
 | `packages/config-schema` | Zod schemas and shared rules (store config, plans, pricing, menu, orders…) | — |
 | `packages/db` | Mongoose models, the tenant-scoping plugin, the write-event hooks | — |
 | `packages/ui` | Shared components (headers, cards, menu sections, pinned bars…) and design tokens | — |
@@ -86,7 +86,7 @@ password is lost), `route-inventory.js` (every API route with its limits), `norm
   set by hand. Anything beyond the plan is greyed out in the dashboard with the reason.
 - **Roles.** `super_admin` (platform), then per store `owner`, `manager`, `staff`, `kitchen`, `editor`, `accountant`,
   each with its own permissions.
-- **Addresses.** A store opens on its own domain (if its plan includes that) or on a free TablePe address,
+- **Addresses.** A store opens on its own domain (if its plan includes that) or on a free Rasoi Pulse address,
   `acme.<STORE_SUBDOMAIN_BASE>`. One storefront serves every store: it finds the store from the address it was opened on.
 - **Tenancy.** Every query is scoped to a store by the `tenantScope` plugin in `packages/db`.
 
@@ -112,7 +112,7 @@ book a table, rate an order and order it again from their Account page. Each ord
 
 ### Platform console (apps/admin, super admin only)
 
-Stores (plan, limits, features, owners, people, outlets, domains and TablePe address, store name, disable or delete) ·
+Stores (plan, limits, features, owners, people, outlets, domains and Rasoi Pulse address, store name, disable or delete) ·
 Plans and the price list · Client **onboarding form** (record a client's requirements, export to PDF, publish as a
 store) · Marketing website pages and settings · Leads · Cache (lifetimes, expire, viewer) · Server monitor ·
 Security (sign-in blocks) · Storage (where pictures live — try any storage without switching it on, see what is stored per store and outlet, and move the files between this server's disk and Cloudflare R2 / S3 with the stored picture addresses following) · AI pictures (Gemini keys) · Settings (grace period…) ·
@@ -130,7 +130,7 @@ Local defaults work out of the box; each app ships a `.env.example`. The setting
 | `ENCRYPTION_KEY` | encrypts payment and messaging credentials at rest — **change it for production** |
 | `ALLOW_MOCK_GATEWAY` | the simulated payment gateway; **never `true` in production** |
 | `STOREFRONT_ORIGIN` | the storefront's public origin — every table QR code is built from it (the API refuses to start in production with a localhost value) |
-| `STORE_SUBDOMAIN_BASE` | the domain stores' TablePe addresses live under (`tablepe.in` in production, `localhost:3070` locally so `acme.localhost:3070` works with no DNS) |
+| `STORE_SUBDOMAIN_BASE` | the domain stores' Rasoi Pulse addresses live under (`rasoipulse.in` in production, `localhost:3070` locally so `acme.localhost:3070` works with no DNS) |
 | `PUBLIC_API_URL` | the API's own public origin, used to build links to uploaded pictures |
 | `UPLOADS_DIR` | where the local storage provider writes uploads |
 | `WEBSITE_URL`, `WEBSITE_INTERNAL_URL`, `WEBSITE_REVALIDATE_SECRET` | how the API tells the marketing website to refresh; the secret must match the website's |
@@ -176,7 +176,7 @@ re-running. `tests/e2e/README.md` explains the bench and how to add a test. The 
 
 ## Production
 
-Build the apps (`pnpm build`), then run the API with `node src/server.js` (`pnpm --filter @onetap/api start`) and the
+Build the apps (`pnpm build`), then run the API with `node src/server.js` (`pnpm --filter @rasoipulse/api start`) and the
 Next.js apps with `next start`. The admin is a static `dist/` to be served by a web server. A typical setup is nginx in
 front of a process manager such as pm2. Things to get right:
 
@@ -185,7 +185,7 @@ front of a process manager such as pm2. Things to get right:
 - The storefront and website bake the API address in at **build time** — rebuild them after changing it.
 - The reverse proxy must pass the visitor's real IP (`X-Forwarded-For`), or sign-in blocks and rate limits will see
   everyone as one address.
-- Wildcard store addresses (`acme.tablepe.in`) need a one-time DNS, nginx and certificate step.
+- Wildcard store addresses (`acme.rasoipulse.in`) need a one-time DNS, nginx and certificate step.
 
 ## More documentation
 

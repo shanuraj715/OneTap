@@ -1,4 +1,4 @@
-// T09 — the store's own TablePe address (lifecycle.<base>), all in Chrome: remove it, try names, create it, open every outlet on it, rename.
+// T09 — the store's own Rasoi Pulse address (lifecycle.<base>), all in Chrome: remove it, try names, create it, open every outlet on it, rename.
 import { BENCH } from "../bench/watch.mjs";
 import * as ui from "../bench/ui.mjs";
 import { MENUS, OUTLETS, OWNER, SUB_HOST, SUB_URL, W, requireWorld } from "./_world.mjs";
@@ -8,9 +8,9 @@ export const meta = {
   title: "Store subdomain — remove, create lifecycle.<base>, open every outlet on it, unknown addresses, rename",
   area: "domains",
   fresh: false,
-  summary: "Continues from t08, in Chrome. The platform removes the store's TablePe address (the customer then gets 'couldn't find a restaurant here'), tries names in the Domains tab (reserved, too short, bad characters, taken by another store, free), creates the address, and a customer's browser then opens the store's root and each outlet on it — each showing its own details and menu. A made-up outlet, a made-up subdomain and another store's outlet are all 'not found'. Renaming the address moves the store and the old address stops working.",
+  summary: "Continues from t08, in Chrome. The platform removes the store's Rasoi Pulse address (the customer then gets 'couldn't find a restaurant here'), tries names in the Domains tab (reserved, too short, bad characters, taken by another store, free), creates the address, and a customer's browser then opens the store's root and each outlet on it — each showing its own details and menu. A made-up outlet, a made-up subdomain and another store's outlet are all 'not found'. Renaming the address moves the store and the old address stops working.",
   expect: [
-    "With no TablePe address the store can't be opened on lifecycle.<base> ('We couldn't find a restaurant here').",
+    "With no Rasoi Pulse address the store can't be opened on lifecycle.<base> ('We couldn't find a restaurant here').",
     "A free name shows 'is free'; reserved names (www, admin…), names under 3 characters, bad characters and names used by another store show a reason.",
     "After 'Create address', the root page and /central, /second and /third open; each outlet shows its own name and menu.",
     "Renaming makes the new address work and the old one stop working; renaming back restores it.",
@@ -45,7 +45,7 @@ export async function run(d, h) {
 
   await d.step("In the Domains tab: which names may the store have?");
   await platform();
-  const rules = [["www", /kept for TablePe/i, "a reserved name"], ["admin", /kept for TablePe/i, "a reserved name"], ["ab", /at least 3 characters/i, "too short"], ["Bad_Name", /lowercase letters, numbers and hyphens/i, "bad characters"], ["beta", /already used by another store/i, "used by another store"]];
+  const rules = [["www", /kept for Rasoi Pulse/i, "a reserved name"], ["admin", /kept for Rasoi Pulse/i, "a reserved name"], ["ab", /at least 3 characters/i, "too short"], ["Bad_Name", /lowercase letters, numbers and hyphens/i, "bad characters"], ["beta", /already used by another store/i, "used by another store"]];
   for (const [name, rx, why] of rules) {
     const page = await ui.tryAddressName(d, W.store, name);
     d.never(`"${name}" (${why}) is offered as free`, /is free/.test(page));

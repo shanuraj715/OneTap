@@ -23,7 +23,7 @@ import {
   updateModifierGroup,
 } from "./menu.service.js";
 import { limiter } from "../../middleware/rate-limit.js";
-import { AI_ASPECT_RATIO_IDS, AI_MAX_IMAGES_AT_ONCE, AI_MAX_PROMPT_LENGTH, ITEM_IMAGE_RATIO_IDS, MAX_IMAGES_PER_ITEM } from "@onetap/config-schema";
+import { AI_ASPECT_RATIO_IDS, AI_MAX_IMAGES_AT_ONCE, AI_MAX_PROMPT_LENGTH, ITEM_IMAGE_RATIO_IDS, MAX_IMAGES_PER_ITEM } from "@rasoipulse/config-schema";
 import { suggestionsFor } from "./suggestions.service.js";
 
 export const menuRouter         = Router();
@@ -35,7 +35,7 @@ export const menuRouter         = Router();
 async function menuContext(req         )                         {
   const outletId =
     (typeof req.query.outletId === "string" ? req.query.outletId : undefined) ??
-    req.header("x-onetap-outlet") ??
+    req.header("x-rasoipulse-outlet") ??
     undefined;
   if (!outletId) throw new HttpError(400, "outletId is required");
 

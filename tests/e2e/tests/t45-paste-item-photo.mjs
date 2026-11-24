@@ -31,7 +31,7 @@ export async function run(d) {
   const menuNow = async () => (await (await fetch(`${BENCH.api}/api/menu?outletId=${outletId}`)).json());
   const dish = (await menuNow()).items.find((i) => i.name === "Veg Steamed Momos");
   const originalImages = dish.images;
-  const hdr = { "content-type": "application/json", cookie: ownerCookie, "x-onetap-outlet": outletId };
+  const hdr = { "content-type": "application/json", cookie: ownerCookie, "x-rasoipulse-outlet": outletId };
   // the dish's own photos are put back at the end; the checks below count relative to however many it starts with
   if (originalImages.length > 2) await fetch(`${BENCH.api}/api/menu/items/${dish.id}`, { method: "PATCH", headers: hdr, body: JSON.stringify({ images: originalImages.slice(0, 2) }) });
 

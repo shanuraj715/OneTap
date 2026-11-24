@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
-import { tableStatusSchema } from "@onetap/config-schema";
-import { OutletModel } from "@onetap/db";
+import { tableStatusSchema } from "@rasoipulse/config-schema";
+import { OutletModel } from "@rasoipulse/db";
 import { storefrontOriginFor } from "../outlets/domains.js";
 import { outletBrand } from "../outlets/outlet-cache.js";
 import { requireOutletContext, requireUser } from "../../middleware/auth.js";
@@ -190,7 +190,7 @@ tablesRouter.get("/public", limiter("table-scan"), async (req, res) => {
   const outletId = typeof req.query.outletId === "string" ? req.query.outletId : "";
   if (!outletId) throw new HttpError(400, "outletId is required");
 
-  const { TableModel } = await import("@onetap/db");
+  const { TableModel } = await import("@rasoipulse/db");
   const ref = await outletBrand(outletId);
   if (!ref) throw new HttpError(404, "Outlet not found");
 
@@ -226,7 +226,7 @@ tablesRouter.post("/claim", limiter("table-scan"), async (req, res) => {
   const customer = await currentCustomer(req);
   if (!customer) throw new HttpError(401, "Verify your mobile or email before choosing a table");
 
-  const { TableModel } = await import("@onetap/db");
+  const { TableModel } = await import("@rasoipulse/db");
   const ref = await outletBrand(outletId);
   if (!ref) throw new HttpError(404, "Outlet not found");
   if (customer.brandId !== ref.brandId) throw new HttpError(403, "Verify again for this restaurant");
@@ -238,7 +238,7 @@ tablesRouter.post("/claim", limiter("table-scan"), async (req, res) => {
   // Someone else's tab is already open here — sending food to it would put this
   // order on their bill.
   if (table.activeSessionId) {
-    const { TableSessionModel } = await import("@onetap/db");
+    const { TableSessionModel } = await import("@rasoipulse/db");
     const existing = await TableSessionModel.findOne({ ...ctx, _id: table.activeSessionId, status: "open" }).lean();
     if (existing && existing.customerId !== String(customer._id)) {
       throw new HttpError(409, `Table ${tableNumber} is already in use. Please ask a member of staff.`);
@@ -261,7 +261,7 @@ tablesRouter.get("/sessions/:id/tab", limiter("table-scan"), async (req, res) =>
   if (!customer) throw new HttpError(401, "Sign in to see your tab");
 
   const ctx = { brandId: customer.brandId, outletId };
-  const { TableSessionModel } = await import("@onetap/db");
+  const { TableSessionModel } = await import("@rasoipulse/db");
   const session = await TableSessionModel.findOne({
     _id: req.params.id,
     brandId: ctx.brandId,

@@ -18,7 +18,7 @@ import {
                     
                    
                  
-} from "@onetap/config-schema";
+} from "@rasoipulse/config-schema";
 import {
   AlertTriangle,
   Bell,
@@ -69,7 +69,7 @@ import { OrderEditModal } from "./orders/OrderEditModal";
 import { TableOverviewModal } from "./orders/TableOverviewModal";
 
 /** Rows-per-page, remembered per browser. */
-const PAGE_SIZE_KEY = "onetap.ordersPageSize";
+const PAGE_SIZE_KEY = "rasoipulse.ordersPageSize";
 const PAGE_SIZES = [10, 25, 50, 100]         ;
 const SEARCH_INPUT_ID = "orders-search-input";
 

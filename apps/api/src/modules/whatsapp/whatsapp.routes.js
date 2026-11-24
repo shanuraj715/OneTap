@@ -1,6 +1,6 @@
 import { Router, raw } from "express";
 import { z } from "zod";
-import { WA_MAX_MEDIA_BYTES, waAccessSchema, waBroadcastSchema, waColorSchema, waMediaTypeOf, waSendSchema } from "@onetap/config-schema";
+import { WA_MAX_MEDIA_BYTES, waAccessSchema, waBroadcastSchema, waColorSchema, waMediaTypeOf, waSendSchema } from "@rasoipulse/config-schema";
 import { HttpError } from "../../middleware/error.js";
 import { putFile } from "../storage/storage.service.js";
 import * as wa from "./whatsapp.service.js";

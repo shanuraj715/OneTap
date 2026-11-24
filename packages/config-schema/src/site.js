@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 /**
- * The TablePe marketing website — its pages, settings and enquiry form.
+ * The Rasoi Pulse marketing website — its pages, settings and enquiry form.
  *
  * One definition of each shape, used three ways: the API validates what the
  * console saves, the console builds its forms from SECTION_META, and the
@@ -205,7 +205,7 @@ export const SECTION_META = {
   features: { label: "Features", description: "Why use us — a grid of icon, title and text." },
   audience: { label: "Who it's for", description: "The kinds of restaurants you serve." },
   useCases: { label: "When to use it", description: "The moments a restaurant needs you." },
-  logos: { label: "Logos", description: "Stores that use TablePe." },
+  logos: { label: "Logos", description: "Stores that use Rasoi Pulse." },
   testimonials: { label: "Testimonials", description: "What owners say, with name and business." },
   pricing: { label: "Pricing", description: "Your plans that are set to show on the website, each with Talk to us." },
   faq: { label: "FAQ", description: "Questions and answers — also shown to Google as an FAQ." },
@@ -242,12 +242,12 @@ export const sitePageSchema = z.object({
 const hex = z.string().trim().regex(/^#[0-9a-fA-F]{6}$/, "Use a colour like #C8372D");
 
 export const siteSettingsSchema = z.object({
-  brandName: str(60, "TablePe"),
+  brandName: str(60, "Rasoi Pulse"),
   tagline: str(140, "Restaurant ordering, from table to kitchen."),
   logoUrl: str(600),
   faviconUrl: str(600),
   brandColor: hex.default("#C8372D"),
-  /** the site's public address, for canonical links and the sitemap — e.g. https://tablepe.com */
+  /** the site's public address, for canonical links and the sitemap — e.g. https://rasoipulse.com */
   siteUrl: str(200),
   contact: z
     .object({ email: str(120), phone: str(30), whatsapp: str(30), address: str(300), hours: str(120) })
@@ -256,7 +256,7 @@ export const siteSettingsSchema = z.object({
     .object({ instagram: str(300), facebook: str(300), linkedin: str(300), x: str(300), youtube: str(300) })
     .default({}),
   seo: z
-    .object({ titleTemplate: str(80, "%s · TablePe"), description: str(170), ogImage: str(600) })
+    .object({ titleTemplate: str(80, "%s · Rasoi Pulse"), description: str(170), ogImage: str(600) })
     .default({}),
   announcement: z.object({ show: bool(), text: str(140), href: str(300) }).default({}),
   footerNote: str(300),

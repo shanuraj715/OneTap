@@ -70,7 +70,7 @@ function encode(pipeline, format, quality, hasAlpha) {
 
 /**
  * @param {Buffer} input
- * @param {import("@onetap/config-schema").ImageProcessing} opts
+ * @param {import("@rasoipulse/config-schema").ImageProcessing} opts
  * @returns {Promise<{ buffer: Buffer, contentType: string, ext: string, width: number, height: number, format: string, quality: number, originalBytes: number, bytes: number }>}
  */
 export async function processImage(input, opts) {

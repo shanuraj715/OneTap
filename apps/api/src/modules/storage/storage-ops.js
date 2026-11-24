@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
-import { STORAGE_FIELDS, STORAGE_PROVIDERS, STORAGE_PROVIDER_LABELS, STORAGE_REQUIRED_FIELDS } from "@onetap/config-schema";
-import { BrandModel, OutletModel } from "@onetap/db";
+import { STORAGE_FIELDS, STORAGE_PROVIDERS, STORAGE_PROVIDER_LABELS, STORAGE_REQUIRED_FIELDS } from "@rasoipulse/config-schema";
+import { BrandModel, OutletModel } from "@rasoipulse/db";
 import { env, publicApiUrl } from "../../env.js";
 import { HttpError } from "../../middleware/error.js";
 import { localUploadsPath, providerFor } from "./providers/index.js";
@@ -61,7 +61,7 @@ const withTimeout = (ms) => AbortSignal.timeout(ms);
 async function probe(cfg) {
   const adapter = providerFor(cfg.provider);
   const key = `platform/_probe/${randomUUID()}.txt`; // (not a dot-folder: the static file server hides those, which would fail the public check for no reason)
-  const body = Buffer.from(`tablepe storage probe ${new Date().toISOString()}`);
+  const body = Buffer.from(`rasoipulse storage probe ${new Date().toISOString()}`);
   const steps = [];
   const started = Date.now();
   let publicUrl = "";

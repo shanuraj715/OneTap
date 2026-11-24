@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { formatClock, formatDay, istDayKey, istParts, relativeDay, RESERVATION_NEXT, RESERVATION_STATUS_LABELS, shiftDay } from "@onetap/config-schema";
+import { formatClock, formatDay, istDayKey, istParts, relativeDay, RESERVATION_NEXT, RESERVATION_STATUS_LABELS, shiftDay } from "@rasoipulse/config-schema";
 import { CalendarDays, Check, ChevronLeft, ChevronRight, Plus, StickyNote, Users, X } from "lucide-react";
 import { useAuth } from "../lib/useAuth";
 import { useCreateStaffReservation, useReservations, useReservationSlots, useUpdateReservation } from "../lib/useGrowth";

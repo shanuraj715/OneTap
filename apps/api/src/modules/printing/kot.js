@@ -1,4 +1,4 @@
-import { MenuCategoryModel, MenuItemModel, PrinterModel, tenantFilter } from "@onetap/db";
+import { MenuCategoryModel, MenuItemModel, PrinterModel, tenantFilter } from "@rasoipulse/db";
 
 /**
  * The rules for kitchen tickets (KOTs):

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { DatePickerInput, formatDate } from "@onetap/ui";
-import { addDays, dayKey, EXPORT_FORMATS, EXPORT_SECTIONS, presetRange } from "@onetap/config-schema";
+import { DatePickerInput, formatDate } from "@rasoipulse/ui";
+import { addDays, dayKey, EXPORT_FORMATS, EXPORT_SECTIONS, presetRange } from "@rasoipulse/config-schema";
 import { Download, FileSpreadsheet, FileText } from "lucide-react";
 import * as api from "../../lib/api";
 import { useOutlet } from "../../lib/useOutlet";

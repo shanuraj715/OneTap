@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { checkDelivery, formatINR, haversineKm, ORDER_TYPE_LABELS, ORDER_TYPE_STORAGE_KEY, offeredOrderTypes, startingOrderType } from "@onetap/config-schema";
-import { fx, StickyBar } from "@onetap/ui";
+import { checkDelivery, formatINR, haversineKm, ORDER_TYPE_LABELS, ORDER_TYPE_STORAGE_KEY, offeredOrderTypes, startingOrderType } from "@rasoipulse/config-schema";
+import { fx, StickyBar } from "@rasoipulse/ui";
 import { Bike, Check, ChevronDown, LocateFixed, MapPin, ShoppingBag } from "lucide-react";
 import { useUserLocation } from "@/lib/useUserLocation";
 
@@ -27,7 +27,7 @@ import { useUserLocation } from "@/lib/useUserLocation";
 const TYPE_ICON = { takeaway: ShoppingBag, delivery: Bike };
 /** the switch always shows BOTH, in this order — one an outlet doesn't offer is shown greyed out and can't be chosen */
 const SWITCH_TYPES = ["takeaway", "delivery"];
-const CHOICE_COOKIE = "onetap_outlet_slug"; // the same cookie the "which location?" page remembers a choice in
+const CHOICE_COOKIE = "rasoipulse_outlet_slug"; // the same cookie the "which location?" page remembers a choice in
 
 const kmText = (km) => (km < 0.1 ? "under 0.1 km" : km < 10 ? `${km.toFixed(1)} km` : `${Math.round(km)} km`);
 

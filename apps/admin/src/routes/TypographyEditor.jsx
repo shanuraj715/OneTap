@@ -6,7 +6,7 @@ import {
   googleFontsUrl,
   TYPE_SCALES,
                   
-} from "@onetap/config-schema";
+} from "@rasoipulse/config-schema";
 import { useOutlet, usePatchConfig } from "../lib/useOutlet";
 import { Button, Card, Field, PageHeader, TextInput, Toast } from "../ui";
 import { StorefrontNav } from "../components/SubNav";
@@ -17,7 +17,7 @@ const CATEGORY_LABELS = { sans: "Sans-serif", serif: "Serif", display: "Display"
 /** Loads the preview fonts so the picker shows each face in its own typeface. */
 function useFontPreloader() {
   useEffect(() => {
-    const id = "onetap-font-previews";
+    const id = "rasoipulse-font-previews";
     if (document.getElementById(id)) return;
     const specs = FONT_FAMILIES.map((f) => f.google).filter(Boolean)            ;
     const link = document.createElement("link");

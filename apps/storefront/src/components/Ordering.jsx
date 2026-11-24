@@ -2,8 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { formatINR, itemFromPrice, itemGallery, menuForNow, menuLayoutSchema } from "@onetap/config-schema";
-import { FoodMark, MenuSections, fx, getCarouselVariant, getVariant, Photo } from "@onetap/ui";
+import { formatINR, itemFromPrice, itemGallery, menuForNow, menuLayoutSchema } from "@rasoipulse/config-schema";
+import { FoodMark, MenuSections, fx, getCarouselVariant, getVariant, Photo } from "@rasoipulse/ui";
 import { X } from "lucide-react";
 import { api } from "@/lib/clientApi";
 import { useCartLines } from "@/lib/useCartLines";

@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { CUSTOMER_AGE_MAX, CUSTOMER_AGE_MIN, CUSTOMER_GENDER_LABELS, CUSTOMER_GENDERS, formatCountdown } from "@onetap/config-schema";
-import { fx } from "@onetap/ui";
+import { CUSTOMER_AGE_MAX, CUSTOMER_AGE_MIN, CUSTOMER_GENDER_LABELS, CUSTOMER_GENDERS, formatCountdown } from "@rasoipulse/config-schema";
+import { fx } from "@rasoipulse/ui";
 import { Calendar, Check, ChevronLeft, Loader2, LogIn, Mail, Phone, ShieldAlert, ShieldCheck, User } from "lucide-react";
 import { api, apiPatch } from "@/lib/clientApi";
 
-const DRAFT_KEY = "onetap.customerDraft";
+const DRAFT_KEY = "rasoipulse.customerDraft";
 // How long to wait before asking for another code is the SERVER's call (it grows with every code: 30 s, 1 min, 2 min,
 // 5 min … up to 6 hours) and it refuses an early request no matter who sends it. This screen only shows the countdown
 // the server gave, and remembers it for the number it belongs to — going Back, or retyping the same number, doesn't reset it.

@@ -10,7 +10,7 @@ import {
   PRINT_STATIONS,
   PRINT_TARGETS,
   SIZES,
-} from "@onetap/config-schema";
+} from "@rasoipulse/config-schema";
 import { tenantScope } from "../tenant-scope.js";
 
 const { Schema, model, models } = mongoose;

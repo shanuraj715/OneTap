@@ -1,11 +1,11 @@
-import { BrandModel, OutletModel } from "@onetap/db";
+import { BrandModel, OutletModel } from "@rasoipulse/db";
 import { cache } from "../cache/cache.js";
 import { brandPlan, effectiveConfigWith } from "./config.service.js";
 
 /**
  * The cached lookups behind every storefront page view.
  *
- * A visitor opens an address (acme.tablepe.in). To show the restaurant the
+ * A visitor opens an address (acme.rasoipulse.in). To show the restaurant the
  * server needs: which store owns the address, that store's outlets with their
  * look as the plan allows it (theme, fonts, layout, features), and the menu.
  * Reading all that from the database on every page view is the same answer

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "../../lib/nav";
-import { MARKETING_CHANNEL_LABELS } from "@onetap/config-schema";
+import { MARKETING_CHANNEL_LABELS } from "@rasoipulse/config-schema";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import * as api from "../../lib/api";
 import { useAuth } from "../../lib/useAuth";

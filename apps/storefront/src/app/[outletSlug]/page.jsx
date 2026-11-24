@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
-import { menuForNow, storefrontMenuLayout } from "@onetap/config-schema";
-import { getVariant, Hero, MenuSections } from "@onetap/ui";
+import { menuForNow, storefrontMenuLayout } from "@rasoipulse/config-schema";
+import { getVariant, Hero, MenuSections } from "@rasoipulse/ui";
 import { StoreBottom, StoreTop } from "@/components/Chrome";
 import { Ordering } from "@/components/Ordering";
 import { OrderBar } from "@/components/OrderBar";

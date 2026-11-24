@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { menuLayoutSchema, storefrontMenuLayout } from "@onetap/config-schema";
-import { MenuSections } from "@onetap/ui";
+import { menuLayoutSchema, storefrontMenuLayout } from "@rasoipulse/config-schema";
+import { MenuSections } from "@rasoipulse/ui";
 
 const BACKOFF = [1_000, 2_000, 5_000, 10_000, 20_000];
 
@@ -11,10 +11,10 @@ const BACKOFF = [1_000, 2_000, 5_000, 10_000, 20_000];
  * @param {string} props.sessionId
  * @param {string} props.apiBase
  * @param {string} props.outletName
- * @param {import("@onetap/config-schema").Menu} props.menu
+ * @param {import("@rasoipulse/config-schema").Menu} props.menu
  * @param {string} props.fallbackCardVariant
  * @param {string} [props.fallbackImageRatio]
- * @param {import("@onetap/config-schema").MenuLayout} props.initialLayout
+ * @param {import("@rasoipulse/config-schema").MenuLayout} props.initialLayout
  */
 export function LivePreview({ sessionId, apiBase, outletName, menu, fallbackCardVariant, fallbackImageRatio = "", initialLayout }) {
   const [layout, setLayout] = useState(initialLayout);

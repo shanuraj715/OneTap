@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
-import { marketingAudienceSchema, parseContacts } from "@onetap/config-schema";
+import { marketingAudienceSchema, parseContacts } from "@rasoipulse/config-schema";
 import { requireOutletContext } from "../../middleware/auth.js";
 import { requireFeature } from "../platform/plan.service.js";
 import { filterOptions, previewAudience } from "./audience.js";

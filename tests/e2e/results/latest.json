@@ -24953,5 +24953,115 @@
     ],
     "findings": [],
     "problems": []
+  },
+  "t78-storefront-title": {
+    "id": "t78-storefront-title",
+    "title": "The storefront's browser-tab title is the store's name (and follows a rename)",
+    "status": "fail",
+    "pass": 10,
+    "fail": 1,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-24T21:33:39.367Z",
+    "durationMs": 18964,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The tab shows the store's name",
+        "checks": [
+          {
+            "label": "the platform admin renames the store",
+            "ok": true,
+            "detail": "Acme Momos → Title Test Cafe",
+            "kind": "expect"
+          },
+          {
+            "label": "the home page's tab title is the store's name",
+            "ok": true,
+            "detail": "Title Test Cafe",
+            "kind": "expect"
+          },
+          {
+            "label": "…exactly the same words as the big heading on the page",
+            "ok": true,
+            "detail": "\"Title Test Cafe\"",
+            "kind": "expect"
+          },
+          {
+            "label": "…and no longer the one fixed product name every store used to show",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the page description talks about the store, not about the platform",
+            "ok": true,
+            "detail": "Steamed, fried and made to order",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "A rename shows at once",
+        "checks": [
+          {
+            "label": "the store is renamed again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the next visit already has the new name in the tab (nothing is remembered from before)",
+            "ok": true,
+            "detail": "Renamed Again Co",
+            "kind": "expect"
+          },
+          {
+            "label": "…and in the heading",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Every outlet of the store",
+        "checks": [
+          {
+            "label": "the other outlet (/second) has the same store title",
+            "ok": true,
+            "detail": "Renamed Again Co",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "The other pages still name the store",
+        "checks": [
+          {
+            "label": "the Account page: 'Your account — <store>'",
+            "ok": true,
+            "detail": "Your account — Renamed Again Co",
+            "kind": "expect"
+          },
+          {
+            "label": "a page of the store: '<page> — <store>'",
+            "ok": false,
+            "detail": "Page not found",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "A table's QR page",
+        "checks": []
+      }
+    ],
+    "findings": [],
+    "problems": []
   }
 }

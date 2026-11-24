@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { comboDetails, describeWindows, formatINR, WEEKDAY_SHORT } from "@onetap/config-schema";
+import { comboDetails, describeWindows, formatINR, WEEKDAY_SHORT } from "@rasoipulse/config-schema";
 import { Plus, X } from "lucide-react";
 import { Field, TextInput } from "../../ui";
 

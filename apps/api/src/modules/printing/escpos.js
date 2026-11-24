@@ -1,4 +1,4 @@
-import { charsFor, PAPER,                                  } from "@onetap/config-schema";
+import { charsFor, PAPER,                                  } from "@rasoipulse/config-schema";
 import { renderBlocks,                  } from "./render.js";
 
 /**

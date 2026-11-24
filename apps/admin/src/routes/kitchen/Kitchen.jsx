@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "../../lib/nav";
-import { KDS_STAGE_LABELS, PREP_STATION_LABELS } from "@onetap/config-schema";
+import { KDS_STAGE_LABELS, PREP_STATION_LABELS } from "@rasoipulse/config-schema";
 import { ArrowLeft, Bell, BellOff, ChefHat, RotateCcw, Wifi, WifiOff } from "lucide-react";
 import { useAuth } from "../../lib/useAuth";
 import { useOutlet } from "../../lib/useOutlet";
@@ -25,7 +25,7 @@ const LANES = [
   { stage: "preparing", title: "Preparing" },
   { stage: "ready", title: "Ready" },
 ];
-const SOUND_KEY = "onetap.kitchen.sound";
+const SOUND_KEY = "rasoipulse.kitchen.sound";
 const CHANNEL = { "dine-in": "Dine-in", takeaway: "Takeaway", delivery: "Delivery" };
 
 const minutesSince = (iso, now) => Math.max(0, Math.floor((now - new Date(iso).getTime()) / 60000));
@@ -137,7 +137,7 @@ export function Kitchen() {
       {!allowed ? (
         <Message title="Your role can't see the kitchen display." />
       ) : locked ? (
-        <Message title="The kitchen display isn't part of this store's plan." body="Ask TablePe to switch it on." />
+        <Message title="The kitchen display isn't part of this store's plan." body="Ask Rasoi Pulse to switch it on." />
       ) : q.error ? (
         <Message title="Couldn't load the orders." body={q.error.message} />
       ) : q.isLoading ? (

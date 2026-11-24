@@ -1,6 +1,6 @@
                                            
                                                       
-import { itemImageUrl } from "@onetap/config-schema";
+import { itemImageUrl } from "@rasoipulse/config-schema";
 import { fx } from "./fx";
 import {
   addBtn,

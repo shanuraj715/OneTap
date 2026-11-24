@@ -1,5 +1,5 @@
-import { MAX_SUGGESTIONS, menuForNow } from "@onetap/config-schema";
-import { OrderModel, tenantFilter } from "@onetap/db";
+import { MAX_SUGGESTIONS, menuForNow } from "@rasoipulse/config-schema";
+import { OrderModel, tenantFilter } from "@rasoipulse/db";
 import { cache } from "../cache/cache.js";
 import { effectiveOutletConfig } from "../outlets/config.service.js";
 import { publicOutletById } from "../outlets/outlet-cache.js";

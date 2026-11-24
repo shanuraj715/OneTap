@@ -2,8 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { statusLabelFor } from "@onetap/config-schema";
-import { fx } from "@onetap/ui";
+import { statusLabelFor } from "@rasoipulse/config-schema";
+import { fx } from "@rasoipulse/ui";
 import { AlertTriangle, ArrowLeft, Bike, Clock, Phone, RefreshCw, XCircle } from "lucide-react";
 import { api } from "@/lib/clientApi";
 import { useCustomer } from "@/lib/useCustomer";

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { parseMapsPoint } from "@onetap/config-schema";
+import { parseMapsPoint } from "@rasoipulse/config-schema";
                                            
                                                           
 import { Crosshair, MapPin } from "lucide-react";
@@ -19,7 +19,7 @@ function loadGoogleMaps()                {
   if (gmaps()) return Promise.resolve();
   if (mapsPromise) return mapsPromise;
   mapsPromise = new Promise      ((resolve, reject) => {
-    const cb = `__onetapAdminMaps_${Math.random().toString(36).slice(2)}`;
+    const cb = `__rasoiPulseAdminMaps_${Math.random().toString(36).slice(2)}`;
     (globalThis                           )[cb] = () => {
       delete (globalThis                           )[cb];
       resolve();

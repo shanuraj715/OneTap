@@ -1,4 +1,4 @@
-import { waLevelAtLeast } from "@onetap/config-schema";
+import { waLevelAtLeast } from "@rasoipulse/config-schema";
 import { NotFoundSection } from "../../components/NotFoundSection";
 import { useStorePlan } from "../../lib/useStorePlan";
 import { useWaMe } from "../../lib/useWhatsApp";
