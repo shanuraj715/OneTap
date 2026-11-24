@@ -74,7 +74,7 @@ _Nothing failed._
 - Security lists the address as Blocked, for Dashboards, blocked twice — _203.0.113.50 Dashboards Blocked · 10 seconds left 0 2 21 Nov, 1:09:51 pm Unblock_
 - …and explains the rules (3 wrong tries, longer each time)
 - did not happen: the address is still listed as blocked after Unblock
-- the unblocked address sees the sign-in form again at once — _Rasoi Pulse admin Sign in to manage your restaurant. Email Password Sign in_
+- the unblocked address sees the sign-in form again at once — _TablePe admin Sign in to manage your restaurant. Email Password Sign in_
 
 **Step 6 — On the storefront: wrong customer codes block that network, and only that network**
 

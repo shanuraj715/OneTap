@@ -1,6 +1,6 @@
 # T64 — Two staff taking an order for the same table — the second is told the table is no longer free and can move the order to a free table
 
-**Area:** tables · **Last result:** ✅ PASSED (22 passed, 0 failed · 2026-11-21 13:14 · headless · 1.5 s)
+**Area:** tables · **Last result:** ✅ PASSED (22 passed, 0 failed · 2026-11-25 03:06 · headless · 2.2 s)
 
 **Run it alone:** `node run.mjs --only t64` (add `--visible` to watch it)
 
@@ -69,6 +69,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-25 03:06 | pass | 22 | 0 | headless | 2.2 s |
 | 2026-11-21 13:14 | pass | 22 | 0 | headless | 1.5 s |
 | 2026-11-21 05:03 | pass | 22 | 0 | headless | 2.0 s |
 | 2026-11-21 03:19 | pass | 22 | 0 | headless | 1.9 s |

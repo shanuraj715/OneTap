@@ -51,7 +51,7 @@ _Nothing failed._
 - a line under the switch says so (a phone has no hover)
 - pressing Delivery does nothing
 - the keyboard Tab key skips the disabled Delivery
-- a remembered 'delivery' from another outlet does not select it here — _rasoipulse.orderType_
+- a remembered 'delivery' from another outlet does not select it here — _onetap.orderType_
 
 **Step 2 — an outlet with both**
 

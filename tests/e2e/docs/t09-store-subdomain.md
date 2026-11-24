@@ -48,9 +48,9 @@ _Nothing failed._
 **Step 2 — In the Domains tab: which names may the store have?**
 
 - did not happen: "www" (a reserved name) is offered as free
-- …and the form says why for "www" — _kept for Rasoi Pulse_
+- …and the form says why for "www" — _kept for TablePe_
 - did not happen: "admin" (a reserved name) is offered as free
-- …and the form says why for "admin" — _kept for Rasoi Pulse_
+- …and the form says why for "admin" — _kept for TablePe_
 - did not happen: "ab" (too short) is offered as free
 - …and the form says why for "ab" — _at least 3 characters_
 - did not happen: "Bad_Name" (bad characters) is offered as free

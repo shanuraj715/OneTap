@@ -114,7 +114,7 @@ _Nothing failed._
 - a short link is followed by the server: 'Pin set: 28.5245, 77.2066'
 - plain coordinates work too: 'Pin set: 28.6, 77.2'
 - the 'Fresh green' colour scheme fills the colours (brand colour #2E7D46) and shows a preview
-- the Rasoi Pulse address is checked live: 'onboardcafe.localhost:3170 is free' — _onboardcafe.localhost:3170 is free_
+- the TablePe address is checked live: 'onboardcafe.localhost:3170 is free' — _onboardcafe.localhost:3170 is free_
 - Plan fit: outlets is allowed
 - Plan fit: feature:delivery is allowed
 - Plan fit: feature:marketing is allowed
