@@ -11,6 +11,15 @@ import { getOutletBySlug, getOutletsForHost, getPageLinks, storeName } from "@/l
 
 export const dynamic = "force-dynamic";
 
+/** The browser tab / search-result title is the store's name — the same name as the big heading on the page. */
+export async function generateMetadata({ params }) {
+  const { outletSlug } = await params;
+  const outlet = await getOutletBySlug(outletSlug);
+  if (!outlet) return { title: "Page not found" };
+  const name = storeName(outlet);
+  return { title: name, description: outlet.config?.identity?.tagline || `Order online from ${name}.` };
+}
+
 export default async function OutletHomePage({ params }) {
   const { outletSlug } = await params;
   const outlet = await getOutletBySlug(outletSlug);

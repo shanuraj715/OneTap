@@ -18,6 +18,13 @@ const CHOICE_COOKIE = "onetap_outlet_slug";
  * a picker before any site content renders, per the "ask before showing"
  * requirement.
  */
+/** The picker's tab title is the store's name too (a single-outlet store never shows this page — it redirects). */
+export async function generateMetadata() {
+  const resolved = await getOutletsForHost();
+  const name = resolved?.brand?.name;
+  return name ? { title: name, description: `Choose an outlet and order online from ${name}.` } : {};
+}
+
 export default async function RootPage() {
   const resolved = await getOutletsForHost();
 

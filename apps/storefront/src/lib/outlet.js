@@ -1,4 +1,5 @@
 import { apiServerUrl } from "@/lib/api-config";
+import { cache } from "react";
 import { headers } from "next/headers";
 import { parseOutletConfig,                   } from "@onetap/config-schema";
 
@@ -43,7 +44,7 @@ export async function getOutlet()                                 {
  * outlet-scoped storefront page (`/[outletSlug]`, `/[outletSlug]/t/...`)
  * uses this instead of the bare host-only getOutlet().
  */
-export async function getOutletBySlug(outletSlug        )                                 {
+async function fetchOutletBySlug(outletSlug        )                                 {
   const host = (await headers()).get("host") ?? "";
   const url = `${API_BASE}/api/outlets/resolve?host=${encodeURIComponent(host)}&slug=${encodeURIComponent(outletSlug)}`;
 
@@ -68,7 +69,7 @@ export async function getOutletBySlug(outletSlug        )                       
  * Which brand the current host belongs to, and every outlet under it —
  * powers the root page's "no outlet in the URL yet" resolution.
  */
-export async function getOutletsForHost() {
+async function fetchOutletsForHost() {
   const host = (await headers()).get("host") ?? "";
   try {
     const res = await fetch(`${API_BASE}/api/outlets/for-host?host=${encodeURIComponent(host)}`, { cache: "no-store" });
@@ -109,7 +110,7 @@ export async function getPlatformLinks() {
 }
 
 /** Load an outlet directly by id — used by the table-QR landing page. */
-export async function getOutletById(outletId        )                                 {
+async function fetchOutletById(outletId        )                                 {
   try {
     const res = await fetch(`${API_BASE}/api/outlets/resolve?slug=&host=&id=${encodeURIComponent(outletId)}`, {
       cache: "no-store",
@@ -159,3 +160,12 @@ export async function getStorePage(outletId, slug) {
  * confirming an outlet — the outlet dropdown, checkout. Falls back to the outlet's names only if the store's is missing.
  */
 export const storeName = (outlet) => outlet.brandName || outlet.config?.identity?.name || outlet.name;
+
+/*
+ * One lookup per request. A page's title (generateMetadata) and the page itself both need the same outlet; React's `cache`
+ * makes the second ask reuse the first answer instead of calling the API again. (It lasts for ONE request only — nothing is
+ * kept between visitors, so a renamed store shows its new name straight away.)
+ */
+export const getOutletBySlug = cache(fetchOutletBySlug);
+export const getOutletsForHost = cache(fetchOutletsForHost);
+export const getOutletById = cache(fetchOutletById);
