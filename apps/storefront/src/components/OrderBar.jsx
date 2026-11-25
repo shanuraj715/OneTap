@@ -6,6 +6,7 @@ import { checkDelivery, formatINR, haversineKm, ORDER_TYPE_LABELS, ORDER_TYPE_ST
 import { fx, StickyBar } from "@rasoipulse/ui";
 import { Bike, Check, ChevronDown, LocateFixed, MapPin, ShoppingBag } from "lucide-react";
 import { useUserLocation } from "@/lib/useUserLocation";
+import { startNavProgress } from "./NavProgress";
 
 /**
  * The bar under the header on the menu page: HOW the visitor wants their order (Takeaway or Delivery) and FROM
@@ -100,6 +101,7 @@ export function OrderBar({ current, outlets }) {
     setOpen(false);
     if (outlet.id === here.id) return;
     document.cookie = `${CHOICE_COOKIE}=${encodeURIComponent(outlet.slug)}; path=/; max-age=${60 * 60 * 24 * 180}`;
+    startNavProgress();
     router.push(`/${outlet.slug}`);
   };
 

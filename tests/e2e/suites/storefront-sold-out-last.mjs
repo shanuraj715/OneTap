@@ -21,7 +21,15 @@ const call = async (method, path, body) => {
   let json = {}; try { json = await r.json(); } catch {}
   return { status: r.status, json };
 };
-const must = (r, what) => { if (r.status >= 400) { console.error("SETUP FAILED", what, r.status, JSON.stringify(r.json).slice(0, 300)); process.exit(1); } return r; };
+// a failed setup step must not leave test categories or a changed menu layout behind (the bench store is shared by later tests):
+// undo what was done so far, synchronously, then stop
+import { execFileSync } from "node:child_process";
+const undoSync = () => {
+  const h = ["-s", "-X", "POST", "-H", "content-type: application/json", "-H", `cookie: ${cookie}`, "-H", `x-rasoipulse-outlet: ${outletId}`];
+  try { execFileSync("curl", [...h, "-X", "PATCH", "-d", JSON.stringify({ menuLayout: layoutBefore }), `${API}/api/outlets/${outletId}/config`]); } catch { /* best effort */ }
+  try { if (typeof made !== "undefined" && made.length) execFileSync("curl", [...h, "-d", JSON.stringify({ ids: made, deleteItems: true }), `${API}/api/menu/categories/bulk-delete`]); } catch { /* best effort */ }
+};
+const must = (r, what) => { if (r.status >= 400) { console.error("SETUP FAILED", what, r.status, JSON.stringify(r.json).slice(0, 300)); undoSync(); process.exit(1); } return r; };
 
 const made = [];
 const items = {}; // "SOLD 02" → id

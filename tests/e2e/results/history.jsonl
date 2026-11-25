@@ -1178,3 +1178,50 @@
 {"id":"t49-storefront-item-popup","status":"pass","pass":42,"fail":0,"mode":"headless","at":"2026-11-25T04:25:35.694Z","durationMs":19644}
 {"id":"t72-menu-chunks","status":"pass","pass":15,"fail":0,"mode":"headless","at":"2026-11-25T04:25:45.884Z","durationMs":10111}
 {"id":"t80-sold-out-last-and-view-all","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-25T04:26:06.052Z","durationMs":20092}
+{"id":"t81-storefront-card-columns","status":"pass","pass":163,"fail":0,"mode":"headless","at":"2026-11-25T04:53:01.140Z","durationMs":19001}
+{"id":"t82-storefront-nav-progress","status":"fail","pass":28,"fail":2,"mode":"headless","at":"2026-11-25T04:53:57.751Z","durationMs":56516}
+{"id":"t82-storefront-nav-progress","status":"error","pass":30,"fail":0,"mode":"headless","at":"2026-11-25T04:55:32.417Z","durationMs":58809,"error":"storefront-nav-progress.mjs exited with code 1. }  Node.js v22.17.0"}
+{"id":"t81-storefront-card-columns","status":"fail","pass":144,"fail":19,"mode":"headless","at":"2026-11-25T04:59:46.058Z","durationMs":17088}
+{"id":"t35-storefront-category-bar","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-25T05:00:50.343Z","durationMs":24861}
+{"id":"t37-storefront-mobile-layout","status":"pass","pass":45,"fail":0,"mode":"headless","at":"2026-11-25T05:00:59.743Z","durationMs":9311}
+{"id":"t40-react-style-warnings","status":"fail","pass":3,"fail":1,"mode":"headless","at":"2026-11-25T05:01:38.865Z","durationMs":39048}
+{"id":"t41-storefront-view-all","status":"pass","pass":85,"fail":0,"mode":"headless","at":"2026-11-25T05:02:39.527Z","durationMs":60584}
+{"id":"t47-storefront-pinned-bars","status":"pass","pass":101,"fail":0,"mode":"headless","at":"2026-11-25T05:04:27.810Z","durationMs":108191}
+{"id":"t48-hero-button-card-c02","status":"pass","pass":69,"fail":0,"mode":"headless","at":"2026-11-25T05:05:06.911Z","durationMs":38992}
+{"id":"t49-storefront-item-popup","status":"pass","pass":42,"fail":0,"mode":"headless","at":"2026-11-25T05:05:27.348Z","durationMs":20349}
+{"id":"t72-menu-chunks","status":"pass","pass":15,"fail":0,"mode":"headless","at":"2026-11-25T05:05:37.022Z","durationMs":9595}
+{"id":"t78-storefront-title","status":"pass","pass":16,"fail":0,"mode":"headless","at":"2026-11-25T05:05:39.982Z","durationMs":2872}
+{"id":"t80-sold-out-last-and-view-all","status":"error","pass":0,"fail":0,"mode":"headless","at":"2026-11-25T05:05:40.971Z","durationMs":913,"error":"storefront-sold-out-last.mjs produced no checks (exit 1). SETUP FAILED item 429 {\"error\":\"You're making changes too fast. Please wait 1 second.\",\"details\":{\"code\":\"rate_limited\",\"retryAfterSec\":1,\"policy\":\"team-write\"}}"}
+{"id":"t81-storefront-card-columns","status":"pass","pass":163,"fail":0,"mode":"headless","at":"2026-11-25T05:05:58.598Z","durationMs":17561}
+{"id":"t82-storefront-nav-progress","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-25T05:06:28.770Z","durationMs":30095}
+{"id":"t40-react-style-warnings","status":"fail","pass":3,"fail":1,"mode":"headless","at":"2026-11-25T05:10:36.973Z","durationMs":39282}
+{"id":"t81-storefront-card-columns","status":"fail","pass":161,"fail":2,"mode":"headless","at":"2026-11-25T05:10:56.612Z","durationMs":19436}
+{"id":"t40-react-style-warnings","status":"fail","pass":3,"fail":1,"mode":"headless","at":"2026-11-25T05:13:09.020Z","durationMs":39441}
+{"id":"t81-storefront-card-columns","status":"pass","pass":163,"fail":0,"mode":"headless","at":"2026-11-25T05:13:30.783Z","durationMs":21674}
+{"id":"t35-storefront-category-bar","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-25T05:15:25.814Z","durationMs":22957}
+{"id":"t37-storefront-mobile-layout","status":"pass","pass":45,"fail":0,"mode":"headless","at":"2026-11-25T05:15:36.976Z","durationMs":11057}
+{"id":"t40-react-style-warnings","status":"pass","pass":4,"fail":0,"mode":"headless","at":"2026-11-25T05:16:17.119Z","durationMs":40071}
+{"id":"t41-storefront-view-all","status":"pass","pass":85,"fail":0,"mode":"headless","at":"2026-11-25T05:17:17.138Z","durationMs":59949}
+{"id":"t47-storefront-pinned-bars","status":"pass","pass":101,"fail":0,"mode":"headless","at":"2026-11-25T05:18:59.284Z","durationMs":102063}
+{"id":"t48-hero-button-card-c02","status":"fail","pass":10,"fail":3,"mode":"headless","at":"2026-11-25T05:19:08.279Z","durationMs":8890}
+{"id":"t49-storefront-item-popup","status":"pass","pass":42,"fail":0,"mode":"headless","at":"2026-11-25T05:19:28.805Z","durationMs":20452}
+{"id":"t72-menu-chunks","status":"pass","pass":15,"fail":0,"mode":"headless","at":"2026-11-25T05:19:39.252Z","durationMs":10369}
+{"id":"t78-storefront-title","status":"pass","pass":16,"fail":0,"mode":"headless","at":"2026-11-25T05:19:41.956Z","durationMs":2613}
+{"id":"t81-storefront-card-columns","status":"pass","pass":163,"fail":0,"mode":"headless","at":"2026-11-25T05:20:00.315Z","durationMs":18190}
+{"id":"t82-storefront-nav-progress","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-25T05:20:30.734Z","durationMs":30344}
+{"id":"t80-sold-out-last-and-view-all","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-25T05:21:22.223Z","durationMs":20455}
+{"id":"t48-hero-button-card-c02","status":"fail","pass":10,"fail":3,"mode":"headless","at":"2026-11-25T05:22:43.706Z","durationMs":8530}
+{"id":"t47-storefront-pinned-bars","status":"error","pass":20,"fail":0,"mode":"headless","at":"2026-11-25T05:48:31.392Z","durationMs":92074,"error":"storefront-pinned-bars.mjs exited with code 1. }  Node.js v22.17.0"}
+{"id":"t80-sold-out-last-and-view-all","status":"error","pass":0,"fail":0,"mode":"headless","at":"2026-11-25T05:48:32.257Z","durationMs":785,"error":"storefront-sold-out-last.mjs produced no checks (exit 1). }  Node.js v22.17.0"}
+{"id":"t35-storefront-category-bar","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-25T06:29:12.041Z","durationMs":21938}
+{"id":"t37-storefront-mobile-layout","status":"pass","pass":45,"fail":0,"mode":"headless","at":"2026-11-25T06:29:24.405Z","durationMs":12286}
+{"id":"t40-react-style-warnings","status":"pass","pass":4,"fail":0,"mode":"headless","at":"2026-11-25T06:30:04.495Z","durationMs":40022}
+{"id":"t48-hero-button-card-c02","status":"pass","pass":69,"fail":0,"mode":"headless","at":"2026-11-25T06:30:30.820Z","durationMs":26252}
+{"id":"t49-storefront-item-popup","status":"pass","pass":42,"fail":0,"mode":"headless","at":"2026-11-25T06:30:49.204Z","durationMs":18304}
+{"id":"t72-menu-chunks","status":"pass","pass":15,"fail":0,"mode":"headless","at":"2026-11-25T06:30:57.568Z","durationMs":8293}
+{"id":"t78-storefront-title","status":"pass","pass":16,"fail":0,"mode":"headless","at":"2026-11-25T06:30:59.829Z","durationMs":2191}
+{"id":"t81-storefront-card-columns","status":"pass","pass":163,"fail":0,"mode":"headless","at":"2026-11-25T06:31:21.133Z","durationMs":15863}
+{"id":"t82-storefront-nav-progress","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-25T06:31:48.614Z","durationMs":27397}
+{"id":"t80-sold-out-last-and-view-all","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-25T06:32:13.696Z","durationMs":18635}
+{"id":"t41-storefront-view-all","status":"pass","pass":85,"fail":0,"mode":"headless","at":"2026-11-25T06:33:07.175Z","durationMs":47110}
+{"id":"t47-storefront-pinned-bars","status":"pass","pass":101,"fail":0,"mode":"headless","at":"2026-11-25T06:34:36.967Z","durationMs":82936}

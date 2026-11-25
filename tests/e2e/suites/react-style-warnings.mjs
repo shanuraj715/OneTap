@@ -63,6 +63,10 @@ await page.waitForSelector("[data-fx-toolbar]", { timeout: 15000 });
 await page.waitForTimeout(400);
 
 const sections = async () => page.locator("section[id^='sec-']").count();
+// the menu is drawn in chunks — the next one as the end comes near — so scroll down until all of it is on the page
+for (let i = 0; i < 40 && (await sections()) < 14; i++) { await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight)); await page.waitForTimeout(250); }
+await page.evaluate(() => window.scrollTo(0, 0));
+await page.waitForTimeout(200);
 ok((await sections()) >= 14, "the real menu is on the page (14+ sections, the category bar, the filter)", String(await sections()));
 
 // 1. read down the whole menu: the highlighted chip keeps changing

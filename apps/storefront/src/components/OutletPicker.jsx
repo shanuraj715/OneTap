@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { haversineKm } from "@rasoipulse/config-schema";
+import { startNavProgress } from "./NavProgress";
 
 const Pin = ({ size = 16 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -31,6 +32,7 @@ export function OutletPicker({ brand, outlets, cookieName, pageLinks = [] }) {
 
   const choose = (slug) => {
     document.cookie = `${cookieName}=${encodeURIComponent(slug)}; path=/; max-age=${60 * 60 * 24 * 180}`;
+    startNavProgress();
     router.push(`/${slug}`);
   };
 

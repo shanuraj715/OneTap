@@ -12776,8 +12776,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-25T04:22:13.692Z",
-    "durationMs": 22800,
+    "at": "2026-11-25T06:29:12.041Z",
+    "durationMs": 21938,
     "steps": [
       {
         "n": 1,
@@ -13013,8 +13013,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T09:38:01.273Z",
-    "durationMs": 7894,
+    "at": "2026-11-25T06:29:24.405Z",
+    "durationMs": 12286,
     "steps": [
       {
         "n": 1,
@@ -14210,8 +14210,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T23:26:04.569Z",
-    "durationMs": 39553,
+    "at": "2026-11-25T06:30:04.495Z",
+    "durationMs": 40022,
     "steps": [
       {
         "n": 0,
@@ -14255,8 +14255,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-25T04:23:07.299Z",
-    "durationMs": 53525,
+    "at": "2026-11-25T06:33:07.175Z",
+    "durationMs": 47110,
     "steps": [
       {
         "n": 1,
@@ -14619,7 +14619,7 @@
           {
             "label": "desktop: opening takes long enough to WATCH (about 0.8 s), without dragging",
             "ok": true,
-            "detail": "819 ms",
+            "detail": "791 ms",
             "kind": "expect"
           },
           {
@@ -14649,7 +14649,7 @@
           {
             "label": "desktop: closing is visible too (about 0.7 s)",
             "ok": true,
-            "detail": "655 ms",
+            "detail": "666 ms",
             "kind": "expect"
           },
           {
@@ -14727,7 +14727,7 @@
           {
             "label": "phone: opening takes long enough to WATCH (about 1.0 s), without dragging",
             "ok": true,
-            "detail": "1012 ms",
+            "detail": "1011 ms",
             "kind": "expect"
           },
           {
@@ -16157,8 +16157,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-25T04:24:44.483Z",
-    "durationMs": 97099,
+    "at": "2026-11-25T06:34:36.967Z",
+    "durationMs": 82936,
     "steps": [
       {
         "n": 1,
@@ -16826,8 +16826,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-25T04:25:15.966Z",
-    "durationMs": 31399,
+    "at": "2026-11-25T06:30:30.820Z",
+    "durationMs": 26252,
     "steps": [
       {
         "n": 1,
@@ -17291,8 +17291,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-25T04:25:35.694Z",
-    "durationMs": 19644,
+    "at": "2026-11-25T06:30:49.204Z",
+    "durationMs": 18304,
     "steps": [
       {
         "n": 1,
@@ -23306,8 +23306,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-25T04:25:45.884Z",
-    "durationMs": 10111,
+    "at": "2026-11-25T06:30:57.568Z",
+    "durationMs": 8293,
     "steps": [
       {
         "n": 1,
@@ -24962,8 +24962,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-24T21:35:06.851Z",
-    "durationMs": 3115,
+    "at": "2026-11-25T06:30:59.829Z",
+    "durationMs": 2191,
     "steps": [
       {
         "n": 1,
@@ -25172,8 +25172,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-25T04:26:06.052Z",
-    "durationMs": 20092,
+    "at": "2026-11-25T06:32:13.696Z",
+    "durationMs": 18635,
     "steps": [
       {
         "n": 1,
@@ -25357,6 +25357,1296 @@
             "label": "the test categories are removed and the menu layout is put back",
             "ok": true,
             "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser logged no errors or warnings",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t81-storefront-card-columns": {
+    "id": "t81-storefront-card-columns",
+    "title": "Menu cards: '3 a row' shows 3 only where 3 fit — 2 on a portrait tablet, 1 on a phone — and no card is ever cut off, pushed past the screen or on top of another",
+    "status": "pass",
+    "pass": 163,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-25T06:31:21.133Z",
+    "durationMs": 15863,
+    "steps": [
+      {
+        "n": 1,
+        "title": "390px wide (a phone)",
+        "checks": [
+          {
+            "label": "card.row-compact, 3 per row: 1 column here (minimum card 320px, row 362px)",
+            "ok": true,
+            "detail": "1 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-compact: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left, 3 per row: 1 column here (minimum card 340px, row 362px)",
+            "ok": true,
+            "detail": "1 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right, 3 per row: 1 column here (minimum card 340px, row 362px)",
+            "ok": true,
+            "detail": "1 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top, 3 per row: 1 column here (minimum card 240px, row 362px)",
+            "ok": true,
+            "detail": "1 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge, 3 per row: 1 column here (minimum card 240px, row 362px)",
+            "ok": true,
+            "detail": "1 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image, 3 per row: 1 column here (minimum card 260px, row 362px)",
+            "ok": true,
+            "detail": "1 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay, 3 per row: 1 column here (minimum card 260px, row 362px)",
+            "ok": true,
+            "detail": "1 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait, 3 per row: 1 column here (minimum card 210px, row 362px)",
+            "ok": true,
+            "detail": "1 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle, 3 per row: 1 column here (minimum card 190px, row 362px)",
+            "ok": true,
+            "detail": "1 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.menu-line, 3 per row: 1 column here (minimum card 280px, row 362px)",
+            "ok": true,
+            "detail": "1 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.menu-line: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "the page does not scroll sideways",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "744px wide (a tablet in portrait)",
+        "checks": [
+          {
+            "label": "card.row-compact, 3 per row: 2 columns here (minimum card 320px, row 716px)",
+            "ok": true,
+            "detail": "2 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-compact: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-compact: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left, 3 per row: 2 columns here (minimum card 340px, row 716px)",
+            "ok": true,
+            "detail": "2 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right, 3 per row: 2 columns here (minimum card 340px, row 716px)",
+            "ok": true,
+            "detail": "2 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top, 3 per row: 2 columns here (minimum card 240px, row 716px)",
+            "ok": true,
+            "detail": "2 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge, 3 per row: 2 columns here (minimum card 240px, row 716px)",
+            "ok": true,
+            "detail": "2 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image, 3 per row: 2 columns here (minimum card 260px, row 716px)",
+            "ok": true,
+            "detail": "2 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay, 3 per row: 2 columns here (minimum card 260px, row 716px)",
+            "ok": true,
+            "detail": "2 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait, 3 per row: 2 columns here (minimum card 210px, row 716px)",
+            "ok": true,
+            "detail": "2 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle, 3 per row: 2 columns here (minimum card 190px, row 716px)",
+            "ok": true,
+            "detail": "2 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.menu-line, 3 per row: 2 columns here (minimum card 280px, row 716px)",
+            "ok": true,
+            "detail": "2 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.menu-line: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.menu-line: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "the page does not scroll sideways",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "2 per row (image on top): 2 here",
+            "ok": true,
+            "detail": "row 716px",
+            "kind": "expect"
+          },
+          {
+            "label": "4 per row (image on top): only as many as fit — 2 here, nothing cut off",
+            "ok": true,
+            "detail": "row 716px",
+            "kind": "expect"
+          },
+          {
+            "label": "1 per row stays 1 at every width",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "820px wide (a tablet in portrait)",
+        "checks": [
+          {
+            "label": "card.row-compact, 3 per row: 2 columns here (minimum card 320px, row 792px)",
+            "ok": true,
+            "detail": "2 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-compact: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-compact: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left, 3 per row: 2 columns here (minimum card 340px, row 792px)",
+            "ok": true,
+            "detail": "2 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right, 3 per row: 2 columns here (minimum card 340px, row 792px)",
+            "ok": true,
+            "detail": "2 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top, 3 per row: 2 columns here (minimum card 240px, row 792px)",
+            "ok": true,
+            "detail": "2 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge, 3 per row: 2 columns here (minimum card 240px, row 792px)",
+            "ok": true,
+            "detail": "2 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image, 3 per row: 2 columns here (minimum card 260px, row 792px)",
+            "ok": true,
+            "detail": "2 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay, 3 per row: 2 columns here (minimum card 260px, row 792px)",
+            "ok": true,
+            "detail": "2 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait, 3 per row: 2 columns here (minimum card 210px, row 792px)",
+            "ok": true,
+            "detail": "2 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle, 3 per row: 2 columns here (minimum card 190px, row 792px)",
+            "ok": true,
+            "detail": "2 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.menu-line, 3 per row: 2 columns here (minimum card 280px, row 792px)",
+            "ok": true,
+            "detail": "2 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.menu-line: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.menu-line: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "the page does not scroll sideways",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "2 per row (image on top): 2 here",
+            "ok": true,
+            "detail": "row 792px",
+            "kind": "expect"
+          },
+          {
+            "label": "4 per row (image on top): only as many as fit — 2 here, nothing cut off",
+            "ok": true,
+            "detail": "row 792px",
+            "kind": "expect"
+          },
+          {
+            "label": "1 per row stays 1 at every width",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "1024px wide (a tablet in landscape)",
+        "checks": [
+          {
+            "label": "card.row-compact, 3 per row: 3 columns here (minimum card 320px, row 976px)",
+            "ok": true,
+            "detail": "3 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-compact: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-compact: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left, 3 per row: 2 columns here (minimum card 340px, row 976px)",
+            "ok": true,
+            "detail": "2 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right, 3 per row: 2 columns here (minimum card 340px, row 976px)",
+            "ok": true,
+            "detail": "2 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top, 3 per row: 3 columns here (minimum card 240px, row 976px)",
+            "ok": true,
+            "detail": "3 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge, 3 per row: 3 columns here (minimum card 240px, row 976px)",
+            "ok": true,
+            "detail": "3 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image, 3 per row: 3 columns here (minimum card 260px, row 976px)",
+            "ok": true,
+            "detail": "3 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay, 3 per row: 3 columns here (minimum card 260px, row 976px)",
+            "ok": true,
+            "detail": "3 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait, 3 per row: 3 columns here (minimum card 210px, row 976px)",
+            "ok": true,
+            "detail": "3 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle, 3 per row: 3 columns here (minimum card 190px, row 976px)",
+            "ok": true,
+            "detail": "3 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.menu-line, 3 per row: 3 columns here (minimum card 280px, row 976px)",
+            "ok": true,
+            "detail": "3 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.menu-line: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.menu-line: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "the page does not scroll sideways",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "2 per row (image on top): 2 here",
+            "ok": true,
+            "detail": "row 976px",
+            "kind": "expect"
+          },
+          {
+            "label": "4 per row (image on top): only as many as fit — 4 here, nothing cut off",
+            "ok": true,
+            "detail": "row 976px",
+            "kind": "expect"
+          },
+          {
+            "label": "1 per row stays 1 at every width",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "1280px wide (a laptop)",
+        "checks": [
+          {
+            "label": "card.row-compact, 3 per row: 3 columns here (minimum card 320px, row 1032px)",
+            "ok": true,
+            "detail": "3 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-compact: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-compact: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left, 3 per row: 3 columns here (minimum card 340px, row 1032px)",
+            "ok": true,
+            "detail": "3 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right, 3 per row: 3 columns here (minimum card 340px, row 1032px)",
+            "ok": true,
+            "detail": "3 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top, 3 per row: 3 columns here (minimum card 240px, row 1032px)",
+            "ok": true,
+            "detail": "3 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge, 3 per row: 3 columns here (minimum card 240px, row 1032px)",
+            "ok": true,
+            "detail": "3 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image, 3 per row: 3 columns here (minimum card 260px, row 1032px)",
+            "ok": true,
+            "detail": "3 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay, 3 per row: 3 columns here (minimum card 260px, row 1032px)",
+            "ok": true,
+            "detail": "3 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait, 3 per row: 3 columns here (minimum card 210px, row 1032px)",
+            "ok": true,
+            "detail": "3 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle, 3 per row: 3 columns here (minimum card 190px, row 1032px)",
+            "ok": true,
+            "detail": "3 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.menu-line, 3 per row: 3 columns here (minimum card 280px, row 1032px)",
+            "ok": true,
+            "detail": "3 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "card.menu-line: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.menu-line: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "the page does not scroll sideways",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "2 per row (image on top): 2 here",
+            "ok": true,
+            "detail": "row 1032px",
+            "kind": "expect"
+          },
+          {
+            "label": "4 per row (image on top): only as many as fit — 4 here, nothing cut off",
+            "ok": true,
+            "detail": "row 1032px",
+            "kind": "expect"
+          },
+          {
+            "label": "1 per row stays 1 at every width",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "The case from the report: image overlay, 3 per row, on a tablet",
+        "checks": [
+          {
+            "label": "portrait tablet (744 / 820px): 2 cards a row, not 3 squeezed or cut off",
+            "ok": true,
+            "detail": "2 / 2",
+            "kind": "expect"
+          },
+          {
+            "label": "landscape tablet (1024px): 3 cards a row, all inside the row (they used to run past the right edge and overlap)",
+            "ok": true,
+            "detail": "3 columns",
+            "kind": "expect"
+          },
+          {
+            "label": "laptop (1280px): 3 a row",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "phone: 1 a row",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the test category is removed and the menu layout is put back",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser logged no errors or warnings",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t82-storefront-nav-progress": {
+    "id": "t82-storefront-nav-progress",
+    "title": "A thin progress bar across the top of the storefront while the page changes — starts at once, creeps, finishes and fades when the page arrives, ignores taps that go nowhere, gives up if nothing comes",
+    "status": "pass",
+    "pass": 34,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-25T06:31:48.614Z",
+    "durationMs": 27397,
+    "steps": [
+      {
+        "n": 1,
+        "title": "At rest the bar is not there",
+        "checks": [
+          {
+            "label": "a freshly opened page shows no bar",
+            "ok": true,
+            "detail": "{\"state\":\"idle\",\"ratio\":0}",
+            "kind": "expect"
+          },
+          {
+            "label": "when it shows it is a 3px line fixed at the very top, the full width of the screen",
+            "ok": true,
+            "detail": "fixed top 0, 3px high, 1280/1280px wide",
+            "kind": "expect"
+          },
+          {
+            "label": "…above every sticky bar and pop-up of the page, and it never catches a tap",
+            "ok": true,
+            "detail": "z-index 2147483000 vs 32 highest other",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "A tap on a link to another page of the store (a slow network)",
+        "checks": [
+          {
+            "label": "the bar is on screen at once (a quarter of a second after the tap), already a little way along",
+            "ok": true,
+            "detail": "{\"state\":\"running\",\"ratio\":0.104}",
+            "kind": "expect"
+          },
+          {
+            "label": "…keeps creeping forward while the page is on its way, without reaching the end",
+            "ok": true,
+            "detail": "0.104 → 0.396",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the old page is still showing meanwhile (the new one hasn't arrived)",
+            "ok": true,
+            "detail": "http://localhost:3170/main",
+            "kind": "expect"
+          },
+          {
+            "label": "the new page arrives",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the bar runs to the end when it does",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…then fades away and is gone",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the whole story is: running → done → idle (once)",
+            "ok": true,
+            "detail": "running → done → idle",
+            "kind": "expect"
+          },
+          {
+            "label": "when it finishes it slides all the way across the screen",
+            "ok": true,
+            "detail": "1",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Back",
+        "checks": [
+          {
+            "label": "Back returns to the first page",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Back also shows the bar, and it finishes",
+            "ok": true,
+            "detail": "running → done → idle",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Taps that do NOT leave the page",
+        "checks": [
+          {
+            "label": "a link to the page you are on: no bar",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a #hash link on this page: no bar",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a link to another website: no bar",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a link that opens a new tab: no bar",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a download link: no bar",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a ctrl-click: no bar",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a ⌘-click: no bar",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a shift-click: no bar",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a middle-click: no bar",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a link marked data-no-progress: no bar",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "A link whose page never comes: the bar gives up by itself",
+        "checks": [
+          {
+            "label": "a plain tap on a link to another page starts the bar (here nothing will load)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "after 3 seconds it is still creeping, below the end",
+            "ok": true,
+            "detail": "{\"state\":\"running\",\"ratio\":0.675}",
+            "kind": "expect"
+          },
+          {
+            "label": "within about 8 seconds it gives up and fades away instead of hanging for ever",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(it closes with the same 'done' fade)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "A phone",
+        "checks": [
+          {
+            "label": "on a phone the bar is across the whole top too",
+            "ok": true,
+            "detail": "390px",
+            "kind": "expect"
+          },
+          {
+            "label": "…and finishes when the page arrives",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "The code changes the page itself (the order bar's outlet dropdown)",
+        "checks": [
+          {
+            "label": "a store with more than one outlet has the outlet dropdown in the order bar",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "choosing another outlet (the page is changed by the code, not by a link) shows the bar",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the other outlet's page arrives",
+            "ok": true,
+            "detail": "/second",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the bar finishes",
+            "ok": true,
+            "detail": "running → done → idle",
             "kind": "expect"
           },
           {

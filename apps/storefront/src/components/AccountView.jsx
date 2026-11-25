@@ -9,6 +9,7 @@ import { Banknote, Bike, CalendarDays, CheckCircle2, ChevronDown, Clock, Coins, 
 import { api, apiDelete } from "@/lib/clientApi";
 import { useCustomer } from "@/lib/useCustomer";
 import { CustomerGate } from "./CustomerGate";
+import { startNavProgress } from "./NavProgress";
 
 /**
  * The customer's Account page: who they are, their coins (only when the store has coins switched on), and every
@@ -104,6 +105,7 @@ export function AccountView({ outletId, menuHref, outletSlug, reservationsEnable
       }
       window.localStorage.setItem(key, JSON.stringify([...(Array.isArray(cart) ? cart : []), ...r.lines]));
       if (r.skipped.length || r.notes.length) window.sessionStorage.setItem(`rasoipulse.reorderNotice.${r.outletId}`, JSON.stringify({ skipped: r.skipped, notes: r.notes }));
+      startNavProgress();
       router.push(`/${r.outletSlug}/order`);
     } catch (e) {
       setAgainError({ id: o.id, message: e.message });

@@ -154,3 +154,33 @@ body {
     width: 100%;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Page-change progress bar (components/NavProgress.jsx): a thin line across the very top, above every sticky bar and pop-up.
+--------------------------------------------------------------------------- */
+.nav-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 2147483000;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 320ms ease 120ms;
+}
+.nav-progress[data-state="running"] { opacity: 1; transition: none; }
+.nav-progress[data-state="done"] { opacity: 0; transition: opacity 320ms ease 120ms; }
+.nav-progress__bar {
+  height: 100%;
+  width: 100%;
+  transform-origin: 0 50%;
+  background: var(--color-primary, #7c3aed);
+  box-shadow: 0 0 8px var(--color-primary, #7c3aed);
+  border-radius: 0 3px 3px 0;
+  transition: transform 220ms ease-out;
+}
+.nav-progress[data-state="idle"] .nav-progress__bar { transition: none; }
+@media (prefers-reduced-motion: reduce) {
+  .nav-progress__bar { transition: none; }
+}

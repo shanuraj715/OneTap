@@ -180,31 +180,43 @@
 
 /*
  * Explicit item-card columns for a menu section (see MenuSections.jsx /
- * homepage.js's `columns`) — an admin-chosen desktop count that always
- * collapses toward fewer columns on a narrower screen, never a fixed
- * layout that could clip a card on a phone. `1` stays 1 at every width on
- * purpose (a "featured" card is meant to stay full-bleed even on tablet).
+ * homepage.js's `columns`) — the number the store chose is a MAXIMUM, never a promise: a row holds that many cards only
+ * while every card can keep its own minimum width (--card-min, set per card style in registry.jsx). On a narrower screen
+ * the row simply holds fewer — 3 becomes 2 on a tablet in portrait, 1 on a phone — and the cards share the whole row
+ * (1fr), so there is no gap of unused space and nothing is cut off. `1` stays 1 at every width on purpose (a "featured"
+ * card is meant to stay full-bleed even on tablet).
+ *
+ * How the tracks are worked out: each track is at least the larger of (a) the card's own minimum and (b) an even share of
+ * the row for the chosen count (the 0.5px keeps the last column from being pushed to the next row by rounding); the grid
+ * then fits as many such tracks as the row can hold. Never more than the chosen count, because (b) is already 1/count.
  */
-.ot-grid { display: grid; gap: 12px; }
-.ot-grid-cols-1 { grid-template-columns: 1fr; }
-.ot-grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
-.ot-grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
-.ot-grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
-.ot-grid-cols-5 { grid-template-columns: repeat(5, 1fr); }
-.ot-grid-cols-6 { grid-template-columns: repeat(6, 1fr); }
+.ot-grid { display: grid; gap: var(--ot-grid-gap, 12px); }
+/* a card may always shrink to its column: without this a card with a minimum height and a photo shape (aspect-ratio), or
+   a line that won't wrap, makes its own minimum width and pushes the columns past the screen */
+.ot-grid > *, .ot-grid-auto > * { min-width: 0; }
+.ot-grid-cols-1 { grid-template-columns: minmax(0, 1fr); }
+.ot-grid-cols-2 { --cols: 2; }
+.ot-grid-cols-3 { --cols: 3; }
+.ot-grid-cols-4 { --cols: 4; }
+.ot-grid-cols-5 { --cols: 5; }
+.ot-grid-cols-6 { --cols: 6; }
+.ot-grid-cols-2, .ot-grid-cols-3, .ot-grid-cols-4, .ot-grid-cols-5, .ot-grid-cols-6 {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, max(var(--card-min, 240px), calc((100% - (var(--cols) - 1) * var(--ot-grid-gap, 12px)) / var(--cols) - 0.5px))), 1fr));
+}
 
+/* phones: one card to a row, whatever the store chose */
 @media (max-width: 720px) {
   .ot-grid-cols-2, .ot-grid-cols-3, .ot-grid-cols-4, .ot-grid-cols-5, .ot-grid-cols-6 {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
+/* tablets in portrait (721–960px): at most two to a row — three never sat well on them (and fewer still if two don't fit) */
 @media (min-width: 721px) and (max-width: 960px) {
-  .ot-grid-cols-3, .ot-grid-cols-4, .ot-grid-cols-5, .ot-grid-cols-6 {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  .ot-grid-cols-3, .ot-grid-cols-4, .ot-grid-cols-5, .ot-grid-cols-6 { --cols: 2; }
 }
 
-/* Container queries: inside embedded or side-panel preview widgets, grids collapse by container width */
+/* Container queries: inside embedded or side-panel preview widgets, one card to a row while the preview is phone-narrow
+   (wider previews use the same "as many as fit" rule as the page) */
 .ot-preview-shell,
 .ot-container-query-wrap {
   container-type: inline-size;
@@ -212,13 +224,11 @@
 
 @container (max-width: 680px) {
   .ot-grid-cols-2, .ot-grid-cols-3, .ot-grid-cols-4, .ot-grid-cols-5, .ot-grid-cols-6 {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: minmax(0, 1fr) !important;
   }
 }
 @container (min-width: 681px) and (max-width: 960px) {
-  .ot-grid-cols-3, .ot-grid-cols-4, .ot-grid-cols-5, .ot-grid-cols-6 {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
+  .ot-grid-cols-3, .ot-grid-cols-4, .ot-grid-cols-5, .ot-grid-cols-6 { --cols: 2; }
 }
 
 /* Preview shell: provide realistic phone padding and guarantee single-column cards */

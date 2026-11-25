@@ -182,12 +182,16 @@ export const itemCardVariants                    = [
 export function gridPropsFor(variant, columns) {
   const explicit = columns || variant.defaultColumns;
   if (explicit) {
-    return { className: `ot-grid ot-grid-cols-${Math.min(6, Math.max(1, explicit))}` };
+    // the chosen count is a maximum: each card keeps at least its own minimum width (tokens.css), so a narrower screen holds fewer.
+    // 97% of the style's auto-grid minimum: the menu area on a laptop is 1032px wide, and three 340px cards (+ gaps) need 1044 —
+    // that must stay three a row, as it always was (3 × 330 + 24 fits); a portrait tablet (about 700–780px) still drops to two.
+    return { className: `ot-grid ot-grid-cols-${Math.min(6, Math.max(1, explicit))}`, style: { "--card-min": `${Math.round((variant.minWidth || 280) * 0.97)}px` } };
   }
   if (variant.layout === "list") {
     return { style: { display: "flex", flexDirection: "column", gap: variant.id === "card.menu-line" ? 0 : 12 } };
   }
   return {
+    className: "ot-grid-auto",
     style: { display: "grid", gridTemplateColumns: `repeat(auto-fill, minmax(min(${variant.minWidth}px, 100%), 1fr))`, gap: 12 },
   };
 }
@@ -462,7 +466,7 @@ export const VARIANT_SLOTS                = [
           ? { display: "flex", flexDirection: "column"         , gap: m.id === "card.menu-line" ? 0 : 12 }
           : { display: "grid", gridTemplateColumns: `repeat(auto-fill, minmax(min(${m.minWidth}px, 100%), 1fr))`, gap: 12 };
       return (
-        <div style={style}>
+        <div className="ot-grid-auto" style={style}>
           {ctx.items.map((item) => (
             <C key={item.id} item={item} imageRatio={ctx.imageRatio} />
           ))}
