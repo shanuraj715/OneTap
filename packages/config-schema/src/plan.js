@@ -49,7 +49,7 @@ export const FEATURES = [
   {
     key: "customDomain",
     label: "Own domain name",
-    description: "The storefront opens on the restaurant's own domain (like dominos.com). Without it, the store gets a TablePe address.",
+    description: "The storefront opens on the restaurant's own domain (like dominos.com). Without it, the store gets a Rasoi Pulse address.",
   },
 ];
 export const FEATURE_KEYS = FEATURES.map((f) => f.key);

@@ -1,5 +1,5 @@
-import { smsNumber } from "@onetap/config-schema";
-import { MarketingCampaignModel, MarketingMessageModel } from "@onetap/db";
+import { smsNumber } from "@rasoipulse/config-schema";
+import { MarketingCampaignModel, MarketingMessageModel } from "@rasoipulse/db";
 import { env } from "../../env.js";
 import { logger } from "../../logger.js";
 import { credentialsFor } from "../notify/notify.service.js";

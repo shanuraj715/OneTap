@@ -1,6 +1,6 @@
                                                          
 import { WebSocket, WebSocketServer } from "ws";
-import { OutletModel,              } from "@onetap/db";
+import { OutletModel,              } from "@rasoipulse/db";
 import { logger } from "../logger.js";
 import { SESSION_COOKIE } from "../middleware/auth.js";
 import { allowUpgrade, refuseUpgrade } from "../middleware/rate-limit.js";

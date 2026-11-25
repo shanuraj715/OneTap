@@ -20,7 +20,7 @@ const mainPayments = (outlets.outlets ?? outlets).find((o) => o.slug === "main")
 /** `onlinePay`: delivery counts as "on" on the storefront only when the outlet also takes online payment (delivery is prepaid) */
 const setOrdering = async (ordering, onlinePay = false) => {
   const body = { features: { ...featuresBefore, ordering: { ...featuresBefore.ordering, ...ordering } }, payments: onlinePay ? { ...paymentsBefore, enabled: mainPayments.enabled } : paymentsBefore };
-  const r = await fetch(`${API}/api/outlets/${secondId}/config`, { method: "PATCH", headers: { "content-type": "application/json", cookie, "x-onetap-outlet": secondId }, body: JSON.stringify(body) });
+  const r = await fetch(`${API}/api/outlets/${secondId}/config`, { method: "PATCH", headers: { "content-type": "application/json", cookie, "x-rasoipulse-outlet": secondId }, body: JSON.stringify(body) });
   if (!r.ok) { console.error("SETUP FAILED", r.status, (await r.text()).slice(0, 300)); process.exit(1); }
 };
 console.log("outlet 'second' starts as:", JSON.stringify(featuresBefore.ordering));
@@ -56,7 +56,7 @@ try {
     await page.keyboard.press("Tab");
     ok(!(await page.evaluate(() => /Delivery/.test(document.activeElement?.textContent ?? ""))), "the keyboard Tab key skips the disabled Delivery");
     // a remembered "delivery" from another outlet must not select it here
-    await page.evaluate(() => localStorage.setItem("onetap.orderType", "delivery"));
+    await page.evaluate(() => localStorage.setItem("rasoipulse.orderType", "delivery"));
     await page.reload({ waitUntil: "networkidle" });
     await page.waitForTimeout(400);
     const storageKey = await page.evaluate(() => Object.keys(localStorage).filter((k) => /order.?type/i.test(k)));
@@ -134,7 +134,7 @@ try {
     const line = await plainItem(outletId);
     const { ctx, page } = await open(`${SF}/${slug}`, viewport, viewport ? { isMobile: true, hasTouch: true, deviceScaleFactor: 2 } : {});
     if (pickOnMenu) await btn(page, pickOnMenu).click(); // what the visitor chose on the menu page is remembered on this device
-    await page.evaluate(([id, ln, keep]) => { localStorage.setItem(`onetap.cart.${id}`, JSON.stringify([{ ...ln, quantity: 1, modifierOptionIds: [] }])); if (!keep) localStorage.removeItem("onetap.orderType"); }, [outletId, line, Boolean(pickOnMenu)]);
+    await page.evaluate(([id, ln, keep]) => { localStorage.setItem(`rasoipulse.cart.${id}`, JSON.stringify([{ ...ln, quantity: 1, modifierOptionIds: [] }])); if (!keep) localStorage.removeItem("rasoipulse.orderType"); }, [outletId, line, Boolean(pickOnMenu)]);
     await page.goto(`${SF}/${slug}/order`, { waitUntil: "networkidle", timeout: 90000 });
     await page.getByText("Sign in to order").first().waitFor({ timeout: 20000 });
     const phone = `98${String(Date.now()).slice(-6)}${String(++phoneSeq).padStart(2, "0")}`.slice(0, 10);

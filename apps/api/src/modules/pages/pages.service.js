@@ -1,5 +1,5 @@
-import { slugFromTitle, starterPages, storePageSchema } from "@onetap/config-schema";
-import { OutletModel, StorePageModel, tenantFilter } from "@onetap/db";
+import { slugFromTitle, starterPages, storePageSchema } from "@rasoipulse/config-schema";
+import { OutletModel, StorePageModel, tenantFilter } from "@rasoipulse/db";
 import { HttpError } from "../../middleware/error.js";
 import { cache } from "../cache/cache.js";
 import { outletBrand } from "../outlets/outlet-cache.js";

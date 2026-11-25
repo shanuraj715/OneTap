@@ -6,7 +6,7 @@
 
 ## What this test does
 
-Continues from t08, in Chrome. The platform removes the store's TablePe address (the customer then gets 'couldn't find a restaurant here'), tries names in the Domains tab (reserved, too short, bad characters, taken by another store, free), creates the address, and a customer's browser then opens the store's root and each outlet on it — each showing its own details and menu. A made-up outlet, a made-up subdomain and another store's outlet are all 'not found'. Renaming the address moves the store and the old address stops working.
+Continues from t08, in Chrome. The platform removes the store's Rasoi Pulse address (the customer then gets 'couldn't find a restaurant here'), tries names in the Domains tab (reserved, too short, bad characters, taken by another store, free), creates the address, and a customer's browser then opens the store's root and each outlet on it — each showing its own details and menu. A made-up outlet, a made-up subdomain and another store's outlet are all 'not found'. Renaming the address moves the store and the old address stops working.
 
 ## Steps
 
@@ -17,7 +17,7 @@ Continues from t08, in Chrome. The platform removes the store's TablePe address 
 
 ## What to expect (these must happen)
 
-- With no TablePe address the store can't be opened on lifecycle.<base> ('We couldn't find a restaurant here').
+- With no Rasoi Pulse address the store can't be opened on lifecycle.<base> ('We couldn't find a restaurant here').
 - A free name shows 'is free'; reserved names (www, admin…), names under 3 characters, bad characters and names used by another store show a reason.
 - After 'Create address', the root page and /central, /second and /third open; each outlet shows its own name and menu.
 - Renaming makes the new address work and the old one stop working; renaming back restores it.

@@ -1,5 +1,5 @@
 /**
- * The TablePe website's starter content — settings and pages written about
+ * The Rasoi Pulse website's starter content — settings and pages written about
  * what the product actually does, ready to edit in the console. Used by
  * scripts/seed-website.js (and tests). No made-up customer quotes: the
  * Testimonials section is left for real ones.
@@ -9,11 +9,11 @@ let n = 0;
 const id = (p) => `${p}-${(++n).toString(36)}`;
 
 export const starterSettings = {
-  brandName: "TablePe",
+  brandName: "Rasoi Pulse",
   tagline: "Restaurant ordering, from table to kitchen.",
   brandColor: "#C8372D",
   seo: {
-    titleTemplate: "%s · TablePe",
+    titleTemplate: "%s · Rasoi Pulse",
     description: "QR table ordering, staff ordering on phones, your own online ordering site and kitchen printing for restaurants. One live order screen, no commission.",
   },
   announcement: { show: false, text: "", href: "" },
@@ -39,7 +39,7 @@ const FAQ_CORE = [
   },
   {
     q: "Can I use my own domain?",
-    a: "On our higher plans, yes — your ordering site runs on your own domain, like yourrestaurant.com. Every plan gets its own web address on TablePe, in your colours and fonts, so customers order from you — not from a marketplace.",
+    a: "On our higher plans, yes — your ordering site runs on your own domain, like yourrestaurant.com. Every plan gets its own web address on Rasoi Pulse, in your colours and fonts, so customers order from you — not from a marketplace.",
   },
   {
     q: "Does it print kitchen tickets?",
@@ -76,7 +76,7 @@ const home = {
   status: "published",
   system: true,
   seo: {
-    title: "TablePe — QR ordering & online orders for restaurants",
+    title: "Rasoi Pulse — QR ordering & online orders for restaurants",
     description: "QR table ordering, staff ordering on phones, your own ordering website and kitchen printing — one live order screen for every outlet. No commission.",
   },
   nav: { show: false, label: "", order: 0 },
@@ -101,7 +101,7 @@ const home = {
       id: id("logos"),
       type: "logos",
       eyebrow: "Trusted by",
-      heading: "Restaurants already ordering with TablePe",
+      heading: "Restaurants already ordering with Rasoi Pulse",
       items: [{ name: "Gazab Momos", logo: "", href: "" }],
     },
     {
@@ -193,7 +193,7 @@ const home = {
       id: id("features"),
       type: "features",
       anchor: "why",
-      eyebrow: "Why TablePe",
+      eyebrow: "Why Rasoi Pulse",
       heading: "Everything between \"I'll have the momos\" and the kitchen ticket.",
       intro: "One system for taking, tracking, printing and rewarding every order — built around how a busy restaurant actually works.",
       items: [
@@ -225,8 +225,8 @@ const home = {
       id: id("usecases"),
       type: "useCases",
       anchor: "when",
-      eyebrow: "When to use TablePe",
-      heading: "The moments TablePe pays for itself.",
+      eyebrow: "When to use Rasoi Pulse",
+      heading: "The moments Rasoi Pulse pays for itself.",
       items: [
         { icon: "clock", when: "When the queue is out the door", text: "Let guests order from their table while your counter staff hand out food instead of taking orders." },
         { icon: "receipt", when: "When orders go missing between floor and kitchen", text: "Every order is on one live screen with timers, and its kitchen ticket prints the moment it's accepted." },
@@ -251,8 +251,8 @@ const home = {
       type: "contact",
       anchor: "demo",
       eyebrow: "Book a free demo",
-      heading: "See TablePe with your own menu",
-      intro: "Tell us about your restaurant. We'll call you, show you TablePe with your menu and recommend a plan — there's nothing to buy online.",
+      heading: "See Rasoi Pulse with your own menu",
+      intro: "Tell us about your restaurant. We'll call you, show you Rasoi Pulse with your menu and recommend a plan — there's nothing to buy online.",
       showDetails: true,
     },
   ],
@@ -264,7 +264,7 @@ const pricing = {
   status: "published",
   seo: {
     title: "Pricing",
-    description: "TablePe plans for single restaurants and multi-outlet brands. Every plan includes setup by our team and no commission on your orders.",
+    description: "Rasoi Pulse plans for single restaurants and multi-outlet brands. Every plan includes setup by our team and no commission on your orders.",
   },
   nav: { show: true, label: "Pricing", order: 10 },
   footerGroup: "product",
@@ -281,7 +281,7 @@ const pricing = {
         "Unlimited menu items and orders",
         "No commission on any order",
         "Live orders screen with timers",
-        "New features as TablePe improves",
+        "New features as Rasoi Pulse improves",
       ],
       compare: true,
       note: "Prices shown exclude GST. Online payment and SMS/WhatsApp message charges are billed by those providers, not by us.",
@@ -295,20 +295,20 @@ const faq = {
   slug: "faq",
   title: "Frequently asked questions",
   status: "published",
-  seo: { title: "FAQ", description: "Answers about TablePe: setup, commission, QR ordering, staff ordering, your own domain, printing, delivery and data safety." },
+  seo: { title: "FAQ", description: "Answers about Rasoi Pulse: setup, commission, QR ordering, staff ordering, your own domain, printing, delivery and data safety." },
   nav: { show: true, label: "FAQ", order: 20 },
   footerGroup: "product",
   sections: [
     { id: id("faq"), type: "faq", eyebrow: "FAQ", heading: "Everything restaurants ask us", intro: "Can't find your answer? Talk to us — a person will reply.", items: [...FAQ_CORE, ...FAQ_MORE] },
-    { id: id("cta"), type: "cta", heading: "Still have a question?", text: "We're happy to walk you through TablePe with your own menu.", button: { label: "Contact us", href: "/contact" } },
+    { id: id("cta"), type: "cta", heading: "Still have a question?", text: "We're happy to walk you through Rasoi Pulse with your own menu.", button: { label: "Contact us", href: "/contact" } },
   ],
 };
 
 const about = {
   slug: "about",
-  title: "About TablePe",
+  title: "About Rasoi Pulse",
   status: "published",
-  seo: { title: "About us", description: "TablePe builds the ordering platform for restaurants — QR table ordering, staff ordering, online ordering and kitchen printing, without commission." },
+  seo: { title: "About us", description: "Rasoi Pulse builds the ordering platform for restaurants — QR table ordering, staff ordering, online ordering and kitchen printing, without commission." },
   nav: { show: true, label: "About", order: 30 },
   footerGroup: "company",
   sections: [
@@ -318,7 +318,7 @@ const about = {
       eyebrow: "About us",
       heading: "We build for the rush.",
       body:
-        "TablePe started on the floor of a busy momo shop, where orders were shouted, tickets were lost and the queue never ended. We built the tools that restaurant needed — QR ordering at the table, orders on staff phones, a kitchen screen and printed tickets — and kept going until it ran a whole chain.\n\nToday TablePe is a complete ordering platform any restaurant can run on its own brand, at its own web address.",
+        "Rasoi Pulse started on the floor of a busy momo shop, where orders were shouted, tickets were lost and the queue never ended. We built the tools that restaurant needed — QR ordering at the table, orders on staff phones, a kitchen screen and printed tickets — and kept going until it ran a whole chain.\n\nToday Rasoi Pulse is a complete ordering platform any restaurant can run on its own brand, at its own web address.",
       imageSide: "right",
     },
     {
@@ -337,7 +337,7 @@ const contact = {
   title: "Contact us",
   status: "published",
   system: true,
-  seo: { title: "Contact us", description: "Talk to TablePe about setting up QR ordering, staff ordering and your own online ordering site for your restaurant." },
+  seo: { title: "Contact us", description: "Talk to Rasoi Pulse about setting up QR ordering, staff ordering and your own online ordering site for your restaurant." },
   nav: { show: true, label: "Contact", order: 40 },
   footerGroup: "company",
   sections: [
@@ -346,7 +346,7 @@ const contact = {
       type: "contact",
       eyebrow: "Contact us",
       heading: "Let's set up your restaurant",
-      intro: "Tell us a little about your restaurant. We'll call you back, show you TablePe with your own menu and recommend a plan — there's nothing to buy online.",
+      intro: "Tell us a little about your restaurant. We'll call you back, show you Rasoi Pulse with your own menu and recommend a plan — there's nothing to buy online.",
       showDetails: true,
     },
   ],
@@ -361,7 +361,7 @@ const privacy = {
   title: "Privacy Policy",
   status: "published",
   system: true,
-  seo: { title: "Privacy Policy", description: "How TablePe collects, uses and protects personal data." },
+  seo: { title: "Privacy Policy", description: "How Rasoi Pulse collects, uses and protects personal data." },
   nav: { show: false, label: "", order: 90 },
   footerGroup: "legal",
   sections: [
@@ -371,15 +371,15 @@ const privacy = {
       heading: "",
       body: `*Last updated: [date]*
 
-This Privacy Policy explains how ${COMPANY} ("TablePe", "we", "us") collects, uses and protects personal data when you visit our website, enquire about our services, or use TablePe as a restaurant or as a restaurant's customer.
+This Privacy Policy explains how ${COMPANY} ("Rasoi Pulse", "we", "us") collects, uses and protects personal data when you visit our website, enquire about our services, or use Rasoi Pulse as a restaurant or as a restaurant's customer.
 
 # Who we are
-TablePe provides ordering software to restaurants. For data about a restaurant's own customers (for example, a diner's name and mobile number), the restaurant decides how that data is used and we process it on the restaurant's behalf.
+Rasoi Pulse provides ordering software to restaurants. For data about a restaurant's own customers (for example, a diner's name and mobile number), the restaurant decides how that data is used and we process it on the restaurant's behalf.
 
 # Data we collect
 - **Enquiries:** your name, phone number, email, business name, city, number of outlets and your message, when you fill in our contact form.
 - **Restaurant accounts:** names, email addresses and roles of the restaurant's staff who sign in.
-- **Diners:** name, mobile number, email (optional), orders, and loyalty coin balance, collected when ordering from a restaurant on TablePe.
+- **Diners:** name, mobile number, email (optional), orders, and loyalty coin balance, collected when ordering from a restaurant on Rasoi Pulse.
 - **Technical data:** IP address, browser type and pages visited, used to keep the service secure and working.
 
 # How we use it
@@ -391,7 +391,7 @@ TablePe provides ordering software to restaurants. For data about a restaurant's
 We do not sell personal data.
 
 # Sharing
-We share data only with service providers who help us run TablePe (for example hosting, SMS or WhatsApp delivery, and payment gateways chosen by the restaurant), and only as needed to provide the service, or when the law requires it.
+We share data only with service providers who help us run Rasoi Pulse (for example hosting, SMS or WhatsApp delivery, and payment gateways chosen by the restaurant), and only as needed to provide the service, or when the law requires it.
 
 # Payments
 Card and UPI details are entered into the payment gateway's own checkout and never reach our servers. Payment gateway keys a restaurant gives us are stored encrypted.
@@ -419,7 +419,7 @@ const terms = {
   title: "Terms and Conditions",
   status: "published",
   system: true,
-  seo: { title: "Terms and Conditions", description: "The terms under which TablePe provides its restaurant ordering service." },
+  seo: { title: "Terms and Conditions", description: "The terms under which Rasoi Pulse provides its restaurant ordering service." },
   nav: { show: false, label: "", order: 91 },
   footerGroup: "legal",
   sections: [
@@ -429,10 +429,10 @@ const terms = {
       heading: "",
       body: `*Last updated: [date]*
 
-These Terms govern the use of TablePe, provided by ${COMPANY} ("TablePe", "we", "us"). By using our website or service you agree to them.
+These Terms govern the use of Rasoi Pulse, provided by ${COMPANY} ("Rasoi Pulse", "we", "us"). By using our website or service you agree to them.
 
 # The service
-TablePe provides software for restaurants to take orders by QR code, through staff devices and through their own website, and to manage menus, tables, printing, payments and loyalty coins.
+Rasoi Pulse provides software for restaurants to take orders by QR code, through staff devices and through their own website, and to manage menus, tables, printing, payments and loyalty coins.
 
 # Plans and setup
 Plans are not sold online. Each restaurant's plan, price and setup are agreed directly with us. Features and limits depend on the plan agreed.
@@ -443,13 +443,13 @@ Plan fees are invoiced as agreed with you. Fees exclude applicable taxes unless 
 # Your responsibilities
 - Keep your account credentials secure.
 - Make sure your menu, prices, taxes and any legally required details (such as FSSAI and GSTIN) are accurate.
-- Use TablePe lawfully and handle your customers' data in line with applicable law.
+- Use Rasoi Pulse lawfully and handle your customers' data in line with applicable law.
 
 # Your content and data
 You own your menu, content and your customers' data. You give us permission to use it only to provide the service to you.
 
 # Availability
-We work to keep TablePe available and secure, but we can't promise it will be uninterrupted. We may carry out maintenance, ideally outside your busy hours.
+We work to keep Rasoi Pulse available and secure, but we can't promise it will be uninterrupted. We may carry out maintenance, ideally outside your busy hours.
 
 # Suspension and ending
 Either side may end the service as agreed in your plan. We may suspend access for non-payment, misuse or if required by law. You can ask for an export of your data before your account is closed.

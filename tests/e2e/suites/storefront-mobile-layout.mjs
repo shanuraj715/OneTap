@@ -16,7 +16,7 @@ const main = list.find((o) => o.slug === "main");
 const outletId = String(main._id ?? main.id);
 const layoutBefore = main.config.menuLayout;
 const call = async (method, path, body) => {
-  const r = await fetch(API + path, { method, headers: { "content-type": "application/json", cookie, "x-onetap-outlet": outletId }, body: body ? JSON.stringify(body) : undefined });
+  const r = await fetch(API + path, { method, headers: { "content-type": "application/json", cookie, "x-rasoipulse-outlet": outletId }, body: body ? JSON.stringify(body) : undefined });
   let json = {}; try { json = await r.json(); } catch {}
   return { status: r.status, json };
 };

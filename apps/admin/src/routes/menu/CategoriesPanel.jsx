@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { categoryHeight, categoryLevel, categorySubtreeIds, flattenCategories, cleanCategoryName, duplicateCategoryName, IMAGE_RULES, MAX_CATEGORIES_AT_ONCE, MAX_CATEGORY_DEPTH, planCategoryMove, PREP_STATION_LABELS } from "@onetap/config-schema";
+import { categoryHeight, categoryLevel, categorySubtreeIds, flattenCategories, cleanCategoryName, duplicateCategoryName, IMAGE_RULES, MAX_CATEGORIES_AT_ONCE, MAX_CATEGORY_DEPTH, planCategoryMove, PREP_STATION_LABELS } from "@rasoipulse/config-schema";
 import { ArrowDown, ArrowUp, Download, FolderPlus, GripVertical, ImagePlus, Loader, Minus, MoreHorizontal, Pencil, Plus, Trash2, X } from "lucide-react";
 import * as api from "../../lib/api";
 import { HoursEditor } from "./ItemExtras";

@@ -1,4 +1,4 @@
-import { CUSTOM_PLAN_BASE, hasFeature, planMarketingSchema, planOverridesSchema, planSchema } from "@onetap/config-schema";
+import { CUSTOM_PLAN_BASE, hasFeature, planMarketingSchema, planOverridesSchema, planSchema } from "@rasoipulse/config-schema";
 import {
   BrandModel,
   MenuCategoryModel,
@@ -15,7 +15,7 @@ import {
   TableSessionModel,
   tenantFilter,
   UserModel,
-} from "@onetap/db";
+} from "@rasoipulse/db";
 import { logger } from "../../logger.js";
 import { HttpError } from "../../middleware/error.js";
 import { dropStoreTeam } from "../../realtime/hub.js";
@@ -197,7 +197,7 @@ export async function getStore(id) {
     })),
     people: people.map((u) => shapePerson(u, String(brand._id))),
     domains: await storeDomains(String(brand._id)),
-    /** the store's TablePe address (acme.<base>), and whether its plan lets it have an own domain too */
+    /** the store's Rasoi Pulse address (acme.<base>), and whether its plan lets it have an own domain too */
     subdomain: await subdomainInfo(String(brand._id)),
     canUseOwnDomain: hasFeature(plan.entitlements, "customDomain"),
   };
@@ -211,7 +211,7 @@ export async function updateStoreDomains(id, input) {
   return getStore(id);
 }
 
-/** Give the store a TablePe address, change it, or take it away (subdomains.js has the rules). */
+/** Give the store a Rasoi Pulse address, change it, or take it away (subdomains.js has the rules). */
 export async function setSubdomain(id, label) {
   await loadBrand(id);
   await setStoreSubdomain(id, label);

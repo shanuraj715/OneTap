@@ -1,7 +1,7 @@
 import { apiServerUrl } from "@/lib/api-config";
 import { cache } from "react";
 import { headers } from "next/headers";
-import { parseOutletConfig,                   } from "@onetap/config-schema";
+import { parseOutletConfig,                   } from "@rasoipulse/config-schema";
 
 const API_BASE = apiServerUrl();
 const DEV_FALLBACK_SLUG = process.env.NEXT_PUBLIC_OUTLET_SLUG ?? "gazab-momos/laxmi-nagar";

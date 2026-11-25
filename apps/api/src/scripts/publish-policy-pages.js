@@ -13,8 +13,8 @@
  * read it once and edit anything that is not how they really work (Pages in the dashboard).
  * Pages that already exist are left exactly as they are unless --overwrite is given.
  */
-import { formatClock, parseHHMM, storePageSchema } from "@onetap/config-schema";
-import { BrandModel, connectDb, OutletModel, StorePageModel } from "@onetap/db";
+import { formatClock, parseHHMM, storePageSchema } from "@rasoipulse/config-schema";
+import { BrandModel, connectDb, OutletModel, StorePageModel } from "@rasoipulse/db";
 import { env } from "../env.js";
 
 const bid = () => `blk_${Math.random().toString(36).slice(2, 10)}`;
@@ -29,7 +29,7 @@ export function policyPages({ store, outlet, outlets }) {
   const limits = ops.limits ?? {};
   const hours = ops.hours ?? {};
   const tax = c.tax ?? {};
-  const name = id.name && id.name !== "TablePe Restaurant" ? id.name : outlet.name;
+  const name = id.name && id.name !== "Rasoi Pulse Restaurant" ? id.name : outlet.name;
   const phone = id.phone || "";
   const email = id.email || "";
   const where = id.address ? `${name}, ${id.address}` : name;
@@ -44,7 +44,7 @@ export function policyPages({ store, outlet, outlets }) {
   const outletList = outlets
     .map((o) => {
       const oi = o.config?.identity ?? {};
-      return `- **${oi.name && oi.name !== "TablePe Restaurant" ? oi.name : o.name}** — ${oi.address || o.name}${oi.phone ? ` · ${oi.phone}` : ""}`;
+      return `- **${oi.name && oi.name !== "Rasoi Pulse Restaurant" ? oi.name : o.name}** — ${oi.address || o.name}${oi.phone ? ` · ${oi.phone}` : ""}`;
     })
     .join("\n");
 

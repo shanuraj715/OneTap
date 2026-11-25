@@ -1,5 +1,5 @@
-import { planMarketingSchema, planSchema } from "@onetap/config-schema";
-import { connectDb, disconnectDb, PlanModel } from "@onetap/db";
+import { planMarketingSchema, planSchema } from "@rasoipulse/config-schema";
+import { connectDb, disconnectDb, PlanModel } from "@rasoipulse/db";
 import { env } from "../env.js";
 import { logger } from "../logger.js";
 

@@ -1,4 +1,4 @@
-import { BrandModel, OutletModel } from "@onetap/db";
+import { BrandModel, OutletModel } from "@rasoipulse/db";
 import { HttpError } from "../../middleware/error.js";
 import { cache } from "../cache/cache.js";
 import { platformConfig } from "../cache/platform-config.js";
@@ -26,7 +26,7 @@ export const KINDS = {
   plan: { label: "Plan & limits", what: "A store's plan: its limits and what it unlocks" },
   pages: { label: "Store pages", what: "An outlet's published pages (About us, Contact…), as visitors see them" },
   cap: { label: "Kitchen load", what: "How many orders an outlet has in progress, to show the \"busy\" banner" },
-  site: { label: "Website", what: "The TablePe website's pages, settings and pricing" },
+  site: { label: "Website", what: "The Rasoi Pulse website's pages, settings and pricing" },
   dash: { label: "Dashboard", what: "This console's dashboard numbers" },
   cfg: { label: "Outlet settings", what: "An outlet's settings as they apply under its plan — read by orders, payments and alerts" },
   outletaccess: { label: "Outlet access check", what: "Whether an outlet is blocked, checked on every dashboard request" },

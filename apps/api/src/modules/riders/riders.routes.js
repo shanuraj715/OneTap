@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
-import { RiderModel, tenantFilter } from "@onetap/db";
+import { RiderModel, tenantFilter } from "@rasoipulse/db";
 import { requireOutletContext } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import { requireFeature } from "../platform/plan.service.js";

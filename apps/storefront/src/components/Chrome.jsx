@@ -1,4 +1,4 @@
-import { getAnnouncementVariant, getFooterVariant, getHeaderVariant, StickyBar } from "@onetap/ui";
+import { getAnnouncementVariant, getFooterVariant, getHeaderVariant, StickyBar } from "@rasoipulse/ui";
 import { storeName } from "@/lib/outlet";
 
 /**

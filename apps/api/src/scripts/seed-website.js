@@ -1,11 +1,11 @@
-import { planMarketingSchema, planLimitsSchema, sitePageSchema, siteSettingsSchema } from "@onetap/config-schema";
-import { connectDb, disconnectDb, PlanModel, SitePageModel, SiteSettingsModel } from "@onetap/db";
+import { planMarketingSchema, planLimitsSchema, sitePageSchema, siteSettingsSchema } from "@rasoipulse/config-schema";
+import { connectDb, disconnectDb, PlanModel, SitePageModel, SiteSettingsModel } from "@rasoipulse/db";
 import { env } from "../env.js";
 import { logger } from "../logger.js";
 import { starterPages, starterSettings } from "../modules/site/starter-content.js";
 
 /**
- * The TablePe website's starter pages and settings — all editable afterwards
+ * The Rasoi Pulse website's starter pages and settings — all editable afterwards
  * in the platform console (Website). By default it only ADDS what's missing,
  * so it's safe to run twice and never touches your edits.
  *

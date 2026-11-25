@@ -16,8 +16,8 @@ import {
   TONES_LIGHT,
   categorySubtreeIds,
   flattenCategories,
-} from "@onetap/config-schema";
-import { itemCardVariants, MenuSections } from "@onetap/ui";
+} from "@rasoipulse/config-schema";
+import { itemCardVariants, MenuSections } from "@rasoipulse/ui";
 import {
   ArrowDown,
   ArrowUp,

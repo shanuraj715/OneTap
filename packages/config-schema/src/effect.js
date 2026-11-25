@@ -3,7 +3,7 @@ import { z } from "zod";
 /**
  * A storefront-wide surface treatment, independent of the colour palette —
  * the same red brand can be flat, glassy or neon. Only metadata lives here;
- * each effect's actual CSS is in `@onetap/ui/effects`, loaded one at a time
+ * each effect's actual CSS is in `@rasoipulse/ui/effects`, loaded one at a time
  * so neither the admin bundle nor any visitor ever downloads the other five.
  */
 export const EFFECT_IDS = ["none", "glass", "neumorph", "clay", "aurora", "cyberpunk", "dark-premium"];

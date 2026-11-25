@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "../lib/nav";
-import { PREP_STATION_LABELS } from "@onetap/config-schema";
+import { PREP_STATION_LABELS } from "@rasoipulse/config-schema";
 import { Bell, X } from "lucide-react";
 import { useAuth } from "../lib/useAuth";
 import { useOutlet } from "../lib/useOutlet";

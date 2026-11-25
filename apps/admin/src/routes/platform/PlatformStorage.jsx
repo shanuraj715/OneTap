@@ -4,7 +4,7 @@ import {
   STORAGE_PROVIDER_DESCRIPTIONS,
   STORAGE_PROVIDER_LABELS,
   STORAGE_PROVIDERS,
-} from "@onetap/config-schema";
+} from "@rasoipulse/config-schema";
 import { Check, Cloud, HardDrive, Loader, PlugZap, RotateCcw } from "lucide-react";
 import * as api from "../../lib/api";
 import { usePlatformMutation, usePlatformStorage, useStores } from "../../lib/usePlatform";

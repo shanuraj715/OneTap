@@ -3,7 +3,7 @@ import { SiteFooter, SiteHeader } from "@/components/Chrome";
 import { NavProgress } from "@/components/NavProgress";
 import { Trail } from "@/components/Trail";
 import { getPage, getPages, getSettings, siteUrl } from "@/lib/site";
-import { slugifyHeading } from "@onetap/config-schema";
+import { slugifyHeading } from "@rasoipulse/config-schema";
 import "./globals.css";
 
 // Self-hosted by Next at build time — no request to Google from the visitor's browser.

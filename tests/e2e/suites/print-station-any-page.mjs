@@ -15,7 +15,7 @@ const outlets = await (await fetch(`${API}/api/outlets`, { headers: { cookie } }
 const main = (outlets.outlets ?? outlets).find((o) => o.slug === "main");
 const outletId = String(main._id ?? main.id);
 const call = async (method, path, body) => {
-  const r = await fetch(API + path, { method, headers: { "content-type": "application/json", cookie, "x-onetap-outlet": outletId }, body: body ? JSON.stringify(body) : undefined });
+  const r = await fetch(API + path, { method, headers: { "content-type": "application/json", cookie, "x-rasoipulse-outlet": outletId }, body: body ? JSON.stringify(body) : undefined });
   let json = {}; try { json = await r.json(); } catch {}
   return { status: r.status, json };
 };
@@ -125,7 +125,7 @@ try {
   {
     const b = await newPage();
     // pretend this device was switched on earlier
-    await b.ctx.addInitScript(() => { try { localStorage.setItem("onetap.printStation", JSON.stringify({ enabled: true, targets: ["browser", "epos-lan"], clientId: "browser-t52" })); } catch {} });
+    await b.ctx.addInitScript(() => { try { localStorage.setItem("rasoipulse.printStation", JSON.stringify({ enabled: true, targets: ["browser", "epos-lan"], clientId: "browser-t52" })); } catch {} });
     await signIn(b.page, "o@beta.test", "Owner123!");
     await b.page.goto(AD + "/orders", { waitUntil: "load" });
     await b.page.waitForTimeout(1500);

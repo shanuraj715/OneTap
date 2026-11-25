@@ -6,8 +6,8 @@ import {
   marketingCampaignSchema,
   parseContacts,
   renderMarketing,
-} from "@onetap/config-schema";
-import { BrandModel, MarketingCampaignModel, MarketingContactModel, MarketingListModel, MarketingMessageModel, WaAccountModel } from "@onetap/db";
+} from "@rasoipulse/config-schema";
+import { BrandModel, MarketingCampaignModel, MarketingContactModel, MarketingListModel, MarketingMessageModel, WaAccountModel } from "@rasoipulse/db";
 import { HttpError } from "../../middleware/error.js";
 import { credentialsFor } from "../notify/notify.service.js";
 import { providerFor } from "../notify/providers/index.js";

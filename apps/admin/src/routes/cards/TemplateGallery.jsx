@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { CARD_TEMPLATES, CARD_TEMPLATE_FAMILIES } from "@onetap/config-schema";
+import { CARD_TEMPLATES, CARD_TEMPLATE_FAMILIES } from "@rasoipulse/config-schema";
 import { Check, LayoutTemplate, X } from "lucide-react";
 import { layoutCard, prepareCard, renderCard } from "../../lib/card/cardRenderer";
 import { useStorePlan } from "../../lib/useStorePlan";

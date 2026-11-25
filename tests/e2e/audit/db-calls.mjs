@@ -8,7 +8,7 @@ const login = async (email, password) => (await fetch(`${API}/api/auth/login`, {
 const owner = await login("o@acme.test", "Owner123!");
 const sup = await login("super@sandbox.test", "Super123!");
 const get = async (path, { cookie, outlet, label } = {}) => {
-  const r = await fetch(API + path, { headers: { ...(cookie ? { cookie } : {}), ...(outlet ? { "x-onetap-outlet": outlet } : {}), "x-audit": label ?? path } });
+  const r = await fetch(API + path, { headers: { ...(cookie ? { cookie } : {}), ...(outlet ? { "x-rasoipulse-outlet": outlet } : {}), "x-audit": label ?? path } });
   let json = null; try { json = await r.json(); } catch { /* not json */ }
   return { status: r.status, json };
 };

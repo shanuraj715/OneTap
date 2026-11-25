@@ -1,5 +1,5 @@
-import { CARD_SPEC_MAX_BYTES, cardTemplateById, defaultQrCardSpec, qrCardSpecSchema } from "@onetap/config-schema";
-import { QrCardDesignModel, tenantFilter } from "@onetap/db";
+import { CARD_SPEC_MAX_BYTES, cardTemplateById, defaultQrCardSpec, qrCardSpecSchema } from "@rasoipulse/config-schema";
+import { QrCardDesignModel, tenantFilter } from "@rasoipulse/db";
 import { HttpError } from "../../middleware/error.js";
 import { storePlan } from "../platform/plan.service.js";
 

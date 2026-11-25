@@ -5,7 +5,7 @@ import {
   GATEWAY_LABELS,
                
                        
-} from "@onetap/config-schema";
+} from "@rasoipulse/config-schema";
                                                 
 import { useAuth } from "../lib/useAuth";
 import { useOutlet, usePatchConfig } from "../lib/useOutlet";
@@ -71,7 +71,7 @@ export function Payments() {
     <>
       <PageHeader
         title="Payments"
-        subtitle="Your own gateway account — money settles directly to you. TablePe never holds funds."
+        subtitle="Your own gateway account — money settles directly to you. Rasoi Pulse never holds funds."
       />
 
       <SettingsNav />
@@ -123,7 +123,7 @@ export function Payments() {
       <Card title="Security">
         <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13.5, lineHeight: 1.8, color: "var(--color-text-muted)" }}>
           <li>Secret keys are encrypted (AES-256-GCM) before they touch the database and are never sent back to this page.</li>
-          <li>Card details never reach TablePe&apos;s servers — the gateway&apos;s own checkout collects them.</li>
+          <li>Card details never reach Rasoi Pulse&apos;s servers — the gateway&apos;s own checkout collects them.</li>
           <li>Webhooks are signature-verified and de-duplicated, so a retry can&apos;t settle an order twice.</li>
         </ul>
       </Card>

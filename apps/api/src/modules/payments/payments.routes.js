@@ -1,7 +1,7 @@
 import { Router,              } from "express";
 import { z } from "zod";
-import { gatewaySchema } from "@onetap/config-schema";
-import { OrderModel } from "@onetap/db";
+import { gatewaySchema } from "@rasoipulse/config-schema";
+import { OrderModel } from "@rasoipulse/db";
 import { outletBrand } from "../outlets/outlet-cache.js";
 import { requireOutletContext, requireUser } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";

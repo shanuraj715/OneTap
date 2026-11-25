@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { GATEWAYS, PAYMENT_STATUSES } from "@onetap/config-schema";
+import { GATEWAYS, PAYMENT_STATUSES } from "@rasoipulse/config-schema";
 import { tenantScope } from "../tenant-scope.js";
 
 const { Schema, model, models } = mongoose;

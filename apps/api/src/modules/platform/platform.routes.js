@@ -1,7 +1,7 @@
 import { clearAllBlocks, clearBlock, GUARD_SETTINGS, guardOn, listBlocks } from "../security/login-guard.js";
 import { Router } from "express";
 import { z } from "zod";
-import { imageProcessingSchema, storageProviderSchema } from "@onetap/config-schema";
+import { imageProcessingSchema, storageProviderSchema } from "@rasoipulse/config-schema";
 import { requireBrandContext, requireSuperAdmin } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import { checkLabel, hostStatus, probeBase, subdomainInfo } from "../outlets/subdomains.js";
@@ -21,7 +21,7 @@ import { storePlan } from "./plan.service.js";
 import * as platform from "./platform.service.js";
 import { limiter } from "../../middleware/rate-limit.js";
 
-/** The platform console — TablePe's own super admin, managing client stores. */
+/** The platform console — Rasoi Pulse's own super admin, managing client stores. */
 export const platformRouter = Router();
 
 platformRouter.use((req, _res, next) => {
@@ -347,7 +347,7 @@ platformRouter.put("/stores/:id/domains", async (req, res) => {
   res.json({ store: await platform.updateStoreDomains(req.params.id, domainsBody.parse(req.body)) });
 });
 
-/* -------------------------------------------------- TablePe addresses (subdomains) */
+/* -------------------------------------------------- Rasoi Pulse addresses (subdomains) */
 
 /** Is this name free, and what address would it be? Live feedback while typing. */
 platformRouter.get("/subdomains/check", async (req, res) => {
@@ -370,10 +370,10 @@ platformRouter.delete("/stores/:id/subdomain", async (req, res) => {
   res.json({ store: await platform.removeSubdomain(req.params.id) });
 });
 
-/** Does this store's TablePe address actually open from outside? */
+/** Does this store's Rasoi Pulse address actually open from outside? */
 platformRouter.get("/stores/:id/subdomain/status", limiter("outbound-fetch"), async (req, res) => {
   const info = await subdomainInfo(req.params.id);
-  if (!info.host) throw new HttpError(404, "This store has no TablePe address.");
+  if (!info.host) throw new HttpError(404, "This store has no Rasoi Pulse address.");
   res.json({ status: await hostStatus(info.host) });
 });
 

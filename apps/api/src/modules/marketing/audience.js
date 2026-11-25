@@ -1,5 +1,5 @@
-import { currentAge, dateAgo, formatWaPhone, marketingAudienceSchema, MARKETING_MAX_RECIPIENTS, normalizeWaPhone, parseContacts } from "@onetap/config-schema";
-import { CustomerModel, MarketingContactModel, MenuItemModel, OrderModel, OutletModel, WaChatModel } from "@onetap/db";
+import { currentAge, dateAgo, formatWaPhone, marketingAudienceSchema, MARKETING_MAX_RECIPIENTS, normalizeWaPhone, parseContacts } from "@rasoipulse/config-schema";
+import { CustomerModel, MarketingContactModel, MenuItemModel, OrderModel, OutletModel, WaChatModel } from "@rasoipulse/db";
 import { HttpError } from "../../middleware/error.js";
 
 /**

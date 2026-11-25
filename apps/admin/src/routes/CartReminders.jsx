@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { CART_REMINDER_CHANNEL_LABELS, CART_REMINDER_CHANNELS, CART_REMINDER_VARIABLES, DEFAULT_CART_REMINDER, formatINR, renderTemplate } from "@onetap/config-schema";
+import { CART_REMINDER_CHANNEL_LABELS, CART_REMINDER_CHANNELS, CART_REMINDER_VARIABLES, DEFAULT_CART_REMINDER, formatINR, renderTemplate } from "@rasoipulse/config-schema";
 import { ShoppingCart } from "lucide-react";
 import { SettingsNav } from "../components/SubNav";
 import { useAuth } from "../lib/useAuth";
@@ -54,7 +54,7 @@ export function CartReminders() {
     <>
       {header}
       <SettingsNav />
-      {!planAllows ? <Note>Abandoned-cart reminders aren&apos;t included in your plan. Contact TablePe to add them.</Note> : null}
+      {!planAllows ? <Note>Abandoned-cart reminders aren&apos;t included in your plan. Contact Rasoi Pulse to add them.</Note> : null}
 
       <Card title="Reminders for this store">
         <div style={{ display: "flex", flexDirection: "column", gap: 14, opacity: planAllows ? 1 : 0.55 }}>

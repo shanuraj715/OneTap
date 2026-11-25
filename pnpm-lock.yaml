@@ -14,10 +14,10 @@ importers:
 
   apps/admin:
     dependencies:
-      '@onetap/config-schema':
+      '@rasoipulse/config-schema':
         specifier: workspace:*
         version: link:../../packages/config-schema
-      '@onetap/ui':
+      '@rasoipulse/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       '@tanstack/react-query':
@@ -48,10 +48,10 @@ importers:
 
   apps/api:
     dependencies:
-      '@onetap/config-schema':
+      '@rasoipulse/config-schema':
         specifier: workspace:*
         version: link:../../packages/config-schema
-      '@onetap/db':
+      '@rasoipulse/db':
         specifier: workspace:*
         version: link:../../packages/db
       '@whiskeysockets/baileys':
@@ -109,10 +109,10 @@ importers:
 
   apps/storefront:
     dependencies:
-      '@onetap/config-schema':
+      '@rasoipulse/config-schema':
         specifier: workspace:*
         version: link:../../packages/config-schema
-      '@onetap/ui':
+      '@rasoipulse/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       next:
@@ -130,7 +130,7 @@ importers:
 
   apps/website:
     dependencies:
-      '@onetap/config-schema':
+      '@rasoipulse/config-schema':
         specifier: workspace:*
         version: link:../../packages/config-schema
       lucide-react:
@@ -157,7 +157,7 @@ importers:
 
   packages/db:
     dependencies:
-      '@onetap/config-schema':
+      '@rasoipulse/config-schema':
         specifier: workspace:*
         version: link:../config-schema
       mongoose:
@@ -166,7 +166,7 @@ importers:
 
   packages/ui:
     dependencies:
-      '@onetap/config-schema':
+      '@rasoipulse/config-schema':
         specifier: workspace:*
         version: link:../config-schema
       react-dom:

@@ -50,7 +50,7 @@ const mk = async (name, slug, email, planId) => {
 };
 const A = await mk("Acme", "acme", "o@acme.test", plan);
 const owner = await login("o@acme.test", "Owner123!");
-const H = { "x-onetap-outlet": A.outlet, "x-onetap-brand": A.brand };
+const H = { "x-rasoipulse-outlet": A.outlet, "x-rasoipulse-brand": A.brand };
 const own = (method, path, body) => call(method, path, { cookie: owner, headers: H, body });
 await must(own("PATCH", `/api/outlets/${A.outlet}/config`, { operations: { orders: { allowOrderEdit: true, editLockAfter: "never" } } }), "let orders be edited");
 
@@ -288,7 +288,7 @@ say("8. a store without the Printing feature");
 {
   const N = await mk("No Print", "noprint", "o@noprint.test", planNo);
   const ownN = await login("o@noprint.test", "Owner123!");
-  const HN = { "x-onetap-outlet": N.outlet, "x-onetap-brand": N.brand };
+  const HN = { "x-rasoipulse-outlet": N.outlet, "x-rasoipulse-brand": N.brand };
   const c = (await must(call("POST", "/api/menu/categories", { cookie: ownN, headers: HN, body: { name: "Food" } }), "cat")).json.category;
   const i = (await must(call("POST", "/api/menu/items", { cookie: ownN, headers: HN, body: { categoryId: c.id, name: "Momos", basePrice: 9000 } }), "item")).json.item;
   const o = (await must(call("POST", "/api/orders", { cookie: ownN, headers: HN, body: { outletId: N.outlet, cart: { lines: [{ itemId: i.id, quantity: 1, modifierOptionIds: [] }] }, channel: "takeaway", name: "x" } }), "order")).json.order;

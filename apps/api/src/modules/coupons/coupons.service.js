@@ -7,7 +7,7 @@ import {
                      
                    
                     
-} from "@onetap/config-schema";
+} from "@rasoipulse/config-schema";
 import {
   CouponModel,
   CouponRedemptionModel,
@@ -15,7 +15,7 @@ import {
   tenantFilter,
                  
                      
-} from "@onetap/db";
+} from "@rasoipulse/db";
 import { HttpError } from "../../middleware/error.js";
 import { cache } from "../cache/cache.js";
 import { getMenu } from "../menu/menu.service.js";

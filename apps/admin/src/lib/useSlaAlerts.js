@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { evaluateSla,                                  } from "@onetap/config-schema";
+import { evaluateSla,                                  } from "@rasoipulse/config-schema";
                                         
 
 /**

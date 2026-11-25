@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from "react";
-import { activeCategoryIds, flattenCategories, formatINR, itemFromPrice, itemImageUrl } from "@onetap/config-schema";
+import { activeCategoryIds, flattenCategories, formatINR, itemFromPrice, itemImageUrl } from "@rasoipulse/config-schema";
 import { Minus, Plus, Search, SlidersHorizontal, X } from "lucide-react";
 import { lineKey } from "./useTakeOrder";
 import { chip, chipActive, FOOD_COLOR, input, muted } from "./styles";

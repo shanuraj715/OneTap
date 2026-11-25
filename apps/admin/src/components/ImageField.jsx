@@ -5,7 +5,7 @@ import { Button } from "../ui";
 
 /**
  * One picture: what is there now, an Upload button (any photo format — the server shrinks it), and Remove.
- * Where it is kept is TablePe's setting, not the store's; the owner just picks a file.
+ * Where it is kept is Rasoi Pulse's setting, not the store's; the owner just picks a file.
  *
  *   value      the picture's address ("" for none)
  *   onChange   called with the new address, or "" when removed

@@ -3,7 +3,7 @@
  * notification channels. Adding a backend is a new file plus a registry entry.
  *
  * @typedef {Object} ResolvedStorage
- * @property {import("@onetap/config-schema").StorageProvider} provider
+ * @property {import("@rasoipulse/config-schema").StorageProvider} provider
  * @property {string} brandId
  * @property {string} outletId
  * @property {string} [publicBaseUrl]   CDN / custom domain in front of the store
@@ -29,7 +29,7 @@
 
 /**
  * @typedef {Object} StorageAdapter
- * @property {import("@onetap/config-schema").StorageProvider} id
+ * @property {import("@rasoipulse/config-schema").StorageProvider} id
  * @property {(cfg: ResolvedStorage, input: PutInput) => Promise<{ url: string, key: string }>} put
  * @property {(cfg: ResolvedStorage, key: string) => Promise<void>} remove
  */

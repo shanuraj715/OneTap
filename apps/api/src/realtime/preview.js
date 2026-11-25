@@ -1,5 +1,5 @@
 import { WebSocket, WebSocketServer } from "ws";
-import { menuLayoutSchema } from "@onetap/config-schema";
+import { menuLayoutSchema } from "@rasoipulse/config-schema";
 import { logger } from "../logger.js";
 import { SESSION_COOKIE } from "../middleware/auth.js";
 import { allowUpgrade, refuseUpgrade } from "../middleware/rate-limit.js";
@@ -28,7 +28,7 @@ const HEARTBEAT_MS = 30_000;
  * @property {string} id
  * @property {string} outletId
  * @property {string} brandId
- * @property {import("@onetap/config-schema").MenuLayout} layout last known working layout
+ * @property {import("@rasoipulse/config-schema").MenuLayout} layout last known working layout
  * @property {number} updatedAt
  * @property {Set<import("ws").WebSocket>} viewers
  * @property {Set<import("ws").WebSocket>} editors

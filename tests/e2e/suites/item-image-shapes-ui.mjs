@@ -45,7 +45,7 @@ const outletId = String(main._id ?? main.id);
 const layoutBefore = main.config.layout;
 const menuLayoutBefore = main.config.menuLayout;
 const call = async (method, path, body) => {
-  const r = await fetch(API + path, { method, headers: { "content-type": "application/json", cookie, "x-onetap-outlet": outletId }, body: body ? JSON.stringify(body) : undefined });
+  const r = await fetch(API + path, { method, headers: { "content-type": "application/json", cookie, "x-rasoipulse-outlet": outletId }, body: body ? JSON.stringify(body) : undefined });
   let json = {}; try { json = await r.json(); } catch {}
   return { status: r.status, json };
 };
@@ -60,7 +60,7 @@ const seeded = [
   { url: "https://img.test/own-sq-2.png", key: "menu-items/own-sq-2.png", width: 800, height: 800 },
 ];
 {
-  const r = await fetch(`${API}/api/menu/items/${dish.id}`, { method: "PATCH", headers: { "content-type": "application/json", cookie, "x-onetap-outlet": outletId }, body: JSON.stringify({ images: seeded }) });
+  const r = await fetch(`${API}/api/menu/items/${dish.id}`, { method: "PATCH", headers: { "content-type": "application/json", cookie, "x-rasoipulse-outlet": outletId }, body: JSON.stringify({ images: seeded }) });
   if (!r.ok) { console.error("SETUP FAILED", r.status); process.exit(1); }
 }
 const squareKeysBefore = seeded.map((i) => i.key);

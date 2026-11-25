@@ -14,7 +14,7 @@ const main = (outlets.outlets ?? outlets).find((o) => o.slug === "main");
 const outletId = String(main._id ?? main.id);
 const layoutBefore = main.config.layout;
 const setLayout = async (patch) => {
-  const r = await fetch(`${API}/api/outlets/${outletId}/config`, { method: "PATCH", headers: { "content-type": "application/json", cookie, "x-onetap-outlet": outletId }, body: JSON.stringify({ layout: { ...layoutBefore, ...patch } }) });
+  const r = await fetch(`${API}/api/outlets/${outletId}/config`, { method: "PATCH", headers: { "content-type": "application/json", cookie, "x-rasoipulse-outlet": outletId }, body: JSON.stringify({ layout: { ...layoutBefore, ...patch } }) });
   if (!r.ok) { console.error("SETUP FAILED", r.status, (await r.text()).slice(0, 300)); process.exit(1); }
 };
 

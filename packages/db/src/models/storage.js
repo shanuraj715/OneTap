@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { STORAGE_PROVIDERS } from "@onetap/config-schema";
+import { STORAGE_PROVIDERS } from "@rasoipulse/config-schema";
 import { tenantScope } from "../tenant-scope.js";
 
 const { Schema, model, models } = mongoose;

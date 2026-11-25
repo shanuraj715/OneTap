@@ -7,8 +7,8 @@ import {
   STORAGE_FIELDS,
   STORAGE_PROVIDERS,
   STORAGE_REQUIRED_FIELDS,
-} from "@onetap/config-schema";
-import { BrandModel, brandFilter, PlatformStorageModel, StorageConfigModel } from "@onetap/db";
+} from "@rasoipulse/config-schema";
+import { BrandModel, brandFilter, PlatformStorageModel, StorageConfigModel } from "@rasoipulse/db";
 import { env, publicApiUrl } from "../../env.js";
 import { decryptSecret, encryptSecret, maskSecret } from "../../lib/crypto.js";
 import { logger } from "../../logger.js";
@@ -259,7 +259,7 @@ function assertUsable(cfg) {
   const missing = missingOf(cfg);
   if (missing.length) {
     logger.error({ provider: cfg.provider, missing }, "image storage is not fully configured");
-    throw new HttpError(409, "Image uploads aren't available right now. Please contact TablePe.");
+    throw new HttpError(409, "Image uploads aren't available right now. Please contact Rasoi Pulse.");
   }
 }
 

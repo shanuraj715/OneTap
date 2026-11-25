@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { AI_ASPECT_RATIOS, AI_MAX_IMAGES_AT_ONCE, buildItemImagePrompt, categoryPathLabel, imageRatioMeta, imageRoom } from "@onetap/config-schema";
+import { AI_ASPECT_RATIOS, AI_MAX_IMAGES_AT_ONCE, buildItemImagePrompt, categoryPathLabel, imageRatioMeta, imageRoom } from "@rasoipulse/config-schema";
 import { Loader, RotateCcw, Sparkles } from "lucide-react";
 import { useGenerateItemImages } from "../../lib/useMenu";
 import { Button, Modal, Toast } from "../../ui";

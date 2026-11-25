@@ -66,7 +66,7 @@ export const useOnboardingForm = (id) => useQuery({ queryKey: ["platform", "onbo
 
 export const usePricing = () => useQuery({ queryKey: ["platform", "onboarding", "pricing"], queryFn: api.getOnboardingPricing });
 
-/** The TablePe website and its enquiries. */
+/** The Rasoi Pulse website and its enquiries. */
 export const useSitePages = () => useQuery({ queryKey: ["platform", "site", "pages"], queryFn: api.listSitePages });
 export const useSitePage = (id) => useQuery({ queryKey: ["platform", "site", "page", id], queryFn: () => api.getSitePage(id), enabled: Boolean(id) });
 export const useSiteSettings = () => useQuery({ queryKey: ["platform", "site", "settings"], queryFn: api.getSiteSettings });

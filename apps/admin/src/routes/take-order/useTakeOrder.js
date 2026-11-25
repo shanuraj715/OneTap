@@ -35,7 +35,7 @@ const NO_CUSTOMER = { phone: "", name: "", email: "", useCoins: false, coins: 0,
 /** A half-taken order older than this is someone else's by now — start fresh. */
 const STALE_MS = 2 * 60 * 60 * 1000;
 
-const keyFor = (outletId) => `onetap.takeOrder.${outletId}`;
+const keyFor = (outletId) => `rasoipulse.takeOrder.${outletId}`;
 
 function load(outletId) {
   if (!outletId) return EMPTY;

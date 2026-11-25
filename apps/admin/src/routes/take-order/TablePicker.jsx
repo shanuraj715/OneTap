@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { formatINR } from "@onetap/config-schema";
+import { formatINR } from "@rasoipulse/config-schema";
 import { Armchair, Search } from "lucide-react";
 import { input, muted } from "./styles";
 

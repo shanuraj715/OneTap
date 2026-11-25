@@ -13,7 +13,7 @@ import {
                     
                         
                              
-} from "@onetap/config-schema";
+} from "@rasoipulse/config-schema";
 import { AlertTriangle, Bell, CheckCircle2, Filter, MessageCircle, MessagesSquare, ScrollText, Smartphone, XCircle } from "lucide-react";
 import { Link } from "../lib/nav";
 import { useStorePlan } from "../lib/useStorePlan";

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "../../../lib/nav";
-import { FEATURES, priceSteps, resolvePricing } from "@onetap/config-schema";
+import { FEATURES, priceSteps, resolvePricing } from "@rasoipulse/config-schema";
 import { ArrowLeft, Calculator, RotateCcw, Save } from "lucide-react";
 import * as api from "../../../lib/api";
 import { usePlans, usePlatformMutation, usePricing } from "../../../lib/usePlatform";

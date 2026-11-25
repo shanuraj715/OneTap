@@ -1,4 +1,4 @@
-import { onModelWrite } from "@onetap/db";
+import { onModelWrite } from "@rasoipulse/db";
 import { cache } from "./cache.js";
 
 /**

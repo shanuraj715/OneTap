@@ -17,7 +17,7 @@ const planSchema = new Schema(
     custom: { type: Boolean, default: false },
     limits: { type: Schema.Types.Mixed, default: () => ({}) },
     entitlements: { type: Schema.Types.Mixed, default: () => ({}) },
-    /** how the plan appears on the TablePe website's Pricing — `planMarketingSchema` */
+    /** how the plan appears on the Rasoi Pulse website's Pricing — `planMarketingSchema` */
     marketing: { type: Schema.Types.Mixed, default: () => ({}) },
     /** archived plans stay on the stores that have them but can't be newly assigned */
     archived: { type: Boolean, default: false },

@@ -62,7 +62,7 @@ export function AnalyticsChart({
 
   return (
     <div
-      className={`onetap-analytics-chart ${className}`}
+      className={`rasoipulse-analytics-chart ${className}`}
       style={{
         background: "var(--color-surface, #ffffff)",
         border: "1px solid var(--color-border, #e2e8f0)",

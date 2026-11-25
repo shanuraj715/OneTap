@@ -1,5 +1,5 @@
-import { outletConfigSchema } from "@onetap/config-schema";
-import { BrandModel, connectDb, disconnectDb, OutletModel } from "@onetap/db";
+import { outletConfigSchema } from "@rasoipulse/config-schema";
+import { BrandModel, connectDb, disconnectDb, OutletModel } from "@rasoipulse/db";
 import { env } from "../env.js";
 import { logger } from "../logger.js";
 

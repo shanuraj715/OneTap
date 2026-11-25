@@ -6,13 +6,13 @@ import {
   isReservedOutletSlug,
   outletConfigSchema,
   slugSchema,
-} from "@onetap/config-schema";
+} from "@rasoipulse/config-schema";
 import {
   BrandModel,
   OrderModel,
   OutletModel,
 
-} from "@onetap/db";
+} from "@rasoipulse/db";
 import { HttpError } from "../../middleware/error.js";
 import { invalidateStorePlan, storePlan } from "../platform/plan.service.js";
 import { APPEARANCE_AREAS, ownerConfig } from "./config.service.js";
@@ -82,10 +82,10 @@ export async function createOutlet(ctx               , input                    
   if (!asPlatform) {
     const plan = await storePlan(ctx.brandId);
     if (!plan.limits.multiOutlet && plan.usage.outlets >= 1) {
-      throw new HttpError(409, "Multiple outlets aren't included in your plan. Ask TablePe to enable multi-outlet.");
+      throw new HttpError(409, "Multiple outlets aren't included in your plan. Ask Rasoi Pulse to enable multi-outlet.");
     }
     if (plan.max.outlets !== null && plan.usage.outlets >= plan.max.outlets) {
-      throw new HttpError(409, `Your plan allows ${plan.max.outlets} outlets and all are in use. Ask TablePe to raise the limit.`);
+      throw new HttpError(409, `Your plan allows ${plan.max.outlets} outlets and all are in use. Ask Rasoi Pulse to raise the limit.`);
     }
   }
 

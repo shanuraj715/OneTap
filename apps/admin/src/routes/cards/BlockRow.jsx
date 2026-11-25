@@ -9,7 +9,7 @@ import {
   cardFontsInGroup,
   fontIsItalicOnly,
   isRiskyEyePairing,
-} from "@onetap/config-schema";
+} from "@rasoipulse/config-schema";
 import {
   ChevronDown,
   ChevronUp,

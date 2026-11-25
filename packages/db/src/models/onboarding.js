@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const { Schema, model, models } = mongoose;
 
 /**
- * A client onboarding form: what a TablePe representative collected from a restaurant that wants to join, kept as a draft
+ * A client onboarding form: what a Rasoi Pulse representative collected from a restaurant that wants to join, kept as a draft
  * until it is published as a store. Platform-level (like a Lead) — it exists before the store does, so it has no brand.
  *
  * `data` is the whole form, shaped by `onboardingSchema` in config-schema. The owner's password is deliberately NOT part of

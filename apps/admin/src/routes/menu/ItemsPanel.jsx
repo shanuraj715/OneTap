@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { categoryPathLabel, categorySubtreeIds, flattenCategories, itemImageUrl, itemPriceLabel } from "@onetap/config-schema";
+import { categoryPathLabel, categorySubtreeIds, flattenCategories, itemImageUrl, itemPriceLabel } from "@rasoipulse/config-schema";
 import { Download, Sparkles, Trash2 } from "lucide-react";
 import { useAuth } from "../../lib/useAuth";
 import { useDeleteItem, useDeleteItems, useUpdateItem } from "../../lib/useMenu";

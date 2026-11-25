@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { DatePickerInput } from "@onetap/ui";
+import { DatePickerInput } from "@rasoipulse/ui";
 import {
   BUSINESS_TYPES,
   CHECKLIST_FEATURES,
@@ -17,7 +17,7 @@ import {
   planHasEffect,
   planHasFeature,
   slugifyName,
-} from "@onetap/config-schema";
+} from "@rasoipulse/config-schema";
 import { MapPin, Trash2 } from "lucide-react";
 import * as api from "../../../lib/api";
 import { Button, Card, Checkbox, ColorInput, Field, Note, Select, TextInput } from "../../../ui";
@@ -482,9 +482,9 @@ export function AddressSection({ data, P, ctx }) {
   return (
     <Card title="8 · The store's address" subtitle="Where customers open the store.">
       <div style={grid}>
-        <Field label="TablePe address" info="Free, instant, nothing to set up on the server.">
+        <Field label="Rasoi Pulse address" info="Free, instant, nothing to set up on the server.">
           <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <TextInput value={data.address.subdomain} onChange={(e) => P("address.subdomain", slugifyName(e.target.value))} placeholder={slugifyName(data.business.storeName)} maxLength={40} style={{ flex: 1, minWidth: 0 }} aria-label="TablePe address" />
+            <TextInput value={data.address.subdomain} onChange={(e) => P("address.subdomain", slugifyName(e.target.value))} placeholder={slugifyName(data.business.storeName)} maxLength={40} style={{ flex: 1, minWidth: 0 }} aria-label="Rasoi Pulse address" />
             {base ? <span style={{ ...subtle, whiteSpace: "nowrap" }}>.{base}</span> : null}
           </span>
           {base && label ? (

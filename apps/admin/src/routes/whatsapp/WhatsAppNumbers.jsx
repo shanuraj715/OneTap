@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import QRCode from "qrcode";
-import { formatWaPhone, WA_NUMBER_COLORS, WA_PACING, waTextOn } from "@onetap/config-schema";
+import { formatWaPhone, WA_NUMBER_COLORS, WA_PACING, waTextOn } from "@rasoipulse/config-schema";
 import { AlertTriangle, ArrowRight, KeyRound, Link2, Pencil, Plus, RefreshCw, Shuffle, Smartphone, Trash2, Unlink } from "lucide-react";
 import { Link } from "../../lib/nav";
 import { useAuth } from "../../lib/useAuth";

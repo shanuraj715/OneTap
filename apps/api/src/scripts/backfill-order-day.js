@@ -1,4 +1,4 @@
-import { connectDb, disconnectDb, OrderModel } from "@onetap/db";
+import { connectDb, disconnectDb, OrderModel } from "@rasoipulse/db";
 import { env } from "../env.js";
 import { logger } from "../logger.js";
 

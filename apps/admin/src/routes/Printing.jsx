@@ -1,6 +1,6 @@
 import { useState } from "react";
                                            
-import { TARGETS,                  } from "@onetap/config-schema";
+import { TARGETS,                  } from "@rasoipulse/config-schema";
 import { FileText, ListChecks, MonitorSmartphone, Printer as PrinterIcon } from "lucide-react";
 import { useAuth } from "../lib/useAuth";
 import { useOutlet } from "../lib/useOutlet";
@@ -118,7 +118,7 @@ function StationPanel({
       <Note icon={<MonitorSmartphone size={15} />}>
         Turn this on for the computer that sits <strong>at the outlet</strong>, next to the printers. It picks up jobs
         for printers on the local network and for the ordinary print dialog. Printers using a cloud service or the
-        TablePe agent do not need this — the server sends to those directly.
+        Rasoi Pulse agent do not need this — the server sends to those directly.
       </Note>
 
       <div style={{ display: "flex", gap: 16, flexWrap: "wrap", alignItems: "center" }}>

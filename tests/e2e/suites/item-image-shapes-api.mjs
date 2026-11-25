@@ -45,7 +45,7 @@ const plan = idOf((await must(call("POST", "/api/platform/plans", { cookie: su, 
 const j = (await must(call("POST", "/api/brands", { cookie: su, body: { brandName: "Acme", brandSlug: "acme", outletName: "Main", outletSlug: "main", hostnames: ["acme.test"], ownerEmail: "o@acme.test", ownerName: "Owner", ownerPassword: "Owner123!", planId: plan } }), "store")).json;
 const A = { brand: String(j.brand?._id ?? j.brand?.id ?? j.brandId), outlet: String(j.outlet?._id ?? j.outlet?.id ?? j.outletId) };
 const owner = await login("o@acme.test", "Owner123!");
-const H = { "x-onetap-outlet": A.outlet, "x-onetap-brand": A.brand };
+const H = { "x-rasoipulse-outlet": A.outlet, "x-rasoipulse-brand": A.brand };
 const own = (method, path, body) => call(method, path, { cookie: owner, headers: H, body });
 const cat = (await must(own("POST", "/api/menu/categories", { name: "Food" }), "category")).json.category;
 const menu = async () => (await call("GET", `/api/menu?outletId=${A.outlet}`)).json;
@@ -126,7 +126,7 @@ say("5. importing a menu from another outlet brings the shapes along");
 {
   const second = (await must(own("POST", "/api/outlets", { name: "Second", slug: "second" }), "second outlet")).json.outlet;
   const secondId = idOf(second);
-  const H2 = { "x-onetap-outlet": secondId, "x-onetap-brand": A.brand };
+  const H2 = { "x-rasoipulse-outlet": secondId, "x-rasoipulse-brand": A.brand };
   const r = await call("POST", "/api/menu/import", { cookie: owner, headers: H2, body: { sourceOutletId: A.outlet, itemIds: [legacyId] } });
   ok(r.status === 201 && r.json.importedItemsCount === 1, "an item with all four shapes is imported into the second outlet", `${r.status} ${JSON.stringify(r.json)}`);
   const copied = (await call("GET", `/api/menu?outletId=${secondId}`)).json.items.find((i) => i.name === "Old Momos");

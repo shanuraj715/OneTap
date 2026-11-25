@@ -1,4 +1,4 @@
-# TablePe end-to-end tests
+# Rasoi Pulse end-to-end tests
 
 A saved, repeatable test library for the whole product. Every test records **what it does (steps)**, **what must happen**, **what must NOT happen**, and **what passed / failed** — and keeps that in [`docs/`](docs/CATALOG.md) so you can read it without running anything.
 

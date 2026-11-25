@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { flattenCategories, formatINR, itemImageUrl } from "@onetap/config-schema";
+import { flattenCategories, formatINR, itemImageUrl } from "@rasoipulse/config-schema";
 import { useQuery } from "@tanstack/react-query";
 import {
   Check,

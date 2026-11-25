@@ -1,10 +1,10 @@
 import { randomBytes } from "node:crypto";
-import { connectDb, disconnectDb, UserModel } from "@onetap/db";
+import { connectDb, disconnectDb, UserModel } from "@rasoipulse/db";
 import { env } from "../env.js";
 import { logger } from "../logger.js";
 import { hashPassword } from "../modules/auth/password.js";
 
-const SUPERADMIN_EMAIL = "admin@tablepe.example";
+const SUPERADMIN_EMAIL = "admin@rasoipulse.example";
 
 /**
  * There's no self-service "forgot password" flow yet, so this is the only way

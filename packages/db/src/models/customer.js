@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { CUSTOMER_GENDERS } from "@onetap/config-schema";
+import { CUSTOMER_GENDERS } from "@rasoipulse/config-schema";
 import { writeEvents } from "../write-events.js";
 
 const { Schema, model, models } = mongoose;

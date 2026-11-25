@@ -7,8 +7,8 @@ import { Button } from "../ui";
 const since = (at) => (at ? new Date(at).toLocaleDateString([], { day: "numeric", month: "short", year: "numeric" }) : "");
 
 /**
- * What a store's team sees while TablePe has switched their store off (a late or missing payment, say) —
- * instead of a dashboard full of errors. It says plainly what is and isn't affected, shows the message TablePe
+ * What a store's team sees while Rasoi Pulse has switched their store off (a late or missing payment, say) —
+ * instead of a dashboard full of errors. It says plainly what is and isn't affected, shows the message Rasoi Pulse
  * left for them, and lets them check again once things are sorted out.
  */
 export function StoreDisabled({ user }) {
@@ -21,7 +21,7 @@ export function StoreDisabled({ user }) {
   const check = async () => {
     setChecking(true);
     setChecked(false);
-    // if TablePe has switched the store back on, the app notices and opens the dashboard by itself
+    // if Rasoi Pulse has switched the store back on, the app notices and opens the dashboard by itself
     await qc.invalidateQueries({ queryKey: ["me"] });
     setChecking(false);
     setChecked(true);
@@ -35,16 +35,16 @@ export function StoreDisabled({ user }) {
         </div>
         <h1 style={title}>{storeName ? `${storeName} is disabled` : "Your store is disabled"}</h1>
         <p style={lead}>
-          TablePe has switched this store off{at ? ` (since ${since(at)})` : ""}. Customers can&apos;t place orders and your team can&apos;t use the dashboard until it&apos;s turned back on.
+          Rasoi Pulse has switched this store off{at ? ` (since ${since(at)})` : ""}. Customers can&apos;t place orders and your team can&apos;t use the dashboard until it&apos;s turned back on.
         </p>
 
         {message ? (
           <div style={messageBox} role="note">
-            <div style={messageLabel}>Message from TablePe</div>
+            <div style={messageLabel}>Message from Rasoi Pulse</div>
             <div style={messageText}>{message}</div>
           </div>
         ) : (
-          <p style={{ ...lead, color: "var(--color-text)", fontWeight: 600 }}>Please contact TablePe to turn your store back on.</p>
+          <p style={{ ...lead, color: "var(--color-text)", fontWeight: 600 }}>Please contact Rasoi Pulse to turn your store back on.</p>
         )}
 
         <p style={reassure}>Nothing has been deleted — your menu, orders, customers and settings are exactly as you left them, and will be waiting the moment the store is back on.</p>

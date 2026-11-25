@@ -1,5 +1,5 @@
 /**
- * Which TablePe API this storefront talks to — the one place it's set.
+ * Which Rasoi Pulse API this storefront talks to — the one place it's set.
  *
  * Every store's website, whatever domain it's served on (dominos.com,
  * wowmomos.com…), talks to the same platform API, so the address ships with

@@ -1,4 +1,4 @@
-import { NOTIFY_VARIABLES } from "@onetap/config-schema";
+import { NOTIFY_VARIABLES } from "@rasoipulse/config-schema";
 import { env } from "../../../env.js";
                                                                                         
 

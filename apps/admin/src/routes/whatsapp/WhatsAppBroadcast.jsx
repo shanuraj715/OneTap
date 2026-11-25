@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { WA_MAX_MEDIA_BYTES, WA_OPT_OUT_FOOTER, WA_PACING } from "@onetap/config-schema";
+import { WA_MAX_MEDIA_BYTES, WA_OPT_OUT_FOOTER, WA_PACING } from "@rasoipulse/config-schema";
 import { ImagePlus, Megaphone, X } from "lucide-react";
 import * as api from "../../lib/api";
 import { useOutlet } from "../../lib/useOutlet";

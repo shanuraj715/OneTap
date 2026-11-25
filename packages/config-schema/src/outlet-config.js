@@ -19,7 +19,7 @@ import { typographySchema } from "./typography.js";
 import { walletSettingsSchema } from "./wallet.js";
 
 export const outletIdentitySchema = z.object({
-  name: z.string().default("TablePe Restaurant"),
+  name: z.string().default("Rasoi Pulse Restaurant"),
   tagline: z.string().default(""),
   logoAssetId: z.string().nullable().default(null),
   /** the restaurant's logo — the address of an uploaded picture; shown by headers that have room for one */

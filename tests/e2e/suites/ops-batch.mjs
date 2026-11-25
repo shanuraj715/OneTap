@@ -23,7 +23,7 @@ const outlets = await (await fetch(`${API}/api/outlets`, { headers: { cookie } }
 const main = (outlets.outlets ?? outlets).find((o) => o.slug === "main");
 const outletId = String(main._id ?? main.id);
 const mk = (ck, oid) => async (method, path, body) => {
-  const r = await fetch(API + path, { method, headers: { "content-type": "application/json", cookie: ck, ...(oid ? { "x-onetap-outlet": oid } : {}) }, body: body ? JSON.stringify(body) : undefined });
+  const r = await fetch(API + path, { method, headers: { "content-type": "application/json", cookie: ck, ...(oid ? { "x-rasoipulse-outlet": oid } : {}) }, body: body ? JSON.stringify(body) : undefined });
   let json = {}; try { json = await r.json(); } catch {}
   return { status: r.status, json };
 };
@@ -186,7 +186,7 @@ try {
   /* ------------------------------------------------------------ 6. print station */
   console.log("== Print station: 8-second checks, green check, loader, countdown");
   const pc = await browser.newContext({ viewport: { width: 1360, height: 900 } });
-  await pc.addInitScript(() => { try { localStorage.setItem("onetap.printStation", JSON.stringify({ enabled: true, targets: ["browser", "epos-lan"], clientId: "browser-test0001" })); } catch { /* ignore */ } });
+  await pc.addInitScript(() => { try { localStorage.setItem("rasoipulse.printStation", JSON.stringify({ enabled: true, targets: ["browser", "epos-lan"], clientId: "browser-test0001" })); } catch { /* ignore */ } });
   const ps = await pc.newPage(); watch(ps);
   const claims = [];
   ps.on("request", (rq) => { if (/\/api\/printing\/jobs\/claim/.test(rq.url())) claims.push(Date.now()); });
@@ -219,7 +219,7 @@ try {
 
   console.log("== Print station: the platform dashboard (super admin) never prints or checks");
   const pc2 = await browser.newContext({ viewport: { width: 1360, height: 900 } });
-  await pc2.addInitScript(() => { try { localStorage.setItem("onetap.printStation", JSON.stringify({ enabled: true, targets: ["browser", "epos-lan"], clientId: "browser-test0002" })); } catch { /* ignore */ } });
+  await pc2.addInitScript(() => { try { localStorage.setItem("rasoipulse.printStation", JSON.stringify({ enabled: true, targets: ["browser", "epos-lan"], clientId: "browser-test0002" })); } catch { /* ignore */ } });
   const sp2 = await pc2.newPage(); watch(sp2);
   const claims2 = [];
   sp2.on("request", (rq) => { if (/\/api\/printing\/jobs\/claim/.test(rq.url())) claims2.push(rq.url()); });

@@ -1,5 +1,5 @@
 {
-  "name": "@onetap/ui",
+  "name": "@rasoipulse/ui",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -20,6 +20,6 @@
     "react": "^19.0.0"
   },
   "dependencies": {
-    "@onetap/config-schema": "workspace:*"
+    "@rasoipulse/config-schema": "workspace:*"
   }
 }

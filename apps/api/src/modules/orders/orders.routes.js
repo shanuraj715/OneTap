@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
-import { cartSchema, gatewaySchema, orderChannelSchema, orderStatusSchema } from "@onetap/config-schema";
-import { OrderModel } from "@onetap/db";
+import { cartSchema, gatewaySchema, orderChannelSchema, orderStatusSchema } from "@rasoipulse/config-schema";
+import { OrderModel } from "@rasoipulse/db";
 import { outletBrand } from "../outlets/outlet-cache.js";
 import { requireOutletContext, requireUser } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
@@ -109,14 +109,14 @@ ordersRouter.get("/pickup-slots", limiter("public-compute"), async (req, res) =>
  * Placing an order requires a verified diner — no anonymous orders. Staff
  * placing one on a walk-in or phoned-in customer's behalf are the exception:
  * the person standing at the till is the trusted party, whatever the order's
- * channel. That's signalled by the `x-onetap-outlet` header, which only an
+ * channel. That's signalled by the `x-rasoipulse-outlet` header, which only an
  * authenticated admin call ever sends — the storefront never does, so a
  * customer request can't land here even carrying a stray staff cookie.
  */
 ordersRouter.post("/", limiter("order-place"), async (req, res) => {
   const body = placeBody.parse(req.body);
 
-  if (req.header("x-onetap-outlet")) {
+  if (req.header("x-rasoipulse-outlet")) {
     const ctx = await requireOutletContext(req, "order:create");
     const user = requireUser(req);
     const order = await placeOrder({
@@ -175,7 +175,7 @@ async function dineInContext(
   if (body.channel !== "dine-in") return {};
   if (!body.sessionId) throw new HttpError(400, "Scan your table QR before ordering");
 
-  const { TableSessionModel } = await import("@onetap/db");
+  const { TableSessionModel } = await import("@rasoipulse/db");
   const session = await TableSessionModel.findOne({
     _id: body.sessionId,
     brandId: ctx.brandId,
@@ -204,7 +204,7 @@ async function dineInContextForStaff(
 )                                                    {
   if (body.channel !== "dine-in" || !body.sessionId) return {};
 
-  const { TableSessionModel, CustomerModel } = await import("@onetap/db");
+  const { TableSessionModel, CustomerModel } = await import("@rasoipulse/db");
   const session = await TableSessionModel.findOne({
     _id: body.sessionId,
     brandId: ctx.brandId,

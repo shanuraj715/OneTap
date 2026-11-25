@@ -1,5 +1,5 @@
-import { FEEDBACK_EDIT_DAYS, FEEDBACK_TAGS, FEEDBACK_WINDOW_DAYS } from "@onetap/config-schema";
-import { brandFilter, FeedbackModel, OrderModel, tenantFilter } from "@onetap/db";
+import { FEEDBACK_EDIT_DAYS, FEEDBACK_TAGS, FEEDBACK_WINDOW_DAYS } from "@rasoipulse/config-schema";
+import { brandFilter, FeedbackModel, OrderModel, tenantFilter } from "@rasoipulse/db";
 import { HttpError } from "../../middleware/error.js";
 import { effectiveOutletConfig } from "../outlets/config.service.js";
 

@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { SITE_ICONS } from "@onetap/config-schema";
+import { SITE_ICONS } from "@rasoipulse/config-schema";
 import {
   ArrowDown,
   ArrowUp,

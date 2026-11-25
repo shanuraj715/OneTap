@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
-import { reservationRequestSchema, reservationStatusSchema } from "@onetap/config-schema";
-import { OutletModel } from "@onetap/db";
+import { reservationRequestSchema, reservationStatusSchema } from "@rasoipulse/config-schema";
+import { OutletModel } from "@rasoipulse/db";
 import { requireOutletContext, requireUser } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import { limiter } from "../../middleware/rate-limit.js";

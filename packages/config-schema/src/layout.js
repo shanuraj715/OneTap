@@ -2,7 +2,7 @@ import { z } from "zod";
 
 /**
  * Which component variant each layout slot uses. The values are ids from the
- * variant registry in @onetap/ui — swapping one changes the storefront's look
+ * variant registry in @rasoipulse/ui — swapping one changes the storefront's look
  * with no code change.
  */
 /** One extra link in the header nav — admin-added, on top of the built-in

@@ -1,11 +1,11 @@
-import "@onetap/ui/tokens.css";
+import "@rasoipulse/ui/tokens.css";
 import "./globals.css";
 import { RouterLinks } from "@/components/RouterLinks";
                                      
                                        
 
 export const metadata           = {
-  title: "TablePe",
+  title: "Rasoi Pulse",
   description: "Multi-tenant restaurant platform",
 };
 

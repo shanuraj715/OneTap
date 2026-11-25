@@ -165,7 +165,7 @@ export function DatePicker({
 
   return (
     <div
-      className={`onetap-datepicker ${className}`}
+      className={`rasoipulse-datepicker ${className}`}
       style={{
         ...themeVars,
         width: 320,

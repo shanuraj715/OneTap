@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { availabilitySchema, imageRatioOf, limitImages, categoryHeight, cleanCategoryName, comboSchema, duplicateCategoryName, categoryLevel, categorySubtreeIds, istDayKey, itemStockSchema, MAX_CATEGORIES_AT_ONCE, MAX_CATEGORY_DEPTH, planCategoryMove } from "@onetap/config-schema";
+import { availabilitySchema, imageRatioOf, limitImages, categoryHeight, cleanCategoryName, comboSchema, duplicateCategoryName, categoryLevel, categorySubtreeIds, istDayKey, itemStockSchema, MAX_CATEGORIES_AT_ONCE, MAX_CATEGORY_DEPTH, planCategoryMove } from "@rasoipulse/config-schema";
 import { refillDailyStock } from "./stock.service.js";
 import {
   MenuCategoryModel,
@@ -7,7 +7,7 @@ import {
   ModifierGroupModel,
   OutletModel,
   tenantFilter,
-} from "@onetap/db";
+} from "@rasoipulse/db";
 import { HttpError } from "../../middleware/error.js";
 import { cache } from "../cache/cache.js";
 import { removeObject } from "../storage/storage.service.js";

@@ -9,8 +9,8 @@ import {
   tenantFilter,
                 
                      
-} from "@onetap/db";
-import { normalizeTableStatus } from "@onetap/config-schema";
+} from "@rasoipulse/db";
+import { normalizeTableStatus } from "@rasoipulse/config-schema";
 import { env } from "../../env.js";
 import { safeEqual } from "../../lib/crypto.js";
 import { HttpError } from "../../middleware/error.js";

@@ -1,4 +1,4 @@
-import { OutletModel } from "@onetap/db";
+import { OutletModel } from "@rasoipulse/db";
 import { env, isProd } from "../../env.js";
 import { HttpError } from "../../middleware/error.js";
 
@@ -15,7 +15,7 @@ const DOMAIN_RE = /^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z][a-z0-9-]{1,
 // (acme.localhost:3070 too — browsers open any *.localhost on this machine, which is how store addresses are tried out locally)
 const LOCAL_RE = /^(?:(?:[a-z0-9-]+\.)*localhost|127\.0\.0\.1|\[::1\])(?::\d{2,5})?$/;
 
-/** The domain stores' TablePe addresses live under on THIS server ("tablepe.in", or "localhost:3070" in development), or "" for none. Validated at startup (env.js). */
+/** The domain stores' Rasoi Pulse addresses live under on THIS server ("rasoipulse.in", or "localhost:3070" in development), or "" for none. Validated at startup (env.js). */
 export const configuredBase = () => env.STORE_SUBDOMAIN_BASE.trim().toLowerCase();
 
 /** Is this one of the machine's own addresses (acme.localhost:3070) rather than something on the internet? */

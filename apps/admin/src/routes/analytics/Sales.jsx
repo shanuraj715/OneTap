@@ -1,4 +1,4 @@
-import { WEEKDAYS } from "@onetap/config-schema";
+import { WEEKDAYS } from "@rasoipulse/config-schema";
 import { useAn, useAnFilters } from "../../lib/useAnalytics";
 import { ColumnChart, DataTable, Figure, LineChart, Legend } from "../platform/viz/charts";
 import { axisMoney, count, rupees } from "../platform/viz/format";

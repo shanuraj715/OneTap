@@ -9,7 +9,7 @@ import {
               
                    
                     
-} from "@onetap/config-schema";
+} from "@rasoipulse/config-schema";
 import { Plus, Tag, Trash2, X } from "lucide-react";
 import * as api from "../lib/api";
                                          

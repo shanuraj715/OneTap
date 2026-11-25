@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
                                            
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { categoryPathLabel, formatINR,                                      } from "@onetap/config-schema";
+import { categoryPathLabel, formatINR,                                      } from "@rasoipulse/config-schema";
 import {
   Minus,
   NotepadText,

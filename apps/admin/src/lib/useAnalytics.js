@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "./nav";
-import { DEFAULT_FOOD_COST_PCT, DEFAULT_STOCK_SAFETY_PCT, EXPENSE_LINES, presetRange } from "@onetap/config-schema";
+import { DEFAULT_FOOD_COST_PCT, DEFAULT_STOCK_SAFETY_PCT, EXPENSE_LINES, presetRange } from "@rasoipulse/config-schema";
 import * as api from "./api";
 import { useOutlet } from "./useOutlet";
 
@@ -49,7 +49,7 @@ export function useAn(kind, filters, extra = {}, enabled = true) {
  * or salaries is typed once; "Save to my store" also keeps a copy on the server so another device — or the accountant —
  * sees the same numbers. Amounts are monthly rupees; `scopes` has one list for the shared store bills and one per outlet.
  */
-const keyFor = (brandId) => `tablepe.analytics.finance.${brandId}`;
+const keyFor = (brandId) => `rasoipulse.analytics.finance.${brandId}`;
 const blank = () => ({ foodCostPct: DEFAULT_FOOD_COST_PCT, safetyPct: DEFAULT_STOCK_SAFETY_PCT, scopes: {}, savedAt: null });
 export const defaultLines = (scope) => EXPENSE_LINES.filter((l) => scope === "all" || l.scope === scope || (scope !== "store" && l.scope === "outlet")).map((l) => ({ key: l.key, label: l.label, monthly: 0 }));
 

@@ -79,7 +79,7 @@ export function Login() {
           <>
             <div style={{ marginBottom: 22 }}>
               <div style={{ fontFamily: "var(--font-heading)", fontWeight: 700, fontSize: 20 }}>
-                TablePe<span style={{ color: "var(--color-text-muted)", fontWeight: 400 }}> admin</span>
+                Rasoi Pulse<span style={{ color: "var(--color-text-muted)", fontWeight: 400 }}> admin</span>
               </div>
               <p style={{ margin: "6px 0 0", fontSize: 14, color: "var(--color-text-muted)" }}>
                 Sign in to manage your restaurant.

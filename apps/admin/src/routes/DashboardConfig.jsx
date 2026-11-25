@@ -7,7 +7,7 @@ import {
   ROLES,
                                
             
-} from "@onetap/config-schema";
+} from "@rasoipulse/config-schema";
 import { BarChart3, ChevronDown, ChevronUp, LayoutGrid, ListTree, Save } from "lucide-react";
 import { useAuth } from "../lib/useAuth";
 import { useOutlet, usePatchConfig } from "../lib/useOutlet";

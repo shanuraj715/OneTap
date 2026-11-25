@@ -11,8 +11,8 @@ import {
   siteSectionSchema,
   sitePageSchema,
   siteSettingsSchema,
-} from "@onetap/config-schema";
-import { LeadModel, PlanModel, SitePageModel, SiteSettingsModel } from "@onetap/db";
+} from "@rasoipulse/config-schema";
+import { LeadModel, PlanModel, SitePageModel, SiteSettingsModel } from "@rasoipulse/db";
 import { env } from "../../env.js";
 import { safeEqual } from "../../lib/crypto.js";
 import { logger } from "../../logger.js";
@@ -24,7 +24,7 @@ import { tooMany } from "./guard.js";
 import { notifyWebsite } from "./revalidate.js";
 
 /**
- * The TablePe marketing website's content: settings, pages built from
+ * The Rasoi Pulse marketing website's content: settings, pages built from
  * sections, the public view of plans, and enquiries from its contact form.
  * Everything public is published-only; everything else is the platform
  * super admin's (routes enforce that).

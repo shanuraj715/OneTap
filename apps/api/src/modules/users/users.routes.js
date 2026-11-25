@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
-import { permissionsForRole, roleSchema } from "@onetap/config-schema";
-import { UserModel } from "@onetap/db";
+import { permissionsForRole, roleSchema } from "@rasoipulse/config-schema";
+import { UserModel } from "@rasoipulse/db";
 import { requireBrandContext, requireUser } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import { hashPassword } from "../auth/password.js";
@@ -29,14 +29,14 @@ const shape = (u, brandId) => {
 const membershipIn = (user, brandId) => user.memberships.find((x) => x.brandId === brandId);
 
 /**
- * Store owners are managed by the platform (TablePe), not from the store's
+ * Store owners are managed by the platform (Rasoi Pulse), not from the store's
  * own dashboard — so a store can't create, promote, edit or remove an owner.
  */
 function assertCanManage(me, target, brandId, nextRole) {
   if (me.isSuperAdmin) return;
-  if (nextRole === "owner") throw new HttpError(403, "Store owners are added by TablePe.");
+  if (nextRole === "owner") throw new HttpError(403, "Store owners are added by Rasoi Pulse.");
   if (target && membershipIn(target, brandId)?.role === "owner") {
-    throw new HttpError(403, "Store owners are managed by TablePe.");
+    throw new HttpError(403, "Store owners are managed by Rasoi Pulse.");
   }
 }
 
@@ -45,7 +45,7 @@ async function assertSeatFree(me, brandId) {
   if (me.isSuperAdmin) return;
   const plan = await storePlan(brandId);
   if (plan.max.users !== null && plan.usage.users >= plan.max.users) {
-    throw new HttpError(409, `Your plan allows ${plan.max.users} people and all are in use. Remove someone or ask TablePe to raise the limit.`);
+    throw new HttpError(409, `Your plan allows ${plan.max.users} people and all are in use. Remove someone or ask Rasoi Pulse to raise the limit.`);
   }
 }
 

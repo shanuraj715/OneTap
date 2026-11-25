@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fontById, googleFontsUrl, themeTokensSchema, tokensToCssVars, TONES_LIGHT } from "@onetap/config-schema";
+import { fontById, googleFontsUrl, themeTokensSchema, tokensToCssVars, TONES_LIGHT } from "@rasoipulse/config-schema";
 
 /**
  * Dressing real storefront components in a store's own look inside the admin:
@@ -17,7 +17,7 @@ export function useEffectCss(effect) {
       setCss("");
       return undefined;
     }
-    import("@onetap/ui/effects")
+    import("@rasoipulse/ui/effects")
       .then(({ loadEffectCss }) => loadEffectCss(effect, { scope: "[data-fx-preview]", page: "[data-fx-preview]" }))
       .then((c) => live && setCss(c))
       .catch(() => live && setCss(""));

@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { WA_MESSAGE_SOURCES, WA_MESSAGE_STATUSES, WA_MESSAGE_TYPES } from "@onetap/config-schema";
+import { WA_MESSAGE_SOURCES, WA_MESSAGE_STATUSES, WA_MESSAGE_TYPES } from "@rasoipulse/config-schema";
 import { tenantScope } from "../tenant-scope.js";
 
 const { Schema, model, models } = mongoose;

@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { computeProfitLoss, daysBetween } from "@onetap/config-schema";
+import { computeProfitLoss, daysBetween } from "@rasoipulse/config-schema";
 import { Calculator, CloudUpload, Plus, Trash2 } from "lucide-react";
 import { defaultLines, useAn, useAnFilters, useAnOptions, useFinanceProfile } from "../../lib/useAnalytics";
 import { Button, Card, Field, Note, TextInput } from "../../ui";

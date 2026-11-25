@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { formatINR } from "@onetap/config-schema";
+import { formatINR } from "@rasoipulse/config-schema";
 import { ArrowLeft, BadgeCheck, Coins, DoorOpen, Minus, Plus, Send, ShieldCheck, Sparkles, UserRound } from "lucide-react";
 import * as api from "../../lib/api";
 import { useCloseSession } from "../../lib/useTables";

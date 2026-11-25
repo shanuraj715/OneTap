@@ -1,6 +1,6 @@
 import { Router, raw } from "express";
 import { z } from "zod";
-import { IMAGE_RULES } from "@onetap/config-schema";
+import { IMAGE_RULES } from "@rasoipulse/config-schema";
 import { requireOutletContext } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import { putImage, removeObject } from "./storage.service.js";

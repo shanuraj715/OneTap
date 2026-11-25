@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { PAGE_STATUSES } from "@onetap/config-schema";
+import { PAGE_STATUSES } from "@rasoipulse/config-schema";
 import { tenantScope } from "../tenant-scope.js";
 import { writeEvents } from "../write-events.js";
 

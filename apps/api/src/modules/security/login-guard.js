@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { isIP } from "node:net";
 import { ipKeyGenerator, rateLimit } from "express-rate-limit";
-import { LoginGuardModel } from "@onetap/db";
+import { LoginGuardModel } from "@rasoipulse/db";
 import { env } from "../../env.js";
 import { HttpError } from "../../middleware/error.js";
 

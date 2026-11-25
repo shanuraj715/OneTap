@@ -278,7 +278,7 @@ export async function openWatch({ mobile = false, slow: slowOpt = 1, geolocation
 async function callApi(ctx, method, path, { body, outlet, brand } = {}) {
   const r = await ctx.fetch(BENCH.api + path, {
     method,
-    headers: { ...(outlet ? { "x-onetap-outlet": outlet } : {}), ...(brand ? { "x-onetap-brand": brand } : {}) },
+    headers: { ...(outlet ? { "x-rasoipulse-outlet": outlet } : {}), ...(brand ? { "x-rasoipulse-brand": brand } : {}) },
     ...(body ? { data: body } : {}),
   });
   let json = null;

@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { DatePickerInput, formatDate } from "@onetap/ui";
+import { DatePickerInput, formatDate } from "@rasoipulse/ui";
 import { Eraser } from "lucide-react";
 import * as api from "../../lib/api";
 import { useOutlet } from "../../lib/useOutlet";

@@ -8,8 +8,8 @@ import {
   istParts,
   parseHHMM,
   renderTemplate,
-} from "@onetap/config-schema";
-import { BrandModel, CartModel, CartReminderModel, CustomerModel, OutletModel, tenantFilter } from "@onetap/db";
+} from "@rasoipulse/config-schema";
+import { BrandModel, CartModel, CartReminderModel, CustomerModel, OutletModel, tenantFilter } from "@rasoipulse/db";
 import { env } from "../../env.js";
 import { logger } from "../../logger.js";
 import { HttpError } from "../../middleware/error.js";

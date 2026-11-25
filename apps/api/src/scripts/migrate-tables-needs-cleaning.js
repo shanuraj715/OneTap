@@ -5,7 +5,7 @@
  *   node src/scripts/migrate-tables-needs-cleaning.js          (dry run: says how many it would change)
  *   node src/scripts/migrate-tables-needs-cleaning.js --apply
  */
-import { connectDb, disconnectDb, TableModel } from "@onetap/db";
+import { connectDb, disconnectDb, TableModel } from "@rasoipulse/db";
 import { env } from "../env.js";
 
 const apply = process.argv.includes("--apply");

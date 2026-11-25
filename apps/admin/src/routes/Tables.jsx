@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
                                            
 import { useMutation } from "@tanstack/react-query";
 import { Link } from "../lib/nav";
-import { formatINR, TABLE_STATUS_LABELS,                              } from "@onetap/config-schema";
+import { formatINR, TABLE_STATUS_LABELS,                              } from "@rasoipulse/config-schema";
 import { getTableQr, rotateTableQr,                    } from "../lib/api";
 import { useAuth } from "../lib/useAuth";
 import { useOutlet } from "../lib/useOutlet";

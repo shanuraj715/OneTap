@@ -47,7 +47,7 @@ export function PlatformDashboard() {
     <PageHeader
       title="Dashboard"
       icon={<LayoutDashboard size={23} />}
-      subtitle="Every store on TablePe at a glance."
+      subtitle="Every store on Rasoi Pulse at a glance."
       action={
         <div style={{ display: "flex", alignItems: "center" }}>
           {d ? (
@@ -245,7 +245,7 @@ export function PlatformDashboard() {
         </div>
 
         <div className="dash-2">
-          <Card title="Subscriptions, estimated" subtitle="Each plan's listed monthly price × the stores on it. There is no billing in TablePe yet, so this is not money received and has no history.">
+          <Card title="Subscriptions, estimated" subtitle="Each plan's listed monthly price × the stores on it. There is no billing in Rasoi Pulse yet, so this is not money received and has no history.">
             <div style={{ display: "flex", gap: 28, flexWrap: "wrap", marginBottom: 12 }}>
               <div>
                 <div style={muted}>Per month</div>

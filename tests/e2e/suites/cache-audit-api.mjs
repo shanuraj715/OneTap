@@ -56,7 +56,7 @@ const mkStore = async (name, slug, host, email) => {
 const A = await mkStore("Acme", "acme", "acme.test", "o@acme.test");
 const B = await mkStore("Beta", "beta", "beta.test", "o@beta.test");
 const ownerA = await login("o@acme.test", "Owner123!");
-const hdr = (s) => ({ "x-onetap-outlet": s.outlet, "x-onetap-brand": s.brand });
+const hdr = (s) => ({ "x-rasoipulse-outlet": s.outlet, "x-rasoipulse-brand": s.brand });
 const own = (method, path, body) => call(method, path, { cookie: ownerA, headers: hdr(A), body });
 const mkUser = async (email, role) => { await must(call("POST", "/api/users", { cookie: ownerA, headers: hdr(A), body: { email, name: role, password: "Password123!", role } }), email); return { cookie: await login(email, "Password123!"), email }; };
 

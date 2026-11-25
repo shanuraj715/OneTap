@@ -1,6 +1,6 @@
 "use client";
 
-import { fx } from "@onetap/ui";
+import { fx } from "@rasoipulse/ui";
 
 /**
  * The +/− quantity control. Shared between the item customiser (still a

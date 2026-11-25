@@ -1,4 +1,4 @@
-import { renderMarkdown, safeHref } from "@onetap/config-schema";
+import { renderMarkdown, safeHref } from "@rasoipulse/config-schema";
 import { fx } from "./fx";
 import { getVariant } from "./registry";
 
@@ -11,7 +11,7 @@ import { getVariant } from "./registry";
  *   layout   the store's look choices, for the FAQ and carousel styles
  *   preview  in the editor: an empty photo shows a placeholder instead of nothing
  *
- * Text is Markdown, rendered by the same escape-first renderer the TablePe website uses, so whatever is typed can
+ * Text is Markdown, rendered by the same escape-first renderer the Rasoi Pulse website uses, so whatever is typed can
  * never carry a script; links are checked again here before they become `<a>`.
  */
 

@@ -1,4 +1,4 @@
-import { BrandModel } from "@onetap/db";
+import { BrandModel } from "@rasoipulse/db";
 import { HttpError } from "../../middleware/error.js";
 import { cache, expireEverything, expireStore } from "../cache/cache.js";
 import { platformConfig, savePlatformConfig } from "../cache/platform-config.js";

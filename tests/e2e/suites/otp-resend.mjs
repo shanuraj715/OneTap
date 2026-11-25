@@ -32,7 +32,7 @@ const raw = (c) => db.mongoose.connection.db.collection(c);
 const base = `http://127.0.0.1:${PORT}`;
 let OUTLET = null;
 const call = async (method, path, { body, cookie } = {}) => {
-  const r = await fetch(base + path, { method, headers: { "content-type": "application/json", ...(cookie ? { cookie } : {}), ...(OUTLET ? { "x-onetap-outlet": OUTLET } : {}) }, body: body ? JSON.stringify(body) : undefined });
+  const r = await fetch(base + path, { method, headers: { "content-type": "application/json", ...(cookie ? { cookie } : {}), ...(OUTLET ? { "x-rasoipulse-outlet": OUTLET } : {}) }, body: body ? JSON.stringify(body) : undefined });
   const text = await r.text(); let json = {}; try { json = JSON.parse(text); } catch {}
   return { status: r.status, json, headers: r.headers };
 };

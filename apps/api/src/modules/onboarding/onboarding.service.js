@@ -11,8 +11,8 @@ import {
   planFit,
   slugifyName,
   validateOnboarding,
-} from "@onetap/config-schema";
-import { BrandModel, OnboardingModel, PlanModel, PricingModel, UserModel } from "@onetap/db";
+} from "@rasoipulse/config-schema";
+import { BrandModel, OnboardingModel, PlanModel, PricingModel, UserModel } from "@rasoipulse/db";
 import { HttpError } from "../../middleware/error.js";
 import { assertHostnamesFree, normalizeHostnames } from "../outlets/domains.js";
 import { checkLabel } from "../outlets/subdomains.js";
@@ -129,7 +129,7 @@ export async function serverChecks(data) {
   const out = [];
   const storeSlug = slugifyName(data.business.storeName);
   if (storeSlug && (await BrandModel.exists({ slug: storeSlug }))) {
-    out.push({ path: "business.storeName", message: `A store called “${storeSlug}” already exists on TablePe — change the store's name.` });
+    out.push({ path: "business.storeName", message: `A store called “${storeSlug}” already exists on Rasoi Pulse — change the store's name.` });
   }
   const label = onboardingSubdomain(data);
   if (label) {
@@ -147,7 +147,7 @@ export async function serverChecks(data) {
   }
   const email = data.business.ownerEmail.trim().toLowerCase();
   if (email && (await UserModel.exists({ email }))) {
-    out.push({ path: "business.ownerEmail", message: "That email already has a TablePe account. Use a different email for this owner (it becomes their sign-in)." });
+    out.push({ path: "business.ownerEmail", message: "That email already has a Rasoi Pulse account. Use a different email for this owner (it becomes their sign-in)." });
   }
   return out;
 }

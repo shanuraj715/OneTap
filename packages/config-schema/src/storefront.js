@@ -3,7 +3,7 @@ import { z } from "zod";
 /**
  * What a store owner configures for the pieces that sit around the menu on the storefront: the message bar above
  * the header, the promo carousel, and the order-type switch. Which STYLE each one uses (a variant id from the
- * registry in @onetap/ui) lives in `layout` with every other look choice; what they SAY lives here.
+ * registry in @rasoipulse/ui) lives in `layout` with every other look choice; what they SAY lives here.
  */
 
 /* ----------------------------------------------------------------- links */
@@ -97,7 +97,7 @@ export const emptyCarouselSlide = () => carouselSlideSchema.parse({ id: newId("s
 /** How a visitor wants their order: remembered on their device and carried into checkout. */
 export const ORDER_TYPES = ["takeaway", "delivery"];
 export const ORDER_TYPE_LABELS = { takeaway: "Takeaway", delivery: "Delivery" };
-export const ORDER_TYPE_STORAGE_KEY = "onetap.orderType";
+export const ORDER_TYPE_STORAGE_KEY = "rasoipulse.orderType";
 
 /**
  * Which order types an outlet offers on the storefront (dine-in only ever comes from a table QR).

@@ -1,5 +1,5 @@
 {
-  "name": "@onetap/api",
+  "name": "@rasoipulse/api",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -11,8 +11,8 @@
     "clean": "rm -rf dist .turbo"
   },
   "dependencies": {
-    "@onetap/config-schema": "workspace:*",
-    "@onetap/db": "workspace:*",
+    "@rasoipulse/config-schema": "workspace:*",
+    "@rasoipulse/db": "workspace:*",
     "@whiskeysockets/baileys": "7.0.0-rc14",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",

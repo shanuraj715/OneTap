@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { MARKETING_CHANNELS } from "@onetap/config-schema";
+import { MARKETING_CHANNELS } from "@rasoipulse/config-schema";
 import { tenantScope } from "../tenant-scope.js";
 
 const { Schema, model, models } = mongoose;

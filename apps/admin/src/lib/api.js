@@ -49,7 +49,7 @@ export class ApiError extends Error {
   }
 }
 
-/** True when the API turned someone away because TablePe has switched their whole store off. */
+/** True when the API turned someone away because Rasoi Pulse has switched their whole store off. */
 export const isStoreDisabledError = (error) => error instanceof ApiError && error.status === 403 && error.details?.code === "store_disabled";
 
 ;                                                       
@@ -60,8 +60,8 @@ export const isStoreDisabledError = (error) => error instanceof ApiError && erro
 
 async function req   (path        , init          = {})             {
   const headers                         = { "content-type": "application/json", ...init.headers };
-  if (init.outletId) headers["x-onetap-outlet"] = init.outletId;
-  if (init.brandId) headers["x-onetap-brand"] = init.brandId;
+  if (init.outletId) headers["x-rasoipulse-outlet"] = init.outletId;
+  if (init.brandId) headers["x-rasoipulse-brand"] = init.brandId;
 
   const res = await fetch(`${API_BASE}${path}`, {
     ...init,
@@ -103,7 +103,7 @@ export const me = () => req                       ("/api/auth/me");
 
 // brandId is only ever needed for a superadmin — everyone else's session
 // already carries their one brandId server-side, and requireBrandContext
-// falls back to it when no x-onetap-brand header is sent.
+// falls back to it when no x-rasoipulse-brand header is sent.
 export const listUsers = (brandId          ) => req                        ("/api/users", { brandId });
 
 export const createUser = (body                                                               , brandId          ) =>
@@ -787,7 +787,7 @@ export const addStoreOwner = (id, body) => req(`/api/platform/stores/${id}/owner
 export const updateStoreOwner = (id, userId, body) => req(`/api/platform/stores/${id}/owners/${userId}`, json("PATCH", body));
 export const removeStoreOwner = (id, userId) => req(`/api/platform/stores/${id}/owners/${userId}`, json("DELETE"));
 
-/* ---------------------------------------------------- TablePe website (platform) */
+/* ---------------------------------------------------- Rasoi Pulse website (platform) */
 
 export const getSiteSettings = () => req("/api/platform/site/settings");
 export const saveSiteSettings = (body) => req("/api/platform/site/settings", json("PUT", body));
@@ -875,17 +875,17 @@ export const an = (o, kind, params) => req(`/api/analytics/${kind}${anQuery(para
 export const anSaveProfile = (o, data) => req("/api/analytics/profile", { method: "PUT", body: JSON.stringify({ data }), outletId: o._id });
 /** Ask for a report file; resolves to { blob, filename } so the browser can save it. */
 export async function anExport(o, body) {
-  const res = await fetch(`${API_BASE}/api/analytics/export`, { method: "POST", credentials: "include", headers: { "content-type": "application/json", "x-onetap-outlet": o._id }, body: JSON.stringify(body) });
+  const res = await fetch(`${API_BASE}/api/analytics/export`, { method: "POST", credentials: "include", headers: { "content-type": "application/json", "x-rasoipulse-outlet": o._id }, body: JSON.stringify(body) });
   if (!res.ok) {
     const j = await res.json().catch(() => ({}));
     throw new ApiError(res.status, j.error ?? `The report could not be made (${res.status})`, j.details);
   }
-  const name = /filename="?([^"]+)"?/.exec(res.headers.get("content-disposition") ?? "")?.[1] ?? "tablepe-report";
+  const name = /filename="?([^"]+)"?/.exec(res.headers.get("content-disposition") ?? "")?.[1] ?? "rasoipulse-report";
   return { blob: await res.blob(), filename: name };
 }
 
 /* --------------------------------------------------------------- client onboarding */
-// The requirement forms a TablePe representative fills with a new client, and publishing one as a store (platform console).
+// The requirement forms a Rasoi Pulse representative fills with a new client, and publishing one as a store (platform console).
 export const listOnboarding = (status) => req(`/api/platform/onboarding${status ? `?status=${encodeURIComponent(status)}` : ""}`);
 export const getOnboarding = (id) => req(`/api/platform/onboarding/${id}`);
 export const createOnboarding = (data) => req("/api/platform/onboarding", json("POST", { data }));

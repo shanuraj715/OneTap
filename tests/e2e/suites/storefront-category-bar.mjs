@@ -14,7 +14,7 @@ const cookie = await login();
 const outletsRes = await (await fetch(`${API}/api/outlets`, { headers: { cookie } })).json();
 const outlet = String((outletsRes.outlets ?? outletsRes).find((o) => o.slug === "main")?._id ?? (outletsRes.outlets ?? outletsRes).find((o) => o.slug === "main")?.id);
 const call = async (method, path, body) => {
-  const r = await fetch(API + path, { method, headers: { "content-type": "application/json", cookie, "x-onetap-outlet": outlet }, body: body ? JSON.stringify(body) : undefined });
+  const r = await fetch(API + path, { method, headers: { "content-type": "application/json", cookie, "x-rasoipulse-outlet": outlet }, body: body ? JSON.stringify(body) : undefined });
   let json = {}; try { json = await r.json(); } catch {}
   return { status: r.status, json };
 };

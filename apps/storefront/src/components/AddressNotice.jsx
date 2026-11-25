@@ -33,13 +33,13 @@ export async function NoRestaurantHere({ host }) {
   const links = await getPlatformLinks();
   return (
     <main className="addr">
-      <title>No restaurant at this address — TablePe</title>
+      <title>No restaurant at this address — Rasoi Pulse</title>
       <div className="addr-card">
         <Icon>
           <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
           <path d="M9.5 8.5 14.5 13.5M14.5 8.5l-5 5" />
         </Icon>
-        <p className="addr-brand">TablePe</p>
+        <p className="addr-brand">Rasoi Pulse</p>
         <h1 className="addr-title">We couldn’t find a restaurant here</h1>
         {host ? (
           <p className="addr-host" translate="no">
@@ -47,13 +47,13 @@ export async function NoRestaurantHere({ host }) {
           </p>
         ) : null}
         <p className="addr-text">
-          This address isn’t linked to any restaurant on TablePe. The link may have a typing mistake, or the restaurant may have moved to a new address.
+          This address isn’t linked to any restaurant on Rasoi Pulse. The link may have a typing mistake, or the restaurant may have moved to a new address.
         </p>
         <p className="addr-text">Check the spelling, or ask the restaurant for their current link — or scan the QR code on their table.</p>
         {links ? (
           <div className="addr-actions">
             <a className="addr-btn addr-btn-primary" href={links.websiteUrl}>
-              Go to TablePe
+              Go to Rasoi Pulse
             </a>
             <a className="addr-btn addr-btn-outline" href={links.contactUrl}>
               Contact us

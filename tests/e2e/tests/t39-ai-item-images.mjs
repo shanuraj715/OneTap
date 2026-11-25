@@ -145,7 +145,7 @@ export async function run(d) {
   await d.page.locator('[data-testid="item-row"][data-item="Veg Steamed Momos"]').waitFor({ timeout: 10000 });
   d.check("the owner sees the dishes but no sparkles button on any of them", (await d.page.locator('[data-testid="item-row"]').count()) > 0 && (await d.page.getByTestId("ai-button").count()) === 0);
   d.check("…and no AI pop-up trigger anywhere on the page", !/Make pictures with AI/.test(await ui.text(d)));
-  const refused = await fetch(`${BENCH.api}/api/menu/items/${dish.id}/generate-images`, { method: "POST", headers: { "content-type": "application/json", cookie: ownerCookie, "x-onetap-outlet": outletId }, body: JSON.stringify({ aspectRatio: "4:3", count: 1 }) });
+  const refused = await fetch(`${BENCH.api}/api/menu/items/${dish.id}/generate-images`, { method: "POST", headers: { "content-type": "application/json", cookie: ownerCookie, "x-rasoipulse-outlet": outletId }, body: JSON.stringify({ aspectRatio: "4:3", count: 1 }) });
   const keysRefused = await fetch(`${BENCH.api}/api/platform/ai`, { headers: { cookie: ownerCookie } });
   d.check("the API refuses the owner too (403 for making pictures and for the key list)", refused.status === 403 && keysRefused.status === 403, `${refused.status}/${keysRefused.status}`);
   d.check("Google was not asked again", (await (await fetch(`${GOOGLE}/__calls`)).json()).length === asked.length);
@@ -160,5 +160,5 @@ export async function run(d) {
     await d.click(d.page.getByTestId("ai-key").filter({ hasText: label }).getByRole("button", { name: /Remove/ }), { after: 700 });
   }
   d.check("both keys can be removed", await ui.until(async () => (await d.page.getByTestId("ai-key").count()) === 0 && /No key yet/.test(await ui.text(d)), 10000));
-  await fetch(`${BENCH.api}/api/menu/items/${dish.id}`, { method: "PATCH", headers: { "content-type": "application/json", cookie: ownerCookie, "x-onetap-outlet": outletId }, body: JSON.stringify({ images: originalImages }) });
+  await fetch(`${BENCH.api}/api/menu/items/${dish.id}`, { method: "PATCH", headers: { "content-type": "application/json", cookie: ownerCookie, "x-rasoipulse-outlet": outletId }, body: JSON.stringify({ images: originalImages }) });
 }

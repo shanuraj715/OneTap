@@ -1,7 +1,7 @@
 import ExcelJS from "exceljs";
 import PDFDocument from "pdfkit";
-import { computeProfitLoss, dayEnd, dayKey, dayStart, daysBetween, EXPORT_SECTIONS } from "@onetap/config-schema";
-import { OrderModel } from "@onetap/db";
+import { computeProfitLoss, dayEnd, dayKey, dayStart, daysBetween, EXPORT_SECTIONS } from "@rasoipulse/config-schema";
+import { OrderModel } from "@rasoipulse/db";
 import * as svc from "./analytics.service.js";
 
 /**
@@ -137,7 +137,7 @@ export async function buildReport(ctx, input, outlets, { canFinance }) {
     add("pnl", "Profit & loss", [{ key: "line", label: "", kind: "text" }, { key: "amount", label: "Amount (₹)", kind: "auto" }], rows);
   }
 
-  return { title: "TablePe report", range, days: daysBetween(range.from, range.to), scopeLabel, generated: new Date(), sections, kpis: k };
+  return { title: "Rasoi Pulse report", range, days: daysBetween(range.from, range.to), scopeLabel, generated: new Date(), sections, kpis: k };
 }
 const round2 = (n) => Math.round(n * 100) / 100;
 
@@ -157,7 +157,7 @@ export function toCsv(section) {
 const FMT = { money: '"₹"#,##0.00', int: "#,##0", dec: "#,##0.0", pct: "0.0%", pctPoints: '0.0"%"' };
 export async function toXlsx(report) {
   const wb = new ExcelJS.Workbook();
-  wb.creator = "TablePe";
+  wb.creator = "Rasoi Pulse";
   wb.created = report.generated;
   for (const s of report.sections) {
     const ws = wb.addWorksheet(s.title.replace(/[\\/?*[\]:]/g, " ").slice(0, 31), { views: [{ state: "frozen", ySplit: 1 }] });
@@ -185,14 +185,14 @@ export async function toXlsx(report) {
 const money = (n) => `Rs ${new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(Math.round(n))}`;
 export function toPdf(report) {
   return new Promise((resolve, reject) => {
-    const doc = new PDFDocument({ size: "A4", margin: 40, info: { Title: `TablePe report ${report.range.from} to ${report.range.to}`, Author: "TablePe" } });
+    const doc = new PDFDocument({ size: "A4", margin: 40, info: { Title: `Rasoi Pulse report ${report.range.from} to ${report.range.to}`, Author: "Rasoi Pulse" } });
     const chunks = [];
     doc.on("data", (c) => chunks.push(c));
     doc.on("end", () => resolve(Buffer.concat(chunks)));
     doc.on("error", reject);
     const W = doc.page.width - 80;
     const red = "#b42318";
-    doc.fillColor(red).fontSize(22).text("TablePe", { continued: true }).fillColor("#111").fontSize(22).text("  report");
+    doc.fillColor(red).fontSize(22).text("Rasoi Pulse", { continued: true }).fillColor("#111").fontSize(22).text("  report");
     doc.fontSize(11).fillColor("#555").text(`${report.range.from}  to  ${report.range.to}  (${report.days} day${report.days === 1 ? "" : "s"})`);
     doc.text(`${report.scopeLabel}  ·  made ${report.generated.toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })}`);
     doc.moveDown(0.8);

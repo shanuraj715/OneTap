@@ -34,7 +34,7 @@ export function WebsiteTabs({ active }) {
   );
 }
 
-/** Every page of the TablePe website — status, menu placement, and where to edit it. */
+/** Every page of the Rasoi Pulse website — status, menu placement, and where to edit it. */
 export function WebsitePages() {
   const pages = useSitePages();
   const settings = useSiteSettings().data?.settings;
@@ -50,7 +50,7 @@ export function WebsitePages() {
       <PageHeader
         title="Website"
         icon={<Globe size={23} />}
-        subtitle="TablePe's own website — the pages restaurants find on Google."
+        subtitle="Rasoi Pulse's own website — the pages restaurants find on Google."
         action={
           <span style={{ display: "flex", gap: 8 }}>
             <a href={base} target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>

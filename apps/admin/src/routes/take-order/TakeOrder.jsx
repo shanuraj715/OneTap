@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "../../lib/nav";
-import { formatINR } from "@onetap/config-schema";
+import { formatINR } from "@rasoipulse/config-schema";
 import { ArrowLeft, ChevronDown, CircleCheckBig, ConciergeBell, ShoppingBag } from "lucide-react";
 import { useAuth } from "../../lib/useAuth";
 import { useMenu } from "../../lib/useMenu";

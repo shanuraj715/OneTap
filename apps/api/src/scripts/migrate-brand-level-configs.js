@@ -1,4 +1,4 @@
-import { connectDb, disconnectDb, NotificationCredentialModel, StorageConfigModel } from "@onetap/db";
+import { connectDb, disconnectDb, NotificationCredentialModel, StorageConfigModel } from "@rasoipulse/db";
 import { env } from "../env.js";
 import { logger } from "../logger.js";
 

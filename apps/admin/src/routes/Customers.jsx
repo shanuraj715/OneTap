@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CUSTOMER_GENDER_LABELS } from "@onetap/config-schema";
+import { CUSTOMER_GENDER_LABELS } from "@rasoipulse/config-schema";
 import { ChevronDown, ChevronRight, Coins, Search, Users as UsersIcon } from "lucide-react";
 import { useAuth } from "../lib/useAuth";
 import { useCustomers, useCustomerWallet } from "../lib/useCustomers";

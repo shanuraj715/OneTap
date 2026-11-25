@@ -1,4 +1,4 @@
-import { BrandModel, LoginLogModel } from "@onetap/db";
+import { BrandModel, LoginLogModel } from "@rasoipulse/db";
 import { logger } from "../../logger.js";
 import { tooMany } from "../site/guard.js";
 

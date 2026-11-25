@@ -19,8 +19,8 @@ import {
   WA_NUMBER_COLORS,
   WA_REVOKE_HOURS,
   WA_CODE_REDACTED,
-} from "@onetap/config-schema";
-import { BrandModel, CustomerModel, WaAccountModel, WaCampaignModel, WaChatModel, WaMessageModel } from "@onetap/db";
+} from "@rasoipulse/config-schema";
+import { BrandModel, CustomerModel, WaAccountModel, WaCampaignModel, WaChatModel, WaMessageModel } from "@rasoipulse/db";
 import { logger } from "../../logger.js";
 import { HttpError } from "../../middleware/error.js";
 import { requireOutletContext } from "../../middleware/auth.js";

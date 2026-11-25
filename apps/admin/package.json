@@ -1,5 +1,5 @@
 {
-  "name": "@onetap/admin",
+  "name": "@rasoipulse/admin",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -10,8 +10,8 @@
     "clean": "rm -rf dist .turbo"
   },
   "dependencies": {
-    "@onetap/config-schema": "workspace:*",
-    "@onetap/ui": "workspace:*",
+    "@rasoipulse/config-schema": "workspace:*",
+    "@rasoipulse/ui": "workspace:*",
     "@tanstack/react-query": "^5.62.11",
     "lucide-react": "^1.39.0",
     "qrcode": "^1.5.4",

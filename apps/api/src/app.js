@@ -123,7 +123,7 @@ export function createApp()          {
   app.use("/health", healthRouter);
   app.use("/api/auth", authRouter);
   app.use("/api/brands", brandsRouter);
-  // the TablePe website: public content + the super admin's management of it
+  // the Rasoi Pulse website: public content + the super admin's management of it
   app.use("/api/site", siteRouter);
   app.use("/api/platform/site", platformSiteRouter);
   app.use("/api/platform", platformRouter);

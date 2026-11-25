@@ -17,7 +17,7 @@ export function pageMetadata(page, settings, { preview = false } = {}) {
     `/og?${new URLSearchParams({ title: page.slug === "home" ? settings.tagline : title, brand: settings.brandName, color: settings.brandColor })}`;
 
   return {
-    // the home page's title stands on its own; every other page goes through the template ("Pricing · TablePe")
+    // the home page's title stands on its own; every other page goes through the template ("Pricing · Rasoi Pulse")
     title: page.slug === "home" ? { absolute: title } : title,
     description,
     alternates: { canonical: path },

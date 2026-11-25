@@ -37,7 +37,7 @@ export function WebsiteSettings() {
 
   return (
     <>
-      <PageHeader title="Website settings" icon={<Globe size={23} />} subtitle="Shown on every page of the TablePe website." />
+      <PageHeader title="Website settings" icon={<Globe size={23} />} subtitle="Shown on every page of the Rasoi Pulse website." />
       <WebsiteTabs active="settings" />
 
       <div style={{ position: "sticky", top: STICKY_HEADER_CLEARANCE, zIndex: 4, background: "var(--color-bg)", padding: "8px 0 12px", display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
@@ -68,7 +68,7 @@ export function WebsiteSettings() {
             value={draft.siteUrl}
             onChange={(v) => set({ siteUrl: v.trim() })}
             max={200}
-            placeholder="https://tablepe.com"
+            placeholder="https://rasoipulse.com"
             hint="The address the website is live on. Used for links Google and social networks see, and the sitemap."
           />
         </div>
@@ -79,7 +79,7 @@ export function WebsiteSettings() {
           <Row>
             <Text label="Phone" value={draft.contact.phone} onChange={(v) => contact({ phone: v })} max={30} placeholder="+91 98xxx xxxxx" />
             <Text label="WhatsApp number" value={draft.contact.whatsapp} onChange={(v) => contact({ whatsapp: v })} max={30} placeholder="98xxx xxxxx" />
-            <Text label="Email" value={draft.contact.email} onChange={(v) => contact({ email: v })} max={120} placeholder="hello@tablepe.com" />
+            <Text label="Email" value={draft.contact.email} onChange={(v) => contact({ email: v })} max={120} placeholder="hello@rasoipulse.com" />
           </Row>
           <Row>
             <Text label="Address" value={draft.contact.address} onChange={(v) => contact({ address: v })} max={300} />
@@ -88,7 +88,7 @@ export function WebsiteSettings() {
         </div>
       </Card>
 
-      <Card title="Social links" subtitle="Full addresses, e.g. https://instagram.com/tablepe">
+      <Card title="Social links" subtitle="Full addresses, e.g. https://instagram.com/rasoipulse">
         <Row>
           <Text label="Instagram" value={draft.social.instagram} onChange={(v) => social({ instagram: v })} max={300} />
           <Text label="Facebook" value={draft.social.facebook} onChange={(v) => social({ facebook: v })} max={300} />
@@ -100,7 +100,7 @@ export function WebsiteSettings() {
 
       <Card title="Search defaults" subtitle="Used by any page that doesn't set its own.">
         <div style={stack}>
-          <Text label="Title pattern" value={draft.seo.titleTemplate} onChange={(v) => seo({ titleTemplate: v })} max={80} hint='"%s" becomes the page title — e.g. "%s · TablePe" gives "Pricing · TablePe".' />
+          <Text label="Title pattern" value={draft.seo.titleTemplate} onChange={(v) => seo({ titleTemplate: v })} max={80} hint='"%s" becomes the page title — e.g. "%s · Rasoi Pulse" gives "Pricing · Rasoi Pulse".' />
           <Text label="Description" value={draft.seo.description} onChange={(v) => seo({ description: v })} max={170} multiline rows={2} />
           <ImageField label="Share image (optional)" value={draft.seo.ogImage} onChange={(v) => seo({ ogImage: v })} withAlt={false} />
         </div>

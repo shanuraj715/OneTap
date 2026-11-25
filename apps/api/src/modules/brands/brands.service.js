@@ -1,8 +1,8 @@
-import { defaultOutletConfig, isReservedOutletSlug, slugSchema } from "@onetap/config-schema";
-import { BrandModel, OutletModel, PlanModel } from "@onetap/db";
+import { defaultOutletConfig, isReservedOutletSlug, slugSchema } from "@rasoipulse/config-schema";
+import { BrandModel, OutletModel, PlanModel } from "@rasoipulse/db";
 import { HttpError } from "../../middleware/error.js";
 import { ensureOwner } from "../auth/auth.service.js";
-import { resolvePlan } from "@onetap/config-schema";
+import { resolvePlan } from "@rasoipulse/config-schema";
 import { assertHostnamesFree, configuredBase, normalizeHostnames } from "../outlets/domains.js";
 import { assertOwnDomainsAllowed, normalizeLabel } from "../outlets/subdomains.js";
 
@@ -36,14 +36,14 @@ export async function createBrand(input) {
   }
 
   // The store's addresses, checked before anything is created: an own domain needs the plan's
-  // "Own domain name" feature; a TablePe address needs the base domain to be set up.
+  // "Own domain name" feature; a Rasoi Pulse address needs the base domain to be set up.
   const subdomainBase = configuredBase();
   const ownDomains = normalizeHostnames(input.hostnames);
   assertOwnDomainsAllowed(ownDomains, { entitlements: resolvePlan(plan, {}).entitlements, base: subdomainBase, planName: plan?.name });
-  let tablepeAddress = "";
+  let rasoiPulseAddress = "";
   if (input.subdomain?.trim()) {
-    if (!subdomainBase) throw new HttpError(400, "This server has no base domain for store addresses. Set STORE_SUBDOMAIN_BASE (for example tablepe.in) in the API's .env and restart it.");
-    tablepeAddress = `${normalizeLabel(input.subdomain)}.${subdomainBase}`;
+    if (!subdomainBase) throw new HttpError(400, "This server has no base domain for store addresses. Set STORE_SUBDOMAIN_BASE (for example rasoipulse.in) in the API's .env and restart it.");
+    rasoiPulseAddress = `${normalizeLabel(input.subdomain)}.${subdomainBase}`;
   }
 
   const brand = await BrandModel.create({
@@ -56,8 +56,8 @@ export async function createBrand(input) {
   // A brand with no outlet or no owner is useless and confusing to leave
   // behind — best-effort clean up if anything after this point fails.
   try {
-    // an own domain, when there is one, is the main address; the TablePe address works alongside it
-    const hostnames = [...new Set([...ownDomains, ...(tablepeAddress ? [tablepeAddress] : [])])];
+    // an own domain, when there is one, is the main address; the Rasoi Pulse address works alongside it
+    const hostnames = [...new Set([...ownDomains, ...(rasoiPulseAddress ? [rasoiPulseAddress] : [])])];
     await assertHostnamesFree(hostnames, brand._id);
     const config = defaultOutletConfig();
     config.identity.name = input.outletName;

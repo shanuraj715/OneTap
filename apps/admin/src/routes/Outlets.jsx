@@ -18,7 +18,7 @@ export function Outlets() {
   const remove = useDeleteOutlet();
   const [modal, setModal] = useState(null); // "create" | outlet object to edit | null
   const { canAddOutlet, outletLimitReason } = useStorePlan();
-  // TablePe (the super admin) can always add — the platform console shows the store as over its limit.
+  // Rasoi Pulse (the super admin) can always add — the platform console shows the store as over its limit.
   const canAdd = me?.isSuperAdmin || canAddOutlet;
 
   if (!can("outlet:manage")) {
@@ -60,7 +60,7 @@ export function Outlets() {
 
       <Card
         title={`Outlets — ${siblings.length}`}
-        subtitle={canAdd || !outletLimitReason ? undefined : `${outletLimitReason} Ask TablePe to add more.`}
+        subtitle={canAdd || !outletLimitReason ? undefined : `${outletLimitReason} Ask Rasoi Pulse to add more.`}
       >
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {siblings.map((o) => (

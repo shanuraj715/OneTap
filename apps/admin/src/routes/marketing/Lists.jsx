@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { Trash2, Upload, UsersRound } from "lucide-react";
-import { formatWaPhone } from "@onetap/config-schema";
+import { formatWaPhone } from "@rasoipulse/config-schema";
 import * as api from "../../lib/api";
 import { useAuth } from "../../lib/useAuth";
 import { useMkAction, useMkList, useMkLists } from "../../lib/useMarketing";

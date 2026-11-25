@@ -9,7 +9,7 @@ import { ImageResponse } from "next/og";
 export async function GET(request) {
   const q = new URL(request.url).searchParams;
   const title = (q.get("title") || "Restaurant ordering, from table to kitchen.").slice(0, 110);
-  const brand = (q.get("brand") || "TablePe").slice(0, 40);
+  const brand = (q.get("brand") || "Rasoi Pulse").slice(0, 40);
   const color = /^#[0-9a-fA-F]{6}$/.test(q.get("color") ?? "") ? q.get("color") : "#C8372D";
 
   return new ImageResponse(

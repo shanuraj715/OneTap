@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
-import { kdsScreenSchema } from "@onetap/config-schema";
+import { kdsScreenSchema } from "@rasoipulse/config-schema";
 import { requireOutletContext, requireUser } from "../../middleware/auth.js";
 import { requireFeature } from "../platform/plan.service.js";
 import { listKitchenOrders, setKitchenStage } from "./kitchen.service.js";

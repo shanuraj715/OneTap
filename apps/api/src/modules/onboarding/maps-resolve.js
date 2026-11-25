@@ -1,4 +1,4 @@
-import { parseMapsPoint } from "@onetap/config-schema";
+import { parseMapsPoint } from "@rasoipulse/config-schema";
 import { HttpError } from "../../middleware/error.js";
 
 /**
@@ -37,7 +37,7 @@ export async function resolveMapsLink(raw) {
     if (!allowed(url)) throw new HttpError(400, "Only Google Maps links can be opened. Paste a link from Google Maps, or type the coordinates.");
     let res;
     try {
-      res = await fetch(url, { redirect: "manual", signal: AbortSignal.timeout(TIMEOUT_MS), headers: { "user-agent": "Mozilla/5.0 (compatible; TablePeBot/1.0)", accept: "text/html" } });
+      res = await fetch(url, { redirect: "manual", signal: AbortSignal.timeout(TIMEOUT_MS), headers: { "user-agent": "Mozilla/5.0 (compatible; RasoiPulseBot/1.0)", accept: "text/html" } });
     } catch {
       throw new HttpError(502, "Couldn't open that link from the server. Paste the full Google Maps address (open the link in a browser, then copy the address bar), or type the coordinates.");
     }

@@ -3,8 +3,8 @@ import {
   permissionsForRole,
             
                    
-} from "@onetap/config-schema";
-import { SessionModel, UserModel,              } from "@onetap/db";
+} from "@rasoipulse/config-schema";
+import { SessionModel, UserModel,              } from "@rasoipulse/db";
 import { HttpError } from "../../middleware/error.js";
 import { cache } from "../cache/cache.js";
 import { platformConfig } from "../cache/platform-config.js";
@@ -111,7 +111,7 @@ export function toSessionUser(user         )              {
 }
 
 /**
- * `toSessionUser`, plus — for a store's team — whether TablePe has switched their store off. The admin shows
+ * `toSessionUser`, plus — for a store's team — whether Rasoi Pulse has switched their store off. The admin shows
  * that notice instead of the dashboard, so people learn why nothing works rather than meeting a wall of
  * errors. A team member can still sign in to a disabled store for exactly that reason. The platform's own
  * super admin is never affected.

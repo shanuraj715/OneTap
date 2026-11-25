@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { WEEKDAYS } from "@onetap/config-schema";
+import { WEEKDAYS } from "@rasoipulse/config-schema";
 import { Banknote, Percent, ReceiptText, ShoppingBag, Users as UsersIcon, XCircle } from "lucide-react";
 import { useAn, useAnFilters } from "../../lib/useAnalytics";
 import { ColumnChart, Figure, RankedBars, SegmentedBar, StatTile } from "../platform/viz/charts";

@@ -5,8 +5,8 @@ import { writeEvents } from "../write-events.js";
 const { Schema, model, models } = mongoose;
 
 /**
- * The TablePe marketing website. Platform-level (not tenant-scoped): it's
- * TablePe's own site, managed by the platform super admin. Section contents
+ * The Rasoi Pulse marketing website. Platform-level (not tenant-scoped): it's
+ * Rasoi Pulse's own site, managed by the platform super admin. Section contents
  * are validated by `sitePageSchema` / `siteSettingsSchema` (config-schema) in
  * the service, so the stored shapes are Mixed here.
  */

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "../../../lib/nav";
-import { forcedOverrides, onboardingOutletSlug, onboardingSubdomain, FEATURES } from "@onetap/config-schema";
+import { forcedOverrides, onboardingOutletSlug, onboardingSubdomain, FEATURES } from "@rasoipulse/config-schema";
 import { CheckCircle2, KeyRound, Store } from "lucide-react";
 import * as api from "../../../lib/api";
 import { usePlatformMutation } from "../../../lib/usePlatform";

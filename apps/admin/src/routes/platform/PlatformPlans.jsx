@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CARD_TEMPLATE_FAMILIES, EFFECT_IDS, EFFECT_PRESETS, FEATURE_KEYS, FEATURES, planPrices, QR_CARD_FAMILY_IDS } from "@onetap/config-schema";
+import { CARD_TEMPLATE_FAMILIES, EFFECT_IDS, EFFECT_PRESETS, FEATURE_KEYS, FEATURES, planPrices, QR_CARD_FAMILY_IDS } from "@rasoipulse/config-schema";
 import { Layers, Pencil, Plus } from "lucide-react";
 import * as api from "../../lib/api";
 import { usePlans, usePlatformMutation } from "../../lib/usePlatform";

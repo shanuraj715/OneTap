@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
-import { cartSchema } from "@onetap/config-schema";
+import { cartSchema } from "@rasoipulse/config-schema";
 import { requireOutletContext, requireUser } from "../../middleware/auth.js";
 import { wire } from "./orders.service.js";
 import {

@@ -22,7 +22,7 @@ export function PlatformSettings() {
   const socketOn = q.data?.settings.realtimeWebsocket !== false;
   const liveSave = usePlatformMutation((v) => api.updatePlatformSettings({ realtimeWebsocket: v }));
 
-  // the domain stores' TablePe addresses live under — set on the server (STORE_SUBDOMAIN_BASE), not here
+  // the domain stores' Rasoi Pulse addresses live under — set on the server (STORE_SUBDOMAIN_BASE), not here
   const probe = usePlatformMutation(api.probeSubdomains);
   const base = q.data?.settings.subdomainBase ?? "";
 
@@ -81,7 +81,7 @@ export function PlatformSettings() {
       <Card
         title="Store addresses"
         icon={<Globe size={16} />}
-        subtitle="Every store without its own domain opens on a TablePe address — acme.yourdomain.com. You create, rename and remove these on each store's Domains tab; there is nothing to install per store."
+        subtitle="Every store without its own domain opens on a Rasoi Pulse address — acme.yourdomain.com. You create, rename and remove these on each store's Domains tab; there is nothing to install per store."
       >
         {base ? (
           <>
@@ -95,7 +95,7 @@ export function PlatformSettings() {
               </span>
             </div>
             <p style={muted}>
-              This comes from the server's <code>STORE_SUBDOMAIN_BASE</code> setting (production: your real domain, such as <code>tablepe.in</code>; on a developer's machine:
+              This comes from the server's <code>STORE_SUBDOMAIN_BASE</code> setting (production: your real domain, such as <code>rasoipulse.in</code>; on a developer's machine:
               <code> localhost:3070</code>), so local work and production can differ even though they share a database. It's set up once on the server — a wildcard DNS
               record, one wildcard certificate and one nginx block (steps in <code>deploy/wildcard-subdomains.md</code>). After that, no store ever needs server work.
             </p>
@@ -109,7 +109,7 @@ export function PlatformSettings() {
           </>
         ) : (
           <Note>
-            This server has no base domain for store addresses yet. Add <code>STORE_SUBDOMAIN_BASE=tablepe.in</code> to the API's <code>.env</code> and restart it (for local
+            This server has no base domain for store addresses yet. Add <code>STORE_SUBDOMAIN_BASE=rasoipulse.in</code> to the API's <code>.env</code> and restart it (for local
             development use <code>STORE_SUBDOMAIN_BASE=localhost:3070</code>). The steps are in <code>deploy/wildcard-subdomains.md</code>.
           </Note>
         )}

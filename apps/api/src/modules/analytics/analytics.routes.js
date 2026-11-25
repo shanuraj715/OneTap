@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
-import { analyticsRangeSchema, permissionsForRole, DEFAULT_FOOD_COST_PCT, DEFAULT_STOCK_SAFETY_PCT, EXPORT_FORMATS, exportRequestSchema, EXPORT_SECTIONS, presetRange } from "@onetap/config-schema";
-import { AnalyticsProfileModel, BrandModel } from "@onetap/db";
+import { analyticsRangeSchema, permissionsForRole, DEFAULT_FOOD_COST_PCT, DEFAULT_STOCK_SAFETY_PCT, EXPORT_FORMATS, exportRequestSchema, EXPORT_SECTIONS, presetRange } from "@rasoipulse/config-schema";
+import { AnalyticsProfileModel, BrandModel } from "@rasoipulse/db";
 import { requireOutletContext } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import { requireFeature } from "../platform/plan.service.js";
@@ -120,7 +120,7 @@ analyticsRouter.post("/export", limiter("export"), async (req, res) => {
   const brand = await BrandModel.findById(ctx.brandId).select("name").lean();
   const slug = String(brand?.name ?? "store").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
   const meta = EXPORT_FORMATS.find((f) => f.id === input.format);
-  const file = `tablepe-${slug}-${range.from}_to_${range.to}${input.format === "csv" ? `-${input.section}` : ""}.${meta.ext}`;
+  const file = `rasoipulse-${slug}-${range.from}_to_${range.to}${input.format === "csv" ? `-${input.section}` : ""}.${meta.ext}`;
   let body;
   if (input.format === "xlsx") body = await toXlsx(report);
   else if (input.format === "pdf") body = await toPdf(report);

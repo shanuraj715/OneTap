@@ -1,11 +1,11 @@
                                                                
-import { permissionsForRole,                            } from "@onetap/config-schema";
+import { permissionsForRole,                            } from "@rasoipulse/config-schema";
 import { userFromToken } from "../modules/auth/auth.service.js";
 import { outletAccess } from "../modules/outlets/outlet-cache.js";
 import { assertStoreEnabled } from "../modules/platform/plan.service.js";
 import { HttpError } from "./error.js";
 
-export const SESSION_COOKIE = "onetap_session";
+export const SESSION_COOKIE = "rasoipulse_session";
 
                 
                                                              
@@ -30,7 +30,7 @@ export function requireUser(req         )          {
   return req.user;
 }
 
-/** Platform-only routes — the super admin who runs TablePe, not a store's owner. */
+/** Platform-only routes — the super admin who runs Rasoi Pulse, not a store's owner. */
 export function requireSuperAdmin(req         )          {
   const user = requireUser(req);
   if (!user.isSuperAdmin) throw new HttpError(403, "Only a platform superadmin can do this");
@@ -59,7 +59,7 @@ export async function requireOutletContext(
   const user = requireUser(req);
 
   const outletId =
-    (req.header("x-onetap-outlet") ?? "") ||
+    (req.header("x-rasoipulse-outlet") ?? "") ||
     (typeof req.query.outletId === "string" ? req.query.outletId : "");
   if (!outletId) throw new HttpError(400, "No outlet selected");
 
@@ -95,7 +95,7 @@ export async function requireOutletContext(
 /** Brand-level context, for things that aren't outlet-specific (users, billing). */
 export async function requireBrandContext(req         , permission             )                      {
   const user = requireUser(req);
-  const brandId = req.header("x-onetap-brand") ?? user.memberships[0]?.brandId;
+  const brandId = req.header("x-rasoipulse-brand") ?? user.memberships[0]?.brandId;
   if (!brandId) throw new HttpError(400, "No brand selected");
 
   const membership = membershipFor(user, brandId);

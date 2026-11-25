@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "../../lib/nav";
-import { formatWaPhone, WA_MAX_MEDIA_BYTES, WA_MEDIA_ACCEPT, WA_PACING, WA_REVOKE_HOURS, waTextOn } from "@onetap/config-schema";
+import { formatWaPhone, WA_MAX_MEDIA_BYTES, WA_MEDIA_ACCEPT, WA_PACING, WA_REVOKE_HOURS, waTextOn } from "@rasoipulse/config-schema";
 import { AlertCircle, ArrowLeft, Ban, Check, CheckCheck, Clock, Download, FileText, MessageCirclePlus, MoreVertical, Paperclip, RotateCcw, Search, Send, Smartphone, Trash2, X } from "lucide-react";
 import * as api from "../../lib/api";
 import { useMedia } from "../../lib/useMedia";

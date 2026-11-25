@@ -1,6 +1,6 @@
 import { raw, Router } from "express";
 import { z } from "zod";
-import { IMAGE_RULES, LEAD_STATUSES } from "@onetap/config-schema";
+import { IMAGE_RULES, LEAD_STATUSES } from "@rasoipulse/config-schema";
 import { requireSuperAdmin, requireUser } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import { clientIp, issueChallenge } from "./guard.js";
@@ -10,7 +10,7 @@ import { limiter } from "../../middleware/rate-limit.js";
 /* ===================================================================== public */
 
 /**
- * What the TablePe website reads — published content only, no login. Short
+ * What the Rasoi Pulse website reads — published content only, no login. Short
  * public cache headers on reads; the website itself also caches and is told
  * to refresh when something changes.
  */

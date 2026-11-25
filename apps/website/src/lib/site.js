@@ -1,4 +1,4 @@
-import { siteSettingsSchema } from "@onetap/config-schema";
+import { siteSettingsSchema } from "@rasoipulse/config-schema";
 import { apiServerUrl } from "./api-config";
 
 /**
@@ -16,7 +16,7 @@ async function get(path, { cache = true } = {}) {
   return res.json();
 }
 
-/** Settings, with defaults — the site still renders (as TablePe) if the API is briefly unreachable. */
+/** Settings, with defaults — the site still renders (as Rasoi Pulse) if the API is briefly unreachable. */
 export async function getSettings() {
   try {
     const data = await get("/api/site/settings");

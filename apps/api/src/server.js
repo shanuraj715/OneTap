@@ -1,4 +1,4 @@
-import { connectDb } from "@onetap/db";
+import { connectDb } from "@rasoipulse/db";
 import { createApp } from "./app.js";
 import { env } from "./env.js";
 import { logger } from "./logger.js";
@@ -61,7 +61,7 @@ function main()       {
   attachPreview(server);
 
   server.on("listening", () => {
-    logger.info(`TablePe API → http://localhost:${env.API_PORT}`);
+    logger.info(`Rasoi Pulse API → http://localhost:${env.API_PORT}`);
   });
 
   server.on("error", (err                       ) => {

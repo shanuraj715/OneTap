@@ -73,7 +73,7 @@ export function StatCard({
 
   return (
     <div
-      className={`onetap-stat-card ${className}`}
+      className={`rasoipulse-stat-card ${className}`}
       style={{
         background: "var(--color-surface, #ffffff)",
         border: "1px solid var(--color-border, #e2e8f0)",

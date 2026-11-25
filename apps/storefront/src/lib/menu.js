@@ -1,5 +1,5 @@
 import { apiServerUrl } from "@/lib/api-config";
-import { menuSchema,           } from "@onetap/config-schema";
+import { menuSchema,           } from "@rasoipulse/config-schema";
 
 const API_BASE = apiServerUrl();
 

@@ -1,5 +1,5 @@
-import { OtpChallengeModel, OtpThrottleModel } from "@onetap/db";
-import { OTP_FORGET_AFTER_SEC, formatWaitLong, otpResendWait } from "@onetap/config-schema";
+import { OtpChallengeModel, OtpThrottleModel } from "@rasoipulse/db";
+import { OTP_FORGET_AFTER_SEC, formatWaitLong, otpResendWait } from "@rasoipulse/config-schema";
 import { HttpError } from "../../middleware/error.js";
 
 /**

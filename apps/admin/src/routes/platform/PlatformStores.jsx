@@ -43,7 +43,7 @@ export function PlatformStores() {
   const activePlans = (plans.data?.plans ?? []).filter((p) => !p.archived);
   const selectedPlan = activePlans.find((p) => p.id === form.planId);
   const customPlan = Boolean(selectedPlan?.custom);
-  // a store's TablePe address (acme.<base>) comes with every plan; an own domain only with plans that include it
+  // a store's Rasoi Pulse address (acme.<base>) comes with every plan; an own domain only with plans that include it
   const base = usePlatformSettings().data?.settings.subdomainBase ?? "";
   const ownAllowed = !selectedPlan || selectedPlan.entitlements.features.includes("customDomain");
   const [subTouched, setSubTouched] = useState(false);
@@ -140,7 +140,7 @@ export function PlatformStores() {
                 />
               </Field>
               {base ? (
-                <Field label="TablePe address" info={`A free address on ${base} — the store opens on ${subdomain || "name"}.${base}. Set up instantly, nothing to install on the server.`}>
+                <Field label="Rasoi Pulse address" info={`A free address on ${base} — the store opens on ${subdomain || "name"}.${base}. Set up instantly, nothing to install on the server.`}>
                   <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                     <TextInput
                       value={subdomain}
@@ -169,7 +169,7 @@ export function PlatformStores() {
                   />
                 </Field>
               ) : (
-                <Field label="Own domain" info="Not included in this plan — the store gets a TablePe address. Unlock “Own domain name” on its Features tab later if it buys one.">
+                <Field label="Own domain" info="Not included in this plan — the store gets a Rasoi Pulse address. Unlock “Own domain name” on its Features tab later if it buys one.">
                   <TextInput value="Not included in this plan" disabled />
                 </Field>
               )}

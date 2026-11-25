@@ -7,7 +7,7 @@ export const fmtDate = (d) =>
 /** "3 / 5", or "3 / ∞" when unlimited. */
 export const usageText = (used, max) => `${used} / ${max ?? "∞"}`;
 
-/** Shown wherever a store that TablePe has switched off is listed. Renders nothing for a store that is running. */
+/** Shown wherever a store that Rasoi Pulse has switched off is listed. Renders nothing for a store that is running. */
 export function DisabledPill({ store, withDate = false }) {
   if (!store.disabled) return null;
   return (

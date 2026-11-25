@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { BrandModel, OutletModel, StorageMigrationModel, StorageOptimizeModel, StorageSettledModel } from "@onetap/db";
+import { BrandModel, OutletModel, StorageMigrationModel, StorageOptimizeModel, StorageSettledModel } from "@rasoipulse/db";
 import { publicApiUrl } from "../../env.js";
 import { logger } from "../../logger.js";
 import { HttpError } from "../../middleware/error.js";

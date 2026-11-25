@@ -20,7 +20,7 @@ import {
                 
                    
                    
-} from "@onetap/config-schema";
+} from "@rasoipulse/config-schema";
 import {
   brandFilter,
   CustomerModel,
@@ -33,7 +33,7 @@ import {
   tenantFilter,
                 
                      
-} from "@onetap/db";
+} from "@rasoipulse/db";
 import { logger } from "../../logger.js";
 import { HttpError } from "../../middleware/error.js";
 import { broadcast } from "../../realtime/hub.js";

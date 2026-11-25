@@ -1,4 +1,4 @@
-import { LoginLogModel } from "@onetap/db";
+import { LoginLogModel } from "@rasoipulse/db";
 
 /** The sign-in log for the platform dashboard — newest first, filterable, one page at a time. */
 

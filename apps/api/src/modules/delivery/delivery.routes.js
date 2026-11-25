@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
-import { checkDelivery } from "@onetap/config-schema";
+import { checkDelivery } from "@rasoipulse/config-schema";
 import { outletBrand } from "../outlets/outlet-cache.js";
 import { HttpError } from "../../middleware/error.js";
 import { outletConfigFor } from "../orders/orders.service.js";

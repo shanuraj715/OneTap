@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { STORAGE_FIELDS } from "@onetap/config-schema";
+import { STORAGE_FIELDS } from "@rasoipulse/config-schema";
 import { AlertTriangle, ArrowRight, Check, ChevronDown, ChevronRight, CircleAlert, Loader, ScanSearch, Truck, X } from "lucide-react";
 import * as api from "../../lib/api";
 import { useStorageMove, useStorageUsage } from "../../lib/usePlatform";
