@@ -156,6 +156,17 @@ export const menuLayoutSchema = z.object({
 
 const bySortOrder = (a, b) => a.sortOrder - b.sortOrder;
 
+/**
+ * Dishes that can't be ordered right now (sold out, out of stock, outside their hours) go to the END of their section, so a
+ * category of 15 with one sold-out dish shows the 14 orderable ones first and that one 15th. Everything else keeps its
+ * order (a stable split, not a re-sort), so menu order, hand-picked order and price/name sorting all still hold among
+ * the dishes on each side.
+ */
+export function soldOutLast(items) {
+  if (!items.some((i) => i.isAvailable === false)) return items;
+  return [...items.filter((i) => i.isAvailable !== false), ...items.filter((i) => i.isAvailable === false)];
+}
+
 /** The section a category becomes. `extra` carries where it sits in the tree. */
 function sectionFor(cat, items, layout, extra = {}) {
   return {
@@ -192,7 +203,7 @@ function sectionFor(cat, items, layout, extra = {}) {
  */
 function autoSections(menu, layout) {
   const active = activeCategoryIds(menu.categories);
-  const itemsOf = (id) => menu.items.filter((i) => i.categoryId === id).sort(bySortOrder);
+  const itemsOf = (id) => soldOutLast(menu.items.filter((i) => i.categoryId === id).sort(bySortOrder));
   const hasDishes = (id) => categorySubtreeIds(menu.categories, id).some((cid) => active.has(cid) && menu.items.some((i) => i.categoryId === cid));
   const rootOf = new Map();
 
@@ -295,6 +306,7 @@ export function resolveMenuSections(menu, layout) {
     if (section.hideUnavailable) items = items.filter((i) => i.isAvailable);
     // "default" keeps the pool order (menu order, or the hand-picked order).
     if (section.sortBy && section.sortBy !== "default") items = applySort(items, section.sortBy);
+    items = soldOutLast(items);
     if (section.maxItems > 0) items = items.slice(0, section.maxItems);
     if (items.length === 0) continue;
 

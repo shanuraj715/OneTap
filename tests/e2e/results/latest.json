@@ -12776,8 +12776,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T09:37:52.581Z",
-    "durationMs": 21277,
+    "at": "2026-11-25T04:22:13.692Z",
+    "durationMs": 22800,
     "steps": [
       {
         "n": 1,
@@ -12786,7 +12786,7 @@
           {
             "label": "all 30+ categories are in the bar",
             "ok": true,
-            "detail": "36",
+            "detail": "35",
             "kind": "expect"
           },
           {
@@ -12804,7 +12804,7 @@
           {
             "label": "more chips than fit: the row scrolls sideways instead of wrapping",
             "ok": true,
-            "detail": "5282px of chips in 768px",
+            "detail": "5177px of chips in 768px",
             "kind": "expect"
           },
           {
@@ -12834,7 +12834,7 @@
           {
             "label": "choosing it scrolls the menu to that category, just under the (short) bar",
             "ok": true,
-            "detail": "{\"top\":239,\"bar\":227}",
+            "detail": "{\"top\":238,\"bar\":227}",
             "kind": "expect"
           },
           {
@@ -12912,7 +12912,7 @@
           {
             "label": "tablet: the sheet fits the screen and lists every category",
             "ok": true,
-            "detail": "792px of 1100px, 37 buttons",
+            "detail": "792px of 1100px, 36 buttons",
             "kind": "expect"
           },
           {
@@ -12924,7 +12924,7 @@
           {
             "label": "tablet: a category picked in the sheet lands just under the bar",
             "ok": true,
-            "detail": "{\"top\":245,\"bar\":232}",
+            "detail": "{\"top\":244,\"bar\":232}",
             "kind": "expect"
           },
           {
@@ -12966,7 +12966,7 @@
           {
             "label": "phone: the sheet fits the screen and lists every category",
             "ok": true,
-            "detail": "608px of 844px, 37 buttons",
+            "detail": "608px of 844px, 36 buttons",
             "kind": "expect"
           },
           {
@@ -14255,8 +14255,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T09:38:51.995Z",
-    "durationMs": 49936,
+    "at": "2026-11-25T04:23:07.299Z",
+    "durationMs": 53525,
     "steps": [
       {
         "n": 1,
@@ -14619,7 +14619,7 @@
           {
             "label": "desktop: opening takes long enough to WATCH (about 0.8 s), without dragging",
             "ok": true,
-            "detail": "795 ms",
+            "detail": "819 ms",
             "kind": "expect"
           },
           {
@@ -14649,7 +14649,7 @@
           {
             "label": "desktop: closing is visible too (about 0.7 s)",
             "ok": true,
-            "detail": "663 ms",
+            "detail": "655 ms",
             "kind": "expect"
           },
           {
@@ -14709,7 +14709,7 @@
           {
             "label": "phone: opening SLIDES — several in-between heights, not an instant jump",
             "ok": true,
-            "detail": "55 in-between heights: 191, 192, 194, 196, 198, 201, 204, 208…",
+            "detail": "55 in-between heights: 191, 192, 194, 196, 198, 201, 204, 209…",
             "kind": "expect"
           },
           {
@@ -14727,7 +14727,7 @@
           {
             "label": "phone: opening takes long enough to WATCH (about 1.0 s), without dragging",
             "ok": true,
-            "detail": "1016 ms",
+            "detail": "1012 ms",
             "kind": "expect"
           },
           {
@@ -14757,7 +14757,7 @@
           {
             "label": "phone: closing is visible too (about 0.8 s)",
             "ok": true,
-            "detail": "847 ms",
+            "detail": "850 ms",
             "kind": "expect"
           },
           {
@@ -16157,8 +16157,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T09:41:11.274Z",
-    "durationMs": 101246,
+    "at": "2026-11-25T04:24:44.483Z",
+    "durationMs": 97099,
     "steps": [
       {
         "n": 1,
@@ -16185,7 +16185,7 @@
           {
             "label": "phone 390px: the page is long enough to test scrolling",
             "ok": true,
-            "detail": "2807px of scroll",
+            "detail": "2654px of scroll",
             "kind": "expect"
           },
           {
@@ -16195,13 +16195,13 @@
             "kind": "expect"
           },
           {
-            "label": "phone 390px: scrolled 1684px — all three are pinned to the top, one under the other with no gap",
+            "label": "phone 390px: scrolled 1592px — all three are pinned to the top, one under the other with no gap",
             "ok": true,
             "detail": "header 0.0+120.0, order bar 120.0+61.0, category bar 181.0+55.0",
             "kind": "expect"
           },
           {
-            "label": "phone 390px: scrolled 2767px — all three are pinned to the top, one under the other with no gap",
+            "label": "phone 390px: scrolled 2614px — all three are pinned to the top, one under the other with no gap",
             "ok": true,
             "detail": "header 0.0+120.0, order bar 120.0+61.0, category bar 181.0+55.0",
             "kind": "expect"
@@ -16251,7 +16251,7 @@
           {
             "label": "tablet 820px: the page is long enough to test scrolling",
             "ok": true,
-            "detail": "1643px of scroll",
+            "detail": "1489px of scroll",
             "kind": "expect"
           },
           {
@@ -16261,13 +16261,13 @@
             "kind": "expect"
           },
           {
-            "label": "tablet 820px: scrolled 986px — all three are pinned to the top, one under the other with no gap",
+            "label": "tablet 820px: scrolled 893px — all three are pinned to the top, one under the other with no gap",
             "ok": true,
             "detail": "header 0.0+106.4, order bar 106.4+67.0, category bar 173.4+58.8",
             "kind": "expect"
           },
           {
-            "label": "tablet 820px: scrolled 1603px — all three are pinned to the top, one under the other with no gap",
+            "label": "tablet 820px: scrolled 1449px — all three are pinned to the top, one under the other with no gap",
             "ok": true,
             "detail": "header 0.0+106.4, order bar 106.4+67.0, category bar 173.4+58.8",
             "kind": "expect"
@@ -16281,7 +16281,7 @@
           {
             "label": "tablet 820px: choosing a category scrolls to it just under the pinned bars (not hidden behind them)",
             "ok": true,
-            "detail": "heading at 244px, pinned bars end at 232px",
+            "detail": "heading at 298px, pinned bars end at 232px",
             "kind": "expect"
           },
           {
@@ -16317,7 +16317,7 @@
           {
             "label": "desktop 1440px: the page is long enough to test scrolling",
             "ok": true,
-            "detail": "1675px of scroll",
+            "detail": "1521px of scroll",
             "kind": "expect"
           },
           {
@@ -16327,13 +16327,13 @@
             "kind": "expect"
           },
           {
-            "label": "desktop 1440px: scrolled 1005px — all three are pinned to the top, one under the other with no gap",
+            "label": "desktop 1440px: scrolled 913px — all three are pinned to the top, one under the other with no gap",
             "ok": true,
             "detail": "header 0.0+106.4, order bar 106.4+67.0, category bar 173.4+53.5",
             "kind": "expect"
           },
           {
-            "label": "desktop 1440px: scrolled 1635px — all three are pinned to the top, one under the other with no gap",
+            "label": "desktop 1440px: scrolled 1481px — all three are pinned to the top, one under the other with no gap",
             "ok": true,
             "detail": "header 0.0+106.4, order bar 106.4+67.0, category bar 173.4+53.5",
             "kind": "expect"
@@ -16826,8 +16826,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T09:41:42.892Z",
-    "durationMs": 30736,
+    "at": "2026-11-25T04:25:15.966Z",
+    "durationMs": 31399,
     "steps": [
       {
         "n": 1,
@@ -17291,8 +17291,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T09:42:03.094Z",
-    "durationMs": 19338,
+    "at": "2026-11-25T04:25:35.694Z",
+    "durationMs": 19644,
     "steps": [
       {
         "n": 1,
@@ -23306,8 +23306,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-24T21:36:40.995Z",
-    "durationMs": 8915,
+    "at": "2026-11-25T04:25:45.884Z",
+    "durationMs": 10111,
     "steps": [
       {
         "n": 1,
@@ -25154,6 +25154,213 @@
           },
           {
             "label": "a secret locked with the renamed text is not readable by the app (the app really uses the original text)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t80-sold-out-last-and-view-all": {
+    "id": "t80-sold-out-last-and-view-all",
+    "title": "Menu: sold-out dishes go to the end of their category, and 'View all' disappears when a filter leaves only a few dishes",
+    "status": "pass",
+    "pass": 28,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-25T04:26:06.052Z",
+    "durationMs": 20092,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Sold-out dishes go to the end of their category (desktop 1280px)",
+        "checks": [
+          {
+            "label": "a category of 15 with 2 sold-out dishes, closed: the first 6 shown are all orderable (01 03 04 05 06 08 — not 02 or 07)",
+            "ok": true,
+            "detail": "01 03 04 05 06 08",
+            "kind": "expect"
+          },
+          {
+            "label": "…and none of the first 6 says 'Sold out'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the button counts the rest: View all (9 more)",
+            "ok": true,
+            "detail": "View all (9 more)",
+            "kind": "expect"
+          },
+          {
+            "label": "opened: the 13 orderable dishes in their own order, then the two sold-out ones last (…15, 02, 07)",
+            "ok": true,
+            "detail": "01 03 04 05 06 08 09 10 11 12 13 14 15 02 07",
+            "kind": "expect"
+          },
+          {
+            "label": "exactly two dishes say 'Sold out'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "on screen too: the sold-out dishes sit after dish 15, dish 02 before dish 07",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a category with nothing sold out keeps its normal order (01 … 08)",
+            "ok": true,
+            "detail": "01 02 03 04 05 06 07 08",
+            "kind": "expect"
+          },
+          {
+            "label": "a section capped at 5 dishes is filled with orderable ones first (03 … 07), not with the two sold-out dishes at the top",
+            "ok": true,
+            "detail": "03 04 05 06 07",
+            "kind": "expect"
+          },
+          {
+            "label": "sorted by price (high to low): that order holds, and the dearest dish — sold out — drops to the end",
+            "ok": true,
+            "detail": "05 04 03 02 01 06",
+            "kind": "expect"
+          },
+          {
+            "label": "…with its 'Sold out' label",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "A dish that comes back is put back where it belongs",
+        "checks": [
+          {
+            "label": "dish 02 orderable again → it is back among the first six (01 … 06) after a reload",
+            "ok": true,
+            "detail": "01 02 03 04 05 06",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "'View all' follows the filter (desktop 1280px)",
+        "checks": [
+          {
+            "label": "no filter: the four long categories each have a View all button",
+            "ok": true,
+            "detail": "{\"A\":[\"View all (9 more)\"],\"B\":[\"View all (2 more)\"],\"C\":[\"View all (3 more)\"],\"D\":[\"View all (3 more)\"],\"S\":[\"View all (9 more)\"]}",
+            "kind": "expect"
+          },
+          {
+            "label": "Veg: category A (15 dishes) is down to 3 → all 3 are shown and there is NO View all button",
+            "ok": true,
+            "detail": "3 dishes, buttons: none",
+            "kind": "expect"
+          },
+          {
+            "label": "Veg: category B is down to exactly 6 (the first-few limit) → no button",
+            "ok": true,
+            "detail": "6 dishes, buttons: none",
+            "kind": "expect"
+          },
+          {
+            "label": "Veg: category C is down to 7 → 6 shown and View all (1 more)",
+            "ok": true,
+            "detail": "6 dishes, buttons: View all (1 more)",
+            "kind": "expect"
+          },
+          {
+            "label": "Veg: category D (button beside the title) is down to 2 → that button is gone too",
+            "ok": true,
+            "detail": "buttons: none",
+            "kind": "expect"
+          },
+          {
+            "label": "Veg: the all-veg category (15 left) keeps its View all (9 more)",
+            "ok": true,
+            "detail": "View all (9 more)",
+            "kind": "expect"
+          },
+          {
+            "label": "…and it still opens (7 dishes, 'Show less')",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Non-veg: category A has 12 left → View all (6 more), first 6 shown",
+            "ok": true,
+            "detail": "View all (6 more)",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the all-veg category is gone from a Non-veg menu (nothing left in it)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "All: every View all button is back",
+            "ok": true,
+            "detail": "{\"A\":[\"View all (9 more)\"],\"B\":[\"View all (2 more)\"],\"C\":[\"Show less\"],\"D\":[\"View all (3 more)\"],\"S\":[\"View all (9 more)\"]}",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "The same on a phone (390px wide)",
+        "checks": [
+          {
+            "label": "no filter: category A has View all (under the cards)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Veg: category A shows its 3 dishes and no View all button",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Veg: category D has no button either",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Veg: category C (7 left) still has one",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the first six of the 15-dish category are the orderable ones on a phone too",
+            "ok": true,
+            "detail": "01 03 04 05 06 08",
+            "kind": "expect"
+          },
+          {
+            "label": "the test categories are removed and the menu layout is put back",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser logged no errors or warnings",
             "ok": true,
             "detail": "",
             "kind": "expect"

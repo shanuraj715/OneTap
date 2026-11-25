@@ -58,7 +58,14 @@ export function MenuSections({
   const visibleSections = useMemo(() => {
     if (!foodFilter) return sections;
     // a parent's heading stays only while something inside it is still shown
-    return pruneEmptySections(sections.map((s) => ({ ...s, items: s.items.filter((i) => i.foodType === foodFilter) })));
+    return pruneEmptySections(
+      sections.map((s) => {
+        const items = s.items.filter((i) => i.foodType === foodFilter);
+        // "View all" only makes sense while more dishes remain than the first few — after the filter a 15-dish category
+        // may be down to 3, and then there is nothing to open
+        return { ...s, items, collapsible: s.collapsible && items.length > s.initialItems };
+      }),
+    );
   }, [sections, foodFilter]);
 
   // how many cards a section shows while closed ("View all" sections show only their first few until opened)
