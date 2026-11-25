@@ -1168,3 +1168,4 @@
 {"id":"t64-table-conflict","status":"pass","pass":22,"fail":0,"mode":"headless","at":"2026-11-24T21:36:27.880Z","durationMs":2214}
 {"id":"t71-soft-navigation","status":"pass","pass":14,"fail":0,"mode":"headless","at":"2026-11-24T21:36:32.008Z","durationMs":4053}
 {"id":"t72-menu-chunks","status":"pass","pass":15,"fail":0,"mode":"headless","at":"2026-11-24T21:36:40.995Z","durationMs":8915}
+{"id":"t79-stored-secrets","status":"pass","pass":6,"fail":0,"mode":"headless","at":"2026-11-25T04:13:05.328Z","durationMs":2175}

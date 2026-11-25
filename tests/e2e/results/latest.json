@@ -25100,5 +25100,68 @@
     ],
     "findings": [],
     "problems": []
+  },
+  "t79-stored-secrets": {
+    "id": "t79-stored-secrets",
+    "title": "Stored secrets stay readable — a secret locked before the Rasoi Pulse rename still opens, and old and new builds read each other's secrets",
+    "status": "pass",
+    "pass": 6,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-25T04:13:05.328Z",
+    "durationMs": 2175,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The fixed test secret itself",
+        "checks": [
+          {
+            "label": "the stored test secret opens with the original text (so the test value is correct)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and does NOT open with the renamed text (so this test would notice a rename)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "The app's own code",
+        "checks": [
+          {
+            "label": "the app opens a secret that was stored before the rename",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a secret the app locks today opens again (round trip)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a secret the app locks today also opens with the ORIGINAL text — old and new builds can read each other's secrets",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a secret locked with the renamed text is not readable by the app (the app really uses the original text)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
   }
 }

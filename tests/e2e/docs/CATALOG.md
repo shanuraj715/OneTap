@@ -1,6 +1,6 @@
 # Rasoi Pulse end-to-end tests — catalog
 
-**79 tests** · 79 passing · 0 failing/error · 0 not run yet
+**80 tests** · 80 passing · 0 failing/error · 0 not run yet
 
 | Test | Area | Result | Checks | Last run |
 |---|---|---|---|---|
@@ -83,6 +83,7 @@
 | [t76-storage-optimize-api](t76-storage-optimize-api.md) — Storage — find the pictures bigger than the size limit and compress the chosen ones; every stored address follows | platform | ✅ PASSED | 73/73 | 2026-11-21 16:14 |
 | [t77-storage-optimize-ui](t77-storage-optimize-ui.md) — The Storage page — find the pictures bigger than the size limit in a grid, select them and optimize | platform | ✅ PASSED | 37/37 | 2026-11-21 16:15 |
 | [t78-storefront-title](t78-storefront-title.md) — The storefront's browser-tab title is the store's name (and follows a rename) | storefront | ✅ PASSED | 16/16 | 2026-11-25 03:05 |
+| [t79-stored-secrets](t79-stored-secrets.md) — Stored secrets stay readable — a secret locked before the Rasoi Pulse rename still opens, and old and new builds read each other's secrets | security | ✅ PASSED | 6/6 | 2026-11-25 09:43 |
 
 ## Open findings (noticed during tests, not yet fixed)
 

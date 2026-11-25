@@ -9,7 +9,11 @@ if (isProd && env.ENCRYPTION_KEY === DEV_ENCRYPTION_KEY) {
   process.exit(1);
 }
 
-const key = scryptSync(env.ENCRYPTION_KEY, "rasoipulse.payment-credentials.v1", 32);
+// DO NOT RENAME THIS STRING. It is part of the key every stored secret was locked with (gateway keys, R2/S3 keys, AI keys,
+// SMS / WhatsApp Business tokens, printer cloud keys, the linked WhatsApp sessions). It is not a product name: change a single
+// letter and every secret already in the database can no longer be opened. It kept its original text through the rename to
+// Rasoi Pulse on purpose; tests/e2e/suites/stored-secrets.mjs fails if it ever changes.
+const key = scryptSync(env.ENCRYPTION_KEY, "onetap.payment-credentials.v1", 32);
 
 /**
  * AES-256-GCM envelope for gateway secrets at rest. Format:
