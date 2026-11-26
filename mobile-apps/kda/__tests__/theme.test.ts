@@ -22,3 +22,36 @@ describe("the helpers", () => {
   it("contrast is 21 for black on white and 1 for the same colour", () => { expect(contrast("#000000", "#FFFFFF")).toBeCloseTo(21, 0); expect(contrast("#777777", "#777777")).toBeCloseTo(1, 5); });
   it("picks the palette by the phone's setting", () => { expect(themeFor(true).c).toBe(darkColors); expect(themeFor(false).c).toBe(lightColors); });
 });
+
+/** The hue (0–360°) of a #RRGGBB colour. */
+const hue = (hex: string): number => {
+  const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255) as [number, number, number];
+  const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min;
+  if (d === 0) return 0;
+  const h = max === r ? ((g - b) / d) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
+  return (h * 60 + 360) % 360;
+};
+
+describe("KDA is teal (one colour for the app, its icon and its page on the website)", () => {
+  it("the brand colour is exactly #0D7F6B, in the light and the dark theme", () => {
+    expect(lightColors.primary.toUpperCase()).toBe("#0D7F6B");
+    expect(darkColors.primary.toUpperCase()).toBe("#0D7F6B");
+  });
+  it("it is teal: its hue sits between 155° and 185° (not the old red)", () => {
+    for (const c of [lightColors.primary, lightColors.primaryText, darkColors.primary, darkColors.primaryText]) {
+      expect(hue(c)).toBeGreaterThanOrEqual(155);
+      expect(hue(c)).toBeLessThanOrEqual(185);
+    }
+  });
+  it("the page, the cards and the lines are tinted toward it, so the whole app is one colour", () => {
+    for (const palette of [lightColors, darkColors]) for (const c of [palette.bg, palette.surfaceAlt, palette.border]) {
+      expect(hue(c)).toBeGreaterThanOrEqual(130);
+      expect(hue(c)).toBeLessThanOrEqual(210);
+    }
+  });
+  it("status colours are NOT tinted: 'danger' is still a red and 'success' still a green, in every app", () => {
+    expect(hue(lightColors.danger)).toBeLessThan(20);
+    expect(hue(lightColors.success)).toBeGreaterThan(110);
+    expect(hue(lightColors.success)).toBeLessThan(160);
+  });
+});

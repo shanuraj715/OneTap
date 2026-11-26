@@ -22,7 +22,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     package: "com.rasoipulse.rda",
     versionCode: appVersion.versionCode,
     adaptiveIcon: {
-      backgroundColor: "#2B1A4D", // the deep plum of the RDA icon
+      backgroundColor: "#764ED1", // the violet of the RDA icon: exactly the app's primary colour (a test keeps them equal)
       foregroundImage: "./assets/android-icon-foreground.png",
       backgroundImage: "./assets/android-icon-background.png",
       monochromeImage: "./assets/android-icon-monochrome.png",

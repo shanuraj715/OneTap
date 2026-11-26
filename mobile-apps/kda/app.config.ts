@@ -22,7 +22,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     package: "com.rasoipulse.kda",
     versionCode: appVersion.versionCode,
     adaptiveIcon: {
-      backgroundColor: "#0B2E2B", // the deep teal of the KDA icon
+      backgroundColor: "#0D7F6B", // the teal of the KDA icon: exactly the app's primary colour (a test keeps them equal)
       foregroundImage: "./assets/android-icon-foreground.png",
       backgroundImage: "./assets/android-icon-background.png",
       monochromeImage: "./assets/android-icon-monochrome.png",

@@ -15,18 +15,23 @@ export interface Colors {
   info: string; infoWash: string; success: string; successWash: string; warning: string; warningWash: string; danger: string; dangerWash: string;
 }
 
+/**
+ * RDA (Rider Delivery App) is violet: the app's own colour, shared with its icon (the icon's tile is exactly `primary`) and its page on the website. Light, dark and
+ * the neutrals are tinted toward it so the whole app reads as one colour. The status colours below are NOT tinted: "ready", "sold out" or "late"
+ * mean the same thing in every app and on the dashboard.
+ */
 export const lightColors: Colors = {
-  bg: "#F7F6F3", surface: "#FFFFFF", surfaceAlt: "#EFEDE8", border: "#DDD9D2",
-  text: "#1C1B19", muted: "#5E5A54",
-  primary: "#C6362F", onPrimary: "#FFFFFF", primaryText: "#B02E28",
+  bg: "#F8F6FC", surface: "#FFFFFF", surfaceAlt: "#EEE9F8", border: "#DDD5EE",
+  text: "#1E1A2B", muted: "#5E5775",
+  primary: "#764ED1", onPrimary: "#FFFFFF", primaryText: "#6B43C4",
   overlay: "rgba(20,19,15,0.5)",
   info: "#1F5C7A", infoWash: "#DCEAF1", success: "#256B3B", successWash: "#DEEDE0", warning: "#7A5410", warningWash: "#F3E7CF", danger: "#A5382F", dangerWash: "#F1DDD9",
 };
 
 export const darkColors: Colors = {
-  bg: "#14130F", surface: "#1E1C17", surfaceAlt: "#28251F", border: "#3A362F",
-  text: "#ECE6D8", muted: "#B4AFA4",
-  primary: "#C6362F", onPrimary: "#FFFFFF", primaryText: "#F0928B",
+  bg: "#14111C", surface: "#1D1928", surfaceAlt: "#282336", border: "#3B3450",
+  text: "#EEE9F7", muted: "#B7B0C9",
+  primary: "#764ED1", onPrimary: "#FFFFFF", primaryText: "#C4A8FF",
   overlay: "rgba(0,0,0,0.65)",
   info: "#6FA9C4", infoWash: "#17262D", success: "#74C08D", successWash: "#17281C", warning: "#D6A24C", warningWash: "#2B2314", danger: "#E3877A", dangerWash: "#2E1C19",
 };

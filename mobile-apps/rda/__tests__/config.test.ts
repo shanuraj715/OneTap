@@ -1,4 +1,5 @@
 import type { ConfigContext } from "expo/config";
+import { darkColors, lightColors } from "@/ui/theme";
 
 /** The server address comes from EXPO_PUBLIC_API_URL when a build or `npm run phone` sets it, and falls back to the live server. */
 function apiUrlWith(env: string | undefined): string {
@@ -52,5 +53,19 @@ describe("this app is its own app (it can be installed beside OMA and KDA)", () 
   it("tells the server which app it is (the update check and the sign-in rule both depend on it)", () => {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     expect(require("@/lib/config").APP_ID).toBe("rda");
+  });
+});
+
+describe("the icon and the app share one colour", () => {
+  it("the Android icon's background is exactly the app's primary colour (#764ED1), in light and dark", () => {
+    let cfg: Record<string, any> = {};
+    jest.isolateModules(() => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      cfg = (require("../app.config").default as (c: ConfigContext) => Record<string, any>)({ config: {} } as ConfigContext);
+    });
+    const tile = String(cfg.android.adaptiveIcon.backgroundColor).toUpperCase();
+    expect(tile).toBe("#764ED1");
+    expect(tile).toBe(lightColors.primary.toUpperCase());
+    expect(tile).toBe(darkColors.primary.toUpperCase());
   });
 });

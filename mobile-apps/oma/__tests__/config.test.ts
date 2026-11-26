@@ -1,4 +1,5 @@
 import type { ConfigContext } from "expo/config";
+import { darkColors, lightColors } from "@/ui/theme";
 
 /** The server address comes from EXPO_PUBLIC_API_URL when a build or `npm run phone` sets it, and falls back to the live server. */
 function apiUrlWith(env: string | undefined): string {
@@ -23,5 +24,19 @@ describe("which server a build talks to", () => {
   it("an EMPTY setting does not blank the address (it used to)", () => {
     expect(apiUrlWith("")).toBe("https://api.rasoipulse.in");
     expect(apiUrlWith("   ")).toBe("https://api.rasoipulse.in");
+  });
+});
+
+describe("the icon and the app share one colour", () => {
+  it("the Android icon's background is exactly the app's primary colour (#404DB6), in light and dark", () => {
+    let cfg: Record<string, any> = {};
+    jest.isolateModules(() => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      cfg = (require("../app.config").default as (c: ConfigContext) => Record<string, any>)({ config: {} } as ConfigContext);
+    });
+    const tile = String(cfg.android.adaptiveIcon.backgroundColor).toUpperCase();
+    expect(tile).toBe("#404DB6");
+    expect(tile).toBe(lightColors.primary.toUpperCase());
+    expect(tile).toBe(darkColors.primary.toUpperCase());
   });
 });

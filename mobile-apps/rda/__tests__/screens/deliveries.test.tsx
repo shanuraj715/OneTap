@@ -235,7 +235,8 @@ describe("a new delivery is handed to the rider", () => {
   });
   it("the bell in the heading switches the alert", async () => {
     const { runtime } = await renderApp(<DeliveriesScreen />, { server: server() });
-    await fireEvent.press(await screen.findByTestId("alert-toggle"));
-    expect(runtime.settings.store.getState().alerts).toBe(false);
+    await screen.findByTestId("delivery-0003"); // (the list has loaded: the heading is not about to be swapped while it is pressed)
+    await fireEvent.press(screen.getByTestId("alert-toggle"));
+    await waitFor(() => expect(runtime.settings.store.getState().alerts).toBe(false));
   });
 });
