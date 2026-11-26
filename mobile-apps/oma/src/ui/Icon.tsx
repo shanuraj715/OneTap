@@ -58,6 +58,9 @@ export const ICONS = {
   history: ["M4 12a8 8 0 108-8 8 8 0 00-6 2.7", "M4 4v4h4", "M12 8v4l3 2"],
   sparkle: ["M12 4l1.8 5.2L19 11l-5.2 1.8L12 18l-1.8-5.2L5 11l5.2-1.8z"],
   utensils: ["M7 3v7a2 2 0 002 2v9M11 3v7a2 2 0 01-2 2M9 3v6", "M17 3c-2 1.5-3 4-3 7h3v11"],
+  download: ["M12 4v11M7.5 11L12 15.5 16.5 11", "M5 19.5h14"],
+  external: ["M14 4h6v6M20 4l-9 9", "M18 14v5.5H4.5V6H10"],
+  swap: ["M16 3l4 4-4 4M20 7H8", "M8 21l-4-4 4-4M4 17h12"],
   users: [circle(9, 8, 3.5), "M2.5 20c.8-3.5 3.5-5.5 6.5-5.5s5.7 2 6.5 5.5", "M16 4.8a3.5 3.5 0 010 6.4M18.5 14.8c1.6.7 2.6 2.4 3 4.7"],
 } as const;
 export type IconName = keyof typeof ICONS;

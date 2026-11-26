@@ -1,6 +1,6 @@
 # T87 — Staff app sign-in: a session token in the answer, used as a Bearer token, with the dashboard's brute-force guards (address block, account pause, flood limit)
 
-**Area:** security · **Last result:** ✅ PASSED (34 passed, 0 failed · 2026-11-26 16:49 · headless · 5.2 s)
+**Area:** security · **Last result:** ✅ PASSED (34 passed, 0 failed · 2026-11-26 19:25 · headless · 8.3 s)
 
 **Run it alone:** `node run.mjs --only t87` (add `--visible` to watch it)
 
@@ -41,7 +41,7 @@ _Nothing failed._
 - the right email and password give a session token in the answer — _status 200_
 - …and nothing is set as a cookie (the app keeps the token itself)
 - the answer says who signed in, their role and what they may do (the app needs order:create and table access) — _staff_
-- the session lasts days, not minutes (it is the same session the dashboard uses) — _2026-12-10T11:19:36.692Z_
+- the session lasts days, not minutes (it is the same session the dashboard uses) — _2026-12-10T13:55:45.350Z_
 - the password hash is never in the answer
 - the dashboard's own sign-in is unchanged: a cookie, and no token in the answer
 
@@ -76,7 +76,7 @@ _Nothing failed._
 - GET /api/auth/guard tells the app whether this address is blocked (so it can show a notice instead of the form)
 - wrong passwords are answered 401 at first — _401,401,401,429_
 - after 4 wrong passwords the address is blocked — even the RIGHT password is now refused (429) with a countdown — _429 Too many failed attempts. Try again in 5 minutes._
-- the guard endpoint now says blocked, and for how long — _{"blocked":true,"retryAfterSec":300,"blockedUntil":"2026-11-26T11:24:37.157Z"}_
+- the guard endpoint now says blocked, and for how long — _{"blocked":true,"retryAfterSec":300,"blockedUntil":"2026-11-26T14:00:45.917Z"}_
 - the block is shared: the same address is refused on the DASHBOARD sign-in too (the app route is not a way around it) — _status 429_
 - another address is not affected
 - wrong passwords for one account from many different addresses pause that account — _answers 401,429, then right password: 429_
@@ -89,6 +89,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-26 19:25 | pass | 34 | 0 | headless | 8.3 s |
 | 2026-11-26 16:49 | pass | 34 | 0 | headless | 5.2 s |
 
 ---

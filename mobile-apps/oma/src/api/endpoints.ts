@@ -1,7 +1,7 @@
 import type { z } from "zod";
 import type { ApiClient } from "./client";
 import {
-  appLoginSchema, closedSchema, customersSchema, guardSchema, meSchema, menuSchema, moveSchema, ordersSchema, outletsSchema, paymentSchema, placedOrderSchema, quoteSchema, sessionsSchema, tablesSchema, unavailableSchema,
+  appLoginSchema, closedSchema, customersSchema, guardSchema, meSchema, menuSchema, moveSchema, ordersSchema, outletsSchema, paymentSchema, placedOrderSchema, quoteSchema, sessionsSchema, tablesSchema, unavailableSchema, updateCheckSchema,
 } from "./schemas";
 
 /** One line of an order being put together: the dish, the size, the add-ons, how many, a note for the kitchen. */
@@ -19,6 +19,9 @@ export function createApi(client: ApiClient) {
     signOut: () => request("/api/auth/logout", { method: "POST", body: {} }),
     me: () => request("/api/auth/me", { schema: meSchema }),
     outlets: () => request("/api/outlets", { schema: outletsSchema }),
+
+    /* is there a newer version of the app? (no sign-in needed; the phone says which build it is on) */
+    checkForUpdate: (versionCode: number) => request(`/api/app-updates/check?app=oma&platform=android&versionCode=${versionCode}`, { auth: false, schema: updateCheckSchema }),
 
     /* what the waiter works with */
     menu: (outletId: string) => request(`/api/menu?outletId=${encodeURIComponent(outletId)}`, { outletId, schema: menuSchema }),

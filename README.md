@@ -99,6 +99,35 @@ Rules for the apps (decided with the owner):
 - **One README for the whole project** — this file. App folders have a short README of their own for how to run and
   build that app; anything about the product as a whole goes here.
 
+### App updates: uploading a version, optional vs. required
+
+The apps are not on the Play Store. New versions are uploaded in the platform console and downloaded from the website:
+
+- **Console → App updates** (`/platform/app-updates`, platform admin only): *New version* picks the `.apk`, fills the
+  version from its file name (`…-v-261126-002.apk`), takes release notes, and sends the file up in 4 MB pieces with a
+  progress bar (so no larger request limit is needed in nginx/Cloudflare, and a dropped connection retries by itself).
+  Each version is a **draft**, **published** or **withdrawn**; **Required** makes it compulsory. Uploads are checked: it must
+  be a real APK (a zip with an `AndroidManifest.xml`), under `APP_RELEASE_MAX_MB`, with a version `v-DDMMYY-NNN` whose
+  build number (`NNN`) is not used yet. The file's size and SHA-256 are recorded.
+- **Website → `/app`**: the public download page (latest version button, release notes, install steps, every version with
+  its SHA-256). It follows the console within seconds (the API tells the website to refresh) and is not indexed by search engines.
+- **In the app**, when it opens (and when it comes back to the front after 30 minutes away) it asks
+  `GET /api/app-updates/check?versionCode=<its build>`. A newer **optional** version shows a pop-up with *Update* (opens the
+  `/app` page in the phone's browser) and *Later*. If **any** version newer than the phone's is marked **Required**, the app
+  shows a full "Update needed" screen instead, with no way past it (Back does nothing) until the new version is installed.
+  The server backs this up: while an update is required, `POST /api/auth/app-login` from an old build answers
+  `426 update_required` (before any password is checked), so an old build can't get in even if it skipped the check.
+  A phone that can't reach the server is never blocked by the check itself.
+- Files are stored on the API server's disk in `APP_RELEASES_DIR` (default `.app-releases` next to where the API runs —
+  **in production point it outside the code folder**, and keep it out of any `rsync --delete`). Settings:
+  `APP_RELEASES_DIR`, `APP_RELEASE_MAX_MB` (default 300), and `WEBSITE_URL` (the `/app` page address the app sends people to).
+  Public endpoints: `GET /api/app-updates/check`, `/releases`, `/download/:id` (resumable, rate-limited, never cached).
+  The test for all of this is t93 (API), t94 (console page) and t95 (website page).
+- **Signing:** every update must be signed with the **same key** as the version it replaces, or Android refuses to install it
+  over the old one. The APKs built so far use the shared debug key — create a release keystore before real staff installs.
+- **Platform admin in the app:** a platform admin who signs in to OMA is asked *which store, then which outlet* every time
+  (even if there is only one); *Account → Change store or outlet* goes back. Everyone else goes straight to their own outlet.
+
 The API side of the apps: `GET /api/menu/unavailable` (what can't be ordered now — the staff app loads the menu once and asks only this each order), a `version` in the menu answer, team members can be **mapped to outlets** (Users & roles; they then see only those outlets, in the dashboard and the app), and putting a Completed order back to Preparing **seats its table again** (or asks which free table when someone else has it). Also `POST /api/auth/app-login` (returns a token the app sends as `Authorization: Bearer …`;
 the dashboard keeps using its cookie), `GET /api/auth/guard` (is this address paused?) and the Bearer support in the
 `authenticate` middleware. Saved test: `tests/e2e/tests/t87-staff-app-auth-api.mjs`.
@@ -161,7 +190,8 @@ Local defaults work out of the box; each app ships a `.env.example`. The setting
 | `STORE_SUBDOMAIN_BASE` | the domain stores' Rasoi Pulse addresses live under (`rasoipulse.in` in production, `localhost:3070` locally so `acme.localhost:3070` works with no DNS) |
 | `PUBLIC_API_URL` | the API's own public origin, used to build links to uploaded pictures |
 | `UPLOADS_DIR` | where the local storage provider writes uploads |
-| `WEBSITE_URL`, `WEBSITE_INTERNAL_URL`, `WEBSITE_REVALIDATE_SECRET` | how the API tells the marketing website to refresh; the secret must match the website's |
+| `WEBSITE_URL`, `WEBSITE_INTERNAL_URL`, `WEBSITE_REVALIDATE_SECRET` | how the API tells the marketing website to refresh; the secret must match the website's. `WEBSITE_URL` is also the address the staff app sends people to for updates (`<WEBSITE_URL>/app`) |
+| `APP_RELEASES_DIR`, `APP_RELEASE_MAX_MB` | where uploaded app files (APKs) are kept (outside the code folder in production) and the biggest allowed (default 300 MB) |
 | `WHATSAPP_WORKER`, `MARKETING_WORKER` | see below |
 | `LOGIN_*`, `RATE_LIMITS`, `RATE_LIMIT_SCALE` | sign-in protection and API request limits (see the docs below) |
 | `TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY` | optional Cloudflare Turnstile on the website's enquiry form |

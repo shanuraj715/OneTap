@@ -17,6 +17,10 @@ const schema = z.object({
   GEMINI_API_BASE_URL: z.string().default("https://generativelanguage.googleapis.com"),
   /** where the local storage provider writes uploads (relative to the API's working dir) */
   UPLOADS_DIR: z.string().default(".uploads"),
+  /** where the staff app's APK files are kept (never inside the code tree: a deploy must not delete them) */
+  APP_RELEASES_DIR: z.string().default(".app-releases"),
+  /** the biggest APK the console accepts (MB) */
+  APP_RELEASE_MAX_MB: z.coerce.number().int().min(1).max(2000).default(300),
   /**
    * The public origin of the diner-facing storefront. Every table QR code is
    * built from this, so a wrong value here is not a degraded experience — it is

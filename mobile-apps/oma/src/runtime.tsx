@@ -7,12 +7,13 @@ import { secureStorage, type TokenStorage } from "@/auth/storage";
 import { createSessionStore, type SessionState, type SessionStore } from "@/auth/session";
 import { createDraftStore, type DraftState, type DraftStore } from "@/cart/cart";
 import { createAreaPrefs, type AreaPrefs } from "@/prefs/areas";
+import { createUpdateStore, type UpdateStore } from "@/updates/store";
 import { prefsStorage, type PrefsStorage } from "@/prefs/storage";
-import { API_URL } from "@/lib/config";
+import { API_URL, APP_BUILD, APP_VERSION } from "@/lib/config";
 import { keys } from "@/data/keys";
 
 /** Everything the screens share: the server calls, who is signed in, the orders being put together, and the remembered answers. */
-export interface Runtime { api: Api; session: SessionStore; drafts: DraftStore; areas: AreaPrefs; queryClient: QueryClient }
+export interface Runtime { api: Api; session: SessionStore; drafts: DraftStore; areas: AreaPrefs; updates: UpdateStore; queryClient: QueryClient }
 
 export interface RuntimeOptions {
   baseUrl?: string;
@@ -22,6 +23,9 @@ export interface RuntimeOptions {
   prefs?: PrefsStorage;
   /** tests turn retries off so a failure shows at once */
   retry?: boolean;
+  /** which build / version this app says it is (tests pass their own; the app uses its real ones) */
+  build?: number;
+  version?: string;
 }
 
 /** A failed call is tried again (twice) only when trying again could help: no answer, or a server problem — not "wrong password" or "table taken". */
@@ -37,17 +41,27 @@ export function createRuntime(options: RuntimeOptions = {}): Runtime {
   });
   // `session` is needed by the client (for the token) and the client by the session (for sign-in): tie the knot lazily
   let session: SessionStore;
+  let updates: UpdateStore;
   const client = createClient({
     baseUrl: options.baseUrl ?? API_URL,
     fetchImpl: options.fetchImpl,
     getToken: () => session.getState().token,
     onUnauthorized: () => session.getState().expire(),
+    // every call says which build this is; the server refuses the sign-in of a build that is too old while an update is required
+    headers: { "x-oma-version-code": String(options.build ?? APP_BUILD), "x-oma-version": options.version ?? APP_VERSION },
+    onUpdateRequired: (details) => updates.getState().markRequired(details),
   });
   const api = createApi(client);
+  updates = createUpdateStore({ api: () => api, build: options.build });
   session = createSessionStore({ api: () => api, storage: options.storage ?? secureStorage });
   session.subscribe((state, before) => {
     // leaving (sign out, or the sign-in ended): nothing from this person stays in memory for the next one
     if (before.status === "signed-in" && state.status !== "signed-in") {
+      queryClient.clear();
+      drafts.getState().clearAll();
+    }
+    // a platform admin going back to "which store?": nothing of the outlet they leave stays in memory
+    if (state.status === "signed-in" && before.outletId && !state.outletId) {
       queryClient.clear();
       drafts.getState().clearAll();
     }
@@ -59,7 +73,7 @@ export function createRuntime(options: RuntimeOptions = {}): Runtime {
   });
   // (preferences are NOT cleared when someone signs out: they belong to that person and come back when they sign in again)
   const areas = createAreaPrefs(options.prefs ?? prefsStorage);
-  return { api, session, drafts, areas, queryClient };
+  return { api, session, drafts, areas, updates, queryClient };
 }
 
 let shared: Runtime | undefined;

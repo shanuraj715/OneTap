@@ -1,9 +1,10 @@
-// TEST BENCH controller —   node bench/bench.mjs up | reset | rebuild | down | status
+// TEST BENCH controller —   node bench/bench.mjs up | reset | rebuild | website | down | status
 //   up       start whatever isn't running: API :3097 (fresh fake data), dashboard :3171, storefront :3170
 //            (builds the dashboard/storefront first if they've never been built OR the app code changed since)
 //   reset    throw the fake data away and re-seed (restarts only the API; sign in again afterwards)
 //   rebuild  force a rebuild of the dashboard + storefront from the CURRENT code, then start everything
-//   down     stop all three
+//   website  (only when asked, not part of `up`) build + start the marketing website on :3173 from a copy in .bench/website
+//   down     stop all of them
 // It only ever touches ports 3097 / 3170 / 3171 and kills only the process LISTENING there — your own dev servers on
 // 3070-3073 are never touched. The storefront is built in .bench/storefront, NEVER in apps/storefront/.next.
 // The real database is never used: the API runs on an in-memory MongoDB (see serve-bench.mjs).
@@ -15,13 +16,14 @@ import { fileURLToPath } from "node:url";
 const HERE = dirname(fileURLToPath(import.meta.url));
 export const REPO = resolve(HERE, "../../..");
 export const BENCH_DIR = resolve(HERE, "../.bench");
-export const PORTS = { api: 3097, admin: 3171, storefront: 3170 };
+export const PORTS = { api: 3097, admin: 3171, storefront: 3170, website: 3173 };
 const LOGS = join(BENCH_DIR, "logs");
 mkdirSync(LOGS, { recursive: true });
 
 // pnpm's launcher script for Next — it sets NODE_PATH, which the storefront needs to find lucide-react (the storefront
 // imports it but doesn't declare it in its package.json; it only resolves through pnpm hoisting).
 const NEXT = join(REPO, "apps/storefront/node_modules/.bin/next");
+const NEXT_WEBSITE = join(REPO, "apps/website/node_modules/.bin/next");
 const VITE = join(REPO, "apps/admin/node_modules/vite/bin/vite.js");
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const log = (...a) => console.log("[bench]", ...a);
@@ -78,6 +80,7 @@ const sharedNewest = () => Math.max(newestMtime(join(REPO, "packages/config-sche
 
 /** true when the code of the dashboard changed after the bench's build of it */
 export const adminStale = () => mtime(join(BENCH_DIR, "admin-dist/index.html")) < Math.max(newestMtime(join(REPO, "apps/admin/src")), mtime(join(REPO, "apps/admin/index.html")), sharedNewest());
+export const websiteStale = () => mtime(join(BENCH_DIR, "website/.next/BUILD_ID")) < Math.max(newestMtime(join(REPO, "apps/website/src")), newestMtime(join(REPO, "apps/website/public")), mtime(join(REPO, "apps/website/next.config.mjs")), sharedNewest());
 export const storefrontStale = () => mtime(join(BENCH_DIR, "storefront/.next/BUILD_ID")) < Math.max(newestMtime(join(REPO, "apps/storefront/src")), sharedNewest());
 
 /* ---------------------------------------------------------------- the three services */
@@ -146,6 +149,37 @@ async function startStorefront() {
   return ok;
 }
 
+/* the marketing website: built in .bench/website (never in apps/website/.next, which belongs to the dev server on :3073) */
+function buildWebsite() {
+  log("website    building (about a minute)…");
+  const w = join(BENCH_DIR, "website");
+  mkdirSync(w, { recursive: true });
+  rmSync(join(w, "src"), { recursive: true, force: true });
+  cpSync(join(REPO, "apps/website/src"), join(w, "src"), { recursive: true });
+  rmSync(join(w, "public"), { recursive: true, force: true });
+  if (existsSync(join(REPO, "apps/website/public"))) cpSync(join(REPO, "apps/website/public"), join(w, "public"), { recursive: true });
+  for (const f of ["package.json", "jsconfig.json"]) cpSync(join(REPO, "apps/website", f), join(w, f));
+  const cfg = readFileSync(join(REPO, "apps/website/next.config.mjs"), "utf8").split("\n").filter((l) => !/monorepo root|const workspaceRoot|outputFileTracingRoot/.test(l)).join("\n");
+  writeFileSync(join(w, "next.config.mjs"), cfg);
+  try { unlinkSync(join(w, "node_modules")); } catch { /* none yet */ }
+  symlinkSync(join(REPO, "apps/website/node_modules"), join(w, "node_modules"));
+  rmSync(join(w, ".next"), { recursive: true, force: true });
+  const ok = runToLog(NEXT_WEBSITE, ["build"], "website-build.log", { cwd: w, env: websiteEnv() });
+  if (!ok) log("website build failed:\n" + tail("website-build.log", 15));
+  return ok;
+}
+const websiteEnv = () => ({ ...process.env, API_INTERNAL_URL: `http://127.0.0.1:${PORTS.api}`, NEXT_PUBLIC_API_URL: `http://localhost:${PORTS.api}`, NEXT_PUBLIC_SITE_URL: `http://localhost:${PORTS.website}` });
+export async function website() {
+  if (!(await startApi())) return false;
+  const w = join(BENCH_DIR, "website");
+  if (!existsSync(join(w, ".next/BUILD_ID")) || websiteStale()) { if (isUp(PORTS.website)) await stopPort(PORTS.website); if (!buildWebsite()) return false; }
+  if (isUp(PORTS.website)) return true;
+  startDetached(NEXT_WEBSITE, ["start", "-p", String(PORTS.website)], "website.log", { cwd: w, env: websiteEnv() });
+  const ok = await waitHttp(`http://localhost:${PORTS.website}/app`, 200, 60);
+  log(ok ? "website    :3173  ready" : "website failed to start:\n" + tail("website.log", 8));
+  return ok;
+}
+
 /* ---------------------------------------------------------------- public commands */
 export async function up() { return (await startApi()) && (await startAdmin()) && (await startStorefront()); }
 export async function reset() { await stopPort(PORTS.api); return startApi(); }
@@ -155,14 +189,14 @@ export async function rebuild() {
   rmSync(join(BENCH_DIR, "storefront/.next"), { recursive: true, force: true });
   return up();
 }
-export async function down() { await stopPort(PORTS.admin); await stopPort(PORTS.storefront); await stopPort(PORTS.api); log("stopped"); }
+export async function down() { await stopPort(PORTS.website); await stopPort(PORTS.admin); await stopPort(PORTS.storefront); await stopPort(PORTS.api); log("stopped"); }
 export function status() { for (const [n, p] of Object.entries(PORTS)) log(`${n.padEnd(10)} :${p}  ${isUp(p) ? "up" : "down"}`); }
 export const ids = () => JSON.parse(readFileSync(join(BENCH_DIR, "ids.json"), "utf8"));
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const cmd = process.argv[2];
-  const fns = { up, reset, rebuild, down, status };
-  if (!fns[cmd]) { console.log("usage: node bench/bench.mjs up|reset|rebuild|down|status"); process.exit(1); }
+  const fns = { up, reset, rebuild, website, down, status };
+  if (!fns[cmd]) { console.log("usage: node bench/bench.mjs up|reset|rebuild|website|down|status"); process.exit(1); }
   const ok = await fns[cmd]();
   process.exit(ok === false ? 1 : 0);
 }

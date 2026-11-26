@@ -14,6 +14,9 @@ build/
 .env.local
 .env.*.local
 
+# uploaded app builds (APKs) live on the server, never in git
+.app-releases/
+
 # local dev database (mongodb-memory-server)
 .local-db/
 .cache/mongodb-binaries/

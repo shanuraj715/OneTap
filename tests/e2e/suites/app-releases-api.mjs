@@ -1,0 +1,164 @@
+// The staff app's updates: the platform admin uploads an APK (in 4 MB pieces), publishes it and can force an update; the app asks (no
+// sign-in) whether a newer version exists; the website lists and serves the APKs; a forced update also turns old builds away at sign-in.
+// A private API on an in-memory database, files in a temporary folder; no browser.
+import { createHash } from "node:crypto";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import { makeApk, startApi } from "./_api-harness.mjs";
+// the folder is called ".app-releases" like the real one (Express refuses to send files under a dot-folder unless told it may)
+const base = fs.mkdtempSync(path.join(os.tmpdir(), "oma-releases-"));
+const dir = path.join(base, ".app-releases");
+const t = await startApi(3113, { APP_RELEASES_DIR: dir, APP_RELEASE_MAX_MB: "20", WEBSITE_URL: "https://site.example.test" });
+const { call, ok, say } = t;
+const sha = (b) => createHash("sha256").update(b).digest("hex");
+const CHUNK = 4 * 1024 * 1024;
+
+await t.run(async () => {
+  say("Setup: the platform admin, a store owner and a waiter");
+  const s = await t.makeStore();
+  const brandHdr = { "x-rasoipulse-brand": s.brand };
+  await call("POST", "/api/users", { cookie: s.owner, headers: brandHdr, body: { email: "w@acme.test", name: "Waiter", password: "Staff123!", role: "staff" } });
+  const waiter = await t.cookieLogin("w@acme.test", "Staff123!");
+  const A = "/api/platform/app-releases";
+  const admin = (method, path_, body) => call(method, A + path_, { cookie: s.su, body });
+  const put = async (id, index, buf) => {
+    const r = await fetch(`${t.base}${A}/uploads/${id}/chunks/${index}`, { method: "PUT", headers: { cookie: s.su, "content-type": "application/octet-stream", "x-forwarded-for": "198.51.100.77" }, body: buf });
+    return { status: r.status, json: await r.json().catch(() => ({})) };
+  };
+  /** upload a whole file through the real three steps, publishing it or not */
+  const upload = async (apk, version, { notes = "", force = false, publish = false } = {}) => {
+    const start = await admin("POST", "/uploads", { fileName: `oma-${version}.apk`, size: apk.length });
+    if (start.status !== 201) return { start };
+    const n = start.json.chunks;
+    for (let i = 0; i < n; i++) await put(start.json.uploadId, i, apk.subarray(i * CHUNK, Math.min(apk.length, (i + 1) * CHUNK)));
+    const done = await admin("POST", `/uploads/${start.json.uploadId}/complete`, { version, notes, force, publish });
+    return { start, done, release: done.json.release };
+  };
+
+  say("1. Only the platform admin manages releases");
+  for (const [who, cookie] of [["a store owner", s.owner], ["a waiter", waiter], ["nobody signed in", undefined]]) {
+    const r = await call("GET", A, { cookie });
+    ok(r.status === 403 || r.status === 401, `${who} cannot see the release list`, `${r.status}`);
+  }
+  ok((await call("POST", A + "/uploads", { cookie: s.owner, body: { fileName: "a.apk", size: 5000 } })).status === 403, "…nor start an upload");
+  ok((await admin("GET", "")).status === 200, "the platform admin can");
+
+  say("2. An upload is checked before it is accepted");
+  ok((await admin("POST", "/uploads", { fileName: "notes.txt", size: 5000 })).status === 400, "a file that isn't an .apk is refused up front");
+  ok((await admin("POST", "/uploads", { fileName: "a.apk", size: 10 })).status === 400, "an empty/tiny file is refused");
+  const huge = await admin("POST", "/uploads", { fileName: "a.apk", size: 25 * 1024 * 1024 });
+  ok(huge.status === 413 && /too big/i.test(huge.json.error ?? ""), "a file over the size limit is refused (413) before anything is sent", huge.json.error);
+  const apk1 = makeApk(9 * 1024 * 1024 + 123); // 3 pieces: 4 MB, 4 MB, and the rest
+  const st = await admin("POST", "/uploads", { fileName: "oma.apk", size: apk1.length });
+  ok(st.status === 201 && st.json.chunks === 3 && st.json.chunkSize === CHUNK, "the server splits a 9 MB file into 3 pieces of 4 MB", `${st.json.chunks} pieces`);
+  const id = st.json.uploadId;
+  ok((await put(id, 7, Buffer.alloc(10))).status === 400, "a piece number outside the file is refused");
+  ok((await put(id, 0, Buffer.alloc(1000))).status === 400, "a piece of the wrong length is refused (it must be exactly 4 MB)");
+  ok((await put("ffffffffffffffffffffffff", 0, apk1.subarray(0, CHUNK))).status === 404, "a piece for an upload that doesn't exist: 404");
+  ok((await put(id, 0, apk1.subarray(0, CHUNK))).status === 200, "piece 1 is accepted");
+  ok((await put(id, 0, apk1.subarray(0, CHUNK))).status === 200, "…and sending it AGAIN is harmless (a retry after a dropped connection)");
+  const early = await admin("POST", `/uploads/${id}/complete`, { version: "v-261126-001" });
+  ok(early.status === 409 && early.json.details?.code === "upload_incomplete" && early.json.details.missing.join() === "1,2", "finishing with pieces missing is refused and says which are missing", early.json.error);
+  ok((await put(id, 2, apk1.subarray(2 * CHUNK))).status === 200, "the last (short) piece is accepted — out of order is fine (resume)");
+  ok((await put(id, 1, apk1.subarray(CHUNK, 2 * CHUNK))).status === 200, "and piece 2");
+  ok((await admin("POST", `/uploads/${id}/complete`, { version: "nope" })).status === 400, "a version that isn't v-DDMMYY-NNN is refused");
+
+  say("3. The finished upload becomes a release");
+  const done = await admin("POST", `/uploads/${id}/complete`, { version: "v-261126-001", notes: "First version", force: false, publish: false });
+  const r1 = done.json.release;
+  ok(done.status === 201 && r1?.version === "v-261126-001" && r1.versionCode === 1, "the release is created; its build number is read from the version", `${done.status} build ${r1?.versionCode}`);
+  ok(r1.status === "draft" && r1.size === apk1.length && r1.sha256 === sha(apk1), "saved as a draft, with the file's real size and SHA-256", `${r1.size} bytes`);
+  ok(fs.readdirSync(dir).some((f) => f.endsWith(".apk")), "the file is on the server's disk, in the releases folder");
+  const dup = await upload(makeApk(5000), "v-261126-001");
+  ok(dup.done?.status === 409 && /already exists/.test(dup.done.json.error ?? ""), "a version (build number) that already exists can't be uploaded again", dup.done?.json.error);
+  const notApk = await upload(Buffer.concat([Buffer.from("this is not a zip file "), Buffer.alloc(5000, 1)]), "v-261126-009");
+  ok(notApk.done?.status === 400 && /isn't an APK/.test(notApk.done.json.error ?? ""), "a file that isn't an APK is refused when it is finished", notApk.done?.json.error);
+  const noManifest = await upload(makeApk(6000, { manifest: false }), "v-261126-009");
+  ok(noManifest.done?.status === 400 && /AndroidManifest/.test(noManifest.done.json.error ?? ""), "a zip without an AndroidManifest.xml is refused too");
+  ok(!(await admin("GET", "")).json.releases.some((r) => r.versionCode === 9), "…and neither left a release behind");
+
+  const check = (code) => call("GET", `/api/app-updates/check?versionCode=${code ?? ""}`);
+  say("4. A draft is invisible to phones and the website");
+  ok(!(await check(0)).json.updateAvailable && (await check(0)).json.latest === null, "no release is published yet: nothing to update to");
+  ok((await call("GET", `/api/app-updates/download/${r1.id}`)).status === 404, "a draft can't be downloaded");
+  ok((await call("GET", "/api/app-updates/releases")).json.releases.length === 0, "and is not on the website's list");
+
+  say("5. Publishing, and who is told what");
+  const apk2 = makeApk(60_000), apk3 = makeApk(70_000), apk4 = makeApk(80_000);
+  await admin("PATCH", `/${r1.id}`, { status: "published" });
+  const r2 = (await upload(apk2, "v-261126-002", { notes: "Two: pictures on dishes", publish: true })).release;
+  ok(r2?.status === "published" && r2.publishedAt, "version 2 is published as it is uploaded", r2?.status);
+  let c = (await check(1)).json;
+  ok(c.updateAvailable && !c.force && c.latest.version === "v-261126-002", "a phone on build 1 is told 002 is available — optional, not forced", `${c.updateAvailable} force=${c.force}`);
+  ok(c.pageUrl === "https://site.example.test/app", "with the website page to go to (from the server's own settings)", c.pageUrl);
+  ok(c.latest.sha256 === sha(apk2) && c.latest.size === apk2.length && /\/api\/app-updates\/download\//.test(c.latest.downloadUrl), "and the file's size, fingerprint and download address", `${c.latest.size} bytes`);
+  ok(!(await check(2)).json.updateAvailable, "a phone already on build 2 is told nothing");
+  ok(!(await check(5)).json.updateAvailable, "a phone on a NEWER build (a test build) is told nothing");
+  ok(!(await check(0)).json.updateAvailable && !(await check(undefined)).json.updateAvailable, "a phone that does not say which build it is on is never told to update (the server can't judge it)");
+
+  const r3 = (await upload(apk3, "v-261126-003", { notes: "Three: security fix", force: true, publish: true })).release;
+  c = (await check(2)).json;
+  ok(c.updateAvailable && c.force === true && c.latest.version === "v-261126-003", "version 3 is FORCED: a phone on build 2 must update", `force=${c.force}`);
+  c = (await check(1)).json;
+  ok(c.force === true && c.whatsNew.map((w) => w.version).join() === "v-261126-003,v-261126-002", "a phone on build 1 must too — and sees what changed in BOTH newer versions, newest first", c.whatsNew.map((w) => w.version).join());
+  ok(!(await check(3)).json.updateAvailable, "a phone already on the forced build is free to go");
+  const r4 = (await upload(apk4, "v-261126-004", { notes: "Four: small tweak", publish: true })).release;
+  c = (await check(2)).json;
+  ok(c.force === true && c.latest.version === "v-261126-004", "a later OPTIONAL release doesn't cancel an earlier forced one: a phone that skipped 003 must still update", `force=${c.force}`);
+  ok((await check(3)).json.force === false && (await check(3)).json.updateAvailable === true, "a phone on 003 (past the forced one) gets only the optional 004");
+
+  say("6. A forced update also turns old builds away at sign-in");
+  const login = (code, password) => fetch(`${t.base}/api/auth/app-login`, { method: "POST", headers: { "content-type": "application/json", "x-forwarded-for": "198.51.100.88", ...(code ? { "x-oma-version-code": String(code) } : {}) }, body: JSON.stringify({ email: "w@acme.test", password }) }).then(async (r) => ({ status: r.status, json: await r.json().catch(() => ({})) }));
+  const old = await login(2, "Staff123!");
+  ok(old.status === 426 && old.json.details?.code === "update_required" && old.json.details.pageUrl === "https://site.example.test/app", "build 2 is refused at sign-in with 426 'update_required' and the page to update from", `${old.status} ${old.json.details?.code}`);
+  ok((await login(2, "wrong-password")).status === 426, "…before any password is looked at (a wrong password gets the same answer)");
+  ok((await login(3, "Staff123!")).status === 200, "build 3 signs in normally");
+  ok((await login(undefined, "Staff123!")).status === 200, "a build that sends no number (older app) signs in normally");
+  ok((await call("POST", "/api/auth/login", { body: { email: "w@acme.test", password: "Staff123!" } })).status === 200, "the dashboard's sign-in is not affected");
+
+  say("7. Downloading the APK");
+  const dl = await fetch(`${t.base}/api/app-updates/download/${r2.id}`, { headers: { "x-forwarded-for": "198.51.100.90" } });
+  const bytes = Buffer.from(await dl.arrayBuffer());
+  ok(dl.status === 200 && sha(bytes) === sha(apk2), "the file downloads, byte for byte what was uploaded (no sign-in needed)", `${bytes.length} bytes`);
+  ok(dl.headers.get("content-type") === "application/vnd.android.package-archive" && /attachment; filename="rasoi-pulse-oma-v-261126-002\.apk"/.test(dl.headers.get("content-disposition") ?? ""), "as an Android package, with a clear file name", dl.headers.get("content-disposition"));
+  ok(dl.headers.get("accept-ranges") === "bytes", "and can resume after a dropped connection (byte ranges)");
+  ok(dl.headers.get("cache-control") === "no-cache", "and is never kept by a cache (a withdrawn version stops at once)", dl.headers.get("cache-control"));
+  const part = await fetch(`${t.base}/api/app-updates/download/${r2.id}`, { headers: { range: "bytes=100-199", "x-forwarded-for": "198.51.100.91" } });
+  const partBytes = Buffer.from(await part.arrayBuffer());
+  ok(part.status === 206 && partBytes.equals(apk2.subarray(100, 200)), "a byte range gives exactly those bytes (206)", `${part.status}`);
+  await new Promise((r) => setTimeout(r, 200));
+  const after = (await admin("GET", "")).json.releases.find((r) => r.id === r2.id);
+  ok(after.downloads === 1, "the download counter counted the full download once, not the resumed part", `downloads ${after.downloads}`);
+  ok((await call("GET", "/api/app-updates/download/not-an-id")).status === 404 && (await call("GET", "/api/app-updates/download/ffffffffffffffffffffffff")).status === 404, "a made-up download address: 404");
+
+  say("8. The website's list");
+  const pub = (await call("GET", "/api/app-updates/releases")).json;
+  ok(pub.latest.version === "v-261126-004" && pub.releases.map((r) => r.version).join() === "v-261126-004,v-261126-003,v-261126-002,v-261126-001", "newest first, and only the PUBLISHED releases (all four are published by now)", pub.releases.map((r) => r.version).join());
+  ok(!JSON.stringify(pub).includes("createdBy") && !JSON.stringify(pub).includes(r2.fileName ?? "oma-v"), "no internal fields (who uploaded, the stored file name) are shown", "");
+  ok(pub.releases.every((r) => /^http/.test(r.downloadUrl) && r.sha256.length === 64 && r.size > 0), "each has a full download address, its SHA-256 and size");
+
+  say("9. Managing releases");
+  const patch1 = await admin("PATCH", `/${r4.id}`, { notes: "Four: reworded", force: true });
+  ok(patch1.status === 200 && patch1.json.release.force === true && patch1.json.release.notes === "Four: reworded", "notes and the force switch can be changed after publishing");
+  ok((await check(3)).json.force === true, "…and the change reaches phones at once (003 is now below a forced 004)");
+  await admin("PATCH", `/${r4.id}`, { status: "withdrawn" });
+  ok((await check(3)).json.updateAvailable === false, "a WITHDRAWN release disappears from the phones' view (003 is the newest again)");
+  ok((await call("GET", `/api/app-updates/download/${r4.id}`)).status === 404, "…and can't be downloaded");
+  await admin("PATCH", `/${r3.id}`, { force: false });
+  ok((await check(2)).json.force === false && (await check(2)).json.updateAvailable === true, "taking the force off 003 lets build 2 carry on (still offered the update)");
+  ok((await admin("PATCH", `/${r3.id}`, { status: "nonsense" })).status === 400 && (await admin("PATCH", "/ffffffffffffffffffffffff", { notes: "x" })).status === 404, "a bad status is refused; an unknown release is 404");
+  const list = (await admin("GET", "")).json;
+  ok(list.releases.length === 4 && list.releases[0].versionCode === 4 && list.forcedBelow === null && list.chunkSize === CHUNK, "the console's list: newest first, the rule in force (none now) and the piece size", `forcedBelow ${JSON.stringify(list.forcedBelow)}`);
+  await admin("PATCH", `/${r3.id}`, { force: true });
+  ok((await admin("GET", "")).json.forcedBelow?.version === "v-261126-003", "with 003 forced again the list says: apps older than v-261126-003 must update");
+  const key = fs.readdirSync(dir).filter((f) => f.endsWith(".apk")).length;
+  ok((await admin("DELETE", `/${r1.id}`)).status === 204, "a release can be deleted");
+  ok(fs.readdirSync(dir).filter((f) => f.endsWith(".apk")).length === key - 1, "…and its file goes from the disk too");
+  ok(!(await admin("GET", "")).json.releases.some((r) => r.id === r1.id), "…and from the list");
+
+  say("10. Nothing is left lying around");
+  const leftover = fs.existsSync(path.join(dir, ".parts")) ? fs.readdirSync(path.join(dir, ".parts")).filter((f) => f.endsWith(".part")) : [];
+  ok(leftover.length === 3, "unfinished uploads (the refused ones) stay as parts to be cleared after a day — finished ones are gone", `${leftover.length} parts`);
+});
+fs.rmSync(base, { recursive: true, force: true });

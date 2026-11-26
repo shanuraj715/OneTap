@@ -30,6 +30,10 @@ export interface ClientOptions {
   onUnauthorized: () => void;
   fetchImpl?: typeof fetch;
   timeoutMs?: number;
+  /** sent with every request: which build of the app this is (the server turns away a build that is too old when an update is required) */
+  headers?: Record<string, string>;
+  /** called when the server refuses because this build is out of date and an update is required (426) */
+  onUpdateRequired?: (details: Record<string, unknown>) => void;
 }
 
 export interface RequestOptions<S extends z.ZodType | undefined> {
@@ -52,7 +56,7 @@ export function createClient(options: ClientOptions) {
   async function request<S extends z.ZodType | undefined = undefined>(path: string, opts: RequestOptions<S> = {}): Promise<S extends z.ZodType ? z.infer<S> : unknown> {
     const { method = "GET", body, outletId, auth = true, schema, signal } = opts;
     const token = auth ? options.getToken() : null;
-    const headers: Record<string, string> = { accept: "application/json" };
+    const headers: Record<string, string> = { accept: "application/json", ...options.headers };
     if (body !== undefined) headers["content-type"] = "application/json";
     if (token) headers.authorization = `Bearer ${token}`;
     if (outletId) headers["x-rasoipulse-outlet"] = outletId;
@@ -86,6 +90,7 @@ export function createClient(options: ClientOptions) {
       const retry = Number(details?.retryAfterSec ?? res.headers.get("retry-after"));
       const message = typeof data.error === "string" && data.error ? data.error : res.status >= 500 ? "The server had a problem. Try again in a moment." : `The server answered ${res.status}.`;
       if (res.status === 401 && token) options.onUnauthorized();
+      if (res.status === 426 && details?.code === "update_required") options.onUpdateRequired?.(details);
       throw new ApiError(res.status, message, { code: typeof details?.code === "string" ? details.code : undefined, details, retryAfterSec: Number.isFinite(retry) && retry > 0 ? retry : undefined });
     }
 

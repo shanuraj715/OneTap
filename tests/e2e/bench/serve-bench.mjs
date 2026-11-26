@@ -39,6 +39,8 @@ Object.assign(process.env, {
   CORS_ORIGINS: "http://localhost:3171,http://127.0.0.1:3171",
   PUBLIC_API_URL: "http://localhost:3097",
   STOREFRONT_ORIGIN: "http://localhost:3170",
+  WEBSITE_URL: "http://localhost:3173", // where the staff app sends people to download an update (the website's /app page)
+  APP_RELEASE_MAX_MB: "20", // small, so a test can show the "too big" message (uploaded APKs go to .bench/.app-releases)
   LOG_LEVEL: "warn",
   // brute-force guard, with block times of seconds instead of minutes so a test can watch a block end and the next one be longer
   LOGIN_MAX_FAILURES: "3",

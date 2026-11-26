@@ -1287,3 +1287,19 @@
 {"id":"t92-dashboard-reopen-outlets-ui","status":"error","pass":18,"fail":0,"mode":"headless","at":"2026-11-26T12:18:46.607Z","durationMs":7179,"error":"dashboard-reopen-outlets-ui.mjs exited with code 1. }  Node.js v24.3.0"}
 {"id":"t92-dashboard-reopen-outlets-ui","status":"pass","pass":30,"fail":0,"mode":"headless","at":"2026-11-26T12:19:13.755Z","durationMs":7550}
 {"id":"t28-rate-limits-api","status":"pass","pass":124,"fail":0,"mode":"headless","at":"2026-11-26T12:48:48.875Z","durationMs":27969}
+{"id":"t93-app-releases-api","status":"fail","pass":65,"fail":1,"mode":"headless","at":"2026-11-26T13:21:44.232Z","durationMs":5372}
+{"id":"t28-rate-limits-api","status":"fail","pass":132,"fail":1,"mode":"headless","at":"2026-11-26T13:24:07.671Z","durationMs":8743}
+{"id":"t93-app-releases-api","status":"pass","pass":66,"fail":0,"mode":"headless","at":"2026-11-26T13:24:11.791Z","durationMs":4089}
+{"id":"t28-rate-limits-api","status":"pass","pass":133,"fail":0,"mode":"headless","at":"2026-11-26T13:24:33.248Z","durationMs":9594}
+{"id":"t93-app-releases-api","status":"pass","pass":66,"fail":0,"mode":"headless","at":"2026-11-26T13:24:37.400Z","durationMs":4124}
+{"id":"t94-app-releases-ui","status":"error","pass":12,"fail":0,"mode":"headless","at":"2026-11-26T13:28:54.050Z","durationMs":4731,"error":"app-releases-ui.mjs exited with code 1. }  Node.js v24.3.0"}
+{"id":"t93-app-releases-api","status":"pass","pass":66,"fail":0,"mode":"headless","at":"2026-11-26T13:30:52.313Z","durationMs":4257}
+{"id":"t94-app-releases-ui","status":"fail","pass":44,"fail":1,"mode":"headless","at":"2026-11-26T13:31:18.305Z","durationMs":15202}
+{"id":"t94-app-releases-ui","status":"pass","pass":45,"fail":0,"mode":"headless","at":"2026-11-26T13:31:52.473Z","durationMs":14455}
+{"id":"t95-app-releases-website-ui","status":"fail","pass":25,"fail":4,"mode":"headless","at":"2026-11-26T13:36:21.467Z","durationMs":1435}
+{"id":"t95-app-releases-website-ui","status":"pass","pass":29,"fail":0,"mode":"headless","at":"2026-11-26T13:36:37.437Z","durationMs":1853}
+{"id":"t28-rate-limits-api","status":"pass","pass":133,"fail":0,"mode":"headless","at":"2026-11-26T13:55:40.558Z","durationMs":10644}
+{"id":"t87-staff-app-auth-api","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-26T13:55:48.910Z","durationMs":8325}
+{"id":"t93-app-releases-api","status":"pass","pass":67,"fail":0,"mode":"headless","at":"2026-11-26T13:55:54.887Z","durationMs":5954}
+{"id":"t94-app-releases-ui","status":"pass","pass":45,"fail":0,"mode":"headless","at":"2026-11-26T13:56:09.285Z","durationMs":14378}
+{"id":"t95-app-releases-website-ui","status":"pass","pass":29,"fail":0,"mode":"headless","at":"2026-11-26T13:56:23.100Z","durationMs":13796}

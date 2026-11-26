@@ -69,3 +69,5 @@ export async function startApi(port, extraEnv = {}) {
   }
   return { REPO, API, db, env, base, call, cookieLogin, ok, say, makeStore, finish, run, raw: (c) => db.mongoose.connection.db.collection(c) };
 }
+
+export { makeApk } from "./_apk.mjs";

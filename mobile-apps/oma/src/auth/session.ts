@@ -26,6 +26,8 @@ export interface SessionState {
   /** the server said this sign-in no longer counts */
   expire(): void;
   selectOutlet(id: string): Promise<void>;
+  /** a platform admin goes back to "which store, which outlet?" (nobody else can: their outlets are fixed by their account) */
+  changeOutlet(): void;
   clearNotice(): void;
 }
 
@@ -50,7 +52,9 @@ export function createSessionStore({ api, storage }: SessionDeps) {
       if (!canUseApp(user)) throw new ApiError(403, notForThisApp(user));
       const outlets = (await api().outlets()).outlets.filter((o) => !o.blocked); // a blocked outlet can't take orders
       if (!outlets.length) throw new ApiError(403, "This account has no restaurant outlet to take orders for.");
-      set({ user, outlets, outletId: pickOutlet(outlets, preferredOutlet), status: "signed-in", notice: null });
+      // a platform admin can work in any store, so nothing is chosen for them: the app asks which store and which outlet, every time
+      const outletId = user.isSuperAdmin ? null : pickOutlet(outlets, preferredOutlet);
+      set({ user, outlets, outletId, status: "signed-in", notice: null });
     }
 
     return {
@@ -115,7 +119,12 @@ export function createSessionStore({ api, storage }: SessionDeps) {
       async selectOutlet(id) {
         if (!get().outlets.some((o) => o.id === id)) return;
         set({ outletId: id });
-        if (await storage.load().then((s) => !!s.token)) await storage.saveOutlet(id).catch(() => undefined);
+        // (a platform admin is asked again next time, so there is nothing to remember for them)
+        if (!get().user?.isSuperAdmin && (await storage.load().then((s) => !!s.token))) await storage.saveOutlet(id).catch(() => undefined);
+      },
+
+      changeOutlet() {
+        if (get().status === "signed-in" && get().user?.isSuperAdmin) set({ outletId: null });
       },
 
       clearNotice() { set({ notice: null }); },

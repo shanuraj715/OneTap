@@ -182,3 +182,35 @@ export const ordersSchema = z.object({ orders: z.array(orderSchema) });
 export const moveSchema = z.object({ session: z.object({ _id: z.string(), tableId: z.string() }), from: tableSchema, to: tableSchema });
 export const paymentSchema = z.object({ tab: z.number(), unpaidTotal: z.number(), allPaid: z.boolean() });
 export const closedSchema = z.object({ session: z.object({ _id: z.string(), status: z.string() }) });
+
+/** One published version of this app, as the server describes it (the file's address included). */
+export const releaseSchema = z.object({
+  id: z.string(),
+  version: z.string(),
+  versionCode: z.number(),
+  notes: z.string().default(""),
+  force: z.boolean().default(false),
+  size: z.number().default(0),
+  downloadUrl: z.string().default(""),
+});
+export type Release = z.infer<typeof releaseSchema>;
+
+/** What changed in a version newer than this one (up to five, newest first). */
+export const whatsNewSchema = z.object({ version: z.string(), versionCode: z.number(), notes: z.string().default(""), force: z.boolean().default(false) });
+export type WhatsNew = z.infer<typeof whatsNewSchema>;
+
+/** The answer to "is there a newer version of the app than the one on this phone?" Needs no sign-in. */
+export const updateCheckSchema = z.object({
+  updateAvailable: z.boolean(),
+  /** some version newer than this one is marked "required": this phone has to update before it can be used */
+  force: z.boolean(),
+  latest: releaseSchema.nullable(),
+  whatsNew: z.array(whatsNewSchema).default([]),
+  /** the website page people download the app from (opened in the phone's browser) */
+  pageUrl: z.string(),
+});
+export type UpdateCheck = z.infer<typeof updateCheckSchema>;
+
+/** The extra facts of the server's "426 update_required" refusal (an old build trying to sign in while an update is required). */
+export const updateRequiredSchema = z.object({ code: z.literal("update_required"), pageUrl: z.string(), latest: releaseSchema.nullable().optional() });
+export type UpdateRequired = z.infer<typeof updateRequiredSchema>;

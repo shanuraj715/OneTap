@@ -46,6 +46,15 @@ export async function getPricing() {
   }
 }
 
+/** The staff app's published versions (newest first) for the /app page — `{ latest, releases }`, or null if the API can't be reached. */
+export async function getAppReleases() {
+  try {
+    return await get("/api/app-updates/releases");
+  } catch {
+    return null;
+  }
+}
+
 export async function getPreview(id, token) {
   const res = await fetch(`${apiServerUrl()}/api/site/preview/${encodeURIComponent(id)}?t=${encodeURIComponent(token ?? "")}`, { cache: "no-store" });
   if (!res.ok) return null;

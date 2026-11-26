@@ -206,6 +206,29 @@ export const POLICIES = {
     message: "Too many requests from this printer agent. Please wait {wait}.",
   },
 
+  /* ------------------------------------------------------------- the staff app's updates */
+  "app-update-check": {
+    windowMs: MINUTE,
+    limit: 120,
+    key: "ip",
+    why: "Every phone running the staff app asks once when it starts whether a newer version exists. A restaurant's whole Wi-Fi shares one address and the staff all open the app at the same time, so the budget is generous — it only stops a script hammering the question.",
+    message: "Too many update checks from this network. Please try again in {wait}.",
+  },
+  "app-download": {
+    windowMs: 10 * MINUTE,
+    limit: 40,
+    key: "ip",
+    why: "Downloading the app's APK (tens of MB). 40 downloads per 10 minutes per address leaves room for a whole team installing at once behind one Wi-Fi, and stops someone using the download as a bandwidth drain.",
+    message: "Too many downloads from this network. Please try again in {wait}.",
+  },
+  "release-upload": {
+    windowMs: 10 * MINUTE,
+    limit: 200,
+    key: "user",
+    why: "Uploading a new app version: a 100 MB file goes up in 4 MB pieces, one request each (a 300 MB file is 75). 200 pieces in 10 minutes is room for a couple of uploads plus retries, and it is kept under the dashboard's own 240-changes-a-minute cap so a stuck page or a script is stopped by this one. Only the platform's super admin can upload.",
+    message: "That's a lot of app uploads in a short time. Please wait {wait}.",
+  },
+
   /* ----------------------------------------------- signed in: heavy or sensitive actions */
   "team-write": {
     windowMs: MINUTE,

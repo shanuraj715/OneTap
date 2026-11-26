@@ -15,6 +15,7 @@ import * as cacheInspect from "./cache-inspect.service.js";
 import { dashboard } from "./dashboard.service.js";
 import { listLoginLogs, LOGIN_FILTERS } from "./login-logs.service.js";
 import { onboardingRouter } from "../onboarding/onboarding.routes.js";
+import { appReleasesAdminRouter } from "../app-releases/app-releases.routes.js";
 import { sysmonRouter } from "../sysmon/sysmon.routes.js";
 import * as storeDelete from "./store-delete.service.js";
 import { storePlan } from "./plan.service.js";
@@ -242,6 +243,8 @@ platformRouter.post("/storage/adopt/:brandId", limiter("secrets"), async (req, r
 /** CPU, memory, disk, network, processes and a 0–10 health score for the machine this API runs on. */
 platformRouter.use("/server", sysmonRouter);
 platformRouter.use("/onboarding", onboardingRouter);
+// the staff app's releases: upload an APK, publish it, force an update
+platformRouter.use("/app-releases", appReleasesAdminRouter);
 
 /* ------------------------------------------------------------------- cache */
 

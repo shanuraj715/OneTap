@@ -4,6 +4,7 @@ import { isProd } from "../../env.js";
 import { bearerToken, requireUser, SESSION_COOKIE } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import { usesPolicy } from "../../middleware/rate-limit.js";
+import { assertAppCurrent } from "../app-releases/app-releases.service.js";
 import { accountBlockedError, assertAccountNotBlocked, assertNotBlocked, blockInfo, clearAccountFailures, failed, floodLimiter, recordAccountFailure } from "../security/login-guard.js";
 import { describeSessionUser, login, logout } from "./auth.service.js";
 
@@ -72,6 +73,8 @@ authRouter.post("/login", loginFlood, usesPolicy("login-account"), async (req, r
  * `Authorization: Bearer <token>` afterwards); nothing is set as a cookie. The app keeps it in the phone's secure storage.
  */
 authRouter.post("/app-login", loginFlood, usesPolicy("login-account"), async (req, res) => {
+  // an app build that is too old (and a forced update is out) is turned away BEFORE any password is checked
+  await assertAppCurrent(req);
   const result = await signIn(req);
   res.json({ token: result.token, expiresAt: result.expiresAt, user: result.user });
 });

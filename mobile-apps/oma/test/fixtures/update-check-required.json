@@ -1,0 +1,31 @@
+{
+  "updateAvailable": true,
+  "force": true,
+  "latest": {
+    "id": "6b08366cfbec0fab49e219fb",
+    "version": "v-261128-003",
+    "versionCode": 3,
+    "notes": "Security fix: please update",
+    "force": true,
+    "publishedAt": "2026-11-27T10:00:00.000Z",
+    "size": 3400000,
+    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "downloadUrl": "https://api.rasoipulse.in/api/app-updates/download/6b08366cfbec0fab49e219fb"
+  },
+  "whatsNew": [
+    {
+      "version": "v-261128-003",
+      "versionCode": 3,
+      "notes": "Security fix: please update",
+      "force": true
+    },
+    {
+      "version": "v-261127-002",
+      "versionCode": 2,
+      "notes": "Menu loads once and stays fast\nTables grouped by floor",
+      "force": false
+    }
+  ],
+  "pageUrl": "https://rasoipulse.in/app",
+  "checkedAt": "2026-11-26T13:38:52.597Z"
+}

@@ -54,6 +54,7 @@ import {
   Server as ServerIcon,
   MessageCircle,
   ClipboardList,
+  Smartphone,
   Route as RouteIcon,
   CalendarDays,
   Star,
@@ -130,6 +131,7 @@ import { PlatformSettings } from "./routes/platform/PlatformSettings";
 import { PlatformStoreDetail } from "./routes/platform/PlatformStoreDetail";
 import { PlatformStores } from "./routes/platform/PlatformStores";
 import { PlatformLeads } from "./routes/platform/PlatformLeads";
+import { AppReleases } from "./routes/platform/AppReleases";
 import { OnboardingForm } from "./routes/platform/onboarding/OnboardingForm";
 import { OnboardingList } from "./routes/platform/onboarding/OnboardingList";
 import { PricingPage } from "./routes/platform/onboarding/PricingPage";
@@ -196,6 +198,7 @@ const ROUTE_META = {
   "/platform/cache": { title: "Cache", icon: Database },
   "/platform/storage": { title: "Storage", icon: HardDrive },
   "/platform/ai": { title: "AI pictures", icon: Sparkles },
+  "/platform/app-updates": { title: "App updates", icon: Smartphone },
   "/platform/settings": { title: "Platform settings", icon: SettingsIcon },
   "/platform/website": { title: "Website", icon: Globe },
   "/platform/website/settings": { title: "Website settings", icon: Globe },
@@ -259,6 +262,7 @@ const PLATFORM_NAV_GROUPS = [
       { to: "/platform/cache", label: "Cache", icon: <Database size={ICON} /> },
       { to: "/platform/storage", label: "Storage", icon: <HardDrive size={ICON} /> },
       { to: "/platform/ai", label: "AI pictures", icon: <Sparkles size={ICON} /> },
+      { to: "/platform/app-updates", label: "App updates", icon: <Smartphone size={ICON} /> },
       { to: "/platform/settings", label: "Settings", icon: <SettingsIcon size={ICON} /> },
     ],
   },
@@ -635,6 +639,7 @@ function Shell({ can }                                     ) {
               <Route path="/platform/cache" element={<PlatformCache />} />
               <Route path="/platform/storage" element={<PlatformStorage />} />
               <Route path="/platform/ai" element={<PlatformAi />} />
+              <Route path="/platform/app-updates" element={<AppReleases />} />
               <Route path="/platform/settings" element={<PlatformSettings />} />
               <Route path="/platform/website" element={<WebsitePages />} />
               <Route path="/platform/website/settings" element={<WebsiteSettings />} />

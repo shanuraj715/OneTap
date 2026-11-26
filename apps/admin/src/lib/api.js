@@ -936,3 +936,43 @@ export const listFeedback = (o, { days = 30, stars = [], withComment = false, be
 
 export const getCartReminders = (o) => req("/api/cart-reminders", { outletId: o._id });
 export const saveCartReminders = (o, body) => req("/api/cart-reminders", { method: "PUT", body: JSON.stringify(body), outletId: o._id });
+
+/* ----------------------------------------------------------- the staff app's releases (platform console) */
+
+export const listAppReleases = () => req("/api/platform/app-releases");
+export const startAppUpload = (fileName, size) => req("/api/platform/app-releases/uploads", json("POST", { fileName, size }));
+export const completeAppUpload = (uploadId, body) => req(`/api/platform/app-releases/uploads/${uploadId}/complete`, json("POST", body));
+export const updateAppRelease = (id, body) => req(`/api/platform/app-releases/${id}`, json("PATCH", body));
+export const deleteAppRelease = (id) => req(`/api/platform/app-releases/${id}`, { method: "DELETE" });
+
+/**
+ * Send ONE piece of an APK. XMLHttpRequest rather than fetch because only it reports how many bytes have gone up, which the progress bar
+ * needs. Resolves when the server has the piece; rejects with an ApiError (a 4xx/5xx) or a plain Error (the connection dropped).
+ * `onBytes(n)` is called with the bytes of THIS piece sent so far; `signal` cancels it.
+ */
+export function putAppChunk(uploadId, index, blob, { onBytes, signal } = {}) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("PUT", `${API_BASE}/api/platform/app-releases/uploads/${uploadId}/chunks/${index}`);
+    xhr.withCredentials = true; // session cookie
+    xhr.setRequestHeader("content-type", "application/octet-stream");
+    xhr.upload.onprogress = (e) => onBytes?.(e.loaded);
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) return resolve();
+      let body = {};
+      try {
+        body = JSON.parse(xhr.responseText);
+      } catch {
+        /* not JSON (a gateway page) */
+      }
+      reject(new ApiError(xhr.status, body.error ?? `The server answered ${xhr.status}`, body.details));
+    };
+    xhr.onerror = () => reject(new Error("The connection dropped."));
+    xhr.onabort = () => reject(new DOMException("Upload cancelled", "AbortError"));
+    if (signal) {
+      if (signal.aborted) return reject(new DOMException("Upload cancelled", "AbortError"));
+      signal.addEventListener("abort", () => xhr.abort(), { once: true });
+    }
+    xhr.send(blob);
+  });
+}

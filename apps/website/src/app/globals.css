@@ -575,3 +575,34 @@ p { margin: 0; text-wrap: pretty; }
 .compare .no { color: color-mix(in srgb, var(--muted) 55%, transparent); }
 .compare .pick { display: inline-block; font-size: 12px; font-weight: 600; color: var(--brand); padding: 3px 9px; border-radius: 999px; border: 1px dashed color-mix(in srgb, var(--brand) 45%, transparent); white-space: nowrap; }
 .compare tbody tr:hover td, .compare tbody tr:hover th { background: color-mix(in srgb, var(--brand) 4%, var(--surface)); }
+
+/* ------------------------------------------------------- staff app page (/app) */
+.app-facts { list-style: none; margin: 22px 0 0; padding: 0; display: grid; gap: 8px; color: var(--ink-2); font-size: 15px; }
+.app-facts li { display: flex; align-items: center; gap: 9px; }
+.app-facts svg { color: var(--brand); flex-shrink: 0; }
+.app-none { margin-top: 26px; max-width: 520px; padding: 14px 18px; border: 1px dashed var(--line); border-radius: var(--radius); background: var(--surface); color: var(--ink-2); }
+.app-ticket-version { font-size: clamp(24px, 7vw, 30px); letter-spacing: -0.02em; word-break: break-all; }
+.app-page .hero-media { display: flex; justify-content: center; padding: 14px 0; }
+/* beside the version number, not over the notes below it */
+.app-page .stamp { top: 52px; bottom: auto; right: -14px; }
+.app-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; counter-reset: step; }
+@media (min-width: 840px) { .app-steps { grid-template-columns: repeat(3, 1fr); } }
+.app-steps li { counter-increment: step; position: relative; padding: 24px 24px 24px 24px; border: 1px solid var(--line); border-radius: 18px; background: var(--paper); }
+.app-steps li::before { content: counter(step); display: grid; place-items: center; width: 34px; height: 34px; margin-bottom: 14px; border-radius: 10px; background: var(--brand); color: var(--brand-ink); font: 800 16px/1 var(--font-display), sans-serif; }
+.app-steps h3 { font-size: 19px; font-weight: 700; margin-bottom: 6px; }
+.app-steps p { color: var(--muted); font-size: 15.5px; }
+.app-updates .section-head { margin-bottom: 0; }
+.app-updates .section-head p strong { color: var(--ink); }
+.app-versions { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; max-width: 860px; }
+.app-version { padding: 20px 22px; border: 1px solid var(--line); border-radius: 18px; background: var(--paper); }
+.app-version-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; }
+.app-version-name { font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
+.app-version-meta { color: var(--muted); font-size: 14px; margin-right: auto; }
+.app-pill { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+.app-pill-brand { background: var(--brand-wash); color: var(--brand); }
+.app-pill-warn { border: 1.5px solid var(--brand); color: var(--brand); }
+.app-notes { margin: 14px 0 0; padding-left: 20px; color: var(--ink-2); font-size: 15.5px; display: grid; gap: 4px; }
+.app-verify { margin-top: 14px; font-size: 14px; }
+.app-verify summary { display: inline-flex; align-items: center; gap: 7px; cursor: pointer; color: var(--muted); font-weight: 600; }
+.app-verify summary:hover { color: var(--ink); }
+.app-verify p { margin-top: 8px; padding: 10px 12px; border-radius: 10px; background: var(--surface); border: 1px solid var(--line); font-size: 12.5px; line-height: 1.5; overflow-wrap: anywhere; color: var(--ink-2); }

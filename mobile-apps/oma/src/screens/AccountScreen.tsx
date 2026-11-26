@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { View } from "react-native";
+import { useStore } from "zustand";
 import { canManageTables } from "@/auth/permissions";
 import { API_HOST, APP_BUILD, APP_NAME, APP_TAGLINE, APP_VERSION } from "@/lib/config";
 import { useDrafts, useRuntime, useSession } from "@/runtime";
 import { Button, Card, ConfirmDialog, Divider, Dropdown, Icon, IconTile, Screen, ScreenTitle, Text, toasts, useTheme, type IconName } from "@/ui";
 
-const ROLE: Record<string, string> = { kitchen: "Kitchen", editor: "Editor", accountant: "Accountant", manager: "Manager", staff: "Cashier / Staff", owner: "Owner" };
+const ROLE: Record<string, string> = { super_admin: "Platform admin", kitchen: "Kitchen", editor: "Editor", accountant: "Accountant", manager: "Manager", staff: "Cashier / Staff", owner: "Owner" };
 
 function Fact({ label, value, icon }: { label: string; value: string; icon: IconName }) {
   const { c } = useTheme();
@@ -28,9 +29,22 @@ export function AccountScreen() {
   const unsent = useDrafts((s) => Object.values(s.drafts).filter((d) => d.lines.length > 0).length);
   const [confirming, setConfirming] = useState(false);
   const [leaving, setLeaving] = useState(false);
+  const [changing, setChanging] = useState(false);
+  const { updates } = useRuntime();
+  const updateStatus = useStore(updates, (s) => s.status);
+  const updateLatest = useStore(updates, (s) => s.latest);
+  const updateChecking = useStore(updates, (s) => s.checking);
 
   if (!user) return null;
   const outlet = outlets.find((o) => o.id === outletId);
+
+  async function checkForUpdates() {
+    const status = await updates.getState().check(true);
+    const { error } = updates.getState();
+    if (error) toasts.warn(`Couldn't check for updates: ${error}`);
+    else if (status === "current") toasts.ok("You have the latest version.");
+    // (an available / required update opens its own pop-up or screen)
+  }
 
   async function signOut() {
     setLeaving(true);
@@ -54,7 +68,12 @@ export function AccountScreen() {
         <Fact icon="table" label="Can manage tables" value={canManageTables(user) ? "Yes" : "No — orders only"} />
       </Card>
 
-      {outlets.length > 1 ? (
+      {user.isSuperAdmin ? (
+        <Card style={{ gap: 12 }}>
+          <Fact icon="store" label="Working at" value={outlet ? `${outlet.name}${outlet.brandName ? ` · ${outlet.brandName}` : ""}` : "—"} />
+          <Button title="Change store or outlet" icon="swap" variant="outline" fullWidth onPress={() => (unsent > 0 ? setChanging(true) : session.getState().changeOutlet())} testID="change-outlet" />
+        </Card>
+      ) : outlets.length > 1 ? (
         <Dropdown<string>
           label="Working at"
           value={outletId}
@@ -78,9 +97,27 @@ export function AccountScreen() {
         <Fact icon="tag" label="Version" value={APP_VERSION} />
         <Fact icon="hash" label="Build" value={String(APP_BUILD)} />
         <Fact icon="server" label="Server" value={API_HOST} />
+        <Divider />
+        <Fact
+          icon="download"
+          label="Updates"
+          value={updateStatus === "available" ? `${updateLatest?.version ?? "A new version"} is out` : updateStatus === "required" ? "Update required" : updateStatus === "current" ? "Up to date" : "Not checked yet"}
+        />
+        <Button title="Check for updates" icon="refresh" variant="outline" fullWidth loading={updateChecking} onPress={() => void checkForUpdates()} testID="check-updates" />
       </Card>
 
       <Button title="Sign out" icon="logout" variant="outline" fullWidth onPress={() => setConfirming(true)} testID="sign-out" />
+
+      <ConfirmDialog
+        visible={changing}
+        title="Change store or outlet?"
+        icon="swap"
+        message={`You have ${unsent} ${unsent === 1 ? "order" : "orders"} that ${unsent === 1 ? "was" : "were"} not sent yet. ${unsent === 1 ? "It" : "They"} will be lost.`}
+        confirmLabel="Yes, change"
+        destructive
+        onConfirm={() => { setChanging(false); session.getState().changeOutlet(); }}
+        onCancel={() => setChanging(false)}
+      />
 
       <ConfirmDialog
         visible={confirming}

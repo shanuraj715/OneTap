@@ -1,6 +1,6 @@
 # MEMORY.md — everything we know about this project
 
-> A snapshot taken on 2026-11-26 of the notes kept about the **Rasoi Pulse** project (a multi-tenant restaurant ordering platform; formerly TablePe / OneTap; the first store is Gazab Momos). It holds 71 notes: decisions, rules, how things were built and tested, what is deployed, and what is still open.
+> A snapshot taken on 2026-11-26 of the notes kept about the **Rasoi Pulse** project (a multi-tenant restaurant ordering platform; formerly TablePe / OneTap; the first store is Gazab Momos). It holds 72 notes: decisions, rules, how things were built and tested, what is deployed, and what is still open.
 >
 > **What is NOT in here, on purpose:** passwords, API keys, tokens and database connection strings (none were stored in the notes), and the server's address, SSH port, database host / user name and personal network addresses (shown as `<VPS-IP>`, `<SSH-PORT>`, `<atlas-cluster>`, `<db-user>`, `<my-public-IP>`). Keep it that way when you edit this file.
 >
@@ -39,7 +39,7 @@
 [whatsapp-chat](#whatsapp-chat), [message-sending](#message-sending), [marketing](#marketing), [analytics](#analytics)
 
 **Everything else**  
-[feedback-app-flow-parity](#feedback-app-flow-parity), [feedback-app-icons](#feedback-app-icons), [feedback-app-versioning](#feedback-app-versioning), [feedback-readme-maintenance](#feedback-readme-maintenance), [oma-app](#oma-app)
+[app-updates](#app-updates), [feedback-app-flow-parity](#feedback-app-flow-parity), [feedback-app-icons](#feedback-app-icons), [feedback-app-versioning](#feedback-app-versioning), [feedback-readme-maintenance](#feedback-readme-maintenance), [oma-app](#oma-app)
 
 
 ---
@@ -655,6 +655,8 @@ Env on prod API: API_PORT 3092, CORS_ORIGINS https://admin.rasoipulse.in, PUBLIC
 **2026-11-26 (later) — SSH flakiness explained + the fix:** the VPS accepts SSH only from some of my machine's public addresses (<my-public-IP> worked; <my-public-IP> and <my-public-IP> did not). It is the SAME Mac (MacBookPro.lan, gateway 192.168.31.1) — its internet traffic leaves through different lines/addresses from one minute to the next (seen alternating within ~2 minutes), so a request is blocked or not depending on the line. The user asked "are you using another machine?" — no. **Workaround that worked:** retry until one connection gets through, then keep it: `ssh -p <SSH-PORT> -o ControlMaster=yes -o ControlPath=/tmp/rp-ssh-master -o ControlPersist=30m -fN root@<VPS-IP>`, and run EVERY later ssh/scp/rsync with `-o ControlPath=/tmp/rp-ssh-master` (rsync: `-e "ssh -p <SSH-PORT> -o ControlPath=…"`) — they all reuse that one connection, so the deploy can't hit a blocked line half way. (The user can log in with `ssh root@<VPS-IP> -p <SSH-PORT>` too.) Production now runs main 27493f6.
 
 **2026-11-26 (evening) — staff-app sign-in deployed:** the user asked "if api needs to be updated for app please update" → committed `db67616` (API `app-login` + Bearer; t28 124/124, t87 34/34) and pushed, then synced ONLY `apps/api/src/middleware/auth.js` + `apps/api/src/modules/auth/auth.routes.js` to /var/www/tablepe-prod (checksums matched 8dc946b's versions first; backups in `/root/tablepe-backups/before-app-login-2026-11-26/`), `node --check` on the server, `pm2 restart tablepe-prod-api --update-env` only (WhatsApp worker restarted fine, Mongo connected, /health 200). The server tree is therefore main@db67616 for those two files and 27493f6 elsewhere; 8dc946b (header-highlight, packages/ui) is still undeployed. Rollback = copy the two backups back + restart. See [oma-app](#oma-app).
+
+**2026-11-26 (night) — FULL deploy of main@13e775d (user said "yes deploy to production"):** clean worktree → dry-run rsync (no deletions) → real rsync (excludes now also `.uploads`, `mobile-apps`, `MEMORY.md`, `tests`) → admin build 20 s, storefront 50 s, website 43 s (server has ~2 GB RAM; one at a time) → `pm2 restart tablepe-prod-api tablepe-prod-storefront tablepe-prod-website --update-env` (no pm2 save). Went live: unavailable-now menu call + menu version, re-seat table on order put-back (+ pick-a-table dialog), team members mapped to outlets (+ Users page UI), AND the earlier-undeployed header-highlight (8dc946b: packages/ui + storefront). Verified: /health 200, /api/menu/unavailable answers for the real store, app-login + dashboard login 400 on empty body, rasoipulse.in / admin / rp-demo store 200. Prod code = main@13e775d (server paths). Rollback = redeploy the previous commit 27493f6 (+ the two auth files of db67616 are inside 13e775d already).
 
 ### dev-server-mytimelyne
 
@@ -1580,6 +1582,26 @@ Built 2026-11-16 on `feature/analytics` (from `main` at f6aa7d8). **Nothing comm
 ---
 
 ## Everything else
+
+### app-updates
+
+_2026-11-26/27 — OMA update system (console "App updates" page, website /app download page, in-app optional/required update gate, 426 at sign-in) + super-admin store→outlet chooser in the app; decisions, deploy needs (APP_RELEASES_DIR, rsync exclude), tests t93–t95, what is NOT yet deployed/committed_
+
+**Asked by the user (2026-11-26):** (1) a platform admin signing in to OMA must be asked *store first, then outlet* — even with one store/one outlet; (2) when the app opens, a popup checks for updates: optional (Update/Later) or **forced** (can't enter the app until updated); a button opens a web page in an external browser where the APK is downloaded; (3) console page to manage versions + force flag + upload the APK; (4) a separate website page for app updates/downloads.
+
+**Built (all uncommitted at the time of writing, see git status; NOT deployed — needs a fresh explicit "yes", [feedback-ask-before-prod-deploy](#feedback-ask-before-prod-deploy)):**
+- Shared rules `packages/config-schema/src/app-release.js` (`parseAppVersion`, `decideUpdate`: any NEWER published release with force ⇒ force, so a phone that skipped a forced one still must update; unknown build 0 is never judged; `formatBytes`), model `packages/db/src/models/app-release.js`, API `apps/api/src/modules/app-releases/` (public `/api/app-updates/check|releases|download/:id`; super-admin `/api/platform/app-releases` list/PATCH/DELETE + chunked upload `uploads` → `chunks/:i` (exactly 4 MB each, resumable, in `.app-releases/.parts`) → `complete` (zip + AndroidManifest check, sha256, duplicate build 409)). `assertAppCurrent` in `/api/auth/app-login`: header `x-oma-version-code` too old while an update is forced ⇒ `426 update_required` BEFORE the password is looked at; no header = let through. Three new rate-limit policies (`app-update-check`, `app-download`, `release-upload` 200/10 min — deliberately under team-write's 240/min).
+- Console `apps/admin/src/routes/platform/AppReleases.jsx` (+ `lib/uploadApk.js`: piece-by-piece XHR with progress, 4 retries on connection drops, 4xx not retried). "Cancel upload" only stops the upload (bug found by t94: it used to close the pop-up).
+- Website `apps/website/src/app/app/page.jsx` = `/app` (ISR 300 s + the API's revalidate ping on every publish/withdraw/edit); "app" added to RESERVED_SITE_SLUGS; noindex.
+- App `mobile-apps/oma/src/updates/` (`store.ts`, `UpdateGate.tsx`, `open.ts` http(s)-only), `ChooseStoreScreen.tsx` + route `choose` (session: super admin ⇒ `outletId` null after sign-in AND after a kept-sign-in start; `changeOutlet()`; Account "Change store or outlet" + "Check for updates"). The required screen is a full-screen overlay (NOT a Modal: a Modal window had an unreadable status bar) and holds the hardware Back button; root layout hides the app from screen readers while it is up. 448 jest tests (was 383), tsc + lint clean.
+- Tests: t93 API (67), t94 console UI (45), t95 website (29), t28 (133, incl. the 3 new policies), t87 (34). Bench: `node tests/e2e/bench/bench.mjs website` builds/starts the marketing site on :3173 from a copy in `.bench/website` (never touches apps/website/.next); bench API now has WEBSITE_URL=http://localhost:3173 and APP_RELEASE_MAX_MB=20. New fixtures recorder `_record-staff-app-superadmin-update-fixtures.mjs` (only adds its own files).
+- Verified on the **Android 14 emulator** (debug APK v-261126-001 against the bench): optional pop-up over the sign-in screen, Update opens Chrome on `/app`, super-admin chooser (stores → outlets, Back goes outlets→stores), Account screen, forced update screen (Back keeps it, Check again toast, Download update → Chrome).
+
+**Bugs found on the way (fixed + covered):** Express `res.download` refuses files under a dot-folder (`.app-releases`) unless `dotfiles: "allow"` → every download 404'd (t93 now uses a dot-named folder); a zustand selector returning a new object re-rendered forever (use one selector per value); Modal-based blocking screen had an unreadable status bar → overlay; `Date.now` mock for "30 minutes later" and the AppState/BackHandler listeners are replaced by assignment in tests (the setup's own mocks must not be restored with spies).
+
+**Deploy needs (when the user says yes):** API restart; new env on prod — `APP_RELEASES_DIR` OUTSIDE the code folder (e.g. `/var/lib/rasoi-pulse/app-releases`, writable by the API user), `WEBSITE_URL` must be the public site (`https://rasoipulse.in`) because the app is sent to `<WEBSITE_URL>/app`; rsync must `--exclude .app-releases` (it is git-ignored); admin + website rebuild (config-schema changed → all consumers); nginx `client_max_body_size 12m` on api.rasoipulse.in is already enough (pieces are 4 MB). Console/website show "App updates" only after the deploy.
+
+**Caveats to tell the user:** the release APK is signed with the shared DEBUG key — updates only install over an app signed with the SAME key, so a proper release keystore must be made BEFORE real staff install the first APK; the app's own version (`v-261126-001`) was not bumped (only when asked) so the first real update needs `npm run version:bump -- --confirm` + a build; "version management" was built as: console page = manage (upload/publish/withdraw/required/notes/delete/counters), website page = public download + history.
 
 ### feedback-app-flow-parity
 

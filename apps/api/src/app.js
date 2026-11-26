@@ -36,6 +36,7 @@ import { previewRouter } from "./modules/preview/preview.routes.js";
 import { printingRouter } from "./modules/printing/printing.routes.js";
 import { qrCardsRouter } from "./modules/qr-cards/qr-cards.routes.js";
 import { storageRouter } from "./modules/storage/storage.routes.js";
+import { appUpdatesRouter } from "./modules/app-releases/app-releases.routes.js";
 import { tablesRouter } from "./modules/tables/tables.routes.js";
 import { usersRouter } from "./modules/users/users.routes.js";
 import { ridersRouter } from "./modules/riders/riders.routes.js";
@@ -125,6 +126,8 @@ export function createApp()          {
   app.use("/api/brands", brandsRouter);
   // the Rasoi Pulse website: public content + the super admin's management of it
   app.use("/api/site", siteRouter);
+  // the staff app asks here whether a newer version exists (before anyone signs in); the website lists and serves the APKs
+  app.use("/api/app-updates", appUpdatesRouter);
   app.use("/api/platform/site", platformSiteRouter);
   app.use("/api/platform", platformRouter);
   app.use("/api/store", storeRouter);

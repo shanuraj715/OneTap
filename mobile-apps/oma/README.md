@@ -99,6 +99,23 @@ The version is **`v-DDMMYY-NNN`**: the date, then a number for that day. The fir
 
   Without `--confirm` the bump command refuses. Android's `versionCode` must only go up, so a number is never reused.
 
+## Updates and the platform admin
+
+- **Update check.** When the app opens (and when it returns to the front after 30 minutes away) it asks the server whether a newer
+  build exists (`GET /api/app-updates/check?versionCode=<build>`, no sign-in). Code in `src/updates/` (`store.ts` = the logic,
+  `UpdateGate.tsx` = the pop-up and the screen, `open.ts` = opening the download page in the phone's browser; only `http(s)`
+  addresses are opened). An **optional** update is a pop-up with *Update* and *Later* ("Later" lasts until the app is opened
+  next). A **required** update is a full-screen "Update needed" that holds the Back button and can't be closed.
+  A phone that can't reach the server is never blocked by the check. Every request carries `x-oma-version-code`, and the server
+  refuses an old build's sign-in with `426 update_required` while an update is required (that also shows the same screen).
+  *Account → Check for updates* asks by hand.
+- **Platform admin.** A platform admin signs in with no outlet chosen and is shown *Choose a store* → *Choose an outlet*
+  (`src/screens/ChooseStoreScreen.tsx`) every time, even with one store and one outlet; *Account → Change store or outlet* goes
+  back (unsent orders are cleared, and the app says so first). Nothing is remembered for them. Other staff go straight to their outlet.
+- New server answers for the tests are recorded by `tests/e2e/suites/_record-staff-app-superadmin-update-fixtures.mjs`
+  (it only adds its own fixture files; the older recorder renews every id).
+- The version in the app does not change when an update feature is built: versions change only when the owner asks (see above).
+
 ## Tests
 
 ```bash

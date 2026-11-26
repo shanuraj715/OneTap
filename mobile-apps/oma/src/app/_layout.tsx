@@ -7,6 +7,7 @@ import { useStore } from "zustand";
 import { wireQueryClient } from "@/data/setup";
 import { APP_NAME, APP_TAGLINE } from "@/lib/config";
 import { RuntimeProvider, sharedRuntime } from "@/runtime";
+import { UpdateGate } from "@/updates/UpdateGate";
 import { ErrorState, Icon, QueryProgress, Spinner, Text, ToastHost, useTheme } from "@/ui";
 
 const runtime = sharedRuntime();
@@ -35,6 +36,8 @@ function Splash() {
 
 export default function RootLayout() {
   const status = useStore(runtime.session, (s) => s.status);
+  const outletId = useStore(runtime.session, (s) => s.outletId);
+  const updateRequired = useStore(runtime.updates, (s) => s.status === "required");
   // the app has just opened: connect to the phone's state (background/online) and look for a kept sign-in
   useEffect(() => {
     const unwire = wireQueryClient();
@@ -45,12 +48,19 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <RuntimeProvider runtime={runtime}>
         <StatusBar style="auto" />
+        {/* while the "update needed" screen is up, screen readers must not wander into the app underneath */}
+        <View style={{ flex: 1 }} importantForAccessibility={updateRequired ? "no-hide-descendants" : "auto"} accessibilityElementsHidden={updateRequired}>
         <Stack screenOptions={{ headerShown: false, animation: "fade" }}>
           {/* nothing past the sign-in is reachable until a person has signed in */}
-          <Stack.Protected guard={status === "signed-in"}><Stack.Screen name="(app)" /></Stack.Protected>
+          <Stack.Protected guard={status === "signed-in" && !!outletId}><Stack.Screen name="(app)" /></Stack.Protected>
+          {/* a platform admin is asked which store, then which outlet, before anything else (nobody else sees this screen) */}
+          <Stack.Protected guard={status === "signed-in" && !outletId}><Stack.Screen name="choose" /></Stack.Protected>
           <Stack.Protected guard={status !== "signed-in"}><Stack.Screen name="sign-in" /></Stack.Protected>
         </Stack>
         <QueryProgress />
+        </View>
+        {/* "a new version is out": a pop-up (or, when the update is required, a screen nobody gets past) above everything */}
+        <UpdateGate />
         <ToastHost />
         {status === "starting" ? <Splash /> : null}
       </RuntimeProvider>

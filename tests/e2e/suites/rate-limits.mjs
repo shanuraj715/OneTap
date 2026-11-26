@@ -101,6 +101,8 @@ say("1. visitors — each public entry point has its own limit (a fresh address 
 { const ip = fresh(); await exercise("order-place", () => call("POST", "/api/orders", { ip, body: {} })); }
 { const ip = fresh(); await exercise("customer-account", () => call("PATCH", "/api/customer/profile", { ip, body: {} })); }
 { const ip = fresh(); await exercise("api", () => call("GET", "/api/site/links", { ip }), { label: "api (a visitor)" }); }
+{ const ip = fresh(); await exercise("app-update-check", () => call("GET", "/api/app-updates/check?versionCode=1", { ip })); }
+{ const ip = fresh(); await exercise("app-download", () => call("GET", "/api/app-updates/download/000000000000000000000000", { ip })); }
 
 say("2. sign-in codes — per address, and per store");
 { const ip = fresh(); await exercise("otp-send-ip", (i) => call("POST", "/api/customer/otp/request", { ip, body: { outletId: outlet, destination: `98110${String(10000 + i)}` } })); }
@@ -147,7 +149,11 @@ say("3. signed-in people — each kind of action has its own limit (a different 
 { const c = user(); await exercise("api", () => call("GET", "/api/auth/me", { cookie: c }), { label: "api (a signed-in user)", sampleReq: { user: { _id: "x" } } }); }
 
 say("4. the platform console (super admin)");
+await exercise("release-upload", () => call("PUT", "/api/platform/app-releases/uploads/000000000000000000000000/chunks/0", { cookie: su, rawBody: "x", headers: { "content-type": "application/octet-stream" } }));
+// (the upload check above used part of this admin's general write allowance for the minute, so this one runs at full scale: the general cap is then far out of reach)
+env.RATE_LIMIT_SCALE = 1;
 await exercise("outbound-fetch", () => call("POST", "/api/platform/onboarding/resolve-map", { cookie: su, body: {} }));
+env.RATE_LIMIT_SCALE = 0.1;
 
 say("5. one visitor being limited never affects another");
 {

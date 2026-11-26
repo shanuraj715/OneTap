@@ -19,6 +19,7 @@ const defaults = (): Record<string, Handler> => ({
   "POST /api/auth/logout": { json: { ok: true } },
   "GET /api/auth/me": { json: { user: fx("auth-app-login").user } },
   "GET /api/outlets": { json: fx("outlets") },
+  "GET /api/app-updates/check": { json: fx("update-check-none") },
   "GET /api/menu": { json: fx("menu") },
   "GET /api/menu/unavailable": { json: fx("menu-unavailable") },
   // what the dashboard's Take order shows under the mobile box: a few digits match several people, a whole number exactly one
@@ -108,14 +109,14 @@ export const areasKey = () => `oma.areas.v1:${fx("auth-app-login").user.id}:${fx
 /** Preferences as if the waiter had already opened these areas on an earlier day. */
 export const prefsWithOpenAreas = (...labels: string[]) => memoryPrefs({ [areasKey()]: JSON.stringify({ v: 1, open: labels }) });
 
-export interface AppOptions { server?: FakeServer; storage?: ReturnType<typeof memoryStorage>; prefs?: ReturnType<typeof memoryPrefs>; signedIn?: boolean }
+export interface AppOptions { server?: FakeServer; storage?: ReturnType<typeof memoryStorage>; prefs?: ReturnType<typeof memoryPrefs>; signedIn?: boolean; /** which build number this app says it is (default: the test config's, 0) */ build?: number }
 
 /** A screen, inside the app's own providers, talking to a fake server — signed in as the sandbox waiter unless said otherwise. */
 export async function renderApp(ui: ReactElement, options: AppOptions = {}): Promise<RenderResult & { runtime: Runtime; server: FakeServer; storage: ReturnType<typeof memoryStorage>; prefs: ReturnType<typeof memoryPrefs> }> {
   const server = options.server ?? fakeServer();
   const storage = options.storage ?? memoryStorage();
   const prefs = options.prefs ?? memoryPrefs();
-  const runtime = createRuntime({ baseUrl: "https://api.test", fetchImpl: server.fetch, storage, prefs, retry: false });
+  const runtime = createRuntime({ baseUrl: "https://api.test", fetchImpl: server.fetch, storage, prefs, retry: false, build: options.build });
   liveRuntimes.push(runtime);
   if (options.signedIn !== false) await runtime.session.getState().signIn("waiter@sandbox.test", "Staff123!", false);
   const result = await render(<RuntimeProvider runtime={runtime}>{ui}</RuntimeProvider>);

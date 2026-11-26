@@ -44,3 +44,4 @@ export * from "./scheduling.js";
 export * from "./reservations.js";
 export * from "./kitchen-display.js";
 export * from "./growth.js";
+export * from "./app-release.js";

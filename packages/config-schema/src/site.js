@@ -221,7 +221,7 @@ export const newSection = (type, id) => SECTION_SCHEMAS[type].parse({ type, id }
 
 export const SITE_SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 /** Paths the website itself owns — no page may take them. */
-export const RESERVED_SITE_SLUGS = ["api", "preview", "og", "sitemap", "robots", "_next", "uploads", "opengraph-image", "favicon"];
+export const RESERVED_SITE_SLUGS = ["api", "app", "preview", "og", "sitemap", "robots", "_next", "uploads", "opengraph-image", "favicon"];
 export const FOOTER_GROUPS = ["", "product", "company", "legal"];
 
 export const sitePageSchema = z.object({

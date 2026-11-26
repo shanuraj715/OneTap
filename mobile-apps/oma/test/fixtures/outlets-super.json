@@ -1,0 +1,1352 @@
+{
+  "outlets": [
+    {
+      "_id": "6b08366cfbec0fab49e219b8",
+      "name": "Noida",
+      "slug": "noida",
+      "hostnames": [
+        "noida.test"
+      ],
+      "canonicalHostname": "noida.test",
+      "config": {
+        "version": 1,
+        "identity": {
+          "name": "Noida",
+          "tagline": "",
+          "logoAssetId": null,
+          "logoUrl": "",
+          "fssaiLicense": "",
+          "gstin": "",
+          "phone": "",
+          "email": "",
+          "address": "",
+          "location": {
+            "point": null,
+            "formattedAddress": ""
+          }
+        },
+        "features": {
+          "ordering": {
+            "takeaway": true,
+            "dineInQr": true,
+            "delivery": false
+          },
+          "reservations": {
+            "enabled": false
+          },
+          "payments": {
+            "razorpay": false,
+            "cod": true
+          },
+          "coupons": true,
+          "ui": {
+            "scrollToTop": true,
+            "announcementBar": false
+          }
+        },
+        "theme": {
+          "mode": "system",
+          "defaultMode": "light",
+          "light": {
+            "colorPrimary": "#C6362F",
+            "colorOnPrimary": "#FFFFFF",
+            "colorBg": "#FFFFFF",
+            "colorSurface": "#F6F6F4",
+            "colorText": "#1A1A1A",
+            "colorTextMuted": "#6B6B6B",
+            "colorBorder": "#E4E4E0",
+            "radiusCard": "12px",
+            "fontHeading": "'Inter', system-ui, sans-serif",
+            "fontBody": "'Inter', system-ui, sans-serif"
+          },
+          "dark": {}
+        },
+        "effect": {
+          "style": "none"
+        },
+        "branding": {
+          "faviconUrl": ""
+        },
+        "layout": {
+          "announcementVariant": "announcement.solid",
+          "headerVariant": "header.centered",
+          "highlightCurrentPage": true,
+          "navLinks": [],
+          "footerVariant": "footer.two-column",
+          "itemCardVariant": "card.row-compact",
+          "itemImageRatio": "",
+          "buttonVariant": "button.solid",
+          "badgeVariant": "badge.solid",
+          "chipVariant": "chip.solid",
+          "alertVariant": "alert.left-accent",
+          "toastVariant": "toast.solid",
+          "modalVariant": "modal.centered",
+          "popoverVariant": "popover.card",
+          "accordionVariant": "accordion.bordered",
+          "faqVariant": "faq.stacked",
+          "contentCardVariant": "content.image-top",
+          "carouselVariant": "carousel.slider",
+          "popupCarouselVariant": "carousel.slider",
+          "dropdownVariant": "dropdown.menu",
+          "listGroupVariant": "list.bordered",
+          "paginationVariant": "pagination.numbered",
+          "progressVariant": "progress.bar"
+        },
+        "tax": {
+          "pricesIncludeTax": true,
+          "defaultGstRatePct": 5,
+          "placeOfSupply": "",
+          "serviceChargePct": 0
+        },
+        "typography": {
+          "headingFont": "inter",
+          "bodyFont": "inter",
+          "baseSize": 16,
+          "scale": "default",
+          "headingWeight": 700,
+          "headingLetterSpacing": "tight",
+          "uppercaseHeadings": false
+        },
+        "payments": {
+          "enabled": [
+            "cod"
+          ],
+          "testMode": true
+        },
+        "operations": {
+          "sla": {
+            "enabled": true,
+            "acceptMinutes": 2,
+            "prepMinutes": 20,
+            "sound": true,
+            "repeatAlert": true,
+            "autoCancelMinutes": 0
+          },
+          "orders": {
+            "showTimers": true,
+            "pollSeconds": 10,
+            "oldestFirst": false,
+            "confirmCancel": true,
+            "allowStatusRewind": true,
+            "allowOrderEdit": true,
+            "editLockAfter": "ready",
+            "autoAccept": false
+          },
+          "hours": {
+            "enabled": false,
+            "opensAt": "11:00",
+            "closesAt": "23:00",
+            "lastOrderBufferMinutes": 30,
+            "closedMessage": "We're closed right now. Please check back during opening hours."
+          },
+          "prepTime": {
+            "defaultMinutes": 15,
+            "busyExtraMinutes": 10,
+            "busyMode": false
+          },
+          "limits": {
+            "minOrderValue": 0,
+            "maxItemsPerOrder": 50,
+            "freeDeliveryAbove": 0,
+            "deliveryFee": 0,
+            "deliveryRadiusKm": 5,
+            "deliveryMinutesPerKm": 4,
+            "deliveryMinEtaMinutes": 20
+          },
+          "receipts": {
+            "autoPrintReceipt": true,
+            "offerDigitalReceipt": false,
+            "showTipLine": false,
+            "serviceChargePct": 0
+          },
+          "scheduling": {
+            "enabled": false,
+            "maxDaysAhead": 2,
+            "minLeadMinutes": 30,
+            "slotMinutes": 15,
+            "maxPerSlot": 0
+          }
+        },
+        "menuLayout": {
+          "mode": "auto",
+          "defaultCardVariant": "card.row-compact",
+          "defaultImageRatio": "",
+          "sections": [],
+          "showFoodTypeFilter": true,
+          "showCategoryNav": true
+        },
+        "wallet": {
+          "enabled": false,
+          "earnRatePaise": 1000,
+          "redeemValuePaise": 100,
+          "minOrderToEarn": 0,
+          "maxRedeemPercent": 50,
+          "expiryDays": 0
+        },
+        "orderNotify": {
+          "whatsapp": {
+            "enabled": false,
+            "events": [],
+            "templates": {}
+          },
+          "sms": {
+            "enabled": false,
+            "events": [],
+            "templates": {}
+          },
+          "linked": {
+            "enabled": false,
+            "events": [],
+            "templates": {}
+          }
+        },
+        "capacity": {
+          "enabled": false,
+          "highOrdersThreshold": 15,
+          "highOrdersMessage": "We're experiencing high order volume right now — your order may take a little longer than usual.",
+          "stopOrdersThreshold": 25,
+          "stopOrdersMessage": "We're not accepting new orders right now — please check back shortly.",
+          "deliveryWarnThreshold": 8,
+          "deliveryWarnMessage": "Limited delivery riders are available right now — your delivery may take longer than usual.",
+          "deliveryStopThreshold": 12,
+          "deliveryStopMessage": "We're not able to take delivery orders right now — too few riders for the orders already out."
+        },
+        "dashboard": {
+          "widgets": [
+            {
+              "id": "revenue-today",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "accountant"
+              ]
+            },
+            {
+              "id": "orders-today",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "staff",
+                "kitchen",
+                "accountant"
+              ]
+            },
+            {
+              "id": "avg-order-value-today",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "accountant"
+              ]
+            },
+            {
+              "id": "active-queue",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "staff",
+                "kitchen"
+              ]
+            },
+            {
+              "id": "missed-orders",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "staff",
+                "kitchen"
+              ]
+            },
+            {
+              "id": "new-customers-today",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "accountant"
+              ]
+            },
+            {
+              "id": "coins-issued-today",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "accountant"
+              ]
+            },
+            {
+              "id": "coupons-redeemed-today",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "accountant"
+              ]
+            },
+            {
+              "id": "payment-pending",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "staff",
+                "accountant"
+              ]
+            },
+            {
+              "id": "notification-failures-today",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager"
+              ]
+            },
+            {
+              "id": "revenue-trend",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "accountant"
+              ]
+            },
+            {
+              "id": "orders-by-channel",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "staff",
+                "accountant"
+              ]
+            },
+            {
+              "id": "orders-by-status",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "staff",
+                "kitchen"
+              ]
+            },
+            {
+              "id": "orders-by-hour",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "staff",
+                "accountant"
+              ]
+            },
+            {
+              "id": "top-items",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "kitchen"
+              ]
+            },
+            {
+              "id": "recent-orders",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "staff",
+                "kitchen"
+              ]
+            },
+            {
+              "id": "low-stock",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "staff",
+                "kitchen"
+              ]
+            }
+          ]
+        },
+        "announcement": {
+          "enabled": false,
+          "messages": [],
+          "showPhone": false,
+          "dismissible": true,
+          "rotateSeconds": 5
+        },
+        "carousel": {
+          "enabled": false,
+          "slides": [],
+          "autoplay": true,
+          "intervalSeconds": 5,
+          "showArrows": true,
+          "showDots": true,
+          "height": "regular"
+        },
+        "reservations": {
+          "slotMinutes": 30,
+          "durationMinutes": 90,
+          "minPartySize": 1,
+          "maxPartySize": 10,
+          "maxDaysAhead": 14,
+          "minNoticeMinutes": 60,
+          "lastBookingBeforeCloseMinutes": 60,
+          "maxGuestsPerSlot": 0,
+          "autoConfirm": false,
+          "cancelUntilMinutes": 60,
+          "guestNote": ""
+        },
+        "kitchenDisplay": {
+          "notifyWaiter": false,
+          "warnAfterMinutes": 10,
+          "lateAfterMinutes": 20
+        },
+        "feedback": {
+          "enabled": true,
+          "googleReviewUrl": "",
+          "googleMinStars": 4
+        },
+        "upsell": {
+          "enabled": true,
+          "auto": true,
+          "title": "Goes well with your order"
+        },
+        "menuTimes": {
+          "hideOutsideHours": false
+        }
+      },
+      "blocked": null,
+      "brandId": "6b08366cfbec0fab49e219b5",
+      "createdAt": "2026-11-26T13:38:52.321Z",
+      "updatedAt": "2026-11-26T13:38:52.321Z",
+      "__v": 0,
+      "brandName": "Gazab Momos"
+    },
+    {
+      "_id": "6b08366cfbec0fab49e219ca",
+      "name": "Ludhiana",
+      "slug": "ludhiana",
+      "hostnames": [
+        "noida.test"
+      ],
+      "canonicalHostname": "noida.test",
+      "config": {
+        "version": 1,
+        "identity": {
+          "name": "Ludhiana",
+          "tagline": "",
+          "logoAssetId": null,
+          "logoUrl": "",
+          "fssaiLicense": "",
+          "gstin": "",
+          "phone": "",
+          "email": "",
+          "address": "",
+          "location": {
+            "point": null,
+            "formattedAddress": ""
+          }
+        },
+        "features": {
+          "ordering": {
+            "takeaway": true,
+            "dineInQr": true,
+            "delivery": false
+          },
+          "reservations": {
+            "enabled": false
+          },
+          "payments": {
+            "razorpay": false,
+            "cod": true
+          },
+          "coupons": true,
+          "ui": {
+            "scrollToTop": true,
+            "announcementBar": false
+          }
+        },
+        "theme": {
+          "mode": "system",
+          "defaultMode": "light",
+          "light": {
+            "colorPrimary": "#C6362F",
+            "colorOnPrimary": "#FFFFFF",
+            "colorBg": "#FFFFFF",
+            "colorSurface": "#F6F6F4",
+            "colorText": "#1A1A1A",
+            "colorTextMuted": "#6B6B6B",
+            "colorBorder": "#E4E4E0",
+            "radiusCard": "12px",
+            "fontHeading": "'Inter', system-ui, sans-serif",
+            "fontBody": "'Inter', system-ui, sans-serif"
+          },
+          "dark": {}
+        },
+        "effect": {
+          "style": "none"
+        },
+        "branding": {
+          "faviconUrl": ""
+        },
+        "layout": {
+          "announcementVariant": "announcement.solid",
+          "headerVariant": "header.centered",
+          "highlightCurrentPage": true,
+          "navLinks": [],
+          "footerVariant": "footer.two-column",
+          "itemCardVariant": "card.row-compact",
+          "itemImageRatio": "",
+          "buttonVariant": "button.solid",
+          "badgeVariant": "badge.solid",
+          "chipVariant": "chip.solid",
+          "alertVariant": "alert.left-accent",
+          "toastVariant": "toast.solid",
+          "modalVariant": "modal.centered",
+          "popoverVariant": "popover.card",
+          "accordionVariant": "accordion.bordered",
+          "faqVariant": "faq.stacked",
+          "contentCardVariant": "content.image-top",
+          "carouselVariant": "carousel.slider",
+          "popupCarouselVariant": "carousel.slider",
+          "dropdownVariant": "dropdown.menu",
+          "listGroupVariant": "list.bordered",
+          "paginationVariant": "pagination.numbered",
+          "progressVariant": "progress.bar"
+        },
+        "tax": {
+          "pricesIncludeTax": true,
+          "defaultGstRatePct": 5,
+          "placeOfSupply": "",
+          "serviceChargePct": 0
+        },
+        "typography": {
+          "headingFont": "inter",
+          "bodyFont": "inter",
+          "baseSize": 16,
+          "scale": "default",
+          "headingWeight": 700,
+          "headingLetterSpacing": "tight",
+          "uppercaseHeadings": false
+        },
+        "payments": {
+          "enabled": [
+            "cod"
+          ],
+          "testMode": true
+        },
+        "operations": {
+          "sla": {
+            "enabled": true,
+            "acceptMinutes": 2,
+            "prepMinutes": 20,
+            "sound": true,
+            "repeatAlert": true,
+            "autoCancelMinutes": 0
+          },
+          "orders": {
+            "showTimers": true,
+            "pollSeconds": 10,
+            "oldestFirst": false,
+            "confirmCancel": true,
+            "allowStatusRewind": true,
+            "allowOrderEdit": true,
+            "editLockAfter": "ready",
+            "autoAccept": false
+          },
+          "hours": {
+            "enabled": false,
+            "opensAt": "11:00",
+            "closesAt": "23:00",
+            "lastOrderBufferMinutes": 30,
+            "closedMessage": "We're closed right now. Please check back during opening hours."
+          },
+          "prepTime": {
+            "defaultMinutes": 15,
+            "busyExtraMinutes": 10,
+            "busyMode": false
+          },
+          "limits": {
+            "minOrderValue": 0,
+            "maxItemsPerOrder": 50,
+            "freeDeliveryAbove": 0,
+            "deliveryFee": 0,
+            "deliveryRadiusKm": 5,
+            "deliveryMinutesPerKm": 4,
+            "deliveryMinEtaMinutes": 20
+          },
+          "receipts": {
+            "autoPrintReceipt": true,
+            "offerDigitalReceipt": false,
+            "showTipLine": false,
+            "serviceChargePct": 0
+          },
+          "scheduling": {
+            "enabled": false,
+            "maxDaysAhead": 2,
+            "minLeadMinutes": 30,
+            "slotMinutes": 15,
+            "maxPerSlot": 0
+          }
+        },
+        "menuLayout": {
+          "mode": "auto",
+          "defaultCardVariant": "card.row-compact",
+          "defaultImageRatio": "",
+          "sections": [],
+          "showFoodTypeFilter": true,
+          "showCategoryNav": true
+        },
+        "wallet": {
+          "enabled": false,
+          "earnRatePaise": 1000,
+          "redeemValuePaise": 100,
+          "minOrderToEarn": 0,
+          "maxRedeemPercent": 50,
+          "expiryDays": 0
+        },
+        "orderNotify": {
+          "whatsapp": {
+            "enabled": false,
+            "events": [],
+            "templates": {}
+          },
+          "sms": {
+            "enabled": false,
+            "events": [],
+            "templates": {}
+          },
+          "linked": {
+            "enabled": false,
+            "events": [],
+            "templates": {}
+          }
+        },
+        "capacity": {
+          "enabled": false,
+          "highOrdersThreshold": 15,
+          "highOrdersMessage": "We're experiencing high order volume right now — your order may take a little longer than usual.",
+          "stopOrdersThreshold": 25,
+          "stopOrdersMessage": "We're not accepting new orders right now — please check back shortly.",
+          "deliveryWarnThreshold": 8,
+          "deliveryWarnMessage": "Limited delivery riders are available right now — your delivery may take longer than usual.",
+          "deliveryStopThreshold": 12,
+          "deliveryStopMessage": "We're not able to take delivery orders right now — too few riders for the orders already out."
+        },
+        "dashboard": {
+          "widgets": [
+            {
+              "id": "revenue-today",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "accountant"
+              ]
+            },
+            {
+              "id": "orders-today",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "staff",
+                "kitchen",
+                "accountant"
+              ]
+            },
+            {
+              "id": "avg-order-value-today",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "accountant"
+              ]
+            },
+            {
+              "id": "active-queue",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "staff",
+                "kitchen"
+              ]
+            },
+            {
+              "id": "missed-orders",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "staff",
+                "kitchen"
+              ]
+            },
+            {
+              "id": "new-customers-today",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "accountant"
+              ]
+            },
+            {
+              "id": "coins-issued-today",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "accountant"
+              ]
+            },
+            {
+              "id": "coupons-redeemed-today",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "accountant"
+              ]
+            },
+            {
+              "id": "payment-pending",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "staff",
+                "accountant"
+              ]
+            },
+            {
+              "id": "notification-failures-today",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager"
+              ]
+            },
+            {
+              "id": "revenue-trend",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "accountant"
+              ]
+            },
+            {
+              "id": "orders-by-channel",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "staff",
+                "accountant"
+              ]
+            },
+            {
+              "id": "orders-by-status",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "staff",
+                "kitchen"
+              ]
+            },
+            {
+              "id": "orders-by-hour",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "staff",
+                "accountant"
+              ]
+            },
+            {
+              "id": "top-items",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "kitchen"
+              ]
+            },
+            {
+              "id": "recent-orders",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "staff",
+                "kitchen"
+              ]
+            },
+            {
+              "id": "low-stock",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "staff",
+                "kitchen"
+              ]
+            }
+          ]
+        },
+        "announcement": {
+          "enabled": false,
+          "messages": [],
+          "showPhone": false,
+          "dismissible": true,
+          "rotateSeconds": 5
+        },
+        "carousel": {
+          "enabled": false,
+          "slides": [],
+          "autoplay": true,
+          "intervalSeconds": 5,
+          "showArrows": true,
+          "showDots": true,
+          "height": "regular"
+        },
+        "reservations": {
+          "slotMinutes": 30,
+          "durationMinutes": 90,
+          "minPartySize": 1,
+          "maxPartySize": 10,
+          "maxDaysAhead": 14,
+          "minNoticeMinutes": 60,
+          "lastBookingBeforeCloseMinutes": 60,
+          "maxGuestsPerSlot": 0,
+          "autoConfirm": false,
+          "cancelUntilMinutes": 60,
+          "guestNote": ""
+        },
+        "kitchenDisplay": {
+          "notifyWaiter": false,
+          "warnAfterMinutes": 10,
+          "lateAfterMinutes": 20
+        },
+        "feedback": {
+          "enabled": true,
+          "googleReviewUrl": "",
+          "googleMinStars": 4
+        },
+        "upsell": {
+          "enabled": true,
+          "auto": true,
+          "title": "Goes well with your order"
+        },
+        "menuTimes": {
+          "hideOutsideHours": false
+        }
+      },
+      "blocked": null,
+      "brandId": "6b08366cfbec0fab49e219b5",
+      "createdAt": "2026-11-26T13:38:52.382Z",
+      "updatedAt": "2026-11-26T13:38:52.382Z",
+      "__v": 0,
+      "brandName": "Gazab Momos"
+    },
+    {
+      "_id": "6b08366cfbec0fab49e219d6",
+      "name": "Delhi",
+      "slug": "delhi",
+      "hostnames": [
+        "delhi.test"
+      ],
+      "canonicalHostname": "delhi.test",
+      "config": {
+        "version": 1,
+        "identity": {
+          "name": "Delhi",
+          "tagline": "",
+          "logoAssetId": null,
+          "logoUrl": "",
+          "fssaiLicense": "",
+          "gstin": "",
+          "phone": "",
+          "email": "",
+          "address": "",
+          "location": {
+            "point": null,
+            "formattedAddress": ""
+          }
+        },
+        "features": {
+          "ordering": {
+            "takeaway": true,
+            "dineInQr": true,
+            "delivery": false
+          },
+          "reservations": {
+            "enabled": false
+          },
+          "payments": {
+            "razorpay": false,
+            "cod": true
+          },
+          "coupons": true,
+          "ui": {
+            "scrollToTop": true,
+            "announcementBar": false
+          }
+        },
+        "theme": {
+          "mode": "system",
+          "defaultMode": "light",
+          "light": {
+            "colorPrimary": "#C6362F",
+            "colorOnPrimary": "#FFFFFF",
+            "colorBg": "#FFFFFF",
+            "colorSurface": "#F6F6F4",
+            "colorText": "#1A1A1A",
+            "colorTextMuted": "#6B6B6B",
+            "colorBorder": "#E4E4E0",
+            "radiusCard": "12px",
+            "fontHeading": "'Inter', system-ui, sans-serif",
+            "fontBody": "'Inter', system-ui, sans-serif"
+          },
+          "dark": {}
+        },
+        "effect": {
+          "style": "none"
+        },
+        "branding": {
+          "faviconUrl": ""
+        },
+        "layout": {
+          "announcementVariant": "announcement.solid",
+          "headerVariant": "header.centered",
+          "highlightCurrentPage": true,
+          "navLinks": [],
+          "footerVariant": "footer.two-column",
+          "itemCardVariant": "card.row-compact",
+          "itemImageRatio": "",
+          "buttonVariant": "button.solid",
+          "badgeVariant": "badge.solid",
+          "chipVariant": "chip.solid",
+          "alertVariant": "alert.left-accent",
+          "toastVariant": "toast.solid",
+          "modalVariant": "modal.centered",
+          "popoverVariant": "popover.card",
+          "accordionVariant": "accordion.bordered",
+          "faqVariant": "faq.stacked",
+          "contentCardVariant": "content.image-top",
+          "carouselVariant": "carousel.slider",
+          "popupCarouselVariant": "carousel.slider",
+          "dropdownVariant": "dropdown.menu",
+          "listGroupVariant": "list.bordered",
+          "paginationVariant": "pagination.numbered",
+          "progressVariant": "progress.bar"
+        },
+        "tax": {
+          "pricesIncludeTax": true,
+          "defaultGstRatePct": 5,
+          "placeOfSupply": "",
+          "serviceChargePct": 0
+        },
+        "typography": {
+          "headingFont": "inter",
+          "bodyFont": "inter",
+          "baseSize": 16,
+          "scale": "default",
+          "headingWeight": 700,
+          "headingLetterSpacing": "tight",
+          "uppercaseHeadings": false
+        },
+        "payments": {
+          "enabled": [
+            "cod"
+          ],
+          "testMode": true
+        },
+        "operations": {
+          "sla": {
+            "enabled": true,
+            "acceptMinutes": 2,
+            "prepMinutes": 20,
+            "sound": true,
+            "repeatAlert": true,
+            "autoCancelMinutes": 0
+          },
+          "orders": {
+            "showTimers": true,
+            "pollSeconds": 10,
+            "oldestFirst": false,
+            "confirmCancel": true,
+            "allowStatusRewind": true,
+            "allowOrderEdit": true,
+            "editLockAfter": "ready",
+            "autoAccept": false
+          },
+          "hours": {
+            "enabled": false,
+            "opensAt": "11:00",
+            "closesAt": "23:00",
+            "lastOrderBufferMinutes": 30,
+            "closedMessage": "We're closed right now. Please check back during opening hours."
+          },
+          "prepTime": {
+            "defaultMinutes": 15,
+            "busyExtraMinutes": 10,
+            "busyMode": false
+          },
+          "limits": {
+            "minOrderValue": 0,
+            "maxItemsPerOrder": 50,
+            "freeDeliveryAbove": 0,
+            "deliveryFee": 0,
+            "deliveryRadiusKm": 5,
+            "deliveryMinutesPerKm": 4,
+            "deliveryMinEtaMinutes": 20
+          },
+          "receipts": {
+            "autoPrintReceipt": true,
+            "offerDigitalReceipt": false,
+            "showTipLine": false,
+            "serviceChargePct": 0
+          },
+          "scheduling": {
+            "enabled": false,
+            "maxDaysAhead": 2,
+            "minLeadMinutes": 30,
+            "slotMinutes": 15,
+            "maxPerSlot": 0
+          }
+        },
+        "menuLayout": {
+          "mode": "auto",
+          "defaultCardVariant": "card.row-compact",
+          "defaultImageRatio": "",
+          "sections": [],
+          "showFoodTypeFilter": true,
+          "showCategoryNav": true
+        },
+        "wallet": {
+          "enabled": false,
+          "earnRatePaise": 1000,
+          "redeemValuePaise": 100,
+          "minOrderToEarn": 0,
+          "maxRedeemPercent": 50,
+          "expiryDays": 0
+        },
+        "orderNotify": {
+          "whatsapp": {
+            "enabled": false,
+            "events": [],
+            "templates": {}
+          },
+          "sms": {
+            "enabled": false,
+            "events": [],
+            "templates": {}
+          },
+          "linked": {
+            "enabled": false,
+            "events": [],
+            "templates": {}
+          }
+        },
+        "capacity": {
+          "enabled": false,
+          "highOrdersThreshold": 15,
+          "highOrdersMessage": "We're experiencing high order volume right now — your order may take a little longer than usual.",
+          "stopOrdersThreshold": 25,
+          "stopOrdersMessage": "We're not accepting new orders right now — please check back shortly.",
+          "deliveryWarnThreshold": 8,
+          "deliveryWarnMessage": "Limited delivery riders are available right now — your delivery may take longer than usual.",
+          "deliveryStopThreshold": 12,
+          "deliveryStopMessage": "We're not able to take delivery orders right now — too few riders for the orders already out."
+        },
+        "dashboard": {
+          "widgets": [
+            {
+              "id": "revenue-today",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "accountant"
+              ]
+            },
+            {
+              "id": "orders-today",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "staff",
+                "kitchen",
+                "accountant"
+              ]
+            },
+            {
+              "id": "avg-order-value-today",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "accountant"
+              ]
+            },
+            {
+              "id": "active-queue",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "staff",
+                "kitchen"
+              ]
+            },
+            {
+              "id": "missed-orders",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "staff",
+                "kitchen"
+              ]
+            },
+            {
+              "id": "new-customers-today",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "accountant"
+              ]
+            },
+            {
+              "id": "coins-issued-today",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "accountant"
+              ]
+            },
+            {
+              "id": "coupons-redeemed-today",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "accountant"
+              ]
+            },
+            {
+              "id": "payment-pending",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "staff",
+                "accountant"
+              ]
+            },
+            {
+              "id": "notification-failures-today",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager"
+              ]
+            },
+            {
+              "id": "revenue-trend",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "accountant"
+              ]
+            },
+            {
+              "id": "orders-by-channel",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "staff",
+                "accountant"
+              ]
+            },
+            {
+              "id": "orders-by-status",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "staff",
+                "kitchen"
+              ]
+            },
+            {
+              "id": "orders-by-hour",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "staff",
+                "accountant"
+              ]
+            },
+            {
+              "id": "top-items",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "kitchen"
+              ]
+            },
+            {
+              "id": "recent-orders",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "staff",
+                "kitchen"
+              ]
+            },
+            {
+              "id": "low-stock",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "staff",
+                "kitchen"
+              ]
+            }
+          ]
+        },
+        "announcement": {
+          "enabled": false,
+          "messages": [],
+          "showPhone": false,
+          "dismissible": true,
+          "rotateSeconds": 5
+        },
+        "carousel": {
+          "enabled": false,
+          "slides": [],
+          "autoplay": true,
+          "intervalSeconds": 5,
+          "showArrows": true,
+          "showDots": true,
+          "height": "regular"
+        },
+        "reservations": {
+          "slotMinutes": 30,
+          "durationMinutes": 90,
+          "minPartySize": 1,
+          "maxPartySize": 10,
+          "maxDaysAhead": 14,
+          "minNoticeMinutes": 60,
+          "lastBookingBeforeCloseMinutes": 60,
+          "maxGuestsPerSlot": 0,
+          "autoConfirm": false,
+          "cancelUntilMinutes": 60,
+          "guestNote": ""
+        },
+        "kitchenDisplay": {
+          "notifyWaiter": false,
+          "warnAfterMinutes": 10,
+          "lateAfterMinutes": 20
+        },
+        "feedback": {
+          "enabled": true,
+          "googleReviewUrl": "",
+          "googleMinStars": 4
+        },
+        "upsell": {
+          "enabled": true,
+          "auto": true,
+          "title": "Goes well with your order"
+        },
+        "menuTimes": {
+          "hideOutsideHours": false
+        }
+      },
+      "blocked": null,
+      "brandId": "6b08366cfbec0fab49e219d1",
+      "createdAt": "2026-11-26T13:38:52.473Z",
+      "updatedAt": "2026-11-26T13:38:52.473Z",
+      "__v": 0,
+      "brandName": "Spice Route"
+    }
+  ],
+  "scope": "all"
+}
