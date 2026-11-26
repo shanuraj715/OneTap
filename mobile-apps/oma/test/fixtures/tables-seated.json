@@ -1,0 +1,31 @@
+{
+  "tables": [
+    {
+      "id": "6b0826d970b3aff5bb1baf24",
+      "number": "T1",
+      "zone": "Ground floor",
+      "seats": 4,
+      "status": "seated",
+      "isActive": true,
+      "activeSessionId": "6b0826d970b3aff5bb1baf50"
+    },
+    {
+      "id": "6b0826d970b3aff5bb1baf28",
+      "number": "T2",
+      "zone": "Ground floor",
+      "seats": 2,
+      "status": "free",
+      "isActive": true,
+      "activeSessionId": null
+    },
+    {
+      "id": "6b0826d970b3aff5bb1baf2b",
+      "number": "T3",
+      "zone": "Terrace",
+      "seats": 6,
+      "status": "free",
+      "isActive": true,
+      "activeSessionId": null
+    }
+  ]
+}

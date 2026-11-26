@@ -1,0 +1,10 @@
+{
+  "status": 409,
+  "error": "Table T1 was just taken — someone else has started an order there.",
+  "details": {
+    "code": "table_taken",
+    "tableId": "6b0826d970b3aff5bb1baf24",
+    "tableNumber": "T1",
+    "occupied": true
+  }
+}

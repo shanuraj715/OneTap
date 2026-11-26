@@ -1,0 +1,25 @@
+{
+  "sessions": [
+    {
+      "id": "6b0826d970b3aff5bb1baf50",
+      "tableId": "6b0826d970b3aff5bb1baf24",
+      "tableNumber": "T1",
+      "customerId": "6b0826d970b3aff5bb1baf4c",
+      "customerName": "Mehta family",
+      "customerPhone": "9876543210",
+      "openedAt": "2026-11-26T12:32:25.457Z",
+      "orderCount": 1,
+      "openOrders": 1,
+      "tab": 34000,
+      "unpaidTotal": 34000,
+      "allPaid": false,
+      "tableHistory": [
+        {
+          "tableId": "6b0826d970b3aff5bb1baf24",
+          "number": "T1",
+          "at": "2026-11-26T12:32:25.456Z"
+        }
+      ]
+    }
+  ]
+}

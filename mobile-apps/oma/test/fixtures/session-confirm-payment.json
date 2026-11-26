@@ -1,0 +1,106 @@
+{
+  "orders": [
+    {
+      "id": "6b0826d970b3aff5bb1baf58",
+      "orderNumber": "0001",
+      "status": "accepted",
+      "lines": [
+        {
+          "itemId": "6b0826d970b3aff5bb1baf19",
+          "name": "Veg Steamed Momos",
+          "foodType": "veg",
+          "variantId": "95d76a49-8dd5-4e9e-ab23-1ff02b6d9c4c",
+          "variantLabel": "Full (8 pcs)",
+          "modifiers": [
+            {
+              "id": "f9a925ca-6661-4b47-a61b-17797d5c0790",
+              "label": "Mayo dip",
+              "priceDelta": 1000
+            }
+          ],
+          "quantity": 2,
+          "unitPrice": 10000,
+          "lineTotal": 20000,
+          "gstRatePct": 5,
+          "note": "less salt"
+        },
+        {
+          "itemId": "6b0826d970b3aff5bb1baf1b",
+          "name": "Chicken Kurkure Momos",
+          "foodType": "non-veg",
+          "modifiers": [
+            {
+              "id": "0023f557-04ca-481a-bc87-0070a23b939e",
+              "label": "Hot",
+              "priceDelta": 0
+            }
+          ],
+          "quantity": 1,
+          "unitPrice": 14000,
+          "lineTotal": 14000,
+          "gstRatePct": 5
+        }
+      ],
+      "totals": {
+        "subtotal": 34000,
+        "discount": 0,
+        "deliveryFee": 0,
+        "coinsRedeemed": 0,
+        "coinsDiscount": 0,
+        "coinsEarned": 0,
+        "taxable": 32381,
+        "cgst": 810,
+        "sgst": 809,
+        "taxAmount": 1619,
+        "serviceCharge": 0,
+        "roundOff": 0,
+        "grandTotal": 34000
+      },
+      "payment": {
+        "gateway": "cod",
+        "status": "paid"
+      },
+      "createdAt": "2026-11-26T12:32:25.463Z"
+    },
+    {
+      "id": "6b0826d970b3aff5bb1baf79",
+      "orderNumber": "0002",
+      "status": "accepted",
+      "lines": [
+        {
+          "itemId": "6b0826d970b3aff5bb1baf1f",
+          "name": "Masala Chai",
+          "foodType": "veg",
+          "modifiers": [],
+          "quantity": 2,
+          "unitPrice": 3000,
+          "lineTotal": 6000,
+          "gstRatePct": 5
+        }
+      ],
+      "totals": {
+        "subtotal": 6000,
+        "discount": 0,
+        "deliveryFee": 0,
+        "coinsRedeemed": 0,
+        "coinsDiscount": 0,
+        "coinsEarned": 0,
+        "taxable": 5714,
+        "cgst": 143,
+        "sgst": 143,
+        "taxAmount": 286,
+        "serviceCharge": 0,
+        "roundOff": 0,
+        "grandTotal": 6000
+      },
+      "payment": {
+        "gateway": "cod",
+        "status": "paid"
+      },
+      "createdAt": "2026-11-26T12:32:25.499Z"
+    }
+  ],
+  "tab": 40000,
+  "unpaidTotal": 0,
+  "allPaid": true
+}

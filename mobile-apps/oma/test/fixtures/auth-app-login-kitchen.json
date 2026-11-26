@@ -1,0 +1,26 @@
+{
+  "token": "TEST-TOKEN-KITCHEN-0123456789",
+  "expiresAt": "2026-12-10T00:00:00.000Z",
+  "user": {
+    "id": "6b0826d970b3aff5bb1baf06",
+    "email": "chef@sandbox.test",
+    "name": "Ravi (kitchen)",
+    "isSuperAdmin": false,
+    "role": "kitchen",
+    "brandId": "6b0826d970b3aff5bb1baed6",
+    "blockedAt": null,
+    "permissions": [
+      "outlet:read",
+      "menu:read",
+      "order:read",
+      "order:update",
+      "table:read",
+      "printer:read",
+      "print:job"
+    ],
+    "realtime": {
+      "websocket": true
+    },
+    "storeDisabled": null
+  }
+}

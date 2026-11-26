@@ -20,6 +20,7 @@ storefront, team dashboard, menu, orders and look — switched on and limited by
 | `packages/config-schema` | Zod schemas and shared rules (store config, plans, pricing, menu, orders…) | — |
 | `packages/db` | Mongoose models, the tenant-scoping plugin, the write-event hooks | — |
 | `packages/ui` | Shared components (headers, cards, menu sections, pinned bars…) and design tokens | — |
+| `mobile-apps/` | Phone and tablet apps (React Native). One folder per app — today **Rasoi Pulse OMA** (Order Management App, Android, for staff who take orders at the table). **Not** part of the pnpm workspace: each app has its own `package.json` and uses npm — see [Mobile apps](#mobile-apps) | — |
 | `tests/e2e` | The end-to-end test library and its throwaway test bench — see [Tests](#tests) | 3097 / 3171 / 3170 |
 | `deploy/`, `docs/` | Server and operations notes — see [More documentation](#more-documentation) | — |
 
@@ -74,6 +75,33 @@ node src/scripts/seed-website.js    # the marketing website's starter pages and 
 Other helpers in `apps/api/src/scripts/`: `reset-superadmin-password.js` (the only way back in if the super admin's
 password is lost), `route-inventory.js` (every API route with its limits), `normalize-upload-urls.js` and
 `migrate-brand-appearance.js` (one-off data tidy-ups; read the header of each before running).
+
+## Mobile apps
+
+Every phone/tablet app lives in its own folder under [`mobile-apps/`](mobile-apps/README.md) and is named
+**"Rasoi Pulse &lt;ROLE&gt;"** with the role's short code (OMA = Order Management App). They talk to the same API as the
+dashboard and the storefront; nothing in them is a second copy of the business rules — the server decides every price,
+permission and limit.
+
+| App | For | Platform | Folder |
+| --- | --- | --- | --- |
+| **Rasoi Pulse OMA** | Staff who walk to tables: take orders, manage tables (move, confirm payment, free, cancel), watch orders | Android 11+ phones and tablets | [`mobile-apps/oma`](mobile-apps/oma/README.md) |
+
+Rules for the apps (decided with the owner):
+
+- **Sign-in at every start.** An app asks for email and password each time it opens (the API rate-limits and blocks
+  repeated wrong tries — the same guard as the dashboard). "Keep me signed in" is an opt-in on the sign-in screen.
+- **Versions look like `v-DDMMYY-NNN`** (date, then a number for that day; the first OMA version is `v-261126-001`) and
+  change **only when the owner asks for an upgrade** — building, testing and fixing never change it. See
+  [`mobile-apps/oma/README.md`](mobile-apps/oma/README.md#version-management).
+- **Flow parity needs a yes.** When a flow in the storefront (or dashboard) changes and the same flow exists in an app,
+  the app is **not** changed silently: the change is raised with the owner first, and made in the app only after they confirm.
+- **One README for the whole project** — this file. App folders have a short README of their own for how to run and
+  build that app; anything about the product as a whole goes here.
+
+The API side of the apps: `GET /api/menu/unavailable` (what can't be ordered now — the staff app loads the menu once and asks only this each order), a `version` in the menu answer, team members can be **mapped to outlets** (Users & roles; they then see only those outlets, in the dashboard and the app), and putting a Completed order back to Preparing **seats its table again** (or asks which free table when someone else has it). Also `POST /api/auth/app-login` (returns a token the app sends as `Authorization: Bearer …`;
+the dashboard keeps using its cookie), `GET /api/auth/guard` (is this address paused?) and the Bearer support in the
+`authenticate` middleware. Saved test: `tests/e2e/tests/t87-staff-app-auth-api.mjs`.
 
 ## How it fits together
 
@@ -192,4 +220,5 @@ front of a process manager such as pm2. Things to get right:
 - [`deploy/wildcard-subdomains.md`](deploy/wildcard-subdomains.md) — store addresses on a subdomain: local use and the three one-time production steps
 - [`deploy/login-protection.md`](deploy/login-protection.md) — sign-in brute-force protection and how to tune it
 - [`docs/api-rate-limiting.md`](docs/api-rate-limiting.md) — which API requests are limited, how hard, and why
+- [`mobile-apps/README.md`](mobile-apps/README.md) — how the mobile apps are organised; [`mobile-apps/oma/README.md`](mobile-apps/oma/README.md) — run, build, version and test the staff order app
 - [`tests/e2e/README.md`](tests/e2e/README.md) — the test library and how to add a test

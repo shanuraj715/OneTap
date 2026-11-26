@@ -1,0 +1,68 @@
+{
+  "order": {
+    "id": "6b0826d970b3aff5bb1baf79",
+    "orderNumber": "0002",
+    "channel": "dine-in",
+    "placedBy": "staff",
+    "staffName": "Asha (waiter)",
+    "status": "accepted",
+    "lines": [
+      {
+        "itemId": "6b0826d970b3aff5bb1baf1f",
+        "name": "Masala Chai",
+        "foodType": "veg",
+        "modifiers": [],
+        "quantity": 2,
+        "unitPrice": 3000,
+        "lineTotal": 6000,
+        "gstRatePct": 5
+      }
+    ],
+    "totals": {
+      "subtotal": 6000,
+      "discount": 0,
+      "deliveryFee": 0,
+      "coinsRedeemed": 0,
+      "coinsDiscount": 0,
+      "coinsEarned": 0,
+      "taxable": 5714,
+      "cgst": 143,
+      "sgst": 143,
+      "taxAmount": 286,
+      "serviceCharge": 0,
+      "roundOff": 0,
+      "grandTotal": 6000
+    },
+    "pricesIncludeTax": true,
+    "payment": {
+      "gateway": "cod",
+      "status": "pending"
+    },
+    "note": null,
+    "customer": {
+      "customerId": "6b0826d970b3aff5bb1baf4c",
+      "name": "Mehta family",
+      "phone": "9876543210"
+    },
+    "tableId": "6b0826d970b3aff5bb1baf24",
+    "sessionId": "6b0826d970b3aff5bb1baf50",
+    "kds": null,
+    "couponCode": null,
+    "deliveryAddress": null,
+    "etaMinutes": 15,
+    "scheduledFor": null,
+    "rider": null,
+    "statusHistory": [
+      {
+        "status": "placed",
+        "at": "2026-11-26T12:32:25.499Z"
+      },
+      {
+        "status": "accepted",
+        "at": "2026-11-26T12:32:25.504Z",
+        "by": "6b0826d970b3aff5bb1baef9"
+      }
+    ],
+    "createdAt": "2026-11-26T12:32:25.499Z"
+  }
+}

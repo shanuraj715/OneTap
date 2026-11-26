@@ -1,0 +1,12 @@
+{
+  "customers": [
+    {
+      "id": "6b0826d970b3aff5bb1baf4c",
+      "name": "Mehta family",
+      "phone": "9876543210",
+      "email": null,
+      "visits": 1,
+      "coins": 0
+    }
+  ]
+}

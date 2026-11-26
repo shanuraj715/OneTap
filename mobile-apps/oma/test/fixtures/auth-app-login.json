@@ -1,0 +1,31 @@
+{
+  "token": "TEST-TOKEN-0123456789",
+  "expiresAt": "2026-12-10T00:00:00.000Z",
+  "user": {
+    "id": "6b0826d970b3aff5bb1baef9",
+    "email": "waiter@sandbox.test",
+    "name": "Asha (waiter)",
+    "isSuperAdmin": false,
+    "role": "staff",
+    "brandId": "6b0826d970b3aff5bb1baed6",
+    "blockedAt": null,
+    "permissions": [
+      "outlet:read",
+      "menu:read",
+      "order:read",
+      "order:create",
+      "order:update",
+      "table:read",
+      "table:manage",
+      "printer:read",
+      "print:job",
+      "coupon:read",
+      "reservation:read",
+      "reservation:manage"
+    ],
+    "realtime": {
+      "websocket": true
+    },
+    "storeDisabled": null
+  }
+}

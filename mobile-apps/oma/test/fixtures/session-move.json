@@ -1,0 +1,45 @@
+{
+  "session": {
+    "_id": "6b0826d970b3aff5bb1baf50",
+    "tableId": "6b0826d970b3aff5bb1baf28",
+    "customerId": "6b0826d970b3aff5bb1baf4c",
+    "status": "open",
+    "tableHistory": [
+      {
+        "tableId": "6b0826d970b3aff5bb1baf24",
+        "number": "T1",
+        "at": "2026-11-26T12:32:25.456Z"
+      },
+      {
+        "tableId": "6b0826d970b3aff5bb1baf28",
+        "number": "T2",
+        "at": "2026-11-26T12:32:25.579Z",
+        "by": "6b0826d970b3aff5bb1baef9"
+      }
+    ],
+    "brandId": "6b0826d970b3aff5bb1baed6",
+    "outletId": "6b0826d970b3aff5bb1baed9",
+    "openedAt": "2026-11-26T12:32:25.457Z",
+    "createdAt": "2026-11-26T12:32:25.457Z",
+    "updatedAt": "2026-11-26T12:32:25.579Z",
+    "__v": 1
+  },
+  "from": {
+    "id": "6b0826d970b3aff5bb1baf24",
+    "number": "T1",
+    "zone": "Ground floor",
+    "seats": 4,
+    "status": "free",
+    "isActive": true,
+    "activeSessionId": null
+  },
+  "to": {
+    "id": "6b0826d970b3aff5bb1baf28",
+    "number": "T2",
+    "zone": "Ground floor",
+    "seats": 2,
+    "status": "seated",
+    "isActive": true,
+    "activeSessionId": "6b0826d970b3aff5bb1baf50"
+  }
+}
