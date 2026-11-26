@@ -68,6 +68,16 @@ body {
 }
 img { max-width: 100%; height: auto; display: block; }
 a { color: inherit; }
+
+/* The site is read, not copied from: text can't be selected and the pointer never turns into the text I-beam — an ordinary arrow over text and
+ * pictures, a hand over anything that can be pressed. Typing fields keep selection and their I-beam (you can't type without them), and so does
+ * the file checksum on an app's page, which people copy on purpose. */
+body { -webkit-user-select: none; user-select: none; cursor: default; }
+a, button, summary, label, select, [role="button"], [role="tab"], .btn, .ptab { cursor: pointer; }
+input, textarea, [contenteditable="true"] { -webkit-user-select: text; user-select: text; cursor: text; }
+input[type="checkbox"], input[type="radio"], input[type="submit"], input[type="button"] { cursor: pointer; }
+.app-verify p { -webkit-user-select: text; user-select: text; cursor: text; }
+img, svg { -webkit-user-drag: none; }
 h1, h2, h3, h4 { font-family: var(--font-display), system-ui, sans-serif; line-height: 1.12; letter-spacing: -0.02em; text-wrap: balance; margin: 0; }
 p { margin: 0; text-wrap: pretty; }
 :focus-visible { outline: 3px solid color-mix(in srgb, var(--brand) 70%, transparent); outline-offset: 2px; border-radius: 6px; }
@@ -187,12 +197,34 @@ p { margin: 0; text-wrap: pretty; }
 .features { display: grid; gap: 16px; grid-template-columns: 1fr; }
 @media (min-width: 640px) { .features { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 980px) { .features { grid-template-columns: repeat(3, 1fr); } }
-.feature { padding: 26px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease; }
-.feature:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: color-mix(in srgb, var(--brand) 30%, var(--line)); }
+.feature { --fx: var(--brand); position: relative; overflow: hidden; isolation: isolate; padding: 28px; border: 1px solid var(--line); border-radius: 22px; background: var(--surface); transition: transform 240ms ease, box-shadow 240ms ease, border-color 240ms ease; }
+.feature:nth-child(6n + 2) { --fx: #12a58a; }
+.feature:nth-child(6n + 3) { --fx: #8b5cf6; }
+.feature:nth-child(6n + 4) { --fx: #e08a00; }
+.feature:nth-child(6n + 5) { --fx: #3b82f6; }
+.feature:nth-child(6n) { --fx: #e0475b; }
+.feature:hover { transform: translateY(-4px); box-shadow: 0 22px 40px -24px color-mix(in srgb, var(--fx) 70%, transparent), var(--shadow); border-color: color-mix(in srgb, var(--fx) 34%, var(--line)); }
 @media (prefers-reduced-motion: reduce) { .feature, .feature:hover { transition: none; transform: none; } }
-.feature-icon { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; background: var(--brand-wash); color: var(--brand); margin-bottom: 16px; }
-.feature h3 { font-size: 19px; font-weight: 700; margin-bottom: 8px; }
+.feature-icon { position: relative; width: 56px; height: 56px; border-radius: 18px; display: grid; place-items: center; color: color-mix(in srgb, var(--fx) 78%, var(--ink)); background: linear-gradient(145deg, color-mix(in srgb, var(--fx) 24%, var(--surface)), color-mix(in srgb, var(--fx) 8%, var(--surface))); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fx) 26%, transparent), 0 10px 20px -12px color-mix(in srgb, var(--fx) 75%, transparent); margin-bottom: 20px; transition: background 260ms, color 260ms, box-shadow 260ms; }
+.feature:hover .feature-icon { color: #fff; background: linear-gradient(145deg, var(--fx), color-mix(in srgb, var(--fx) 68%, #000)); box-shadow: 0 14px 24px -10px color-mix(in srgb, var(--fx) 85%, transparent); }
+.feature h3 { font-size: 19.5px; font-weight: 700; margin-bottom: 8px; }
 .feature p { color: var(--muted); font-size: 15.5px; }
+/* the light that follows the pointer: a wash inside the card and a bright edge (needs Spotlight's --mx / --my; rests top-right without them) */
+.feature::before, .moment::before { content: ""; position: absolute; inset: 0; z-index: -1; background: radial-gradient(280px circle at var(--mx, 88%) var(--my, 0%), color-mix(in srgb, var(--fx) 15%, transparent), transparent 70%); opacity: 0; transition: opacity 320ms; pointer-events: none; }
+.feature::after, .moment::after { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px; background: radial-gradient(220px circle at var(--mx, 88%) var(--my, 0%), var(--fx), transparent 72%); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); opacity: 0; transition: opacity 320ms; pointer-events: none; }
+.feature:hover::before, .moment:hover::before, .feature:hover::after, .moment:hover::after { opacity: 1; }
+.feature-ghost { position: absolute; z-index: -1; right: -22px; bottom: -26px; width: 132px; height: 132px; color: var(--fx); opacity: 0.075; rotate: -14deg; transition: rotate 700ms cubic-bezier(0.2, 0.8, 0.2, 1), scale 700ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 400ms; pointer-events: none; }
+.feature-ghost svg { width: 100%; height: 100%; stroke-width: 1.1; }
+.feature:hover .feature-ghost { rotate: 0deg; scale: 1.14; opacity: 0.16; }
+@media (prefers-reduced-motion: reduce) { .feature-ghost, .feature-icon { transition: none; } }
+
+/* colour drifting behind a section; it fades out at the top and bottom so no edge shows */
+.has-glow { position: relative; isolation: isolate; }
+.sec-glow { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; -webkit-mask-image: linear-gradient(180deg, transparent, #000 22%, #000 78%, transparent); mask-image: linear-gradient(180deg, transparent, #000 22%, #000 78%, transparent); }
+.sec-glow i { position: absolute; border-radius: 50%; filter: blur(90px); will-change: transform; }
+.sec-glow i:nth-child(1) { width: 440px; height: 440px; left: -140px; top: 8%; background: color-mix(in srgb, var(--brand) 15%, transparent); animation: apps-drift-a 26s ease-in-out infinite alternate; }
+.sec-glow i:nth-child(2) { width: 400px; height: 400px; right: -120px; bottom: 6%; background: color-mix(in srgb, #12a58a 14%, transparent); animation: apps-drift-b 30s ease-in-out infinite alternate; }
+@media (prefers-reduced-motion: reduce) { .sec-glow i, .sec-glow i:nth-child(n) { animation: none; } }
 
 /* ------------------------------------------------------------- audience */
 .cards { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
@@ -203,11 +235,22 @@ p { margin: 0; text-wrap: pretty; }
 .card p { color: var(--muted); font-size: 15.5px; }
 
 /* ------------------------------------------------------------ use cases */
-.moments { display: grid; gap: 0 48px; }
-@media (min-width: 900px) { .moments { grid-template-columns: repeat(2, 1fr); } }
-.moment { display: grid; grid-template-columns: 44px 1fr; gap: 16px; padding: 24px 0; border-top: 1px solid var(--line); }
-.moment-icon { width: 44px; height: 44px; border-radius: 999px; border: 1.5px solid var(--line); display: grid; place-items: center; color: var(--ink-2); }
-.moment h3 { font-size: 19px; font-weight: 700; margin-bottom: 6px; }
+.moments { display: grid; gap: 16px; }
+@media (min-width: 900px) { .moments { grid-template-columns: repeat(2, 1fr); gap: 18px; } }
+.moment { --fx: var(--brand); position: relative; overflow: hidden; isolation: isolate; display: grid; grid-template-columns: 58px 1fr; gap: 20px; align-items: start; padding: 26px; border: 1px solid var(--line); border-radius: 22px; background: var(--surface); transition: transform 240ms ease, box-shadow 240ms ease, border-color 240ms ease; }
+.moment:nth-child(6n + 2) { --fx: #12a58a; }
+.moment:nth-child(6n + 3) { --fx: #8b5cf6; }
+.moment:nth-child(6n + 4) { --fx: #e08a00; }
+.moment:nth-child(6n + 5) { --fx: #3b82f6; }
+.moment:nth-child(6n) { --fx: #e0475b; }
+.moment:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--fx) 34%, var(--line)); box-shadow: 0 20px 38px -24px color-mix(in srgb, var(--fx) 70%, transparent), var(--shadow); }
+@media (prefers-reduced-motion: reduce) { .moment, .moment:hover { transition: none; transform: none; } }
+.moment-icon { position: relative; width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; color: color-mix(in srgb, var(--fx) 78%, var(--ink)); background: radial-gradient(circle at 30% 25%, color-mix(in srgb, var(--fx) 26%, var(--surface)), color-mix(in srgb, var(--fx) 9%, var(--surface))); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--fx) 30%, transparent); transition: background 260ms, color 260ms; }
+.moment:hover .moment-icon { color: #fff; background: radial-gradient(circle at 30% 25%, color-mix(in srgb, var(--fx) 88%, #fff), color-mix(in srgb, var(--fx) 72%, #000)); }
+/* a small live dot on the icon: the pulse of the product */
+.moment-icon::before { content: ""; position: absolute; right: 1px; top: 1px; width: 11px; height: 11px; border-radius: 50%; background: var(--fx); box-shadow: 0 0 0 2.5px var(--surface); }
+.moment h3 { font-size: 20px; font-weight: 700; line-height: 1.25; margin-bottom: 8px; }
+.moment-when { display: block; margin-bottom: 5px; font-size: 12px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: color-mix(in srgb, var(--fx) 80%, var(--ink)); }
 .moment p { color: var(--muted); font-size: 15.5px; }
 
 /* ---------------------------------------------------------------- logos */
@@ -511,7 +554,7 @@ p { margin: 0; text-wrap: pretty; }
 .m-wa-icon { width: 30px; height: 30px; border-radius: 99px; display: grid; place-items: center; background: #25d366; color: #fff; }
 
 /* --------------------------------------------------------------- stat band */
-.statband { position: relative; background: var(--panel); color: var(--panel-text); border: 1px solid var(--panel-edge); border-radius: 28px; padding: 44px 28px; overflow: hidden; }
+.statband { position: relative; background: var(--panel); color: var(--panel-text); border: 0; border-radius: 28px; padding: 44px 28px; overflow: hidden; }
 @media (min-width: 900px) { .statband { padding: 56px 56px; } }
 .statband::before, .statband::after { content: ""; position: absolute; left: 0; right: 0; height: 12px; background: radial-gradient(circle at 10px 0, var(--paper) 6px, transparent 6.5px); background-size: 20px 12px; }
 .statband::before { top: 0; }
@@ -738,3 +781,135 @@ p { margin: 0; text-wrap: pretty; }
 .app-icon-lg img { display: block; width: 100%; height: 100%; border-radius: 26px; box-shadow: 0 22px 36px -14px color-mix(in srgb, var(--app) 80%, transparent), 0 0 0 1px rgb(255 255 255 / 0.08); }
 @keyframes apps-glow { 0%, 100% { opacity: 0.55; transform: scale(1); } 50% { opacity: 1; transform: scale(1.12); } }
 @media (prefers-reduced-motion: reduce) { .app-icon-lg, .app-icon-lg::before { animation: none !important; } }
+
+/* ======================================================= homepage: apps note + motion
+ * Everything below only decorates. Only transform / opacity / stroke / scale / translate are animated, nothing needs script, and with "reduce motion"
+ * every animation stops and the page is simply drawn, complete. */
+
+/* ---- the live backdrop behind the homepage hero: the apps page's backdrop, quieter, and fading out at the bottom so it never ends in a line */
+.hero-live { position: relative; isolation: isolate; overflow-x: clip; } /* the stamp lands from double size: it must never widen the page while it does */
+.hero-live > .wrap { position: relative; z-index: 1; }
+.hero-live .apps-bg {
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 42%, transparent 96%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 42%, transparent 96%);
+}
+.apps-bg-soft .apps-blob { opacity: 0.15; }
+.apps-bg-soft .apps-dots { opacity: 0.26; }
+.apps-bg-soft .apps-beat { display: none; } /* the heartbeat line would run through the hero's text and stats */
+.apps-bg-soft .apps-bubble:nth-of-type(n + 7) { display: none; }
+
+/* ---- "We have apps too" (the section after the product tabs) */
+.apps-show-inner { display: grid; gap: 36px; align-items: center; }
+@media (min-width: 900px) { .apps-show-inner { grid-template-columns: 0.85fr 1.15fr; gap: 64px; } }
+.apps-show-copy h2 { font-size: clamp(28px, 4.2vw, 44px); font-weight: 750; }
+.apps-show-copy h2 em { font-style: normal; color: var(--brand); }
+.apps-show-copy p { margin-top: 14px; font-size: 18px; color: var(--muted); max-width: 520px; }
+.apps-show-copy .apps-show-more { margin-top: 24px; }
+
+.apps-flow { --icon: 80px; position: relative; padding: 6px 0 2px; }
+@media (max-width: 520px) { .apps-flow { --icon: 64px; } }
+.apps-flow-nodes { list-style: none; margin: 0; padding: 0; display: flex; position: relative; z-index: 1; }
+.apps-flow-node { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; padding-inline: 4px; }
+.apps-flow-node b { margin-top: 12px; font-size: 15.5px; font-weight: 700; letter-spacing: -0.01em; }
+.apps-flow-node small { font-size: 12.5px; line-height: 1.35; color: var(--muted); }
+.apps-flow-icon { position: relative; display: block; width: var(--icon); height: var(--icon); animation: apps-bob 5.5s ease-in-out infinite; animation-delay: calc(var(--i, 0) * -1.9s); }
+.apps-flow-icon img { display: block; width: 100%; height: 100%; border-radius: 24%; box-shadow: 0 16px 28px -12px color-mix(in srgb, var(--app, var(--brand)) 70%, transparent), 0 0 0 1px rgb(255 255 255 / 0.07); }
+/* the ring that flashes round an app the moment the ticket reaches it */
+.apps-flow-icon::after { content: ""; position: absolute; inset: -2px; border-radius: 26%; border: 2.5px solid var(--app, var(--brand)); opacity: 0; animation: apps-node-ping 9s ease-out infinite; animation-delay: var(--d, 0s); }
+@keyframes apps-bob { 0%, 100% { translate: 0 0; rotate: -1.5deg; } 50% { translate: 0 -6px; rotate: 1.5deg; } }
+@keyframes apps-node-ping { 0% { opacity: 0.85; scale: 1; } 14% { opacity: 0; scale: 1.5; } 100% { opacity: 0; scale: 1.5; } }
+
+/* the line and the ticket run from the middle of the first app to the middle of the last (the apps sit above them, so the ticket slides out from behind one and in behind the next) */
+.apps-flow-track { position: absolute; z-index: 0; left: calc(50% / var(--n, 3)); right: calc(50% / var(--n, 3)); top: calc(var(--icon) / 2 + 6px); height: 0; }
+.apps-flow-line { position: absolute; left: 0; top: -4px; width: 100%; height: 8px; overflow: visible; }
+.apps-flow-line line { stroke: color-mix(in srgb, var(--ink) 32%, transparent); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 2 10; animation: apps-march 1.3s linear infinite; }
+@keyframes apps-march { to { stroke-dashoffset: -12; } }
+.apps-flow-ticket { position: absolute; left: 0; top: 0; width: 30px; height: 37px; translate: -50% -50%; rotate: -7deg; filter: drop-shadow(0 6px 8px rgb(0 0 0 / 0.22)); animation: apps-ticket 9s linear infinite; }
+@keyframes apps-ticket {
+  0% { left: 0; opacity: 0; }
+  4% { left: 0; opacity: 1; }
+  76% { left: 100%; opacity: 1; }
+  80% { left: 100%; opacity: 0; }
+  100% { left: 0; opacity: 0; }
+}
+
+/* ---- motion across the site (scroll-reveal, living icons, button shine, a floating hero) */
+.btn-brand { position: relative; overflow: hidden; isolation: isolate; }
+.btn-brand::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(105deg, transparent 38%, rgb(255 255 255 / 0.3) 50%, transparent 62%); transform: translateX(-130%); transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1); pointer-events: none; }
+.btn-brand:hover::after, .btn-brand:focus-visible::after { transform: translateX(130%); }
+
+/* the highlighter under the hero's emphasised words (drawn in full when nothing moves) */
+.hero-live h1 em { background: linear-gradient(var(--brand), var(--brand)) no-repeat 0 94% / 100% 0.1em; padding-bottom: 0.04em; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.feature-icon::after, .moment-icon::after { content: ""; position: absolute; inset: 0; border-radius: inherit; border: 2px solid var(--brand); opacity: 0; pointer-events: none; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-live h1 em { animation: rp-underline 0.9s 0.55s cubic-bezier(0.6, 0.1, 0.2, 1) backwards; }
+  @keyframes rp-underline { from { background-size: 0% 0.1em; } }
+
+  /* icons: a slow breathing tilt, a wiggle and a ring when the card is hovered (translate / rotate, so the cards' own hover lift keeps working) */
+  .feature-icon svg, .moment-icon svg { animation: rp-bob 5.2s ease-in-out infinite; }
+  .feature:nth-child(2n) .feature-icon svg, .moment:nth-child(2n) .moment-icon svg { animation-delay: -1.7s; }
+  .feature:nth-child(3n) .feature-icon svg, .moment:nth-child(3n) .moment-icon svg { animation-delay: -3.2s; }
+  @keyframes rp-bob { 0%, 100% { translate: 0 0; rotate: -4deg; } 50% { translate: 0 -2.5px; rotate: 4deg; } }
+  .feature:hover .feature-icon svg, .moment:hover .moment-icon svg { animation: rp-wiggle 0.7s ease-in-out; }
+  @keyframes rp-wiggle { 0%, 100% { rotate: 0deg; scale: 1; } 25% { rotate: -14deg; scale: 1.2; } 60% { rotate: 10deg; scale: 1.2; } }
+  .feature:hover .feature-icon::after, .moment:hover .moment-icon::after { animation: rp-ping 0.9s ease-out; }
+  @keyframes rp-ping { from { opacity: 0.6; scale: 1; } to { opacity: 0; scale: 1.65; } }
+  .dd-item:hover .dd-icon svg { animation: rp-wiggle 0.7s ease-in-out; }
+
+  /* the hero's kitchen ticket: its chips float, its stamp lands */
+  .chip-a { animation: rp-float 6.4s ease-in-out infinite; }
+  .chip-b { animation: rp-float 7.2s ease-in-out -3s infinite; }
+  @keyframes rp-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -9px; } }
+  .stamp { animation: rp-stamp 0.55s 1s cubic-bezier(0.2, 1.5, 0.4, 1) backwards; }
+  @keyframes rp-stamp { from { scale: 2; opacity: 0; } }
+  .ticket { animation: rp-sway 9s ease-in-out infinite; }
+  @keyframes rp-sway { 0%, 100% { translate: 0 0; } 50% { translate: 0 -7px; } }
+
+  /* the line before every small heading draws itself in as the heading scrolls into view */
+  .eyebrow::before { transform-origin: left; }
+}
+
+/* scroll-reveal: each block rises into place as it comes into view. It only runs where the browser can tie an animation to scrolling; everywhere else, and for anyone who asked for less motion, the blocks are just there. Blocks already on screen at load are already past their reveal, so nothing waits invisible. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .section-head, .feature, .card, .moment, .quote, .plan, .faq details, .logos-band, .apps-flow, .apps-show-copy, .statband-row li {
+      animation: rp-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 34%;
+    }
+    .features > :nth-child(3n + 2), .cards > :nth-child(3n + 2), .plans > :nth-child(3n + 2) { animation-range: entry 4% entry 38%; }
+    .features > :nth-child(3n), .cards > :nth-child(3n), .plans > :nth-child(3n) { animation-range: entry 8% entry 42%; }
+    @keyframes rp-reveal { from { opacity: 0; translate: 0 26px; } to { opacity: 1; translate: 0 0; } }
+    .eyebrow::before { animation: rp-grow linear both; animation-timeline: view(); animation-range: entry 10% entry 70%; }
+    @keyframes rp-grow { from { scale: 0 1; } to { scale: 1 1; } }
+  }
+}
+
+/* "reduce motion": nothing moves — the apps picture stands still with the ticket between the first two apps */
+@media (prefers-reduced-motion: reduce) {
+  .apps-flow *, .apps-flow-icon::after, .hero-live .apps-bg *, .hero-live .apps-bg { animation: none !important; transition: none !important; }
+  .apps-flow-ticket { left: 25%; opacity: 1; }
+  .apps-flow-icon::after { display: none; }
+  .btn-brand::after { transition: none; }
+  .hero-live .apps-bubble { display: none; }
+}
+
+/* ---- each icon has its own little trick when its card is hovered (keyed to the icon, so reordering cards in the console keeps them right) */
+@media (prefers-reduced-motion: no-preference) {
+  .moment-icon::before { animation: rp-beat 2.6s ease-in-out infinite; }
+  .moment:nth-child(2n) .moment-icon::before { animation-delay: -1.3s; }
+  @keyframes rp-beat { 0%, 100% { scale: 1; box-shadow: 0 0 0 2.5px var(--surface), 0 0 0 2.5px transparent; } 18% { scale: 1.25; } 36% { scale: 1; box-shadow: 0 0 0 2.5px var(--surface), 0 0 0 9px transparent; } }
+
+  .feature:hover .feature-icon .lucide-globe, .feature:hover .feature-icon .lucide-palette, .moment:hover .moment-icon .lucide-clock { animation: rp-spin 1.1s cubic-bezier(0.5, 0, 0.2, 1); }
+  @keyframes rp-spin { to { rotate: 360deg; } }
+  .feature:hover .feature-icon .lucide-coins, .moment:hover .moment-icon .lucide-coins { animation: rp-flip 0.9s ease-in-out; }
+  @keyframes rp-flip { to { transform: rotateY(360deg); } }
+  .feature:hover .feature-icon .lucide-message-circle, .feature:hover .feature-icon .lucide-store, .moment:hover .moment-icon .lucide-users, .moment:hover .moment-icon .lucide-store { animation: rp-pop 0.6s cubic-bezier(0.3, 1.8, 0.5, 1); }
+  @keyframes rp-pop { 0% { scale: 1; } 40% { scale: 1.32; } 100% { scale: 1; } }
+  .feature:hover .feature-icon .lucide-printer, .moment:hover .moment-icon .lucide-receipt, .moment:hover .moment-icon .lucide-receipt-text { animation: rp-nudge 0.8s ease-in-out; }
+  @keyframes rp-nudge { 0%, 100% { translate: 0 0; } 25% { translate: 0 3px; } 55% { translate: 0 -3px; } 80% { translate: 0 1px; } }
+  .moment:hover .moment-icon .lucide-bike { animation: rp-ride 0.9s ease-in-out; }
+  @keyframes rp-ride { 0% { translate: -6px 0; opacity: 0.2; } 60% { translate: 3px 0; opacity: 1; } 100% { translate: 0 0; } }
+  .feature:hover .feature-icon .lucide-ticket-percent { animation: rp-wiggle 0.7s ease-in-out; }
+}

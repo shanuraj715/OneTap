@@ -167,11 +167,11 @@ export function OrderTracker({ outletId, outletSlug, orderId }) {
           </div>
         ) : null}
 
-        {order.status === "out_for_delivery" && order.deliveryCode ? (
+        {order.deliveryCode ? (
           <div style={codeBox} data-testid="tracker-delivery-code">
             <span style={{ flex: 1 }}>
               <strong>Your delivery code</strong>
-              <span style={{ display: "block", fontSize: 12, opacity: 0.85 }}>Tell this to the rider when your food arrives. Don&apos;t share it before.</span>
+              <span style={{ display: "block", fontSize: 12, opacity: 0.85 }}>Tell this to the rider when your food arrives, and not before.</span>
             </span>
             <span style={codeDigits} aria-label={`Delivery code ${order.deliveryCode.split("").join(" ")}`}>{order.deliveryCode}</span>
           </div>

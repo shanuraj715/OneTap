@@ -12,7 +12,7 @@ export { OnboardingModel, PricingModel } from "./models/onboarding.js";
 export { LoginLogModel } from "./models/audit.js";
 export { LoginGuardModel } from "./models/security.js";
 export { OrderModel, CounterModel, nextSequence } from "./models/order.js";
-export { CustomerModel, OtpChallengeModel, OtpThrottleModel, CustomerSessionModel } from "./models/customer.js";
+export { CustomerModel, OtpChallengeModel, OtpThrottleModel, CustomerSessionModel, CustomerAddressModel } from "./models/customer.js";
 export { TableModel, TableSessionModel } from "./models/table.js";
 export { PrinterModel, PrintTemplateModel, PrintJobModel } from "./models/printer.js";
 export { PaymentCredentialModel, PaymentModel, WebhookEventModel } from "./models/payment.js";

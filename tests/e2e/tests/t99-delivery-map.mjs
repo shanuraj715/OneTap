@@ -3,21 +3,21 @@ import { runSuite } from "../bench/suite.mjs";
 
 export const meta = {
   id: "t99-delivery-map",
-  title: "Delivery checkout: the customer must choose the place on a free map (Leaflet + OpenStreetMap, no key); the distance, delivery area and charge are measured from that pin; no pin, no order",
+  title: "Delivery checkout: a free map with the pin FIXED in the middle and the map moved under it (one finger drags, two pinch); it starts at the customer's saved place for the outlet, else their phone's location if already allowed, else the restaurant; the distance is measured from the pin; no chosen place, no order",
   area: "storefront",
   browser: true,
   fresh: false,
-  summary: "Chrome against the bench's Acme store (its Connaught Place outlet delivers within 5 km). Choosing Delivery draws a map headed 'Choose your location on the map — Required' with the '© OpenStreetMap contributors' credit; the map pictures are answered locally so the test never calls OpenStreetMap, and no Google Maps or key is involved. Before a pin: a note says to place it, the order button says 'Choose location on the map' and is disabled — even after the address is typed. Tapping the map drops the pin; the quote says 'We deliver here' with the straight-line distance, and that number equals an independently computed distance between the pin and the restaurant; moving the pin (a tap or a drag) measures again from the new pin, and the check sent to the server carries exactly the pin's coordinates. A pin outside the ring says 'Delivery not available at this pin' and the button says to move it. Switching to Takeaway and back starts with no pin. The sticky bottom bar stays above the map. 'Use my current location' (mocked phone location) puts the pin on the map, with its accuracy, and can be corrected; a refused location leaves the map working. A phone-width screen has no sideways scroll. If the map pictures can't load a message says so and the location button still sets the pin. No console errors.",
+  summary: "Chrome against the bench's Acme store (its Connaught Place outlet delivers within 5 km). The map pictures are answered locally so the test never calls OpenStreetMap; no Google Maps or key is involved. Choosing Delivery draws a map headed 'Choose your location on the map — Required' with a pin whose tip is exactly the map's centre, a tiny '© OpenStreetMap' credit (no 'Leaflet' label; ≤ 11 px, ≤ 9.5 px on a phone). With nothing saved and no location allowed it starts at the restaurant, the place is NOT chosen, the order button says 'Choose location on the map' and stays locked even after the address is typed. Clicking the map places nothing; zooming with + / − or Ctrl + scroll changes the zoom but is not a choice; a plain scroll over the map does not zoom. Dragging the MAP moves what is under the pin while the pin does not move on screen; the place becomes chosen, the quote says 'We deliver here' with a distance equal to an independently computed distance from the map's centre to the restaurant, and the check sent to the server carries exactly the centre's coordinates. Dragging until the pin is beyond the ring says 'Delivery not available at this pin' and locks the button. Switching to Takeaway and back starts clean; the sticky bar stays above the map. On a phone (real touch input): ONE finger moves the map without scrolling the page, pinching out zooms in and pinching in zooms out, and there is no sideways scroll. With location already allowed the map opens at the phone's location with the accuracy; without permission it stays at the restaurant and asks nothing. With a saved place for the outlet the map opens with the pin on it, the whole address (text + landmark) filled, the distance measured from it, the order ready to place; the customer can still move the map, and 'Forget it' removes the saved place. If the map pictures can't load a message says so. No console errors.",
   expect: [
-    "Delivery asks for the place on a map, marked Required, and nothing can be ordered until the pin is placed inside the delivery area.",
-    "The distance shown is measured from the chosen pin, and moving the pin re-measures.",
-    "The free map shows OpenStreetMap's credit and uses no Google Maps or key.",
+    "Delivery shows a map with a fixed pin; moving the map (one finger, mouse, or pinch to zoom) changes the place under the pin.",
+    "The map starts at the saved place for the outlet, else the phone's location (if allowed), else the restaurant; only the first two count as chosen.",
+    "The distance shown is measured from the pin, and nothing can be ordered until the place is chosen inside the delivery area.",
   ],
   expectNot: [
-    "A typed address alone must NOT unlock a delivery order.",
-    "A pin outside the delivery area must NOT allow the order.",
-    "An old pin must NOT be kept when the customer leaves Delivery and comes back.",
-    "The map must NOT cover the page's sticky bars.",
+    "A tap or click on the map must NOT place the pin (it is fixed).",
+    "A typed address alone, or a pin left on the restaurant, must NOT unlock a delivery order.",
+    "One finger on the map must NOT scroll the page behind it.",
+    "The OpenStreetMap credit must NOT be large on a phone.",
   ],
 };
 

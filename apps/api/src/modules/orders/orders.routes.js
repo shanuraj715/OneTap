@@ -160,7 +160,9 @@ ordersRouter.post("/", limiter("order-place"), async (req, res) => {
     ...(await dineInContext(ctx, body, customer)),
   });
 
-  res.status(201).json({ order: shape(order, true) });
+  // a delivery order's 4-digit handover code goes back to the customer who placed it (it is for them to remember and tell the rider);
+  // the dashboard's copy of an order never carries it
+  res.status(201).json({ order: { ...shape(order, true), ...(order.deliveryCode ? { deliveryCode: order.deliveryCode } : {}) } });
 });
 
 /**

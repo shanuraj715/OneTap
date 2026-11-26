@@ -46,6 +46,7 @@ import { markCartOrdered } from "../carts/carts.service.js";
 import { assertOutletOpen, effectiveOutletConfig } from "../outlets/config.service.js";
 import { publicOutletById } from "../outlets/outlet-cache.js";
 import { fireOrderNotifications } from "../notify/notify.service.js";
+import { rememberDelivery } from "../customer/customer-address.service.js";
 import { autoPrintForOrder, printOrderChange } from "../printing/printing.service.js";
 import { earnForOrder, previewRedeem, redeemForOrder, reverseRedeemForOrder, revokeEarnForOrder } from "../wallet/wallet.service.js";
 
@@ -495,6 +496,9 @@ export async function placeOrder(input
     });
   }
 
+  // where this delivery went is remembered for the customer's next order from this outlet (their pin on the map + the address they typed)
+  if (deliveryRecord) rememberDelivery(ctx, input.customer.customerId, deliveryRecord);
+
   if (input.customer.customerId) {
     await CustomerModel.updateOne(
       { _id: input.customer.customerId },
@@ -926,8 +930,9 @@ function shapeCustomerOrder(o, { byId, ratingOf, now, feedbackEnabled }) {
     scheduledFor: o.scheduledFor ?? null,
     // the rider's name and number only while they are on the way — not for ever after
     rider: o.status === "out_for_delivery" && o.rider?.name ? { name: o.rider.name, phone: o.rider.phone ?? "" } : null,
-    // the 4-digit code to tell the rider when the food arrives (only while it is on its way; older orders have none)
-    deliveryCode: o.status === "out_for_delivery" && o.deliveryCode ? o.deliveryCode : null,
+    // the 4-digit code to tell the rider when the food arrives: shown for as long as the delivery is still to come (so the customer can find it
+    // again), never after it is delivered or cancelled; older orders have none
+    deliveryCode: o.channel === "delivery" && o.deliveryCode && !["completed", "cancelled"].includes(o.status) ? o.deliveryCode : null,
     feedback: f ? { rating: f.rating, comment: f.comment ?? "", tags: f.tags ?? [], editable: now - new Date(f.createdAt).getTime() < FEEDBACK_EDIT_DAYS * 86_400_000 } : null,
     canRate: feedbackEnabled && o.status === "completed" && recent && !f,
   };

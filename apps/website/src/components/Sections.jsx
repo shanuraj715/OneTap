@@ -1,3 +1,6 @@
+import { Fragment } from "react";
+import { AppsBackdrop } from "./AppsBackdrop";
+import { Spotlight } from "./Spotlight";
 import Link from "next/link";
 import { Check, Clock, Mail, MapPin, MessageCircle, Minus, Phone } from "lucide-react";
 import { FEATURES, renderMarkdown, slugifyHeading } from "@rasoipulse/config-schema";
@@ -59,8 +62,17 @@ function Head({ eyebrow, heading, intro, h1, fallbackTitle, center }) {
   );
 }
 
-const Wrap = ({ s, band, children, className = "" }) => (
-  <section id={s.anchor || undefined} className={`section${band ? " band" : ""} ${className}`.trim()}>
+/** Soft colour drifting behind a section (two blurred blobs that fade out at the top and bottom, so it never ends in a line). */
+const Glow = () => (
+  <span className="sec-glow" aria-hidden="true">
+    <i />
+    <i />
+  </span>
+);
+
+const Wrap = ({ s, band, glow, children, className = "" }) => (
+  <section id={s.anchor || undefined} className={`section${band ? " band" : ""}${glow ? " has-glow" : ""} ${className}`.trim()}>
+    {glow ? <Glow /> : null}
     <div className="wrap">{children}</div>
   </section>
 );
@@ -69,7 +81,8 @@ const Wrap = ({ s, band, children, className = "" }) => (
 
 function Hero({ s }) {
   return (
-    <section id={s.anchor || undefined} className="hero">
+    <section id={s.anchor || undefined} className="hero hero-live">
+      <AppsBackdrop soft />
       <div className="wrap hero-grid">
         <div>
           {s.eyebrow ? <div className="eyebrow">{s.eyebrow}</div> : null}
@@ -189,19 +202,23 @@ function Stats({ s, h1, page }) {
 
 function Features({ s, h1, page }) {
   return (
-    <Wrap s={s}>
+    <Wrap s={s} glow>
       <Head {...s} h1={h1} fallbackTitle={page.title} />
-      <div className="features">
+      <Spotlight className="features">
         {s.items.map((f, i) => (
-          <div className="feature" key={i}>
+          <div className="feature" key={i} data-spot>
             <div className="feature-icon">
-              <Icon name={f.icon} />
+              <Icon name={f.icon} size={26} />
             </div>
             <h3>{f.title}</h3>
             <p>{f.text}</p>
+            {/* a big, faint copy of the icon in the corner: it turns upright and brightens when the card is hovered */}
+            <span className="feature-ghost" aria-hidden="true">
+              <Icon name={f.icon} size={132} />
+            </span>
           </div>
         ))}
-      </div>
+      </Spotlight>
     </Wrap>
   );
 }
@@ -233,21 +250,34 @@ function Audience({ s, h1, page }) {
 
 function UseCases({ s, h1, page }) {
   return (
-    <Wrap s={s}>
+    <Wrap s={s} glow>
       <Head {...s} h1={h1} fallbackTitle={page.title} />
-      <div className="moments">
-        {s.items.map((m, i) => (
-          <div className="moment" key={i}>
-            <span className="moment-icon">
-              <Icon name={m.icon} size={19} />
-            </span>
-            <div>
-              <h3>{m.when}</h3>
-              <p>{m.text}</p>
+      <Spotlight className="moments">
+        {s.items.map((m, i) => {
+          // "When the queue is out the door": the first word becomes a small label above the rest
+          const split = /^when\s+(\S.*)$/i.exec(m.when ?? "");
+          return (
+            <div className="moment" key={i} data-spot>
+              <span className="moment-icon">
+                <Icon name={m.icon} size={24} />
+              </span>
+              <div>
+                <h3>
+                  {split ? (
+                    <>
+                      <span className="moment-when">When </span>
+                      {split[1].charAt(0).toUpperCase() + split[1].slice(1)}
+                    </>
+                  ) : (
+                    m.when
+                  )}
+                </h3>
+                <p>{m.text}</p>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          );
+        })}
+      </Spotlight>
     </Wrap>
   );
 }
@@ -694,11 +724,23 @@ const RENDERERS = {
   contact: Contact,
 };
 
-export function Sections({ page, settings }) {
+/**
+ * A page's sections in order. `inject` ({ after: "productTabs", node }) puts one more block (the homepage's apps section, which is code rather than
+ * console content) right after the first section of that type — or at the end when the page has none.
+ */
+export function Sections({ page, settings, inject }) {
   const hasHero = page.sections.some((s) => s.type === "hero");
-  return page.sections.map((s, i) => {
+  const anchored = inject ? page.sections.some((s) => s.type === inject.after) : false;
+  const out = page.sections.map((s, i) => {
     const R = RENDERERS[s.type];
     if (!R) return null;
-    return <R key={s.id} s={s} page={page} settings={settings} h1={!hasHero && i === 0} />;
+    return (
+      <Fragment key={s.id}>
+        <R s={s} page={page} settings={settings} h1={!hasHero && i === 0} />
+        {inject && anchored && s.type === inject.after && page.sections.findIndex((x) => x.type === inject.after) === i ? inject.node : null}
+      </Fragment>
+    );
   });
+  if (inject && !anchored) out.push(<Fragment key="injected">{inject.node}</Fragment>);
+  return out;
 }

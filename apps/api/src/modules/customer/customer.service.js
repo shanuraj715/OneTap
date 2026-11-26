@@ -13,7 +13,8 @@ import { codeSender } from "../notify/notify.service.js";
 import { clearThrottle, livePurposeFilter, noteSent, releaseSend, reserveSend } from "./otp-throttle.js";
 
 const MAX_ATTEMPTS = 5;
-const SESSION_DAYS = 30;
+/** How long a sign-in lasts without a visit. Every visit pushes it out again (see extendSession), so a customer who keeps ordering never has to sign in again. */
+const SESSION_DAYS = 180;
 
 const sha = (v        ) => createHash("sha256").update(v).digest("hex");
 
@@ -243,6 +244,19 @@ export async function customerFromToken(token                    )              
   );
   if (!found || found.expiresAt < Date.now()) return null;
   return found.customer;
+}
+
+/**
+ * Push a sign-in's end date out to a full SESSION_DAYS from now — at most once a day per sign-in (a cheap write, only when the end date is more
+ * than a day closer than it could be). Returns the new end date when it moved (the caller re-issues the cookie with it), otherwise null.
+ */
+export async function extendSession(token) {
+  if (!token) return null;
+  const now = Date.now();
+  const target = new Date(now + SESSION_DAYS * 24 * 60 * 60 * 1000);
+  const stale = new Date(now + (SESSION_DAYS - 1) * 24 * 60 * 60 * 1000);
+  const r = await CustomerSessionModel.updateOne({ tokenHash: sha(token), expiresAt: { $gt: new Date(now), $lt: stale } }, { $set: { expiresAt: target } });
+  return r.modifiedCount ? target : null;
 }
 
 export async function endCustomerSession(token                    )                {

@@ -1,6 +1,5 @@
-import Link from "next/link";
-import { formatBytes } from "@rasoipulse/config-schema";
 import { Download, ShieldCheck, Smartphone } from "lucide-react";
+import { AppCard } from "@/components/AppCard";
 import { AppsBackdrop } from "@/components/AppsBackdrop";
 import { appArt, BRAND_TILE, orbitPlace } from "@/lib/app-art";
 import { getApps, getSettings, siteUrl } from "@/lib/site";
@@ -14,8 +13,6 @@ export async function generateMetadata() {
   const description = "Rasoi Pulse apps for restaurant teams: take orders at the table, run the kitchen, deliver the food. Download the latest version of each.";
   return { title, description, alternates: { canonical: "/apps" }, robots: { index: false, follow: false }, openGraph: { type: "website", url: `${siteUrl(settings)}/apps`, siteName: settings.brandName, title, description, locale: "en_IN" } };
 }
-
-const day = (d) => (d ? new Date(d).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Kolkata" }) : "");
 
 /** The hero's picture: the Rasoi Pulse tile pulsing in the middle, ripples spreading from it and every app's icon floating round it. */
 function Orbit({ apps }) {
@@ -86,39 +83,7 @@ export default async function AppsPage() {
           ) : (
             <ul className="apps-grid">
               {apps.map((a, i) => (
-                <li key={a.id} className="apps-card" style={{ "--app": appArt(a.id).accent, "--i": i }}>
-                  <div className="apps-card-head">
-                    <span className="apps-icon">
-                      <img src={appArt(a.id).icon} alt="" width="84" height="84" />
-                    </span>
-                    <div className="apps-card-id">
-                      <span className="apps-code mono">{a.code}</span>
-                      <span className="app-pill app-pill-brand apps-tag">{a.tagline}</span>
-                    </div>
-                  </div>
-                  <h2>{a.name}</h2>
-                  <p className="apps-for">{a.audience}</p>
-                  <p>{a.description}</p>
-                  <p className="app-version-meta">
-                    {a.latest ? (
-                      <>
-                        <Smartphone size={15} aria-hidden="true" /> {a.latest.version} · {formatBytes(a.latest.size)} · {day(a.latest.publishedAt)}
-                      </>
-                    ) : (
-                      "No version published yet."
-                    )}
-                  </p>
-                  <div className="hero-actions">
-                    {a.latest ? (
-                      <a className="btn btn-brand btn-sm" href={a.latest.downloadUrl} download>
-                        <Download size={16} aria-hidden="true" /> Download
-                      </a>
-                    ) : null}
-                    <Link className="btn btn-ghost btn-sm" href={a.page}>
-                      Details and versions
-                    </Link>
-                  </div>
-                </li>
+                <AppCard key={a.id} app={a} index={i} />
               ))}
             </ul>
           )}

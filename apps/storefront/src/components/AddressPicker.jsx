@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { formatINR } from "@rasoipulse/config-schema";
 
 import { fx } from "@rasoipulse/ui";
-import { getApiBase } from "@/lib/clientApi";
+import { api, apiDelete, getApiBase } from "@/lib/clientApi";
 import { DeliveryMap } from "./DeliveryMap";
 
 /* -------------------------------------------------------------------- icons */
@@ -41,22 +41,31 @@ const Spinner = ({ size = 15 }) => (
 /* ----------------------------------------------------------------- component */
 
 /**
- * Where should the delivery go? The customer MUST choose the place on a (free) map: tap it to drop the pin, drag the pin to adjust, or press
- * "Use my current location". From that pin the server measures the distance to the restaurant, says whether it delivers there and what it
- * costs. They then type the address in words (flat, street, area) and an optional landmark for the rider.
+ * Where should the delivery go? A (free) map with the PIN FIXED in the middle: the customer moves the map under it (one finger drags, two
+ * fingers pinch to zoom) until the pin is on their door — or presses "Use my current location". From that pin the server measures the distance
+ * to the restaurant, says whether it delivers there and what it costs. They then type the address in words (flat, street, area) and an
+ * optional landmark for the rider.
  *
- * Nothing is handed up to checkout (`onChange(null, …)`) until there is a pin inside the delivery area AND an address, so the order can't be
- * placed without a place on the map. The third argument says whether a pin has been placed yet (so the button can say what is missing).
+ * Where the map STARTS: (1) the place the customer last had food delivered from THIS outlet (saved by the server when they order; the address
+ * they typed comes with it), (2) their own location, if they have already allowed it for this site, (3) the restaurant. In (1) and (2) the pin
+ * counts as chosen straight away; in (3) it only counts once they have moved the map (a pin left on the restaurant is not a delivery place).
+ *
+ * Nothing is handed up to checkout (`onChange(null, …)`) until there is a chosen pin inside the delivery area AND an address, so the order can't
+ * be placed without a place on the map. The third argument says whether a pin has been chosen yet (so the button can say what is missing).
  */
 export function AddressPicker({ outletId, subtotal, onChange }) {
   const [origin, setOrigin] = useState(null); // the restaurant's place and how far it delivers
   const [loc, setLoc] = useState("idle"); // idle | locating | denied | unsupported
-  const [point, setPoint] = useState(null); // { lat, lng, accuracy?, center? }
+  const [view, setView] = useState(null); // where the map was sent from outside: { lat, lng, zoom, key }
+  const [point, setPoint] = useState(null); // the chosen place: { lat, lng, source: "saved" | "phone" | "map", accuracy? }
   const [address, setAddress] = useState("");
   const [landmark, setLandmark] = useState("");
+  const [saved, setSaved] = useState(null); // the place saved for this outlet, when it was used
   const [quote, setQuote] = useState(null);
   const [checking, setChecking] = useState(false);
-  const latest = useRef(0); // only the newest answer counts when the pin is moved quickly
+  const latest = useRef(0); // only the newest answer counts when the map is moved quickly
+  const text = useRef({ address: "", landmark: "" }); // what is typed now (the map's handlers must not see an old copy)
+  text.current = { address, landmark };
 
   useEffect(() => {
     if (typeof navigator !== "undefined" && !navigator.geolocation) setLoc("unsupported");
@@ -65,16 +74,6 @@ export function AddressPicker({ outletId, subtotal, onChange }) {
     onChange(null, null, { pinned: false });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  /* ---- the restaurant's place, for the map ---- */
-  useEffect(() => {
-    let dead = false;
-    fetch(`${getApiBase()}/api/delivery/origin?outletId=${encodeURIComponent(outletId)}`)
-      .then((r) => (r.ok ? r.json() : null))
-      .then((o) => { if (!dead && o?.point) setOrigin({ point: o.point, radiusKm: o.radiusKm ?? 0 }); })
-      .catch(() => undefined);
-    return () => { dead = true; };
-  }, [outletId]);
 
   /* ---- ask the server: how far is this pin, do we deliver there, what does it cost? ---- */
   const check = useCallback(
@@ -109,14 +108,48 @@ export function AddressPicker({ outletId, subtotal, onChange }) {
     [onChange],
   );
 
-  /* ---- the pin: a tap on the map, a drag, or the phone's own location ---- */
-  const pick = async (p) => {
-    setPoint(p);
-    const q = await check(p);
-    publish(p, address, landmark, q);
-  };
+  /** Choose this place (from the map, a saved place or the phone) and measure it. */
+  const choose = useCallback(
+    async (p, typed = text.current) => {
+      setPoint(p);
+      const q = await check(p);
+      publish(p, typed.address, typed.landmark, q);
+    },
+    [check, publish],
+  );
 
-  const useMyLocation = () => {
+  /* ---- where the map starts ---- */
+  useEffect(() => {
+    let dead = false;
+    const start = async () => {
+      const [o, s] = await Promise.all([
+        fetch(`${getApiBase()}/api/delivery/origin?outletId=${encodeURIComponent(outletId)}`).then((r) => (r.ok ? r.json() : null)).catch(() => null),
+        fetchSaved(outletId),
+      ]);
+      if (dead) return;
+      if (o?.point) setOrigin({ point: o.point, radiusKm: o.radiusKm ?? 0 });
+      // (1) the place they last had food delivered from this outlet, with the address they typed then
+      if (s) {
+        setSaved(s);
+        setAddress(s.text);
+        setLandmark(s.landmark);
+        setView({ lat: s.lat, lng: s.lng, zoom: 17, key: 1 });
+        await choose({ lat: s.lat, lng: s.lng, source: "saved" }, { address: s.text, landmark: s.landmark });
+        return;
+      }
+      // (2) their own location — only when they have ALREADY allowed it for this site (we never pop the question up on our own)
+      try {
+        const perm = await navigator.permissions?.query({ name: "geolocation" });
+        if (perm?.state === "granted" && !dead) locate(true);
+      } catch { /* no Permissions API: stay on the restaurant until they press the button */ }
+    };
+    void start();
+    return () => { dead = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [outletId]);
+
+  /* ---- the phone's own location: put the pin there, and the map with it ---- */
+  const locate = (quiet = false) => {
     if (!navigator.geolocation) {
       setLoc("unsupported");
       return;
@@ -125,11 +158,21 @@ export function AddressPicker({ outletId, subtotal, onChange }) {
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
         setLoc("idle");
-        await pick({ lat: Math.round(pos.coords.latitude * 1e6) / 1e6, lng: Math.round(pos.coords.longitude * 1e6) / 1e6, accuracy: pos.coords.accuracy, center: true });
+        const p = { lat: Math.round(pos.coords.latitude * 1e6) / 1e6, lng: Math.round(pos.coords.longitude * 1e6) / 1e6, source: "phone", accuracy: pos.coords.accuracy };
+        setView((v) => ({ lat: p.lat, lng: p.lng, zoom: 17, key: (v?.key ?? 0) + 1 }));
+        await choose(p);
       },
-      (err) => setLoc(err.code === err.PERMISSION_DENIED ? "denied" : "idle"),
+      (err) => setLoc(quiet ? "idle" : err.code === err.PERMISSION_DENIED ? "denied" : "idle"),
       { enableHighAccuracy: true, timeout: 10_000, maximumAge: 0 },
     );
+  };
+
+  /* ---- the customer moved the map: the place under the pin is the new one ---- */
+  const moved = (p) => { void choose({ ...p, source: "map" }); };
+
+  const forgetSaved = async () => {
+    setSaved(null);
+    try { await apiDelete(`/api/customer/address?outletId=${encodeURIComponent(outletId)}`); } catch { /* it is only a convenience: the pin and the address stay as they are */ }
   };
 
   /* ---- the cart total changed (free delivery above a limit): ask again for the same pin ---- */
@@ -155,9 +198,9 @@ export function AddressPicker({ outletId, subtotal, onChange }) {
         <span style={requiredTag}>Required</span>
       </label>
 
-      <DeliveryMap origin={origin} value={point} onPick={pick} />
+      <DeliveryMap origin={origin} view={view} onMove={moved} />
 
-      <button type="button" className="ot-fx-chip" style={{ ...fx("chip", shareBtn), marginTop: 10 }} onClick={useMyLocation} disabled={loc === "locating" || loc === "unsupported"} data-testid="delivery-use-location">
+      <button type="button" className="ot-fx-chip" style={{ ...fx("chip", shareBtn), marginTop: 10 }} onClick={() => locate(false)} disabled={loc === "locating" || loc === "unsupported"} data-testid="delivery-use-location">
         <span style={{ display: "inline-flex" }}>{loc === "locating" ? <Spinner /> : <Navigation />}</span>
         {loc === "locating" ? "Getting your location…" : "Use my current location"}
       </button>
@@ -167,7 +210,7 @@ export function AddressPicker({ outletId, subtotal, onChange }) {
           <span style={{ display: "inline-flex", flexShrink: 0, color: "var(--tone-warning)" }}>
             <Alert size={14} />
           </span>
-          <span>Location access is blocked for this site. You can still tap the map to place the pin yourself.</span>
+          <span>Location access is blocked for this site. You can still move the map to put the pin on your door.</span>
         </div>
       ) : null}
       {loc === "unsupported" ? (
@@ -175,7 +218,7 @@ export function AddressPicker({ outletId, subtotal, onChange }) {
           <span style={{ display: "inline-flex", flexShrink: 0, color: "var(--tone-warning)" }}>
             <Alert size={14} />
           </span>
-          <span>This browser can&apos;t share a location. Tap the map to place the pin yourself.</span>
+          <span>This browser can&apos;t share a location. Move the map to put the pin on your door.</span>
         </div>
       ) : null}
 
@@ -185,7 +228,7 @@ export function AddressPicker({ outletId, subtotal, onChange }) {
             <Alert size={14} />
           </span>
           <span>
-            <strong>Place the pin on the map first.</strong> We use it to measure the distance, check that we deliver to you and work out the delivery charge.
+            <strong>Move the map so the pin is on your door.</strong> We use it to measure the distance, check that we deliver to you and work out the delivery charge.
           </span>
         </div>
       ) : (
@@ -194,11 +237,18 @@ export function AddressPicker({ outletId, subtotal, onChange }) {
             <Check size={14} />
           </span>
           <span style={{ flex: 1, minWidth: 0 }}>
-            <strong style={{ display: "block" }}>Location chosen on the map</strong>
+            <strong style={{ display: "block" }}>
+              {point.source === "saved" && saved ? "Your saved place for this outlet" : point.source === "phone" ? "Your current location" : "Location chosen on the map"}
+            </strong>
             <span style={{ fontSize: 11.5, opacity: 0.8 }}>
-              Not quite right? Tap the map again or drag the pin{point.accuracy ? ` · phone location accurate to ~${Math.round(point.accuracy)} m` : ""}.
+              Not quite right? Move the map to put the pin exactly on your door{point.accuracy ? ` · phone location accurate to ~${Math.round(point.accuracy)} m` : ""}.
             </span>
           </span>
+          {saved ? (
+            <button type="button" onClick={forgetSaved} style={reshareBtn} data-testid="delivery-forget-saved">
+              Forget it
+            </button>
+          ) : null}
         </div>
       )}
 
@@ -231,7 +281,7 @@ export function AddressPicker({ outletId, subtotal, onChange }) {
             </span>
             <span>
               <strong style={{ display: "block" }}>Delivery not available at this pin</strong>
-              {quote.reason ?? `Outside the ${quote.radiusKm} km delivery area.`} Move the pin closer, or choose takeaway.
+              {quote.reason ?? `Outside the ${quote.radiusKm} km delivery area.`} Move the map so the pin is closer, or choose takeaway.
             </span>
           </div>
         )
@@ -265,6 +315,17 @@ export function AddressPicker({ outletId, subtotal, onChange }) {
       />
     </div>
   );
+}
+
+/** The place this customer last had food delivered from this outlet, or null (never ordered, not signed in, or the request failed). */
+async function fetchSaved(outletId) {
+  try {
+    const r = await api(`/api/customer/address?outletId=${encodeURIComponent(outletId)}`);
+    const a = r?.address;
+    return a && typeof a.lat === "number" && typeof a.lng === "number" ? { lat: a.lat, lng: a.lng, text: a.text ?? "", landmark: a.landmark ?? "" } : null;
+  } catch {
+    return null;
+  }
 }
 
 /* ------------------------------------------------------------------- styles */

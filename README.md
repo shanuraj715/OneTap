@@ -174,15 +174,31 @@ It reuses the existing kitchen API unchanged and adds a few endpoints; the other
 ### Delivery: the map pin, the delivery code, and the Rider app (RDA)
 
 **Ordering for delivery (storefront).** Choosing Delivery draws a **free map** (Leaflet + OpenStreetMap, no key — see [`docs/free-maps.md`](docs/free-maps.md))
-headed *Choose your location on the map — Required*. The customer taps it to drop the pin on their door (or drags the pin, or presses *Use my current
-location*); the restaurant and its delivery ring are drawn. **No pin, no order**: the order button reads *Choose location on the map* and a typed
-address alone does not unlock it (the server also refuses a delivery order with no coordinates, 400). The **distance is measured from that pin** to the
-restaurant (a straight line, `POST /api/delivery/check`, recomputed by the server when the order is placed), and the delivery area, charge and time
-come from it; a pin outside the ring says so and the button asks to move it. Tiles come from `NEXT_PUBLIC_MAP_TILE_URL` (default: OpenStreetMap's public
-server, meant for light use). Test: t99.
+headed *Choose your location on the map — Required*. **The pin is fixed in the middle of the map and the customer moves the map under it**: one finger
+drags, two fingers pinch to zoom (the +/− buttons, a double tap, and Ctrl + scroll / a trackpad pinch also zoom; a plain scroll still scrolls the
+page); a click does not place anything. The restaurant and its delivery ring are drawn. The OpenStreetMap credit is shown very small (9 px on a phone).
+**Where the map starts:** (1) the place the customer **last had food delivered from this outlet** (saved by the server when they order, with the whole address
+they typed — text and landmark — and filled back in), else (2) their phone's location **if they have already allowed it** (we never pop the question up;
+*Use my current location* asks), else (3) the restaurant. In (1) and (2) the place counts as chosen at once; in (3) it only counts once they move the map.
+**No chosen place, no order**: the order button reads *Choose location on the map* and a typed address alone does not unlock it (the server also refuses a
+delivery order with no coordinates, 400). The **distance is measured from that pin** to the restaurant (a straight line, `POST /api/delivery/check`,
+recomputed by the server when the order is placed); the delivery area, charge and time come from it, and a pin outside the ring says so. The order is **re-priced
+only when the pin moves, never while the address is being typed**. Tiles come from `NEXT_PUBLIC_MAP_TILE_URL` (default: OpenStreetMap's public server, meant
+for light use). Tests: t99 (map, saved place, confirmation), t101 (saved places + sessions, API).
 
-**The delivery code.** A new delivery order gets a 4-digit code (`Order.deliveryCode`, never in the dashboard's order data or the rider's list). The
-customer's order page shows it **while the food is out for delivery** ("tell it to the rider"); the rider types it to mark the order delivered. Five wrong
+**Saved delivery places.** `CustomerAddress` (one row per customer **per outlet**: pin, address text, landmark, times used) is written when a delivery order is
+placed and rewritten by the next one from the same outlet; another outlet keeps its own row (Noida and Delhi can differ). `GET /api/customer/address?outletId=`
+reads it (null when signed out or never ordered), `PUT` saves by hand, `DELETE` forgets it (the picker's *Forget it* button). A customer of another store gets 403.
+Staff-placed, takeaway and refused orders save nothing.
+
+**Staying signed in.** A customer's sign-in is a database session (`CustomerSession`, a random token whose hash is stored) in an HttpOnly cookie that lasts **180
+days and is pushed out again by every visit** (`GET /api/customer/me`, at most once a day, re-issuing the cookie); an ended session is never revived and signing out
+removes it. The storefront treats only a *clear* "nobody" as signed out: a failed check (502 during a deploy/restart, a 429, no connection) is **retried with a growing
+pause and never shows the login form** (it used to, which cost customers another code). Test: t102.
+
+**The delivery code.** A new delivery order gets a 4-digit code (`Order.deliveryCode`, never in the dashboard's order data or the rider's list). It is shown to the
+customer on the **"Order placed" screen in big highlighted digits** (the order response to the customer who placed it carries it; staff's does not) and on the order's tracking page,
+for as long as the delivery is still to come (never after it is delivered or cancelled); the rider types it to mark the order delivered. Five wrong
 tries lock the order for the rider (a manager can still complete it from the dashboard); an empty submission isn't a try; orders from before this have none.
 
 **Rider app (RDA)** — `mobile-apps/rda`, `com.rasoipulse.rda`, first version `v-26.11.27-001`, violet icon with **RDA**.
@@ -199,6 +215,14 @@ tries lock the order for the rider (a manager can still complete it from the das
 - **Tests:** server t98 (87 checks), manager's PIN screen t100, the app's own jest suite (`npm test` in `mobile-apps/rda`) against answers recorded by
   `tests/e2e/suites/_record-rider-app-fixtures.mjs`.
 - **Not in the first version (ideas):** live location sharing, an in-app map, push notifications while the app is closed, a rider list/earnings screen.
+
+### Marketing website (apps/website): header, footer, homepage
+
+- **Header** = the Product dropdown, **Pricing**, **Apps** (a fixed link to `/apps`, not a console page), **FAQ**, and the Talk to us button. **About** and **Contact** live in the **footer** only (`FOOTER_ONLY` in `src/components/Chrome.jsx`); the footer's Product column also links to Apps.
+- **Homepage apps note** (`AppsShowcase.jsx`, placed right after the product tabs by `PageView.jsx`): a few words and a small animated picture of an order travelling from the waiter's app to the kitchen's to the rider's. It deliberately has **no app cards and no downloads** — those are on `/apps`. It is drawn from the same app list as `/apps` and is left out when the list can't be reached.
+- **Look**: the homepage hero has a quiet moving backdrop that fades out at the bottom (never a hard edge); Features and "moments" cards are tinted per card, light up under the pointer (`Spotlight.jsx`), and their icons have little hover tricks. Motion is CSS only; scroll-reveal runs only where the browser supports scroll-linked animations, and **everything stops under "reduce motion"**.
+- **Text can't be selected and the pointer is never the text I-beam** (arrow over text, hand over links and buttons). Typing fields and an app's file checksum stay selectable on purpose.
+- **Tests:** t44 (header and Product dropdown), t95 (`/apps` pages), t103 (the above, including a pixel check that the hero colour has faded by its bottom edge, and reduce-motion).
 
 ## How it fits together
 

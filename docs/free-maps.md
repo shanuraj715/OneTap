@@ -4,7 +4,7 @@ Nothing in Rasoi Pulse calls a paid map service. There is no Google Maps key to 
 
 | Where | What it does | What it uses | Cost |
 | --- | --- | --- | --- |
-| **Storefront, ordering for delivery** | The customer taps a map to drop the pin on their door (required), and can drag it; the restaurant and its delivery ring are drawn | **Leaflet** (open-source) with **OpenStreetMap** tiles | Free |
+| **Storefront, ordering for delivery** | A map with the pin fixed in the middle: the customer drags the map (one finger) and pinches to zoom until the pin is on their door (required); it starts at their saved place for the outlet, else their location if already allowed, else the restaurant; the restaurant and its delivery ring are drawn | **Leaflet** (open-source) with **OpenStreetMap** tiles | Free |
 | **Distance and delivery charge** | From the chosen pin to the restaurant, in a straight line | Our own server (`POST /api/delivery/check`, the haversine formula) — no routing service | Free |
 | **Rider app, directions** | The rider's own maps app opens at the customer's pin | A plain link (`https://www.google.com/maps/dir/?api=1&destination=lat,lng`, or `geo:`) | Free: a link, not the Maps API |
 | **Call / WhatsApp** | `tel:` and `https://wa.me/…` links | The phone's own apps | Free |

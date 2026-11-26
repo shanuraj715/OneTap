@@ -1,6 +1,6 @@
 # Rasoi Pulse end-to-end tests — catalog
 
-**98 tests** · 98 passing · 0 failing/error · 0 not run yet
+**104 tests** · 98 passing · 0 failing/error · 6 not run yet
 
 | Test | Area | Result | Checks | Last run |
 |---|---|---|---|---|
@@ -15,6 +15,10 @@
 | [t08-plans-outlets-settings](t08-plans-outlets-settings.md) — Plans & outlets — Basic → Pro upgrade, outlets 1-3 with menus, all outlet settings, delivery distance, load management | plans | ✅ PASSED | 44/44 | 2026-11-21 13:17 |
 | [t09-store-subdomain](t09-store-subdomain.md) — Store subdomain — remove, create lifecycle.<base>, open every outlet on it, unknown addresses, rename | domains | ✅ PASSED | 36/36 | 2026-11-21 13:18 |
 | [t10-plan-downgrade](t10-plan-downgrade.md) — Plan downgrade Pro → Basic — what stops, what keeps working, grace period, after the grace period, a manually disabled outlet | plans | ✅ PASSED | 38/38 | 2026-11-21 13:19 |
+| [t100-rider-pin-ui](t100-rider-pin-ui.md) — Dashboard: the manager gives a delivery rider an app login with a PIN, resets it and switches it off | delivery | ⚪ not run yet | — | — |
+| [t101-customer-address-api](t101-customer-address-api.md) — Customer: the pin and address of a delivery order are saved per outlet and read back next time; the sign-in lasts 180 days and every visit extends it | storefront | ⚪ not run yet | — | — |
+| [t102-login-persist](t102-login-persist.md) — Storefront: a customer who signed in stays signed in for 180 days, through reloads, new tabs and a server that can't answer for a moment (restart, deploy, rate limit, dropped connection) — without being sent back to the login form | storefront | ⚪ not run yet | — | — |
+| [t103-website-home-apps-motion](t103-website-home-apps-motion.md) — Website → header keeps to Product / Pricing / Apps / FAQ (About + Contact in the footer); homepage has a short animated 'We have apps too' note (no cards); hero backdrop fades out; livelier Features and moments; motion that stops under reduce-motion; no text selection or text cursor | website | ⚪ not run yet | — | — |
 | [t11-outlet-delete](t11-outlet-delete.md) — Delete an outlet from the dashboard — protection for outlets with orders, then the deleted outlet on the subdomain | domains | ✅ PASSED | 13/13 | 2026-11-21 13:19 |
 | [t12-store-delete](t12-store-delete.md) — Delete the store — typed-name confirmation, then the subdomain, the owner and the other stores | domains | ✅ PASSED | 19/19 | 2026-11-21 13:19 |
 | [t13-marketing](t13-marketing.md) — Marketing — channels, audience filters (last visit, items, age, gender, order type, area), imports, lists, sending and the sidebar | marketing | ✅ PASSED | 70/70 | 2026-11-21 13:07 |
@@ -102,6 +106,8 @@
 | [t95-app-releases-website-ui](t95-app-releases-website-ui.md) — Website → /app: the staff app's download page shows the latest published version, its notes and every version, and follows publish / withdraw / required in seconds | app | ✅ PASSED | 37/37 | 2026-11-26 22:08 |
 | [t96-icons-map-ui](t96-icons-map-ui.md) — Icons: the website has the Rasoi Pulse icon (navy), the admin panel a different one (red), and the storefront shows the shop owner's own icon (the Rasoi Pulse one until they upload theirs) | branding | ✅ PASSED | 20/20 | 2026-11-26 21:43 |
 | [t97-kitchen-app-api](t97-kitchen-app-api.md) — Kitchen app (KDA) API: only the kitchen team may sign in; a dish can be marked sold out / unavailable / available from the kitchen (with a stock number for managers); nothing the other apps or the dashboard do has changed | kitchen | ✅ PASSED | 34/34 | 2026-11-26 22:05 |
+| [t98-rider-app-api](t98-rider-app-api.md) — Rider app (RDA) API: a rider signs in with their phone number and a PIN the manager sets, sees only the deliveries handed to them, marks them picked up and delivered (with the customer's 4-digit code); a new delivery order needs a map pin and gets a code; nothing else of the store opens to a rider | delivery | ⚪ not run yet | — | — |
+| [t99-delivery-map](t99-delivery-map.md) — Delivery checkout: a free map with the pin FIXED in the middle and the map moved under it (one finger drags, two pinch); it starts at the customer's saved place for the outlet, else their phone's location if already allowed, else the restaurant; the distance is measured from the pin; no chosen place, no order | storefront | ⚪ not run yet | — | — |
 
 ## Open findings (noticed during tests, not yet fixed)
 

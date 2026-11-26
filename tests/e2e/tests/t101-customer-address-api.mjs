@@ -1,0 +1,22 @@
+// T101 — A customer's saved delivery place (one per outlet) and the longer-lasting customer sign-in.
+import { runSuite } from "../bench/suite.mjs";
+
+export const meta = {
+  id: "t101-customer-address-api",
+  title: "Customer: the pin and address of a delivery order are saved per outlet and read back next time; the sign-in lasts 180 days and every visit extends it",
+  area: "storefront",
+  browser: false,
+  fresh: false,
+  summary: "Runs suites/customer-address-api.mjs on a private API with an in-memory database (no browser). A customer with no history has nothing saved (and someone not signed in gets 'nothing', not an error). Placing a delivery order saves the pin and the whole address (text + landmark) for THAT outlet; ordering from a second outlet saves a second place and leaves the first untouched (two rows); ordering again from the same outlet replaces its place (still one row per outlet). A staff-placed order, a takeaway order and a refused (out-of-area) delivery save nothing. A customer can save a place by hand (PUT), impossible coordinates are 400, saving needs a sign-in, and 'forget' (DELETE) removes only their own. A customer of another store gets 403 on read/save/clear. The sign-in: a new one lasts 180 days with a matching cookie end date; a visit right after changes nothing; a visit with 100 days left pushes it back to 180 days and re-issues the same token's cookie (HttpOnly, SameSite=Lax); a sign-in whose end date has passed is not revived; signing out still removes it from the database.",
+  expect: [
+    "A delivery order saves the customer's pin and address for that outlet; each outlet keeps its own; the next order from the same outlet replaces it.",
+    "A signed-in customer stays signed in for 180 days, and each visit moves the end date out again.",
+  ],
+  expectNot: [
+    "A customer must NOT be able to read, save or clear a place at another store's outlet, or see another customer's place.",
+    "A staff order, a takeaway order or a refused delivery must NOT save an address.",
+    "A visit must NOT bring back a sign-in whose end date has passed.",
+  ],
+};
+
+export const run = (d) => runSuite(d, "customer-address-api.mjs", { timeoutMs: 6 * 60_000 });

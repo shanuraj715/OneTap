@@ -138,13 +138,17 @@ await t.run(async () => {
   ok((await rider("POST", `/deliveries/${mine2}/delivered`, sureshToken, { code: "4821" })).status === 404, "another rider can't complete my delivery");
   ok((await rider("POST", `/deliveries/${cooking}/delivered`, token, { code: "4821" })).status === 409, "an order that was never picked up can't be marked delivered");
 
-  say("7. The customer sees the code while the food is on its way");
+  say("7. The customer can see the code for as long as the delivery is still to come");
   const view1 = await orders.customerOrderById({ brandId: A.brand, outletId: A.outlet, customerId: "c1", orderId: mine2 });
   ok(view1.deliveryCode === "4821" && view1.rider?.name === "Ramesh", "an Out-for-delivery order shows the customer the 4 digits and the rider");
   const view2 = await orders.customerOrderById({ brandId: A.brand, outletId: A.outlet, customerId: "c1", orderId: cooking });
-  ok(view2.deliveryCode === null, "before it is out, no code is shown");
+  ok(view2.deliveryCode === "4821", "while it is still being made the customer can already see it (so they can remember it)");
   const view3 = await orders.customerOrderById({ brandId: A.brand, outletId: A.outlet, customerId: "c1", orderId: mine1 });
   ok(view3.deliveryCode === null, "after it is delivered, no code is shown");
+  const gone = await seed({ status: "cancelled", statusHistory: [{ status: "placed", at: new Date() }, { status: "cancelled", at: new Date() }] });
+  ok((await orders.customerOrderById({ brandId: A.brand, outletId: A.outlet, customerId: "c1", orderId: gone })).deliveryCode === null, "a cancelled delivery shows no code");
+  const take = await seed({ channel: "takeaway", deliveryAddress: undefined, rider: undefined, deliveryCode: undefined, status: "preparing" });
+  ok((await orders.customerOrderById({ brandId: A.brand, outletId: A.outlet, customerId: "c1", orderId: take })).deliveryCode === null, "a takeaway order never has one");
 
   say("8. A new delivery order gets a code");
   await own("PATCH", `/api/outlets/${A.outlet}/config`, { features: { ordering: { delivery: true } }, identity: { location: { point: { lat: 28.6315, lng: 77.2167 } } }, operations: { limits: { deliveryRadiusKm: 5 } } });

@@ -159,11 +159,17 @@ console.log("== the pointer can travel from Product down into the panel without 
   ok(!(await page.locator(".dd-panel").isVisible()), "moving away closes it");
 }
 
+console.log("== the header keeps to Product, Pricing, Apps, FAQ (About and Contact moved to the footer)");
+const navLinks = (await page.locator(".nav > a").allTextContents()).map((t) => t.trim());
+ok(JSON.stringify(navLinks) === JSON.stringify(["Pricing", "Apps", "FAQ"]), "the header's links are Pricing, Apps, FAQ (after the Product dropdown) — no About, no Contact", navLinks.join(" | "));
+ok(/class="dd-btn"[^>]*>\s*Product/.test(html), "…with the Product dropdown first");
+ok(/Talk to us/.test(html), "…and the Talk to us button is still there");
+
 console.log("== the header links themselves are unchanged");
 await page.mouse.move(5, 700);
 await page.waitForTimeout(200);
 const link = await styleOf(".nav > a:nth-of-type(1)", ["borderTopLeftRadius", "fontSize", "fontWeight", "paddingLeft"]);
-ok(parseFloat(link.borderTopLeftRadius) >= 100 && link.fontSize === "15px" && link.fontWeight === "500" && link.paddingLeft === "12px", "Pricing / FAQ / About / Contact keep their pill shape and type", JSON.stringify(link));
+ok(parseFloat(link.borderTopLeftRadius) >= 100 && link.fontSize === "15px" && link.fontWeight === "500" && link.paddingLeft === "12px", "Pricing / Apps / FAQ keep their pill shape and type", JSON.stringify(link));
 await page.locator(".nav > a").first().hover();
 await page.waitForTimeout(250);
 const lh = await styleOf(".nav > a:nth-of-type(1)", ["backgroundColor"]);

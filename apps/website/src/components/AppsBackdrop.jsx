@@ -7,11 +7,11 @@ const BUBBLES = [
 
 /**
  * The moving background of the apps heroes: drifting colour, a slow dotted grid, rising rings and a heartbeat line that draws itself.
- * All aria-hidden, no script. `solo` paints every blob in the page's own colour (`--app`, an app's page) instead of the three apps' colours (the index).
+ * All aria-hidden, no script. `soft` is the quieter version behind the homepage hero (fainter line and dots, so the text stays the star). `solo` paints every blob in the page's own colour (`--app`, an app's page) instead of the three apps' colours (the index).
  */
-export function AppsBackdrop({ solo = false }) {
+export function AppsBackdrop({ solo = false, soft = false }) {
   return (
-    <div className={`apps-bg${solo ? " apps-bg-solo" : ""}`} aria-hidden="true">
+    <div className={`apps-bg${solo ? " apps-bg-solo" : ""}${soft ? " apps-bg-soft" : ""}`} aria-hidden="true">
       <span className="apps-blob apps-blob-a" />
       <span className="apps-blob apps-blob-b" />
       <span className="apps-blob apps-blob-c" />

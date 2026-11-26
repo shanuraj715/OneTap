@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { CUSTOMER_GENDERS } from "@rasoipulse/config-schema";
+import { tenantScope } from "../tenant-scope.js";
 import { writeEvents } from "../write-events.js";
 
 const { Schema, model, models } = mongoose;
@@ -105,3 +106,26 @@ customerSessionSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 customerSessionSchema.plugin(writeEvents, { model: "CustomerSession" });
 export const CustomerSessionModel =
   models.CustomerSession ?? model("CustomerSession", customerSessionSchema);
+
+/* ---------------------------------------------------- saved delivery address */
+
+/**
+ * Where a customer last had food delivered FROM ONE OUTLET: the pin they chose on the map and the address they typed. One row per customer
+ * per outlet, rewritten every time they order delivery from that outlet — so the next order from the same outlet starts with the pin
+ * already in place (a different outlet has its own row). Tenant-scoped: `brandId` + `outletId` come from the plugin.
+ */
+const customerAddressSchema = new Schema(
+  {
+    customerId: { type: String, required: true },
+    lat: { type: Number, required: true },
+    lng: { type: Number, required: true },
+    text: { type: String, default: "" },
+    landmark: { type: String, default: "" },
+    timesUsed: { type: Number, default: 1 },
+    lastUsedAt: { type: Date, default: Date.now },
+  },
+  { timestamps: true },
+);
+customerAddressSchema.plugin(tenantScope);
+customerAddressSchema.index({ brandId: 1, outletId: 1, customerId: 1 }, { unique: true });
+export const CustomerAddressModel = models.CustomerAddress ?? model("CustomerAddress", customerAddressSchema);

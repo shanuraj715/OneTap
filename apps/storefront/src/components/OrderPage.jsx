@@ -151,6 +151,11 @@ export function OrderPage({
       .catch(() => undefined);
   }, [fulfilment, dineIn, tables.length, outletId]);
 
+  // The price depends on WHERE the pin is (the delivery charge), never on the words typed in the address box: depend on the two numbers,
+  // not on the whole address object (a new object is made on every keystroke, which re-priced the order — a quote request per letter).
+  const deliveryLat = deliveryAddress?.lat;
+  const deliveryLng = deliveryAddress?.lng;
+
   const reprice = useCallback(async () => {
     if (lines.length === 0) {
       setPriced(null);
@@ -163,8 +168,8 @@ export function OrderPage({
         channel: effectiveChannel,
         scheduledFor,
       };
-      if (effectiveChannel === "delivery" && deliveryAddress) {
-        body.deliveryPoint = { lat: deliveryAddress.lat, lng: deliveryAddress.lng };
+      if (effectiveChannel === "delivery" && deliveryLat !== undefined && deliveryLng !== undefined) {
+        body.deliveryPoint = { lat: deliveryLat, lng: deliveryLng };
       }
       const q = await api("/api/orders/quote", body);
       setPriced(q);
@@ -180,7 +185,7 @@ export function OrderPage({
     // Only once the customer is known — pricing before that would quote coin
     // redemption against no one and immediately show a "sign in" error that's
     // about to be replaced by the actual sign-in screen anyway.
-  }, [lines, outletId, appliedCoupon, redeemCoins, effectiveChannel, deliveryAddress, scheduledFor]);
+  }, [lines, outletId, appliedCoupon, redeemCoins, effectiveChannel, deliveryLat, deliveryLng, scheduledFor]);
 
   useEffect(() => {
     if (customer) void reprice();
@@ -444,7 +449,10 @@ function ReviewOrder({
   const [couponBusy, setCouponBusy] = useState(false);
   const [couponError, setCouponError] = useState(null);
   const [coinInput, setCoinInput] = useState(redeemCoins > 0 ? String(redeemCoins) : "");
-  const [gateway, setGateway] = useState(gateways[0] ?? "cod");
+  const [chosenGateway, setGateway] = useState(gateways[0] ?? "cod");
+  // The payment method in use follows the order type: a choice made for a takeaway ("cash") is not offered for a delivery (paid online only),
+  // so it must not stay selected underneath — it used to, and the order went out as cash and was refused ("Delivery orders must be paid online").
+  const gateway = gateways.includes(chosenGateway) ? chosenGateway : (gateways[0] ?? "cod");
   const [note, setNote] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
@@ -832,6 +840,15 @@ function DoneView({ order, dineIn, tab, channel, menuHref, accountHref, trackHre
       <h2 style={doneTitle}>Order #{order.orderNumber} placed</h2>
       <p style={doneLead}>{lead}</p>
 
+      {/* a delivery order's 4-digit code: the customer tells it to the rider when the food arrives, so it is shown big enough to remember */}
+      {isDelivery && order.deliveryCode ? (
+        <div style={doneCode} data-testid="done-delivery-code" role="group" aria-label={`Your delivery code is ${order.deliveryCode.split("").join(" ")}`}>
+          <span style={doneCodeLabel}>Your delivery code</span>
+          <span style={doneCodeDigits} data-testid="done-delivery-code-digits">{order.deliveryCode}</span>
+          <span style={doneCodeHint}>Remember this. Tell it to the rider when your food arrives, and not before. We also show it on your order page.</span>
+        </div>
+      ) : null}
+
       <dl className="ot-fx-card" style={fx("card", doneSummary)}>
         {rows.map(([label, value], i) => (
           <div key={label} style={{ ...doneRow, ...(i > 0 ? doneRowRule : null) }}>
@@ -1139,6 +1156,10 @@ const doneCheck = {
 };
 const doneTitle = { margin: "30px 0 0", fontFamily: "var(--font-heading)", fontSize: "clamp(1.45rem, 5.5vw, 1.8rem)", lineHeight: 1.2, textWrap: "balance" };
 const doneLead = { margin: "10px 0 0", fontSize: 16, lineHeight: 1.5, color: "var(--color-text-muted)" };
+const doneCode = { display: "flex", flexDirection: "column", alignItems: "center", gap: 6, width: "100%", maxWidth: 420, margin: "18px auto 4px", padding: "18px 16px 16px", borderRadius: 18, border: "2px dashed var(--color-primary)", background: "color-mix(in srgb, var(--color-primary) 10%, var(--color-bg))", textAlign: "center" };
+const doneCodeLabel = { fontSize: 12.5, fontWeight: 800, letterSpacing: 1.2, textTransform: "uppercase", color: "var(--color-primary-text, var(--color-primary))" };
+const doneCodeDigits = { fontSize: "clamp(44px, 14vw, 64px)", fontWeight: 900, lineHeight: 1.05, letterSpacing: "0.22em", paddingLeft: "0.22em", fontVariantNumeric: "tabular-nums", color: "var(--color-text)" };
+const doneCodeHint = { fontSize: 13, lineHeight: 1.45, color: "var(--color-text-muted)", maxWidth: 320 };
 const doneSummary = { width: "100%", maxWidth: 380, margin: "28px 0 0", padding: "4px 18px", background: "var(--color-bg)", border: "1px solid var(--color-border)", borderRadius: 14, textAlign: "left" };
 const doneRow = { display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 16, padding: "13px 0" };
 const doneRowRule = { borderTop: "1px solid var(--color-border)" };

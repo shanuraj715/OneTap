@@ -11,7 +11,8 @@ import { rateOrder } from "../feedback/feedback.service.js";
 import { customerOrderById, customerOrderHistory, hideOrderFromCustomer } from "../orders/orders.service.js";
 import { reorderLines } from "../orders/reorder.service.js";
 import { storePlan } from "../platform/plan.service.js";
-import { completeProfile, customerFromToken, endCustomerSession, requestOtp, verifyOtp } from "./customer.service.js";
+import { completeProfile, customerFromToken, endCustomerSession, extendSession, requestOtp, verifyOtp } from "./customer.service.js";
+import { clearSavedAddress, getSavedAddress, saveAddress } from "./customer-address.service.js";
 import { limiter, usesPolicy } from "../../middleware/rate-limit.js";
 
 export const CUSTOMER_COOKIE = "rasoipulse_customer";
@@ -246,7 +247,54 @@ customerRouter.get("/me", async (req, res) => {
     res.json({ customer: null });
     return;
   }
+  // every visit pushes the sign-in's end date out again (at most once a day), and the cookie with it: someone who keeps coming back stays signed in
+  const renewed = await extendSession((req.cookies)?.[CUSTOMER_COOKIE]);
+  if (renewed) res.cookie(CUSTOMER_COOKIE, (req.cookies)[CUSTOMER_COOKIE], { httpOnly: true, sameSite: "lax", secure: isProd, expires: renewed, path: "/" });
   res.json({ customer: shapeCustomer(customer) });
+});
+
+/* ------------------------------------------------- the customer's saved delivery place (one per outlet) */
+
+const addressQuery = z.object({ outletId: z.string().min(1) });
+const addressBody = z.object({
+  outletId: z.string().min(1),
+  lat: z.number().min(-90).max(90),
+  lng: z.number().min(-180).max(180),
+  text: z.string().trim().max(300).default(""),
+  landmark: z.string().trim().max(120).default(""),
+});
+
+/** The signed-in customer + the outlet's tenant context (the customer must belong to the outlet's store). */
+async function addressContext(req, outletId) {
+  const customer = await currentCustomer(req);
+  if (!customer) throw new HttpError(401, "Sign in to use your saved address");
+  const outlet = await outletOf(outletId);
+  if (String(customer.brandId) !== String(outlet.brandId)) throw new HttpError(403, "Sign in again for this restaurant");
+  return { customer, ctx: { brandId: String(outlet.brandId), outletId: String(outlet._id) } };
+}
+
+/** Where this customer last had food delivered from this outlet (null when never), so the map can start with the pin already there. */
+customerRouter.get("/address", async (req, res) => {
+  const { outletId } = addressQuery.parse(req.query);
+  const customer = await currentCustomer(req);
+  if (!customer) { res.json({ address: null }); return; } // not signed in: nothing saved to show (no error: the picker just starts at the restaurant)
+  const { ctx } = await addressContext(req, outletId);
+  res.json({ address: await getSavedAddress(ctx, customer._id) });
+});
+
+/** Save the place for this outlet (the order flow does this by itself when a delivery order is placed; this is for explicit saves). */
+customerRouter.put("/address", limiter("customer-account"), async (req, res) => {
+  const body = addressBody.parse(req.body);
+  const { customer, ctx } = await addressContext(req, body.outletId);
+  res.json({ address: await saveAddress(ctx, customer._id, body) });
+});
+
+/** Forget the saved place for this outlet. */
+customerRouter.delete("/address", limiter("customer-account"), async (req, res) => {
+  const { outletId } = addressQuery.parse(req.query);
+  const { customer, ctx } = await addressContext(req, outletId);
+  await clearSavedAddress(ctx, customer._id);
+  res.status(204).end();
 });
 
 const completeProfileBody = z.object({

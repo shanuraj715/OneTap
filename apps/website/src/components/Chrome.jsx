@@ -22,8 +22,23 @@ function Brand({ settings }) {
   );
 }
 
-const navPages = (pages) =>
-  pages.filter((p) => p.nav?.show && p.slug !== "home").sort((a, b) => (a.nav.order ?? 50) - (b.nav.order ?? 50));
+/** Pages that live in the FOOTER only: the header keeps to what a visitor is choosing between (Product, Pricing, Apps, FAQ). */
+const FOOTER_ONLY = new Set(["about", "contact"]);
+
+/**
+ * The header's links: the pages the console flags for the menu (minus the footer-only ones), in the console's order, with the Apps page — which is
+ * not a console page — right after Pricing (or first when there is no Pricing page).
+ */
+function headerLinks(pages) {
+  const list = pages
+    .filter((p) => p.nav?.show && p.slug !== "home" && !FOOTER_ONLY.has(p.slug))
+    .sort((a, b) => (a.nav.order ?? 50) - (b.nav.order ?? 50))
+    .map((p) => ({ key: p.slug, href: pathFor(p.slug), label: p.nav.label || p.title }));
+  const apps = { key: "apps", href: "/apps", label: "Apps" };
+  const at = list.findIndex((l) => l.key === "pricing");
+  list.splice(at + 1, 0, apps);
+  return list;
+}
 
 /**
  * The Product dropdown (desktop header): opens on hover, and on keyboard
@@ -55,7 +70,7 @@ function ProductMenu({ items }) {
 }
 
 export function SiteHeader({ settings, pages, product = [] }) {
-  const nav = navPages(pages);
+  const nav = headerLinks(pages);
   const contact = pages.some((p) => p.slug === "contact");
   const ctaHref = contact ? "/contact" : settings.contact.phone ? `tel:${settings.contact.phone.replace(/\s/g, "")}` : "/";
   return (
@@ -73,9 +88,9 @@ export function SiteHeader({ settings, pages, product = [] }) {
           <Brand settings={settings} />
           <nav className="nav" aria-label="Main">
             <ProductMenu items={product} />
-            {nav.map((p) => (
-              <Link key={p.slug} href={pathFor(p.slug)}>
-                {p.nav.label || p.title}
+            {nav.map((l) => (
+              <Link key={l.key} href={l.href}>
+                {l.label}
               </Link>
             ))}
           </nav>
@@ -94,9 +109,9 @@ export function SiteHeader({ settings, pages, product = [] }) {
                 </Link>
               ))}
               {product.length ? <span className="menu-label">More</span> : null}
-              {nav.map((p) => (
-                <Link key={p.slug} href={pathFor(p.slug)}>
-                  {p.nav.label || p.title}
+              {nav.map((l) => (
+                <Link key={l.key} href={l.href}>
+                  {l.label}
                 </Link>
               ))}
               <Link className="btn btn-brand" href={ctaHref}>
@@ -140,8 +155,8 @@ export function SiteFooter({ settings, pages }) {
             ) : null}
           </div>
           {GROUPS.map(([key, label]) => {
-            const list = pages.filter((p) => p.footerGroup === key);
-            if (!list.length) return null;
+            const list = pages.filter((p) => p.footerGroup === key || (key === "company" && FOOTER_ONLY.has(p.slug) && !p.footerGroup && p.nav?.show));
+            if (!list.length && key !== "product") return null;
             return (
               <div key={key} className="foot-col">
                 <h2>{label}</h2>
@@ -151,6 +166,11 @@ export function SiteFooter({ settings, pages }) {
                       <Link href={pathFor(p.slug)}>{p.nav?.label || p.title}</Link>
                     </li>
                   ))}
+                  {key === "product" ? (
+                    <li>
+                      <Link href="/apps">Apps</Link>
+                    </li>
+                  ) : null}
                 </ul>
               </div>
             );
