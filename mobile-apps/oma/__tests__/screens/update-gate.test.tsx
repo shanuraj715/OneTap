@@ -27,7 +27,7 @@ describe("an optional update (a pop-up when the app opens)", () => {
     await renderApp(<UpdateGate />, { signedIn: false, build: 1, server: fakeServer(checkRoute("update-check-optional")) });
     const box = within(await screen.findByTestId("update-optional"));
     expect(box.getByText("New version available")).toBeOnTheScreen();
-    expect(box.getByText(/v-261127-002 · 3\.2 MB is ready\. You have v-261126-001\./)).toBeOnTheScreen();
+    expect(box.getByText(/v-27.11.26-002 · 3\.2 MB is ready\. You have v-26.11.26-001\./)).toBeOnTheScreen();
     expect(box.getByText("• Menu loads once and stays fast")).toBeOnTheScreen();
     expect(box.getByText("• Tables grouped by floor")).toBeOnTheScreen();
     expect(box.getByRole("button", { name: "Later" })).toBeOnTheScreen();
@@ -79,9 +79,9 @@ describe("a required update (a screen nobody gets past)", () => {
     await renderApp(<UpdateGate />, { signedIn: false, build: 1, server: fakeServer(checkRoute("update-check-required")) });
     const page = within(await screen.findByTestId("update-required"));
     expect(page.getByText("Update needed")).toBeOnTheScreen();
-    expect(page.getByText(/This version of the app \(v-261126-001\) can't be used any more\. Install v-261128-003 \(3\.2 MB\) to carry on\./)).toBeOnTheScreen();
-    expect(page.getByText("v-261128-003")).toBeOnTheScreen();
-    expect(page.getByText("v-261127-002")).toBeOnTheScreen();
+    expect(page.getByText(/This version of the app \(v-26.11.26-001\) can't be used any more\. Install v-28.11.26-003 \(3\.2 MB\) to carry on\./)).toBeOnTheScreen();
+    expect(page.getByText("v-28.11.26-003")).toBeOnTheScreen();
+    expect(page.getByText("v-27.11.26-002")).toBeOnTheScreen();
     expect(page.getByText("• Security fix: please update")).toBeOnTheScreen();
     expect(page.getByText(/Download the file, open it and tap Install/)).toBeOnTheScreen();
     expect(page.queryByRole("button", { name: "Later" })).toBeNull(); // no way to put it off

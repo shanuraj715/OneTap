@@ -57,10 +57,10 @@ try {
   const publish = (version, versionCode, notes, force) => db.AppReleaseModel.create({ app: "oma", platform: "android", version, versionCode, notes, force, status: "published", publishedAt: new Date("2026-11-27T10:00:00Z"), file: file(version) });
   const check = async (code) => must(await call("GET", `/api/app-updates/check?app=oma&platform=android&versionCode=${code}`), `check ${code}`);
   save("update-check-none", await check(1));
-  await publish("v-261127-002", 2, "Menu loads once and stays fast\nTables grouped by floor", false);
+  await publish("v-27.11.26-002", 2, "Menu loads once and stays fast\nTables grouped by floor", false);
   save("update-check-optional", await check(1));
   save("update-check-current", await check(2));
-  await publish("v-261128-003", 3, "Security fix: please update", true);
+  await publish("v-28.11.26-003", 3, "Security fix: please update", true);
   save("update-check-required", await check(1));
   const old = await call("POST", "/api/auth/app-login", { headers: { "x-oma-version-code": "1" }, body: { email: "super@sandbox.test", password: "Super123!" } });
   if (old.status !== 426) { console.error("expected 426, got", old.status); process.exit(1); }

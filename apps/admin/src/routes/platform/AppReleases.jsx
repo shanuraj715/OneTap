@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { MAX_APK_MB, formatBytes, parseAppVersion } from "@rasoipulse/config-schema";
+import { APP_CATALOG, APP_IDS, MAX_APK_MB, formatBytes, parseAppVersion } from "@rasoipulse/config-schema";
 import { Archive, Check, Copy, Download, ExternalLink, Eye, EyeOff, Pencil, Rocket, ShieldAlert, Smartphone, Trash2, Upload } from "lucide-react";
 import * as api from "../../lib/api";
 import { uploadApk, versionFromFileName } from "../../lib/uploadApk";
@@ -19,7 +19,9 @@ const STATUS = {
  * the website's /app page lets people download.
  */
 export function AppReleases() {
-  const q = useAppReleases();
+  const [app, setApp] = useState(() => { try { const a = new URLSearchParams(window.location.search).get("app"); return APP_IDS.includes(a) ? a : "oma"; } catch { return "oma"; } });
+  const meta = APP_CATALOG[app];
+  const q = useAppReleases(app);
   const [creating, setCreating] = useState(false);
   const [editing, setEditing] = useState(null);
   const data = q.data;
@@ -30,13 +32,30 @@ export function AppReleases() {
       <PageHeader
         title="App updates"
         icon={<Smartphone size={23} />}
-        subtitle="Rasoi Pulse OMA, the staff ordering app. Upload a new version, choose whether staff can skip it or must install it first, and share the download page."
+        subtitle="One page for every Rasoi Pulse app. Choose the app, upload a new version, decide whether staff can skip it or must install it first, and share its download page."
         action={
           <Button onClick={() => setCreating(true)}>
             <Upload size={15} aria-hidden="true" /> New version
           </Button>
         }
       />
+
+      <div role="tablist" aria-label="Apps" style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 14 }}>
+        {APP_IDS.map((id) => (
+          <button
+            key={id}
+            type="button"
+            role="tab"
+            aria-selected={id === app}
+            data-testid={`app-tab-${id}`}
+            onClick={() => { setApp(id); setCreating(false); setEditing(null); }}
+            style={{ ...appTab, ...(id === app ? appTabOn : {}) }}
+          >
+            <Smartphone size={15} aria-hidden="true" /> {APP_CATALOG[id].name}
+            <span style={{ opacity: 0.7, fontWeight: 500 }}>· {APP_CATALOG[id].tagline}</span>
+          </button>
+        ))}
+      </div>
 
       {q.isLoading ? (
         <Card>
@@ -50,7 +69,7 @@ export function AppReleases() {
           <Card>
             {releases.length === 0 ? (
               <Empty icon={<Smartphone size={34} />} title="No version uploaded yet">
-                Press “New version”, choose the .apk file, and publish it. Staff phones will then be offered it the next time they open the app.
+                Press “New version”, choose the .apk file, and publish it. Phones will then be offered it the next time they open the app.
               </Empty>
             ) : (
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -63,7 +82,7 @@ export function AppReleases() {
         </>
       )}
 
-      {creating ? <NewVersion data={data} onClose={() => setCreating(false)} /> : null}
+      {creating ? <NewVersion data={data} app={app} meta={meta} onClose={() => setCreating(false)} /> : null}
       {editing ? <EditNotes release={editing} onClose={() => setEditing(null)} /> : null}
     </>
   );
@@ -230,7 +249,7 @@ function EditNotes({ release, onClose }) {
 }
 
 /** Choose the .apk, name the version, say whether it is required, then send it up in pieces with a progress bar. */
-function NewVersion({ data, onClose }) {
+function NewVersion({ data, app, meta, onClose }) {
   const [file, setFile] = useState(null);
   const [version, setVersion] = useState("");
   const [notes, setNotes] = useState("");
@@ -249,7 +268,7 @@ function NewVersion({ data, onClose }) {
   const code = parsed?.build ?? 0;
   const clash = parsed && data?.releases.find((r) => r.versionCode === code);
   const newest = data?.releases[0]?.versionCode ?? 0;
-  const versionProblem = !version ? "" : !parsed ? "Use the form v-DDMMYY-NNN, for example v-261126-002." : clash ? `Build ${code} already exists (${clash.version}). Each build number can be used once.` : "";
+  const versionProblem = !version ? "" : !parsed ? "Use the form v-YY.MM.DD-NNN, for example v-26.11.27-003." : parsed.legacy ? "That is the old form. Use v-YY.MM.DD-NNN, for example v-26.11.27-003." : clash ? `Build ${code} already exists (${clash.version}). Each build number can be used once.` : "";
   const versionWarning = parsed && !versionProblem && code < newest ? `Build ${code} is lower than the newest one (${newest}). Phones are only offered a higher build number, so nobody will be offered this.` : "";
   const ready = file && !tooBig && parsed && !clash && stage === "form";
   const busy = stage !== "form";
@@ -274,7 +293,7 @@ function NewVersion({ data, onClose }) {
     const abort = new AbortController();
     cancel.current = abort;
     try {
-      const { uploadId } = await uploadApk(file, { onProgress: setProgress, signal: abort.signal });
+      const { uploadId } = await uploadApk(file, { onProgress: setProgress, signal: abort.signal, app });
       setStage("finishing");
       const res = await save.mutateAsync({ uploadId, body: { version: version.trim(), notes, force, publish } });
       setDone(res.release);
@@ -320,7 +339,7 @@ function NewVersion({ data, onClose }) {
 
   return (
     <Modal onClose={busy ? () => undefined : close} closeOnOverlay={!busy} width={600} panelStyle={{ padding: 24, overflowY: "auto" }} ariaLabel="New app version">
-      <h2 style={modalTitle}>New version of the staff app</h2>
+      <h2 style={modalTitle}>New version of {meta.name}</h2>
 
       <input ref={pick} type="file" accept=".apk,application/vnd.android.package-archive" hidden onChange={(e) => choose(e.target.files?.[0])} />
       <button
@@ -350,8 +369,8 @@ function NewVersion({ data, onClose }) {
       {tooBig ? <Toast kind="error">That file is {formatBytes(file.size)}. The most allowed is {formatBytes(data.maxBytes)}.</Toast> : null}
 
       <div style={{ display: "grid", gap: 14, marginTop: 14 }}>
-        <Field label="Version" style={{ maxWidth: "none", marginBottom: 0 }} hint="Day, month, year and a build number: v-DDMMYY-NNN. The build number must be higher than the last one.">
-          <TextInput value={version} onChange={(e) => setVersion(e.target.value.trim().toLowerCase())} placeholder="v-261126-002" disabled={busy} aria-invalid={Boolean(versionProblem)} />
+        <Field label="Version" style={{ maxWidth: "none", marginBottom: 0 }} hint="Year, month, day and a build number: v-YY.MM.DD-NNN. The build number must be higher than the last one.">
+          <TextInput value={version} onChange={(e) => setVersion(e.target.value.trim().toLowerCase())} placeholder="v-26.11.27-003" disabled={busy} aria-invalid={Boolean(versionProblem)} />
           {versionProblem ? <span style={{ color: "var(--tone-danger)", fontSize: 12.5 }}>{versionProblem}</span> : null}
           {versionWarning ? <span style={{ color: "var(--tone-warning)", fontSize: 12.5 }}>{versionWarning}</span> : null}
         </Field>
@@ -400,6 +419,8 @@ function NewVersion({ data, onClose }) {
 
 /* ------------------------------------------------------------------ styles */
 
+const appTab = { display: "inline-flex", alignItems: "center", gap: 7, font: "inherit", fontSize: 13.5, fontWeight: 650, padding: "8px 14px", borderRadius: 999, border: "1px solid var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)", cursor: "pointer" };
+const appTabOn = { background: "var(--color-text)", borderColor: "var(--color-text)", color: "var(--color-bg)" };
 const label = { fontSize: 11.5, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--color-text-muted)", marginBottom: 4 };
 const bigVersion = { fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace", fontSize: 20, fontWeight: 700, letterSpacing: "-0.01em" };
 const link = { display: "inline-flex", alignItems: "center", gap: 6, color: "var(--color-primary)", fontWeight: 600, fontSize: 14, textDecoration: "none", overflowWrap: "anywhere" };

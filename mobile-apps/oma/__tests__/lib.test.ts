@@ -76,7 +76,7 @@ describe("layout: phones and tablets, portrait and landscape", () => {
 describe("config", () => {
   it("is named Rasoi Pulse OMA and carries the version", () => {
     expect(APP_NAME).toBe("Rasoi Pulse OMA");
-    expect(APP_VERSION).toBe("v-261126-001");
+    expect(APP_VERSION).toBe("v-26.11.26-001");
     expect(API_URL).toBe("https://api.example.test");
   });
 });

@@ -16,7 +16,7 @@ describe("the sign-in screen", () => {
     await open();
     expect(screen.getByText("Rasoi Pulse OMA", { exact: true })).toBeOnTheScreen();
     expect(screen.getByText("Order Management App")).toBeOnTheScreen();
-    expect(screen.getByText(/v-\d{6}-\d{3}|dev/)).toBeOnTheScreen();
+    expect(screen.getByText(/v-\d{2}\.\d{2}\.\d{2}-\d{3}|dev/)).toBeOnTheScreen();
   });
 
   it("asks for both fields before sending anything", async () => {

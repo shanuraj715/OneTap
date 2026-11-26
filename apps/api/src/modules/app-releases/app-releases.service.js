@@ -2,7 +2,7 @@ import { createHash, randomBytes } from "node:crypto";
 import fs from "node:fs";
 import fsp from "node:fs/promises";
 import path from "node:path";
-import { OMA_APP, appReleaseInputSchema, appReleasePatchSchema, decideUpdate, versionCodeOf, MAX_APK_MB } from "@rasoipulse/config-schema";
+import { APP_CATALOG, APP_IDS, DEFAULT_APP, appPagePath, appReleaseInputSchema, appReleasePatchSchema, decideUpdate, isAppId, versionCodeOf, MAX_APK_MB } from "@rasoipulse/config-schema";
 import { AppReleaseModel } from "@rasoipulse/db";
 import { env, publicApiUrl } from "../../env.js";
 import { logger } from "../../logger.js";
@@ -27,7 +27,10 @@ const partsDir = () => path.join(root(), ".parts");
 const maxBytes = () => Math.min(env.APP_RELEASE_MAX_MB, MAX_APK_MB * 7) * 1024 * 1024;
 
 /** where phones are sent to download: the website's app page */
-export const pageUrl = () => `${(env.WEBSITE_URL || "").replace(/\/$/, "")}/app`;
+export const pageUrl = (app = DEFAULT_APP) => `${(env.WEBSITE_URL || "").replace(/\/$/, "")}${appPagePath(app)}`;
+
+/** Which app is asking: the `x-app-id` header (every app sends it); the first OMA builds sent nothing, so that means OMA. */
+export const appOfRequest = (req) => { const id = String(req.header?.("x-app-id") ?? ""); return isAppId(id) ? id : DEFAULT_APP; };
 const downloadUrl = (r) => `${publicApiUrl}/api/app-updates/download/${r._id ?? r.id}`;
 
 /* ------------------------------------------------------------------ shapes */
@@ -64,12 +67,12 @@ const publicShape = (r) => ({
   downloadUrl: downloadUrl(r),
 });
 
-const publishedOf = async (app = OMA_APP) => AppReleaseModel.find({ app, platform: PLATFORM, status: "published" }).sort({ versionCode: -1 }).lean();
+const publishedOf = async (app = DEFAULT_APP) => AppReleaseModel.find({ app, platform: PLATFORM, status: "published" }).sort({ versionCode: -1 }).lean();
 
 /* ------------------------------------------------------------------ the phone's question */
 
 /** The answer to "is there a newer version than build `versionCode`?" — what the app shows at start. Public. */
-export async function checkForUpdate({ app = OMA_APP, versionCode }) {
+export async function checkForUpdate({ app = DEFAULT_APP, versionCode }) {
   const releases = await publishedOf(app);
   const d = decideUpdate(versionCode, releases);
   return {
@@ -77,7 +80,7 @@ export async function checkForUpdate({ app = OMA_APP, versionCode }) {
     force: d.force,
     latest: d.latest ? publicShape(d.latest) : null,
     whatsNew: d.whatsNew,
-    pageUrl: pageUrl(),
+    pageUrl: pageUrl(app),
     checkedAt: new Date().toISOString(),
   };
 }
@@ -87,18 +90,30 @@ export async function checkForUpdate({ app = OMA_APP, versionCode }) {
  * screen: an old build that skips the check still can't get in. A request with no build number (the dashboard, an old app) is let through.
  */
 export async function assertAppCurrent(req) {
-  const code = Number.parseInt(String(req.header("x-oma-version-code") ?? ""), 10);
+  const app = appOfRequest(req);
+  // the build number: `x-app-version-code` (every app); the first OMA builds sent `x-oma-version-code`
+  const code = Number.parseInt(String(req.header("x-app-version-code") ?? req.header("x-oma-version-code") ?? ""), 10);
   if (!(code > 0)) return;
-  const d = decideUpdate(code, await publishedOf());
+  const d = decideUpdate(code, await publishedOf(app));
   if (d.updateAvailable && d.force) {
-    throw new HttpError(426, "This version of the app is out of date. Please update the app to continue.", { code: "update_required", pageUrl: pageUrl(), latest: d.latest ? publicShape(d.latest) : null });
+    throw new HttpError(426, "This version of the app is out of date. Please update the app to continue.", { code: "update_required", pageUrl: pageUrl(app), latest: d.latest ? publicShape(d.latest) : null });
   }
 }
 
 /** For the website's app page: the newest release and the history. Public. */
-export async function publicReleases({ app = OMA_APP, limit = 20 } = {}) {
+export async function publicReleases({ app = DEFAULT_APP, limit = 20 } = {}) {
   const releases = await publishedOf(app);
-  return { latest: releases[0] ? publicShape(releases[0]) : null, releases: releases.slice(0, limit).map(publicShape), pageUrl: pageUrl() };
+  return { latest: releases[0] ? publicShape(releases[0]) : null, releases: releases.slice(0, limit).map(publicShape), pageUrl: pageUrl(app), app: APP_CATALOG[app] };
+}
+
+/** Every app with its newest published version — for the website's /apps page. Public. */
+export async function publicApps() {
+  const apps = [];
+  for (const id of APP_IDS) {
+    const [latest] = await publishedOf(id);
+    apps.push({ ...APP_CATALOG[id], page: appPagePath(id), latest: latest ? publicShape(latest) : null });
+  }
+  return { apps };
 }
 
 /* ------------------------------------------------------------------ downloads */
@@ -108,7 +123,7 @@ export async function downloadable(id) {
   if (!/^[a-f\d]{24}$/i.test(String(id))) throw new HttpError(404, "That download doesn't exist.");
   const r = await AppReleaseModel.findOne({ _id: id, status: "published" }).lean();
   if (!r?.file?.key) throw new HttpError(404, "That download isn't available.");
-  return { filename: `rasoi-pulse-oma-${r.version}.apk`, release: r };
+  return { filename: `rasoi-pulse-${r.app ?? DEFAULT_APP}-${r.version}.apk`, release: r };
 }
 
 /** The file of a release from the platform storage (a disk path, or a stream from the bucket); 404 when it has gone missing. */
@@ -125,8 +140,8 @@ export const countDownload = (id) => void AppReleaseModel.updateOne({ _id: id },
 
 /* ------------------------------------------------------------------ the console */
 
-export async function listReleases() {
-  const rows = await AppReleaseModel.find({ app: OMA_APP, platform: PLATFORM }).sort({ versionCode: -1 }).lean();
+export async function listReleases(app = DEFAULT_APP) {
+  const rows = await AppReleaseModel.find({ app, platform: PLATFORM }).sort({ versionCode: -1 }).lean();
   const published = rows.filter((r) => r.status === "published");
   // "apps older than this must update": the newest published release that is forced
   const forcedBelow = published.filter((r) => r.force).sort((a, b) => b.versionCode - a.versionCode)[0] ?? null;
@@ -134,7 +149,8 @@ export async function listReleases() {
     releases: rows.map(adminShape),
     latest: published[0] ? adminShape(published[0]) : null,
     forcedBelow: forcedBelow ? { version: forcedBelow.version, versionCode: forcedBelow.versionCode } : null,
-    pageUrl: pageUrl(),
+    pageUrl: pageUrl(app),
+    app: APP_CATALOG[app],
     chunkSize: CHUNK_SIZE,
     maxBytes: maxBytes(),
   };
@@ -167,7 +183,7 @@ export async function deleteRelease(id) {
 
 /* ------------------------------------------------------------------ uploads (4 MB pieces) */
 
-const uploads = new Map(); // id → { id, name, size, chunks, received:Set, by, at }
+const uploads = new Map(); // id → { id, app, name, size, chunks, received:Set, by, at }
 const chunkCount = (size) => Math.ceil(size / CHUNK_SIZE);
 const metaFile = (id) => path.join(partsDir(), `${id}.json`);
 const partFile = (id) => path.join(partsDir(), `${id}.part`);
@@ -202,7 +218,8 @@ async function clearStaleUploads() {
   } catch { /* nothing to clear */ }
 }
 
-export async function startUpload({ fileName, size }, user) {
+export async function startUpload({ fileName, size, app = DEFAULT_APP }, user) {
+  if (!isAppId(app)) throw new HttpError(400, "Choose which app this file is for.");
   const name = String(fileName ?? "").trim();
   if (!/^[\w.\- ()]{1,120}\.apk$/i.test(name)) throw new HttpError(400, "Choose an .apk file.");
   if (!Number.isInteger(size) || size < 1024) throw new HttpError(400, "That file is empty or too small to be an app.");
@@ -210,7 +227,7 @@ export async function startUpload({ fileName, size }, user) {
   await fsp.mkdir(partsDir(), { recursive: true });
   await clearStaleUploads();
   const id = randomBytes(12).toString("hex");
-  const u = { id, name, size, chunks: chunkCount(size), received: new Set(), by: String(user._id), at: Date.now() };
+  const u = { id, app, name, size, chunks: chunkCount(size), received: new Set(), by: String(user._id), at: Date.now() };
   uploads.set(id, u);
   await saveMeta(u);
   return { uploadId: id, chunkSize: CHUNK_SIZE, chunks: u.chunks };
@@ -285,13 +302,16 @@ export async function completeUpload(id, input, user) {
   if (!stat || stat.size !== u.size) throw new HttpError(409, "The uploaded file is not the size it should be. Start the upload again.", { code: "upload_incomplete" });
 
   const versionCode = versionCodeOf(body.version);
-  if (await AppReleaseModel.exists({ app: OMA_APP, platform: PLATFORM, versionCode })) throw new HttpError(409, `Version ${body.version} (build ${versionCode}) already exists. Each build number can be used once.`);
+  // the file was uploaded FOR an app; the version the admin types must be that app's (a different `app` in the body is a mistake)
+  const app = isAppId(u.app) ? u.app : DEFAULT_APP;
+  if (body.app && body.app !== app) throw new HttpError(400, `This file was uploaded for ${APP_CATALOG[app].name}, not ${APP_CATALOG[body.app].name}.`);
+  if (await AppReleaseModel.exists({ app, platform: PLATFORM, versionCode })) throw new HttpError(409, `Version ${body.version} (build ${versionCode}) already exists. Each build number can be used once.`);
   const apk = await inspectApk(part);
   if (!apk.ok) throw new HttpError(400, apk.why);
 
   const sha256 = await sha256Of(part);
   // the finished file goes to the platform storage (disk or bucket). If that fails the pieces stay here, so nothing has to be sent again
-  const key = `app-releases/${OMA_APP}/${body.version}-${randomBytes(6).toString("hex")}.apk`;
+  const key = `app-releases/${app}/${body.version}-${randomBytes(6).toString("hex")}.apk`;
   await putLargeFile({ key, filePath: part, size: u.size, sha256, contentType: "application/vnd.android.package-archive" });
   await fsp.rm(part, { force: true });
   await fsp.rm(metaFile(id), { force: true });
@@ -300,7 +320,7 @@ export async function completeUpload(id, input, user) {
   let r;
   try {
     r = await AppReleaseModel.create({
-      app: OMA_APP, platform: PLATFORM, version: body.version, versionCode, notes: body.notes, force: body.force,
+      app, platform: PLATFORM, version: body.version, versionCode, notes: body.notes, force: body.force,
       status: body.publish ? "published" : "draft", publishedAt: body.publish ? new Date() : null,
       file: { name: u.name, key, size: u.size, sha256 }, createdBy: String(user._id), updatedBy: String(user._id),
     });

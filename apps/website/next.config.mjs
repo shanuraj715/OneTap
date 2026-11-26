@@ -8,6 +8,10 @@ const nextConfig = {
   transpilePackages: ["@rasoipulse/config-schema"],
   outputFileTracingRoot: workspaceRoot,
   poweredByHeader: false,
+  // the first staff app was given /app as its download page: keep that address working
+  async redirects() {
+    return [{ source: "/app", destination: "/apps/oma", permanent: true }];
+  },
   async headers() {
     return [
       {

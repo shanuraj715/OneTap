@@ -177,7 +177,7 @@ export async function website() {
   if (!existsSync(join(w, ".next/BUILD_ID")) || websiteStale()) { if (isUp(PORTS.website)) await stopPort(PORTS.website); if (!buildWebsite()) return false; }
   if (isUp(PORTS.website)) return true;
   startDetached(NEXT_WEBSITE, ["start", "-p", String(PORTS.website)], "website.log", { cwd: w, env: websiteEnv() });
-  const ok = await waitHttp(`http://localhost:${PORTS.website}/app`, 200, 60);
+  const ok = await waitHttp(`http://localhost:${PORTS.website}/apps`, 200, 60);
   log(ok ? "website    :3173  ready" : "website failed to start:\n" + tail("website.log", 8));
   return ok;
 }

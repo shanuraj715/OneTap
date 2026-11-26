@@ -1,5 +1,5 @@
-import { OrderModel, TableModel, tenantFilter } from "@rasoipulse/db";
-import { slowestStage } from "@rasoipulse/config-schema";
+import { MenuCategoryModel, MenuItemModel, OrderModel, TableModel, tenantFilter } from "@rasoipulse/db";
+import { istDayKey, slowestStage } from "@rasoipulse/config-schema";
 import { HttpError } from "../../middleware/error.js";
 import { broadcast } from "../../realtime/hub.js";
 import { effectiveOutletConfig } from "../outlets/config.service.js";
@@ -156,4 +156,97 @@ export async function setKitchenStage(ctx, user, orderId, screen, stage) {
     }
   }
   return wire(done);
+}
+
+/* ------------------------------------------------------------------ dishes: sold out / unavailable / available */
+
+export const ITEM_STATES = ["available", "sold-out", "unavailable"];
+
+/** What the kitchen sees of a dish: the state (the dish's own switch, or a counted stock that has run out), and its count if it has one. */
+function itemView(d, categoryName) {
+  const counted = d.stock?.tracked ? { left: Math.max(0, d.stock.left ?? 0), daily: d.stock.daily ?? null, lowAt: d.stock.lowAt ?? 5 } : null;
+  const countedOut = counted !== null && counted.left <= 0;
+  const state = !d.isAvailable ? (d.offReason === "sold-out" ? "sold-out" : "unavailable") : countedOut ? "sold-out" : "available";
+  return {
+    id: String(d._id),
+    name: d.name,
+    categoryId: d.categoryId ?? null,
+    categoryName,
+    foodType: d.foodType ?? "veg",
+    image: d.images?.[0]?.url ?? null,
+    state,
+    switchedOff: !d.isAvailable,
+    stock: counted,
+    low: counted !== null && counted.left > 0 && counted.left <= counted.lowAt,
+    changedAt: !d.isAvailable ? (d.offAt ?? null) : null,
+  };
+}
+
+/** Every dish of the outlet with its state — for the kitchen's "Dishes" screen. */
+export async function listKitchenItems(ctx) {
+  const [items, categories] = await Promise.all([
+    MenuItemModel.find(tenantFilter(ctx)).sort({ sortOrder: 1, name: 1 }).lean(),
+    MenuCategoryModel.find(tenantFilter(ctx)).sort({ sortOrder: 1, name: 1 }).select("name").lean(),
+  ]);
+  const names = new Map(categories.map((c) => [String(c._id), c.name]));
+  return { items: items.map((d) => itemView(d, names.get(String(d.categoryId)) ?? "")), categories: categories.map((c) => ({ id: String(c._id), name: c.name })) };
+}
+
+/**
+ * Switch one dish available / sold out / unavailable. This is the dish's own switch, so every screen (the storefront, the staff app, the order check)
+ * obeys it at once. A counted dish that has none left stays sold out when put back unless a number is given (`left`).
+ */
+export async function setItemState(ctx, user, id, state, left) {
+  if (left !== undefined) {
+    const cur = await MenuItemModel.findOne(tenantFilter(ctx, { _id: id })).select("stock").lean();
+    if (!cur) throw new HttpError(404, "Dish not found");
+    if (!cur.stock?.tracked) throw new HttpError(400, "This dish isn't counted, so there is no number to set.");
+  }
+  const now = new Date();
+  const set =
+    state === "available"
+      ? { isAvailable: true, offReason: "", offAt: null, offBy: "" }
+      : { isAvailable: false, offReason: state, offAt: now, offBy: String(user._id) };
+  if (left !== undefined) set["stock.left"] = left;
+  const doc = await MenuItemModel.findOneAndUpdate(tenantFilter(ctx, { _id: id }), { $set: set }, { new: true }).lean();
+  if (!doc) throw new HttpError(404, "Dish not found");
+  const category = doc.categoryId ? await MenuCategoryModel.findOne(tenantFilter(ctx, { _id: doc.categoryId })).select("name").lean() : null;
+  const view = itemView(doc, category?.name ?? "");
+  return { ...view, stillSoldOut: state === "available" && view.state === "sold-out" };
+}
+
+/* ------------------------------------------------------------------ the kitchen manager's summary */
+
+/** Today (India time): what is on the screen now, how many orders were made ready, how long they took, and what was cooked most. */
+export async function kitchenSummary(ctx) {
+  const cfg = (await effectiveOutletConfig(ctx)).kitchenDisplay;
+  const board = await listKitchenOrders(ctx, "all");
+  const now = { new: 0, preparing: 0, ready: 0 };
+  for (const o of board.orders) now[o.stage] = (now[o.stage] ?? 0) + 1;
+  const dayStart = new Date(`${istDayKey()}T00:00:00+05:30`);
+  const done = await OrderModel.find(tenantFilter(ctx, { statusHistory: { $elemMatch: { status: "ready", at: { $gte: dayStart } } } }))
+    .select("orderNumber statusHistory createdAt lines")
+    .limit(800)
+    .lean();
+  let total = 0, slowest = null, late = 0;
+  const made = new Map();
+  for (const o of done) {
+    const readyAt = new Date((o.statusHistory ?? []).find((h) => h.status === "ready")?.at ?? 0).getTime();
+    const minutes = Math.max(0, Math.round((readyAt - new Date(acceptedAt(o)).getTime()) / 60000));
+    total += minutes;
+    if (minutes > cfg.lateAfterMinutes) late += 1;
+    if (!slowest || minutes > slowest.minutes) slowest = { orderNumber: o.orderNumber, minutes };
+    for (const l of expandCombos(o.lines ?? [])) made.set(l.name, (made.get(l.name) ?? 0) + (l.quantity ?? 1));
+  }
+  return {
+    now,
+    today: {
+      ready: done.length,
+      averageMinutes: done.length ? Math.round(total / done.length) : null,
+      lateCount: late,
+      slowest,
+      topDishes: [...made.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8).map(([name, quantity]) => ({ name, quantity })),
+    },
+    settings: { warnAfterMinutes: cfg.warnAfterMinutes, lateAfterMinutes: cfg.lateAfterMinutes },
+  };
 }

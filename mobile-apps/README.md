@@ -15,7 +15,7 @@ lower case (`oma`). Android package: `com.rasoipulse.<code>`.
 ## Rules every app follows
 
 1. **Sign in at every start** (server-side rate limiting and blocking apply). Keeping a sign-in is an opt-in.
-2. **Version `v-DDMMYY-NNN`**, changed only when the owner asks for an upgrade.
+2. **Version `v-YY.MM.DD-NNN`** (year, month, day, then the build number), changed only when the owner asks for an upgrade.
 3. **Flow parity**: a changed storefront/dashboard flow is raised with the owner before the app copies it.
 4. **The server decides.** Prices, taxes, permissions and limits come from the API; an app only shows them and hides buttons the person cannot use.
 5. **Tests ship with the app** — logic and screens run against recorded real API answers (`test/fixtures`).

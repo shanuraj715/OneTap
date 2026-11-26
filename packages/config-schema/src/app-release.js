@@ -1,29 +1,68 @@
 import { z } from "zod";
 
 /**
- * Releases of the staff Android app ("Rasoi Pulse OMA"). The platform admin uploads an APK, says what changed and whether staff MUST
- * update; the app asks the server at every start whether a newer release exists.
+ * Releases of the Rasoi Pulse Android apps (OMA, KDA, …). The platform admin uploads an APK for an app, says what changed and whether staff
+ * MUST update; the app asks the server at every start whether a newer release of ITSELF exists.
  *
- * A version is `v-DDMMYY-NNN`: the day it was cut and a build number that only ever goes up (it is also Android's versionCode, so the
- * build number is what decides "newer"). One file of rules for the server, the console and the tests.
+ * A version is `v-YY.MM.DD-NNN`: the day it was cut and a build number that only ever goes up (it is also Android's versionCode, so the
+ * build number is what decides "newer"; every app has its own sequence). Versions made before 2026-11-27 look like `v-DDMMYY-NNN`: they are
+ * still read (so what is already published keeps working) but a NEW version must use the new form. One file of rules for the server, the
+ * console and the tests.
  */
 
+/** The apps: one entry each. The id is what the app sends, the page address is /apps/<slug>. To add an app: add it here. */
+export const APP_CATALOG = {
+  oma: {
+    id: "oma",
+    slug: "oma",
+    code: "OMA",
+    name: "Rasoi Pulse OMA",
+    tagline: "Order Management App",
+    audience: "For restaurant staff who take orders at the table",
+    description: "Take orders at the table from an Android phone or tablet, send them to the kitchen, and keep every table in view.",
+  },
+  kda: {
+    id: "kda",
+    slug: "kda",
+    code: "KDA",
+    name: "Rasoi Pulse KDA",
+    tagline: "Kitchen Display App",
+    audience: "For kitchen staff and kitchen managers",
+    description: "See every order the moment it comes in, start and finish it, and mark a dish sold out or available, from an Android phone or tablet.",
+  },
+};
+export const APP_IDS = Object.keys(APP_CATALOG);
 export const OMA_APP = "oma";
+export const KDA_APP = "kda";
+export const DEFAULT_APP = OMA_APP;
+/** Apps only some roles may sign in to: the server turns everyone else away at sign-in (OMA has no such rule, as before). */
+export const APP_REQUIRED_PERMISSION = { kda: "kitchen:app" };
+export const isAppId = (v) => typeof v === "string" && Object.prototype.hasOwnProperty.call(APP_CATALOG, v);
+/** The public address of an app's page on the website: `/apps/oma`. */
+export const appPagePath = (app) => `/apps/${APP_CATALOG[app]?.slug ?? app}`;
+
 export const APP_PLATFORMS = ["android"];
 export const RELEASE_STATUSES = ["draft", "published", "withdrawn"];
 export const RELEASE_STATUS_LABELS = { draft: "Draft", published: "Published", withdrawn: "Withdrawn" };
 
-const FORMAT = /^v-(\d{2})(\d{2})(\d{2})-(\d{3,})$/;
+const FORMAT = /^v-(\d{2})\.(\d{2})\.(\d{2})-(\d{3,})$/; // v-YY.MM.DD-NNN
+const LEGACY_FORMAT = /^v-(\d{2})(\d{2})(\d{2})-(\d{3,})$/; // v-DDMMYY-NNN (before 2026-11-27)
 
-/** `v-261126-001` → { day, month, year, build }, or null when it isn't a version. */
+/** `v-26.11.27-001` → { day, month, year, build, legacy }, or null when it isn't a version. (`v-271126-001` is read too: `legacy: true`.) */
 export function parseAppVersion(version) {
-  const m = FORMAT.exec(String(version ?? "").trim());
-  if (!m) return null;
-  const day = Number(m[1]);
-  const month = Number(m[2]);
+  const text = String(version ?? "").trim();
+  let m = FORMAT.exec(text);
+  let legacy = false;
+  let day, month, yy;
+  if (m) { yy = Number(m[1]); month = Number(m[2]); day = Number(m[3]); }
+  else if ((m = LEGACY_FORMAT.exec(text))) { legacy = true; day = Number(m[1]); month = Number(m[2]); yy = Number(m[3]); }
+  else return null;
   if (day < 1 || day > 31 || month < 1 || month > 12) return null;
-  return { day, month, year: 2000 + Number(m[3]), build: Number(m[4]) };
+  return { day, month, year: 2000 + yy, build: Number(m[4]), legacy };
 }
+
+/** A version in the form new versions must use (the old `v-DDMMYY-NNN` is readable but no longer accepted for a new upload). */
+export const isCurrentAppVersion = (version) => parseAppVersion(version)?.legacy === false;
 
 /** The Android versionCode of a version = its build number (0 when it isn't a version). */
 export const versionCodeOf = (version) => parseAppVersion(version)?.build ?? 0;
@@ -35,7 +74,9 @@ export const appReleaseInputSchema = z.object({
   version: z
     .string()
     .trim()
-    .refine((v) => parseAppVersion(v) !== null, "Use a version like v-261126-001 (v-DDMMYY-NNN)."),
+    .refine(isCurrentAppVersion, "Use a version like v-26.11.27-003 (v-YY.MM.DD-NNN)."),
+  /** which app this file is for */
+  app: z.enum(APP_IDS).optional(),
   notes: z.string().max(3000, "Keep the release notes under 3,000 characters.").default(""),
   /** staff on any older version must update before they can use the app */
   force: z.boolean().default(false),

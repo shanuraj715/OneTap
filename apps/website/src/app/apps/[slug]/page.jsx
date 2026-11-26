@@ -1,36 +1,49 @@
-import { formatBytes } from "@rasoipulse/config-schema";
+import { notFound } from "next/navigation";
+import Link from "next/link";
+import { APP_CATALOG, APP_IDS, formatBytes } from "@rasoipulse/config-schema";
 import { Download, ShieldCheck, Smartphone } from "lucide-react";
 import { getAppReleases, getSettings, siteUrl } from "@/lib/site";
 
 // Served from cache, refreshed every 5 minutes — and the moment a version is published, withdrawn or changed in the console.
 export const revalidate = 300;
 
-export async function generateMetadata() {
+// every app has its own page: /apps/oma, /apps/kda … (an unknown name is a 404, answered below)
+export const dynamicParams = true;
+export const generateStaticParams = () => APP_IDS.map((slug) => ({ slug }));
+const appOf = (slug) => Object.values(APP_CATALOG).find((a) => a.slug === slug) ?? null;
+
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  const app = appOf(slug);
+  if (!app) return {};
   const settings = await getSettings();
   const base = siteUrl(settings);
-  const title = `${settings.brandName} OMA, the staff app`;
-  const description = "Download the Rasoi Pulse OMA Android app: take orders at the table from a phone or tablet. Release notes and every version.";
+  const title = `${app.name}, ${app.tagline}`;
+  const description = `Download ${app.name} for Android: ${app.description} Release notes and every version.`;
   return {
     title,
     description,
-    alternates: { canonical: "/app" },
+    alternates: { canonical: `/apps/${app.slug}` },
     // a page for the people who work in a restaurant, not for search results
     robots: { index: false, follow: false },
-    openGraph: { type: "website", url: `${base}/app`, siteName: settings.brandName, title, description, locale: "en_IN" },
+    openGraph: { type: "website", url: `${base}/apps/${app.slug}`, siteName: settings.brandName, title, description, locale: "en_IN" },
   };
 }
 
 const day = (d) => (d ? new Date(d).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Kolkata" }) : "");
 const lines = (text) => String(text ?? "").split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
 
-const STEPS = [
-  ["Download the file", "Tap the red button. Your phone saves a file called rasoi-pulse-oma… .apk in Downloads."],
+const steps = (app) => [
+  ["Download the file", `Tap the red button. Your phone saves a file called rasoi-pulse-${app.id}… .apk in Downloads.`],
   ["Open it and allow the install", "Android asks if this browser may install apps. Allow it for this one time, then tap Install."],
-  ["Sign in", "Open Rasoi Pulse OMA and sign in with the account your manager gave you."],
+  ["Sign in", `Open ${app.name} and sign in with the account your manager gave you.`],
 ];
 
-export default async function AppPage() {
-  const data = await getAppReleases();
+export default async function AppPage({ params }) {
+  const { slug } = await params;
+  const app = appOf(slug);
+  if (!app) notFound();
+  const data = await getAppReleases(app.id);
   const releases = data?.releases ?? [];
   const latest = data?.latest ?? releases[0] ?? null;
   const older = releases.filter((r) => r.id !== latest?.id);
@@ -40,13 +53,11 @@ export default async function AppPage() {
       <section className="hero">
         <div className="wrap hero-grid">
           <div>
-            <span className="eyebrow">For restaurant staff</span>
+            <span className="eyebrow">{app.audience}</span>
             <h1>
-              Rasoi Pulse <em>OMA</em>
+              Rasoi Pulse <em>{app.code}</em>
             </h1>
-            <p className="hero-sub">
-              The order management app for the floor. Take orders at the table from an Android phone or tablet, send them to the kitchen, and keep every table in view.
-            </p>
+            <p className="hero-sub">{app.description}</p>
             {latest ? (
               <>
                 <div className="hero-actions">
@@ -56,6 +67,9 @@ export default async function AppPage() {
                   <a className="btn btn-ghost" href="#install">
                     How to install
                   </a>
+                  <Link className="btn btn-ghost" href="/apps">
+                    All apps
+                  </Link>
                 </div>
                 <ul className="app-facts">
                   <li>
@@ -77,7 +91,7 @@ export default async function AppPage() {
             <div className="hero-media" aria-label={`Latest version ${latest.version}`}>
               <div className="ticket">
                 <div className="ticket-head">
-                  <span>OMA · ANDROID</span>
+                  <span>{app.code} · ANDROID</span>
                   <span>{day(latest.publishedAt)}</span>
                 </div>
                 <div className="ticket-table app-ticket-version">{latest.version}</div>
@@ -114,7 +128,7 @@ export default async function AppPage() {
             <p>The app isn’t on the Play Store, so it installs from this page. The steps are the same for the first install and for every update.</p>
           </div>
           <ol className="app-steps">
-            {STEPS.map(([title, text]) => (
+            {steps(app).map(([title, text]) => (
               <li key={title}>
                 <h3>{title}</h3>
                 <p>{text}</p>

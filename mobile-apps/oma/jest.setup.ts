@@ -21,7 +21,7 @@ jest.mock("@react-native-async-storage/async-storage", () => jest.requireActual(
 
 jest.mock("expo-constants", () => ({
   __esModule: true,
-  default: { expoConfig: { name: "Rasoi Pulse OMA", version: "v-261126-001", extra: { apiUrl: "https://api.example.test" } } },
+  default: { expoConfig: { name: "Rasoi Pulse OMA", version: "v-26.11.26-001", extra: { apiUrl: "https://api.example.test" } } },
 }));
 
 // Safe-area insets come from the phone's window; in Node they are zero.

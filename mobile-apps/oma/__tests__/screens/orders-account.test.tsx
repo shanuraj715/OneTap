@@ -82,7 +82,7 @@ describe("the account page", () => {
     expect(screen.getByText("Cashier / Staff")).toBeOnTheScreen();
     expect(screen.getByText("Rasoi Pulse OMA")).toBeOnTheScreen();
     expect(screen.getByText("Order Management App")).toBeOnTheScreen();
-    expect(screen.getByText("v-261126-001")).toBeOnTheScreen();
+    expect(screen.getByText("v-26.11.26-001")).toBeOnTheScreen();
     expect(screen.getByText("Noida · Rasoi Pulse Sandbox".replace("Rasoi Pulse Sandbox", fx("outlets").outlets[0].brandName))).toBeOnTheScreen();
     expect(screen.queryByTestId("outlet-dropdown")).toBeNull(); // one outlet: nothing to choose
   });

@@ -1,4 +1,4 @@
-// The website's /app page — where staff are sent to download the staff app — driven in Chrome against the bench (API :3097 and the
+// The website's app pages (/apps, /apps/oma, /apps/kda) — where staff are sent to download an app — driven in Chrome against the bench (API :3097 and the
 // marketing website :3173, which this suite starts if it isn't running). Versions are published and withdrawn through the console's API
 // and the page must follow within seconds (the API tells the website to refresh its cache).
 import { execFileSync } from "node:child_process";
@@ -23,14 +23,14 @@ const sa = async (method, path, body, raw) => {
   const r = await fetch(API + path, { method, headers: { cookie: sup, "content-type": raw ? "application/octet-stream" : "application/json" }, body: raw ?? (body ? JSON.stringify(body) : undefined) });
   return { status: r.status, json: await r.json().catch(() => ({})) };
 };
-const upload = async (version, { notes = "", force = false, publish = true, bytes = 40_000 } = {}) => {
+const upload = async (version, { notes = "", force = false, publish = true, bytes = 40_000, app = "oma" } = {}) => {
   const apk = makeApk(bytes);
-  const s = await sa("POST", "/api/platform/app-releases/uploads", { fileName: `oma-${version}.apk`, size: apk.length });
+  const s = await sa("POST", "/api/platform/app-releases/uploads", { fileName: `${app}-${version}.apk`, size: apk.length, app });
   await sa("PUT", `/api/platform/app-releases/uploads/${s.json.uploadId}/chunks/0`, null, apk);
   const done = await sa("POST", `/api/platform/app-releases/uploads/${s.json.uploadId}/complete`, { version, notes, force, publish });
   return { apk, release: done.json.release };
 };
-const clearAll = async () => { for (const r of (await sa("GET", "/api/platform/app-releases")).json.releases ?? []) await sa("DELETE", `/api/platform/app-releases/${r.id}`); };
+const clearAll = async () => { for (const app of ["oma", "kda"]) for (const r of (await sa("GET", `/api/platform/app-releases?app=${app}`)).json.releases ?? []) await sa("DELETE", `/api/platform/app-releases/${r.id}`); };
 
 let browser;
 try {
@@ -39,7 +39,7 @@ try {
   const page = await browser.newPage({ viewport: { width: 1360, height: 1000 } });
   page.on("console", (m) => { if (m.type() === "error" && !/Failed to load resource|favicon|status of 4\d\d|status of 5\d\d/.test(m.text())) problems.push(m.text().slice(0, 200)); });
   page.on("pageerror", (e) => problems.push(`pageerror: ${String(e).slice(0, 200)}`));
-  const open = async () => { await page.goto(WEB + "/app", { waitUntil: "load" }); return page.locator("main"); };
+  const open = async (path = "/apps/oma") => { await page.goto(WEB + path, { waitUntil: "load" }); return page.locator("main"); };
   const refresh = async (check) => until(async () => { await open(); return check(await page.locator("main").innerText()); }, 25000);
 
   say("1. Nothing is published yet");
@@ -54,16 +54,16 @@ try {
   ok(/noindex/.test((await page.locator('meta[name="robots"]').first().getAttribute("content")) ?? ""), "the page asks search engines not to list it");
 
   say("2. A published version appears");
-  const v1 = await upload("v-261126-001", { notes: "First version\nSign in and take orders at the tables", bytes: 60_000 });
-  await refresh((t) => /Download v-261126-001/.test(t));
-  const dl = page.getByRole("link", { name: /^Download v-261126-001$/ });
+  const v1 = await upload("v-26.11.26-001", { notes: "First version\nSign in and take orders at the tables", bytes: 60_000 });
+  await refresh((t) => /Download v-26.11.26-001/.test(t));
+  const dl = page.getByRole("link", { name: /^Download v-26.11.26-001$/ });
   ok(await dl.isVisible(), "the download button names the version");
   const href = await dl.getAttribute("href");
   ok(href === v1.release.downloadUrl, "…and points at the API's download address", href);
   const t2 = await main.innerText();
   ok(/Android 11 or newer/.test(t2) && /58\.\d KB|58 KB|59 KB|\d+(\.\d)? KB/.test(t2), "it says Android 11 or newer and the file's size", (t2.match(/\d+(\.\d)? [KM]B/) ?? [])[0]);
   const ticket = page.locator(".ticket");
-  ok(/v-261126-001/.test(await ticket.innerText()) && /Sign in and take orders at the tables/.test(await ticket.innerText()), "the ticket shows the version and its release notes");
+  ok(/v-26.11.26-001/.test(await ticket.innerText()) && /Sign in and take orders at the tables/.test(await ticket.innerText()), "the ticket shows the version and its release notes");
   ok(await ticket.locator(".stamp").count() === 0, "no 'Required' stamp on an optional version");
   const file = await fetch(href);
   ok(file.status === 200 && Buffer.from(await file.arrayBuffer()).equals(v1.apk), "the button's file is exactly the uploaded APK");
@@ -71,25 +71,25 @@ try {
   ok(await list.count() === 1 && /latest/i.test(await list.first().innerText()), "the version list has it, marked Latest");
 
   say("3. A required version");
-  const v2 = await upload("v-261126-002", { notes: "Security fix", force: true });
-  await refresh((t) => /Download v-261126-002/.test(t));
-  ok(await page.getByRole("link", { name: /^Download v-261126-002$/ }).isVisible(), "the button now offers v-261126-002");
+  const v2 = await upload("v-26.11.26-002", { notes: "Security fix", force: true });
+  await refresh((t) => /Download v-26.11.26-002/.test(t));
+  ok(await page.getByRole("link", { name: /^Download v-26.11.26-002$/ }).isVisible(), "the button now offers v-26.11.26-002");
   ok(await page.locator(".ticket .stamp").isVisible() && /required/i.test(await page.locator(".ticket .stamp").innerText()), "its ticket carries a 'Required' stamp");
   const rows = page.locator(".app-versions li.app-version");
   ok(await rows.count() === 2, "the list has both versions", String(await rows.count()));
   const first = await rows.nth(0).innerText(), second = await rows.nth(1).innerText();
-  ok(/v-261126-002/.test(first) && /latest/i.test(first) && /required/i.test(first), "newest first: 002, marked Latest and Required");
-  ok(/v-261126-001/.test(second) && !/latest/i.test(second) && !/required/i.test(second), "001 below it, with neither mark");
+  ok(/v-26.11.26-002/.test(first) && /latest/i.test(first) && /required/i.test(first), "newest first: 002, marked Latest and Required");
+  ok(/v-26.11.26-001/.test(second) && !/latest/i.test(second) && !/required/i.test(second), "001 below it, with neither mark");
   ok(/Security fix/.test(first) && /Sign in and take orders/.test(second), "each keeps its own notes");
   await rows.nth(0).getByText("Check the file").click();
   ok((await rows.nth(0).innerText()).includes(v2.release.sha256), "'Check the file' shows the file's SHA-256", v2.release.sha256.slice(0, 12) + "…");
 
   say("4. Drafts and withdrawn versions stay hidden");
-  await upload("v-261126-003", { notes: "Not ready", publish: false });
+  await upload("v-26.11.26-003", { notes: "Not ready", publish: false });
   await sa("PATCH", `/api/platform/app-releases/${v2.release.id}`, { status: "withdrawn" });
-  await refresh((t) => /Download v-261126-001/.test(t) && !/v-261126-002/.test(t));
+  await refresh((t) => /Download v-26.11.26-001/.test(t) && !/v-26.11.26-002/.test(t));
   const t4 = await main.innerText();
-  ok(/Download v-261126-001/.test(t4) && !/v-261126-002/.test(t4) && !/v-261126-003/.test(t4) && !/Not ready/.test(t4), "withdrawing 002 hides it, and the draft 003 was never shown; 001 is the latest again");
+  ok(/Download v-26.11.26-001/.test(t4) && !/v-26.11.26-002/.test(t4) && !/v-26.11.26-003/.test(t4) && !/Not ready/.test(t4), "withdrawing 002 hides it, and the draft 003 was never shown; 001 is the latest again");
   ok(await page.locator(".ticket .stamp").count() === 0, "so the 'Required' stamp is gone too");
   ok((await fetch(v2.release.downloadUrl)).status === 404, "and the withdrawn file can't be downloaded");
 
@@ -97,14 +97,31 @@ try {
   await page.setViewportSize({ width: 390, height: 844 });
   await open();
   ok(!(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1)), "nothing sticks out sideways");
-  const btn = await page.getByRole("link", { name: /^Download v-261126-001$/ }).boundingBox();
+  const btn = await page.getByRole("link", { name: /^Download v-26.11.26-001$/ }).boundingBox();
   const tk = await page.locator(".ticket").boundingBox();
   ok(btn && btn.x >= 0 && btn.x + btn.width <= 390, "the download button fits the screen", `${Math.round(btn?.width ?? 0)} px wide`);
   ok(tk && tk.x >= 0 && tk.x + tk.width <= 392, "and so does the ticket", `${Math.round(tk?.x ?? 0)} → ${Math.round((tk?.x ?? 0) + (tk?.width ?? 0))}`);
 
-  say("6. /app can't be taken by a website page");
-  const clash = await sa("POST", "/api/platform/site/pages", { slug: "app", title: "App" });
-  ok(clash.status === 400 && /used by the website itself/.test(clash.json.error ?? ""), "creating a page called 'app' in the console is refused", clash.json.error);
+  say("5b. The old address and the pages of the other apps");
+  const moved = await fetch(WEB + "/app", { redirect: "manual" });
+  ok([301, 307, 308].includes(moved.status) && /\/apps\/oma$/.test(moved.headers.get("location") ?? ""), "/app (the address the first apps were given) redirects to /apps/oma", `${moved.status} ${moved.headers.get("location")}`);
+  const k1 = await upload("v-26.11.27-001", { app: "kda", notes: "Kitchen one", bytes: 50_000 });
+  await until(async () => { await open("/apps/kda"); return /Download v-26\.11\.27-001/.test(await page.locator("main").innerText()); }, 25000);
+  const kt = await page.locator("main").innerText();
+  ok(/Rasoi Pulse\s+KDA/.test(kt) && /for kitchen staff/i.test(kt) && /Download v-26\.11\.27-001/.test(kt) && !/v-26\.11\.26-001/.test(kt), "/apps/kda is the Kitchen app's own page: its name, who it is for and ITS version (not OMA's)");
+  ok((await page.title()).includes("Rasoi Pulse KDA") && /rasoi-pulse-kda/.test(kt), "its tab title and install text name the Kitchen app");
+  ok((await fetch(k1.release.downloadUrl)).status === 200, "its download button works");
+  await open("/apps");
+  const index = await page.locator("main").innerText();
+  ok(/Rasoi Pulse OMA/.test(index) && /Rasoi Pulse KDA/.test(index) && /v-26\.11\.26-001/.test(index) && /v-26\.11\.27-001/.test(index), "/apps lists every app with its newest version");
+  ok(await page.locator('a[href="/apps/kda"]').count() === 1 && await page.locator('a[href="/apps/oma"]').count() === 1, "each app links to its own page");
+  await open("/apps/nope");
+  ok(/couldn't find that page/i.test(await page.locator("body").innerText()) && !/Download v-/.test(await page.locator("body").innerText()), "a page for an app that doesn't exist says it couldn't find that page (like every unknown address on the site) and offers no download");
+  ok(/noindex/.test((await page.locator('meta[name="robots"]').first().getAttribute("content")) ?? ""), "the index page asks search engines not to list it");
+
+  say("6. /app and /apps can't be taken by a website page");
+  const clash = await sa("POST", "/api/platform/site/pages", { slug: "apps", title: "Apps" });
+  ok(clash.status === 400 && /used by the website itself/.test(clash.json.error ?? ""), "creating a page called 'apps' in the console is refused", clash.json.error);
 } finally {
   await clearAll().catch(() => undefined);
   await browser?.close();

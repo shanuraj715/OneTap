@@ -4,7 +4,8 @@ import { isProd } from "../../env.js";
 import { bearerToken, requireUser, SESSION_COOKIE } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import { usesPolicy } from "../../middleware/rate-limit.js";
-import { assertAppCurrent } from "../app-releases/app-releases.service.js";
+import { APP_CATALOG, APP_REQUIRED_PERMISSION } from "@rasoipulse/config-schema";
+import { appOfRequest, assertAppCurrent } from "../app-releases/app-releases.service.js";
 import { accountBlockedError, assertAccountNotBlocked, assertNotBlocked, blockInfo, clearAccountFailures, failed, floodLimiter, recordAccountFailure } from "../security/login-guard.js";
 import { describeSessionUser, login, logout } from "./auth.service.js";
 
@@ -75,7 +76,14 @@ authRouter.post("/login", loginFlood, usesPolicy("login-account"), async (req, r
 authRouter.post("/app-login", loginFlood, usesPolicy("login-account"), async (req, res) => {
   // an app build that is too old (and a forced update is out) is turned away BEFORE any password is checked
   await assertAppCurrent(req);
+  const app = appOfRequest(req);
   const result = await signIn(req);
+  // some apps are for certain roles only (the Kitchen app: the kitchen team): everyone else is turned away, and the session just opened ends
+  const needed = APP_REQUIRED_PERMISSION[app];
+  if (needed && !result.user.permissions?.includes(needed)) {
+    await logout(result.token).catch(() => undefined);
+    throw new HttpError(403, `${APP_CATALOG[app].name} is for the kitchen team (kitchen staff, kitchen managers and owners). This account can't use it.`, { code: "app_not_allowed", app });
+  }
   res.json({ token: result.token, expiresAt: result.expiresAt, user: result.user });
 });
 

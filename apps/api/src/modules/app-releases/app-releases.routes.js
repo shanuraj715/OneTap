@@ -1,6 +1,6 @@
 import { raw, Router } from "express";
 import { z } from "zod";
-import { OMA_APP } from "@rasoipulse/config-schema";
+import { APP_IDS, DEFAULT_APP } from "@rasoipulse/config-schema";
 import { limiter } from "../../middleware/rate-limit.js";
 import { HttpError } from "../../middleware/error.js";
 import { requireUser } from "../../middleware/auth.js";
@@ -10,7 +10,7 @@ import * as svc from "./app-releases.service.js";
 export const appUpdatesRouter = Router();
 
 const checkQuery = z.object({
-  app: z.string().max(20).default(OMA_APP),
+  app: z.enum(APP_IDS).default(DEFAULT_APP),
   platform: z.string().max(20).default("android"),
   versionCode: z.coerce.number().int().min(0).max(10_000_000).default(0),
 });
@@ -21,8 +21,16 @@ appUpdatesRouter.get("/check", limiter("app-update-check"), async (req, res) => 
   res.json(await svc.checkForUpdate({ app: q.app, versionCode: q.versionCode }));
 });
 
-appUpdatesRouter.get("/releases", limiter("app-update-check"), async (_req, res) => {
-  res.json(await svc.publicReleases());
+const appQuery = z.object({ app: z.enum(APP_IDS).default(DEFAULT_APP) });
+
+/** One app's published versions (newest first) — what its page on the website shows. */
+appUpdatesRouter.get("/releases", limiter("app-update-check"), async (req, res) => {
+  res.json(await svc.publicReleases({ app: appQuery.parse(req.query).app }));
+});
+
+/** Every app, each with its newest published version — the website's /apps page. */
+appUpdatesRouter.get("/apps", limiter("app-update-check"), async (_req, res) => {
+  res.json(await svc.publicApps());
 });
 
 /** The APK itself. Streamed from disk with Range support, so an interrupted download on a poor connection can continue. */
@@ -54,12 +62,12 @@ appUpdatesRouter.get("/download/:id", limiter("app-download"), async (req, res, 
 /** The platform console's part (mounted under /api/platform/app-releases — super admin only, checked by the platform router). */
 export const appReleasesAdminRouter = Router();
 
-appReleasesAdminRouter.get("/", async (_req, res) => {
-  res.json(await svc.listReleases());
+appReleasesAdminRouter.get("/", async (req, res) => {
+  res.json(await svc.listReleases(appQuery.parse(req.query).app));
 });
 
 appReleasesAdminRouter.post("/uploads", limiter("release-upload"), async (req, res) => {
-  const body = z.object({ fileName: z.string().min(1).max(200), size: z.number().int() }).parse(req.body);
+  const body = z.object({ fileName: z.string().min(1).max(200), size: z.number().int(), app: z.enum(APP_IDS).default(DEFAULT_APP) }).parse(req.body);
   res.status(201).json(await svc.startUpload(body, requireUser(req)));
 });
 

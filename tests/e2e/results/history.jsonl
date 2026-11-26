@@ -1310,3 +1310,17 @@
 {"id":"t96-icons-map-ui","status":"fail","pass":18,"fail":2,"mode":"headless","at":"2026-11-26T16:12:49.779Z","durationMs":24063}
 {"id":"t96-icons-map-ui","status":"fail","pass":19,"fail":1,"mode":"headless","at":"2026-11-26T16:13:05.901Z","durationMs":3451}
 {"id":"t96-icons-map-ui","status":"pass","pass":20,"fail":0,"mode":"headless","at":"2026-11-26T16:13:31.438Z","durationMs":3312}
+{"id":"t93-app-releases-api","status":"error","pass":0,"fail":0,"mode":"headless","at":"2026-11-26T16:33:53.814Z","durationMs":666,"error":"app-releases-api.mjs produced no checks (exit 1).     at async #link (node:internal/modules/esm/module_job:173:19)  Node.js v24.3.0"}
+{"id":"t28-rate-limits-api","status":"pass","pass":133,"fail":0,"mode":"headless","at":"2026-11-26T16:34:21.585Z","durationMs":9690}
+{"id":"t93-app-releases-api","status":"pass","pass":98,"fail":0,"mode":"headless","at":"2026-11-26T16:34:26.338Z","durationMs":4717}
+{"id":"t97-kitchen-app-api","status":"fail","pass":33,"fail":1,"mode":"headless","at":"2026-11-26T16:35:16.153Z","durationMs":4883}
+{"id":"t97-kitchen-app-api","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-26T16:35:28.329Z","durationMs":4605}
+{"id":"t94-app-releases-ui","status":"pass","pass":54,"fail":0,"mode":"headless","at":"2026-11-26T16:35:55.808Z","durationMs":15658}
+{"id":"t95-app-releases-website-ui","status":"error","pass":0,"fail":0,"mode":"headless","at":"2026-11-26T16:36:02.977Z","durationMs":7148,"error":"app-releases-website-ui.mjs produced no checks (exit 1). }  Node.js v24.3.0"}
+{"id":"t95-app-releases-website-ui","status":"fail","pass":35,"fail":2,"mode":"headless","at":"2026-11-26T16:38:04.328Z","durationMs":2124}
+{"id":"t95-app-releases-website-ui","status":"fail","pass":36,"fail":1,"mode":"headless","at":"2026-11-26T16:38:23.882Z","durationMs":1938}
+{"id":"t95-app-releases-website-ui","status":"pass","pass":37,"fail":0,"mode":"headless","at":"2026-11-26T16:38:32.759Z","durationMs":1625}
+{"id":"t28-rate-limits-api","status":"pass","pass":133,"fail":0,"mode":"headless","at":"2026-11-26T16:40:13.047Z","durationMs":8632}
+{"id":"t65-kitchen-display","status":"pass","pass":43,"fail":0,"mode":"headless","at":"2026-11-26T16:40:22.103Z","durationMs":9028}
+{"id":"t87-staff-app-auth-api","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-26T16:40:27.176Z","durationMs":5048}
+{"id":"t90-staff-outlet-access-api","status":"pass","pass":33,"fail":0,"mode":"headless","at":"2026-11-26T16:40:31.172Z","durationMs":3980}

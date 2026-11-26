@@ -48,7 +48,7 @@ export function createRuntime(options: RuntimeOptions = {}): Runtime {
     getToken: () => session.getState().token,
     onUnauthorized: () => session.getState().expire(),
     // every call says which build this is; the server refuses the sign-in of a build that is too old while an update is required
-    headers: { "x-oma-version-code": String(options.build ?? APP_BUILD), "x-oma-version": options.version ?? APP_VERSION },
+    headers: { "x-app-id": "oma", "x-app-version-code": String(options.build ?? APP_BUILD), "x-oma-version-code": String(options.build ?? APP_BUILD), "x-oma-version": options.version ?? APP_VERSION },
     onUpdateRequired: (details) => updates.getState().markRequired(details),
   });
   const api = createApi(client);

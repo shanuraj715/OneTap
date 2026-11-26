@@ -11,8 +11,8 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
  * @param {{ onProgress?: (info: { sent: number, total: number, piece: number, pieces: number }) => void, signal?: AbortSignal }} [opts]
  * @returns {Promise<{ uploadId: string }>} ready to be completed with `completeAppUpload`
  */
-export async function uploadApk(file, { onProgress, signal } = {}) {
-  const started = await api.startAppUpload(file.name, file.size);
+export async function uploadApk(file, { onProgress, signal, app = "oma" } = {}) {
+  const started = await api.startAppUpload(file.name, file.size, app);
   const { uploadId, chunkSize, chunks } = started;
   let done = 0; // bytes of whole pieces already on the server
   for (let i = 0; i < chunks; i += 1) {
@@ -37,5 +37,5 @@ export async function uploadApk(file, { onProgress, signal } = {}) {
   return { uploadId };
 }
 
-/** "v-261126-003" out of a file name such as "rasoi-pulse-oma-v-261126-003.apk" (or ""), to pre-fill the version box. */
-export const versionFromFileName = (name) => /v-\d{6}-\d{3}/i.exec(String(name ?? ""))?.[0]?.toLowerCase() ?? "";
+/** "v-26.11.27-003" out of a file name such as "rasoi-pulse-oma-v-26.11.27-003.apk" (or ""), to pre-fill the version box. */
+export const versionFromFileName = (name) => /v-\d{2}\.\d{2}\.\d{2}-\d{3,}/i.exec(String(name ?? ""))?.[0]?.toLowerCase() ?? "";

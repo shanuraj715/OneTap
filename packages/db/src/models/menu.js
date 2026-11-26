@@ -107,6 +107,11 @@ const itemSchema = new Schema(
     modifierGroupIds: { type: [String], default: [] },
     gstRatePct: { type: Number, default: 5 },
     isAvailable: { type: Boolean, default: true },
+    // WHY a dish is switched off when the kitchen did it: "sold-out" (finished for now) or "unavailable" (can't be made). Only read while isAvailable is false;
+    // the dashboard's own switch clears it. Customers see "Sold out" either way — the switch itself is what every screen obeys.
+    offReason: { type: String, enum: ["", "sold-out", "unavailable"], default: "" },
+    offAt: { type: Date, default: null },
+    offBy: { type: String, default: "" },
     sortOrder: { type: Number, default: 0 },
     // counted stock; null = not counted. `resetDay` is the India-time day `left` was last refilled to `daily`.
     stock: {

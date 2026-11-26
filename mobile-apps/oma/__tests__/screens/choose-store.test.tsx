@@ -129,7 +129,7 @@ describe("Account → Check for updates", () => {
     const server = fakeServer({ "GET /api/app-updates/check": { json: fx("update-check-optional") } });
     await renderApp(<AccountScreen />, { server, build: 1 });
     await fireEvent.press(await screen.findByTestId("check-updates"));
-    expect(await screen.findByText("v-261127-002 is out")).toBeOnTheScreen();
+    expect(await screen.findByText("v-27.11.26-002 is out")).toBeOnTheScreen();
   });
 
   it("says when it can't check", async () => {

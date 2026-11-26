@@ -1,6 +1,6 @@
 # T95 — Website → /app: the staff app's download page shows the latest published version, its notes and every version, and follows publish / withdraw / required in seconds
 
-**Area:** app · **Last result:** ✅ PASSED (29 passed, 0 failed · 2026-11-26 20:09 · headless · 2.5 s)
+**Area:** app · **Last result:** ✅ PASSED (37 passed, 0 failed · 2026-11-26 22:08 · headless · 1.6 s)
 
 **Run it alone:** `node run.mjs --only t95` (add `--visible` to watch it)
 
@@ -15,7 +15,8 @@ Runs suites/app-releases-website-ui.mjs in Chrome against the bench API and the 
 3. A required version
 4. Drafts and withdrawn versions stay hidden
 5. A phone-sized screen
-6. /app can't be taken by a website page
+6. 5b. The old address and the pages of the other apps
+7. /app and /apps can't be taken by a website page
 
 ## What to expect (these must happen)
 
@@ -35,7 +36,7 @@ Runs suites/app-releases-website-ui.mjs in Chrome against the bench API and the 
 
 _Nothing failed._
 
-### ✅ Passed (29)
+### ✅ Passed (37)
 
 **Step 1 — Nothing is published yet**
 
@@ -44,13 +45,13 @@ _Nothing failed._
 - and no version list
 - the page still introduces the app
 - and still explains how to install
-- the browser tab has a title that names the app — _Rasoi Pulse OMA, the staff app · Rasoi Pulse_
+- the browser tab has a title that names the app — _Rasoi Pulse OMA, Order Management App · Rasoi Pulse_
 - the page asks search engines not to list it
 
 **Step 2 — A published version appears**
 
 - the download button names the version
-- …and points at the API's download address — _http://localhost:3097/api/app-updates/download/6b084495b7279569b0515759_
+- …and points at the API's download address — _http://localhost:3097/api/app-updates/download/6b0860886ae95f5d245f79e0_
 - it says Android 11 or newer and the file's size — _58 KB_
 - the ticket shows the version and its release notes
 - no 'Required' stamp on an optional version
@@ -59,13 +60,13 @@ _Nothing failed._
 
 **Step 3 — A required version**
 
-- the button now offers v-261126-002
+- the button now offers v-26.11.26-002
 - its ticket carries a 'Required' stamp
 - the list has both versions — _2_
 - newest first: 002, marked Latest and Required
 - 001 below it, with neither mark
 - each keeps its own notes
-- 'Check the file' shows the file's SHA-256 — _3be58d4f8f51…_
+- 'Check the file' shows the file's SHA-256 — _5404e4767c89…_
 
 **Step 4 — Drafts and withdrawn versions stay hidden**
 
@@ -76,18 +77,33 @@ _Nothing failed._
 **Step 5 — A phone-sized screen**
 
 - nothing sticks out sideways
-- the download button fits the screen — _245 px wide_
+- the download button fits the screen — _251 px wide_
 - and so does the ticket — _24 → 366_
 
-**Step 6 — /app can't be taken by a website page**
+**Step 6 — 5b. The old address and the pages of the other apps**
 
-- creating a page called 'app' in the console is refused — _"/app" is used by the website itself — pick another address._
+- /app (the address the first apps were given) redirects to /apps/oma — _308 /apps/oma_
+- /apps/kda is the Kitchen app's own page: its name, who it is for and ITS version (not OMA's)
+- its tab title and install text name the Kitchen app
+- its download button works
+- /apps lists every app with its newest version
+- each app links to its own page
+- a page for an app that doesn't exist says it couldn't find that page (like every unknown address on the site) and offers no download
+- the index page asks search engines not to list it
+
+**Step 7 — /app and /apps can't be taken by a website page**
+
+- creating a page called 'apps' in the console is refused — _"/apps" is used by the website itself — pick another address._
 - no errors in the browser
 
 ## History (latest 10 runs)
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-26 22:08 | pass | 37 | 0 | headless | 1.6 s |
+| 2026-11-26 22:08 | fail | 36 | 1 | headless | 1.9 s |
+| 2026-11-26 22:08 | fail | 35 | 2 | headless | 2.1 s |
+| 2026-11-26 22:06 | error | 0 | 0 | headless | 7.1 s |
 | 2026-11-26 20:09 | pass | 29 | 0 | headless | 2.5 s |
 | 2026-11-26 19:26 | pass | 29 | 0 | headless | 13.8 s |
 | 2026-11-26 19:06 | pass | 29 | 0 | headless | 1.9 s |

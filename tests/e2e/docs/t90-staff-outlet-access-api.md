@@ -1,6 +1,6 @@
 # T90 — Team members mapped to outlets: they see (and can work in) only those outlets; nothing mapped = every outlet; the owner can change it later
 
-**Area:** security · **Last result:** ✅ PASSED (33 passed, 0 failed · 2026-11-26 17:45 · headless · 4.4 s)
+**Area:** security · **Last result:** ✅ PASSED (33 passed, 0 failed · 2026-11-26 22:10 · headless · 4.0 s)
 
 **Run it alone:** `node run.mjs --only t90` (add `--visible` to watch it)
 
@@ -39,7 +39,7 @@ _Nothing failed._
 
 **Step 1 — Setup: a store with three outlets, and a second store**
 
-- the store has three outlets — _f9ae f9d0 f9d9_
+- the store has three outlets — _bb6d bb8f bb99_
 
 **Step 2 — Making accounts with outlets**
 
@@ -92,6 +92,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-26 22:10 | pass | 33 | 0 | headless | 4.0 s |
 | 2026-11-26 17:45 | pass | 33 | 0 | headless | 4.4 s |
 | 2026-11-26 17:44 | fail | 31 | 2 | headless | 4.6 s |
 

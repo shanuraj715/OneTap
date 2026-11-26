@@ -1,6 +1,6 @@
 # T65 — Kitchen display (/kitchen) — orders by station, Start / Ready, late colours, and the waiter's bell (off by default)
 
-**Area:** kitchen · **Last result:** ✅ PASSED (43 passed, 0 failed · 2026-11-21 13:14 · headless · 9.1 s)
+**Area:** kitchen · **Last result:** ✅ PASSED (43 passed, 0 failed · 2026-11-26 22:10 · headless · 9.0 s)
 
 **Run it alone:** `node run.mjs --only t65` (add `--visible` to watch it)
 
@@ -83,7 +83,7 @@ _Nothing failed._
 - Ready moves the card to the READY lane
 - with the bell OFF the waiter's screen shows nothing when the kitchen is ready
 - Recall brings it back to PREPARING
-- bell ON: the waiter's screen shows 'Table T4 — Order #… Everything is ready' — _Table T4 — Order #0012 Everything is ready — take it out._
+- bell ON: the waiter's screen shows 'Table T4 — Order #… Everything is ready' — _Table T4 — Order #0003 Everything is ready — take it out._
 - the waiter can dismiss it
 - the new-order sound is on by default
 - switching it off is remembered on this device after a reload
@@ -100,6 +100,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-26 22:10 | pass | 43 | 0 | headless | 9.0 s |
 | 2026-11-21 13:14 | pass | 43 | 0 | headless | 9.1 s |
 | 2026-11-21 05:03 | pass | 43 | 0 | headless | 9.8 s |
 | 2026-11-21 04:20 | pass | 43 | 0 | headless | 9.2 s |

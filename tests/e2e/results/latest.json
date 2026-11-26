@@ -9422,8 +9422,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T14:38:41.300Z",
-    "durationMs": 9685,
+    "at": "2026-11-26T16:40:13.047Z",
+    "durationMs": 8632,
     "steps": [
       {
         "n": 1,
@@ -10194,7 +10194,7 @@
           {
             "label": "the inventory sees the whole API",
             "ok": true,
-            "detail": "335 routes, 195 change data",
+            "detail": "339 routes, 196 change data",
             "kind": "expect"
           },
           {
@@ -21593,8 +21593,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T07:44:28.802Z",
-    "durationMs": 9090,
+    "at": "2026-11-26T16:40:22.103Z",
+    "durationMs": 9028,
     "steps": [
       {
         "n": 1,
@@ -21825,7 +21825,7 @@
           {
             "label": "bell ON: the waiter's screen shows 'Table T4 — Order #… Everything is ready'",
             "ok": true,
-            "detail": "Table T4 — Order #0012 Everything is ready — take it out.",
+            "detail": "Table T4 — Order #0003 Everything is ready — take it out.",
             "kind": "expect"
           },
           {
@@ -30059,8 +30059,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T13:55:48.910Z",
-    "durationMs": 8325,
+    "at": "2026-11-26T16:40:27.176Z",
+    "durationMs": 5048,
     "steps": [
       {
         "n": 1,
@@ -30087,7 +30087,7 @@
           {
             "label": "the session lasts days, not minutes (it is the same session the dashboard uses)",
             "ok": true,
-            "detail": "2026-12-10T13:55:45.350Z",
+            "detail": "2026-12-10T16:40:25.480Z",
             "kind": "expect"
           },
           {
@@ -30249,7 +30249,7 @@
           {
             "label": "the guard endpoint now says blocked, and for how long",
             "ok": true,
-            "detail": "{\"blocked\":true,\"retryAfterSec\":300,\"blockedUntil\":\"2026-11-26T14:00:45.917Z\"}",
+            "detail": "{\"blocked\":true,\"retryAfterSec\":300,\"blockedUntil\":\"2026-11-26T16:45:26.084Z\"}",
             "kind": "expect"
           },
           {
@@ -30720,8 +30720,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T12:15:08.856Z",
-    "durationMs": 4425,
+    "at": "2026-11-26T16:40:31.172Z",
+    "durationMs": 3980,
     "steps": [
       {
         "n": 1,
@@ -30730,7 +30730,7 @@
           {
             "label": "the store has three outlets",
             "ok": true,
-            "detail": "f9ae f9d0 f9d9",
+            "detail": "bb6d bb8f bb99",
             "kind": "expect"
           }
         ]
@@ -31361,12 +31361,12 @@
     "id": "t93-app-releases-api",
     "title": "App updates: the platform admin uploads an APK in pieces and publishes it (optionally forcing an update); phones ask 'is there a newer version?'; old builds are turned away at sign-in when an update is forced",
     "status": "pass",
-    "pass": 82,
+    "pass": 98,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T14:38:46.075Z",
-    "durationMs": 4741,
+    "at": "2026-11-26T16:34:26.338Z",
+    "durationMs": 4717,
     "steps": [
       {
         "n": 1,
@@ -31512,7 +31512,7 @@
           {
             "label": "the file is in the platform storage (this disk, by default), under app-releases/oma/",
             "ok": true,
-            "detail": "app-releases/oma/v-261126-001-e4e129fb8581.apk",
+            "detail": "app-releases/oma/v-26.11.26-001-0d3bfd087376.apk",
             "kind": "expect"
           },
           {
@@ -31524,7 +31524,7 @@
           {
             "label": "a version (build number) that already exists can't be uploaded again",
             "ok": true,
-            "detail": "Version v-261126-001 (build 1) already exists. Each build number can be used once.",
+            "detail": "Version v-26.11.26-001 (build 1) already exists. Each build number can be used once.",
             "kind": "expect"
           },
           {
@@ -31588,9 +31588,9 @@
             "kind": "expect"
           },
           {
-            "label": "with the website page to go to (from the server's own settings)",
+            "label": "with the website page to go to (this app's own: /apps/oma)",
             "ok": true,
-            "detail": "https://site.example.test/app",
+            "detail": "https://site.example.test/apps/oma",
             "kind": "expect"
           },
           {
@@ -31626,7 +31626,7 @@
           {
             "label": "a phone on build 1 must too — and sees what changed in BOTH newer versions, newest first",
             "ok": true,
-            "detail": "v-261126-003,v-261126-002",
+            "detail": "v-26.11.26-003,v-26.11.26-002",
             "kind": "expect"
           },
           {
@@ -31698,7 +31698,7 @@
           {
             "label": "as an Android package, with a clear file name",
             "ok": true,
-            "detail": "attachment; filename=\"rasoi-pulse-oma-v-261126-002.apk\"",
+            "detail": "attachment; filename=\"rasoi-pulse-oma-v-26.11.26-002.apk\"",
             "kind": "expect"
           },
           {
@@ -31740,7 +31740,7 @@
           {
             "label": "newest first, and only the PUBLISHED releases (all four are published by now)",
             "ok": true,
-            "detail": "v-261126-004,v-261126-003,v-261126-002,v-261126-001",
+            "detail": "v-26.11.26-004,v-26.11.26-003,v-26.11.26-002,v-26.11.26-001",
             "kind": "expect"
           },
           {
@@ -31804,7 +31804,7 @@
             "kind": "expect"
           },
           {
-            "label": "with 003 forced again the list says: apps older than v-261126-003 must update",
+            "label": "with 003 forced again the list says: apps older than v-26.11.26-003 must update",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -31831,6 +31831,108 @@
       },
       {
         "n": 11,
+        "title": "9b. More than one app: each has its own versions, build numbers and 'required' rule",
+        "checks": [
+          {
+            "label": "the new form is v-YY.MM.DD-NNN; the old v-DDMMYY-NNN is still READ (what is published keeps working) but is no longer accepted for a new version",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an app's page address is /apps/<app>",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a NEW version in the old form is refused, with the new form named",
+            "ok": true,
+            "detail": "Use a version like v-26.11.27-003 (v-YY.MM.DD-NNN).",
+            "kind": "expect"
+          },
+          {
+            "label": "a file uploaded for one app can't be published as another",
+            "ok": true,
+            "detail": "This file was uploaded for Rasoi Pulse KDA, not Rasoi Pulse OMA.",
+            "kind": "expect"
+          },
+          {
+            "label": "an unknown app is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a Kitchen-app version can use build 1 although OMA already has a build 1 (every app counts for itself)",
+            "ok": true,
+            "detail": "1",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the OMA list does not show it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the console's list for KDA: its own two versions, newest first, its own 'required below' rule",
+            "ok": true,
+            "detail": "v-26.11.28-002,v-26.11.27-001",
+            "kind": "expect"
+          },
+          {
+            "label": "each app has its own page address: /apps/kda and /apps/oma",
+            "ok": true,
+            "detail": "https://site.example.test/apps/kda",
+            "kind": "expect"
+          },
+          {
+            "label": "a Kitchen-app phone on build 1 must update to ITS latest, and is sent to its own page",
+            "ok": true,
+            "detail": "v-26.11.28-002",
+            "kind": "expect"
+          },
+          {
+            "label": "(the OMA answer is its own)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an unknown app in the check is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the website's list is per app too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/api/app-updates/apps lists every app with its newest version and page",
+            "ok": true,
+            "detail": "oma:v-26.11.26-003 kda:v-26.11.28-002",
+            "kind": "expect"
+          },
+          {
+            "label": "a Kitchen-app file downloads under its own name",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an old Kitchen-app build is turned away at sign-in with ITS page, while OMA is judged only by OMA's releases",
+            "ok": true,
+            "detail": "426",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 12,
         "title": "The files follow the storage chosen in the console: a bucket instead of the disk",
         "checks": [
           {
@@ -31842,7 +31944,7 @@
           {
             "label": "the finished upload lands in the bucket, under app-releases/oma/",
             "ok": true,
-            "detail": "app-releases/oma/v-261126-020-87182142309c.apk",
+            "detail": "app-releases/oma/v-26.11.26-020-c343821552cc.apk",
             "kind": "expect"
           },
           {
@@ -31920,13 +32022,13 @@
         ]
       },
       {
-        "n": 12,
+        "n": 13,
         "title": "Nothing is left lying around",
         "checks": [
           {
             "label": "unfinished uploads (the refused ones) stay as parts to be cleared after a day — finished ones are gone",
             "ok": true,
-            "detail": "3 parts",
+            "detail": "5 parts",
             "kind": "expect"
           }
         ]
@@ -31939,12 +32041,12 @@
     "id": "t94-app-releases-ui",
     "title": "Console → App updates: choose an .apk, see the upload progress, publish it, make an update required, edit the notes, withdraw and delete",
     "status": "pass",
-    "pass": 45,
+    "pass": 54,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T14:39:15.652Z",
-    "durationMs": 14828,
+    "at": "2026-11-26T16:35:55.808Z",
+    "durationMs": 15658,
     "steps": [
       {
         "n": 1,
@@ -32001,7 +32103,7 @@
           {
             "label": "the version box is filled in from the file's name",
             "ok": true,
-            "detail": "v-261126-001",
+            "detail": "v-26.11.26-001",
             "kind": "expect"
           },
           {
@@ -32011,7 +32113,7 @@
             "kind": "expect"
           },
           {
-            "label": "a version that isn't v-DDMMYY-NNN is explained and blocks the button",
+            "label": "a version that isn't v-YY.MM.DD-NNN is explained and blocks the button",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -32055,7 +32157,7 @@
           {
             "label": "the percentage climbs while it sends",
             "ok": true,
-            "detail": "0% → 18%",
+            "detail": "0% → 19%",
             "kind": "expect"
           },
           {
@@ -32085,11 +32187,11 @@
           {
             "label": "the version is listed: Published, its size, 0 downloads and its notes",
             "ok": true,
-            "detail": "v-261126-001 Published 9.0 MB · 0 downloads · published Nov 26, 2026 First version: sign in, take orders at the tables. Withdraw Required Notes APK File",
+            "detail": "v-26.11.26-001 Published 9.0 MB · 0 downloads · published Nov 26, 2026 First version: sign in, take orders at the tables. Withdraw Required Notes APK File",
             "kind": "expect"
           },
           {
-            "label": "the summary now says phones are offered v-261126-001",
+            "label": "the summary now says phones are offered v-26.11.26-001",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -32143,7 +32245,7 @@
             "kind": "expect"
           },
           {
-            "label": "the summary now offers v-261126-002 and still says updates are optional",
+            "label": "the summary now offers v-26.11.26-002 and still says updates are optional",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -32155,7 +32257,7 @@
             "kind": "expect"
           },
           {
-            "label": "the card is marked, and the summary says everything older than v-261126-002 is stopped",
+            "label": "the card is marked, and the summary says everything older than v-26.11.26-002 is stopped",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -32229,7 +32331,7 @@
           {
             "label": "it asks first, and says the version is published right now",
             "ok": true,
-            "detail": "Delete v-261126-002? The file is removed from the server and nobody can download it again. It is published right now.",
+            "detail": "Delete v-26.11.26-002? The file is removed from the server and nobody can download it again. It is published right now.",
             "kind": "expect"
           },
           {
@@ -32255,6 +32357,66 @@
             "ok": true,
             "detail": "",
             "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 9,
+        "title": "Every app has its own tab, list and numbers",
+        "checks": [
+          {
+            "label": "the page has a tab for each app (OMA is open first)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the KDA tab does not show OMA's versions",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the pop-up names the app it is for",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the version is filled from the file name (new form)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it appears in the KDA list, with build 1 (OMA has its own build 1)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it is stored for KDA only",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the summary shows KDA's own download page (/apps/kda)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "back on the OMA tab: its own list and its own page (/apps/oma)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a version in the OLD form is explained and blocks the upload",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
           },
           {
             "label": "no errors in the browser",
@@ -32272,12 +32434,12 @@
     "id": "t95-app-releases-website-ui",
     "title": "Website → /app: the staff app's download page shows the latest published version, its notes and every version, and follows publish / withdraw / required in seconds",
     "status": "pass",
-    "pass": 29,
+    "pass": 37,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T14:39:18.133Z",
-    "durationMs": 2459,
+    "at": "2026-11-26T16:38:32.759Z",
+    "durationMs": 1625,
     "steps": [
       {
         "n": 1,
@@ -32316,7 +32478,7 @@
           {
             "label": "the browser tab has a title that names the app",
             "ok": true,
-            "detail": "Rasoi Pulse OMA, the staff app · Rasoi Pulse",
+            "detail": "Rasoi Pulse OMA, Order Management App · Rasoi Pulse",
             "kind": "expect"
           },
           {
@@ -32340,7 +32502,7 @@
           {
             "label": "…and points at the API's download address",
             "ok": true,
-            "detail": "http://localhost:3097/api/app-updates/download/6b084495b7279569b0515759",
+            "detail": "http://localhost:3097/api/app-updates/download/6b0860886ae95f5d245f79e0",
             "kind": "expect"
           },
           {
@@ -32380,7 +32542,7 @@
         "title": "A required version",
         "checks": [
           {
-            "label": "the button now offers v-261126-002",
+            "label": "the button now offers v-26.11.26-002",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -32418,7 +32580,7 @@
           {
             "label": "'Check the file' shows the file's SHA-256",
             "ok": true,
-            "detail": "3be58d4f8f51…",
+            "detail": "5404e4767c89…",
             "kind": "expect"
           }
         ]
@@ -32460,7 +32622,7 @@
           {
             "label": "the download button fits the screen",
             "ok": true,
-            "detail": "245 px wide",
+            "detail": "251 px wide",
             "kind": "expect"
           },
           {
@@ -32473,12 +32635,66 @@
       },
       {
         "n": 6,
-        "title": "/app can't be taken by a website page",
+        "title": "5b. The old address and the pages of the other apps",
         "checks": [
           {
-            "label": "creating a page called 'app' in the console is refused",
+            "label": "/app (the address the first apps were given) redirects to /apps/oma",
             "ok": true,
-            "detail": "\"/app\" is used by the website itself — pick another address.",
+            "detail": "308 /apps/oma",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/kda is the Kitchen app's own page: its name, who it is for and ITS version (not OMA's)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "its tab title and install text name the Kitchen app",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "its download button works",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps lists every app with its newest version",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "each app links to its own page",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a page for an app that doesn't exist says it couldn't find that page (like every unknown address on the site) and offers no download",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the index page asks search engines not to list it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "/app and /apps can't be taken by a website page",
+        "checks": [
+          {
+            "label": "creating a page called 'apps' in the console is refused",
+            "ok": true,
+            "detail": "\"/apps\" is used by the website itself — pick another address.",
             "kind": "expect"
           },
           {
@@ -32638,6 +32854,261 @@
             "label": "no errors in the browser",
             "ok": true,
             "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t97-kitchen-app-api": {
+    "id": "t97-kitchen-app-api",
+    "title": "Kitchen app (KDA) API: only the kitchen team may sign in; a dish can be marked sold out / unavailable / available from the kitchen (with a stock number for managers); nothing the other apps or the dashboard do has changed",
+    "status": "pass",
+    "pass": 34,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-26T16:35:28.329Z",
+    "durationMs": 4605,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Who may sign in to the Kitchen app (the server decides, not the app)",
+        "checks": [
+          {
+            "label": "kitchen staff, a manager, the owner and the platform admin can sign in",
+            "ok": true,
+            "detail": "200,200,200,200",
+            "kind": "expect"
+          },
+          {
+            "label": "a cook may use the app and switch a dish, but may not edit the menu",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "waiter (not kitchen) is turned away, in words",
+            "ok": true,
+            "detail": "Rasoi Pulse KDA is for the kitchen team (kitchen staff, kitchen managers and owners). This account can't use it.",
+            "kind": "expect"
+          },
+          {
+            "label": "books (not kitchen) is turned away, in words",
+            "ok": true,
+            "detail": "Rasoi Pulse KDA is for the kitchen team (kitchen staff, kitchen managers and owners). This account can't use it.",
+            "kind": "expect"
+          },
+          {
+            "label": "ed (not kitchen) is turned away, in words",
+            "ok": true,
+            "detail": "Rasoi Pulse KDA is for the kitchen team (kitchen staff, kitchen managers and owners). This account can't use it.",
+            "kind": "expect"
+          },
+          {
+            "label": "the same waiter signs in to OMA exactly as before (no app named = OMA)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and when OMA names itself",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a cook can still use OMA's sign-in too (nothing was taken away from anyone)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a refused sign-in sets nothing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the session each refused sign-in opened is ended (only the two OMA sign-ins of this waiter are left)",
+            "ok": true,
+            "detail": "2 session(s)",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "The dishes",
+        "checks": [
+          {
+            "label": "the cook sees every dish with its category",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an ordinary dish: available, not counted",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a counted dish with none left shows as sold out",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a counted dish running low is flagged",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(a waiter can already read the menu, so reading the list is no new power)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Switching a dish (the dish's own switch, so every screen obeys it)",
+        "checks": [
+          {
+            "label": "the cook marks a dish SOLD OUT",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the staff app's 'unavailable now' list has it at once, labelled Sold out",
+            "ok": true,
+            "detail": "[{\"id\":\"6b085fcfacf5a265ef851c9f\",\"label\":\"Sold out\"},{\"id\":\"6b085fcfacf5a265ef851c9d\",\"label\":\"Sold out\"}]",
+            "kind": "expect"
+          },
+          {
+            "label": "…then UNAVAILABLE (it can't be made today): a different state",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the list agrees",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and AVAILABLE again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it leaves the 'unavailable now' list",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the storefront's menu has it back, and shows nothing of the kitchen's note",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Who may do what",
+        "checks": [
+          {
+            "label": "a waiter can NOT switch a dish from here (no menu:availability)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an unknown state is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a dish that doesn't exist is a 404",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a counted dish with none left stays sold out when put back, and says so (it needs a number)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a cook can NOT set a stock number (that is the manager's, menu:update)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the manager restocks it: available with 5 left",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a number for a dish that isn't counted is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "The dashboard's own switch is unchanged",
+        "checks": [
+          {
+            "label": "the cook's sold-out shows",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the owner switching it back on in the dashboard puts it back (and the kitchen's note is forgotten)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "switching it OFF in the dashboard is 'unavailable' (not a stale 'sold out')",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "The board and the manager's numbers",
+        "checks": [
+          {
+            "label": "the board is the existing one, unchanged",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "today's summary with no orders: zeros, no average",
+            "ok": true,
+            "detail": "{\"ready\":0,\"averageMinutes\":null,\"lateCount\":0,\"slowest\":null,\"topDishes\":[]}",
             "kind": "expect"
           }
         ]

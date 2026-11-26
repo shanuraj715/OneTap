@@ -1,6 +1,6 @@
 # T94 — Console → App updates: choose an .apk, see the upload progress, publish it, make an update required, edit the notes, withdraw and delete
 
-**Area:** app · **Last result:** ✅ PASSED (45 passed, 0 failed · 2026-11-26 20:09 · headless · 14.8 s)
+**Area:** app · **Last result:** ✅ PASSED (54 passed, 0 failed · 2026-11-26 22:05 · headless · 15.7 s)
 
 **Run it alone:** `node run.mjs --only t94` (add `--visible` to watch it)
 
@@ -18,6 +18,7 @@ Runs suites/app-releases-ui.mjs in Chrome against the bench (the platform admin)
 6. Notes, withdraw, download
 7. Delete
 8. On a phone-sized screen
+9. Every app has its own tab, list and numbers
 
 ## What to expect (these must happen)
 
@@ -37,7 +38,7 @@ Runs suites/app-releases-ui.mjs in Chrome against the bench (the platform admin)
 
 _Nothing failed._
 
-### ✅ Passed (45)
+### ✅ Passed (54)
 
 **Step 1 — The page, with nothing uploaded yet**
 
@@ -51,9 +52,9 @@ _Nothing failed._
 - 'Upload and publish' is off until a file and a version are chosen
 - a file that isn't an .apk is refused straight away
 - a file over the size limit says so (with the limit) and can't be sent
-- the version box is filled in from the file's name — _v-261126-001_
+- the version box is filled in from the file's name — _v-26.11.26-001_
 - now the button is ready
-- a version that isn't v-DDMMYY-NNN is explained and blocks the button
+- a version that isn't v-YY.MM.DD-NNN is explained and blocks the button
 - fixing it clears the message
 - no warning while 'Update required' is off
 - ticking 'Update required' (with Publish now) warns that older phones will be blocked
@@ -62,7 +63,7 @@ _Nothing failed._
 
 - a progress bar says how much has been sent — _Sending 0 B of 9.0 MB 0%_
 - 'Cancel upload' is offered while it is going
-- the percentage climbs while it sends — _0% → 18%_
+- the percentage climbs while it sends — _0% → 19%_
 - cancelling creates nothing
 - and the form is ready to try again
 
@@ -70,7 +71,7 @@ _Nothing failed._
 
 - it says it is live, and that staff may choose Later
 - the version is listed: Published, its size, 0 downloads and its notes
-- the summary now says phones are offered v-261126-001
+- the summary now says phones are offered v-26.11.26-001
 - the server holds the file with its real size and SHA-256 — _9437369 bytes_
 - a phone already on build 1 is told nothing
 - the website's list has it
@@ -81,9 +82,9 @@ _Nothing failed._
 - the second one is listed as a Draft
 - a draft is invisible to phones
 - published: a phone on build 1 is offered it — optional
-- the summary now offers v-261126-002 and still says updates are optional
+- the summary now offers v-26.11.26-002 and still says updates are optional
 - ticking 'Required' makes the update compulsory for build 1
-- the card is marked, and the summary says everything older than v-261126-002 is stopped
+- the card is marked, and the summary says everything older than v-26.11.26-002 is stopped
 - an old build is now turned away at sign-in (426) — _426_
 - unticking it makes it optional again, on the page and for phones
 
@@ -106,12 +107,25 @@ _Nothing failed._
 
 - nothing sticks out sideways
 - the card's buttons are still reachable
+
+**Step 9 — Every app has its own tab, list and numbers**
+
+- the page has a tab for each app (OMA is open first)
+- the KDA tab does not show OMA's versions
+- the pop-up names the app it is for
+- the version is filled from the file name (new form)
+- it appears in the KDA list, with build 1 (OMA has its own build 1)
+- it is stored for KDA only
+- the summary shows KDA's own download page (/apps/kda)
+- back on the OMA tab: its own list and its own page (/apps/oma)
+- a version in the OLD form is explained and blocks the upload
 - no errors in the browser
 
 ## History (latest 10 runs)
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-26 22:05 | pass | 54 | 0 | headless | 15.7 s |
 | 2026-11-26 20:09 | pass | 45 | 0 | headless | 14.8 s |
 | 2026-11-26 19:26 | pass | 45 | 0 | headless | 14.4 s |
 | 2026-11-26 19:01 | pass | 45 | 0 | headless | 14.5 s |

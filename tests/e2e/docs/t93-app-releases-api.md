@@ -1,6 +1,6 @@
 # T93 — App updates: the platform admin uploads an APK in pieces and publishes it (optionally forcing an update); phones ask 'is there a newer version?'; old builds are turned away at sign-in when an update is forced
 
-**Area:** app · **Last result:** ✅ PASSED (82 passed, 0 failed · 2026-11-26 20:08 · headless · 4.7 s)
+**Area:** app · **Last result:** ✅ PASSED (98 passed, 0 failed · 2026-11-26 22:04 · headless · 4.7 s)
 
 **Run it alone:** `node run.mjs --only t93` (add `--visible` to watch it)
 
@@ -20,8 +20,9 @@ Runs suites/app-releases-api.mjs on a private API with an in-memory database and
 8. Downloading the APK
 9. The website's list
 10. Managing releases
-11. The files follow the storage chosen in the console: a bucket instead of the disk
-12. Nothing is left lying around
+11. 9b. More than one app: each has its own versions, build numbers and 'required' rule
+12. The files follow the storage chosen in the console: a bucket instead of the disk
+13. Nothing is left lying around
 
 ## What to expect (these must happen)
 
@@ -41,7 +42,7 @@ Runs suites/app-releases-api.mjs on a private API with an in-memory database and
 
 _Nothing failed._
 
-### ✅ Passed (82)
+### ✅ Passed (98)
 
 **Step 2 — Only the platform admin manages releases**
 
@@ -71,9 +72,9 @@ _Nothing failed._
 
 - the release is created; its build number is read from the version — _201 build 1_
 - saved as a draft, with the file's real size and SHA-256 — _9437171 bytes_
-- the file is in the platform storage (this disk, by default), under app-releases/oma/ — _app-releases/oma/v-261126-001-e4e129fb8581.apk_
+- the file is in the platform storage (this disk, by default), under app-releases/oma/ — _app-releases/oma/v-26.11.26-001-0d3bfd087376.apk_
 - …and the scratch folder for uploads in progress holds no finished file
-- a version (build number) that already exists can't be uploaded again — _Version v-261126-001 (build 1) already exists. Each build number can be used once._
+- a version (build number) that already exists can't be uploaded again — _Version v-26.11.26-001 (build 1) already exists. Each build number can be used once._
 - a file that isn't an APK is refused when it is finished — _That file isn't an APK (it isn't a zip archive)._
 - a zip without an AndroidManifest.xml is refused too
 - …and neither left a release behind
@@ -88,13 +89,13 @@ _Nothing failed._
 
 - version 2 is published as it is uploaded — _published_
 - a phone on build 1 is told 002 is available — optional, not forced — _true force=false_
-- with the website page to go to (from the server's own settings) — _https://site.example.test/app_
+- with the website page to go to (this app's own: /apps/oma) — _https://site.example.test/apps/oma_
 - and the file's size, fingerprint and download address — _59864 bytes_
 - a phone already on build 2 is told nothing
 - a phone on a NEWER build (a test build) is told nothing
 - a phone that does not say which build it is on is never told to update (the server can't judge it)
 - version 3 is FORCED: a phone on build 2 must update — _force=true_
-- a phone on build 1 must too — and sees what changed in BOTH newer versions, newest first — _v-261126-003,v-261126-002_
+- a phone on build 1 must too — and sees what changed in BOTH newer versions, newest first — _v-26.11.26-003,v-26.11.26-002_
 - a phone already on the forced build is free to go
 - a later OPTIONAL release doesn't cancel an earlier forced one: a phone that skipped 003 must still update — _force=true_
 - a phone on 003 (past the forced one) gets only the optional 004
@@ -110,7 +111,7 @@ _Nothing failed._
 **Step 8 — Downloading the APK**
 
 - the file downloads, byte for byte what was uploaded (no sign-in needed) — _59864 bytes_
-- as an Android package, with a clear file name — _attachment; filename="rasoi-pulse-oma-v-261126-002.apk"_
+- as an Android package, with a clear file name — _attachment; filename="rasoi-pulse-oma-v-26.11.26-002.apk"_
 - and can resume after a dropped connection (byte ranges)
 - and is never kept by a cache (a withdrawn version stops at once) — _no-cache_
 - a byte range gives exactly those bytes (206) — _206_
@@ -119,7 +120,7 @@ _Nothing failed._
 
 **Step 9 — The website's list**
 
-- newest first, and only the PUBLISHED releases (all four are published by now) — _v-261126-004,v-261126-003,v-261126-002,v-261126-001_
+- newest first, and only the PUBLISHED releases (all four are published by now) — _v-26.11.26-004,v-26.11.26-003,v-26.11.26-002,v-26.11.26-001_
 - no internal fields (who uploaded, the stored file name) are shown
 - each has a full download address, its SHA-256 and size
 
@@ -132,15 +133,34 @@ _Nothing failed._
 - taking the force off 003 lets build 2 carry on (still offered the update)
 - a bad status is refused; an unknown release is 404
 - the console's list: newest first, the rule in force (none now) and the piece size — _forcedBelow null_
-- with 003 forced again the list says: apps older than v-261126-003 must update
+- with 003 forced again the list says: apps older than v-26.11.26-003 must update
 - a release can be deleted
 - …and its file goes from the storage too
 - …and from the list
 
-**Step 11 — The files follow the storage chosen in the console: a bucket instead of the disk**
+**Step 11 — 9b. More than one app: each has its own versions, build numbers and 'required' rule**
+
+- the new form is v-YY.MM.DD-NNN; the old v-DDMMYY-NNN is still READ (what is published keeps working) but is no longer accepted for a new version
+- an app's page address is /apps/<app>
+- a NEW version in the old form is refused, with the new form named — _Use a version like v-26.11.27-003 (v-YY.MM.DD-NNN)._
+- a file uploaded for one app can't be published as another — _This file was uploaded for Rasoi Pulse KDA, not Rasoi Pulse OMA._
+- an unknown app is refused
+- a Kitchen-app version can use build 1 although OMA already has a build 1 (every app counts for itself) — _1_
+- …and the OMA list does not show it
+- the console's list for KDA: its own two versions, newest first, its own 'required below' rule — _v-26.11.28-002,v-26.11.27-001_
+- each app has its own page address: /apps/kda and /apps/oma — _https://site.example.test/apps/kda_
+- a Kitchen-app phone on build 1 must update to ITS latest, and is sent to its own page — _v-26.11.28-002_
+- (the OMA answer is its own)
+- an unknown app in the check is refused
+- the website's list is per app too
+- /api/app-updates/apps lists every app with its newest version and page — _oma:v-26.11.26-003 kda:v-26.11.28-002_
+- a Kitchen-app file downloads under its own name
+- an old Kitchen-app build is turned away at sign-in with ITS page, while OMA is judged only by OMA's releases — _426_
+
+**Step 12 — The files follow the storage chosen in the console: a bucket instead of the disk**
 
 - the platform storage is switched to a bucket
-- the finished upload lands in the bucket, under app-releases/oma/ — _app-releases/oma/v-261126-020-87182142309c.apk_
+- the finished upload lands in the bucket, under app-releases/oma/ — _app-releases/oma/v-26.11.26-020-c343821552cc.apk_
 - byte for byte, with the Android package type
 - nothing was kept on this server's disk
 - the download comes from the bucket, byte for byte
@@ -154,14 +174,16 @@ _Nothing failed._
 - after the fix, finishing the SAME upload works without sending anything again
 - deleting a release deletes its file from the bucket
 
-**Step 12 — Nothing is left lying around**
+**Step 13 — Nothing is left lying around**
 
-- unfinished uploads (the refused ones) stay as parts to be cleared after a day — finished ones are gone — _3 parts_
+- unfinished uploads (the refused ones) stay as parts to be cleared after a day — finished ones are gone — _5 parts_
 
 ## History (latest 10 runs)
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-26 22:04 | pass | 98 | 0 | headless | 4.7 s |
+| 2026-11-26 22:03 | error | 0 | 0 | headless | 0.7 s |
 | 2026-11-26 20:08 | pass | 82 | 0 | headless | 4.7 s |
 | 2026-11-26 19:25 | pass | 67 | 0 | headless | 6.0 s |
 | 2026-11-26 19:00 | pass | 66 | 0 | headless | 4.3 s |

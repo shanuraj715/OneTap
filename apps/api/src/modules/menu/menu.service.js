@@ -431,6 +431,8 @@ export async function createItem(ctx               , input                      
 
 export async function updateItem(ctx               , id        , patch           ) {
   const update                          = { ...patch };
+  // flipping the switch from the dashboard says nothing about WHY: forget what the kitchen app recorded
+  if (patch.isAvailable !== undefined) Object.assign(update, { offReason: "", offAt: null, offBy: "" });
   if (patch.variants) update.variants = normalizeVariants(patch.variants);
   if (patch.stock !== undefined) update.stock = normalizeStock(patch.stock);
   if (patch.availability !== undefined) update.availability = normalizeAvailability(patch.availability);

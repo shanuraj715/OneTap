@@ -91,7 +91,7 @@ Rules for the apps (decided with the owner):
 
 - **Sign-in at every start.** An app asks for email and password each time it opens (the API rate-limits and blocks
   repeated wrong tries — the same guard as the dashboard). "Keep me signed in" is an opt-in on the sign-in screen.
-- **Versions look like `v-DDMMYY-NNN`** (date, then a number for that day; the first OMA version is `v-261126-001`) and
+- **Versions look like `v-YY.MM.DD-NNN`** (year, month, day, then the build number — e.g. `v-26.11.27-003`; the first OMA versions were made in the old form `v-DDMMYY-NNN`, e.g. `v-261126-001`, which is still read) and
   change **only when the owner asks for an upgrade** — building, testing and fixing never change it. See
   [`mobile-apps/oma/README.md`](mobile-apps/oma/README.md#version-management).
 - **Flow parity needs a yes.** When a flow in the storefront (or dashboard) changes and the same flow exists in an app,
@@ -104,10 +104,10 @@ Rules for the apps (decided with the owner):
 The apps are not on the Play Store. New versions are uploaded in the platform console and downloaded from the website:
 
 - **Console → App updates** (`/platform/app-updates`, platform admin only): *New version* picks the `.apk`, fills the
-  version from its file name (`…-v-261126-002.apk`), takes release notes, and sends the file up in 4 MB pieces with a
+  version from its file name (`…-v-26.11.27-003.apk`), takes release notes, and sends the file up in 4 MB pieces with a
   progress bar (so no larger request limit is needed in nginx/Cloudflare, and a dropped connection retries by itself).
   Each version is a **draft**, **published** or **withdrawn**; **Required** makes it compulsory. Uploads are checked: it must
-  be a real APK (a zip with an `AndroidManifest.xml`), under `APP_RELEASE_MAX_MB`, with a version `v-DDMMYY-NNN` whose
+  be a real APK (a zip with an `AndroidManifest.xml`), under `APP_RELEASE_MAX_MB`, with a version `v-YY.MM.DD-NNN` (the old `v-DDMMYY-NNN` is refused for a new upload) whose
   build number (`NNN`) is not used yet. The file's size and SHA-256 are recorded.
 - **Website → `/app`**: the public download page (latest version button, release notes, install steps, every version with
   its SHA-256). It follows the console within seconds (the API tells the website to refresh) and is not indexed by search engines.

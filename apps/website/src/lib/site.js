@@ -46,10 +46,19 @@ export async function getPricing() {
   }
 }
 
-/** The staff app's published versions (newest first) for the /app page — `{ latest, releases }`, or null if the API can't be reached. */
-export async function getAppReleases() {
+/** One app's published versions (newest first) for its page /apps/<slug> — `{ latest, releases }`, or null if the API can't be reached. */
+export async function getAppReleases(app = "oma") {
   try {
-    return await get("/api/app-updates/releases");
+    return await get(`/api/app-updates/releases?app=${encodeURIComponent(app)}`);
+  } catch {
+    return null;
+  }
+}
+
+/** Every app with its newest published version, for the /apps page — `{ apps }`, or null if the API can't be reached. */
+export async function getApps() {
+  try {
+    return await get("/api/app-updates/apps");
   } catch {
     return null;
   }

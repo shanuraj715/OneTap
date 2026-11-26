@@ -41,8 +41,8 @@ describe("checking for an update", () => {
     await store.getState().check();
     const s = store.getState();
     expect(s.status).toBe("available");
-    expect(s.latest).toMatchObject({ version: "v-261127-002", versionCode: 2, size: 3_400_000 });
-    expect(s.whatsNew.map((n) => n.version)).toEqual(["v-261127-002"]);
+    expect(s.latest).toMatchObject({ version: "v-27.11.26-002", versionCode: 2, size: 3_400_000 });
+    expect(s.whatsNew.map((n) => n.version)).toEqual(["v-27.11.26-002"]);
     expect(s.pageUrl).toBe("https://rasoipulse.in/app");
     expect(shouldOfferUpdate(s)).toBe(true);
   });
@@ -52,8 +52,8 @@ describe("checking for an update", () => {
     await store.getState().check();
     const s = store.getState();
     expect(s.status).toBe("required");
-    expect(s.latest?.version).toBe("v-261128-003");
-    expect(s.whatsNew.map((n) => n.version)).toEqual(["v-261128-003", "v-261127-002"]);
+    expect(s.latest?.version).toBe("v-28.11.26-003");
+    expect(s.whatsNew.map((n) => n.version)).toEqual(["v-28.11.26-003", "v-27.11.26-002"]);
     expect(shouldOfferUpdate(s)).toBe(false); // the optional pop-up is for optional updates only
   });
 
@@ -106,7 +106,7 @@ describe("'Later'", () => {
     await t.store.getState().check();
     expect(shouldOfferUpdate(t.store.getState())).toBe(false);
     // a NEWER optional version appears: offered again
-    const newer = { ...answer("update-check-optional"), latest: { ...answer("update-check-optional").latest!, version: "v-261129-004", versionCode: 4 } };
+    const newer = { ...answer("update-check-optional"), latest: { ...answer("update-check-optional").latest!, version: "v-29.11.26-004", versionCode: 4 } };
     t.set(newer);
     await t.store.getState().check();
     expect(shouldOfferUpdate(t.store.getState())).toBe(true);
@@ -135,7 +135,7 @@ describe("the server's 'update required' refusal at sign-in", () => {
     const { store } = setup(answer("update-check-none"));
     store.getState().markRequired(fx("error-update-required").details);
     expect(store.getState()).toMatchObject({ status: "required", pageUrl: "https://rasoipulse.in/app" });
-    expect(store.getState().latest?.version).toBe("v-261128-003");
+    expect(store.getState().latest?.version).toBe("v-28.11.26-003");
   });
 
   it("ignores anything that isn't that refusal", () => {

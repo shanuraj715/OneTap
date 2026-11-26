@@ -5,7 +5,7 @@
     "pageUrl": "https://rasoipulse.in/app",
     "latest": {
       "id": "6b08366cfbec0fab49e219fb",
-      "version": "v-261128-003",
+      "version": "v-28.11.26-003",
       "versionCode": 3,
       "notes": "Security fix: please update",
       "force": true,

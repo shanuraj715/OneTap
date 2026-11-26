@@ -1,6 +1,6 @@
 # Rasoi Pulse end-to-end tests — catalog
 
-**97 tests** · 97 passing · 0 failing/error · 0 not run yet
+**98 tests** · 98 passing · 0 failing/error · 0 not run yet
 
 | Test | Area | Result | Checks | Last run |
 |---|---|---|---|---|
@@ -32,7 +32,7 @@
 | [t25-otp-resend-api](t25-otp-resend-api.md) — Code resend rule — the API makes a number wait 30 s, 1 min, 2 min, 5 min, 15 min, 1 h, then 6 h between codes, however it is called | security | ✅ PASSED | 43/43 | 2026-11-21 13:08 |
 | [t26-signin-resend-timer](t26-signin-resend-timer.md) — Sign-in code — resend timer on the screen (30 s first), kept by the server: Back, reload and direct API calls can't skip it | security | ✅ PASSED | 20/20 | 2026-11-21 13:24 |
 | [t27-signin-codes-switch](t27-signin-codes-switch.md) — WhatsApp → Numbers has a 'Send sign-in codes from my WhatsApp numbers' switch; with several numbers each code leaves from a random one | notifications | ✅ PASSED | 21/21 | 2026-11-21 13:24 |
-| [t28-rate-limits-api](t28-rate-limits-api.md) — Request limits — every protected API stops at its limit with a clear 429, per account sign-in guard, live connections, and nothing that changes data is left unprotected | security | ✅ PASSED | 133/133 | 2026-11-26 20:08 |
+| [t28-rate-limits-api](t28-rate-limits-api.md) — Request limits — every protected API stops at its limit with a clear 429, per account sign-in guard, live connections, and nothing that changes data is left unprotected | security | ✅ PASSED | 133/133 | 2026-11-26 22:10 |
 | [t29-orders-account-api](t29-orders-account-api.md) — Order history for the storefront Account page, and deleting an order — who may, what it puts right, where it disappears | orders | ✅ PASSED | 65/65 | 2026-11-25 03:06 |
 | [t30-account-orders](t30-account-orders.md) — Storefront Account page — 'My orders' menu link, order history with status, payment mode & state, coins; Delete order on the dashboard | storefront | ✅ PASSED | 42/42 | 2026-11-21 14:26 |
 | [t31-store-name-header](t31-store-name-header.md) — Storefront — the header and the big heading say the store's name; the outlet's name is only in the outlet dropdown | storefront | ✅ PASSED | 12/12 | 2026-11-21 13:13 |
@@ -69,7 +69,7 @@
 | [t62-food-mark](t62-food-mark.md) — The veg / non-veg mark — the dot is exactly centred in its frame on the storefront and in Take order | storefront | ✅ PASSED | 9/9 | 2026-11-21 05:03 |
 | [t63-card-picture-shape](t63-card-picture-shape.md) — C07 uses the wide 16:9 picture — and Appearance has a Picture shape field per card style that resets on a new card and can be overridden | storefront | ✅ PASSED | 30/30 | 2026-11-26 12:38 |
 | [t64-table-conflict](t64-table-conflict.md) — Two staff taking an order for the same table — the second is told the table is no longer free and can move the order to a free table | tables | ✅ PASSED | 22/22 | 2026-11-25 03:06 |
-| [t65-kitchen-display](t65-kitchen-display.md) — Kitchen display (/kitchen) — orders by station, Start / Ready, late colours, and the waiter's bell (off by default) | kitchen | ✅ PASSED | 43/43 | 2026-11-21 13:14 |
+| [t65-kitchen-display](t65-kitchen-display.md) — Kitchen display (/kitchen) — orders by station, Start / Ready, late colours, and the waiter's bell (off by default) | kitchen | ✅ PASSED | 43/43 | 2026-11-26 22:10 |
 | [t66-ops-batch](t66-ops-batch.md) — Completed dine-in order frees the table (no Needs cleaning) · phone layouts · platform live-updates switch · print station every 8 s with check, loader and countdown | operations | ✅ PASSED | 47/47 | 2026-11-21 13:04 |
 | [t67-order-tracking-api](t67-order-tracking-api.md) — Following an order — the tracking API, lateness, cancelling an order nobody accepts, and error messages that name the box | orders | ✅ PASSED | 50/50 | 2026-11-21 12:59 |
 | [t68-order-tracking-ui](t68-order-tracking-ui.md) — Following an order on the storefront — a page that moves by itself, links from Order placed and Account, cancelled, someone else's link, a phone | storefront | ✅ PASSED | 23/23 | 2026-11-21 15:12 |
@@ -91,16 +91,17 @@
 | [t84-storage-image-cache](t84-storage-image-cache.md) — Browser caching of pictures: new cloud uploads carry a one-year immutable cache header, and pictures stored earlier can be given it in place | storage | ✅ PASSED | 23/23 | 2026-11-26 11:51 |
 | [t85-effects-toolbar-spacing](t85-effects-toolbar-spacing.md) — The storefront's category and filter strip has room inside its panel in every style effect (light and dark, laptop and phone) | storefront | ✅ PASSED | 105/105 | 2026-11-26 12:41 |
 | [t86-header-current-page](t86-header-current-page.md) — The header menu highlights the page you're on in every header style (laptop menu and phone slide-in menu), on by default, and the owner can switch it off | storefront | ✅ PASSED | 81/81 | 2026-11-26 12:36 |
-| [t87-staff-app-auth-api](t87-staff-app-auth-api.md) — Staff app sign-in: a session token in the answer, used as a Bearer token, with the dashboard's brute-force guards (address block, account pause, flood limit) | security | ✅ PASSED | 34/34 | 2026-11-26 19:25 |
+| [t87-staff-app-auth-api](t87-staff-app-auth-api.md) — Staff app sign-in: a session token in the answer, used as a Bearer token, with the dashboard's brute-force guards (address block, account pause, flood limit) | security | ✅ PASSED | 34/34 | 2026-11-26 22:10 |
 | [t88-staff-app-menu-api](t88-staff-app-menu-api.md) — Staff app menu: GET /api/menu/unavailable lists only the dishes that can't be ordered right now (same rule as the order check), and the menu carries a version | menu | ✅ PASSED | 20/20 | 2026-11-26 17:45 |
 | [t89-order-reopen-table-api](t89-order-reopen-table-api.md) — An order put back from Completed/Cancelled to being worked on seats its table again — or asks for another table when someone else is there | orders | ✅ PASSED | 29/29 | 2026-11-26 17:44 |
-| [t90-staff-outlet-access-api](t90-staff-outlet-access-api.md) — Team members mapped to outlets: they see (and can work in) only those outlets; nothing mapped = every outlet; the owner can change it later | security | ✅ PASSED | 33/33 | 2026-11-26 17:45 |
+| [t90-staff-outlet-access-api](t90-staff-outlet-access-api.md) — Team members mapped to outlets: they see (and can work in) only those outlets; nothing mapped = every outlet; the owner can change it later | security | ✅ PASSED | 33/33 | 2026-11-26 22:10 |
 | [t91-staff-order-customer-view-api](t91-staff-order-customer-view-api.md) — An order a waiter took for a customer's number shows in that customer's 'My orders' and tracking page when they sign in on the storefront with the same number | orders | ✅ PASSED | 18/18 | 2026-11-26 17:45 |
 | [t92-dashboard-reopen-outlets-ui](t92-dashboard-reopen-outlets-ui.md) — Dashboard: an order put back from Completed seats its table again (or asks which free table); Users & roles gives team members outlets | orders | ✅ PASSED | 30/30 | 2026-11-26 17:49 |
-| [t93-app-releases-api](t93-app-releases-api.md) — App updates: the platform admin uploads an APK in pieces and publishes it (optionally forcing an update); phones ask 'is there a newer version?'; old builds are turned away at sign-in when an update is forced | app | ✅ PASSED | 82/82 | 2026-11-26 20:08 |
-| [t94-app-releases-ui](t94-app-releases-ui.md) — Console → App updates: choose an .apk, see the upload progress, publish it, make an update required, edit the notes, withdraw and delete | app | ✅ PASSED | 45/45 | 2026-11-26 20:09 |
-| [t95-app-releases-website-ui](t95-app-releases-website-ui.md) — Website → /app: the staff app's download page shows the latest published version, its notes and every version, and follows publish / withdraw / required in seconds | app | ✅ PASSED | 29/29 | 2026-11-26 20:09 |
+| [t93-app-releases-api](t93-app-releases-api.md) — App updates: the platform admin uploads an APK in pieces and publishes it (optionally forcing an update); phones ask 'is there a newer version?'; old builds are turned away at sign-in when an update is forced | app | ✅ PASSED | 98/98 | 2026-11-26 22:04 |
+| [t94-app-releases-ui](t94-app-releases-ui.md) — Console → App updates: choose an .apk, see the upload progress, publish it, make an update required, edit the notes, withdraw and delete | app | ✅ PASSED | 54/54 | 2026-11-26 22:05 |
+| [t95-app-releases-website-ui](t95-app-releases-website-ui.md) — Website → /app: the staff app's download page shows the latest published version, its notes and every version, and follows publish / withdraw / required in seconds | app | ✅ PASSED | 37/37 | 2026-11-26 22:08 |
 | [t96-icons-map-ui](t96-icons-map-ui.md) — Icons: the website has the Rasoi Pulse icon (navy), the admin panel a different one (red), and the storefront shows the shop owner's own icon (the Rasoi Pulse one until they upload theirs) | branding | ✅ PASSED | 20/20 | 2026-11-26 21:43 |
+| [t97-kitchen-app-api](t97-kitchen-app-api.md) — Kitchen app (KDA) API: only the kitchen team may sign in; a dish can be marked sold out / unavailable / available from the kitchen (with a stock number for managers); nothing the other apps or the dashboard do has changed | kitchen | ✅ PASSED | 34/34 | 2026-11-26 22:05 |
 
 ## Open findings (noticed during tests, not yet fixed)
 
