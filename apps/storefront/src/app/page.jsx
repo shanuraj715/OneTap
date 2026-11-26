@@ -22,7 +22,8 @@ const CHOICE_COOKIE = "rasoipulse_outlet_slug";
 export async function generateMetadata() {
   const resolved = await getOutletsForHost();
   const name = resolved?.brand?.name;
-  return name ? { title: name, description: `Choose an outlet and order online from ${name}.` } : {};
+  const icons = { icon: "/rasoi-pulse-favicon.svg" }; // the outlet picker has no single outlet's icon: the Rasoi Pulse one
+  return name ? { title: name, description: `Choose an outlet and order online from ${name}.`, icons } : { icons };
 }
 
 export default async function RootPage() {

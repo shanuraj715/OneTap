@@ -81,7 +81,7 @@ const sharedNewest = () => Math.max(newestMtime(join(REPO, "packages/config-sche
 /** true when the code of the dashboard changed after the bench's build of it */
 export const adminStale = () => mtime(join(BENCH_DIR, "admin-dist/index.html")) < Math.max(newestMtime(join(REPO, "apps/admin/src")), mtime(join(REPO, "apps/admin/index.html")), sharedNewest());
 export const websiteStale = () => mtime(join(BENCH_DIR, "website/.next/BUILD_ID")) < Math.max(newestMtime(join(REPO, "apps/website/src")), newestMtime(join(REPO, "apps/website/public")), mtime(join(REPO, "apps/website/next.config.mjs")), sharedNewest());
-export const storefrontStale = () => mtime(join(BENCH_DIR, "storefront/.next/BUILD_ID")) < Math.max(newestMtime(join(REPO, "apps/storefront/src")), sharedNewest());
+export const storefrontStale = () => mtime(join(BENCH_DIR, "storefront/.next/BUILD_ID")) < Math.max(newestMtime(join(REPO, "apps/storefront/src")), newestMtime(join(REPO, "apps/storefront/public")), sharedNewest());
 
 /* ---------------------------------------------------------------- the three services */
 async function startApi() {
@@ -123,6 +123,8 @@ function buildStorefront() {
   rmSync(join(sf, "src"), { recursive: true, force: true });
   cpSync(join(REPO, "apps/storefront/src"), join(sf, "src"), { recursive: true });
   for (const f of ["package.json", "jsconfig.json"]) cpSync(join(REPO, "apps/storefront", f), join(sf, f));
+  rmSync(join(sf, "public"), { recursive: true, force: true });
+  if (existsSync(join(REPO, "apps/storefront/public"))) cpSync(join(REPO, "apps/storefront/public"), join(sf, "public"), { recursive: true }); // the default icon lives here
   // the real config minus the monorepo-root file-tracing setting (this copy lives outside the app's folder)
   const cfg = readFileSync(join(REPO, "apps/storefront/next.config.mjs"), "utf8").split("\n").filter((l) => !/monorepo root|const workspaceRoot|outputFileTracingRoot/.test(l)).join("\n");
   writeFileSync(join(sf, "next.config.mjs"), cfg);

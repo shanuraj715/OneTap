@@ -22,7 +22,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     package: "com.rasoipulse.oma",
     versionCode: appVersion.versionCode,
     adaptiveIcon: {
-      backgroundColor: "#C6362F",
+      backgroundColor: "#10111B", // the navy of the new icon
       foregroundImage: "./assets/android-icon-foreground.png",
       backgroundImage: "./assets/android-icon-background.png",
       monochromeImage: "./assets/android-icon-monochrome.png",

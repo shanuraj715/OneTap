@@ -105,10 +105,7 @@ p { margin: 0; text-wrap: pretty; }
 }
 .site-header .wrap { display: flex; align-items: center; gap: 24px; min-height: 68px; position: relative; }
 .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-family: var(--font-display); font-weight: 800; font-size: 21px; letter-spacing: -0.03em; }
-.brand-mark { width: 26px; height: 26px; border-radius: 7px; background: var(--brand); position: relative; flex-shrink: 0; }
-.brand-mark::before, .brand-mark::after { content: ""; position: absolute; background: var(--brand-ink); border-radius: 2px; }
-.brand-mark::before { left: 6px; top: 6px; width: 6px; height: 6px; box-shadow: 8px 0 0 var(--brand-ink), 0 8px 0 var(--brand-ink); }
-.brand-mark::after { right: 6px; bottom: 6px; width: 4px; height: 4px; }
+.brand-mark { width: 30px; height: 30px; border-radius: 8px; background: url(/rasoi-pulse-logo.svg) center / cover no-repeat; flex-shrink: 0; }
 .brand img { height: 30px; width: auto; }
 .nav { display: none; gap: 4px; margin-left: auto; }
 .nav > a { text-decoration: none; padding: 8px 12px; border-radius: 999px; font-size: 15px; font-weight: 500; color: var(--ink-2); }

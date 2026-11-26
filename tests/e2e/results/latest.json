@@ -32492,5 +32492,158 @@
     ],
     "findings": [],
     "problems": []
+  },
+  "t96-icons-map-ui": {
+    "id": "t96-icons-map-ui",
+    "title": "Icons: the website has the Rasoi Pulse icon (navy), the admin panel a different one (red), and the storefront shows the shop owner's own icon (the Rasoi Pulse one until they upload theirs)",
+    "status": "pass",
+    "pass": 20,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-26T16:13:31.438Z",
+    "durationMs": 3312,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The website (navy)",
+        "checks": [
+          {
+            "label": "/icon.svg is the Rasoi Pulse favicon",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/favicon.ico is a real .ico",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/apple-icon.png (the touch icon) is a PNG",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the page links the icon and the touch icon",
+            "ok": true,
+            "detail": "/favicon.ico /icon.svg?ccd420d8e41e7706",
+            "kind": "expect"
+          },
+          {
+            "label": "the logo file used in the header is served",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the header shows the new logo (not the old drawn squares)",
+            "ok": true,
+            "detail": "30px",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "The admin panel (red — different from the website)",
+        "checks": [
+          {
+            "label": "/favicon.svg is served",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and it is a DIFFERENT icon from the website's",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the admin tile is red",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "its .ico and touch icon are served",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the page links all three",
+            "ok": true,
+            "detail": "/favicon.ico /favicon.svg",
+            "kind": "expect"
+          },
+          {
+            "label": "the sign-in page shows the icon beside the name",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "The storefront: the shop owner's icon",
+        "checks": [
+          {
+            "label": "start with no icon uploaded",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a store with no icon of its own shows the Rasoi Pulse one — exactly one icon link",
+            "ok": true,
+            "detail": "/rasoi-pulse-favicon.svg",
+            "kind": "expect"
+          },
+          {
+            "label": "…and that file is served by the storefront",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the owner uploads their own icon",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the storefront tab now shows the OWNER's icon, and only that one (the Rasoi Pulse icon is gone)",
+            "ok": true,
+            "detail": "https://cdn.example.test/my-shop-icon.png",
+            "kind": "expect"
+          },
+          {
+            "label": "(the icon is removed again)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the outlet-picker page never shows a stray icon",
+            "ok": true,
+            "detail": "/rasoi-pulse-favicon.svg",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
   }
 }

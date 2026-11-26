@@ -33,7 +33,7 @@ describe("the version is v-DDMMYY-NNN", () => {
 
 describe("upgrading (only ever on request)", () => {
   it("the next version is today's date and the next build number", () => {
-    expect(nextVersion(record, at(2026, 11, 26))).toEqual({ version: "v-261126-002", versionCode: 2, cutOn: "2026-11-26" });
+    expect(nextVersion({ version: "v-261126-001", versionCode: 1, cutOn: "2026-11-26" }, at(2026, 11, 26))).toEqual({ version: "v-261126-002", versionCode: 2, cutOn: "2026-11-26" }); // (a fixed input: it must not depend on the version the app has now)
     expect(nextVersion({ version: "v-261126-002", versionCode: 2, cutOn: "2026-11-26" }, at(2026, 12, 3))).toEqual({ version: "v-031226-003", versionCode: 3, cutOn: "2026-12-03" });
   });
 

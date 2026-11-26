@@ -78,8 +78,11 @@ export function Login() {
         ) : (
           <>
             <div style={{ marginBottom: 22 }}>
-              <div style={{ fontFamily: "var(--font-heading)", fontWeight: 700, fontSize: 20 }}>
-                Rasoi Pulse<span style={{ color: "var(--color-text-muted)", fontWeight: 400 }}> admin</span>
+              <div style={{ fontFamily: "var(--font-heading)", fontWeight: 700, fontSize: 20, display: "flex", alignItems: "center", gap: 10 }}>
+                <img src="/favicon.svg" alt="" width={32} height={32} style={{ borderRadius: 9, flexShrink: 0 }} />
+                <span>
+                  Rasoi Pulse<span style={{ color: "var(--color-text-muted)", fontWeight: 400 }}> admin</span>
+                </span>
               </div>
               <p style={{ margin: "6px 0 0", fontSize: 14, color: "var(--color-text-muted)" }}>
                 Sign in to manage your restaurant.

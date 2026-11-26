@@ -456,8 +456,11 @@ function Shell({ can }                                     ) {
       >
         <div style={{ display: "flex", alignItems: "center", justifyContent: railCollapsed ? "center" : "space-between", gap: 8 }}>
           {!railCollapsed ? (
-            <div style={brand}>
-              Rasoi Pulse<span style={{ color: "var(--color-text-muted)", fontWeight: 400 }}> admin</span>
+            <div style={{ ...brand, display: "flex", alignItems: "center", gap: 9 }}>
+              <img src="/favicon.svg" alt="" width={26} height={26} style={{ borderRadius: 7, flexShrink: 0 }} />
+              <span>
+                Rasoi Pulse<span style={{ color: "var(--color-text-muted)", fontWeight: 400 }}> admin</span>
+              </span>
             </div>
           ) : null}
           {narrow ? (

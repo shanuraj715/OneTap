@@ -1,6 +1,6 @@
 # Rasoi Pulse end-to-end tests — catalog
 
-**96 tests** · 96 passing · 0 failing/error · 0 not run yet
+**97 tests** · 97 passing · 0 failing/error · 0 not run yet
 
 | Test | Area | Result | Checks | Last run |
 |---|---|---|---|---|
@@ -100,6 +100,7 @@
 | [t93-app-releases-api](t93-app-releases-api.md) — App updates: the platform admin uploads an APK in pieces and publishes it (optionally forcing an update); phones ask 'is there a newer version?'; old builds are turned away at sign-in when an update is forced | app | ✅ PASSED | 82/82 | 2026-11-26 20:08 |
 | [t94-app-releases-ui](t94-app-releases-ui.md) — Console → App updates: choose an .apk, see the upload progress, publish it, make an update required, edit the notes, withdraw and delete | app | ✅ PASSED | 45/45 | 2026-11-26 20:09 |
 | [t95-app-releases-website-ui](t95-app-releases-website-ui.md) — Website → /app: the staff app's download page shows the latest published version, its notes and every version, and follows publish / withdraw / required in seconds | app | ✅ PASSED | 29/29 | 2026-11-26 20:09 |
+| [t96-icons-map-ui](t96-icons-map-ui.md) — Icons: the website has the Rasoi Pulse icon (navy), the admin panel a different one (red), and the storefront shows the shop owner's own icon (the Rasoi Pulse one until they upload theirs) | branding | ✅ PASSED | 20/20 | 2026-11-26 21:43 |
 
 ## Open findings (noticed during tests, not yet fixed)
 
