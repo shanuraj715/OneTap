@@ -48,6 +48,9 @@
     "prebuild:android": "expo prebuild --platform android",
     "build:debug": "node scripts/build-android.js debug",
     "build:release": "node scripts/build-android.js release",
+    "signing:create": "node scripts/signing.js create",
+    "signing:show": "node scripts/signing.js show",
+    "signing:verify": "node scripts/signing.js verify",
     "phone": "node scripts/phone.js",
     "phone:usb": "node scripts/phone.js --usb",
     "phone:live": "node scripts/phone.js --live"

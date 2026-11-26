@@ -124,7 +124,10 @@ The apps are not on the Play Store. New versions are uploaded in the platform co
   Public endpoints: `GET /api/app-updates/check`, `/releases`, `/download/:id` (resumable, rate-limited, never cached).
   The test for all of this is t93 (API), t94 (console page) and t95 (website page).
 - **Signing:** every update must be signed with the **same key** as the version it replaces, or Android refuses to install it
-  over the old one. The APKs built so far use the shared debug key — create a release keystore before real staff installs.
+  over the old one. The release key is made once with `npm run signing:create` (in `mobile-apps/oma`) and lives in
+  `~/.rasoi-pulse/signing/oma/` — outside the repo, never committed; **back that folder up, a lost key means every phone must
+  uninstall the app**. Its public fingerprint is committed as `mobile-apps/oma/signing-fingerprint.txt`, and `npm run build:release`
+  refuses to produce an APK signed with anything else. How it works and the commands: [`mobile-apps/oma/README.md`](mobile-apps/oma/README.md#release-signing-the-key).
 - **Platform admin in the app:** a platform admin who signs in to OMA is asked *which store, then which outlet* every time
   (even if there is only one); *Account → Change store or outlet* goes back. Everyone else goes straight to their own outlet.
 

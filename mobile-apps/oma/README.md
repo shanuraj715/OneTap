@@ -78,10 +78,34 @@ Why it is quick: arm64-only (every Android 11+ device and the Apple-silicon emul
 cache and daemon switched on (`plugins/with-fast-gradle.js`), and the JavaScript compiled by Hermes. The first build also
 downloads Gradle and the libraries once; later builds reuse them.
 
-{{BUILD_NUMBERS}}
+Typical times on an Apple-silicon Mac: the very first debug build about 15 minutes (it downloads Gradle and the libraries once), a rebuild about 1–3 minutes; a debug APK is ~96 MB, a release APK ~35 MB.
 
-**Signing.** The generated release build is signed with the shared *debug* key, fine for trying it. Before staff install
-it for real, a proper key is needed (`keystore.properties` + `*.jks` are git-ignored on purpose); ask for that to be set up.
+### Release signing (the key)
+
+Android installs an update over an installed app **only if both files are signed with the same key**. So the release build is
+signed with our own key, made **once** and kept for the life of the app (never Android's shared debug key). The build checks every
+release against that key's fingerprint before it can leave `build-output/`.
+
+```bash
+npm run signing:create     # ONCE: makes the key; the fingerprint goes into signing-fingerprint.txt (public: commit it)
+npm run build:release      # signs with it, checks the result, copies it to build-output/
+npm run signing:show       # where the key is + its fingerprint + does it match signing-fingerprint.txt
+npm run signing:verify     # check any APK (default: the newest release in build-output/)
+```
+
+- The key (`oma-release.jks`) and its settings (`keystore.properties`, which holds the password) live in
+  **`~/.rasoi-pulse/signing/oma/`**, outside every repository, readable only by you. They are never printed and never committed.
+  Back up that **whole folder** (password manager or other safe storage). **Lost key = no phone can be updated again**; every
+  phone must uninstall the app and sign in again.
+- `npm run build:release` stops with a clear message if there is no key, and refuses (does not copy) an APK signed with the debug
+  key or with a different key than `signing-fingerprint.txt`. Gradle gets the key through `OMA_KEYSTORE_PROPERTIES`; nothing secret
+  is written into the generated `android/` folder (`plugins/with-release-signing.js` does the wiring).
+- The key is found in this order: `OMA_KEYSTORE_PROPERTIES` (a path), then `keystore.properties` in this folder, then the default
+  folder above. On another Mac, copy the backed-up folder to the same place.
+- A throwaway test file with the debug key: `RP_ALLOW_DEBUG_SIGNING=1 npm run build:release` (named `…-release-DEBUGKEY.apk`;
+  never upload it).
+- A phone that has an app signed with another key (the debug builds, or anything before this key) cannot be updated to a
+  release signed with this one: uninstall it once first. After that, every update installs over the previous one.
 
 ## Version management
 

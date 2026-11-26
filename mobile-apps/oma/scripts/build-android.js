@@ -8,11 +8,15 @@
  *
  * What it does: (1) writes the native android/ project from app.config.ts (it is generated, never edited by hand),
  * (2) runs Gradle for it, (3) copies the APK to build-output/ with the version in its name, (4) says how long it took.
+ *
+ * A RELEASE build is signed with our own key (npm run signing:create makes it once) and is checked against that key's fingerprint
+ * BEFORE it is copied out: a file signed with the wrong key never reaches build-output/. See scripts/signing-lib.js for why.
  */
 const { spawnSync } = require("node:child_process");
 const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
+const signingLib = require("./signing-lib");
 
 const root = path.join(__dirname, "..");
 const args = process.argv.slice(2);
@@ -41,7 +45,26 @@ if (mode === "release") {
   if (api && !/^https:\/\//i.test(api)) { console.error(`✖ A release build must use an https:// server, not ${api}.`); process.exit(1); }
 }
 
-const env = { ...process.env, ANDROID_HOME: sdk, ANDROID_SDK_ROOT: sdk, CI: process.env.CI ?? "1" };
+// the release key: found here, handed to Gradle through the environment (nothing secret is written into the generated android/ folder)
+let keystoreProperties = null;
+const debugSigningAllowed = mode === "release" && process.env.RP_ALLOW_DEBUG_SIGNING === "1";
+if (mode === "release") {
+  keystoreProperties = signingLib.findKeystoreProperties({ root });
+  if (!keystoreProperties && !debugSigningAllowed) {
+    console.error(`✖ No release signing key found, so this build would be signed with Android's shared debug key, which cannot be used to update real phones.
+  Make the key once:   npm run signing:create
+  (to build a throwaway test file anyway: RP_ALLOW_DEBUG_SIGNING=1 npm run build:release)`);
+    process.exit(1);
+  }
+  if (keystoreProperties) {
+    const props = signingLib.parseProperties(fs.readFileSync(keystoreProperties, "utf8"));
+    const bad = signingLib.propertyProblems(props);
+    if (bad.length) { console.error(`✖ ${keystoreProperties} is incomplete: ${bad.join(", ")}.`); process.exit(1); }
+    if (!fs.existsSync(props.storeFile)) { console.error(`✖ The key file ${props.storeFile} (named in ${keystoreProperties}) does not exist. Restore it from your backup.`); process.exit(1); }
+  }
+}
+
+const env = { ...process.env, ANDROID_HOME: sdk, ANDROID_SDK_ROOT: sdk, CI: process.env.CI ?? "1", ...(keystoreProperties ? { OMA_KEYSTORE_PROPERTIES: keystoreProperties } : {}) };
 const run = (cmd, argv, cwd) => {
   console.log(`\n$ ${cmd} ${argv.join(" ")}`);
   const r = spawnSync(cmd, argv, { cwd, env, stdio: "inherit" });
@@ -61,8 +84,19 @@ lap("Gradle finished");
 
 const apk = path.join(root, "android/app/build/outputs/apk", mode, `app-${mode}.apk`);
 if (!fs.existsSync(apk)) { console.error(`✖ Expected the APK at ${apk}, but it is not there.`); process.exit(1); }
+
+// a release is checked against the key it must be signed with BEFORE it is copied out (a wrong file never lands in build-output/)
+let signedBy = "";
+if (mode === "release" && !debugSigningAllowed) {
+  const { verifyApk } = require("./signing");
+  const { found, problems } = verifyApk(apk);
+  if (problems.length) { console.error(`\n✖ This release is NOT fit to hand out, so it was not copied to build-output/:\n${problems.map((p) => `  - ${p}`).join("\n")}`); process.exit(1); }
+  signedBy = ` — signed with the release key ${signingLib.prettyFingerprint(found.sha256).slice(0, 23)}…`;
+}
 fs.mkdirSync(path.join(root, "build-output"), { recursive: true });
-const out = path.join(root, "build-output", `rasoi-pulse-oma-${version.version}-${mode}.apk`);
+// (a file made with RP_ALLOW_DEBUG_SIGNING=1 says so in its name, so it can't be mistaken for a real release)
+const suffix = debugSigningAllowed && !keystoreProperties ? "release-DEBUGKEY" : mode;
+const out = path.join(root, "build-output", `rasoi-pulse-oma-${version.version}-${suffix}.apk`);
 fs.copyFileSync(apk, out);
-console.log(`\n✔ ${out} (${(fs.statSync(out).size / 1048576).toFixed(1)} MB) — total ${((Date.now() - started) / 1000).toFixed(0)} s`);
-if (mode === "release") console.log("⚠ This release is signed with the shared DEBUG key (the generated default). Fine for trying it; set up a real signing key before giving it to staff.");
+console.log(`\n✔ ${out} (${(fs.statSync(out).size / 1048576).toFixed(1)} MB) — total ${((Date.now() - started) / 1000).toFixed(0)} s${signedBy}`);
+if (suffix === "release-DEBUGKEY") console.log("⚠ Signed with the shared DEBUG key (RP_ALLOW_DEBUG_SIGNING=1): for trying only. Never upload this file for staff.");

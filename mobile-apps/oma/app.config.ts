@@ -47,6 +47,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       },
     ],
     "./plugins/with-fast-gradle",
+    // the release build is signed with our own key (see scripts/signing-lib.js), not Android's shared debug key
+    "./plugins/with-release-signing",
   ],
   extra: { apiUrl: API_URL },
 });
