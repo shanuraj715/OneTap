@@ -1,0 +1,119 @@
+{
+  "screen": "all",
+  "now": 1795711871070,
+  "settings": {
+    "warnAfterMinutes": 10,
+    "lateAfterMinutes": 20,
+    "notifyWaiter": false
+  },
+  "orders": [
+    {
+      "id": "6b08637e42d88c2d2a890621",
+      "orderNumber": "0001",
+      "channel": "dine-in",
+      "tableNumber": "T3",
+      "customerName": "Walk-in",
+      "note": null,
+      "createdAt": "2026-11-26T16:51:10.666Z",
+      "acceptedAt": "2026-11-26T16:51:10.670Z",
+      "scheduledFor": null,
+      "stage": "ready",
+      "stations": [
+        {
+          "station": "kitchen",
+          "stage": "ready"
+        }
+      ],
+      "lines": [
+        {
+          "name": "Veg Steamed Momos",
+          "variantLabel": "Half (4 pcs)",
+          "modifiers": [],
+          "quantity": 1,
+          "note": "",
+          "station": "kitchen"
+        }
+      ]
+    },
+    {
+      "id": "6b08637e42d88c2d2a890640",
+      "orderNumber": "0002",
+      "channel": "dine-in",
+      "tableNumber": "T2",
+      "customerName": "Sita Verma",
+      "note": null,
+      "createdAt": "2026-11-26T16:51:10.728Z",
+      "acceptedAt": "2026-11-26T16:51:10.733Z",
+      "scheduledFor": null,
+      "stage": "preparing",
+      "stations": [
+        {
+          "station": "kitchen",
+          "stage": "preparing"
+        }
+      ],
+      "lines": [
+        {
+          "name": "Paneer Tandoori Momos",
+          "variantLabel": "",
+          "modifiers": [],
+          "quantity": 2,
+          "note": "",
+          "station": "kitchen"
+        }
+      ]
+    },
+    {
+      "id": "6b08637e42d88c2d2a89065c",
+      "orderNumber": "0003",
+      "channel": "dine-in",
+      "tableNumber": "T1",
+      "customerName": "Mehta family",
+      "note": "birthday table, please bring everything together",
+      "createdAt": "2026-11-26T16:51:10.749Z",
+      "acceptedAt": "2026-11-26T16:51:10.755Z",
+      "scheduledFor": null,
+      "stage": "new",
+      "stations": [
+        {
+          "station": "kitchen",
+          "stage": "new"
+        },
+        {
+          "station": "bar",
+          "stage": "new"
+        }
+      ],
+      "lines": [
+        {
+          "name": "Veg Steamed Momos",
+          "variantLabel": "Full (8 pcs)",
+          "modifiers": [
+            "Mayo dip"
+          ],
+          "quantity": 2,
+          "note": "less salt",
+          "station": "kitchen"
+        },
+        {
+          "name": "Chicken Kurkure Momos",
+          "variantLabel": "",
+          "modifiers": [
+            "Hot"
+          ],
+          "quantity": 1,
+          "note": "",
+          "station": "kitchen"
+        },
+        {
+          "name": "Masala Chai",
+          "variantLabel": "",
+          "modifiers": [],
+          "quantity": 2,
+          "note": "",
+          "station": "bar"
+        }
+      ]
+    }
+  ]
+}

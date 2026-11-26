@@ -1,0 +1,8 @@
+{
+  "status": 403,
+  "error": "Rasoi Pulse KDA is for the kitchen team (kitchen staff, kitchen managers and owners). This account can't use it.",
+  "details": {
+    "code": "app_not_allowed",
+    "app": "kda"
+  }
+}

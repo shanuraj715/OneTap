@@ -1,0 +1,75 @@
+{
+  "name": "rasoi-pulse-kda",
+  "version": "0.0.0",
+  "main": "expo-router/entry",
+  "dependencies": {
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "@react-native-community/netinfo": "12.0.1",
+    "@tanstack/react-query": "^5.108.4",
+    "expo": "~58.0.26",
+    "expo-build-properties": "~58.0.12",
+    "expo-constants": "~58.0.16",
+    "expo-keep-awake": "~58.0.4",
+    "expo-linking": "~58.0.17",
+    "expo-router": "~58.0.32",
+    "expo-secure-store": "~58.0.3",
+    "expo-status-bar": "~58.0.5",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-native": "0.88.1",
+    "react-native-safe-area-context": "~5.11.1",
+    "react-native-screens": "~4.30.1",
+    "react-native-svg": "15.16.0",
+    "zod": "^4.6.7",
+    "zustand": "^5.1.0"
+  },
+  "devDependencies": {
+    "@testing-library/react-native": "^14.1.0",
+    "@types/jest": "30.0.0",
+    "@types/node": "^26.6.11",
+    "@types/react": "~19.3.0",
+    "eslint": "^9.0.0",
+    "eslint-config-expo": "~58.0.4",
+    "jest": "~30.5.2",
+    "jest-expo": "~58.0.15",
+    "typescript": "~6.0.3"
+  },
+  "scripts": {
+    "start": "expo start",
+    "start:clear": "expo start --clear",
+    "android": "expo run:android",
+    "lint": "expo lint",
+    "typecheck": "tsc --noEmit",
+    "test": "jest --no-watchman",
+    "test:watch": "jest --watch --no-watchman",
+    "check": "npm run typecheck && npm run lint && npm run test && npm run version:check",
+    "version:show": "node scripts/version.js show",
+    "version:check": "node scripts/version.js check",
+    "version:bump": "node scripts/version.js bump",
+    "prebuild:android": "expo prebuild --platform android",
+    "build:debug": "node scripts/build-android.js debug",
+    "build:release": "node scripts/build-android.js release",
+    "signing:create": "node scripts/signing.js create",
+    "signing:show": "node scripts/signing.js show",
+    "signing:verify": "node scripts/signing.js verify",
+    "phone": "node scripts/phone.js",
+    "phone:usb": "node scripts/phone.js --usb",
+    "phone:live": "node scripts/phone.js --live"
+  },
+  "private": true,
+  "description": "Rasoi Pulse KDA (Kitchen Display App) — Android app for kitchen staff and the kitchen manager: the order board, the prep list, and marking dishes sold out",
+  "jest": {
+    "preset": "jest-expo",
+    "setupFilesAfterEnv": [
+      "<rootDir>/jest.setup.ts"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/android/",
+      "/test/fixtures/"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg)"
+    ]
+  }
+}

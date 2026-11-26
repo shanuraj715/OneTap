@@ -1,10 +1,10 @@
 // Makes every variant of the Rasoi Pulse artwork (a chef's hat with a heartbeat) — SVG + PNG — from the vector outlines in artwork.json,
-// which were traced from the two original images in source/. Also the web favicon and the Rasoi Pulse OMA app icon (the same artwork + the word OMA).
+// which were traced from the two original images in source/. Also the web favicon and the app icons: Rasoi Pulse OMA (staff app) and Rasoi Pulse KDA (kitchen display app), each the same artwork + its 3-letter code.
 //   node brand/rasoi-pulse/build.mjs        (uses `sharp` from apps/api's installed packages)
 //
 // THE FAMILY RULE: every Rasoi Pulse product uses this same artwork. What tells them apart:
-//   the brand / website → the artwork alone      an app (OMA, and later ones) → the artwork a little smaller + the app's code under it (OMA)
-// To add the next app: add its code and colours to APPS and run this again.
+//   the brand / website → the artwork alone      an app (OMA, KDA, and later ones) → the artwork a little smaller + the app's code under it
+// An app is told apart at a glance by its tile colour (OMA navy, KDA deep teal). To add the next app: add its code, tile colour and any new letters to APPS / GLYPHS and run this again.
 import { createRequire } from "node:module";
 import { copyFileSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -13,8 +13,11 @@ import { fileURLToPath } from "node:url";
 const HERE = dirname(fileURLToPath(import.meta.url));
 const sharp = createRequire(join(HERE, "../../apps/api/package.json"))("sharp");
 const art = JSON.parse(readFileSync(join(HERE, "artwork.json"), "utf8"));
-const APPS = { oma: { code: "OMA", label: "Rasoi Pulse OMA" } };
-const APP = APPS.oma;
+// tile = the colour of the app's icon tile and of the Android adaptive-icon background (written as a plain colour: K is defined below)
+const APPS = {
+  oma: { code: "OMA", label: "Rasoi Pulse OMA", tile: "#10111b" }, // navy
+  kda: { code: "KDA", label: "Rasoi Pulse KDA", tile: "#0b2e2b" }, // deep teal: a kitchen's colour, and nothing else in the family uses it
+};
 
 /* ---------------------------------------------------------------- colours (from the two original images) */
 const K = { navy: "#10111b", cream: "#fcf3e2", orange: "#ff9008", mint: "#79f9bb", maroon: "#6d0a19", red: "#be112d", wine: "#901e30", white: "#ffffff" };
@@ -40,6 +43,8 @@ const GLYPHS = {
   O: [88, (c, w) => `<ellipse cx="44" cy="50" rx="32" ry="38" fill="none" stroke="${c}" stroke-width="${w}"/>`],
   M: [100, (c, w) => stroke("M12 88V12L50 60L88 12V88", c, w)],
   A: [92, (c, w) => stroke("M14 88L46 12L78 88M29 66H63", c, w)],
+  K: [92, (c, w) => stroke("M18 12V88M80 12L20 56M38 44L82 88", c, w)],
+  D: [100, (c, w) => stroke("M16 12V88H42C70 88 88 72 88 50C88 28 70 12 42 12H16Z", c, w)],
 };
 const word = (code, c) => {
   const total = [...code].reduce((n, ch) => n + GLYPHS[ch][0], 0) + 14 * (code.length - 1);
@@ -49,8 +54,8 @@ const word = (code, c) => {
 };
 
 /** The whole drawing on the 512 box. `label` = the app icon (artwork higher and smaller, the code under it). `scale` shrinks it all about the middle. */
-const compose = (c, textColor, { label = false, bold = false, scale = 1 } = {}) => {
-  const body = label ? place(layers(c), 256, 200, 0.74) + word(APP.code, textColor) : place(layers(c, { bold }), 256, 256, bold ? 1.2 : 1);
+const compose = (c, textColor, { label = false, bold = false, scale = 1, app = APPS.oma } = {}) => {
+  const body = label ? place(layers(c), 256, 200, 0.74) + word(app.code, textColor) : place(layers(c, { bold }), 256, 256, bold ? 1.2 : 1);
   return scale === 1 ? body : `<g transform="translate(256 256) scale(${scale}) translate(-256 -256)">${body}</g>`;
 };
 const svgDoc = (inner, defs = "") => `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">${defs ? `<defs>${defs}</defs>` : ""}${inner}</svg>\n`;
@@ -79,11 +84,13 @@ const shapeEl = (shape, fill) => (shape === "circle" ? `<circle cx="256" cy="256
 
 function tileSvg(style, shape, { id = "t", ...o } = {}) {
   const t = TILES[style];
+  // an app's own tile colour replaces the family navy (the brand logo and the favicon keep navy)
+  const tile = o.app && t.tile === K.navy ? o.app.tile : t.tile;
   if (t.cut) { // the artwork and the code are cut out of a one-colour tile
     const black = compose(same("#000"), "#000", o);
     return svgDoc(`<g mask="url(#${id}k)">${shapeEl(shape, t.cut)}</g>`, `<mask id="${id}k" maskUnits="userSpaceOnUse" x="0" y="0" width="512" height="512"><rect width="512" height="512" fill="#fff"/>${black}</mask>`);
   }
-  return svgDoc(shapeEl(shape, t.tile) + compose(t.c, t.text, o));
+  return svgDoc(shapeEl(shape, tile) + compose(t.c, t.text, o));
 }
 const markSvg = (style, o = {}) => svgDoc(compose(MARKS[style].c, MARKS[style].text, o));
 
@@ -93,7 +100,7 @@ const out = (...p) => join(HERE, ...p);
 const png = (svg, size) => sharp(Buffer.from(svg), { density: Math.max(72, (72 * size) / 512) }).resize(size, size).png({ compressionLevel: 9 }).toBuffer();
 const files = [];
 const write = (path, data) => { mkdirSync(dirname(out(path)), { recursive: true }); writeFileSync(out(path), data); files.push(path); };
-for (const d of ["favicon", "logo", "oma-app-icon", "source"]) rmSync(out(d), { recursive: true, force: true });
+for (const d of ["favicon", "logo", "oma-app-icon", "kda-app-icon", "source"]) rmSync(out(d), { recursive: true, force: true });
 const IMAGES = "/private/tmp/claude-501/-Users-shanu-raj-Raj-Gazab-Momos/04b5269f-6be5-4e77-a7b8-73a9c95b0058/images";
 mkdirSync(out("source"), { recursive: true });
 copyFileSync(`${IMAGES}/42.png`, out("source/rasoi-pulse-original-dark.png"));
@@ -136,45 +143,50 @@ for (const style of Object.keys(TILES)) { // the favicon in the other colour sty
   for (const s of [16, 32, 48, 180]) write(`favicon/variants/favicon-${style}-${s}.png`, await png(svg, s));
 }
 
-/* ===== 3. THE OMA APP ICON (the artwork + the word OMA) ===== */
-const P = "rasoi-pulse-oma";
-for (const style of Object.keys(TILES)) for (const shape of SHAPES) {
-  const svg = tileSvg(style, shape, { label: true });
-  write(`oma-app-icon/svg/app-icon/${P}-app-icon-${style}-${shape}.svg`, svg);
-  for (const s of SIZES) write(`oma-app-icon/png/app-icon/${P}-app-icon-${style}-${shape}-${s}.png`, await png(svg, s));
+/* ===== 3. THE APP ICONS (the artwork + the app's code), one folder per app ===== */
+const stackedOf = {}; // each app's Android layers stacked, for the picture at the end
+for (const [key, APP] of Object.entries(APPS)) {
+  const dir = `${key}-app-icon`, P = `rasoi-pulse-${key}`, o = { label: true, app: APP };
+  for (const style of Object.keys(TILES)) for (const shape of SHAPES) {
+    const svg = tileSvg(style, shape, o);
+    write(`${dir}/svg/app-icon/${P}-app-icon-${style}-${shape}.svg`, svg);
+    for (const s of SIZES) write(`${dir}/png/app-icon/${P}-app-icon-${style}-${shape}-${s}.png`, await png(svg, s));
+  }
+  for (const style of Object.keys(MARKS)) { // without a tile
+    const svg = markSvg(style, o);
+    write(`${dir}/svg/no-tile/${P}-no-tile-${style}.svg`, svg);
+    for (const s of [1024, 512, 256, 128, 64]) write(`${dir}/png/no-tile/${P}-no-tile-${style}-${s}.png`, await png(svg, s));
+  }
+  // Android adaptive icon: two layers the phone stacks and crops to its own shape (the drawing stays inside the safe zone)
+  const AD = 0.62;
+  const bg = svgDoc(`<rect width="512" height="512" fill="${APP.tile}"/>`);
+  const fg = markSvg("multi-dark", { ...o, scale: AD }), mono = markSvg("mono-black", { ...o, scale: AD });
+  write(`${dir}/android-adaptive/LAYER-background-no-icon.svg`, bg);
+  write(`${dir}/android-adaptive/LAYER-foreground-icon.svg`, fg);
+  write(`${dir}/android-adaptive/LAYER-monochrome-for-themed-icons.svg`, mono);
+  write(`${dir}/android-adaptive/LAYER-background-no-icon-1024.png`, await png(bg, 1024));
+  write(`${dir}/android-adaptive/LAYER-foreground-icon-1024.png`, await png(fg, 1024));
+  write(`${dir}/android-adaptive/LAYER-monochrome-for-themed-icons-1024.png`, await png(mono, 1024));
+  const stacked = (shape) => svgDoc(`${shapeEl(shape, APP.tile)}${inner(fg)}`);
+  write(`${dir}/android-adaptive/PREVIEW-both-layers-circle-1024.png`, await png(stacked("circle"), 1024));
+  write(`${dir}/android-adaptive/PREVIEW-both-layers-rounded-1024.png`, await png(stacked("rounded"), 1024));
+  stackedOf[key] = stacked;
+  // the same file names and sizes as mobile-apps/<app>/assets (the favicon.png there is the brand favicon)
+  write(`${dir}/expo-drop-in/icon.png`, await png(tileSvg("multi-dark", "square", { ...o, id: "e" }), 1024));
+  write(`${dir}/expo-drop-in/splash-icon.png`, await png(markSvg("multi-light", { ...o, scale: 1.05 }), 1024));
+  write(`${dir}/expo-drop-in/favicon.png`, favPng[48]);
+  write(`${dir}/expo-drop-in/android-icon-foreground.png`, await png(fg, 512));
+  write(`${dir}/expo-drop-in/android-icon-background.png`, await png(bg, 512));
+  write(`${dir}/expo-drop-in/android-icon-monochrome.png`, await png(mono, 432));
 }
-for (const style of Object.keys(MARKS)) { // without a tile
-  const svg = markSvg(style, { label: true });
-  write(`oma-app-icon/svg/no-tile/${P}-no-tile-${style}.svg`, svg);
-  for (const s of [1024, 512, 256, 128, 64]) write(`oma-app-icon/png/no-tile/${P}-no-tile-${style}-${s}.png`, await png(svg, s));
-}
-// Android adaptive icon: two layers the phone stacks and crops to its own shape (the drawing stays inside the safe zone)
-const AD = 0.62;
-const bg = svgDoc(`<rect width="512" height="512" fill="${K.navy}"/>`);
-const fg = markSvg("multi-dark", { label: true, scale: AD }), mono = markSvg("mono-black", { label: true, scale: AD });
-write("oma-app-icon/android-adaptive/LAYER-background-no-icon.svg", bg);
-write("oma-app-icon/android-adaptive/LAYER-foreground-icon.svg", fg);
-write("oma-app-icon/android-adaptive/LAYER-monochrome-for-themed-icons.svg", mono);
-write("oma-app-icon/android-adaptive/LAYER-background-no-icon-1024.png", await png(bg, 1024));
-write("oma-app-icon/android-adaptive/LAYER-foreground-icon-1024.png", await png(fg, 1024));
-write("oma-app-icon/android-adaptive/LAYER-monochrome-for-themed-icons-1024.png", await png(mono, 1024));
-const stacked = (shape) => svgDoc(`${shapeEl(shape, K.navy)}${inner(fg)}`);
-write("oma-app-icon/android-adaptive/PREVIEW-both-layers-circle-1024.png", await png(stacked("circle"), 1024));
-write("oma-app-icon/android-adaptive/PREVIEW-both-layers-rounded-1024.png", await png(stacked("rounded"), 1024));
-// the same file names and sizes as mobile-apps/oma/assets (the favicon.png there is the brand favicon)
-write("oma-app-icon/expo-drop-in/icon.png", await png(tileSvg("multi-dark", "square", { id: "e", label: true }), 1024));
-write("oma-app-icon/expo-drop-in/splash-icon.png", await png(markSvg("multi-light", { label: true, scale: 1.05 }), 1024));
-write("oma-app-icon/expo-drop-in/favicon.png", favPng[48]);
-write("oma-app-icon/expo-drop-in/android-icon-foreground.png", await png(fg, 512));
-write("oma-app-icon/expo-drop-in/android-icon-background.png", await png(bg, 512));
-write("oma-app-icon/expo-drop-in/android-icon-monochrome.png", await png(mono, 432));
+const OMA = { label: true, app: APPS.oma }, KDA = { label: true, app: APPS.kda };
 
 /* ===== one picture of everything ===== */
 const nest = (svg, x, y, size, id) => `<svg x="${x}" y="${y}" width="${size}" height="${size}" viewBox="0 0 512 512">${inner(svg).replace(/id="(\w+)"/g, `id="${id}$1"`).replace(/url\(#(\w+)\)/g, `url(#${id}$1)`)}</svg>`;
-const cell = 190, gap = 20, pad = 30, rowH = cell + 56, W = pad * 2 + 6 * (cell + gap) - gap, H = 100 + 4 * rowH + 60;
+const cell = 190, gap = 20, pad = 30, rowH = cell + 56, W = pad * 2 + 6 * (cell + gap) - gap, H = 100 + 5 * rowH + 60;
 const txt = (t, x, y, d) => `<text x="${x}" y="${y}" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="${d ? "#d9d3cb" : "#3a3631"}" text-anchor="middle">${t}</text>`;
 const panel = (col, row, span = 1) => `<rect x="${pad + col * (cell + gap) - 10}" y="${100 + row * rowH - 14}" width="${span * (cell + gap) - gap + 20}" height="${rowH - 8}" rx="16" fill="${K.navy}"/>`;
-let sheet = `<rect width="${W}" height="${H}" fill="#F5F4F0"/><text x="${pad}" y="52" font-family="Helvetica, Arial, sans-serif" font-size="28" font-weight="700" fill="${K.navy}">Rasoi Pulse — logo · web favicon · OMA app icon</text>${panel(4, 0, 2)}${panel(5, 1)}${panel(4, 3, 2)}`;
+let sheet = `<rect width="${W}" height="${H}" fill="#F5F4F0"/><text x="${pad}" y="52" font-family="Helvetica, Arial, sans-serif" font-size="28" font-weight="700" fill="${K.navy}">Rasoi Pulse — logo · web favicon · OMA and KDA app icons</text>${panel(4, 0, 2)}${panel(5, 1)}${panel(4, 3, 2)}${panel(5, 4)}`;
 let n = 0;
 const put = (svg, col, row, name, d = false) => { sheet += nest(svg, pad + col * (cell + gap), 100 + row * rowH, cell, `p${n++}`) + txt(name, pad + col * (cell + gap) + cell / 2, 100 + row * rowH + cell + 22, d); };
 put(tileSvg("multi-dark", "rounded"), 0, 0, "logo · original dark");
@@ -183,15 +195,22 @@ put(markSvg("duo-light"), 2, 0, "logo · duo-light");
 put(markSvg("mono-black"), 3, 0, "logo · mono-black");
 put(markSvg("multi-dark"), 4, 0, "logo · multi-dark", true);
 put(markSvg("mono-white"), 5, 0, "logo · mono-white", true);
-["multi-dark", "multi-red", "duo-navy", "duo-red", "mono-black"].forEach((k, i) => put(tileSvg(k, "rounded", { label: true }), i, 1, `OMA app icon · ${k}`));
-put(tileSvg("mono-white", "rounded", { label: true }), 5, 1, "OMA · mono-white", true);
-SHAPES.forEach((s, i) => put(tileSvg("multi-dark", s, { label: true }), i, 2, `OMA · ${s}`));
-put(stacked("circle"), 3, 2, "Android: both layers (circle)");
+["multi-dark", "multi-red", "duo-navy", "duo-red", "mono-black"].forEach((k, i) => put(tileSvg(k, "rounded", OMA), i, 1, `OMA app icon · ${k}`));
+put(tileSvg("mono-white", "rounded", OMA), 5, 1, "OMA · mono-white", true);
+SHAPES.forEach((s, i) => put(tileSvg("multi-dark", s, OMA), i, 2, `OMA · ${s}`));
+put(stackedOf.oma("circle"), 3, 2, "OMA Android: both layers");
 put(fav, 4, 2, "web favicon (bold)");
 put(tileSvg("multi-red", "rounded", { bold: true }), 5, 2, "favicon · multi-red");
-["multi-light", "duo-light", "mono-black", "mono-red"].forEach((k, i) => put(markSvg(k, { label: true }), i, 3, `OMA no tile · ${k}`));
-["multi-dark", "duo-dark"].forEach((k, i) => put(markSvg(k, { label: true }), 4 + i, 3, `OMA no tile · ${k}`, true));
-sheet += [48, 32, 24, 16].map((s, i) => nest(fav, pad + i * 70, 100 + 4 * rowH - 10, s, `z${i}`)).join("") + txt("favicon at 48 · 32 · 24 · 16 px", pad + 330, 100 + 4 * rowH + 24, false);
+["multi-light", "duo-light", "mono-black", "mono-red"].forEach((k, i) => put(markSvg(k, OMA), i, 3, `OMA no tile · ${k}`));
+["multi-dark", "duo-dark"].forEach((k, i) => put(markSvg(k, OMA), 4 + i, 3, `OMA no tile · ${k}`, true));
+// KDA, the kitchen display app: its own tile colour, the same artwork
+put(tileSvg("multi-dark", "rounded", KDA), 0, 4, "KDA app icon · multi-dark");
+put(tileSvg("multi-dark", "square", KDA), 1, 4, "KDA · square");
+put(tileSvg("multi-dark", "circle", KDA), 2, 4, "KDA · circle");
+put(stackedOf.kda("circle"), 3, 4, "KDA Android: both layers");
+put(tileSvg("duo-navy", "rounded", KDA), 4, 4, "KDA · duo");
+put(tileSvg("mono-white", "rounded", KDA), 5, 4, "KDA · mono-white", true);
+sheet += [48, 32, 24, 16].map((s, i) => nest(fav, pad + i * 70, 100 + 5 * rowH - 10, s, `z${i}`)).join("") + txt("favicon at 48 · 32 · 24 · 16 px", pad + 330, 100 + 5 * rowH + 24, false);
 const preview = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${sheet}</svg>`;
 writeFileSync(out("preview.svg"), preview);
 writeFileSync(out("preview.png"), await sharp(Buffer.from(preview), { density: 96 }).png().toBuffer());

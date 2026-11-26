@@ -1,0 +1,26 @@
+{
+  "user": {
+    "id": "6b08637e42d88c2d2a8905c3",
+    "email": "chef@sandbox.test",
+    "name": "Ravi (kitchen)",
+    "isSuperAdmin": false,
+    "role": "kitchen",
+    "brandId": "6b08637e42d88c2d2a890589",
+    "blockedAt": null,
+    "permissions": [
+      "outlet:read",
+      "menu:read",
+      "order:read",
+      "order:update",
+      "table:read",
+      "printer:read",
+      "print:job",
+      "kitchen:app",
+      "menu:availability"
+    ],
+    "realtime": {
+      "websocket": true
+    },
+    "storeDisabled": null
+  }
+}

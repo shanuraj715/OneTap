@@ -1,0 +1,31 @@
+{
+  "updateAvailable": true,
+  "force": true,
+  "latest": {
+    "id": "6b08637f42d88c2d2a89070f",
+    "version": "v-26.11.28-003",
+    "versionCode": 3,
+    "notes": "Security fix: please update",
+    "force": true,
+    "publishedAt": "2026-11-27T10:00:00.000Z",
+    "size": 3400000,
+    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "downloadUrl": "https://api.rasoipulse.in/api/app-updates/download/6b08637f42d88c2d2a89070f"
+  },
+  "whatsNew": [
+    {
+      "version": "v-26.11.28-003",
+      "versionCode": 3,
+      "notes": "Security fix: please update",
+      "force": true
+    },
+    {
+      "version": "v-26.11.27-002",
+      "versionCode": 2,
+      "notes": "Order alerts are louder\nThe prep list groups the same dish",
+      "force": false
+    }
+  ],
+  "pageUrl": "https://rasoipulse.in/apps/kda",
+  "checkedAt": "2026-11-26T16:51:11.152Z"
+}

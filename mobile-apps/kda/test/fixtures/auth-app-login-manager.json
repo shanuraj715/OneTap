@@ -1,0 +1,48 @@
+{
+  "token": "TEST-TOKEN-MANAGER-0123456789",
+  "expiresAt": "2026-12-10T00:00:00.000Z",
+  "user": {
+    "id": "6b08637e42d88c2d2a8905ce",
+    "email": "boss@sandbox.test",
+    "name": "Meena (kitchen manager)",
+    "isSuperAdmin": false,
+    "role": "manager",
+    "brandId": "6b08637e42d88c2d2a890589",
+    "blockedAt": null,
+    "permissions": [
+      "outlet:read",
+      "menu:read",
+      "menu:update",
+      "order:read",
+      "order:create",
+      "order:update",
+      "table:read",
+      "table:manage",
+      "payment-config:read",
+      "printer:read",
+      "printer:manage",
+      "print:job",
+      "coupon:read",
+      "coupon:manage",
+      "appearance:update",
+      "page:manage",
+      "theme:update",
+      "settings:update",
+      "customer:read",
+      "notification-config:read",
+      "notification-log:read",
+      "dashboard:configure",
+      "analytics:read",
+      "reservation:read",
+      "reservation:manage",
+      "feedback:read",
+      "rider:manage",
+      "kitchen:app",
+      "menu:availability"
+    ],
+    "realtime": {
+      "websocket": true
+    },
+    "storeDisabled": null
+  }
+}

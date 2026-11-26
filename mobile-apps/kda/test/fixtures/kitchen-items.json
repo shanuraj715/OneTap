@@ -1,0 +1,113 @@
+{
+  "items": [
+    {
+      "id": "6b08637e42d88c2d2a8905f2",
+      "name": "Chicken Kurkure Momos",
+      "categoryId": "6b08637e42d88c2d2a8905e5",
+      "categoryName": "Momos",
+      "foodType": "non-veg",
+      "image": null,
+      "state": "available",
+      "switchedOff": false,
+      "stock": null,
+      "low": false,
+      "changedAt": null
+    },
+    {
+      "id": "6b08637e42d88c2d2a8905f9",
+      "name": "Cold Coffee",
+      "categoryId": "6b08637e42d88c2d2a8905e8",
+      "categoryName": "Drinks",
+      "foodType": "veg",
+      "image": null,
+      "state": "unavailable",
+      "switchedOff": true,
+      "stock": null,
+      "low": false,
+      "changedAt": null
+    },
+    {
+      "id": "6b08637e42d88c2d2a8905fb",
+      "name": "Corn Cheese Momos",
+      "categoryId": "6b08637e42d88c2d2a8905e5",
+      "categoryName": "Momos",
+      "foodType": "veg",
+      "image": null,
+      "state": "available",
+      "switchedOff": false,
+      "stock": {
+        "left": 2,
+        "daily": 20,
+        "lowAt": 3
+      },
+      "low": true,
+      "changedAt": null
+    },
+    {
+      "id": "6b08637e42d88c2d2a8905f7",
+      "name": "Masala Chai",
+      "categoryId": "6b08637e42d88c2d2a8905e8",
+      "categoryName": "Drinks",
+      "foodType": "veg",
+      "image": null,
+      "state": "available",
+      "switchedOff": false,
+      "stock": null,
+      "low": false,
+      "changedAt": null
+    },
+    {
+      "id": "6b08637e42d88c2d2a8905f4",
+      "name": "Paneer Tandoori Momos",
+      "categoryId": "6b08637e42d88c2d2a8905e5",
+      "categoryName": "Momos",
+      "foodType": "veg",
+      "image": null,
+      "state": "available",
+      "switchedOff": false,
+      "stock": null,
+      "low": false,
+      "changedAt": null
+    },
+    {
+      "id": "6b08637e42d88c2d2a8905fe",
+      "name": "Peri Peri Momos",
+      "categoryId": "6b08637e42d88c2d2a8905e5",
+      "categoryName": "Momos",
+      "foodType": "veg",
+      "image": null,
+      "state": "sold-out",
+      "switchedOff": false,
+      "stock": {
+        "left": 0,
+        "daily": 20,
+        "lowAt": 3
+      },
+      "low": false,
+      "changedAt": null
+    },
+    {
+      "id": "6b08637e42d88c2d2a8905f0",
+      "name": "Veg Steamed Momos",
+      "categoryId": "6b08637e42d88c2d2a8905e5",
+      "categoryName": "Momos",
+      "foodType": "veg",
+      "image": null,
+      "state": "available",
+      "switchedOff": false,
+      "stock": null,
+      "low": false,
+      "changedAt": null
+    }
+  ],
+  "categories": [
+    {
+      "id": "6b08637e42d88c2d2a8905e5",
+      "name": "Momos"
+    },
+    {
+      "id": "6b08637e42d88c2d2a8905e8",
+      "name": "Drinks"
+    }
+  ]
+}

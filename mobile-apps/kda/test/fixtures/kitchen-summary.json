@@ -1,0 +1,30 @@
+{
+  "now": {
+    "new": 1,
+    "preparing": 0,
+    "ready": 2
+  },
+  "today": {
+    "ready": 2,
+    "averageMinutes": 0,
+    "lateCount": 0,
+    "slowest": {
+      "orderNumber": "0001",
+      "minutes": 0
+    },
+    "topDishes": [
+      {
+        "name": "Paneer Tandoori Momos",
+        "quantity": 2
+      },
+      {
+        "name": "Veg Steamed Momos",
+        "quantity": 1
+      }
+    ]
+  },
+  "settings": {
+    "warnAfterMinutes": 10,
+    "lateAfterMinutes": 20
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "item": {
+    "id": "6b08637e42d88c2d2a8905f4",
+    "name": "Paneer Tandoori Momos",
+    "categoryId": "6b08637e42d88c2d2a8905e5",
+    "categoryName": "Momos",
+    "foodType": "veg",
+    "image": null,
+    "state": "sold-out",
+    "switchedOff": true,
+    "stock": null,
+    "low": false,
+    "changedAt": "2026-11-26T16:51:11.105Z",
+    "stillSoldOut": false
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "screen": "bar",
+  "now": 1795711871083,
+  "settings": {
+    "warnAfterMinutes": 10,
+    "lateAfterMinutes": 20,
+    "notifyWaiter": false
+  },
+  "orders": [
+    {
+      "id": "6b08637e42d88c2d2a89065c",
+      "orderNumber": "0003",
+      "channel": "dine-in",
+      "tableNumber": "T1",
+      "customerName": "Mehta family",
+      "note": "birthday table, please bring everything together",
+      "createdAt": "2026-11-26T16:51:10.749Z",
+      "acceptedAt": "2026-11-26T16:51:10.755Z",
+      "scheduledFor": null,
+      "stage": "new",
+      "stations": [
+        {
+          "station": "kitchen",
+          "stage": "new"
+        },
+        {
+          "station": "bar",
+          "stage": "new"
+        }
+      ],
+      "lines": [
+        {
+          "name": "Masala Chai",
+          "variantLabel": "",
+          "modifiers": [],
+          "quantity": 2,
+          "note": "",
+          "station": "bar"
+        }
+      ]
+    }
+  ]
+}

@@ -20,7 +20,7 @@ storefront, team dashboard, menu, orders and look — switched on and limited by
 | `packages/config-schema` | Zod schemas and shared rules (store config, plans, pricing, menu, orders…) | — |
 | `packages/db` | Mongoose models, the tenant-scoping plugin, the write-event hooks | — |
 | `packages/ui` | Shared components (headers, cards, menu sections, pinned bars…) and design tokens | — |
-| `mobile-apps/` | Phone and tablet apps (React Native). One folder per app — today **Rasoi Pulse OMA** (Order Management App, Android, for staff who take orders at the table). **Not** part of the pnpm workspace: each app has its own `package.json` and uses npm — see [Mobile apps](#mobile-apps) | — |
+| `mobile-apps/` | Phone and tablet apps (React Native). One folder per app — today **Rasoi Pulse OMA** (Order Management App, for staff who take orders at the table) and **Rasoi Pulse KDA** (Kitchen Display App, for the kitchen). **Not** part of the pnpm workspace: each app has its own `package.json` and uses npm — see [Mobile apps](#mobile-apps) | — |
 | `tests/e2e` | The end-to-end test library and its throwaway test bench — see [Tests](#tests) | 3097 / 3171 / 3170 |
 | `deploy/`, `docs/` | Server and operations notes — see [More documentation](#more-documentation) | — |
 
@@ -79,19 +79,20 @@ password is lost), `route-inventory.js` (every API route with its limits), `norm
 ## Mobile apps
 
 Every phone/tablet app lives in its own folder under [`mobile-apps/`](mobile-apps/README.md) and is named
-**"Rasoi Pulse &lt;ROLE&gt;"** with the role's short code (OMA = Order Management App). They talk to the same API as the
+**"Rasoi Pulse &lt;ROLE&gt;"** with the role's short code (OMA = Order Management App, KDA = Kitchen Display App). They talk to the same API as the
 dashboard and the storefront; nothing in them is a second copy of the business rules — the server decides every price,
 permission and limit.
 
 | App | For | Platform | Folder |
 | --- | --- | --- | --- |
 | **Rasoi Pulse OMA** | Staff who walk to tables: take orders, manage tables (move, confirm payment, free, cancel), watch orders | Android 11+ phones and tablets | [`mobile-apps/oma`](mobile-apps/oma/README.md) |
+| **Rasoi Pulse KDA** | Kitchen staff and the kitchen manager: the live order board, the prep list, sold-out / unavailable / available for every dish | Android 11+ phones and tablets | [`mobile-apps/kda`](mobile-apps/kda/README.md) |
 
 Rules for the apps (decided with the owner):
 
 - **Sign-in at every start.** An app asks for email and password each time it opens (the API rate-limits and blocks
   repeated wrong tries — the same guard as the dashboard). "Keep me signed in" is an opt-in on the sign-in screen.
-- **Versions look like `v-YY.MM.DD-NNN`** (year, month, day, then the build number — e.g. `v-26.11.27-003`; the first OMA versions were made in the old form `v-DDMMYY-NNN`, e.g. `v-261126-001`, which is still read) and
+- **Versions look like `v-YY.MM.DD-NNN`** (year, month, day, then the build number — e.g. `v-26.11.27-003`; each app counts its own builds, and the number is Android's `versionCode`; the first OMA versions were made in the old form `v-DDMMYY-NNN`, e.g. `v-261126-001`, which is still read) and
   change **only when the owner asks for an upgrade** — building, testing and fixing never change it. See
   [`mobile-apps/oma/README.md`](mobile-apps/oma/README.md#version-management).
 - **Flow parity needs a yes.** When a flow in the storefront (or dashboard) changes and the same flow exists in an app,
@@ -101,36 +102,36 @@ Rules for the apps (decided with the owner):
 
 ### App updates: uploading a version, optional vs. required
 
-The apps are not on the Play Store. New versions are uploaded in the platform console and downloaded from the website:
+The apps are not on the Play Store. New versions are uploaded in the platform console and downloaded from the website. **Every app has its own releases, its own build numbers and its own download page**; the one list of apps is `APP_CATALOG` in `packages/config-schema/src/app-release.js` (today `oma` and `kda`), and the console, the website and the checks all follow it:
 
-- **Console → App updates** (`/platform/app-updates`, platform admin only): *New version* picks the `.apk`, fills the
+- **Console → App updates** (`/platform/app-updates`, platform admin only): one **tab per app** (OMA · KDA), each with its own list; *New version* picks the `.apk`, fills the
   version from its file name (`…-v-26.11.27-003.apk`), takes release notes, and sends the file up in 4 MB pieces with a
   progress bar (so no larger request limit is needed in nginx/Cloudflare, and a dropped connection retries by itself).
   Each version is a **draft**, **published** or **withdrawn**; **Required** makes it compulsory. Uploads are checked: it must
   be a real APK (a zip with an `AndroidManifest.xml`), under `APP_RELEASE_MAX_MB`, with a version `v-YY.MM.DD-NNN` (the old `v-DDMMYY-NNN` is refused for a new upload) whose
   build number (`NNN`) is not used yet. The file's size and SHA-256 are recorded.
-- **Website → `/app`**: the public download page (latest version button, release notes, install steps, every version with
-  its SHA-256). It follows the console within seconds (the API tells the website to refresh) and is not indexed by search engines.
+- **Website → `/apps`** (all apps) and **`/apps/<app>`** (`/apps/oma`, `/apps/kda`: one page per app — latest version button, release notes, install steps, every version with
+  its SHA-256). The old `/app` redirects (permanently) to `/apps/oma`, because OMA builds already installed send people there. It follows the console within seconds (the API tells the website to refresh) and is not indexed by search engines.
 - **In the app**, when it opens (and when it comes back to the front after 30 minutes away) it asks
-  `GET /api/app-updates/check?versionCode=<its build>`. A newer **optional** version shows a pop-up with *Update* (opens the
-  `/app` page in the phone's browser) and *Later*. If **any** version newer than the phone's is marked **Required**, the app
+  `GET /api/app-updates/check?app=<its id>&platform=android&versionCode=<its build>` (and says which app it is in the `x-app-id` header of every request; no header = OMA). A newer **optional** version shows a pop-up with *Update* (opens its `/apps/<app>`
+  page in the phone's browser) and *Later*. If **any** version newer than the phone's is marked **Required**, the app
   shows a full "Update needed" screen instead, with no way past it (Back does nothing) until the new version is installed.
   The server backs this up: while an update is required, `POST /api/auth/app-login` from an old build answers
   `426 update_required` (before any password is checked), so an old build can't get in even if it skipped the check.
   A phone that can't reach the server is never blocked by the check itself.
 - **Where the APK files are kept:** in the **same storage as every other file**, the one chosen in console → **Storage** (this
   server's disk, or the S3/R2 bucket). A finished upload is streamed there (never held in memory) under
-  `app-releases/oma/<version>-<random>.apk`; the **Move files** tool carries them along when the storage is changed. They are
+  `app-releases/<app>/<version>-<random>.apk`; the **Move files** tool carries them along when the storage is changed. They are
   downloaded through the API (so withdrawing a version stops it at once, and the bucket needs no public access for them).
   `APP_RELEASES_DIR` is only scratch space for uploads in progress. If the storage refuses the file (wrong keys, bucket down),
   finishing the upload says so and the pieces are kept, so after fixing Storage the same upload can be finished without sending
-  it again. Settings: `APP_RELEASES_DIR`, `APP_RELEASE_MAX_MB` (default 300), and `WEBSITE_URL` (the `/app` page address the app sends people to).
+  it again. Settings: `APP_RELEASES_DIR`, `APP_RELEASE_MAX_MB` (default 300), and `WEBSITE_URL` (the address of the `/apps/<app>` pages the apps send people to).
   Public endpoints: `GET /api/app-updates/check`, `/releases`, `/download/:id` (resumable, rate-limited, never cached).
   The test for all of this is t93 (API), t94 (console page) and t95 (website page).
 - **Signing:** every update must be signed with the **same key** as the version it replaces, or Android refuses to install it
   over the old one. The release key is made once with `npm run signing:create` (in `mobile-apps/oma`) and lives in
   `~/.rasoi-pulse/signing/oma/` — outside the repo, never committed; **back that folder up, a lost key means every phone must
-  uninstall the app**. Its public fingerprint is committed as `mobile-apps/oma/signing-fingerprint.txt`, and `npm run build:release`
+  uninstall the app**. **One company key signs every app** (OMA and KDA; Android allows it): its public fingerprint is committed in each app as `signing-fingerprint.txt` (a test checks they are the same), and `npm run build:release`
   refuses to produce an APK signed with anything else. How it works and the commands: [`mobile-apps/oma/README.md`](mobile-apps/oma/README.md#release-signing-the-key).
 - **Platform admin in the app:** a platform admin who signs in to OMA is asked *which store, then which outlet* every time
   (even if there is only one); *Account → Change store or outlet* goes back. Everyone else goes straight to their own outlet.
@@ -138,6 +139,36 @@ The apps are not on the Play Store. New versions are uploaded in the platform co
 The API side of the apps: `GET /api/menu/unavailable` (what can't be ordered now — the staff app loads the menu once and asks only this each order), a `version` in the menu answer, team members can be **mapped to outlets** (Users & roles; they then see only those outlets, in the dashboard and the app), and putting a Completed order back to Preparing **seats its table again** (or asks which free table when someone else has it). Also `POST /api/auth/app-login` (returns a token the app sends as `Authorization: Bearer …`;
 the dashboard keeps using its cookie), `GET /api/auth/guard` (is this address paused?) and the Bearer support in the
 `authenticate` middleware. Saved test: `tests/e2e/tests/t87-staff-app-auth-api.mjs`.
+
+### Kitchen app (KDA): who may sign in, what each role does
+
+**Rasoi Pulse KDA** is the kitchen's twin of the dashboard's Kitchen display. Its screens: **Board** (New · Preparing · Ready,
+All / Kitchen / Bar, Start · Mark ready · Recall, amber/red as an order waits, a vibration for a new order), **Prep** (what to cook
+right now, added up), **Dishes** (find a dish; mark it **Available / Sold out / Unavailable**) and, for the manager, **Today**.
+It reuses the existing kitchen API unchanged and adds a few endpoints; the other apps and the dashboard behave exactly as before.
+
+| Who | Role | Can sign in to KDA | Switch a dish | Stock numbers + **Today** tab |
+| --- | --- | --- | --- | --- |
+| Kitchen staff | `kitchen` | yes | yes | no |
+| Kitchen manager | `manager` | yes | yes | yes |
+| Owner, platform admin | `owner`, `super_admin` | yes | yes | yes |
+| Waiter / cashier, accountant, editor | `staff`, `accountant`, `editor` | **no** — `403 app_not_allowed`, in words | — | — |
+
+- **The server decides.** Two new permissions in `packages/config-schema/src/rbac.js`: **`kitchen:app`** (may use the kitchen app) and
+  **`menu:availability`** (may switch a dish); `menu:update` (already the manager's) gates the stock numbers and the Today tab.
+  `APP_REQUIRED_PERMISSION = { kda: "kitchen:app" }` makes `POST /api/auth/app-login` refuse anyone else **and end the session it just
+  opened**; OMA has no such rule, so nothing changed for it. Custom roles can be given `kitchen:app` in *Users & roles*.
+- **Three dish states, one switch.** *Available*, *Sold out* (finished for now) and *Unavailable* (can't be made) all use the dish's existing
+  on/off switch, so the storefront, the waiters' app and the dashboard obey them at once; the extra `offReason` only remembers which of the
+  two the kitchen meant, and the dashboard's own switch clears it. A **counted** dish (stock) with none left is sold out by itself: putting
+  it back needs a number, which only the manager can give (`menu:update`).
+- **API:** `GET /api/kitchen/orders` and `POST /api/kitchen/orders/:id/stage` (the board, unchanged), **`GET /api/kitchen/items`**,
+  **`POST /api/kitchen/items/:id/availability`** (`{ state, left? }`), **`GET /api/kitchen/summary`** (orders now / made today / average
+  time / late / slowest / most-made dishes). All need the plan feature **Kitchen display** (`kitchenDisplay`) — a store's real plan must have
+  it ticked, like every plan feature.
+- **Tests:** the server side is t97 (`tests/e2e/tests/t97-kitchen-app-api.mjs`); the app has its own jest suite (`npm test` in
+  `mobile-apps/kda`) that runs against answers recorded from the real API by `tests/e2e/suites/_record-kitchen-app-fixtures.mjs`.
+- **App icon:** the same hat-and-heartbeat artwork on a deep-teal tile with **KDA** under it (OMA is navy); made by `brand/rasoi-pulse/build.mjs`.
 
 ## How it fits together
 
@@ -257,5 +288,5 @@ front of a process manager such as pm2. Things to get right:
 - [`deploy/wildcard-subdomains.md`](deploy/wildcard-subdomains.md) — store addresses on a subdomain: local use and the three one-time production steps
 - [`deploy/login-protection.md`](deploy/login-protection.md) — sign-in brute-force protection and how to tune it
 - [`docs/api-rate-limiting.md`](docs/api-rate-limiting.md) — which API requests are limited, how hard, and why
-- [`mobile-apps/README.md`](mobile-apps/README.md) — how the mobile apps are organised; [`mobile-apps/oma/README.md`](mobile-apps/oma/README.md) — run, build, version and test the staff order app
+- [`mobile-apps/README.md`](mobile-apps/README.md) — how the mobile apps are organised; [`mobile-apps/oma/README.md`](mobile-apps/oma/README.md) — run, build, version and test the staff order app; [`mobile-apps/kda/README.md`](mobile-apps/kda/README.md) — the same for the kitchen display app
 - [`tests/e2e/README.md`](tests/e2e/README.md) — the test library and how to add a test
