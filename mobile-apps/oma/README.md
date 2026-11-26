@@ -109,7 +109,7 @@ npm run signing:verify     # check any APK (default: the newest release in build
 
 ## Version management
 
-The version is **`v-YY.MM.DD-NNN`**: the year, month and day it was cut, then the build number (e.g. `v-26.11.27-003`). The first versions were made in the old form `v-DDMMYY-NNN` (`v-261126-001`); the tools still read it, and the next upgrade is written in the new form.
+The version is **`v-YY.MM.DD-NNN`**: the year, month and day it was cut, then the build number (e.g. `v-26.11.27-003`). All three apps were reset to the initial version **`v-26.11.27-001`** on 2026-11-27, before the first release. The old form `v-DDMMYY-NNN` (e.g. `v-261126-002`) is still read by the tools, but nothing uses it any more.
 
 - It lives in **one file**, `app-version.json`, and from there flows into the app (shown on the sign-in and account
   screens) and into Android (`versionName` = the version, `versionCode` = NNN).
