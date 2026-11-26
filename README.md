@@ -233,6 +233,26 @@ tries lock the order for the rider (a manager can still complete it from the das
 - **Text can't be selected and the pointer is never the text I-beam** (arrow over text, hand over links and buttons). Typing fields and an app's file checksum stay selectable on purpose.
 - **Tests:** t44 (header and Product dropdown), t95 (`/apps` pages), t103 (the above, including a pixel check that the hero colour has faded by its bottom edge, and reduce-motion).
 
+### Measuring API speed (run it on the server)
+
+`apps/api/src/scripts/speed-test.js` (`npm run speed` in `apps/api`) measures how fast the API answers, where the time goes, and how fast the database is. Run it **on the server**, so the network between a phone and the server isn't part of the numbers:
+
+```
+cd /var/www/tablepe-prod/apps/api
+SPEED_EMAIL=admin@example.com SPEED_PASSWORD='…' node src/scripts/speed-test.js --json before.json
+node src/scripts/speed-test.js --load 10 --duration 15      # also: 10 requests at a time for 15 s
+node src/scripts/speed-test.js --compare before.json         # run again, then show what changed
+node src/scripts/speed-test.js --compare before.json after.json   # compare two saved runs, no test
+node src/scripts/speed-test.js --url http://127.0.0.1:3092   # test the LIVE API from outside (total time only)
+```
+
+- **How:** by default it starts a *private copy* of the API inside the script (same code, same database from `.env`, a free local port, none of the background workers) and sends requests to it from `127.0.0.1`. Because the copy runs inside the script it can see inside each request: **server** time (arrival → answer sent, no network), **waiting for the database** (queries that run side by side count once), the **API's own work** (the rest), and the **number of queries**. It also runs a read-only `explain` on the busiest queries and flags **no index** (whole-collection scan), **sorting in memory**, and **reading far more documents than it returns**.
+- **Database:** connect time, ping (round trip) and a small read, each timed many times, and the biggest collections. A ping does no work in MongoDB, so it shows the distance to the database; every query pays it.
+- **Endpoints:** the public ones always; the dashboard/app ones (tables, orders, kitchen, dashboard stats …) when `SPEED_EMAIL` / `SPEED_PASSWORD` are set (a super admin works for any outlet; `--outlet <id>` picks one, the default is the outlet with the newest order). For each: the first request (cold), typical, slow 95%, worst, answer size.
+- **Safe on production:** every request is a GET, except one sign-in and sign-out; it creates no indexes or collections; the private copy has the rate limits switched off (only for itself). It needs about as much memory as one more API process. Load tests are small (at most 20 at a time, 60 s) — still, run them at a quiet hour.
+- **Tests:** t106.
+
+
 ## How it fits together
 
 - **Store, outlet, owner.** A store (brand) has one or more outlets (locations) and a team. Menu, orders, tables and

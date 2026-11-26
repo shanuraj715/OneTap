@@ -1,6 +1,6 @@
 # Rasoi Pulse end-to-end tests — catalog
 
-**106 tests** · 98 passing · 0 failing/error · 8 not run yet
+**107 tests** · 98 passing · 0 failing/error · 9 not run yet
 
 | Test | Area | Result | Checks | Last run |
 |---|---|---|---|---|
@@ -21,6 +21,7 @@
 | [t103-website-home-apps-motion](t103-website-home-apps-motion.md) — Website → header keeps to Product / Pricing / Apps / FAQ (About + Contact in the footer); homepage has a short animated 'We have apps too' note (no cards); hero backdrop fades out; livelier Features and moments; motion that stops under reduce-motion; no text selection or text cursor | website | ⚪ not run yet | — | — |
 | [t104-app-refresh-interval-api](t104-app-refresh-interval-api.md) — Apps → the refresh interval is one number per app (default 8 s), set by the platform admin, and announced to the app in every answer | app | ⚪ not run yet | — | — |
 | [t105-app-refresh-interval-ui](t105-app-refresh-interval-ui.md) — Console → App updates → Refresh interval: set how often OMA, KDA and RDA ask for new data (default 8 s, per app, 3–600), and the apps are told with their next request | app | ⚪ not run yet | — | — |
+| [t106-api-speed-test](t106-api-speed-test.md) — API speed test (apps/api/src/scripts/speed-test.js): time inside the API, time waiting for the database, query plans, load, and before/after comparison — read-only | api | ⚪ not run yet | — | — |
 | [t11-outlet-delete](t11-outlet-delete.md) — Delete an outlet from the dashboard — protection for outlets with orders, then the deleted outlet on the subdomain | domains | ✅ PASSED | 13/13 | 2026-11-21 13:19 |
 | [t12-store-delete](t12-store-delete.md) — Delete the store — typed-name confirmation, then the subdomain, the owner and the other stores | domains | ✅ PASSED | 19/19 | 2026-11-21 13:19 |
 | [t13-marketing](t13-marketing.md) — Marketing — channels, audience filters (last visit, items, age, gender, order type, area), imports, lists, sending and the sidebar | marketing | ✅ PASSED | 70/70 | 2026-11-21 13:07 |
