@@ -57,7 +57,7 @@ async function probe() {
 
 probe().then((problem) => {
   if (problem && !flag("force")) { console.error(`\n${problem}\n`); process.exit(1); }
-  console.log(`\n▶ Rasoi Pulse KDA will talk to ${label}:\n    ${api}${hint ? `\n    ${hint}` : ""}\n  (the sign-in screen shows the server's name at the bottom)\n`);
+  console.log(`\n▶ Rasoi Pulse RDA will talk to ${label}:\n    ${api}${hint ? `\n    ${hint}` : ""}\n  (the sign-in screen shows the server's name at the bottom)\n`);
   const child = spawn("npx", ["expo", "start", "--clear"], { stdio: "inherit", env: { ...process.env, EXPO_PUBLIC_API_URL: api } });
   child.on("exit", (code) => process.exit(code ?? 0));
 });

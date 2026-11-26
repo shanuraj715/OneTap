@@ -73,7 +73,7 @@ const run = (cmd, argv, cwd) => {
 const started = Date.now();
 const lap = (label) => console.log(`\n⏱  ${label}: ${((Date.now() - started) / 1000).toFixed(0)} s so far`);
 
-console.log(`Rasoi Pulse KDA ${version.version} (build ${version.versionCode}) — ${mode} — SDK ${sdk} — Java ${javaMajor}`);
+console.log(`Rasoi Pulse RDA ${version.version} (build ${version.versionCode}) — ${mode} — SDK ${sdk} — Java ${javaMajor}`);
 run("npx", ["expo", "prebuild", "--platform", "android", "--no-install", ...(clean ? ["--clean"] : [])], root);
 lap("native project written");
 
@@ -96,7 +96,7 @@ if (mode === "release" && !debugSigningAllowed) {
 fs.mkdirSync(path.join(root, "build-output"), { recursive: true });
 // (a file made with RP_ALLOW_DEBUG_SIGNING=1 says so in its name, so it can't be mistaken for a real release)
 const suffix = debugSigningAllowed && !keystoreProperties ? "release-DEBUGKEY" : mode;
-const out = path.join(root, "build-output", `rasoi-pulse-kda-${version.version}-${suffix}.apk`);
+const out = path.join(root, "build-output", `rasoi-pulse-rda-${version.version}-${suffix}.apk`);
 fs.copyFileSync(apk, out);
 console.log(`\n✔ ${out} (${(fs.statSync(out).size / 1048576).toFixed(1)} MB) — total ${((Date.now() - started) / 1000).toFixed(0)} s${signedBy}`);
 if (suffix === "release-DEBUGKEY") console.log("⚠ Signed with the shared DEBUG key (RP_ALLOW_DEBUG_SIGNING=1): for trying only. Never upload this file for staff.");

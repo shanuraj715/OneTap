@@ -15,7 +15,7 @@ const path = require("node:path");
 
 /**
  * Where the key lives by default: outside every repository, so no `git clean`, worktree or deploy can ever touch it.
- * The Rasoi Pulse apps (OMA, KDA) are signed with ONE company key: the same folder, the same alias. (Android allows one key for many apps.)
+ * The Rasoi Pulse apps (OMA, KDA, RDA) are signed with ONE company key: the same folder, the same alias. (Android allows one key for many apps.)
  * The folder is called "oma" because the key was first made for OMA; renaming it would break every existing build setup.
  */
 const defaultKeyDir = (home = os.homedir()) => path.join(home, ".rasoi-pulse", "signing", "oma");

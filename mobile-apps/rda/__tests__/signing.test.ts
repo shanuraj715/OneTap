@@ -10,7 +10,7 @@ const { patchBuildGradle, MARKER } = require("../plugins/with-release-signing");
 
 const fixture = (name: string) => fs.readFileSync(path.join(__dirname, "..", "test", "fixtures", name), "utf8");
 const root = path.join(__dirname, "..");
-const tmp = () => fs.mkdtempSync(path.join(os.tmpdir(), "kda-signing-"));
+const tmp = () => fs.mkdtempSync(path.join(os.tmpdir(), "rda-signing-"));
 
 const DEBUG = lib.parseApksignerCerts(fixture("apksigner-debug-key.txt"));
 const OURS = "ab".repeat(32); // a stand-in fingerprint for the unit checks
@@ -109,7 +109,7 @@ describe("keystore.properties", () => {
   });
 });
 
-describe("one company key for the Rasoi Pulse apps (OMA and KDA)", () => {
+describe("one company key for the Rasoi Pulse apps (OMA, KDA and RDA)", () => {
   const node = (home: string) => {
     try { return { code: 0, out: execFileSync("node", [path.join(root, "scripts", "signing.js"), "create"], { env: { ...process.env, HOME: home }, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] }) }; }
     catch (e) { const x = e as { status: number; stdout: string }; return { code: x.status, out: String(x.stdout) }; }

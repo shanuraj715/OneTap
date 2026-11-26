@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * The release signing key of the kitchen app. It is the SAME key as the staff app (OMA): the Rasoi Pulse apps share one company key.
+ * The release signing key of the rider app. It is the SAME key as the staff app (OMA): the Rasoi Pulse apps share one company key.
  *
  *   npm run signing:create              the key is made once, from mobile-apps/oma; here this only says where it is
  *   npm run signing:show                where the key is, its fingerprint, and whether it matches the one recorded in git
