@@ -17,6 +17,7 @@ import {
   reorderCategories,
   deleteModifierGroup,
   getMenu,
+  unavailableNow,
   importMenu,
   updateCategory,
   updateItem,
@@ -53,6 +54,11 @@ async function writeContext(req         )                         {
 
 menuRouter.get("/", async (req, res) => {
   res.json(await getMenu(await menuContext(req)));
+});
+
+/** What can't be ordered right now — the staff app asks this each time it starts an order, instead of loading the whole menu again. */
+menuRouter.get("/unavailable", async (req, res) => {
+  res.json(await unavailableNow(await menuContext(req)));
 });
 
 /* --------------------------------------------------------------- categories */

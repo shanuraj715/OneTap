@@ -209,6 +209,19 @@ export function Orders() {
   const cap = capacity.data;
   const setStatus = useSetOrderStatus(outlet);
   const manual = useManualStatus(outlet);
+  // an order put back from Completed/Cancelled whose table has another party by now: the operator picks a free table (see PickTableDialog)
+  const [pickTable, setPickTable] = useState(null);
+  const applyManual = (order, status, tableId) =>
+    manual.mutate(
+      { id: order.id, status, tableId },
+      {
+        onSuccess: () => setPickTable(null),
+        onError: (err) => {
+          const d = err?.details;
+          if (d?.code === "table_taken" && Array.isArray(d.freeTables)) setPickTable({ order, status, message: err.message, freeTables: d.freeTables });
+        },
+      },
+    );
   const printOn = usePrintOrderOn(outlet);
   const deleteOrder = useDeleteOrder(outlet);
   const printers = usePrinters(outlet, can("printer:read"));
@@ -479,7 +492,12 @@ export function Orders() {
       </div>
 
       {setStatus.error ? <Toast kind="error">{(setStatus.error         ).message}</Toast> : null}
-      {manual.error ? <Toast kind="error">{(manual.error         ).message}</Toast> : null}
+      {manual.error && manual.error.details?.code !== "table_taken" ? <Toast kind="error">{(manual.error         ).message}</Toast> : null}
+      {manual.isSuccess && manual.data?.table ? (
+        <Toast kind="ok">
+          Table {manual.data.table.number} is seated again{manual.data.table.moved ? " for this order's party" : ""} — it no longer shows as free.
+        </Toast>
+      ) : null}
       {printOn.error ? <Toast kind="error">{(printOn.error         ).message}</Toast> : null}
 
       {/* -------------------------------------------------------------- table */}
@@ -612,10 +630,22 @@ export function Orders() {
           busy={setStatus.isPending || manual.isPending}
           onCancel={() => setConfirming(null)}
           onConfirm={() => {
-            if (confirming.manual) manual.mutate({ id: confirming.order.id, status: confirming.status });
+            if (confirming.manual) applyManual(confirming.order, confirming.status);
             else setStatus.mutate({ id: confirming.order.id, status: confirming.status });
             setConfirming(null);
           }}
+        />
+      ) : null}
+
+      {pickTable ? (
+        <PickTableDialog
+          order={pickTable.order}
+          status={pickTable.status}
+          message={pickTable.message}
+          freeTables={pickTable.freeTables}
+          busy={manual.isPending}
+          onCancel={() => setPickTable(null)}
+          onPick={(tableId) => applyManual(pickTable.order, pickTable.status, tableId)}
         />
       ) : null}
 
@@ -1310,6 +1340,73 @@ function ConfirmDialog({
         </Button>
         <Button type="button" onClick={onConfirm} disabled={busy} style={actionStyle(toStatus)} title="Shortcut key: Enter">
           {busy ? "Working…" : "Confirm"}
+        </Button>
+      </footer>
+    </Modal>
+  );
+}
+
+/**
+ * An order was put back from Completed / Cancelled, but its table has another party by now. Nothing has been changed yet: the operator
+ * picks a FREE table (grouped by area) to seat this order's party at, or leaves the order as it was.
+ */
+function PickTableDialog({ order, status, message, freeTables, busy, onPick, onCancel }) {
+  const [chosen, setChosen] = useState(null);
+  const zones = useMemo(() => {
+    const by = new Map();
+    for (const t of freeTables) {
+      const zone = t.zone || "";
+      if (!by.has(zone)) by.set(zone, []);
+      by.get(zone).push(t);
+    }
+    // named areas first (A–Z), tables with no area last
+    return [...by.entries()].sort(([a], [b]) => (a === "" ? 1 : b === "" ? -1 : a.localeCompare(b, undefined, { numeric: true })));
+  }, [freeTables]);
+  const picked = freeTables.find((t) => t.id === chosen);
+  return (
+    <Modal onClose={onCancel} width={480} ariaLabel="Pick a table for this order">
+      <div style={{ padding: "20px 22px 8px" }} data-testid="pick-table">
+        <h3 style={{ margin: "0 0 6px", fontSize: 16, fontFamily: "var(--font-heading)" }}>That table has someone else now</h3>
+        <p style={{ margin: 0, fontSize: 13, color: "var(--color-text-muted)", lineHeight: 1.5 }}>
+          {message} Order #{order.orderNumber} will go back to <b>{ORDER_STATUS_LABELS[status] ?? status}</b>, and its party will be seated at the table you pick.
+        </p>
+        {freeTables.length === 0 ? (
+          <p style={{ margin: "14px 0 0", fontSize: 13, color: "var(--tone-danger)" }} role="alert">
+            No table is free right now. Free one first (Tables), then try again — the order stays as it is.
+          </p>
+        ) : (
+          <div style={{ marginTop: 14, display: "grid", gap: 12, maxHeight: 320, overflowY: "auto" }} role="radiogroup" aria-label="Free tables">
+            {zones.map(([zone, tables]) => (
+              <section key={zone || "none"} aria-label={zone || "Other tables"}>
+                <div style={{ fontSize: 12, fontWeight: 600, color: "var(--color-text-muted)", marginBottom: 6 }}>{zone || "Other tables"}</div>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(92px, 1fr))", gap: 8 }}>
+                  {tables.map((t) => {
+                    const on = t.id === chosen;
+                    return (
+                      <button
+                        key={t.id}
+                        type="button"
+                        role="radio"
+                        aria-checked={on}
+                        data-table={t.number}
+                        onClick={() => setChosen(t.id)}
+                        style={{ padding: "8px 6px", borderRadius: 10, cursor: "pointer", textAlign: "center", border: `2px solid ${on ? "var(--color-primary)" : "var(--color-border)"}`, background: on ? "color-mix(in srgb, var(--color-primary) 10%, transparent)" : "var(--color-surface)", color: "var(--color-text)" }}
+                      >
+                        <div style={{ fontWeight: 700, fontSize: 15 }}>{t.number}</div>
+                        <div style={{ fontSize: 11, color: "var(--color-text-muted)" }}>{t.seats} {t.seats === 1 ? "seat" : "seats"}</div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </section>
+            ))}
+          </div>
+        )}
+      </div>
+      <footer style={confirmFooter}>
+        <Button variant="outline" type="button" onClick={onCancel} disabled={busy}>Leave the order as it is</Button>
+        <Button type="button" onClick={() => picked && onPick(picked.id)} disabled={busy || !picked}>
+          {busy ? "Working…" : picked ? `Seat them at ${picked.number}` : "Pick a table"}
         </Button>
       </footer>
     </Modal>

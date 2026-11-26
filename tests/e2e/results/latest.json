@@ -9422,8 +9422,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T11:19:32.454Z",
-    "durationMs": 9367,
+    "at": "2026-11-26T12:48:48.875Z",
+    "durationMs": 27969,
     "steps": [
       {
         "n": 1,
@@ -10140,7 +10140,7 @@
           {
             "label": "the inventory sees the whole API",
             "ok": true,
-            "detail": "325 routes, 190 change data",
+            "detail": "326 routes, 190 change data",
             "kind": "expect"
           },
           {
@@ -30246,6 +30246,1058 @@
         "n": 6,
         "title": "The limits are on the route inventory",
         "checks": []
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t88-staff-app-menu-api": {
+    "id": "t88-staff-app-menu-api",
+    "title": "Staff app menu: GET /api/menu/unavailable lists only the dishes that can't be ordered right now (same rule as the order check), and the menu carries a version",
+    "status": "pass",
+    "pass": 20,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-26T12:15:13.332Z",
+    "durationMs": 3720,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Setup: a store with a menu that has one of every kind of dish",
+        "checks": [
+          {
+            "label": "the dishes were created",
+            "ok": true,
+            "detail": "b852 b855 b857 b85a b85c b860 b862",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "What the app is told",
+        "checks": [
+          {
+            "label": "GET /api/menu/unavailable answers (public, like the menu)",
+            "ok": true,
+            "detail": "status 200",
+            "kind": "expect"
+          },
+          {
+            "label": "lists the dish that is switched off, the counted one at zero, the one out of its hours and the combo with an unavailable part",
+            "ok": true,
+            "detail": "b860 b857 b85c b855",
+            "kind": "expect"
+          },
+          {
+            "label": "does NOT list a plain dish, one that is only running low, or one with plenty left (a dish not in the list can be ordered)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "each comes with the words to show instead of the price",
+            "ok": true,
+            "detail": "Sold out | Sold out | Available 8 PM – 10 PM | Sold out",
+            "kind": "expect"
+          },
+          {
+            "label": "a dish running low is reported with how many are left",
+            "ok": true,
+            "detail": "[{\"id\":\"6b0822d08aad45e0264eb85a\",\"left\":3}]",
+            "kind": "expect"
+          },
+          {
+            "label": "the answer is a small fraction of the whole menu",
+            "ok": true,
+            "detail": "351 bytes vs 12779 bytes",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "It follows what happens at the restaurant",
+        "checks": [
+          {
+            "label": "switching a dish on / adding stock takes it off the list — and the combo that needed it with it (absent = back in stock)",
+            "ok": true,
+            "detail": "b85c",
+            "kind": "expect"
+          },
+          {
+            "label": "the dish that is out of its hours is still listed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "switching a dish OFF puts it on the list at once",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "The same rule the order check uses",
+        "checks": [
+          {
+            "label": "a dish on the list is refused when it is priced for an order",
+            "ok": true,
+            "detail": "status 409",
+            "kind": "expect"
+          },
+          {
+            "label": "a dish NOT on the list can be priced",
+            "ok": true,
+            "detail": "status 200",
+            "kind": "expect"
+          },
+          {
+            "label": "so is the one that is out of its hours",
+            "ok": true,
+            "detail": "status 409",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "The menu version: tells the app when its copy is old",
+        "checks": [
+          {
+            "label": "the menu carries a version",
+            "ok": true,
+            "detail": "k3kjpwzNL9bW",
+            "kind": "expect"
+          },
+          {
+            "label": "and the unavailable answer carries the same one, so the app can compare",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "how many are left changes with every order — it does NOT change the version",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a new price DOES change it (the app must load the menu again)",
+            "ok": true,
+            "detail": "k3kjpwzNL9bW → eT2-tGBWK1_J",
+            "kind": "expect"
+          },
+          {
+            "label": "so does a new dish",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Bad requests",
+        "checks": [
+          {
+            "label": "no outlet named: 400",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an outlet that doesn't exist: 404",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t89-order-reopen-table-api": {
+    "id": "t89-order-reopen-table-api",
+    "title": "An order put back from Completed/Cancelled to being worked on seats its table again — or asks for another table when someone else is there",
+    "status": "pass",
+    "pass": 29,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-26T12:14:04.960Z",
+    "durationMs": 4043,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Setup: a store with three tables and a dish",
+        "checks": []
+      },
+      {
+        "n": 2,
+        "title": "The mistake: Completed frees the table by itself",
+        "checks": [
+          {
+            "label": "an order is taken at T1",
+            "ok": true,
+            "detail": "0001",
+            "kind": "expect"
+          },
+          {
+            "label": "Completed (and paid) frees T1 by itself — that part is intended",
+            "ok": true,
+            "detail": "free",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "The table is still free: putting the order back seats the party again",
+        "checks": [
+          {
+            "label": "the order goes back to Preparing",
+            "ok": true,
+            "detail": "200 preparing",
+            "kind": "expect"
+          },
+          {
+            "label": "the answer says the table was seated again (and that it is the same table)",
+            "ok": true,
+            "detail": "{\"id\":\"6b08228c6d6e209139aa3569\",\"number\":\"T1\",\"zone\":\"Ground floor\",\"seats\":4,\"moved\":false}",
+            "kind": "expect"
+          },
+          {
+            "label": "T1 is SEATED again, with the same party's session (this is the bug)",
+            "ok": true,
+            "detail": "seated",
+            "kind": "expect"
+          },
+          {
+            "label": "the party is back in the list of tables in service (the app reads this)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "nobody else can be seated on T1 now (an order started while it looked free is refused)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Another party took the table meanwhile: the operator is asked to pick another table",
+        "checks": [
+          {
+            "label": "another party is seated at T1",
+            "ok": true,
+            "detail": "0002",
+            "kind": "expect"
+          },
+          {
+            "label": "putting the first order back is REFUSED with table_taken",
+            "ok": true,
+            "detail": "409 table_taken",
+            "kind": "expect"
+          },
+          {
+            "label": "in words the operator can use",
+            "ok": true,
+            "detail": "Table T1 has another party now. Pick a different table for this order.",
+            "kind": "expect"
+          },
+          {
+            "label": "and it carries the free tables (id, number, seats) to choose from — not T1",
+            "ok": true,
+            "detail": "T2/Ground floor T3/Terrace",
+            "kind": "expect"
+          },
+          {
+            "label": "with their areas, so the operator can group them",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "NOTHING changed: the order is still Completed",
+            "ok": true,
+            "detail": "completed",
+            "kind": "expect"
+          },
+          {
+            "label": "the other party still has T1, and T2 and T3 are untouched",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Choosing a table",
+        "checks": [
+          {
+            "label": "choosing T1 again (it is occupied) is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "choosing a table that doesn't exist: 404",
+            "ok": true,
+            "detail": "404",
+            "kind": "expect"
+          },
+          {
+            "label": "choosing T3 puts the order back to Preparing",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "the answer says it is a different table now",
+            "ok": true,
+            "detail": "{\"id\":\"6b08228c6d6e209139aa3570\",\"number\":\"T3\",\"zone\":\"Terrace\",\"seats\":4,\"moved\":true}",
+            "kind": "expect"
+          },
+          {
+            "label": "T3 is seated with the first party's session",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the OTHER party keeps T1",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the order now says it is for T3 (orders follow their party)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the session's history shows the move",
+            "ok": true,
+            "detail": "T3",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Not every rewind touches a table",
+        "checks": [
+          {
+            "label": "the party at T3 orders again",
+            "ok": true,
+            "detail": "0003",
+            "kind": "expect"
+          },
+          {
+            "label": "while the party's session is still open (the second order is running) there is nothing to seat again — no table in the answer",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "T3 stays seated",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "A cancelled table (voided) is put back the same way",
+        "checks": [
+          {
+            "label": "voiding T2 cancels the order and frees the table",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "putting the cancelled order back seats T2 again",
+            "ok": true,
+            "detail": "200 T2",
+            "kind": "expect"
+          },
+          {
+            "label": "T2 is seated",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "The rule is the same for the people who may change a status",
+        "checks": [
+          {
+            "label": "staff can still make the correction themselves (completed again)",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t90-staff-outlet-access-api": {
+    "id": "t90-staff-outlet-access-api",
+    "title": "Team members mapped to outlets: they see (and can work in) only those outlets; nothing mapped = every outlet; the owner can change it later",
+    "status": "pass",
+    "pass": 33,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-26T12:15:08.856Z",
+    "durationMs": 4425,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Setup: a store with three outlets, and a second store",
+        "checks": [
+          {
+            "label": "the store has three outlets",
+            "ok": true,
+            "detail": "f9ae f9d0 f9d9",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Making accounts with outlets",
+        "checks": [
+          {
+            "label": "accounts are created with one outlet, several, none (= all), and for the kitchen",
+            "ok": true,
+            "detail": "201 201 201 201",
+            "kind": "expect"
+          },
+          {
+            "label": "the answer says which outlets each person has",
+            "ok": true,
+            "detail": "1 / 2 / 0",
+            "kind": "expect"
+          },
+          {
+            "label": "the same outlet named twice is kept once",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an outlet of ANOTHER store is refused",
+            "ok": true,
+            "detail": "400 One of those outlets isn't part of this store.",
+            "kind": "expect"
+          },
+          {
+            "label": "an id that is not an outlet is refused",
+            "ok": true,
+            "detail": "400",
+            "kind": "expect"
+          },
+          {
+            "label": "an owner always has every outlet — a mapping given to an owner is dropped",
+            "ok": true,
+            "detail": "201 0",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "What each person sees",
+        "checks": [
+          {
+            "label": "A sees only their outlet in the outlet list (nothing of the others, not even names)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "B sees their two",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "C, who was not mapped, sees all three (nothing changes for existing accounts)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the owner sees all three",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the kitchen account sees only theirs",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the other outlets' ids and names are nowhere in A's answer",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "What each person can do",
+        "checks": [
+          {
+            "label": "A can read the tables of their outlet",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "A is refused the tables of another outlet",
+            "ok": true,
+            "detail": "403 You don't have access to this outlet",
+            "kind": "expect"
+          },
+          {
+            "label": "A is refused the orders of another outlet",
+            "ok": true,
+            "detail": "403 You don't have access to this outlet",
+            "kind": "expect"
+          },
+          {
+            "label": "A is refused the tables in service of another outlet",
+            "ok": true,
+            "detail": "403 You don't have access to this outlet",
+            "kind": "expect"
+          },
+          {
+            "label": "…and cannot price or place an order for it",
+            "ok": true,
+            "detail": "403",
+            "kind": "expect"
+          },
+          {
+            "label": "B can use both of theirs",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "but not the one they were not given",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "C (no mapping) can use every outlet",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the kitchen account is held to its outlet too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the staff app (Bearer sign-in) gets the same restricted list",
+            "ok": true,
+            "detail": "1",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the same refusal for another outlet",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Changing the mapping later",
+        "checks": [
+          {
+            "label": "the owner gives A a second outlet",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "A sees and can use it straight away (no new sign-in needed)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "taking an outlet away takes the access away at once",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an empty list means every outlet again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an outlet of another store is refused here too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "editing something else (the name) leaves the outlets as they are",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the owner's own account cannot be changed from the store (owners are managed by Rasoi Pulse)",
+            "ok": true,
+            "detail": "403",
+            "kind": "expect"
+          },
+          {
+            "label": "a staff member cannot change anyone's access",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "The list the owner manages from",
+        "checks": [
+          {
+            "label": "GET /api/users shows each person's outlets (the dashboard form reads this)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t91-staff-order-customer-view-api": {
+    "id": "t91-staff-order-customer-view-api",
+    "title": "An order a waiter took for a customer's number shows in that customer's 'My orders' and tracking page when they sign in on the storefront with the same number",
+    "status": "pass",
+    "pass": 18,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-26T12:15:46.708Z",
+    "durationMs": 4350,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Setup: a store, a table, a dish — a waiter takes an order for a customer's number",
+        "checks": [
+          {
+            "label": "the waiter takes an order for 9000000001",
+            "ok": true,
+            "detail": "0001",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "The customer signs in on their own phone with the same number",
+        "checks": [
+          {
+            "label": "signing in with the same number works without asking for anything new (the record already exists)",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "the order the waiter took is in their 'My orders' list",
+            "ok": true,
+            "detail": "1 order(s)",
+            "kind": "expect"
+          },
+          {
+            "label": "with its status (staff orders go straight to the kitchen)",
+            "ok": true,
+            "detail": "accepted",
+            "kind": "expect"
+          },
+          {
+            "label": "and its items",
+            "ok": true,
+            "detail": "id,orderNumber,placedAt,channel,status,payment,outlet,items,totals,couponCode,deliveryAddress,etaMinutes,scheduledFor,rider,feedback,canRate",
+            "kind": "expect"
+          },
+          {
+            "label": "and that it is not paid yet",
+            "ok": true,
+            "detail": "{\"gateway\":\"cod\",\"status\":\"pending\"}",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "The status follows the kitchen",
+        "checks": [
+          {
+            "label": "the tracking page shows Accepted",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…then Ready, with how it moved (status and time)",
+            "ok": true,
+            "detail": "ready / 4 steps",
+            "kind": "expect"
+          },
+          {
+            "label": "and once the waiter confirms payment, 'My orders' says paid",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "A second round at the same table is there too",
+        "checks": [
+          {
+            "label": "a later order on the same party's table is added to their list",
+            "ok": true,
+            "detail": "2",
+            "kind": "expect"
+          },
+          {
+            "label": "(taken without typing the number again)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Only the right person sees it",
+        "checks": [
+          {
+            "label": "another customer signs up",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "they do NOT see the first customer's orders",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "and cannot open that order's tracking page either",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "someone not signed in sees nothing (401)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "The same number written differently",
+        "checks": [
+          {
+            "label": "signing in as '+91 90000 00001' reaches the same orders",
+            "ok": true,
+            "detail": "200 2 order(s)",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "They can remove it from their own list; the store keeps it",
+        "checks": [
+          {
+            "label": "a customer's Remove hides it from THEIR list only",
+            "ok": true,
+            "detail": "200 1",
+            "kind": "expect"
+          },
+          {
+            "label": "the restaurant still has the order",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t92-dashboard-reopen-outlets-ui": {
+    "id": "t92-dashboard-reopen-outlets-ui",
+    "title": "Dashboard: an order put back from Completed seats its table again (or asks which free table); Users & roles gives team members outlets",
+    "status": "pass",
+    "pass": 30,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-26T12:19:13.755Z",
+    "durationMs": 7550,
+    "steps": [
+      {
+        "n": 1,
+        "title": "An order put back from Completed: its table is seated again",
+        "checks": [
+          {
+            "label": "T2 is free after the order was completed and paid",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the page says 'Table T2 is seated again'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "T2 shows SEATED (it used to stay free)",
+            "ok": true,
+            "detail": "seated",
+            "kind": "expect"
+          },
+          {
+            "label": "no pop-up was needed — the table was free",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Somebody else is at the table: the operator picks another",
+        "checks": [
+          {
+            "label": "another party sits at T1",
+            "ok": true,
+            "detail": "0013",
+            "kind": "expect"
+          },
+          {
+            "label": "a pop-up explains that T1 has another party",
+            "ok": true,
+            "detail": "That table has someone else now Table T1 has another party now. Pick a different table for this order. Order #0012 will go back to Preparing",
+            "kind": "expect"
+          },
+          {
+            "label": "it offers free tables (T3 yes) and not the taken T1",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the tables are grouped by area",
+            "ok": true,
+            "detail": "Ground floor | Terrace",
+            "kind": "expect"
+          },
+          {
+            "label": "each shows its number and its seats",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the confirm button is off until a table is chosen",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "NOTHING changed yet — the order is still Completed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "choosing T3 marks it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the pop-up closes",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "T3 is seated with the first party; the other party keeps T1",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the order is back to Preparing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the page says it is a different table than before",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "'Leave the order as it is'",
+        "checks": [
+          {
+            "label": "cancelling the pop-up leaves the order Completed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Users & roles: giving a new person outlets",
+        "checks": [
+          {
+            "label": "the bench store has more than one outlet",
+            "ok": true,
+            "detail": "Main, Second",
+            "kind": "expect"
+          },
+          {
+            "label": "the form asks which outlets (the store has several)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Add user is off until an outlet is chosen",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "and says why",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "choosing one outlet turns it on",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the new person is listed with their outlet only",
+            "ok": true,
+            "detail": "Outlets: Main · Change outlets",
+            "kind": "expect"
+          },
+          {
+            "label": "saved: exactly the ticked outlet",
+            "ok": true,
+            "detail": "[\"6b08238779af1425e839ff6c\"]",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "The mapped person sees only their outlet",
+        "checks": [
+          {
+            "label": "nothing of \"Second\" is on their dashboard",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the outlet list they get has just their outlet",
+            "ok": true,
+            "detail": "Main",
+            "kind": "expect"
+          },
+          {
+            "label": "another outlet is refused outright (403)",
+            "ok": true,
+            "detail": "403",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Changing a person's outlets later",
+        "checks": [
+          {
+            "label": "after ticking All outlets the row says All outlets",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "and they see every outlet now — without signing in again",
+            "ok": true,
+            "detail": "2",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
       }
     ],
     "findings": [],

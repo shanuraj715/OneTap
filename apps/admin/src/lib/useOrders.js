@@ -62,7 +62,7 @@ export const useSetOrderStatus = (o                    ) =>
 /** The correction path — set any status directly after a mis-tap. */
 export const useManualStatus = (o                    ) =>
   useOrderMutation                                                      (o, (out, a) =>
-    api.setOrderStatusManual(out, a.id, a.status, a.reason),
+    api.setOrderStatusManual(out, a.id, a.status, a.reason, a.tableId),
   );
 
 /** Delete an order (owner / manager). Every open dashboard refreshes its list from the "order.deleted" push. */

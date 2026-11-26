@@ -309,6 +309,82 @@ export async function moveSession(ctx               , sessionId        , toTable
   return { session: session.toObject(), from: from ? shape(from.toObject()) : null, to: shape(to.toObject()) };
 }
 
+/** Tables that are in service and have nobody at them — what an operator can pick from. */
+export async function freeTablesList(ctx) {
+  const tables = await TableModel.find(tenantFilter(ctx, { isActive: true, activeSessionId: null })).sort({ zone: 1, number: 1 }).lean();
+  return tables.filter((t) => normalizeTableStatus(t.status) === "free").map((t) => ({ id: String(t._id), number: t.number, zone: t.zone ?? "", seats: t.seats }));
+}
+
+/**
+ * An order that was Completed (or Cancelled) is put back to being worked on, by hand. If it was a dine-in order, its table must be
+ * seated again — otherwise the table shows FREE while an order for it is being cooked, and another party can be sat on top of it.
+ *
+ *  - the party's session is still open (other orders were running): nothing to do;
+ *  - the session was closed and its table is still free: the session is opened again, the table seated again;
+ *  - the table has another party now: the answer is a 409 `table_taken` with the list of free tables, so the person can pick one;
+ *    called again with `toTableId`, the session is opened again on THAT table (the orders follow it).
+ *
+ * Done before the order itself changes, so a refusal leaves everything as it was. Returns null when there is nothing to do, else
+ * `{ table, moved, undo }` — `undo()` puts it back if the status change that follows fails.
+ */
+export async function reseatForReopenedOrder(ctx, order, { toTableId, byUserId } = {}) {
+  if (order.channel !== "dine-in" || !order.sessionId) return null;
+  const session = await TableSessionModel.findOne(tenantFilter(ctx, { _id: order.sessionId }));
+  if (!session || session.status === "open") return null;
+
+  const original = await TableModel.findOne(tenantFilter(ctx, { _id: session.tableId }));
+  const chosen = toTableId && toTableId !== session.tableId ? await TableModel.findOne(tenantFilter(ctx, { _id: toTableId })) : original;
+  if (toTableId && !chosen) throw new HttpError(404, "That table doesn't exist.");
+  const isFree = (t) => Boolean(t && t.isActive && !t.activeSessionId && normalizeTableStatus(t.status) === "free");
+
+  if (!isFree(chosen)) {
+    const label = original?.number ?? "its table";
+    throw new HttpError(
+      409,
+      chosen && chosen !== original
+        ? `Table ${chosen.number} isn't free. Pick another table.`
+        : `Table ${label} has another party now. Pick a different table for this order.`,
+      { code: "table_taken", tableId: String(original?._id ?? session.tableId), tableNumber: original?.number ?? null, occupied: true, freeTables: await freeTablesList(ctx) },
+    );
+  }
+
+  // Claim the table in ONE step, only if nobody has sat down since we looked.
+  const claimed = await TableModel.updateOne(tenantFilter(ctx, { _id: chosen._id, activeSessionId: null }), { $set: { activeSessionId: String(session._id), status: "seated" } });
+  if (claimed.modifiedCount !== 1) {
+    throw new HttpError(409, `Table ${chosen.number} was just taken. Pick another table.`, {
+      code: "table_taken", tableId: String(chosen._id), tableNumber: chosen.number, occupied: true, freeTables: await freeTablesList(ctx),
+    });
+  }
+
+  const moved = String(chosen._id) !== String(session.tableId);
+  const previous = { tableId: session.tableId, closedAt: session.closedAt, closedBy: session.closedBy };
+  try {
+    session.status = "open";
+    session.closedAt = undefined;
+    session.closedBy = undefined;
+    if (moved) {
+      session.tableId = String(chosen._id);
+      session.tableHistory.push({ tableId: String(chosen._id), number: chosen.number, at: new Date(), by: byUserId });
+      await OrderModel.updateMany(tenantFilter(ctx, { sessionId: String(session._id) }), { $set: { tableId: String(chosen._id) } });
+    }
+    await session.save();
+  } catch (err) {
+    await TableModel.updateOne(tenantFilter(ctx, { _id: chosen._id }), { $set: { activeSessionId: null, status: "free" } });
+    throw err;
+  }
+
+  return {
+    table: { id: String(chosen._id), number: chosen.number, zone: chosen.zone ?? "", seats: chosen.seats },
+    moved,
+    /** put everything back (the status change that was meant to follow did not happen) */
+    undo: async () => {
+      await TableModel.updateOne(tenantFilter(ctx, { _id: chosen._id }), { $set: { activeSessionId: null, status: "free" } });
+      await TableSessionModel.updateOne(tenantFilter(ctx, { _id: session._id }), { $set: { status: "closed", tableId: previous.tableId, closedAt: previous.closedAt, closedBy: previous.closedBy } });
+      if (moved) await OrderModel.updateMany(tenantFilter(ctx, { sessionId: String(session._id) }), { $set: { tableId: previous.tableId } });
+    },
+  };
+}
+
 export async function closeSession(ctx               , sessionId        , byUserId         ) {
   const session = await TableSessionModel.findOne(tenantFilter(ctx, { _id: sessionId, status: "open" }));
   if (!session) throw new HttpError(404, "No open session to close");

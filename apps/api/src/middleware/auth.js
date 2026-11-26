@@ -53,6 +53,16 @@ function membershipFor(user         , brandId        )                    {
   return user.memberships.find((m) => m.brandId === brandId) ?? null;
 }
 
+/**
+ * The outlets a person is limited to in a store: null = every outlet (owners, the platform admin, and anyone not mapped to particular
+ * outlets), otherwise the list of outlet ids they were mapped to when their account was made or later edited.
+ */
+export function allowedOutletIds(user, brandId) {
+  if (user.isSuperAdmin) return null;
+  const ids = membershipFor(user, brandId)?.outletIds ?? [];
+  return ids.length > 0 ? ids.map(String) : null;
+}
+
 function effectiveRole(user         , membership                   )              {
   return user.isSuperAdmin ? "super_admin" : (membership?.role ?? null);
 }

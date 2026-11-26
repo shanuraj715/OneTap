@@ -1276,3 +1276,14 @@
 {"id":"t47-storefront-pinned-bars","status":"pass","pass":101,"fail":0,"mode":"headless","at":"2026-11-26T07:15:03.895Z","durationMs":113573}
 {"id":"t28-rate-limits-api","status":"pass","pass":124,"fail":0,"mode":"headless","at":"2026-11-26T11:19:32.454Z","durationMs":9367}
 {"id":"t87-staff-app-auth-api","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-26T11:19:38.543Z","durationMs":5226}
+{"id":"t88-staff-app-menu-api","status":"pass","pass":20,"fail":0,"mode":"headless","at":"2026-11-26T12:13:00.895Z","durationMs":4557}
+{"id":"t89-order-reopen-table-api","status":"pass","pass":12,"fail":0,"mode":"headless","at":"2026-11-26T12:13:42.490Z","durationMs":4235}
+{"id":"t89-order-reopen-table-api","status":"fail","pass":12,"fail":1,"mode":"headless","at":"2026-11-26T12:13:54.608Z","durationMs":3730}
+{"id":"t89-order-reopen-table-api","status":"pass","pass":29,"fail":0,"mode":"headless","at":"2026-11-26T12:14:04.960Z","durationMs":4043}
+{"id":"t90-staff-outlet-access-api","status":"fail","pass":31,"fail":2,"mode":"headless","at":"2026-11-26T12:14:52.543Z","durationMs":4630}
+{"id":"t90-staff-outlet-access-api","status":"pass","pass":33,"fail":0,"mode":"headless","at":"2026-11-26T12:15:08.856Z","durationMs":4425}
+{"id":"t88-staff-app-menu-api","status":"pass","pass":20,"fail":0,"mode":"headless","at":"2026-11-26T12:15:13.332Z","durationMs":3720}
+{"id":"t91-staff-order-customer-view-api","status":"pass","pass":18,"fail":0,"mode":"headless","at":"2026-11-26T12:15:46.708Z","durationMs":4350}
+{"id":"t92-dashboard-reopen-outlets-ui","status":"error","pass":18,"fail":0,"mode":"headless","at":"2026-11-26T12:18:46.607Z","durationMs":7179,"error":"dashboard-reopen-outlets-ui.mjs exited with code 1. }  Node.js v24.3.0"}
+{"id":"t92-dashboard-reopen-outlets-ui","status":"pass","pass":30,"fail":0,"mode":"headless","at":"2026-11-26T12:19:13.755Z","durationMs":7550}
+{"id":"t28-rate-limits-api","status":"pass","pass":124,"fail":0,"mode":"headless","at":"2026-11-26T12:48:48.875Z","durationMs":27969}

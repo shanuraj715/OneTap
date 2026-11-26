@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
                                            
 import { ROLE_DESCRIPTIONS, ROLE_LABELS, ROLES,           } from "@rasoipulse/config-schema";
 import { useAuth, useCreateUser, useDeleteUser, useUpdateUser, useUsers } from "../lib/useAuth";
-import { useOutlet } from "../lib/useOutlet";
+import { useOutlet, useOutlets } from "../lib/useOutlet";
 import { useStorePlan } from "../lib/useStorePlan";
-import { Button, Card, Field, PageHeader, TextInput, Toast } from "../ui";
+import { Button, Card, Checkbox, Field, Modal, PageHeader, TextInput, Toast } from "../ui";
 import { SettingsNav } from "../components/SubNav";
 
 const ALL_ASSIGNABLE = ROLES.filter((r) => r !== "super_admin");
@@ -27,7 +27,16 @@ export function Users() {
   const { plan, canAddPerson } = useStorePlan();
   const ASSIGNABLE = me?.isSuperAdmin ? ALL_ASSIGNABLE : STORE_ASSIGNABLE;
 
-  const [form, setForm] = useState({ name: "", email: "", password: "", role: "manager"         });
+  const { outlets: allOutlets } = useOutlets();
+  // the outlets of the store being managed (a platform admin has opened one store; everyone else only has their own)
+  const storeOutlets = useMemo(() => allOutlets.filter((o) => !brandId || o.brandId === brandId), [allOutlets, brandId]);
+  const outletName = (id) => storeOutlets.find((o) => o._id === id)?.name ?? "an outlet that no longer exists";
+  const blank = { name: "", email: "", password: "", role: "manager", allOutlets: false, outletIds: [] };
+  const [form, setForm] = useState(blank);
+  const [editing, setEditing] = useState(null); // the person whose outlets are being changed
+  // a store with a single outlet has nothing to choose; with several, a new person must be given outlets (or "all") on purpose
+  const choosesOutlets = storeOutlets.length > 1 && form.role !== "owner";
+  const missingOutlets = choosesOutlets && !form.allOutlets && form.outletIds.length === 0;
 
   if (!can("user:read")) {
     return (
@@ -43,9 +52,11 @@ export function Users() {
 
   const submit = (e                 ) => {
     e.preventDefault();
+    if (missingOutlets) return;
+    const { allOutlets: all, outletIds, ...rest } = form;
     create.mutate(
-      { body: form, brandId },
-      { onSuccess: () => setForm({ name: "", email: "", password: "", role: "manager" }) },
+      { body: { ...rest, outletIds: choosesOutlets && !all ? outletIds : [] }, brandId },
+      { onSuccess: () => setForm(blank) },
     );
   };
 
@@ -85,6 +96,17 @@ export function Users() {
                       ) : null}
                     </div>
                     <div style={{ fontSize: 12.5, color: "var(--color-text-muted)" }}>{u.email}</div>
+                    {storeOutlets.length > 1 ? (
+                      <div style={{ fontSize: 12.5, color: "var(--color-text-muted)", marginTop: 2 }} data-testid={`outlets-of-${u.email}`}>
+                        {u.role === "owner" || !u.outletIds?.length ? "All outlets" : `Outlets: ${u.outletIds.map(outletName).join(", ")}`}
+                        {manage && !isMe && !platformManaged ? (
+                          <>
+                            {" · "}
+                            <button type="button" style={linkBtn} onClick={() => setEditing(u)}>Change outlets</button>
+                          </>
+                        ) : null}
+                      </div>
+                    ) : null}
                   </div>
 
                   {platformManaged ? (
@@ -166,10 +188,27 @@ export function Users() {
                   ))}
                 </select>
               </Field>
+              {choosesOutlets ? (
+                <Field label="Outlets" hint="Where this person works" info="They see — and can use — only the outlets you tick: not their tables, orders or customers of any other outlet. Tick 'All outlets' for someone who works across the whole store (it includes outlets you add later).">
+                  <div style={{ display: "grid", gap: 6 }} role="group" aria-label="Outlets this person can work in" data-testid="new-user-outlets">
+                    <Checkbox label="All outlets" checked={form.allOutlets} onChange={(v) => setForm({ ...form, allOutlets: v })} />
+                    {storeOutlets.map((o) => (
+                      <Checkbox
+                        key={o._id}
+                        label={o.name}
+                        checked={form.allOutlets || form.outletIds.includes(o._id)}
+                        disabled={form.allOutlets}
+                        onChange={(v) => setForm({ ...form, outletIds: v ? [...form.outletIds, o._id] : form.outletIds.filter((x) => x !== o._id) })}
+                      />
+                    ))}
+                    {missingOutlets ? <span style={{ fontSize: 12, color: "var(--tone-danger)" }} role="alert">Pick at least one outlet, or tick All outlets.</span> : null}
+                  </div>
+                </Field>
+              ) : null}
             </div>
             <Button
               type="submit"
-              disabled={create.isPending || !canAddPerson}
+              disabled={create.isPending || !canAddPerson || missingOutlets}
               // the shared Button doesn't dim when disabled — make the plan block visible
               style={canAddPerson ? undefined : { opacity: 0.5, cursor: "not-allowed" }}
             >
@@ -179,6 +218,8 @@ export function Users() {
           </form>
         </Card>
       ) : null}
+
+      {editing ? <OutletsDialog person={editing} outlets={storeOutlets} busy={update.isPending} onCancel={() => setEditing(null)} onSave={(outletIds) => update.mutate({ id: editing.id, body: { outletIds }, brandId }, { onSuccess: () => setEditing(null) })} /> : null}
 
       <Card title="What each role can do">
         <dl style={{ margin: 0, display: "grid", gridTemplateColumns: "160px 1fr", gap: "8px 16px", fontSize: 13.5 }}>
@@ -194,6 +235,35 @@ export function Users() {
   );
 }
 
+/** Change which outlets one person can work in. "All outlets" = no limit (and covers outlets added later). */
+function OutletsDialog({ person, outlets, busy, onSave, onCancel }) {
+  const [all, setAll] = useState(!person.outletIds?.length);
+  const [ids, setIds] = useState(person.outletIds ?? []);
+  const none = !all && ids.length === 0;
+  return (
+    <Modal onClose={onCancel} width={420} ariaLabel={`Outlets for ${person.name}`}>
+      <div style={{ padding: "20px 22px 8px" }} data-testid="outlets-dialog">
+        <h3 style={{ margin: "0 0 4px", fontSize: 16, fontFamily: "var(--font-heading)" }}>Outlets for {person.name}</h3>
+        <p style={{ margin: "0 0 12px", fontSize: 13, color: "var(--color-text-muted)", lineHeight: 1.5 }}>
+          They see and can use only the outlets ticked here. A change takes effect straight away — they don&apos;t need to sign in again.
+        </p>
+        <div style={{ display: "grid", gap: 8 }} role="group" aria-label="Outlets">
+          <Checkbox label="All outlets" checked={all} onChange={setAll} />
+          {outlets.map((o) => (
+            <Checkbox key={o._id} label={o.name} checked={all || ids.includes(o._id)} disabled={all} onChange={(v) => setIds(v ? [...ids, o._id] : ids.filter((x) => x !== o._id))} />
+          ))}
+        </div>
+        {none ? <p style={{ margin: "10px 0 0", fontSize: 12.5, color: "var(--tone-danger)" }} role="alert">Pick at least one outlet, or tick All outlets.</p> : null}
+      </div>
+      <footer style={{ display: "flex", gap: 9, justifyContent: "flex-end", padding: "14px 20px" }}>
+        <Button variant="outline" type="button" onClick={onCancel} disabled={busy}>Cancel</Button>
+        <Button type="button" disabled={busy || none} onClick={() => onSave(all ? [] : ids)}>{busy ? "Saving…" : "Save"}</Button>
+      </footer>
+    </Modal>
+  );
+}
+
+const linkBtn = { font: "inherit", fontSize: 12.5, padding: 0, border: 0, background: "none", color: "var(--color-primary)", cursor: "pointer", textDecoration: "underline" };
 const row                = {
   display: "flex",
   alignItems: "center",

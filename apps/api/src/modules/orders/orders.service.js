@@ -642,6 +642,8 @@ export async function setStatusManual(
   status             ,
   byUserId         ,
   reason         ,
+  /** `toTableId`: where to seat the party again when its own table has someone else now. `seat`: filled in with what happened to the table. */
+  { toTableId, seat } = {},
 )                    {
   const order = await OrderModel.findOne(tenantFilter(ctx, { _id: id }));
   if (!order) throw new HttpError(404, "Order not found");
@@ -655,21 +657,35 @@ export async function setStatusManual(
   if (order.status === status) return order.toObject();
 
   const from = order.status;
-  order.status = status;
-  order.statusHistory.push({
-    status,
-    at: new Date(),
-    by: byUserId,
-    manual: true,
-    from,
-    reason: reason?.slice(0, 200),
-  });
-  if (status === "completed" && order.payment.gateway === "cod" && order.payment.status === "pending") {
-    order.payment.status = "paid";
+  // Back from Completed / Cancelled to being worked on: its table must be seated again (see reseatForReopenedOrder). Asked FIRST, so a
+  // refusal ("another party is at that table — pick one") leaves the order exactly as it was.
+  let reseated = null;
+  if ((from === "completed" || from === "cancelled") && OPEN_ORDER_STATUSES.includes(status)) {
+    const { reseatForReopenedOrder } = await import("../tables/tables.service.js"); // loaded here: tables.service imports this file
+    reseated = await reseatForReopenedOrder(ctx, order, { toTableId, byUserId });
+    if (reseated && seat) Object.assign(seat, { table: reseated.table, moved: reseated.moved });
   }
-  await settleWallet(ctx, order, status);
-  if (status === "cancelled") await giveStockBack(ctx, order);
-  await order.save();
+
+  try {
+    order.status = status;
+    order.statusHistory.push({
+      status,
+      at: new Date(),
+      by: byUserId,
+      manual: true,
+      from,
+      reason: reason?.slice(0, 200),
+    });
+    if (status === "completed" && order.payment.gateway === "cod" && order.payment.status === "pending") {
+      order.payment.status = "paid";
+    }
+    await settleWallet(ctx, order, status);
+    if (status === "cancelled") await giveStockBack(ctx, order);
+    await order.save();
+  } catch (err) {
+    if (reseated) await reseated.undo().catch((e) => logger.warn({ err: e }, "couldn't undo the table re-seating"));
+    throw err;
+  }
 
   const updated = order.toObject();
   broadcast(ctx.outletId , { type: "order.updated", order: wire(updated) });

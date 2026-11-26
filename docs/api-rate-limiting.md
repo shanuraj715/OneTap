@@ -164,6 +164,7 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | DELETE | `/api/menu/modifier-groups/:id` | `api`, `team-write` |
 | PATCH | `/api/menu/modifier-groups/:id` | `api`, `team-write` |
 | POST | `/api/menu/suggestions` | `api`, `team-write`, `public-compute` |
+| GET | `/api/menu/unavailable` | `api` |
 | GET | `/api/notify/config` | `api` |
 | DELETE | `/api/notify/config/:channel` | `api`, `team-write`, `secrets` |
 | PUT | `/api/notify/config/:channel` | `api`, `team-write`, `secrets` |

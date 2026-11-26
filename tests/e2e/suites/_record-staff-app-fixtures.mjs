@@ -55,7 +55,7 @@ try {
   await item({ categoryId: momos.id, name: "Veg Steamed Momos", description: "Cabbage, carrot and herbs", foodType: "veg", tags: ["bestseller"], variants: [{ label: "Half (4 pcs)", price: 6000 }, { label: "Full (8 pcs)", price: 9000 }], modifierGroupIds: [dip.id] });
   await item({ categoryId: momos.id, name: "Chicken Kurkure Momos", description: "Crispy fried", foodType: "non-veg", tags: ["spicy"], basePrice: 14000, modifierGroupIds: [dip.id, size.id] });
   await item({ categoryId: momos.id, name: "Paneer Tandoori Momos", foodType: "veg", basePrice: 13000 });
-  await item({ categoryId: drinks.id, name: "Masala Chai", foodType: "veg", basePrice: 3000 });
+  await item({ categoryId: drinks.id, name: "Masala Chai", foodType: "veg", basePrice: 3000, images: [{ url: "/uploads/masala-chai.webp", key: "masala-chai.webp", ratio: "1:1" }] });
   await item({ categoryId: drinks.id, name: "Cold Coffee", foodType: "veg", basePrice: 8000, isAvailable: false });
   must(await call("POST", "/api/tables", { cookie: owner, headers: hdr, body: { number: "T1", zone: "Ground floor", seats: 4 } }), "table");
   must(await call("POST", "/api/tables", { cookie: owner, headers: hdr, body: { number: "T2", zone: "Ground floor", seats: 2 } }), "table");
@@ -83,12 +83,21 @@ try {
   const placed = must(await call("POST", "/api/orders/staff", { bearer, headers: hdr, body: { tableId: t1.id, cart, name: "Mehta family", phone: "9876543210", note: "birthday table", expectedSessionId: null } }), "place order");
   save("order-placed", placed);
   save("cart-example", cart);
+  // the menu once, then only "what can't be ordered now?"
+  save("menu-unavailable", must(await call("GET", `/api/menu/unavailable?outletId=${outlet}`, { bearer, headers: hdr }), "unavailable"));
+  // the dropdown under the mobile-number box: a few digits match several people, a full number exactly one
+  must(await call("POST", "/api/orders/staff/quote", { bearer, headers: hdr, body: { cart, phone: "9876543299" } }), "quote with another number");
+  save("customers-search-one", must(await call("GET", "/api/orders/staff/customers?q=9876543210", { bearer, headers: hdr }), "customers one"));
   const active = must(await call("GET", "/api/tables/sessions/active", { bearer, headers: hdr }), "sessions");
   save("sessions-active", active);
   save("tables-seated", must(await call("GET", "/api/tables", { bearer, headers: hdr }), "tables"));
   const sessionId = active.sessions[0].id;
   // a second round on the same table
   save("order-placed-second-round", must(await call("POST", "/api/orders/staff", { bearer, headers: hdr, body: { tableId: t1.id, cart: { lines: [{ itemId: menu.items.find((i) => i.name === "Masala Chai").id, quantity: 2 }] }, expectedSessionId: sessionId } }), "second round"));
+  const t2first = tables.tables.find((t) => t.number === "T2");
+  must(await call("POST", "/api/orders/staff", { bearer, headers: hdr, body: { tableId: t2first.id, cart: { lines: [{ itemId: menu.items.find((i) => i.name === "Masala Chai").id, quantity: 1 }] }, name: "Sita Verma", phone: "9876599999", expectedSessionId: null } }), "second customer");
+  save("customers-search-many", must(await call("GET", "/api/orders/staff/customers?q=98765", { bearer, headers: hdr }), "customers many"));
+  await call("POST", `/api/tables/sessions/${(await call("GET", "/api/tables/sessions/active", { bearer, headers: hdr })).json.sessions.find((x) => x.tableNumber === "T2").id}/void`, { bearer, headers: hdr, body: {} });
   save("orders-list", must(await call("GET", "/api/orders?limit=50", { bearer, headers: hdr }), "orders"));
   // the screen believed T1 was free, but a party is already seated there
   const clash = await call("POST", "/api/orders/staff", { bearer, headers: hdr, body: { tableId: t1.id, cart, phone: "9876500002", expectedSessionId: null } });

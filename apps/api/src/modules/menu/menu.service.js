@@ -1,5 +1,5 @@
-import { randomUUID } from "node:crypto";
-import { availabilitySchema, imageRatioOf, limitImages, categoryHeight, cleanCategoryName, comboSchema, duplicateCategoryName, categoryLevel, categorySubtreeIds, istDayKey, itemStockSchema, MAX_CATEGORIES_AT_ONCE, MAX_CATEGORY_DEPTH, planCategoryMove } from "@rasoipulse/config-schema";
+import { createHash, randomUUID } from "node:crypto";
+import { availabilitySchema, imageRatioOf, menuForNow, limitImages, categoryHeight, cleanCategoryName, comboSchema, duplicateCategoryName, categoryLevel, categorySubtreeIds, istDayKey, itemStockSchema, MAX_CATEGORIES_AT_ONCE, MAX_CATEGORY_DEPTH, planCategoryMove } from "@rasoipulse/config-schema";
 import { refillDailyStock } from "./stock.service.js";
 import {
   MenuCategoryModel,
@@ -74,6 +74,33 @@ const toGroup = (d                     )                => ({
 /* --------------------------------------------------------------------- read */
 
 /**
+ * A short fingerprint of what the menu IS — names, prices, sizes, add-ons, pictures, categories, hours. How many of a counted dish
+ * are left is left out on purpose: that changes with every order, and says nothing about whether the app's copy of the menu is old.
+ * The staff app keeps one copy of the menu and asks only "what can't be ordered now?" afterwards; this tells it when its copy is stale.
+ */
+export function menuVersion(menu) {
+  const items = menu.items.map(({ stock, ...rest }) => ({ ...rest, stock: stock ? { tracked: stock.tracked, daily: stock.daily } : null }));
+  return createHash("sha1").update(JSON.stringify({ c: menu.categories, i: items, m: menu.modifierGroups })).digest("base64url").slice(0, 12);
+}
+
+/**
+ * Only the dishes that can't be ordered RIGHT NOW (switched off, counted stock at zero, outside their serving hours, a combo with a
+ * part that is out) — a few lines instead of the whole menu. A dish that is not in the list can be ordered. Same rule as the
+ * storefront and the order check (`unavailability` in config-schema), worked out at the moment of the call.
+ */
+export async function unavailableNow(ctx, at = Date.now()) {
+  const menu = await getMenu(ctx);
+  const now = menuForNow(menu, at);
+  const unavailable = [];
+  const low = [];
+  for (const item of now.items) {
+    if (!item.isAvailable) unavailable.push({ id: item.id, label: item.unavailableLabel ?? "Sold out" });
+    else if (item.lowStock != null) low.push({ id: item.id, left: item.lowStock });
+  }
+  return { version: menu.version ?? menuVersion(menu), unavailable, low, at: new Date(at).toISOString() };
+}
+
+/**
  * An outlet's whole menu. Page views are served from the cache (dropped the
  * moment any menu item, category or modifier group of the outlet changes).
  * Anything that decides what a customer PAYS — placing or editing an order —
@@ -89,11 +116,12 @@ export async function getMenu(ctx               , { fresh = false } = {}) {
       ModifierGroupModel.find(tenantFilter(ctx)).sort({ name: 1 }).lean(),
     ]);
 
-    return {
+    const menu = {
       categories: categories.map(toCategory),
       items: items.map(toItem),
       modifierGroups: modifierGroups.map(toGroup),
     };
+    return { ...menu, version: menuVersion(menu) };
   };
   if (fresh) return load();
   return cache.wrap(`menu:${ctx.brandId}:${ctx.outletId}`, load, {

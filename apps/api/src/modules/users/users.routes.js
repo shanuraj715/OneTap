@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
 import { permissionsForRole, roleSchema } from "@rasoipulse/config-schema";
-import { UserModel } from "@rasoipulse/db";
+import { OutletModel, UserModel } from "@rasoipulse/db";
 import { requireBrandContext, requireUser } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import { hashPassword } from "../auth/password.js";
@@ -40,6 +40,22 @@ function assertCanManage(me, target, brandId, nextRole) {
   }
 }
 
+/**
+ * Which outlets a team member may work in. An empty list means every outlet of the store. The ids must be outlets of THIS store; an owner
+ * always has every outlet; (Only owners and the platform admin manage people, and they have every outlet.)
+ */
+async function cleanOutletIds(brandId, role, wanted) {
+  const ids = [...new Set((wanted ?? []).map(String))];
+  if (role === "owner") return [];
+  if (ids.length > 0) {
+    // (an id that isn't even shaped like one can't be an outlet — and must not reach the database as a query that crashes)
+    if (ids.some((id) => !/^[a-f\d]{24}$/i.test(id))) throw new HttpError(400, "One of those outlets isn't part of this store.");
+    const found = await OutletModel.find({ brandId, _id: { $in: ids } }).select("_id").lean();
+    if (found.length !== ids.length) throw new HttpError(400, "One of those outlets isn't part of this store.");
+  }
+  return ids;
+}
+
 /** Everyone counts toward the plan's people limit, owners included. The platform can always add. */
 async function assertSeatFree(me, brandId) {
   if (me.isSuperAdmin) return;
@@ -73,12 +89,13 @@ usersRouter.post("/", limiter("account-write"), async (req, res) => {
     throw new HttpError(409, "That email is already in use");
   }
   await assertSeatFree(me, brandId);
+  const outletIds = await cleanOutletIds(brandId, body.role, body.outletIds);
 
   const user = await UserModel.create({
     email: body.email.toLowerCase(),
     name: body.name,
     passwordHash: await hashPassword(body.password),
-    memberships: [{ brandId, role: body.role, outletIds: body.outletIds ?? [] }],
+    memberships: [{ brandId, role: body.role, outletIds }],
   });
   invalidateStorePlan(brandId);
   res.status(201).json({ user: shape(user.toObject(), brandId) });
@@ -89,6 +106,8 @@ const updateBody = z.object({
   role: roleSchema.exclude(["super_admin"]).optional(),
   isActive: z.boolean().optional(),
   password: z.string().min(8).optional(),
+  /** the outlets this person may work in; [] = every outlet */
+  outletIds: z.array(z.string()).optional(),
 });
 
 usersRouter.patch("/:id", limiter("account-write"), async (req, res) => {
@@ -109,9 +128,14 @@ usersRouter.patch("/:id", limiter("account-write"), async (req, res) => {
   if (body.name) user.name = body.name;
   if (body.isActive !== undefined) user.isActive = body.isActive;
   if (body.password) user.passwordHash = await hashPassword(body.password);
-  if (body.role) {
+  if (body.role || body.outletIds) {
     const m = membershipIn(user, brandId);
-    if (m) m.role = body.role;
+    if (m) {
+      if (body.role) m.role = body.role;
+      const role = m.role;
+      if (body.outletIds) m.outletIds = await cleanOutletIds(brandId, role, body.outletIds);
+      else if (role === "owner") m.outletIds = [];
+    }
     user.markModified("memberships");
   }
   await user.save();

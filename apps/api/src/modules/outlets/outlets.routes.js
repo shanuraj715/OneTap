@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
 
-import { requireBrandContext, requireOutletContext } from "../../middleware/auth.js";
+import { allowedOutletIds, requireBrandContext, requireOutletContext } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import {
   createOutlet,
@@ -50,7 +50,10 @@ outletsRouter.get("/", async (req, res) => {
     return;
   }
   const { brandId } = await requireBrandContext(req, "outlet:read");
-  res.json({ outlets: await listOutlets({ brandId }) });
+  const outlets = await listOutlets({ brandId });
+  // someone mapped to particular outlets sees only those: nothing of the others, not even their names
+  const allowed = allowedOutletIds(req.user, brandId);
+  res.json({ outlets: allowed ? outlets.filter((o) => allowed.includes(String(o._id ?? o.id))) : outlets });
 });
 
 const createOutletBody = z.object({

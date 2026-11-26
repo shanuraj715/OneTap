@@ -1,0 +1,101 @@
+# T89 — An order put back from Completed/Cancelled to being worked on seats its table again — or asks for another table when someone else is there
+
+**Area:** orders · **Last result:** ✅ PASSED (29 passed, 0 failed · 2026-11-26 17:44 · headless · 4.0 s)
+
+**Run it alone:** `node run.mjs --only t89` (add `--visible` to watch it)
+
+## What this test does
+
+Runs suites/order-reopen-table-api.mjs on a private API with an in-memory database (no browser). A dine-in order is taken at T1, completed and paid (the table frees itself — intended), then put back to Preparing by hand. With T1 still free the party is seated again with the same session (the bug was that T1 stayed free), the answer says so, and nobody else can be seated there. With another party at T1 the change is REFUSED (409 table_taken, in words, with the free tables and their areas) and nothing changes; choosing a free table puts the order back and seats the party there (orders and the session's history follow), choosing an occupied or missing table is refused; the other party keeps T1. While the party's session is still open there is nothing to re-seat. A voided table's cancelled order is put back the same way. Staff can still make the correction.
+
+## Steps
+
+1. Setup: a store with three tables and a dish
+2. The mistake: Completed frees the table by itself
+3. The table is still free: putting the order back seats the party again
+4. Another party took the table meanwhile: the operator is asked to pick another table
+5. Choosing a table
+6. Not every rewind touches a table
+7. A cancelled table (voided) is put back the same way
+8. The rule is the same for the people who may change a status
+
+## What to expect (these must happen)
+
+- Putting the order back with the table free seats the party's table again (same session).
+- With someone else at the table: 409 table_taken + free tables; the order stays Completed until a table is chosen.
+- Choosing a free table seats the party there; the order, the session and the tables all agree.
+
+## What must NOT happen
+
+- The table must NOT be left free while an order for it is being made.
+- A refusal must NOT change the order or touch the other party's table.
+- An occupied or missing table must NOT be accepted as the new table.
+
+## Result of the last run
+
+### ❌ Failed (0)
+
+_Nothing failed._
+
+### ✅ Passed (29)
+
+**Step 2 — The mistake: Completed frees the table by itself**
+
+- an order is taken at T1 — _0001_
+- Completed (and paid) frees T1 by itself — that part is intended — _free_
+
+**Step 3 — The table is still free: putting the order back seats the party again**
+
+- the order goes back to Preparing — _200 preparing_
+- the answer says the table was seated again (and that it is the same table)
+- T1 is SEATED again, with the same party's session (this is the bug) — _seated_
+- the party is back in the list of tables in service (the app reads this)
+- nobody else can be seated on T1 now (an order started while it looked free is refused)
+
+**Step 4 — Another party took the table meanwhile: the operator is asked to pick another table**
+
+- another party is seated at T1 — _0002_
+- putting the first order back is REFUSED with table_taken — _409 table_taken_
+- in words the operator can use — _Table T1 has another party now. Pick a different table for this order._
+- and it carries the free tables (id, number, seats) to choose from — not T1 — _T2/Ground floor T3/Terrace_
+- with their areas, so the operator can group them
+- NOTHING changed: the order is still Completed — _completed_
+- the other party still has T1, and T2 and T3 are untouched
+
+**Step 5 — Choosing a table**
+
+- choosing T1 again (it is occupied) is refused
+- choosing a table that doesn't exist: 404 — _404_
+- choosing T3 puts the order back to Preparing — _200_
+- the answer says it is a different table now — _{"id":"6b08228c6d6e209139aa3570","number":"T3","zone":"Terrace","seats":4,"moved":true}_
+- T3 is seated with the first party's session
+- the OTHER party keeps T1
+- the order now says it is for T3 (orders follow their party)
+- the session's history shows the move — _T3_
+
+**Step 6 — Not every rewind touches a table**
+
+- the party at T3 orders again — _0003_
+- while the party's session is still open (the second order is running) there is nothing to seat again — no table in the answer
+- T3 stays seated
+
+**Step 7 — A cancelled table (voided) is put back the same way**
+
+- voiding T2 cancels the order and frees the table
+- putting the cancelled order back seats T2 again — _200 T2_
+- T2 is seated
+
+**Step 8 — The rule is the same for the people who may change a status**
+
+- staff can still make the correction themselves (completed again) — _200_
+
+## History (latest 10 runs)
+
+| When | Result | Passed | Failed | Mode | Time |
+|---|---|---|---|---|---|
+| 2026-11-26 17:44 | pass | 29 | 0 | headless | 4.0 s |
+| 2026-11-26 17:43 | fail | 12 | 1 | headless | 3.7 s |
+| 2026-11-26 17:43 | pass | 12 | 0 | headless | 4.2 s |
+
+---
+_Generated by `tests/e2e/run.mjs` — edit the test file (`tests/t89-order-reopen-table-api.mjs`), not this page._

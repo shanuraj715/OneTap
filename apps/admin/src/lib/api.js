@@ -351,10 +351,11 @@ export const setOrderStatus = (o        , id        , status             ) =>
   });
 
 /** Force a status, ignoring the forward-only flow — the mis-tap correction. */
-export const setOrderStatusManual = (o        , id        , status             , reason         ) =>
+export const setOrderStatusManual = (o        , id        , status             , reason         , tableId         ) =>
   req                       (`/api/orders/${id}/status/manual`, {
     method: "PATCH",
-    body: JSON.stringify({ status, reason }),
+    // `tableId`: only when the order's table has another party by now — the free table to seat this order's party at instead
+    body: JSON.stringify({ status, reason, ...(tableId ? { tableId } : {}) }),
     outletId: o._id,
   });
 

@@ -253,14 +253,18 @@ ordersRouter.patch("/:id/status", async (req, res) => {
 const manualBody = z.object({
   status: orderStatusSchema,
   reason: z.string().max(200).optional(),
+  /** when the order's table has another party by now: the free table to seat this order's party at instead */
+  tableId: z.string().max(64).optional(),
 });
 
 ordersRouter.patch("/:id/status/manual", async (req, res) => {
   const ctx = await requireOutletContext(req, "order:update");
   const user = requireUser(req);
   const body = manualBody.parse(req.body);
-  const order = await setStatusManual(ctx, req.params.id, body.status, String(user._id), body.reason);
-  res.json({ order: shape(order, true) });
+  const seat = {};
+  const order = await setStatusManual(ctx, req.params.id, body.status, String(user._id), body.reason, { toTableId: body.tableId, seat });
+  // `table` is present when the order's table had to be seated again (and `moved` when it is a different table than before)
+  res.json({ order: shape(order, true), ...(seat.table ? { table: { ...seat.table, moved: seat.moved } } : {}) });
 });
 
 /**
