@@ -1,6 +1,6 @@
 # MEMORY.md — everything we know about this project
 
-> A snapshot taken on 2026-11-26 of the notes kept about the **Rasoi Pulse** project (a multi-tenant restaurant ordering platform; formerly TablePe / OneTap; the first store is Gazab Momos). It holds 72 notes: decisions, rules, how things were built and tested, what is deployed, and what is still open.
+> A snapshot taken on 2026-11-26 of the notes kept about the **Rasoi Pulse** project (a multi-tenant restaurant ordering platform; formerly TablePe / OneTap; the first store is Gazab Momos). It holds 73 notes: decisions, rules, how things were built and tested, what is deployed, and what is still open.
 >
 > **What is NOT in here, on purpose:** passwords, API keys, tokens and database connection strings (none were stored in the notes), and the server's address, SSH port, database host / user name and personal network addresses (shown as `<VPS-IP>`, `<SSH-PORT>`, `<atlas-cluster>`, `<db-user>`, `<my-public-IP>`). Keep it that way when you edit this file.
 >
@@ -39,7 +39,7 @@
 [whatsapp-chat](#whatsapp-chat), [message-sending](#message-sending), [marketing](#marketing), [analytics](#analytics)
 
 **Everything else**  
-[app-updates](#app-updates), [feedback-app-flow-parity](#feedback-app-flow-parity), [feedback-app-icons](#feedback-app-icons), [feedback-app-versioning](#feedback-app-versioning), [feedback-readme-maintenance](#feedback-readme-maintenance), [oma-app](#oma-app)
+[app-updates](#app-updates), [feedback-app-flow-parity](#feedback-app-flow-parity), [feedback-app-icons](#feedback-app-icons), [feedback-app-versioning](#feedback-app-versioning), [feedback-readme-maintenance](#feedback-readme-maintenance), [oma-app](#oma-app), [release-signing](#release-signing)
 
 
 ---
@@ -1604,9 +1604,9 @@ _2026-11-26/27 — OMA update system (console "App updates" page, website /app d
 
 **Deploy needs (done 2026-11-26, kept as the recipe for next time):** API restart; new env on prod — `APP_RELEASES_DIR` OUTSIDE the code folder (e.g. `/var/lib/rasoi-pulse/app-releases`, writable by the API user), `WEBSITE_URL` must be the public site (`https://rasoipulse.in`) because the app is sent to `<WEBSITE_URL>/app`; rsync must `--exclude .app-releases` (it is git-ignored); admin + website rebuild (config-schema changed → all consumers); nginx `client_max_body_size 12m` on api.rasoipulse.in is already enough (pieces are 4 MB). Console/website show "App updates" only after the deploy.
 
-**Caveats to tell the user:** the release APK is signed with the shared DEBUG key — updates only install over an app signed with the SAME key, so a proper release keystore must be made BEFORE real staff install the first APK; the app's own version (`v-261126-001`) was not bumped (only when asked) so the first real update needs `npm run version:bump -- --confirm` + a build; "version management" was built as: console page = manage (upload/publish/withdraw/required/notes/delete/counters), website page = public download + history.
+**Caveats to tell the user:** (the debug-key caveat is RESOLVED 2026-11-26 — release key made, see [release-signing](#release-signing)); the app's own version (`v-261126-001`) was not bumped (only when asked) so the first real update needs `npm run version:bump -- --confirm` + a build; "version management" was built as: console page = manage (upload/publish/withdraw/required/notes/delete/counters), website page = public download + history.
 
-**Still open after the deploy:** (1) the user has to upload the first real APK in the console → App updates (and publish it); (2) a release keystore (the shared DEBUG key means later updates may not install over the first APK); (3) bump the app version only when the user asks, then build `npm run build:release` and upload that file; (4) a real phone / Android 11 install of an APK downloaded from /app was not tried.
+**Still open after the deploy:** (1) the user has to upload the first real APK in the console → App updates (and publish it); (2) ~~a release keystore~~ DONE — see [release-signing](#release-signing); the user still has to back the key folder up; (3) bump the app version only when the user asks, then build `npm run build:release` and upload that file; (4) a real phone / Android 11 install of an APK downloaded from /app was not tried.
 
 ### feedback-app-flow-parity
 
@@ -1677,3 +1677,17 @@ _"Rasoi Pulse OMA" (Order Management App) — React Native/Expo Android app for 
 - AsyncStorage is a NEW native module: Expo Go has it; the debug APK must be rebuilt (done) — the old APK would just not remember areas (storage errors are swallowed).
 
 **Standing UI preference (2026-11-26):** the user said the app used too few icons → use icons properly everywhere (headings, fields, badges, rows, buttons, empty states). Kit: `IconTile`, `ScreenTitle`, `SectionTitle`, status→icon maps in features/orders.ts + tables.ts, ~60 icons in ui/Icon.tsx. New screens must follow it. See [feedback-app-flow-parity](#feedback-app-flow-parity).
+
+### release-signing
+
+_2026-11-26 — OMA release signing key (made, where it lives, fingerprint, commands, rules, the backup the user must do); debug→release needs one uninstall; verified on Android 14_
+
+**Why:** Android only installs an update over an app signed with the SAME key. The first APKs used Android's shared debug key, so the user asked "set up the release key, and tell me how we can set it up" (2026-11-26, after the app-updates deploy — see [app-updates](#app-updates)).
+
+**Done:** `npm run signing:create` (in `mobile-apps/oma`) made the key ONCE: PKCS12 `oma-release.jks`, alias `rasoipulse-oma`, RSA 4096, 10000 days, subject `CN=Rasoi Pulse OMA, O=Rasoi Pulse, C=IN` (no personal data), random 32-char password passed to keytool via `-storepass:env` and written only to `keystore.properties` (mode 600, never printed, never committed). Both live in **`~/.rasoi-pulse/signing/oma/`** (outside every repo, dir 700). Public SHA-256 fingerprint (committed in `mobile-apps/oma/signing-fingerprint.txt`): `06:63:26:8E:8A:CF:67:9C:B1:58:70:A8:6A:39:89:14:29:86:D4:59:92:5D:6B:3D:B7:DE:AD:0D:C4:B0:08:3C`.
+
+**How it is wired:** config plugin `plugins/with-release-signing.js` patches the GENERATED `android/app/build.gradle` (idempotent, throws if the Expo template changes) so the release type uses `signingConfigs.release` read from the file named by env `OMA_KEYSTORE_PROPERTIES` (nothing secret in `android/`). `scripts/build-android.js release`: finds the key (env → app folder `keystore.properties` → default folder), **refuses with no key** (override only `RP_ALLOW_DEBUG_SIGNING=1`, output named `…-release-DEBUGKEY.apk`), runs `apksigner verify --print-certs` on the result and **refuses to copy** an APK that is debug-signed, signed by another key, has >1 signer/cert, or doesn't verify. Commands: `signing:create|show|verify`. Real apksigner output on this SDK says `V2 Signer: certificate DN/SHA-256 digest:` (not `Signer #1`) — the parser handles both.
+
+**Verified:** release build 85 s, 34.3 MB, apksigner shows our cert (4096-bit, v2 scheme); guards tested (no key, missing .jks, incomplete settings, debug APK refused); 32 jest tests (480 total in the app) incl. a real keytool run and mutation checks; Android 14 emulator: release-key APK over the old debug-key install → `INSTALL_FAILED_UPDATE_INCOMPATIBLE` (so every existing debug install needs ONE uninstall), clean install OK, same-key reinstall `-r` OK, debug build over the release app refused, app runs (shows api.rasoipulse.in). NOT tried: a real phone; a true update to a HIGHER versionCode (version is never bumped without the user asking).
+
+**Open for the user:** BACK UP `~/.rasoi-pulse/signing/oma/` (the .jks AND keystore.properties) into a password manager — lost key = every phone must uninstall. The built `build-output/rasoi-pulse-oma-v-261126-001-release.apk` IS now release-signed (overwrote the old debug-signed one) but nothing has been uploaded to production yet. Possible follow-up offered: make the console's upload reject an APK whose signing certificate differs from earlier releases (needs parsing the APK signing block in Node).
