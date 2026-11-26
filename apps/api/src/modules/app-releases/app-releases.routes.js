@@ -62,6 +62,15 @@ appUpdatesRouter.get("/download/:id", limiter("app-download"), async (req, res, 
 /** The platform console's part (mounted under /api/platform/app-releases — super admin only, checked by the platform router). */
 export const appReleasesAdminRouter = Router();
 
+/** How often each app asks the server for new data (seconds) — one number per app. */
+appReleasesAdminRouter.get("/settings", async (_req, res) => {
+  res.json(await svc.listAppSettings());
+});
+
+appReleasesAdminRouter.put("/settings/:app", async (req, res) => {
+  res.json(await svc.saveAppSettings(req.params.app, req.body ?? {}, requireUser(req)));
+});
+
 appReleasesAdminRouter.get("/", async (req, res) => {
   res.json(await svc.listReleases(appQuery.parse(req.query).app));
 });

@@ -36,6 +36,7 @@ import { previewRouter } from "./modules/preview/preview.routes.js";
 import { printingRouter } from "./modules/printing/printing.routes.js";
 import { qrCardsRouter } from "./modules/qr-cards/qr-cards.routes.js";
 import { storageRouter } from "./modules/storage/storage.routes.js";
+import { appRefreshHeader } from "./middleware/app-refresh.js";
 import { appUpdatesRouter } from "./modules/app-releases/app-releases.routes.js";
 import { tablesRouter } from "./modules/tables/tables.routes.js";
 import { usersRouter } from "./modules/users/users.routes.js";
@@ -113,6 +114,8 @@ export function createApp()          {
   app.use(pinoHttp({ logger }));
   // counts requests, failures and speed for the Server page
   app.use(requestStats);
+  // every answer to a mobile app says how often that app should ask again (set per app in the console)
+  app.use(appRefreshHeader);
 
   // Attaches req.user when a valid session cookie is present; routes enforce.
   app.use(authenticate);

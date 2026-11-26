@@ -21,5 +21,17 @@ export const APP_BUILD: number = Constants.expoConfig?.android?.versionCode ?? 0
 /** The sign-in is kept on the phone only when the person asks for it ("Keep me signed in"). */
 export const SECURE_KEYS = { token: "rda.token" } as const;
 
-/** How often the rider's deliveries refresh by themselves while the screen is in front (milliseconds): a new delivery must show within seconds. */
-export const REFRESH_MS = { deliveries: 10_000 } as const;
+/**
+ * How often RDA asks the server for new data while a screen is in front. ONE number: the platform admin's setting for this app (console →
+ * App updates → RDA → Refresh interval), which the server states in every answer (header `x-refresh-seconds`); until the first answer the
+ * default is used. These three numbers are the same as `APP_REFRESH` in packages/config-schema (a test keeps them equal).
+ */
+export const REFRESH_DEFAULT_SECONDS = 8;
+export const REFRESH_MIN_SECONDS = 3;
+export const REFRESH_MAX_SECONDS = 600;
+
+/** The wait, in milliseconds, for each thing the app refreshes by itself: the list of deliveries refreshes at the setting. */
+export const refreshPlan = (seconds: number) => {
+  const live = seconds * 1000;
+  return { deliveries: live } as const;
+};

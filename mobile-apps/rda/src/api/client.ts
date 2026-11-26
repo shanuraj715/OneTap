@@ -34,6 +34,8 @@ export interface ClientOptions {
   headers?: Record<string, string>;
   /** called when the server refuses because this build is out of date and an update is required (426) */
   onUpdateRequired?: (details: Record<string, unknown>) => void;
+  /** called with the `x-refresh-seconds` header of an answer (how often the platform admin wants this app to ask for new data), when it has one */
+  onRefreshSeconds?: (raw: string) => void;
 }
 
 export interface RequestOptions<S extends z.ZodType | undefined> {
@@ -78,6 +80,10 @@ export function createClient(options: ClientOptions) {
       clearTimeout(timer);
       signal?.removeEventListener("abort", onCallerAbort);
     }
+
+    // every answer (a refusal too) tells the app how often to ask again; the admin can change it at any time
+    const refreshAsked = res.headers?.get?.("x-refresh-seconds");
+    if (refreshAsked) options.onRefreshSeconds?.(refreshAsked);
 
     if (res.status === 204) return undefined as never;
     const text = await res.text().catch(() => "");

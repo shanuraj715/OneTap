@@ -126,3 +126,38 @@ describe("the tables board", () => {
     expect(screen.getByTestId("table-T2")).not.toBeSelected();
   });
 });
+
+describe("how often the board asks for new data (the platform admin's setting for the order app)", () => {
+  const asks = (srv: ReturnType<typeof fakeServer>) => srv.to("GET", "/api/tables").length;
+  const wait = async (ms: number) => { await act(async () => { await jest.advanceTimersByTimeAsync(ms); }); };
+  const run = async (headers: Record<string, string> | undefined, body: (srv: ReturnType<typeof fakeServer>) => Promise<void>) => {
+    jest.useFakeTimers();
+    try {
+      const srv = fakeServer({ "GET /api/tables": { json: fx("tables-seated"), headers } });
+      await renderApp(<TablesScreen onOpenTable={() => undefined} />, { prefs: openAreas(), server: srv });
+      await wait(100);
+      await body(srv);
+    } finally { jest.useRealTimers(); }
+  };
+
+  it("every 8 seconds until the server says otherwise", async () => {
+    await run(undefined, async (srv) => {
+      const first = asks(srv);
+      expect(first).toBeGreaterThanOrEqual(1);
+      await wait(7_000);
+      expect(asks(srv)).toBe(first);
+      await wait(1_500);
+      expect(asks(srv)).toBe(first + 1);
+    });
+  });
+
+  it("every 20 seconds when the admin set 20", async () => {
+    await run({ "x-refresh-seconds": "20" }, async (srv) => {
+      const first = asks(srv);
+      await wait(19_000);
+      expect(asks(srv)).toBe(first);
+      await wait(1_500);
+      expect(asks(srv)).toBe(first + 1);
+    });
+  });
+});

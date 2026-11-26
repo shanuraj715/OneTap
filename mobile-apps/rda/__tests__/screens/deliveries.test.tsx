@@ -240,3 +240,52 @@ describe("a new delivery is handed to the rider", () => {
     await waitFor(() => expect(runtime.settings.store.getState().alerts).toBe(false));
   });
 });
+
+describe("how often it asks for new deliveries (the platform admin's setting for the delivery app)", () => {
+  const asks = (srv: ReturnType<typeof fakeServer>) => srv.to("GET", "/api/rider/deliveries").length;
+  const wait = async (ms: number) => { await act(async () => { await jest.advanceTimersByTimeAsync(ms); }); };
+  const run = async (headers: Record<string, string> | undefined, body: (srv: ReturnType<typeof fakeServer>) => Promise<void>) => {
+    jest.useFakeTimers();
+    try {
+      const srv = fakeServer({ "GET /api/rider/deliveries": { json: list(), headers } });
+      await renderApp(<DeliveriesScreen />, { server: srv });
+      await wait(100);
+      await body(srv);
+    } finally { jest.useRealTimers(); }
+  };
+
+  it("every 8 seconds until the server says otherwise", async () => {
+    await run(undefined, async (srv) => {
+      const first = asks(srv);
+      expect(first).toBeGreaterThanOrEqual(1);
+      await wait(7_000);
+      expect(asks(srv)).toBe(first);
+      await wait(1_500);
+      expect(asks(srv)).toBe(first + 1);
+    });
+  });
+
+  it("every 15 seconds when the admin set 15: not 8, not 10", async () => {
+    await run({ "x-refresh-seconds": "15" }, async (srv) => {
+      const first = asks(srv);
+      await wait(14_000);
+      expect(asks(srv)).toBe(first);
+      await wait(1_500);
+      expect(asks(srv)).toBe(first + 1);
+      await wait(15_000);
+      expect(asks(srv)).toBe(first + 2);
+    });
+  });
+
+  it("follows a change made while the app is open: told 30 later, it slows down", async () => {
+    await run({ "x-refresh-seconds": "15" }, async (srv) => {
+      srv.set("GET /api/rider/deliveries", { json: list(), headers: { "x-refresh-seconds": "30" } });
+      await wait(15_500); // the next ask (still on the old 15 s timer) brings the new number
+      const afterNew = asks(srv);
+      await wait(20_000);
+      expect(asks(srv)).toBe(afterNew);
+      await wait(11_000);
+      expect(asks(srv)).toBe(afterNew + 1);
+    });
+  });
+});

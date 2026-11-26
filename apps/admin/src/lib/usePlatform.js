@@ -87,5 +87,8 @@ export function usePlatformMutation(fn) {
   });
 }
 
+/** How often each app asks for new data (the console's Refresh interval card). */
+export const useAppSettings = () => useQuery({ queryKey: ["platform", "app-settings"], queryFn: () => api.listAppSettings() });
+
 /** The staff app's releases (APK versions, forced updates) — refreshed while the page is open so download counts move. */
 export const useAppReleases = (app = "oma") => useQuery({ queryKey: ["platform", "app-releases", app], queryFn: () => api.listAppReleases(app), refetchInterval: 30_000 });

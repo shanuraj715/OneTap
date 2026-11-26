@@ -1,8 +1,7 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { CartInput, PlaceOrderInput } from "@/api/endpoints";
-import { REFRESH_MS } from "@/lib/config";
 import { keys } from "./keys";
-import { useApi, useOutletId, useRuntime, useSession } from "@/runtime";
+import { useApi, useOutletId, useRuntime, useSession, useRefreshPlan } from "@/runtime";
 import { useStore } from "zustand";
 import { ApiError } from "@/api/client";
 import { withAvailability } from "@/features/menu";
@@ -11,19 +10,22 @@ import { useCallback, useEffect, useMemo } from "react";
 
 /** The table board's two halves: the tables, and who is sitting at them. Both refresh by themselves while the app is open. */
 export function useTables() {
+  const wait = useRefreshPlan();
   const api = useApi();
   const outletId = useOutletId();
-  return useQuery({ queryKey: keys.tables(outletId), queryFn: () => api.tables(outletId), select: (d) => d.tables, refetchInterval: REFRESH_MS.tables, enabled: !!outletId });
+  return useQuery({ queryKey: keys.tables(outletId), queryFn: () => api.tables(outletId), select: (d) => d.tables, refetchInterval: wait.tables, enabled: !!outletId });
 }
 export function useActiveSessions() {
+  const wait = useRefreshPlan();
   const api = useApi();
   const outletId = useOutletId();
-  return useQuery({ queryKey: keys.sessions(outletId), queryFn: () => api.sessions(outletId), select: (d) => d.sessions, refetchInterval: REFRESH_MS.tables, enabled: !!outletId });
+  return useQuery({ queryKey: keys.sessions(outletId), queryFn: () => api.sessions(outletId), select: (d) => d.sessions, refetchInterval: wait.tables, enabled: !!outletId });
 }
 export function useOrders() {
+  const wait = useRefreshPlan();
   const api = useApi();
   const outletId = useOutletId();
-  return useQuery({ queryKey: keys.orders(outletId), queryFn: () => api.orders(outletId), select: (d) => d.orders, refetchInterval: REFRESH_MS.orders, enabled: !!outletId });
+  return useQuery({ queryKey: keys.orders(outletId), queryFn: () => api.orders(outletId), select: (d) => d.orders, refetchInterval: wait.orders, enabled: !!outletId });
 }
 /**
  * The menu is loaded ONCE (right after signing in, see runtime.tsx) and kept: it never refetches by itself. What changes minute to minute —
@@ -41,6 +43,7 @@ export function useMenu() {
  * whole menu. A dish missing from the answer can be ordered.
  */
 export function useUnavailable(enabled = true) {
+  const wait = useRefreshPlan();
   const api = useApi();
   const outletId = useOutletId();
   return useQuery({
@@ -49,7 +52,7 @@ export function useUnavailable(enabled = true) {
     enabled: enabled && !!outletId,
     staleTime: 0,
     refetchOnMount: "always",
-    refetchInterval: 60_000,
+    refetchInterval: wait.unavailable,
     retry: false,
   });
 }

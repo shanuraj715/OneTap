@@ -1,15 +1,15 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { ItemState, KitchenItem, Screen } from "@/api/schemas";
-import { REFRESH_MS } from "@/lib/config";
 import { stateAfter } from "@/features/dishes";
-import { useApi, useOutletId } from "@/runtime";
+import { useApi, useOutletId, useRefreshPlan } from "@/runtime";
 import { keys } from "./keys";
 
 /** The kitchen board. It refreshes by itself while the app is open (a new order must show within seconds) and stops when the app is in the background. */
 export function useBoard(screen: Screen) {
+  const wait = useRefreshPlan();
   const api = useApi();
   const outletId = useOutletId();
-  return useQuery({ queryKey: keys.board(outletId, screen), queryFn: () => api.board(outletId, screen), refetchInterval: REFRESH_MS.board, enabled: !!outletId, placeholderData: keepPreviousData });
+  return useQuery({ queryKey: keys.board(outletId, screen), queryFn: () => api.board(outletId, screen), refetchInterval: wait.board, enabled: !!outletId, placeholderData: keepPreviousData });
 }
 
 /** Start / Ready / Recall one order. Asks the board for the truth afterwards, so what the cook sees is what the server holds. */
@@ -24,9 +24,10 @@ export function useSetStage(screen: Screen) {
 }
 
 export function useItems() {
+  const wait = useRefreshPlan();
   const api = useApi();
   const outletId = useOutletId();
-  return useQuery({ queryKey: keys.items(outletId), queryFn: () => api.items(outletId), refetchInterval: REFRESH_MS.items, enabled: !!outletId, placeholderData: keepPreviousData });
+  return useQuery({ queryKey: keys.items(outletId), queryFn: () => api.items(outletId), refetchInterval: wait.items, enabled: !!outletId, placeholderData: keepPreviousData });
 }
 
 /**
@@ -56,7 +57,8 @@ export function useSetItemState() {
 }
 
 export function useSummary(enabled = true) {
+  const wait = useRefreshPlan();
   const api = useApi();
   const outletId = useOutletId();
-  return useQuery({ queryKey: keys.summary(outletId), queryFn: () => api.summary(outletId), refetchInterval: REFRESH_MS.summary, enabled: !!outletId && enabled, placeholderData: keepPreviousData });
+  return useQuery({ queryKey: keys.summary(outletId), queryFn: () => api.summary(outletId), refetchInterval: wait.summary, enabled: !!outletId && enabled, placeholderData: keepPreviousData });
 }

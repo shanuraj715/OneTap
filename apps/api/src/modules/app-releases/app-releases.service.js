@@ -2,8 +2,8 @@ import { createHash, randomBytes } from "node:crypto";
 import fs from "node:fs";
 import fsp from "node:fs/promises";
 import path from "node:path";
-import { APP_CATALOG, APP_IDS, DEFAULT_APP, appPagePath, appReleaseInputSchema, appReleasePatchSchema, decideUpdate, isAppId, versionCodeOf, MAX_APK_MB } from "@rasoipulse/config-schema";
-import { AppReleaseModel } from "@rasoipulse/db";
+import { APP_CATALOG, APP_IDS, APP_REFRESH, DEFAULT_APP, appPagePath, appReleaseInputSchema, appSettingsInputSchema, appReleasePatchSchema, decideUpdate, isAppId, versionCodeOf, MAX_APK_MB } from "@rasoipulse/config-schema";
+import { AppReleaseModel, AppSettingModel } from "@rasoipulse/db";
 import { env, publicApiUrl } from "../../env.js";
 import { logger } from "../../logger.js";
 import { HttpError } from "../../middleware/error.js";
@@ -332,3 +332,61 @@ export async function completeUpload(id, input, user) {
   if (body.publish) notifyWebsite();
   return adminShape(r.toObject());
 }
+
+/* ------------------------------------------------------------------ how often an app asks for new data */
+
+/**
+ * Every app request carries `x-app-id`, and every answer to it carries the app's refresh interval (see middleware/app-refresh.js), so the
+ * numbers are read from here on every request. They live in memory for a few seconds: a change made in the console is seen at once by this
+ * process (the cache is cleared on save) and within SETTINGS_TTL_MS by any other.
+ */
+const SETTINGS_TTL_MS = 15_000;
+let settingsCache = { at: 0, map: /** @type {Record<string, number>} */ ({}) };
+
+async function loadRefreshSeconds() {
+  const rows = await AppSettingModel.find().lean();
+  const map = {};
+  for (const r of rows) if (isAppId(r.app)) map[r.app] = r.refreshSeconds;
+  settingsCache = { at: Date.now(), map };
+  return map;
+}
+
+/** Seconds between this app's asks for new data: the console's number, else the default. Never throws (a failing database must not stop a request). */
+export async function refreshSecondsOf(app) {
+  try {
+    const map = Date.now() - settingsCache.at < SETTINGS_TTL_MS ? settingsCache.map : await loadRefreshSeconds();
+    return map[app] ?? APP_REFRESH.default;
+  } catch (e) {
+    logger.warn({ err: e }, "could not read the app refresh settings; using what was known");
+    return settingsCache.map[app] ?? APP_REFRESH.default;
+  }
+}
+
+/** The console's list: every app with its refresh interval (and whether that is the default), plus the limits the input is held to. */
+export async function listAppSettings() {
+  const map = await loadRefreshSeconds();
+  const rows = await AppSettingModel.find().lean();
+  const stamp = Object.fromEntries(rows.map((r) => [r.app, r.updatedAt]));
+  return {
+    limits: { ...APP_REFRESH },
+    settings: APP_IDS.map((id) => ({
+      app: id,
+      code: APP_CATALOG[id].code,
+      name: APP_CATALOG[id].name,
+      refreshSeconds: map[id] ?? APP_REFRESH.default,
+      // "the default" is about the number, not about whether it was ever saved: an admin who typed 8 is on the default too
+      isDefault: (map[id] ?? APP_REFRESH.default) === APP_REFRESH.default,
+      updatedAt: stamp[id] ?? null,
+    })),
+  };
+}
+
+export async function saveAppSettings(app, input, user) {
+  if (!isAppId(app)) throw new HttpError(404, "That app doesn't exist.");
+  const parsed = appSettingsInputSchema.safeParse(input);
+  if (!parsed.success) throw new HttpError(400, parsed.error.issues[0]?.message ?? "Check the refresh interval.");
+  await AppSettingModel.findOneAndUpdate({ app }, { $set: { refreshSeconds: parsed.data.refreshSeconds, updatedBy: String(user?._id ?? "") } }, { upsert: true, new: true });
+  settingsCache = { at: 0, map: {} }; // the next request reads the new number
+  return { setting: (await listAppSettings()).settings.find((s) => s.app === app) };
+}
+

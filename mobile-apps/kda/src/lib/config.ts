@@ -21,5 +21,17 @@ export const APP_BUILD: number = Constants.expoConfig?.android?.versionCode ?? 0
 /** The sign-in is kept on the phone only when the person asks for it ("Keep me signed in"). */
 export const SECURE_KEYS = { token: "kda.token", outlet: "kda.outlet" } as const;
 
-/** How often the board, the dishes and the numbers refresh by themselves while a screen is in front (milliseconds). The kitchen needs a new order fast. */
-export const REFRESH_MS = { board: 5_000, items: 15_000, summary: 30_000 } as const;
+/**
+ * How often KDA asks the server for new data while a screen is in front. ONE number: the platform admin's setting for this app (console →
+ * App updates → KDA → Refresh interval), which the server states in every answer (header `x-refresh-seconds`); until the first answer the
+ * default is used. These three numbers are the same as `APP_REFRESH` in packages/config-schema (a test keeps them equal).
+ */
+export const REFRESH_DEFAULT_SECONDS = 8;
+export const REFRESH_MIN_SECONDS = 3;
+export const REFRESH_MAX_SECONDS = 600;
+
+/** The wait, in milliseconds, for each thing the app refreshes by itself: the kitchen board refreshes at the setting; the dishes list (15 s) and today's numbers (30 s) keep their own slower pace, never faster than the setting. */
+export const refreshPlan = (seconds: number) => {
+  const live = seconds * 1000;
+  return { board: live, items: Math.max(15_000, live), summary: Math.max(30_000, live) } as const;
+};

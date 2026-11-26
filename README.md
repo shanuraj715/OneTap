@@ -141,6 +141,15 @@ The API side of the apps: `GET /api/menu/unavailable` (what can't be ordered now
 the dashboard keeps using its cookie), `GET /api/auth/guard` (is this address paused?) and the Bearer support in the
 `authenticate` middleware. Saved test: `tests/e2e/tests/t87-staff-app-auth-api.mjs`.
 
+### How often the apps ask for new data (refresh interval, per app)
+
+- **One number per app**, in seconds, **default 8**, allowed **3 to 600**. The platform admin sets it in the console: **App updates → the app's tab → Refresh interval**. The delivery app (RDA) set to 15 asks the server for new deliveries every 15 seconds; OMA and KDA have their own numbers.
+- **How the app learns it:** every request an app makes carries `x-app-id`, and the API (`middleware/app-refresh.js`) adds `x-refresh-seconds: <n>` to **every answer** to it (errors too). The app keeps the last number it saw (`src/data/refresh.ts`; bad or out-of-range values are ignored) and uses it for its next refresh, so a change reaches a phone with its very next request — no new version to install. Until the first answer, an app uses 8. The server keeps the numbers in memory for 15 seconds (cleared at once on save).
+- **What it covers** (`refreshPlan` in each app's `src/lib/config.ts`): OMA — the table board and the orders list; KDA — the kitchen board; RDA — the list of deliveries. Slower background lists keep their own pace but never refresh faster than the setting (KDA dishes 15 s and today's numbers 30 s, OMA "can't be ordered" 60 s).
+- **Old builds:** an app version made before this setting keeps its old fixed pace (OMA 8/10 s, KDA 5/15/30 s, RDA 10 s) until it is updated; it simply ignores the header.
+- **Data:** one document per app in `appsettings` (`AppSettingModel`); an app with none uses the default. API: `GET /api/platform/app-releases/settings`, `PUT /api/platform/app-releases/settings/:app` (super admin).
+- **Tests:** t104 (API), t105 (console), and in each app's jest suite `__tests__/refresh.test.ts` (limits equal the server's), the client reading the header, and a screen that really waits 15 / 20 seconds when told to.
+
 ### Kitchen app (KDA): who may sign in, what each role does
 
 **Rasoi Pulse KDA** is the kitchen's twin of the dashboard's Kitchen display. Its screens: **Board** (New · Preparing · Ready,

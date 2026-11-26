@@ -203,3 +203,29 @@ describe("the endpoint functions put the right call on the wire", () => {
     expect(c.url).toBe("https://api.test/api/app-updates/check?app=kda&platform=android&versionCode=7");
   });
 });
+
+describe("the refresh interval the server announces", () => {
+  const withCallback = (f: ReturnType<typeof fakeFetch>) => {
+    const onRefreshSeconds = jest.fn();
+    const client = createClient({ baseUrl: "https://api.test", getToken: () => null, onUnauthorized: () => undefined, fetchImpl: f.impl, onRefreshSeconds });
+    return { client, onRefreshSeconds };
+  };
+
+  it("hands the x-refresh-seconds header of an answer to the app", async () => {
+    const { client, onRefreshSeconds } = withCallback(fakeFetch({ json: { ok: true }, headers: { "x-refresh-seconds": "15" } }));
+    await client.request("/api/anything");
+    expect(onRefreshSeconds).toHaveBeenCalledWith("15");
+  });
+
+  it("does so for a refusal too (a wrong password still tells the app how often to ask)", async () => {
+    const { client, onRefreshSeconds } = withCallback(fakeFetch({ status: 401, json: { error: "no" }, headers: { "x-refresh-seconds": "20" } }));
+    await expect(client.request("/api/anything", { auth: false })).rejects.toBeInstanceOf(ApiError);
+    expect(onRefreshSeconds).toHaveBeenCalledWith("20");
+  });
+
+  it("does nothing when the answer has no such header (an older server, a proxy's error page)", async () => {
+    const { client, onRefreshSeconds } = withCallback(fakeFetch({ json: { ok: true } }));
+    await client.request("/api/anything");
+    expect(onRefreshSeconds).not.toHaveBeenCalled();
+  });
+});

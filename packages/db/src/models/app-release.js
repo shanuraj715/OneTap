@@ -38,3 +38,17 @@ const appReleaseSchema = new Schema(
 appReleaseSchema.index({ app: 1, platform: 1, versionCode: 1 }, { unique: true });
 appReleaseSchema.plugin(writeEvents, { model: "AppRelease", ignore: ["downloads"] });
 export const AppReleaseModel = models.AppRelease ?? model("AppRelease", appReleaseSchema);
+
+/**
+ * Settings of one app (not of one release), set by the platform admin: today how often the app asks the server for new data. One document per
+ * app; an app with no document uses the default (APP_REFRESH.default). Platform-level, not tenant-scoped.
+ */
+const appSettingSchema = new Schema(
+  {
+    app: { type: String, required: true, unique: true },
+    refreshSeconds: { type: Number, required: true },
+    updatedBy: { type: String, default: null },
+  },
+  { timestamps: true },
+);
+export const AppSettingModel = models.AppSetting ?? model("AppSetting", appSettingSchema);

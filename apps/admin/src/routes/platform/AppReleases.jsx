@@ -1,9 +1,9 @@
 import { useRef, useState } from "react";
-import { APP_CATALOG, APP_IDS, MAX_APK_MB, formatBytes, parseAppVersion } from "@rasoipulse/config-schema";
-import { Archive, Check, Copy, Download, ExternalLink, Eye, EyeOff, Pencil, Rocket, ShieldAlert, Smartphone, Trash2, Upload } from "lucide-react";
+import { APP_CATALOG, APP_IDS, APP_REFRESH, MAX_APK_MB, formatBytes, parseAppVersion } from "@rasoipulse/config-schema";
+import { Archive, Check, Copy, Download, ExternalLink, Eye, EyeOff, Pencil, RefreshCw, Rocket, ShieldAlert, Smartphone, Trash2, Upload } from "lucide-react";
 import * as api from "../../lib/api";
 import { uploadApk, versionFromFileName } from "../../lib/uploadApk";
-import { useAppReleases, usePlatformMutation } from "../../lib/usePlatform";
+import { useAppReleases, useAppSettings, usePlatformMutation } from "../../lib/usePlatform";
 import { Button, Card, Checkbox, Empty, Field, Modal, Note, PageHeader, Pill, TextInput, Toast } from "../../ui";
 import { fmtDate, muted } from "./shared";
 
@@ -66,6 +66,7 @@ export function AppReleases() {
       ) : (
         <>
           <Summary data={data} />
+          <RefreshInterval app={app} meta={meta} />
           <Card>
             {releases.length === 0 ? (
               <Empty icon={<Smartphone size={34} />} title="No version uploaded yet">
@@ -85,6 +86,79 @@ export function AppReleases() {
       {creating ? <NewVersion data={data} app={app} meta={meta} onClose={() => setCreating(false)} /> : null}
       {editing ? <EditNotes release={editing} onClose={() => setEditing(null)} /> : null}
     </>
+  );
+}
+
+/** What each app's refresh covers, in the words of the people who use it (shown under the number). */
+const REFRESH_COVERS = {
+  oma: "the table board and the list of orders",
+  kda: "the kitchen board (new orders and their timers)",
+  rda: "the list of deliveries (new delivery requests)",
+};
+
+/**
+ * How often THIS app asks the server for new data. One number per app: the delivery app set to 15 asks for new deliveries every 15 seconds.
+ * The server states it in every answer it gives the app, so a change reaches each phone with its very next request, with no new version to install
+ * (an app version made before this setting existed keeps asking at its own fixed pace until it is updated).
+ */
+function RefreshInterval({ app, meta }) {
+  const q = useAppSettings();
+  const setting = q.data?.settings.find((s) => s.app === app);
+  if (!setting) return q.error ? <Toast kind="error">{q.error.message}</Toast> : null;
+  // keyed by the app: switching tabs starts a fresh box, while a save keeps its "Saved." note
+  return <RefreshForm key={app} app={app} meta={meta} setting={setting} />;
+}
+
+function RefreshForm({ app, meta, setting }) {
+  const [text, setText] = useState(String(setting.refreshSeconds));
+  const save = usePlatformMutation((seconds) => api.saveAppSettings(app, seconds));
+  const n = Number(text);
+  const valid = text.trim() !== "" && Number.isInteger(n) && n >= APP_REFRESH.min && n <= APP_REFRESH.max;
+  const changed = valid && n !== setting.refreshSeconds;
+  const problem = text.trim() === "" ? "" : !Number.isInteger(n) ? `Enter a whole number of seconds, from ${APP_REFRESH.min} to ${APP_REFRESH.max}.` : n < APP_REFRESH.min ? `At least ${APP_REFRESH.min} seconds: asking more often only loads the server.` : n > APP_REFRESH.max ? `At most ${APP_REFRESH.max} seconds.` : "";
+  return (
+    <div style={{ marginBottom: 14 }}>
+    <Card>
+      <div data-testid="app-refresh" style={{ display: "flex", flexWrap: "wrap", gap: "14px 28px", alignItems: "flex-end", justifyContent: "space-between" }}>
+        <div style={{ minWidth: 0, flex: "1 1 280px" }}>
+          <div style={label}>
+            <RefreshCw size={12} aria-hidden="true" style={{ verticalAlign: "-1px", marginRight: 5 }} />
+            Refresh interval
+          </div>
+          <div style={{ fontSize: 14.5 }} data-testid="app-refresh-now">
+            {meta.code} asks the server for new data every <strong>{setting.refreshSeconds} seconds</strong>
+            <span style={muted}>{setting.isDefault ? " (the default)" : ""}</span>
+          </div>
+          <p style={{ ...muted, margin: "6px 0 0", fontSize: 13, lineHeight: 1.5 }}>
+            This covers {REFRESH_COVERS[app] ?? "everything the app refreshes by itself"}. A longer wait means fewer requests to the server but new things show later. Slower lists (for example today’s totals, or the dishes that
+            can’t be ordered) keep their own slower pace, and never refresh faster than this. Phones pick up a change with their next request. Each app has its own setting.
+          </p>
+        </div>
+        <form
+          style={{ display: "flex", gap: 10, alignItems: "flex-end", flexWrap: "wrap" }}
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (changed && !save.isPending) save.mutate(n);
+          }}
+        >
+          <Field label="Seconds between refreshes" hint={`Default ${APP_REFRESH.default}. From ${APP_REFRESH.min} to ${APP_REFRESH.max}.`} style={{ width: 190 }}>
+            <TextInput type="number" inputMode="numeric" min={APP_REFRESH.min} max={APP_REFRESH.max} step={1} value={text} onChange={(e) => { setText(e.target.value); save.reset(); }} data-testid="refresh-seconds" aria-invalid={problem ? "true" : undefined} />
+          </Field>
+          <Button type="submit" disabled={!changed || save.isPending} data-testid="refresh-save">
+            {save.isPending ? "Saving…" : "Save"}
+          </Button>
+          {n !== APP_REFRESH.default || setting.refreshSeconds !== APP_REFRESH.default ? (
+            <Button type="button" variant="outline" onClick={() => { setText(String(APP_REFRESH.default)); save.reset(); }} data-testid="refresh-default">
+              Use the default ({APP_REFRESH.default})
+            </Button>
+          ) : null}
+        </form>
+      </div>
+      {problem ? <Toast kind="error"><span data-testid="refresh-problem">{problem}</span></Toast> : null}
+      {save.error ? <Toast kind="error"><span data-testid="refresh-error">{save.error.message}</span></Toast> : null}
+      {save.isSuccess && !save.isPending ? <Toast kind="ok"><span data-testid="refresh-saved">Saved. {meta.code} now asks every {setting.refreshSeconds} seconds.</span></Toast> : null}
+    </Card>
+    </div>
   );
 }
 

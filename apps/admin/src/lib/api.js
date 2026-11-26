@@ -945,6 +945,9 @@ export const saveCartReminders = (o, body) => req("/api/cart-reminders", { metho
 export const listAppReleases = (app = "oma") => req(`/api/platform/app-releases?app=${encodeURIComponent(app)}`);
 export const startAppUpload = (fileName, size, app = "oma") => req("/api/platform/app-releases/uploads", json("POST", { fileName, size, app }));
 export const completeAppUpload = (uploadId, body) => req(`/api/platform/app-releases/uploads/${uploadId}/complete`, json("POST", body));
+/** How often each app asks the server for new data, in seconds (one number per app). */
+export const listAppSettings = () => req("/api/platform/app-releases/settings");
+export const saveAppSettings = (app, refreshSeconds) => req(`/api/platform/app-releases/settings/${encodeURIComponent(app)}`, json("PUT", { refreshSeconds }));
 export const updateAppRelease = (id, body) => req(`/api/platform/app-releases/${id}`, json("PATCH", body));
 export const deleteAppRelease = (id) => req(`/api/platform/app-releases/${id}`, { method: "DELETE" });
 

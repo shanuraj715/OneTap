@@ -51,6 +51,22 @@ export const isAppId = (v) => typeof v === "string" && Object.prototype.hasOwnPr
 /** The public address of an app's page on the website: `/apps/oma`. */
 export const appPagePath = (app) => `/apps/${APP_CATALOG[app]?.slug ?? app}`;
 
+/**
+ * How often an app asks the server for new data (a new order, a new delivery), in seconds. ONE number per app, set by the platform admin in the
+ * console (App updates → the app's tab → Refresh interval) and told to the app in the `x-refresh-seconds` header of every answer, so a change
+ * reaches a phone with its very next request. The apps keep these same numbers (`REFRESH_DEFAULT_SECONDS` …) in their own config, and their tests
+ * fail if the two drift apart.
+ */
+export const APP_REFRESH = { default: 8, min: 3, max: 600 };
+export const APP_REFRESH_HEADER = "x-refresh-seconds";
+export const appSettingsInputSchema = z.object({
+  refreshSeconds: z
+    .number({ invalid_type_error: `Enter a whole number of seconds, from ${APP_REFRESH.min} to ${APP_REFRESH.max}.`, required_error: "Enter how many seconds to wait between refreshes." })
+    .int(`Enter a whole number of seconds, from ${APP_REFRESH.min} to ${APP_REFRESH.max}.`)
+    .min(APP_REFRESH.min, `At least ${APP_REFRESH.min} seconds: asking more often than that only loads the server.`)
+    .max(APP_REFRESH.max, `At most ${APP_REFRESH.max} seconds (${APP_REFRESH.max / 60} minutes): longer than that and new orders would show far too late.`),
+});
+
 export const APP_PLATFORMS = ["android"];
 export const RELEASE_STATUSES = ["draft", "published", "withdrawn"];
 export const RELEASE_STATUS_LABELS = { draft: "Draft", published: "Published", withdrawn: "Withdrawn" };
