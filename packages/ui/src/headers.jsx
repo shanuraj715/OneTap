@@ -104,8 +104,26 @@ const navDrawerLink = {
  *
  * `collapsed` is for the styles that keep the burger at every width: no inline row, the button always shows.
  * `linkStyle` / `linkClass` restyle the links of one variant (pills, underlines, small caps…).
+ *
+ * A link with `current: true` is the page the visitor is on: it gets `aria-current="page"` and `currentStyle` (a variant can pass its own,
+ * for a dark bar or a pill; the default is stronger text with an underline in the brand colour). The storefront decides which link is current
+ * and whether to mark any at all (the owner can switch it off), so a header with no `current` flag looks exactly as it always did.
  */
-function Nav({ links, mobileLinks, showToggle = true, collapsed = false, style, linkStyle: linkOverride, linkClass }) {
+const currentLinkStyle = {
+  color: "var(--color-text)",
+  fontWeight: 700,
+  textDecoration: "underline",
+  textDecorationThickness: "2px",
+  textUnderlineOffset: "6px",
+  textDecorationColor: "var(--color-primary-text, var(--color-primary))",
+};
+/** in the slide-in panel (a link per row): a tinted row in the brand colour */
+const currentDrawerStyle = {
+  background: "color-mix(in srgb, var(--color-primary) 12%, transparent)",
+  color: "var(--color-primary-text, var(--color-primary))",
+  fontWeight: 700,
+};
+function Nav({ links, mobileLinks, showToggle = true, collapsed = false, style, linkStyle: linkOverride, linkClass, currentStyle = currentLinkStyle }) {
   const [open, setOpen] = useState(false);
   // HeaderSplitNav renders two Nav halves for the desktop row — only one of
   // them should own the mobile hamburger, and it opens with the FULL list,
@@ -135,7 +153,13 @@ function Nav({ links, mobileLinks, showToggle = true, collapsed = false, style, 
       {!collapsed && links?.length ? (
         <nav className="ot-nav-inline" style={{ gap: 20, flexWrap: "wrap", ...style }}>
           {links.map((l) => (
-            <AppLink key={l.label} href={l.href} className={linkClass} style={{ ...linkStyle, ...linkOverride }}>
+            <AppLink
+              key={l.label}
+              href={l.href}
+              className={linkClass}
+              aria-current={l.current ? "page" : undefined}
+              style={{ ...linkStyle, ...linkOverride, ...(l.current ? currentStyle : null) }}
+            >
               {l.label}
             </AppLink>
           ))}
@@ -165,7 +189,7 @@ function Nav({ links, mobileLinks, showToggle = true, collapsed = false, style, 
               <div className="ot-anim-fade" style={navBackdrop} onClick={() => setOpen(false)} aria-hidden="true" />
               <nav className="ot-anim-slide-in ot-fx-modal" style={fx("modal", navDrawer)} aria-label="Site menu">
                 {drawerLinks.map((l) => (
-                  <AppLink key={l.label} href={l.href} style={navDrawerLink} onClick={() => setOpen(false)}>
+                  <AppLink key={l.label} href={l.href} aria-current={l.current ? "page" : undefined} style={{ ...navDrawerLink, ...(l.current ? currentDrawerStyle : null) }} onClick={() => setOpen(false)}>
                     {l.label}
                   </AppLink>
                 ))}
@@ -358,6 +382,7 @@ export function HeaderPillNav({ name, logoUrl, links }) {
           style={{ gap: 4, padding: 4, borderRadius: 999, background: "var(--color-surface)", border: "1px solid var(--color-border)" }}
           linkClass="ot-hd-pill"
           linkStyle={{ padding: "7px 16px", borderRadius: 999, color: "var(--color-text)", fontWeight: 600, fontSize: 13.5 }}
+          currentStyle={{ background: "var(--color-primary)", color: "var(--color-on-primary)" }}
         />
       </div>
     </header>
@@ -399,7 +424,7 @@ export function HeaderDark({ name, logoUrl, links, orderHref }) {
       <div className="ot-header-px" style={{ ...inner, paddingTop: 15, paddingBottom: 15, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 20 }}>
         <BrandMark name={name} logoUrl={logoUrl} size={20} color="var(--color-bg)" />
         <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
-          <Nav links={links} linkStyle={{ color: "color-mix(in srgb, var(--color-bg) 80%, transparent)" }} />
+          <Nav links={links} linkStyle={{ color: "color-mix(in srgb, var(--color-bg) 80%, transparent)" }} currentStyle={{ ...currentLinkStyle, color: "var(--color-bg)", textDecorationColor: "var(--color-bg)" }} />
           <OrderButton href={orderHref} />
         </div>
       </div>
@@ -414,7 +439,7 @@ export function HeaderUnderline({ name, logoUrl, links, phone }) {
       <div className="ot-header-px" style={{ ...inner, paddingTop: 16, paddingBottom: 16, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 24 }}>
         <BrandMark name={name} logoUrl={logoUrl} size={20} />
         <div style={{ display: "flex", alignItems: "center", gap: 26 }}>
-          <Nav links={links} style={{ gap: 26 }} linkClass="ot-hd-underline" linkStyle={{ color: "var(--color-text)", fontWeight: 600, paddingBottom: 3 }} />
+          <Nav links={links} style={{ gap: 26 }} linkClass="ot-hd-underline" linkStyle={{ color: "var(--color-text)", fontWeight: 600, paddingBottom: 3 }} currentStyle={{ backgroundSize: "100% 2px", fontWeight: 700 }} />
           {phone ? (
             <a href={telHref(phone)} className="ot-hide-sm" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13, color: "var(--color-text-muted)", textDecoration: "none", whiteSpace: "nowrap" }}>
               <PhoneGlyph /> {phone}

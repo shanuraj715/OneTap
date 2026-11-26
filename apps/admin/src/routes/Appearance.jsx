@@ -5,7 +5,7 @@ import { getVariant, VARIANT_SLOTS } from "@rasoipulse/ui";
 import { useMenu } from "../lib/useMenu";
 import { useOutlet, usePatchConfig } from "../lib/useOutlet";
 import { StorePreviewFrame } from "../lib/storePreview";
-import { Button, Card, Field, InfoHint, PageHeader, STICKY_HEADER_CLEARANCE, TextInput, Toast } from "../ui";
+import { Button, Card, Checkbox, Field, InfoHint, PageHeader, STICKY_HEADER_CLEARANCE, TextInput, Toast } from "../ui";
 import { PictureShape } from "../components/PictureShape";
 import { StorefrontNav } from "../components/SubNav";
 
@@ -103,6 +103,18 @@ export function Appearance() {
           {patch.error ? <Toast kind="error">{(patch.error         ).message}</Toast> : null}
         </div>
       </div>
+
+      <Card
+        title="Header menu"
+        subtitle="How the menu at the top of every page behaves for your customers."
+      >
+        <Checkbox
+          checked={layout.highlightCurrentPage !== false}
+          onChange={(v) => setLayout({ ...layout, highlightCurrentPage: v })}
+          label="Highlight the page you're on"
+          info="The header menu marks the link of the page your customer is looking at: Menu on the menu page, My orders on their account page, and so on. It works with every header style. Turn it off to show all the links the same."
+        />
+      </Card>
 
       <Card
         title="Header navigation links"
@@ -208,7 +220,7 @@ export function Appearance() {
             slot={slot}
             selectedId={values[slot.key]}
             savedId={outlet.config.layout?.[slot.key]}
-            ctx={slot.key === "itemCardVariant" ? { ...previewCtx, imageRatio: values.itemImageRatio ?? "" } : previewCtx}
+            ctx={{ ...previewCtx, highlightCurrent: layout.highlightCurrentPage !== false, ...(slot.key === "itemCardVariant" ? { imageRatio: values.itemImageRatio ?? "" } : null) }}
             config={outlet.config}
             navLinks={navLinks}
           />

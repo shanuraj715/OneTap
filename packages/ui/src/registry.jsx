@@ -425,7 +425,8 @@ const headerProps = (ctx                )              => ({
   tagline: ctx.tagline,
   phone: ctx.phone,
   links: [
-    { label: "Menu", href: "#" },
+    // the sample shows how "the page you're on" looks, unless the store has switched that off (Appearance → Header menu)
+    { label: "Menu", href: "#", ...(ctx.highlightCurrent === false ? null : { current: true }) },
     { label: "Order at table", href: "#" },
     { label: "About", href: "#" },
   ],

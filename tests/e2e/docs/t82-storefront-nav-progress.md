@@ -1,6 +1,6 @@
 # T82 — A thin progress bar across the top of the storefront while the page changes — starts at once, creeps, finishes and fades when the page arrives, ignores taps that go nowhere, gives up if nothing comes
 
-**Area:** storefront · **Last result:** ✅ PASSED (34 passed, 0 failed · 2026-11-26 11:51 · headless · 32.4 s)
+**Area:** storefront · **Last result:** ✅ PASSED (34 passed, 0 failed · 2026-11-26 12:39 · headless · 31.0 s)
 
 **Run it alone:** `node run.mjs --only t82` (add `--visible` to watch it)
 
@@ -45,8 +45,8 @@ _Nothing failed._
 
 **Step 2 — A tap on a link to another page of the store (a slow network)**
 
-- the bar is on screen at once (a quarter of a second after the tap), already a little way along — _{"state":"running","ratio":0.116}_
-- …keeps creeping forward while the page is on its way, without reaching the end — _0.116 → 0.406_
+- the bar is on screen at once (a quarter of a second after the tap), already a little way along — _{"state":"running","ratio":0.104}_
+- …keeps creeping forward while the page is on its way, without reaching the end — _0.104 → 0.399_
 - …and the old page is still showing meanwhile (the new one hasn't arrived) — _http://localhost:3170/main_
 - the new page arrives
 - the bar runs to the end when it does
@@ -75,7 +75,7 @@ _Nothing failed._
 **Step 5 — A link whose page never comes: the bar gives up by itself**
 
 - a plain tap on a link to another page starts the bar (here nothing will load)
-- after 3 seconds it is still creeping, below the end — _{"state":"running","ratio":0.691}_
+- after 3 seconds it is still creeping, below the end — _{"state":"running","ratio":0.675}_
 - within about 8 seconds it gives up and fades away instead of hanging for ever
 - (it closes with the same 'done' fade)
 
@@ -96,6 +96,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-26 12:39 | pass | 34 | 0 | headless | 31.0 s |
 | 2026-11-26 11:51 | pass | 34 | 0 | headless | 32.4 s |
 | 2026-11-26 10:40 | pass | 34 | 0 | headless | 28.6 s |
 | 2026-11-25 12:01 | pass | 34 | 0 | headless | 27.4 s |

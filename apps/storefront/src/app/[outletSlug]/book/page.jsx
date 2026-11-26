@@ -37,7 +37,7 @@ export default async function BookPage({ params }) {
   return (
     <>
       <ThemeStyle theme={theme} typography={typography} effect={outlet.config.effect} branding={outlet.config.branding} />
-      <StoreTop outlet={outlet} outletSlug={outletSlug} pages={pages} />
+      <StoreTop outlet={outlet} outletSlug={outletSlug} pages={pages} current="book" />
       <main>
         <BookingView outletId={outlet.id} outletName={identity.name || outlet.name} outletSlug={outletSlug} phone={identity.phone || ""} />
       </main>

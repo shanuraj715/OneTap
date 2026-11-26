@@ -1,6 +1,6 @@
 # T85 — The storefront's category and filter strip has room inside its panel in every style effect (light and dark, laptop and phone)
 
-**Area:** storefront · **Last result:** ✅ PASSED (105 passed, 0 failed · 2026-11-26 11:52 · headless · 1 min 10 s)
+**Area:** storefront · **Last result:** ✅ PASSED (105 passed, 0 failed · 2026-11-26 12:41 · headless · 1 min 36 s)
 
 **Run it alone:** `node run.mjs --only t85` (add `--visible` to watch it)
 
@@ -165,6 +165,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-26 12:41 | pass | 105 | 0 | headless | 1 min 36 s |
 | 2026-11-26 11:52 | pass | 105 | 0 | headless | 1 min 10 s |
 
 ---

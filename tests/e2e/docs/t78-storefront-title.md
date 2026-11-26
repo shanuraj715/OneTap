@@ -1,6 +1,6 @@
 # T78 — The storefront's browser-tab title is the store's name (and follows a rename)
 
-**Area:** storefront · **Last result:** ✅ PASSED (16 passed, 0 failed · 2026-11-26 11:49 · headless · 3.8 s)
+**Area:** storefront · **Last result:** ✅ PASSED (16 passed, 0 failed · 2026-11-26 12:38 · headless · 2.6 s)
 
 **Run it alone:** `node run.mjs --only t78` (add `--visible` to watch it)
 
@@ -74,6 +74,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-26 12:38 | pass | 16 | 0 | headless | 2.6 s |
 | 2026-11-26 11:49 | pass | 16 | 0 | headless | 3.8 s |
 | 2026-11-26 11:00 | pass | 16 | 0 | headless | 3.4 s |
 | 2026-11-26 10:40 | pass | 16 | 0 | headless | 2.4 s |

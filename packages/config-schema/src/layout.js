@@ -17,6 +17,8 @@ export const layoutSchema = z.object({
   /** the message bar above the header — its own component, so any header can sit under any bar */
   announcementVariant: z.string().default("announcement.solid"),
   headerVariant: z.string().default("header.centered"),
+  /** the header's menu marks the page the visitor is on (Menu on the menu page, My orders on the account page…) — on unless the owner turns it off */
+  highlightCurrentPage: z.boolean().default(true),
   /** admin-added header links, shown after the built-in ones — see {@link navLinkSchema} */
   navLinks: z.array(navLinkSchema).max(8).default([]),
   footerVariant: z.string().default("footer.two-column"),

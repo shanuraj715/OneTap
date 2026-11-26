@@ -42,7 +42,7 @@ export default async function StorePage({ params }) {
   return (
     <>
       <ThemeStyle theme={theme} typography={typography} effect={outlet.config.effect} branding={outlet.config.branding} />
-      <StoreTop outlet={outlet} outletSlug={outletSlug} pages={pages} />
+      <StoreTop outlet={outlet} outletSlug={outletSlug} pages={pages} current={`page:${pageSlug}`} />
       <main>
         <h1 className="ot-page-px" style={title}>{page.title}</h1>
         <PageBlocks blocks={page.blocks} contact={contactDetails(outlet.config)} layout={layout} />

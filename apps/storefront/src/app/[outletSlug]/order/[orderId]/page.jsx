@@ -36,7 +36,7 @@ export default async function TrackOrderPage({ params }) {
   return (
     <>
       <ThemeStyle theme={theme} typography={typography} effect={outlet.config.effect} branding={outlet.config.branding} />
-      <StoreTop outlet={outlet} outletSlug={outletSlug} pages={pages} />
+      <StoreTop outlet={outlet} outletSlug={outletSlug} pages={pages} current="orders" />
       <main>
         <OrderTracker outletId={outlet.id} outletSlug={outletSlug} orderId={orderId} />
       </main>
