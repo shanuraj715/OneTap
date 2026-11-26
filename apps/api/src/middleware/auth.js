@@ -17,10 +17,20 @@ export const SESSION_COOKIE = "rasoipulse_session";
    
  
 
-/** Attaches req.user when the session cookie is valid. Never rejects — routes decide. */
+/** The sign-in token the staff app sends: `Authorization: Bearer <token>` (it has no browser cookie jar). */
+export const bearerToken = (req) => /^Bearer\s+(\S+)$/i.exec(req.header("authorization") ?? "")?.[1];
+
+/**
+ * Attaches req.user when the session is valid — the browser's session cookie, or (for the staff app) a Bearer token. It is the
+ * same session either way: one table, the same expiry, signing out drops it. Never rejects — routes decide.
+ */
 export async function authenticate(req         , _res          , next              )                {
-  const token = (req.cookies                                      )?.[SESSION_COOKIE];
-  const user = await userFromToken(token);
+  const cookieToken = (req.cookies                                      )?.[SESSION_COOKIE];
+  let user = await userFromToken(cookieToken);
+  if (!user) {
+    const bearer = bearerToken(req);
+    if (bearer) user = await userFromToken(bearer);
+  }
   if (user) req.user = user;
   next();
 }

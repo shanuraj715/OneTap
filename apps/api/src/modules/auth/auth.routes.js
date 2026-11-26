@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
 import { isProd } from "../../env.js";
-import { requireUser, SESSION_COOKIE } from "../../middleware/auth.js";
+import { bearerToken, requireUser, SESSION_COOKIE } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import { usesPolicy } from "../../middleware/rate-limit.js";
 import { accountBlockedError, assertAccountNotBlocked, assertNotBlocked, blockInfo, clearAccountFailures, failed, floodLimiter, recordAccountFailure } from "../security/login-guard.js";
@@ -26,7 +26,13 @@ authRouter.get("/guard", async (req, res) => {
   res.json(await blockInfo(req, "staff"));
 });
 
-authRouter.post("/login", loginFlood, usesPolicy("login-account"), async (req, res) => {
+/**
+ * The one sign-in procedure, shared by the dashboard (`/login`, token in an httpOnly cookie) and the staff app (`/app-login`, token in the
+ * answer). Both go through the SAME guards on purpose — the per-address flood limit, the per-address block after wrong passwords and the
+ * per-account pause — and count wrong guesses in the same place, so guessing a password through the app can't get around what protects
+ * the dashboard (and the other way round).
+ */
+async function signIn(req) {
   const body = credentials.parse(req.body);
   await assertNotBlocked(req, "staff");
   // …and the account itself, whichever address the guesses come from
@@ -46,7 +52,11 @@ authRouter.post("/login", loginFlood, usesPolicy("login-account"), async (req, r
     throw e;
   }
   await clearAccountFailures(body.email);
+  return result;
+}
 
+authRouter.post("/login", loginFlood, usesPolicy("login-account"), async (req, res) => {
+  const result = await signIn(req);
   res.cookie(SESSION_COOKIE, result.token, {
     httpOnly: true,
     sameSite: "lax",
@@ -57,8 +67,19 @@ authRouter.post("/login", loginFlood, usesPolicy("login-account"), async (req, r
   res.json({ user: result.user });
 });
 
+/**
+ * Sign-in for the staff Android app. It has no browser cookie jar, so the session token comes back in the answer (and is sent as
+ * `Authorization: Bearer <token>` afterwards); nothing is set as a cookie. The app keeps it in the phone's secure storage.
+ */
+authRouter.post("/app-login", loginFlood, usesPolicy("login-account"), async (req, res) => {
+  const result = await signIn(req);
+  res.json({ token: result.token, expiresAt: result.expiresAt, user: result.user });
+});
+
 authRouter.post("/logout", async (req, res) => {
+  // the browser's cookie, or the staff app's Bearer token — whichever this sign-in used
   await logout((req.cookies                                      )?.[SESSION_COOKIE]);
+  await logout(bearerToken(req));
   res.clearCookie(SESSION_COOKIE, { path: "/" });
   res.status(204).end();
 });

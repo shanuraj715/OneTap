@@ -1,6 +1,6 @@
 # Rasoi Pulse end-to-end tests — catalog
 
-**87 tests** · 87 passing · 0 failing/error · 0 not run yet
+**88 tests** · 88 passing · 0 failing/error · 0 not run yet
 
 | Test | Area | Result | Checks | Last run |
 |---|---|---|---|---|
@@ -32,7 +32,7 @@
 | [t25-otp-resend-api](t25-otp-resend-api.md) — Code resend rule — the API makes a number wait 30 s, 1 min, 2 min, 5 min, 15 min, 1 h, then 6 h between codes, however it is called | security | ✅ PASSED | 43/43 | 2026-11-21 13:08 |
 | [t26-signin-resend-timer](t26-signin-resend-timer.md) — Sign-in code — resend timer on the screen (30 s first), kept by the server: Back, reload and direct API calls can't skip it | security | ✅ PASSED | 20/20 | 2026-11-21 13:24 |
 | [t27-signin-codes-switch](t27-signin-codes-switch.md) — WhatsApp → Numbers has a 'Send sign-in codes from my WhatsApp numbers' switch; with several numbers each code leaves from a random one | notifications | ✅ PASSED | 21/21 | 2026-11-21 13:24 |
-| [t28-rate-limits-api](t28-rate-limits-api.md) — Request limits — every protected API stops at its limit with a clear 429, per account sign-in guard, live connections, and nothing that changes data is left unprotected | security | ✅ PASSED | 124/124 | 2026-11-21 16:14 |
+| [t28-rate-limits-api](t28-rate-limits-api.md) — Request limits — every protected API stops at its limit with a clear 429, per account sign-in guard, live connections, and nothing that changes data is left unprotected | security | ✅ PASSED | 124/124 | 2026-11-26 16:49 |
 | [t29-orders-account-api](t29-orders-account-api.md) — Order history for the storefront Account page, and deleting an order — who may, what it puts right, where it disappears | orders | ✅ PASSED | 65/65 | 2026-11-25 03:06 |
 | [t30-account-orders](t30-account-orders.md) — Storefront Account page — 'My orders' menu link, order history with status, payment mode & state, coins; Delete order on the dashboard | storefront | ✅ PASSED | 42/42 | 2026-11-21 14:26 |
 | [t31-store-name-header](t31-store-name-header.md) — Storefront — the header and the big heading say the store's name; the outlet's name is only in the outlet dropdown | storefront | ✅ PASSED | 12/12 | 2026-11-21 13:13 |
@@ -91,6 +91,7 @@
 | [t84-storage-image-cache](t84-storage-image-cache.md) — Browser caching of pictures: new cloud uploads carry a one-year immutable cache header, and pictures stored earlier can be given it in place | storage | ✅ PASSED | 23/23 | 2026-11-26 11:51 |
 | [t85-effects-toolbar-spacing](t85-effects-toolbar-spacing.md) — The storefront's category and filter strip has room inside its panel in every style effect (light and dark, laptop and phone) | storefront | ✅ PASSED | 105/105 | 2026-11-26 12:41 |
 | [t86-header-current-page](t86-header-current-page.md) — The header menu highlights the page you're on in every header style (laptop menu and phone slide-in menu), on by default, and the owner can switch it off | storefront | ✅ PASSED | 81/81 | 2026-11-26 12:36 |
+| [t87-staff-app-auth-api](t87-staff-app-auth-api.md) — Staff app sign-in: a session token in the answer, used as a Bearer token, with the dashboard's brute-force guards (address block, account pause, flood limit) | security | ✅ PASSED | 34/34 | 2026-11-26 16:49 |
 
 ## Open findings (noticed during tests, not yet fixed)
 

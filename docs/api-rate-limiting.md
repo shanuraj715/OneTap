@@ -38,8 +38,8 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | Limit | Counted per | Allows | Why | Where it applies |
 |---|---|---|---|---|
 | `api` | signed-in user (else address) | 600 per min for a visitor's address · 1,500 per min for a signed-in user | The floor under everything: no one — a script, a stuck app, a stolen session — can hammer any endpoint without limit. Signed-in team members get 1,500 a minute, visitors 600 a minute per address (a restaurant's whole Wi-Fi shares one). | every `/api` request |
-| `login-flood` | visitor's address | 30 requests per min per address; then 5 wrong passwords block the address for 5 min, 15 min, 1 h, 6 h, 24 h (each block longer) | A script can't hammer the dashboard sign-in before it even starts guessing. (Wrong guesses are separately counted per address and per account, and block for longer each time.) | `POST /api/auth/login` |
-| `login-account` | account (email) | 10 wrong passwords in 15 min pause the account for 1 min, then 5 min, 15 min, 1 h | Guessing one account's password from many addresses (a botnet) gets past the per-address block. After 10 wrong passwords for the same email — from anywhere — that account's sign-in pauses for 1 minute, then 5, 15 and 60 minutes. Counts submitted emails whether or not they exist, so it reveals nothing. | `POST /api/auth/login` |
+| `login-flood` | visitor's address | 30 requests per min per address; then 5 wrong passwords block the address for 5 min, 15 min, 1 h, 6 h, 24 h (each block longer) | A script can't hammer the dashboard sign-in before it even starts guessing. (Wrong guesses are separately counted per address and per account, and block for longer each time.) | `POST /api/auth/app-login`<br>`POST /api/auth/login` |
+| `login-account` | account (email) | 10 wrong passwords in 15 min pause the account for 1 min, then 5 min, 15 min, 1 h | Guessing one account's password from many addresses (a botnet) gets past the per-address block. After 10 wrong passwords for the same email — from anywhere — that account's sign-in pauses for 1 minute, then 5, 15 and 60 minutes. Counts submitted emails whether or not they exist, so it reveals nothing. | `POST /api/auth/app-login`<br>`POST /api/auth/login` |
 | `otp-flood` | visitor's address | 30 requests per min per address; 5 wrong codes block the address, longer each time | Any burst of sign-in-code requests or code guesses from one address. | `POST /api/customer/otp/request`<br>`POST /api/customer/otp/verify` |
 | `otp-send-ip` | visitor's address | 15 per 10 min | Each code costs the store an SMS or a WhatsApp message. One address can't make the store text hundreds of different phone numbers (SMS bombing). 15 per 10 minutes leaves room for a restaurant's shared Wi-Fi. | `POST /api/customer/otp/request` |
 | `otp-send-store` | store | 300 per hour | A ceiling on what any attack — however many addresses it uses — can make ONE store spend on codes in an hour. | `POST /api/customer/otp/request` |
@@ -96,6 +96,7 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | PUT | `/api/analytics/profile` | `api`, `team-write`, `report` |
 | GET | `/api/analytics/sales` | `api`, `report` |
 | GET | `/api/analytics/stock` | `api`, `report` |
+| POST | `/api/auth/app-login` | `api`, `login-flood`, `login-account` |
 | GET | `/api/auth/guard` | `api` |
 | POST | `/api/auth/login` | `api`, `login-flood`, `login-account` |
 | POST | `/api/auth/logout` | `api` |

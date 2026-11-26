@@ -9422,8 +9422,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T10:44:05.851Z",
-    "durationMs": 8738,
+    "at": "2026-11-26T11:19:32.454Z",
+    "durationMs": 9367,
     "steps": [
       {
         "n": 1,
@@ -10140,7 +10140,7 @@
           {
             "label": "the inventory sees the whole API",
             "ok": true,
-            "detail": "324 routes, 189 change data",
+            "detail": "325 routes, 190 change data",
             "kind": "expect"
           },
           {
@@ -29992,6 +29992,260 @@
             "kind": "expect"
           }
         ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t87-staff-app-auth-api": {
+    "id": "t87-staff-app-auth-api",
+    "title": "Staff app sign-in: a session token in the answer, used as a Bearer token, with the dashboard's brute-force guards (address block, account pause, flood limit)",
+    "status": "pass",
+    "pass": 34,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-26T11:19:38.543Z",
+    "durationMs": 5226,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Signing in with the app route",
+        "checks": [
+          {
+            "label": "the right email and password give a session token in the answer",
+            "ok": true,
+            "detail": "status 200",
+            "kind": "expect"
+          },
+          {
+            "label": "…and nothing is set as a cookie (the app keeps the token itself)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the answer says who signed in, their role and what they may do (the app needs order:create and table access)",
+            "ok": true,
+            "detail": "staff",
+            "kind": "expect"
+          },
+          {
+            "label": "the session lasts days, not minutes (it is the same session the dashboard uses)",
+            "ok": true,
+            "detail": "2026-12-10T11:19:36.692Z",
+            "kind": "expect"
+          },
+          {
+            "label": "the password hash is never in the answer",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the dashboard's own sign-in is unchanged: a cookie, and no token in the answer",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Using the token",
+        "checks": [
+          {
+            "label": "the token identifies the person on any request (GET /api/auth/me)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and opens the staff endpoints the app needs (the tables of their outlet)",
+            "ok": true,
+            "detail": "status 200",
+            "kind": "expect"
+          },
+          {
+            "label": "…including the tables currently in service",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the menu",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "with no token and no cookie the same request is refused (401)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a made-up token is refused (401)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the outlet still has to be named (the token proves who, the header says where)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an owner's token can do what an owner can",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(and a waiter's token is judged by the waiter's role, not refused as unsigned)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Roles are still enforced",
+        "checks": [
+          {
+            "label": "a kitchen account can sign in but is told it may not take orders (the app turns it away)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the server refuses its order attempt (403), whatever the app does",
+            "ok": true,
+            "detail": "status 403",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Signing out and expiry",
+        "checks": [
+          {
+            "label": "signing out with the token answers 204",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and that token stops working at once",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "other people's tokens are untouched",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a token whose session has expired is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a person can be signed in on the app and in the dashboard at the same time",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "The sign-in guards apply to the app route",
+        "checks": [
+          {
+            "label": "a wrong password and an unknown email get the very same 401 message (no hint which emails exist)",
+            "ok": true,
+            "detail": "Incorrect email or password",
+            "kind": "expect"
+          },
+          {
+            "label": "GET /api/auth/guard tells the app whether this address is blocked (so it can show a notice instead of the form)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "wrong passwords are answered 401 at first",
+            "ok": true,
+            "detail": "401,401,401,429",
+            "kind": "expect"
+          },
+          {
+            "label": "after 4 wrong passwords the address is blocked — even the RIGHT password is now refused (429) with a countdown",
+            "ok": true,
+            "detail": "429 Too many failed attempts. Try again in 5 minutes.",
+            "kind": "expect"
+          },
+          {
+            "label": "the guard endpoint now says blocked, and for how long",
+            "ok": true,
+            "detail": "{\"blocked\":true,\"retryAfterSec\":300,\"blockedUntil\":\"2026-11-26T11:24:37.157Z\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "the block is shared: the same address is refused on the DASHBOARD sign-in too (the app route is not a way around it)",
+            "ok": true,
+            "detail": "status 429",
+            "kind": "expect"
+          },
+          {
+            "label": "another address is not affected",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "wrong passwords for one account from many different addresses pause that account",
+            "ok": true,
+            "detail": "answers 401,429, then right password: 429",
+            "kind": "expect"
+          },
+          {
+            "label": "…even with the right password, from a fresh address, on the app route",
+            "ok": true,
+            "detail": "status 429",
+            "kind": "expect"
+          },
+          {
+            "label": "…and on the dashboard route (one shared pause)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a burst of sign-in requests from one address is stopped by the flood limit (10 a minute here)",
+            "ok": true,
+            "detail": "first 429 at request 11 of 14",
+            "kind": "expect"
+          },
+          {
+            "label": "…with the named policy login-flood and a Retry-After header",
+            "ok": true,
+            "detail": "login-flood 60",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "The limits are on the route inventory",
+        "checks": []
       }
     ],
     "findings": [],

@@ -1274,3 +1274,5 @@
 {"id":"t80-sold-out-last-and-view-all","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-26T07:11:58.295Z","durationMs":23058}
 {"id":"t41-storefront-view-all","status":"pass","pass":85,"fail":0,"mode":"headless","at":"2026-11-26T07:13:04.846Z","durationMs":61007}
 {"id":"t47-storefront-pinned-bars","status":"pass","pass":101,"fail":0,"mode":"headless","at":"2026-11-26T07:15:03.895Z","durationMs":113573}
+{"id":"t28-rate-limits-api","status":"pass","pass":124,"fail":0,"mode":"headless","at":"2026-11-26T11:19:32.454Z","durationMs":9367}
+{"id":"t87-staff-app-auth-api","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-26T11:19:38.543Z","durationMs":5226}
