@@ -169,7 +169,7 @@ It reuses the existing kitchen API unchanged and adds a few endpoints; the other
   it ticked, like every plan feature.
 - **Tests:** the server side is t97 (`tests/e2e/tests/t97-kitchen-app-api.mjs`); the app has its own jest suite (`npm test` in
   `mobile-apps/kda`) that runs against answers recorded from the real API by `tests/e2e/suites/_record-kitchen-app-fixtures.mjs`.
-- **App icon:** the same hat-and-heartbeat artwork on a deep-teal tile with **KDA** under it (OMA is navy); made by `brand/rasoi-pulse/build.mjs`.
+- **App icon:** the same hat-and-heartbeat artwork on a teal tile with **KDA** under it; made by `brand/rasoi-pulse/build.mjs`. **Each app has one colour** — OMA indigo `#404DB6`, KDA teal `#0D7F6B`, RDA violet `#764ED1` — used for its icon tile, its in-app theme (light and dark) and its page on the website (see `brand/rasoi-pulse/README.md`).
 
 ### Delivery: the map pin, the delivery code, and the Rider app (RDA)
 
@@ -185,7 +185,7 @@ server, meant for light use). Test: t99.
 customer's order page shows it **while the food is out for delivery** ("tell it to the rider"); the rider types it to mark the order delivered. Five wrong
 tries lock the order for the rider (a manager can still complete it from the dashboard); an empty submission isn't a try; orders from before this have none.
 
-**Rider app (RDA)** — `mobile-apps/rda`, `com.rasoipulse.rda`, first version `v-26.11.27-001`, deep-plum icon with **RDA**.
+**Rider app (RDA)** — `mobile-apps/rda`, `com.rasoipulse.rda`, first version `v-26.11.27-001`, violet icon with **RDA**.
 - **Sign-in is its own thing:** a rider isn't a dashboard user. **Settings → Delivery riders → App login** gives a rider a PIN (4–6 digits, salted scrypt hash,
   never returned); the rider signs in with their phone number (its last 10 digits; unique across stores) and the PIN at `POST /api/rider/login`, which uses the
   same per-address and per-account guards as the staff sign-in (12 wrong PINs for one number from any addresses pause it). The token is a signed, 14-day
