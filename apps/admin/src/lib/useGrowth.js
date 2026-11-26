@@ -20,6 +20,8 @@ function useOutletMutation(outlet, fn, keys) {
 export const useCreateRider = (o) => useOutletMutation(o, (out, body) => api.createRider(out, body), ["riders"]);
 export const useUpdateRider = (o) => useOutletMutation(o, (out, a) => api.updateRider(out, a.id, a.body), ["riders"]);
 export const useDeleteRider = (o) => useOutletMutation(o, (out, id) => api.deleteRider(out, id), ["riders"]);
+export const useSetRiderPin = (o) => useOutletMutation(o, (out, a) => api.setRiderPin(out, a.id, a.pin), ["riders"]);
+export const useClearRiderPin = (o) => useOutletMutation(o, (out, id) => api.clearRiderPin(out, id), ["riders"]);
 export const useAssignRider = (o) => useOutletMutation(o, (out, a) => api.assignRider(out, a.id, a.body), ["orders", "order-print-status"]);
 
 export function useReservations(outlet, day, enabled = true) {

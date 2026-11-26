@@ -1,0 +1,6 @@
+{
+  "error": "Incorrect phone number or PIN",
+  "details": {
+    "attemptsLeft": 4
+  }
+}

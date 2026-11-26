@@ -40,6 +40,7 @@ import { appUpdatesRouter } from "./modules/app-releases/app-releases.routes.js"
 import { tablesRouter } from "./modules/tables/tables.routes.js";
 import { usersRouter } from "./modules/users/users.routes.js";
 import { ridersRouter } from "./modules/riders/riders.routes.js";
+import { riderAppRouter } from "./modules/riders/rider-app.routes.js";
 import { reservationsRouter } from "./modules/reservations/reservations.routes.js";
 import { feedbackRouter } from "./modules/feedback/feedback.routes.js";
 import { cartRemindersRouter } from "./modules/carts/carts.routes.js";
@@ -155,6 +156,8 @@ export function createApp()          {
   app.use("/api/notify", notifyRouter);
   app.use("/api/dashboard", dashboardRouter);
   app.use("/api/riders", ridersRouter);
+  // the rider app: its own sign-in (phone + PIN) and a token that opens only /api/rider
+  app.use("/api/rider", riderAppRouter);
   app.use("/api/reservations", reservationsRouter);
   app.use("/api/kitchen", kitchenRouter);
   app.use("/api/feedback", feedbackRouter);

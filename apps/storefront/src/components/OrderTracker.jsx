@@ -166,6 +166,16 @@ export function OrderTracker({ outletId, outletSlug, orderId }) {
             ) : null}
           </div>
         ) : null}
+
+        {order.status === "out_for_delivery" && order.deliveryCode ? (
+          <div style={codeBox} data-testid="tracker-delivery-code">
+            <span style={{ flex: 1 }}>
+              <strong>Your delivery code</strong>
+              <span style={{ display: "block", fontSize: 12, opacity: 0.85 }}>Tell this to the rider when your food arrives. Don&apos;t share it before.</span>
+            </span>
+            <span style={codeDigits} aria-label={`Delivery code ${order.deliveryCode.split("").join(" ")}`}>{order.deliveryCode}</span>
+          </div>
+        ) : null}
       </div>
 
       <h2 style={h2}>What happened</h2>
@@ -220,6 +230,8 @@ const ghostBtn = { font: "inherit", fontSize: 13, fontWeight: 600, display: "inl
 const lateBox = { display: "flex", gap: 10, alignItems: "flex-start", marginTop: 14, padding: "11px 13px", borderRadius: "calc(var(--radius-card) - 2px)", background: "var(--tone-warning-wash)", color: "var(--tone-warning)", fontSize: 13.5, fontWeight: 600, lineHeight: 1.45 };
 const cancelBox = { display: "flex", gap: 10, alignItems: "flex-start", marginTop: 14, padding: "11px 13px", borderRadius: "calc(var(--radius-card) - 2px)", background: "var(--tone-danger-wash)", color: "var(--tone-danger)", fontSize: 13.5, fontWeight: 600, lineHeight: 1.45 };
 const riderBox = { display: "flex", alignItems: "center", gap: 10, marginTop: 14, padding: "10px 12px", borderRadius: "calc(var(--radius-card) - 2px)", background: "var(--tone-info-wash)", color: "var(--tone-info)", fontSize: 13.5 };
+const codeBox = { display: "flex", alignItems: "center", gap: 12, marginTop: 10, padding: "10px 12px", borderRadius: "calc(var(--radius-card) - 2px)", background: "var(--tone-success-wash)", color: "var(--tone-success)", fontSize: 13.5 };
+const codeDigits = { fontSize: 26, fontWeight: 800, letterSpacing: 6, fontVariantNumeric: "tabular-nums", color: "var(--color-text)" };
 const callLink = { display: "inline-flex", alignItems: "center", gap: 5, fontWeight: 700, fontSize: 13, color: "var(--tone-info)", textDecoration: "none" };
 const history = { listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 10 };
 const historyRow = { display: "flex", alignItems: "center", gap: 10, fontSize: 13.5 };

@@ -108,6 +108,7 @@ export function OrderPage({
   const [redeemCoins, setRedeemCoins] = useState(0);
   const [deliveryAddress, setDeliveryAddress] = useState(null);
   const [deliveryQuote, setDeliveryQuote] = useState(null);
+  const [deliveryPinned, setDeliveryPinned] = useState(false); // has the customer put the pin on the map yet?
   const [priced, setPriced] = useState(null);
   const [priceError, setPriceError] = useState(null);
 
@@ -324,9 +325,11 @@ export function OrderPage({
         walletBalance={customer.walletBalance}
         deliveryAddress={deliveryAddress}
         deliveryQuote={deliveryQuote}
-        onDelivery={(addr, q) => {
+        deliveryPinned={deliveryPinned}
+        onDelivery={(addr, q, meta) => {
           setDeliveryAddress(addr);
           setDeliveryQuote(q);
+          setDeliveryPinned(Boolean(meta?.pinned));
         }}
         channel={effectiveChannel}
         gateways={effectiveChannel === "delivery" ? prepaidGateways : gateways}
@@ -429,6 +432,7 @@ function ReviewOrder({
   onRedeemCoins,
   walletBalance,
   deliveryAddress,
+  deliveryPinned,
   deliveryQuote,
   onDelivery,
   channel,
@@ -770,7 +774,11 @@ function ReviewOrder({
           {busy
             ? "Please wait…"
             : deliveryBlocked
-              ? "Add delivery address"
+              ? !deliveryPinned
+                ? "Choose location on the map"
+                : deliveryQuote && !deliveryQuote.serviceable
+                  ? "Move the pin inside the delivery area"
+                  : "Add delivery address"
               : tableMissing
                 ? "Pick your table"
                 : pickupMissing

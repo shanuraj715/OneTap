@@ -17,6 +17,7 @@ const art = JSON.parse(readFileSync(join(HERE, "artwork.json"), "utf8"));
 const APPS = {
   oma: { code: "OMA", label: "Rasoi Pulse OMA", tile: "#10111b" }, // navy
   kda: { code: "KDA", label: "Rasoi Pulse KDA", tile: "#0b2e2b" }, // deep teal: a kitchen's colour, and nothing else in the family uses it
+  rda: { code: "RDA", label: "Rasoi Pulse RDA", tile: "#2b1a4d" }, // deep plum: the rider app, clearly apart from navy and teal on a home screen
 };
 
 /* ---------------------------------------------------------------- colours (from the two original images) */
@@ -45,6 +46,7 @@ const GLYPHS = {
   A: [92, (c, w) => stroke("M14 88L46 12L78 88M29 66H63", c, w)],
   K: [92, (c, w) => stroke("M18 12V88M80 12L20 56M38 44L82 88", c, w)],
   D: [100, (c, w) => stroke("M16 12V88H42C70 88 88 72 88 50C88 28 70 12 42 12H16Z", c, w)],
+  R: [92, (c, w) => stroke("M18 88V12H48C68 12 80 24 80 38C80 52 68 64 48 64H18M50 64L82 88", c, w)],
 };
 const word = (code, c) => {
   const total = [...code].reduce((n, ch) => n + GLYPHS[ch][0], 0) + 14 * (code.length - 1);
@@ -100,7 +102,7 @@ const out = (...p) => join(HERE, ...p);
 const png = (svg, size) => sharp(Buffer.from(svg), { density: Math.max(72, (72 * size) / 512) }).resize(size, size).png({ compressionLevel: 9 }).toBuffer();
 const files = [];
 const write = (path, data) => { mkdirSync(dirname(out(path)), { recursive: true }); writeFileSync(out(path), data); files.push(path); };
-for (const d of ["favicon", "logo", "oma-app-icon", "kda-app-icon", "source"]) rmSync(out(d), { recursive: true, force: true });
+for (const d of ["favicon", "logo", "oma-app-icon", "kda-app-icon", "rda-app-icon", "source"]) rmSync(out(d), { recursive: true, force: true });
 const IMAGES = "/private/tmp/claude-501/-Users-shanu-raj-Raj-Gazab-Momos/04b5269f-6be5-4e77-a7b8-73a9c95b0058/images";
 mkdirSync(out("source"), { recursive: true });
 copyFileSync(`${IMAGES}/42.png`, out("source/rasoi-pulse-original-dark.png"));
@@ -179,14 +181,14 @@ for (const [key, APP] of Object.entries(APPS)) {
   write(`${dir}/expo-drop-in/android-icon-background.png`, await png(bg, 512));
   write(`${dir}/expo-drop-in/android-icon-monochrome.png`, await png(mono, 432));
 }
-const OMA = { label: true, app: APPS.oma }, KDA = { label: true, app: APPS.kda };
+const OMA = { label: true, app: APPS.oma }, KDA = { label: true, app: APPS.kda }, RDA = { label: true, app: APPS.rda };
 
 /* ===== one picture of everything ===== */
 const nest = (svg, x, y, size, id) => `<svg x="${x}" y="${y}" width="${size}" height="${size}" viewBox="0 0 512 512">${inner(svg).replace(/id="(\w+)"/g, `id="${id}$1"`).replace(/url\(#(\w+)\)/g, `url(#${id}$1)`)}</svg>`;
-const cell = 190, gap = 20, pad = 30, rowH = cell + 56, W = pad * 2 + 6 * (cell + gap) - gap, H = 100 + 5 * rowH + 60;
+const cell = 190, gap = 20, pad = 30, rowH = cell + 56, W = pad * 2 + 6 * (cell + gap) - gap, H = 100 + 6 * rowH + 60;
 const txt = (t, x, y, d) => `<text x="${x}" y="${y}" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="${d ? "#d9d3cb" : "#3a3631"}" text-anchor="middle">${t}</text>`;
 const panel = (col, row, span = 1) => `<rect x="${pad + col * (cell + gap) - 10}" y="${100 + row * rowH - 14}" width="${span * (cell + gap) - gap + 20}" height="${rowH - 8}" rx="16" fill="${K.navy}"/>`;
-let sheet = `<rect width="${W}" height="${H}" fill="#F5F4F0"/><text x="${pad}" y="52" font-family="Helvetica, Arial, sans-serif" font-size="28" font-weight="700" fill="${K.navy}">Rasoi Pulse — logo · web favicon · OMA and KDA app icons</text>${panel(4, 0, 2)}${panel(5, 1)}${panel(4, 3, 2)}${panel(5, 4)}`;
+let sheet = `<rect width="${W}" height="${H}" fill="#F5F4F0"/><text x="${pad}" y="52" font-family="Helvetica, Arial, sans-serif" font-size="28" font-weight="700" fill="${K.navy}">Rasoi Pulse — logo · web favicon · OMA, KDA and RDA app icons</text>${panel(4, 0, 2)}${panel(5, 1)}${panel(4, 3, 2)}${panel(5, 4)}${panel(5, 5)}`;
 let n = 0;
 const put = (svg, col, row, name, d = false) => { sheet += nest(svg, pad + col * (cell + gap), 100 + row * rowH, cell, `p${n++}`) + txt(name, pad + col * (cell + gap) + cell / 2, 100 + row * rowH + cell + 22, d); };
 put(tileSvg("multi-dark", "rounded"), 0, 0, "logo · original dark");
@@ -210,7 +212,14 @@ put(tileSvg("multi-dark", "circle", KDA), 2, 4, "KDA · circle");
 put(stackedOf.kda("circle"), 3, 4, "KDA Android: both layers");
 put(tileSvg("duo-navy", "rounded", KDA), 4, 4, "KDA · duo");
 put(tileSvg("mono-white", "rounded", KDA), 5, 4, "KDA · mono-white", true);
-sheet += [48, 32, 24, 16].map((s, i) => nest(fav, pad + i * 70, 100 + 5 * rowH - 10, s, `z${i}`)).join("") + txt("favicon at 48 · 32 · 24 · 16 px", pad + 330, 100 + 5 * rowH + 24, false);
+// RDA, the rider app: deep plum
+put(tileSvg("multi-dark", "rounded", RDA), 0, 5, "RDA app icon · multi-dark");
+put(tileSvg("multi-dark", "square", RDA), 1, 5, "RDA · square");
+put(tileSvg("multi-dark", "circle", RDA), 2, 5, "RDA · circle");
+put(stackedOf.rda("circle"), 3, 5, "RDA Android: both layers");
+put(tileSvg("duo-navy", "rounded", RDA), 4, 5, "RDA · duo");
+put(tileSvg("mono-white", "rounded", RDA), 5, 5, "RDA · mono-white", true);
+sheet += [48, 32, 24, 16].map((s, i) => nest(fav, pad + i * 70, 100 + 6 * rowH - 10, s, `z${i}`)).join("") + txt("favicon at 48 · 32 · 24 · 16 px", pad + 330, 100 + 6 * rowH + 24, false);
 const preview = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${sheet}</svg>`;
 writeFileSync(out("preview.svg"), preview);
 writeFileSync(out("preview.png"), await sharp(Buffer.from(preview), { density: 96 }).png().toBuffer());

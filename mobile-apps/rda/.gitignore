@@ -1,0 +1,24 @@
+# dependencies and generated files
+node_modules/
+.expo/
+dist/
+expo-env.d.ts
+*.tsbuildinfo
+# the native projects are GENERATED from app.config.ts by `expo prebuild` (never edit or commit them)
+/android/
+/ios/
+# builds
+*.apk
+*.aab
+build-output/
+# secrets — signing keys and local settings never go in git
+*.jks
+*.keystore
+keystore.properties
+.env
+.env.*
+!.env.example
+# editor / OS
+.DS_Store
+.idea/
+*.log

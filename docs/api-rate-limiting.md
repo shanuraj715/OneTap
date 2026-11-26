@@ -38,8 +38,8 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | Limit | Counted per | Allows | Why | Where it applies |
 |---|---|---|---|---|
 | `api` | signed-in user (else address) | 600 per min for a visitor's address · 1,500 per min for a signed-in user | The floor under everything: no one — a script, a stuck app, a stolen session — can hammer any endpoint without limit. Signed-in team members get 1,500 a minute, visitors 600 a minute per address (a restaurant's whole Wi-Fi shares one). | every `/api` request |
-| `login-flood` | visitor's address | 30 requests per min per address; then 5 wrong passwords block the address for 5 min, 15 min, 1 h, 6 h, 24 h (each block longer) | A script can't hammer the dashboard sign-in before it even starts guessing. (Wrong guesses are separately counted per address and per account, and block for longer each time.) | `POST /api/auth/app-login`<br>`POST /api/auth/login` |
-| `login-account` | account (email) | 10 wrong passwords in 15 min pause the account for 1 min, then 5 min, 15 min, 1 h | Guessing one account's password from many addresses (a botnet) gets past the per-address block. After 10 wrong passwords for the same email — from anywhere — that account's sign-in pauses for 1 minute, then 5, 15 and 60 minutes. Counts submitted emails whether or not they exist, so it reveals nothing. | `POST /api/auth/app-login`<br>`POST /api/auth/login` |
+| `login-flood` | visitor's address | 30 requests per min per address; then 5 wrong passwords block the address for 5 min, 15 min, 1 h, 6 h, 24 h (each block longer) | A script can't hammer the dashboard sign-in before it even starts guessing. (Wrong guesses are separately counted per address and per account, and block for longer each time.) | `POST /api/auth/app-login`<br>`POST /api/auth/login`<br>`POST /api/rider/login` |
+| `login-account` | account (email) | 10 wrong passwords in 15 min pause the account for 1 min, then 5 min, 15 min, 1 h | Guessing one account's password from many addresses (a botnet) gets past the per-address block. After 10 wrong passwords for the same email — from anywhere — that account's sign-in pauses for 1 minute, then 5, 15 and 60 minutes. Counts submitted emails whether or not they exist, so it reveals nothing. | `POST /api/auth/app-login`<br>`POST /api/auth/login`<br>`POST /api/rider/login` |
 | `otp-flood` | visitor's address | 30 requests per min per address; 5 wrong codes block the address, longer each time | Any burst of sign-in-code requests or code guesses from one address. | `POST /api/customer/otp/request`<br>`POST /api/customer/otp/verify` |
 | `otp-send-ip` | visitor's address | 15 per 10 min | Each code costs the store an SMS or a WhatsApp message. One address can't make the store text hundreds of different phone numbers (SMS bombing). 15 per 10 minutes leaves room for a restaurant's shared Wi-Fi. | `POST /api/customer/otp/request` |
 | `otp-send-store` | store | 300 per hour | A ceiling on what any attack — however many addresses it uses — can make ONE store spend on codes in an hour. | `POST /api/customer/otp/request` |
@@ -57,13 +57,14 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | `customer-feedback` | user, else customer, else address | 20 per 10 min | Rating an order: a customer rates a handful of orders at most; this stops a script filling the store's ratings. | `POST /api/customer/orders/:id/feedback` |
 | `reservation-request` | user, else customer, else address | 10 per hour | Booking a table holds seats for everybody else: a few requests an hour is plenty for a real guest, and a script must not be able to fill a restaurant's evening with fake bookings. | `POST /api/reservations` |
 | `order-place` | user, else customer, else address | 12 per 10 min for a customer · 150 per 10 min for staff at the till | A customer placing orders: a dozen in ten minutes is generous, more is a script flooding the kitchen. Staff at the till (who send the outlet header) get a much bigger budget. | `POST /api/orders` |
+| `rider-action` | visitor's address | 90 per min per address | A rider tapping Picked up / Delivered (and the code box) in the rider app. A few a minute is normal; this stops a script from trying delivery codes or flooding an outlet's orders. (Wrong codes are also counted per order: five and it locks.) | `POST /api/rider/deliveries/:id/delivered`<br>`POST /api/rider/deliveries/:id/pickup`<br>`POST /api/rider/logout` |
 | `payment` | user, else customer, else address | 40 per 10 min | Starting and confirming a payment calls the payment gateway; this stops a script burning the store's gateway quota. | `POST /api/payments/intent`<br>`POST /api/payments/verify` |
 | `webhook` | visitor's address | 240 per min | Payment gateways call this with a signature we check — but a flood of forged calls would still cost a signature check and a database read each. A gateway's servers speak for every merchant it has, so the ceiling is generous (4 a second per address) — raise RATE_LIMIT_SCALE if the platform grows to many busy stores. | `POST /api/payments/webhook/:gateway` |
 | `print-agent` | visitor's address | 300 per min | The little program at a restaurant's printer asks for jobs every second or two with its own token. 300 a minute leaves room for several printers; it stops a leaked token being used to hammer the queue. | `GET /api/printing/agent/jobs`<br>`POST /api/printing/agent/jobs/:id/result` |
-| `app-update-check` | visitor's address | 120 per min | Every phone running the staff app asks once when it starts whether a newer version exists. A restaurant's whole Wi-Fi shares one address and the staff all open the app at the same time, so the budget is generous — it only stops a script hammering the question. | `GET /api/app-updates/check`<br>`GET /api/app-updates/releases` |
+| `app-update-check` | visitor's address | 120 per min | Every phone running the staff app asks once when it starts whether a newer version exists. A restaurant's whole Wi-Fi shares one address and the staff all open the app at the same time, so the budget is generous — it only stops a script hammering the question. | `GET /api/app-updates/apps`<br>`GET /api/app-updates/check`<br>`GET /api/app-updates/releases` |
 | `app-download` | visitor's address | 40 per 10 min | Downloading the app's APK (tens of MB). 40 downloads per 10 minutes per address leaves room for a whole team installing at once behind one Wi-Fi, and stops someone using the download as a bandwidth drain. | `GET /api/app-updates/download/:id` |
 | `release-upload` | signed-in user (else address) | 200 per 10 min | Uploading a new app version: a 100 MB file goes up in 4 MB pieces, one request each (a 300 MB file is 75). 200 pieces in 10 minutes is room for a couple of uploads plus retries, and it is kept under the dashboard's own 240-changes-a-minute cap so a stuck page or a script is stopped by this one. Only the platform's super admin can upload. | `POST /api/platform/app-releases/uploads`<br>`PUT /api/platform/app-releases/uploads/:id/chunks/:index`<br>`POST /api/platform/app-releases/uploads/:id/complete` |
-| `team-write` | signed-in user (else address) | 240 per min | Every change a team member makes to the dashboard (menu, outlets, orders, tables, pages, settings…). 240 a minute is four a second — more than any person — so a stolen session can't mass-delete or mass-edit in a blink. | 177 routes (see the full list below) |
+| `team-write` | signed-in user (else address) | 240 per min | Every change a team member makes to the dashboard (menu, outlets, orders, tables, pages, settings…). 240 a minute is four a second — more than any person — so a stolen session can't mass-delete or mass-edit in a blink. | 180 routes (see the full list below) |
 | `account-write` | signed-in user (else address) | 30 per 10 min | Creating team members, changing roles and resetting passwords. Takeover of accounts is the worst thing that can happen to a store, so it is slow on purpose. | `POST /api/platform/stores/:id/owners`<br>`DELETE /api/platform/stores/:id/owners/:userId`<br>`PATCH /api/platform/stores/:id/owners/:userId`<br>`DELETE /api/platform/stores/:id/people/:userId`<br>`POST /api/platform/stores/:id/people/:userId/block`<br>`POST /api/platform/stores/:id/people/:userId/unblock`<br>`POST /api/users`<br>`DELETE /api/users/:id`<br>`PATCH /api/users/:id` |
 | `ai-images` | signed-in user (else address) | 15 per 10 min | Making dish pictures with Gemini. Every picture is a paid call to Google, one request can make up to four, and only the platform's super admin can start one — this is a brake on a stuck button or a script, not on normal use. | `POST /api/menu/items/:id/generate-images` |
 | `storage-heavy` | signed-in user (else address) | 60 per 10 min | Scanning the storage for pictures that are too big, and starting an optimize run. A scan reads every stored file's name and every collection of the database, and a run compresses pictures (a few at a time) — only the platform's super admin can start either, so this is a brake on a stuck button or a script, not on normal use. | `POST /api/platform/storage/optimize`<br>`POST /api/platform/storage/optimize/scan` |
@@ -99,6 +100,7 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | PUT | `/api/analytics/profile` | `api`, `team-write`, `report` |
 | GET | `/api/analytics/sales` | `api`, `report` |
 | GET | `/api/analytics/stock` | `api`, `report` |
+| GET | `/api/app-updates/apps` | `api`, `app-update-check` |
 | GET | `/api/app-updates/check` | `api`, `app-update-check` |
 | GET | `/api/app-updates/download/:id` | `api`, `app-download` |
 | GET | `/api/app-updates/releases` | `api`, `app-update-check` |
@@ -136,8 +138,11 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | POST | `/api/delivery/check` | `api`, `public-compute` |
 | GET | `/api/delivery/origin` | `api` |
 | GET | `/api/feedback` | `api` |
+| GET | `/api/kitchen/items` | `api` |
+| POST | `/api/kitchen/items/:id/availability` | `api`, `team-write` |
 | GET | `/api/kitchen/orders` | `api` |
 | POST | `/api/kitchen/orders/:id/stage` | `api`, `team-write` |
+| GET | `/api/kitchen/summary` | `api` |
 | POST | `/api/marketing/audience/preview` | `api`, `team-write` |
 | GET | `/api/marketing/campaigns` | `api` |
 | POST | `/api/marketing/campaigns` | `api`, `team-write`, `bulk-send` |
@@ -353,10 +358,18 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | GET | `/api/reservations/mine` | `api`, `customer-orders` |
 | POST | `/api/reservations/staff` | `api`, `team-write` |
 | GET | `/api/reservations/summary` | `api` |
+| GET | `/api/rider/deliveries` | `api` |
+| POST | `/api/rider/deliveries/:id/delivered` | `api`, `rider-action` |
+| POST | `/api/rider/deliveries/:id/pickup` | `api`, `rider-action` |
+| POST | `/api/rider/login` | `api`, `login-flood`, `login-account` |
+| POST | `/api/rider/logout` | `api`, `rider-action` |
+| GET | `/api/rider/me` | `api` |
 | GET | `/api/riders` | `api` |
 | POST | `/api/riders` | `api`, `team-write` |
 | DELETE | `/api/riders/:id` | `api`, `team-write` |
 | PATCH | `/api/riders/:id` | `api`, `team-write` |
+| DELETE | `/api/riders/:id/pin` | `api`, `team-write` |
+| PUT | `/api/riders/:id/pin` | `api`, `team-write` |
 | GET | `/api/site/challenge` | `api`, `site-challenge` |
 | POST | `/api/site/leads` | `api`, `site-lead` |
 | GET | `/api/site/links` | `api` |

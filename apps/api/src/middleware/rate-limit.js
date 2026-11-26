@@ -184,6 +184,14 @@ export const POLICIES = {
     why: "A customer placing orders: a dozen in ten minutes is generous, more is a script flooding the kitchen. Staff at the till (who send the outlet header) get a much bigger budget.",
     message: "You're placing orders too quickly. Please wait {wait}.",
   },
+  "rider-action": {
+    windowMs: MINUTE,
+    limit: 90,
+    allows: "90 per min per address",
+    key: "ip",
+    why: "A rider tapping Picked up / Delivered (and the code box) in the rider app. A few a minute is normal; this stops a script from trying delivery codes or flooding an outlet's orders. (Wrong codes are also counted per order: five and it locks.)",
+    message: "You're sending requests too fast. Please wait {wait} and try again.",
+  },
   payment: {
     windowMs: 10 * MINUTE,
     limit: 40,

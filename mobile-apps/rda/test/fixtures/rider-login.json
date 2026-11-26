@@ -1,0 +1,12 @@
+{
+  "token": "TEST-TOKEN-RIDER-0123456789",
+  "expiresAt": "2026-12-10T00:00:00.000Z",
+  "rider": {
+    "id": "6b08894579d3cdd41755cc2d",
+    "name": "Ramesh",
+    "phone": "98765 43210",
+    "outletId": "6b08894579d3cdd41755cbf3",
+    "outletName": "Gazab Momos Noida",
+    "storeName": "Gazab Momos"
+  }
+}

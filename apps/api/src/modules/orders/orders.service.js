@@ -1,4 +1,5 @@
                                                  
+import { randomInt } from "node:crypto";
 import {
   checkDelivery,
   checkPickupTime,
@@ -460,6 +461,8 @@ export async function placeOrder(input
       sessionId: input.sessionId,
       couponCode: priced.coupon?.code,
       deliveryAddress: deliveryRecord,
+      // the handover code the customer tells the rider (delivery orders only)
+      deliveryCode: deliveryRecord ? String(randomInt(1000, 10000)) : undefined,
       etaMinutes,
       scheduledFor,
       stockHold: held.length ? { held: true, lines: held } : undefined,
@@ -839,8 +842,10 @@ export async function assignRider(ctx, id, { riderId, name, phone, sendOut = fal
     order.status = "out_for_delivery";
     order.statusHistory.push({ status: "out_for_delivery", at: new Date(), by: String(user._id), reason: rider ? `with ${rider.name}` : undefined });
   }
+  const handedOver = Boolean(rider?.riderId) && order.rider?.riderId !== rider.riderId; // a different rider than before (or the first one)
   order.rider = rider ? { ...rider, assignedAt: new Date(), assignedBy: String(user._id) } : undefined;
   await order.save();
+  if (handedOver && rider.phone) tellRiderAboutDelivery(ctx, order, rider);
 
   const updated = order.toObject();
   broadcast(ctx.outletId, { type: "order.updated", order: wire(updated) });
@@ -849,6 +854,18 @@ export async function assignRider(ctx, id, { riderId, name, phone, sendOut = fal
     fireNotifications(ctx, updated, "out_for_delivery");
   }
   return updated;
+}
+
+/**
+ * A WhatsApp message from the store's own linked number to the rider the order was just handed to ("a delivery for you"), so they
+ * know even when the rider app is closed. Needs the plan's WhatsApp and a linked number; otherwise nothing is sent. Never fails the hand-over.
+ */
+function tellRiderAboutDelivery(ctx, order, rider) {
+  const where = [order.deliveryAddress?.text, order.deliveryAddress?.landmark ? `near ${order.deliveryAddress.landmark}` : ""].filter(Boolean).join(", ");
+  const text = `New delivery #${order.orderNumber} for you${order.customer?.name ? ` (${order.customer.name})` : ""}.${where ? `\n${where}` : ""}\nOpen the Rasoi Pulse RDA app for directions and to mark it delivered.`;
+  import("../whatsapp/whatsapp.service.js")
+    .then((m) => m.queueCustomerText(ctx, { phone: rider.phone, name: rider.name, text, source: "order" }))
+    .catch((err) => logger.warn({ err }, "couldn't message the rider about a delivery"));
 }
 
 /* ----------------------------------------------------------------- delete an order */
@@ -909,6 +926,8 @@ function shapeCustomerOrder(o, { byId, ratingOf, now, feedbackEnabled }) {
     scheduledFor: o.scheduledFor ?? null,
     // the rider's name and number only while they are on the way — not for ever after
     rider: o.status === "out_for_delivery" && o.rider?.name ? { name: o.rider.name, phone: o.rider.phone ?? "" } : null,
+    // the 4-digit code to tell the rider when the food arrives (only while it is on its way; older orders have none)
+    deliveryCode: o.status === "out_for_delivery" && o.deliveryCode ? o.deliveryCode : null,
     feedback: f ? { rating: f.rating, comment: f.comment ?? "", tags: f.tags ?? [], editable: now - new Date(f.createdAt).getTime() < FEEDBACK_EDIT_DAYS * 86_400_000 } : null,
     canRate: feedbackEnabled && o.status === "completed" && recent && !f,
   };
@@ -924,7 +943,7 @@ export async function customerOrderHistory({ brandId, customerId, before, limit 
   // (orders the customer removed from their own account are left out — the store still has them)
   const filter = { "customer.customerId": String(customerId), customerHiddenAt: null };
   if (before) filter.createdAt = { $lt: before };
-  const rows = await OrderModel.find(brandFilter({ brandId }, filter)).sort({ createdAt: -1, _id: -1 }).limit(take + 1).lean();
+  const rows = await OrderModel.find(brandFilter({ brandId }, filter)).select("+deliveryCode").sort({ createdAt: -1, _id: -1 }).limit(take + 1).lean();
   const page = rows.slice(0, take);
 
   const outletIds = [...new Set(page.map((o) => o.outletId))];
@@ -970,7 +989,7 @@ export function lateness(order, sla, now = Date.now()) {
  */
 export async function customerOrderById({ brandId, outletId, customerId, orderId, feedbackEnabled = false, sla = null }) {
   if (!/^[a-f\d]{24}$/i.test(String(orderId))) throw new HttpError(404, "Order not found");
-  const o = await OrderModel.findOne(brandFilter({ brandId }, { _id: orderId, outletId: String(outletId), "customer.customerId": String(customerId) })).lean();
+  const o = await OrderModel.findOne(brandFilter({ brandId }, { _id: orderId, outletId: String(outletId), "customer.customerId": String(customerId) })).select("+deliveryCode").lean();
   if (!o) throw new HttpError(404, "Order not found");
   const [outlet, rating] = await Promise.all([
     OutletModel.findOne({ brandId, _id: o.outletId }).select("name slug config.identity.name").lean(),

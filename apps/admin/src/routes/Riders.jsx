@@ -1,16 +1,51 @@
 import { useState } from "react";
-import { Bike, Pencil, Plus, Trash2 } from "lucide-react";
+import { Bike, KeyRound, Pencil, Plus, Trash2 } from "lucide-react";
 import { SettingsNav } from "../components/SubNav";
 import { useAuth } from "../lib/useAuth";
-import { useCreateRider, useDeleteRider, useRiders, useUpdateRider } from "../lib/useGrowth";
+import { useClearRiderPin, useCreateRider, useDeleteRider, useRiders, useSetRiderPin, useUpdateRider } from "../lib/useGrowth";
 import { useOutlet } from "../lib/useOutlet";
 import { useStorePlan } from "../lib/useStorePlan";
-import { Button, Card, Empty, Field, Note, PageHeader, Pill, Table, Td, TextInput, Th, Toast } from "../ui";
+import { Button, Card, Empty, Field, Modal, Note, PageHeader, Pill, Table, Td, TextInput, Th, Toast } from "../ui";
 
 /**
  * Settings → Delivery riders: the outlet's riders (name + phone). On the Orders page, "Out for delivery" asks which
- * of them is taking the order; the customer then sees that name and number. Riders don't sign in — this is a list.
+ * of them is taking the order; the customer then sees that name and number. A rider can also be given a login for the
+ * Rasoi Pulse RDA app (their phone number + a PIN set here) so they see their own deliveries on their phone.
  */
+
+/** A PIN the manager can hand to the rider: 4 digits, never a run like 0000 or 1234 that anyone would try first. */
+const suggestPin = () => {
+  for (;;) {
+    const pin = String(Math.floor(1000 + Math.random() * 9000));
+    if (!/^(\d)\1+$/.test(pin) && !"0123456789876543210".includes(pin)) return pin;
+  }
+};
+
+/** Set or reset a rider's PIN. The PIN is shown here once, as it is typed: it is stored only as a hash and can't be looked up later. */
+function PinDialog({ rider, busy, error, onSave, onClose }) {
+  const [pin, setPin] = useState(() => suggestPin());
+  const valid = /^\d{4,6}$/.test(pin);
+  return (
+    <Modal onClose={onClose} width={440} ariaLabel={`Rider app login for ${rider.name}`}>
+      <form onSubmit={(e) => { e.preventDefault(); if (valid) onSave(pin); }} style={{ display: "grid", gap: 12 }} data-testid="pin-dialog">
+        <h2 style={{ margin: 0, fontSize: 18 }}>{rider.appLogin ? "New PIN" : "Rider app login"} for {rider.name}</h2>
+        <p style={{ margin: 0, color: "var(--color-text-muted)", fontSize: 13.5, lineHeight: 1.5 }}>
+          {rider.name} signs in to the Rasoi Pulse RDA app with their phone number <strong>{rider.phone}</strong> and this PIN. Tell them the PIN yourself:
+          it is not shown again{rider.appLogin ? ", and the old PIN stops working at once (they are signed out of the app)" : ""}.
+        </p>
+        <Field label="PIN (4 to 6 digits)">
+          <TextInput value={pin} onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 6))} inputMode="numeric" autoComplete="off" aria-label="Rider PIN" data-testid="pin-input" style={{ letterSpacing: 4, fontSize: 18, fontWeight: 700 }} />
+        </Field>
+        {error ? <Toast kind="error">{error}</Toast> : null}
+        <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", flexWrap: "wrap" }}>
+          <Button type="button" variant="outline" onClick={() => setPin(suggestPin())}>Suggest another</Button>
+          <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
+          <Button type="submit" disabled={!valid || busy} data-testid="pin-save">{busy ? "Saving…" : rider.appLogin ? "Set new PIN" : "Turn on app login"}</Button>
+        </div>
+      </form>
+    </Modal>
+  );
+}
 export function Riders() {
   const { outlet } = useOutlet();
   const { can } = useAuth();
@@ -20,6 +55,9 @@ export function Riders() {
   const create = useCreateRider(outlet);
   const update = useUpdateRider(outlet);
   const remove = useDeleteRider(outlet);
+  const setPin = useSetRiderPin(outlet);
+  const clearPin = useClearRiderPin(outlet);
+  const [pinFor, setPinFor] = useState(null);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [editing, setEditing] = useState(null);
@@ -40,7 +78,7 @@ export function Riders() {
     create.mutate({ name: name.trim(), phone: phone.trim() }, { onSuccess: () => { setName(""); setPhone(""); } });
   };
   const rows = riders.data?.riders ?? [];
-  const error = create.error?.message ?? update.error?.message ?? remove.error?.message;
+  const error = create.error?.message ?? update.error?.message ?? remove.error?.message ?? clearPin.error?.message;
 
   return (
     <>
@@ -73,7 +111,8 @@ export function Riders() {
                 <Th>Name</Th>
                 <Th>Phone</Th>
                 <Th width={120}>Status</Th>
-                <Th width={200} align="right">Actions</Th>
+                <Th width={150}>Rider app</Th>
+                <Th width={280} align="right">Actions</Th>
               </tr>
             </thead>
             <tbody>
@@ -87,6 +126,7 @@ export function Riders() {
                       <Td>
                         <TextInput value={editing.phone} onChange={(e) => setEditing({ ...editing, phone: e.target.value })} aria-label="Rider phone" />
                       </Td>
+                      <Td />
                       <Td />
                       <Td align="right">
                         <span style={{ display: "inline-flex", gap: 6 }}>
@@ -102,8 +142,15 @@ export function Riders() {
                       <Td><strong>{r.name}</strong></Td>
                       <Td>{r.phone || <span style={{ color: "var(--color-text-muted)" }}>—</span>}</Td>
                       <Td>{r.isActive ? <Pill tone="ok">On duty list</Pill> : <Pill tone="neutral">Switched off</Pill>}</Td>
+                      <Td>{r.appLogin ? <Pill tone="ok">Login on</Pill> : <Pill tone="neutral">No login</Pill>}</Td>
                       <Td align="right">
-                        <span style={{ display: "inline-flex", gap: 6 }}>
+                        <span style={{ display: "inline-flex", gap: 6, flexWrap: "wrap", justifyContent: "flex-end" }}>
+                          <Button variant="outline" onClick={() => setPinFor(r)} data-testid={`rider-pin-${r.name}`} style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
+                            <KeyRound size={13} /> {r.appLogin ? "Reset PIN" : "App login"}
+                          </Button>
+                          {r.appLogin ? (
+                            <Button variant="outline" onClick={() => { if (window.confirm(`Switch off ${r.name}'s app login? They are signed out of the app and can't sign in until you set a new PIN.`)) clearPin.mutate(r.id); }} data-testid={`rider-pin-off-${r.name}`}>Login off</Button>
+                          ) : null}
                           <Button variant="outline" onClick={() => update.mutate({ id: r.id, body: { isActive: !r.isActive } })}>{r.isActive ? "Switch off" : "Switch on"}</Button>
                           <Button variant="outline" onClick={() => setEditing({ id: r.id, name: r.name, phone: r.phone })} aria-label={`Edit ${r.name}`}><Pencil size={13} /></Button>
                           <Button variant="outline" onClick={() => { if (window.confirm(`Remove ${r.name} from the list? Orders they delivered keep their name.`)) remove.mutate(r.id); }} aria-label={`Remove ${r.name}`}>
@@ -118,8 +165,17 @@ export function Riders() {
             </tbody>
           </Table>
         )}
+        {pinFor ? (
+          <PinDialog
+            rider={pinFor}
+            busy={setPin.isPending}
+            error={setPin.error?.message}
+            onClose={() => { setPinFor(null); setPin.reset(); }}
+            onSave={(pin) => setPin.mutate({ id: pinFor.id, pin }, { onSuccess: () => { setPinFor(null); setPin.reset(); } })}
+          />
+        ) : null}
         <div style={{ marginTop: 12 }}>
-          <Note>A rider who is switched off isn&apos;t offered when an order goes out. Removing a rider never changes past orders — each keeps the name and number it went out with.</Note>
+          <Note>A rider needs a 10-digit phone number to get an app login: it is the name they sign in with. A rider who is switched off isn&apos;t offered when an order goes out. Removing a rider never changes past orders — each keeps the name and number it went out with.</Note>
         </div>
       </Card>
     </>

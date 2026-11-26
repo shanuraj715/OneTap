@@ -918,6 +918,9 @@ export const listRiders = (o) => req("/api/riders", { outletId: o._id });
 export const createRider = (o, body) => req("/api/riders", { method: "POST", body: JSON.stringify(body), outletId: o._id });
 export const updateRider = (o, id, body) => req(`/api/riders/${id}`, { method: "PATCH", body: JSON.stringify(body), outletId: o._id });
 export const deleteRider = (o, id) => req(`/api/riders/${id}`, { method: "DELETE", outletId: o._id });
+/** The rider app login: set (or reset) the PIN, or switch the login off. */
+export const setRiderPin = (o, id, pin) => req(`/api/riders/${id}/pin`, { method: "PUT", body: JSON.stringify({ pin }), outletId: o._id });
+export const clearRiderPin = (o, id) => req(`/api/riders/${id}/pin`, { method: "DELETE", outletId: o._id });
 
 export const listReservations = (o, day) => req(`/api/reservations?day=${encodeURIComponent(day ?? "")}`, { outletId: o._id });
 export const reservationSummary = (o) => req("/api/reservations/summary", { outletId: o._id });

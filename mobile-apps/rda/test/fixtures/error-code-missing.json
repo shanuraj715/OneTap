@@ -1,0 +1,8 @@
+{
+  "status": 409,
+  "error": "Ask the customer for the 4-digit delivery code on their order page.",
+  "details": {
+    "code": "delivery_code_wrong",
+    "triesLeft": 5
+  }
+}

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 /**
- * Releases of the Rasoi Pulse Android apps (OMA, KDA, …). The platform admin uploads an APK for an app, says what changed and whether staff
+ * Releases of the Rasoi Pulse Android apps (OMA, KDA, RDA, …). The platform admin uploads an APK for an app, says what changed and whether staff
  * MUST update; the app asks the server at every start whether a newer release of ITSELF exists.
  *
  * A version is `v-YY.MM.DD-NNN`: the day it was cut and a build number that only ever goes up (it is also Android's versionCode, so the
@@ -30,10 +30,20 @@ export const APP_CATALOG = {
     audience: "For kitchen staff and kitchen managers",
     description: "See every order the moment it comes in, start and finish it, and mark a dish sold out or available, from an Android phone or tablet.",
   },
+  rda: {
+    id: "rda",
+    slug: "rda",
+    code: "RDA",
+    name: "Rasoi Pulse RDA",
+    tagline: "Rider Delivery App",
+    audience: "For delivery riders",
+    description: "See the deliveries handed to you, get directions in your own maps app, call or message the customer, and mark each order delivered, from an Android phone.",
+  },
 };
 export const APP_IDS = Object.keys(APP_CATALOG);
 export const OMA_APP = "oma";
 export const KDA_APP = "kda";
+export const RDA_APP = "rda";
 export const DEFAULT_APP = OMA_APP;
 /** Apps only some roles may sign in to: the server turns everyone else away at sign-in (OMA has no such rule, as before). */
 export const APP_REQUIRED_PERMISSION = { kda: "kitchen:app" };

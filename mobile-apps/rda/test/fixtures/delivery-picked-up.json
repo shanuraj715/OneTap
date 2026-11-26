@@ -1,0 +1,37 @@
+{
+  "delivery": {
+    "id": "6b08894679d3cdd41755cc91",
+    "orderNumber": "0003",
+    "status": "out_for_delivery",
+    "placedAt": "2026-11-26T19:32:22.022Z",
+    "assignedAt": "2026-11-26T19:32:22.257Z",
+    "pickedUpAt": "2026-11-26T19:32:22.257Z",
+    "deliveredAt": null,
+    "customer": {
+      "name": "Karan",
+      "phone": "9876500003"
+    },
+    "address": {
+      "text": "Flat 4B, Tower C, Sector 62, Noida",
+      "landmark": "",
+      "lat": 28.5655,
+      "lng": 77.381,
+      "distanceKm": 3.5
+    },
+    "items": [
+      {
+        "name": "Masala Chai",
+        "variantLabel": "",
+        "quantity": 3,
+        "modifiers": [],
+        "note": ""
+      }
+    ],
+    "note": "",
+    "payment": {
+      "gateway": "mock",
+      "status": "paid"
+    },
+    "needsCode": false
+  }
+}

@@ -48,6 +48,11 @@ const orderSchema = new Schema(
       default: undefined,
     },
     etaMinutes: { type: Number },
+    // a delivery order's 4-digit handover code: the customer sees it while the food is on its way and tells it to the rider, who
+    // types it in the rider app to mark the order delivered (orders from before this existed have none and need no code)
+    deliveryCode: { type: String, default: undefined, select: false },
+    // wrong codes typed for it in the rider app (after a few, the rider must ask the store to mark it delivered)
+    deliveryCodeTries: { type: Number, default: 0, select: false },
     // a pre-order: the pickup time the customer chose (null = as soon as possible)
     scheduledFor: { type: Date, default: null, index: true },
     // a delivery order's rider, as they were when it was handed over (the rider list can change later)

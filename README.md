@@ -20,7 +20,7 @@ storefront, team dashboard, menu, orders and look — switched on and limited by
 | `packages/config-schema` | Zod schemas and shared rules (store config, plans, pricing, menu, orders…) | — |
 | `packages/db` | Mongoose models, the tenant-scoping plugin, the write-event hooks | — |
 | `packages/ui` | Shared components (headers, cards, menu sections, pinned bars…) and design tokens | — |
-| `mobile-apps/` | Phone and tablet apps (React Native). One folder per app — today **Rasoi Pulse OMA** (Order Management App, for staff who take orders at the table) and **Rasoi Pulse KDA** (Kitchen Display App, for the kitchen). **Not** part of the pnpm workspace: each app has its own `package.json` and uses npm — see [Mobile apps](#mobile-apps) | — |
+| `mobile-apps/` | Phone and tablet apps (React Native). One folder per app — today **Rasoi Pulse OMA** (Order Management App, for staff who take orders at the table) **Rasoi Pulse KDA** (Kitchen Display App, for the kitchen) and **Rasoi Pulse RDA** (Rider Delivery App, for delivery riders). **Not** part of the pnpm workspace: each app has its own `package.json` and uses npm — see [Mobile apps](#mobile-apps) | — |
 | `tests/e2e` | The end-to-end test library and its throwaway test bench — see [Tests](#tests) | 3097 / 3171 / 3170 |
 | `deploy/`, `docs/` | Server and operations notes — see [More documentation](#more-documentation) | — |
 
@@ -79,7 +79,7 @@ password is lost), `route-inventory.js` (every API route with its limits), `norm
 ## Mobile apps
 
 Every phone/tablet app lives in its own folder under [`mobile-apps/`](mobile-apps/README.md) and is named
-**"Rasoi Pulse &lt;ROLE&gt;"** with the role's short code (OMA = Order Management App, KDA = Kitchen Display App). They talk to the same API as the
+**"Rasoi Pulse &lt;ROLE&gt;"** with the role's short code (OMA = Order Management App, KDA = Kitchen Display App, RDA = Rider Delivery App). They talk to the same API as the
 dashboard and the storefront; nothing in them is a second copy of the business rules — the server decides every price,
 permission and limit.
 
@@ -87,6 +87,7 @@ permission and limit.
 | --- | --- | --- | --- |
 | **Rasoi Pulse OMA** | Staff who walk to tables: take orders, manage tables (move, confirm payment, free, cancel), watch orders | Android 11+ phones and tablets | [`mobile-apps/oma`](mobile-apps/oma/README.md) |
 | **Rasoi Pulse KDA** | Kitchen staff and the kitchen manager: the live order board, the prep list, sold-out / unavailable / available for every dish | Android 11+ phones and tablets | [`mobile-apps/kda`](mobile-apps/kda/README.md) |
+| **Rasoi Pulse RDA** | Delivery riders: the deliveries handed to them, directions in their own maps app, call / WhatsApp the customer, picked up and delivered (with the customer's 4-digit code) | Android 11+ phones | [`mobile-apps/rda`](mobile-apps/rda/README.md) |
 
 Rules for the apps (decided with the owner):
 
@@ -102,15 +103,15 @@ Rules for the apps (decided with the owner):
 
 ### App updates: uploading a version, optional vs. required
 
-The apps are not on the Play Store. New versions are uploaded in the platform console and downloaded from the website. **Every app has its own releases, its own build numbers and its own download page**; the one list of apps is `APP_CATALOG` in `packages/config-schema/src/app-release.js` (today `oma` and `kda`), and the console, the website and the checks all follow it:
+The apps are not on the Play Store. New versions are uploaded in the platform console and downloaded from the website. **Every app has its own releases, its own build numbers and its own download page**; the one list of apps is `APP_CATALOG` in `packages/config-schema/src/app-release.js` (today `oma`, `kda` and `rda`), and the console, the website and the checks all follow it:
 
-- **Console → App updates** (`/platform/app-updates`, platform admin only): one **tab per app** (OMA · KDA), each with its own list; *New version* picks the `.apk`, fills the
+- **Console → App updates** (`/platform/app-updates`, platform admin only): one **tab per app** (OMA · KDA · RDA), each with its own list; *New version* picks the `.apk`, fills the
   version from its file name (`…-v-26.11.27-003.apk`), takes release notes, and sends the file up in 4 MB pieces with a
   progress bar (so no larger request limit is needed in nginx/Cloudflare, and a dropped connection retries by itself).
   Each version is a **draft**, **published** or **withdrawn**; **Required** makes it compulsory. Uploads are checked: it must
   be a real APK (a zip with an `AndroidManifest.xml`), under `APP_RELEASE_MAX_MB`, with a version `v-YY.MM.DD-NNN` (the old `v-DDMMYY-NNN` is refused for a new upload) whose
   build number (`NNN`) is not used yet. The file's size and SHA-256 are recorded.
-- **Website → `/apps`** (all apps) and **`/apps/<app>`** (`/apps/oma`, `/apps/kda`: one page per app — latest version button, release notes, install steps, every version with
+- **Website → `/apps`** (all apps) and **`/apps/<app>`** (`/apps/oma`, `/apps/kda`, `/apps/rda`: one page per app — latest version button, release notes, install steps, every version with
   its SHA-256). The old `/app` redirects (permanently) to `/apps/oma`, because OMA builds already installed send people there. It follows the console within seconds (the API tells the website to refresh) and is not indexed by search engines.
 - **In the app**, when it opens (and when it comes back to the front after 30 minutes away) it asks
   `GET /api/app-updates/check?app=<its id>&platform=android&versionCode=<its build>` (and says which app it is in the `x-app-id` header of every request; no header = OMA). A newer **optional** version shows a pop-up with *Update* (opens its `/apps/<app>`
@@ -169,6 +170,35 @@ It reuses the existing kitchen API unchanged and adds a few endpoints; the other
 - **Tests:** the server side is t97 (`tests/e2e/tests/t97-kitchen-app-api.mjs`); the app has its own jest suite (`npm test` in
   `mobile-apps/kda`) that runs against answers recorded from the real API by `tests/e2e/suites/_record-kitchen-app-fixtures.mjs`.
 - **App icon:** the same hat-and-heartbeat artwork on a deep-teal tile with **KDA** under it (OMA is navy); made by `brand/rasoi-pulse/build.mjs`.
+
+### Delivery: the map pin, the delivery code, and the Rider app (RDA)
+
+**Ordering for delivery (storefront).** Choosing Delivery draws a **free map** (Leaflet + OpenStreetMap, no key — see [`docs/free-maps.md`](docs/free-maps.md))
+headed *Choose your location on the map — Required*. The customer taps it to drop the pin on their door (or drags the pin, or presses *Use my current
+location*); the restaurant and its delivery ring are drawn. **No pin, no order**: the order button reads *Choose location on the map* and a typed
+address alone does not unlock it (the server also refuses a delivery order with no coordinates, 400). The **distance is measured from that pin** to the
+restaurant (a straight line, `POST /api/delivery/check`, recomputed by the server when the order is placed), and the delivery area, charge and time
+come from it; a pin outside the ring says so and the button asks to move it. Tiles come from `NEXT_PUBLIC_MAP_TILE_URL` (default: OpenStreetMap's public
+server, meant for light use). Test: t99.
+
+**The delivery code.** A new delivery order gets a 4-digit code (`Order.deliveryCode`, never in the dashboard's order data or the rider's list). The
+customer's order page shows it **while the food is out for delivery** ("tell it to the rider"); the rider types it to mark the order delivered. Five wrong
+tries lock the order for the rider (a manager can still complete it from the dashboard); an empty submission isn't a try; orders from before this have none.
+
+**Rider app (RDA)** — `mobile-apps/rda`, `com.rasoipulse.rda`, first version `v-26.11.27-001`, deep-plum icon with **RDA**.
+- **Sign-in is its own thing:** a rider isn't a dashboard user. **Settings → Delivery riders → App login** gives a rider a PIN (4–6 digits, salted scrypt hash,
+  never returned); the rider signs in with their phone number (its last 10 digits; unique across stores) and the PIN at `POST /api/rider/login`, which uses the
+  same per-address and per-account guards as the staff sign-in (12 wrong PINs for one number from any addresses pause it). The token is a signed, 14-day
+  `rdr1.…` token with no sessions table; **Reset PIN**, **Login off**, switching the rider off, removing them, a switched-off store or a plan without Delivery end it at once.
+  The token opens **only** `/api/rider/…`.
+- **API:** `GET /api/rider/me`, `GET /api/rider/deliveries` (their own: to do, and delivered today), `POST /api/rider/deliveries/:id/pickup` (Ready → Out for delivery;
+  the customer is told, with the rider's name), `POST /api/rider/deliveries/:id/delivered` (`{ code }`; Out for delivery → Completed, the history says the rider did it),
+  `POST /api/rider/logout`; manager side: `PUT /api/riders/:id/pin`, `DELETE /api/riders/:id/pin` (`rider:manage`). Handing an order to a rider also sends them a **WhatsApp message**
+  from the store's own linked number when the plan has WhatsApp and a number is linked (never blocks the hand-over).
+- **Free:** directions are a plain link into the rider's own maps app, calls are `tel:`, chats are `wa.me` — no map or routing service, no key.
+- **Tests:** server t98 (87 checks), manager's PIN screen t100, the app's own jest suite (`npm test` in `mobile-apps/rda`) against answers recorded by
+  `tests/e2e/suites/_record-rider-app-fixtures.mjs`.
+- **Not in the first version (ideas):** live location sharing, an in-app map, push notifications while the app is closed, a rider list/earnings screen.
 
 ## How it fits together
 
@@ -288,5 +318,5 @@ front of a process manager such as pm2. Things to get right:
 - [`deploy/wildcard-subdomains.md`](deploy/wildcard-subdomains.md) — store addresses on a subdomain: local use and the three one-time production steps
 - [`deploy/login-protection.md`](deploy/login-protection.md) — sign-in brute-force protection and how to tune it
 - [`docs/api-rate-limiting.md`](docs/api-rate-limiting.md) — which API requests are limited, how hard, and why
-- [`mobile-apps/README.md`](mobile-apps/README.md) — how the mobile apps are organised; [`mobile-apps/oma/README.md`](mobile-apps/oma/README.md) — run, build, version and test the staff order app; [`mobile-apps/kda/README.md`](mobile-apps/kda/README.md) — the same for the kitchen display app
+- [`docs/free-maps.md`](docs/free-maps.md) — the free map (Leaflet + OpenStreetMap), what it costs, and how to serve your own tiles; [`mobile-apps/README.md`](mobile-apps/README.md) — how the mobile apps are organised; [`mobile-apps/oma/README.md`](mobile-apps/oma/README.md) — run, build, version and test the staff order app; [`mobile-apps/kda/README.md`](mobile-apps/kda/README.md) — the same for the kitchen display app; [`mobile-apps/rda/README.md`](mobile-apps/rda/README.md) — the rider delivery app
 - [`tests/e2e/README.md`](tests/e2e/README.md) — the test library and how to add a test

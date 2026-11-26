@@ -12,6 +12,14 @@ const riderSchema = new Schema(
     name: { type: String, required: true, trim: true },
     phone: { type: String, default: "", trim: true },
     isActive: { type: Boolean, default: true },
+    // The rider app's sign-in (phone + a 4–6 digit PIN the manager sets). `pinHash` is a salted scrypt hash, never the PIN;
+    // `loginPhone` = the last 10 digits of the phone, the name the rider signs in with (only set while the app login is on);
+    // `pinVersion` goes up whenever the PIN is set again or the login is switched off, which ends every sign-in made before.
+    pinHash: { type: String, default: "", select: false },
+    loginPhone: { type: String, default: "", index: true },
+    pinVersion: { type: Number, default: 0 },
+    pinSetAt: { type: Date, default: null },
+    lastLoginAt: { type: Date, default: null },
   },
   { timestamps: true },
 );

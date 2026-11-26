@@ -1,0 +1,7 @@
+{
+  "status": 429,
+  "error": "Too many wrong codes. Call the store: they can mark this order delivered.",
+  "details": {
+    "code": "delivery_code_locked"
+  }
+}

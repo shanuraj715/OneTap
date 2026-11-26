@@ -188,7 +188,7 @@ await t.run(async () => {
   const pubO = (await call("GET", "/api/app-updates/releases?app=oma")).json;
   ok(pubK.releases.length === 2 && pubK.app.name === "Rasoi Pulse KDA" && !pubO.releases.some((r) => r.id === k1.id || r.id === k2.id), "the website's list is per app too");
   const apps = (await call("GET", "/api/app-updates/apps")).json.apps;
-  ok(apps.map((a) => a.id).join() === "oma,kda" && apps[1].latest.version === "v-26.11.28-002" && apps[1].page === "/apps/kda" && apps[0].page === "/apps/oma", "/api/app-updates/apps lists every app with its newest version and page", apps.map((a) => `${a.id}:${a.latest?.version}`).join(" "));
+  ok(apps.map((a) => a.id).join() === "oma,kda,rda" && apps[2].latest === null && apps[1].latest.version === "v-26.11.28-002" && apps[1].page === "/apps/kda" && apps[0].page === "/apps/oma", "/api/app-updates/apps lists every app with its newest version and page", apps.map((a) => `${a.id}:${a.latest?.version}`).join(" "));
   const dlK = await fetch(`${t.base}/api/app-updates/download/${k2.id}`, { headers: { "x-forwarded-for": "198.51.100.140" } });
   ok(dlK.status === 200 && /filename="rasoi-pulse-kda-v-26\.11\.28-002\.apk"/.test(dlK.headers.get("content-disposition") ?? ""), "a Kitchen-app file downloads under its own name");
   const loginK = (code) => fetch(`${t.base}/api/auth/app-login`, { method: "POST", headers: { "content-type": "application/json", "x-forwarded-for": "198.51.100.141", "x-app-id": "kda", ...(code ? { "x-app-version-code": String(code) } : {}) }, body: JSON.stringify({ email: "w@acme.test", password: "Staff123!" }) }).then(async (r) => ({ status: r.status, json: await r.json().catch(() => ({})) }));
