@@ -12776,8 +12776,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T05:08:15.702Z",
-    "durationMs": 22187,
+    "at": "2026-11-26T06:17:31.492Z",
+    "durationMs": 24960,
     "steps": [
       {
         "n": 1,
@@ -13013,8 +13013,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T05:08:24.125Z",
-    "durationMs": 8323,
+    "at": "2026-11-26T06:17:41.818Z",
+    "durationMs": 10236,
     "steps": [
       {
         "n": 1,
@@ -14210,8 +14210,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T05:09:04.371Z",
-    "durationMs": 40152,
+    "at": "2026-11-26T06:18:22.408Z",
+    "durationMs": 40509,
     "steps": [
       {
         "n": 0,
@@ -14255,8 +14255,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T05:11:57.181Z",
-    "durationMs": 50307,
+    "at": "2026-11-26T06:24:02.273Z",
+    "durationMs": 59735,
     "steps": [
       {
         "n": 1,
@@ -14493,7 +14493,7 @@
           {
             "label": "a narrow desktop window (mouse): 'Right side of the title' stays beside the title, with no second button under the cards",
             "ok": true,
-            "detail": "{\"count\":1,\"left\":738,\"right\":0,\"off\":369.21875,\"below\":false,\"besideTitle\":true,\"cards\":3}",
+            "detail": "{\"count\":1,\"left\":738,\"right\":0,\"off\":369.2109375,\"below\":false,\"besideTitle\":true,\"cards\":3}",
             "kind": "expect"
           },
           {
@@ -14619,7 +14619,7 @@
           {
             "label": "desktop: opening takes long enough to WATCH (about 0.8 s), without dragging",
             "ok": true,
-            "detail": "790 ms",
+            "detail": "794 ms",
             "kind": "expect"
           },
           {
@@ -14649,7 +14649,7 @@
           {
             "label": "desktop: closing is visible too (about 0.7 s)",
             "ok": true,
-            "detail": "672 ms",
+            "detail": "661 ms",
             "kind": "expect"
           },
           {
@@ -14727,7 +14727,7 @@
           {
             "label": "phone: opening takes long enough to WATCH (about 1.0 s), without dragging",
             "ok": true,
-            "detail": "1008 ms",
+            "detail": "1012 ms",
             "kind": "expect"
           },
           {
@@ -14755,9 +14755,9 @@
             "kind": "expect"
           },
           {
-            "label": "phone: closing is visible too (about 0.9 s)",
+            "label": "phone: closing is visible too (about 0.8 s)",
             "ok": true,
-            "detail": "855 ms",
+            "detail": "844 ms",
             "kind": "expect"
           },
           {
@@ -16157,8 +16157,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T05:13:34.043Z",
-    "durationMs": 90078,
+    "at": "2026-11-26T06:26:02.133Z",
+    "durationMs": 110858,
     "steps": [
       {
         "n": 1,
@@ -16826,8 +16826,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T05:09:36.339Z",
-    "durationMs": 31869,
+    "at": "2026-11-26T06:19:13.780Z",
+    "durationMs": 51248,
     "steps": [
       {
         "n": 1,
@@ -17291,8 +17291,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T05:09:55.962Z",
-    "durationMs": 19550,
+    "at": "2026-11-26T06:19:35.998Z",
+    "durationMs": 22130,
     "steps": [
       {
         "n": 1,
@@ -23306,8 +23306,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T05:10:04.712Z",
-    "durationMs": 8661,
+    "at": "2026-11-26T06:19:51.689Z",
+    "durationMs": 15558,
     "steps": [
       {
         "n": 1,
@@ -24962,8 +24962,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T05:10:07.166Z",
-    "durationMs": 2377,
+    "at": "2026-11-26T06:19:55.665Z",
+    "durationMs": 3816,
     "steps": [
       {
         "n": 1,
@@ -25172,8 +25172,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T05:11:01.477Z",
-    "durationMs": 20102,
+    "at": "2026-11-26T06:22:56.892Z",
+    "durationMs": 24317,
     "steps": [
       {
         "n": 1,
@@ -25379,8 +25379,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T05:07:37.125Z",
-    "durationMs": 36768,
+    "at": "2026-11-26T06:20:42.031Z",
+    "durationMs": 46271,
     "steps": [
       {
         "n": 1,
@@ -28136,8 +28136,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T05:10:35.863Z",
-    "durationMs": 28629,
+    "at": "2026-11-26T06:21:14.522Z",
+    "durationMs": 32377,
     "steps": [
       {
         "n": 1,
@@ -28170,13 +28170,13 @@
           {
             "label": "the bar is on screen at once (a quarter of a second after the tap), already a little way along",
             "ok": true,
-            "detail": "{\"state\":\"running\",\"ratio\":0.104}",
+            "detail": "{\"state\":\"running\",\"ratio\":0.116}",
             "kind": "expect"
           },
           {
             "label": "…keeps creeping forward while the page is on its way, without reaching the end",
             "ok": true,
-            "detail": "0.104 → 0.396",
+            "detail": "0.116 → 0.406",
             "kind": "expect"
           },
           {
@@ -28314,7 +28314,7 @@
           {
             "label": "after 3 seconds it is still creeping, below the end",
             "ok": true,
-            "detail": "{\"state\":\"running\",\"ratio\":0.674}",
+            "detail": "{\"state\":\"running\",\"ratio\":0.691}",
             "kind": "expect"
           },
           {
@@ -28379,6 +28379,1005 @@
           },
           {
             "label": "the browser logged no errors or warnings",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t83-theme-contrast": {
+    "id": "t83-theme-contrast",
+    "title": "Style effects (Glass, Neumorphism, Clay, Aurora, Cyberpunk, Dark Premium) in light and dark: no text or icon on the storefront loses contrast compared with 'None'",
+    "status": "pass",
+    "pass": 14,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-26T06:29:27.672Z",
+    "durationMs": 199554,
+    "steps": [
+      {
+        "n": 1,
+        "title": "magenta brand colour, laptop (1280px), dark",
+        "checks": [
+          {
+            "label": "magenta laptop dark: every page state could be scanned",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "magenta: Neumorphism, laptop dark: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "magenta: Cyberpunk, laptop dark: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "magenta: Dark Premium, laptop dark: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "magenta brand colour, phone (390px), dark",
+        "checks": [
+          {
+            "label": "magenta phone dark: every page state could be scanned",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "magenta: Neumorphism, phone dark: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "magenta: Cyberpunk, phone dark: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "magenta: Dark Premium, phone dark: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "yellow brand colour, laptop (1280px), dark",
+        "checks": [
+          {
+            "label": "yellow laptop dark: every page state could be scanned",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "yellow: Neumorphism, laptop dark: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "yellow: Cyberpunk, laptop dark: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "yellow: Dark Premium, laptop dark: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the scan really looked at the page (many texts and icons measured)",
+            "ok": true,
+            "detail": "331 elements in the first reference scan",
+            "kind": "expect"
+          },
+          {
+            "label": "no page errors while scanning",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t84-storage-image-cache": {
+    "id": "t84-storage-image-cache",
+    "title": "Browser caching of pictures: new cloud uploads carry a one-year immutable cache header, and pictures stored earlier can be given it in place",
+    "status": "pass",
+    "pass": 23,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-26T06:21:16.151Z",
+    "durationMs": 1542,
+    "steps": [
+      {
+        "n": 1,
+        "title": "New uploads",
+        "checks": [
+          {
+            "label": "the cache header for a picture is one year, public, immutable",
+            "ok": true,
+            "detail": "public, max-age=31536000, immutable",
+            "kind": "expect"
+          },
+          {
+            "label": "any picture type gets it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "documents, audio and unknown types do not",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a picture is stored with the long cache header",
+            "ok": true,
+            "detail": "public, max-age=31536000, immutable",
+            "kind": "expect"
+          },
+          {
+            "label": "a PDF is stored with no cache header",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a caller can still choose its own cache header",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the cache header is part of the signed request (not just added on the side)",
+            "ok": true,
+            "detail": "cache-control;content-type;host;x-amz-content-sha256;x-amz-date",
+            "kind": "expect"
+          },
+          {
+            "label": "reading a picture back tells its type and cache header",
+            "ok": true,
+            "detail": "{\"size\":15,\"modifiedAt\":\"2026-11-26T06:21:16.000Z\",\"contentType\":\"image/webp\",\"cacheControl\":\"public, max-age=31536000, immutable\"}",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Pictures stored before this (no header)",
+        "checks": [
+          {
+            "label": "a dry run counts what needs it (7) and changes nothing",
+            "ok": true,
+            "detail": "{\"wouldUpdate\":7,\"updated\":0}",
+            "kind": "expect"
+          },
+          {
+            "label": "…really nothing: no copy was made and no header changed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "pictures that already have a long cache time (new.webp, g.webp) are counted as fine; the two PDFs are not pictures",
+            "ok": true,
+            "detail": "already 2, not pictures 2",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Trying one first",
+        "checks": [
+          {
+            "label": "--limit 1 changes exactly one picture",
+            "ok": true,
+            "detail": "{\"updated\":1,\"copies\":1}",
+            "kind": "expect"
+          },
+          {
+            "label": "…and its bytes and type are exactly as they were",
+            "ok": true,
+            "detail": "b/o/banners/c.png",
+            "kind": "expect"
+          },
+          {
+            "label": "the copy request signs its copy-source, directive and cache header",
+            "ok": true,
+            "detail": "cache-control;content-type;host;x-amz-content-sha256;x-amz-copy-source;x-amz-date;x-amz-metadata-directive",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "All of them",
+        "checks": [
+          {
+            "label": "the rest are updated, none fail",
+            "ok": true,
+            "detail": "{\"updated\":6,\"failed\":0}",
+            "kind": "expect"
+          },
+          {
+            "label": "every picture now has the long cache header",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no picture's bytes or type changed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the PDF was left alone",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "pictures that were already fine were not copied again",
+            "ok": true,
+            "detail": "7 copies for 7 pictures",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Running it twice",
+        "checks": [
+          {
+            "label": "a second run finds nothing to do and copies nothing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "A copy that fails",
+        "checks": [
+          {
+            "label": "a copy that S3 answers with 200 but an error inside is reported as a failure",
+            "ok": true,
+            "detail": "[{\"key\":\"b/o/logos/broken.webp\",\"error\":\"S3 COPY failed: copy failed inside the body\"}]",
+            "kind": "expect"
+          },
+          {
+            "label": "…the others still get theirs, and the broken one is left as it was",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "Pictures on this server's own disk",
+        "checks": [
+          {
+            "label": "nothing to do: the API already serves its own uploads with a one-year cache header",
+            "ok": true,
+            "detail": "The pictures are on this server's disk; the API already serves them with a one-year cache header.",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t85-effects-toolbar-spacing": {
+    "id": "t85-effects-toolbar-spacing",
+    "title": "The storefront's category and filter strip has room inside its panel in every style effect (light and dark, laptop and phone)",
+    "status": "pass",
+    "pass": 105,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-26T06:22:25.770Z",
+    "durationMs": 69533,
+    "steps": [
+      {
+        "n": 1,
+        "title": "None",
+        "checks": [
+          {
+            "label": "None, laptop light: not drawn as a panel — the strip runs the width of the menu",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "None, laptop light: the first chip lines up with the headings below it",
+            "ok": true,
+            "detail": "124px vs 124px",
+            "kind": "expect"
+          },
+          {
+            "label": "None, laptop dark: not drawn as a panel — the strip runs the width of the menu",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "None, laptop dark: the first chip lines up with the headings below it",
+            "ok": true,
+            "detail": "124px vs 124px",
+            "kind": "expect"
+          },
+          {
+            "label": "None, phone light: not drawn as a panel — the strip runs the width of the menu",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "None, phone light: the first chip lines up with the headings below it",
+            "ok": true,
+            "detail": "14px vs 14px",
+            "kind": "expect"
+          },
+          {
+            "label": "None, phone dark: not drawn as a panel — the strip runs the width of the menu",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "None, phone dark: the first chip lines up with the headings below it",
+            "ok": true,
+            "detail": "14px vs 14px",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Glassmorphism",
+        "checks": [
+          {
+            "label": "Glassmorphism, laptop light: the first control is 15px from the panel's left edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Glassmorphism, laptop light: the last control is 226px from the panel's right edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Glassmorphism, laptop light: air above (11px) and below (11px) the controls",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Glassmorphism, laptop light: drawn as a finished panel — an edge all round and rounded corners",
+            "ok": true,
+            "detail": "radius 18px",
+            "kind": "expect"
+          },
+          {
+            "label": "Glassmorphism, laptop dark: the first control is 15px from the panel's left edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Glassmorphism, laptop dark: the last control is 226px from the panel's right edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Glassmorphism, laptop dark: air above (11px) and below (11px) the controls",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Glassmorphism, laptop dark: drawn as a finished panel — an edge all round and rounded corners",
+            "ok": true,
+            "detail": "radius 18px",
+            "kind": "expect"
+          },
+          {
+            "label": "Glassmorphism, phone light: the first control is 15px from the panel's left edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Glassmorphism, phone light: the last control is 15px from the panel's right edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Glassmorphism, phone light: air above (11px) and below (11px) the controls",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Glassmorphism, phone light: drawn as a finished panel — an edge all round and rounded corners",
+            "ok": true,
+            "detail": "radius 18px",
+            "kind": "expect"
+          },
+          {
+            "label": "Glassmorphism, phone dark: the first control is 15px from the panel's left edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Glassmorphism, phone dark: the last control is 15px from the panel's right edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Glassmorphism, phone dark: air above (11px) and below (11px) the controls",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Glassmorphism, phone dark: drawn as a finished panel — an edge all round and rounded corners",
+            "ok": true,
+            "detail": "radius 18px",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Neumorphism",
+        "checks": [
+          {
+            "label": "Neumorphism, laptop light: the first control is 15px from the panel's left edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Neumorphism, laptop light: the last control is 190px from the panel's right edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Neumorphism, laptop light: air above (11px) and below (11px) the controls",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Neumorphism, laptop light: drawn as a finished panel — an edge all round and rounded corners",
+            "ok": true,
+            "detail": "radius 18px",
+            "kind": "expect"
+          },
+          {
+            "label": "Neumorphism, laptop dark: the first control is 15px from the panel's left edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Neumorphism, laptop dark: the last control is 190px from the panel's right edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Neumorphism, laptop dark: air above (11px) and below (11px) the controls",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Neumorphism, laptop dark: drawn as a finished panel — an edge all round and rounded corners",
+            "ok": true,
+            "detail": "radius 18px",
+            "kind": "expect"
+          },
+          {
+            "label": "Neumorphism, phone light: the first control is 15px from the panel's left edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Neumorphism, phone light: the last control is 15px from the panel's right edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Neumorphism, phone light: air above (11px) and below (11px) the controls",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Neumorphism, phone light: drawn as a finished panel — an edge all round and rounded corners",
+            "ok": true,
+            "detail": "radius 18px",
+            "kind": "expect"
+          },
+          {
+            "label": "Neumorphism, phone dark: the first control is 15px from the panel's left edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Neumorphism, phone dark: the last control is 15px from the panel's right edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Neumorphism, phone dark: air above (11px) and below (11px) the controls",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Neumorphism, phone dark: drawn as a finished panel — an edge all round and rounded corners",
+            "ok": true,
+            "detail": "radius 18px",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Claymorphism",
+        "checks": [
+          {
+            "label": "Claymorphism, laptop light: the first control is 15px from the panel's left edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Claymorphism, laptop light: the last control is 190px from the panel's right edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Claymorphism, laptop light: air above (11px) and below (11px) the controls",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Claymorphism, laptop light: drawn as a finished panel — an edge all round and rounded corners",
+            "ok": true,
+            "detail": "radius 20px",
+            "kind": "expect"
+          },
+          {
+            "label": "Claymorphism, laptop dark: the first control is 15px from the panel's left edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Claymorphism, laptop dark: the last control is 190px from the panel's right edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Claymorphism, laptop dark: air above (11px) and below (11px) the controls",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Claymorphism, laptop dark: drawn as a finished panel — an edge all round and rounded corners",
+            "ok": true,
+            "detail": "radius 20px",
+            "kind": "expect"
+          },
+          {
+            "label": "Claymorphism, phone light: the first control is 15px from the panel's left edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Claymorphism, phone light: the last control is 15px from the panel's right edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Claymorphism, phone light: air above (11px) and below (11px) the controls",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Claymorphism, phone light: drawn as a finished panel — an edge all round and rounded corners",
+            "ok": true,
+            "detail": "radius 20px",
+            "kind": "expect"
+          },
+          {
+            "label": "Claymorphism, phone dark: the first control is 15px from the panel's left edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Claymorphism, phone dark: the last control is 15px from the panel's right edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Claymorphism, phone dark: air above (11px) and below (11px) the controls",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Claymorphism, phone dark: drawn as a finished panel — an edge all round and rounded corners",
+            "ok": true,
+            "detail": "radius 20px",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Aurora",
+        "checks": [
+          {
+            "label": "Aurora, laptop light: the first control is 15px from the panel's left edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Aurora, laptop light: the last control is 226px from the panel's right edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Aurora, laptop light: air above (11px) and below (11px) the controls",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Aurora, laptop light: drawn as a finished panel — an edge all round and rounded corners",
+            "ok": true,
+            "detail": "radius 18px",
+            "kind": "expect"
+          },
+          {
+            "label": "Aurora, laptop dark: the first control is 15px from the panel's left edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Aurora, laptop dark: the last control is 226px from the panel's right edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Aurora, laptop dark: air above (11px) and below (11px) the controls",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Aurora, laptop dark: drawn as a finished panel — an edge all round and rounded corners",
+            "ok": true,
+            "detail": "radius 18px",
+            "kind": "expect"
+          },
+          {
+            "label": "Aurora, phone light: the first control is 15px from the panel's left edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Aurora, phone light: the last control is 15px from the panel's right edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Aurora, phone light: air above (11px) and below (11px) the controls",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Aurora, phone light: drawn as a finished panel — an edge all round and rounded corners",
+            "ok": true,
+            "detail": "radius 18px",
+            "kind": "expect"
+          },
+          {
+            "label": "Aurora, phone dark: the first control is 15px from the panel's left edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Aurora, phone dark: the last control is 15px from the panel's right edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Aurora, phone dark: air above (11px) and below (11px) the controls",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Aurora, phone dark: drawn as a finished panel — an edge all round and rounded corners",
+            "ok": true,
+            "detail": "radius 18px",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Cyberpunk",
+        "checks": [
+          {
+            "label": "Cyberpunk, laptop light: the first control is 15px from the panel's left edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Cyberpunk, laptop light: the last control is 226px from the panel's right edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Cyberpunk, laptop light: air above (11px) and below (11px) the controls",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Cyberpunk, laptop light: drawn as a finished panel — an edge all round and rounded corners",
+            "ok": true,
+            "detail": "radius 6px",
+            "kind": "expect"
+          },
+          {
+            "label": "Cyberpunk, laptop dark: the first control is 15px from the panel's left edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Cyberpunk, laptop dark: the last control is 226px from the panel's right edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Cyberpunk, laptop dark: air above (11px) and below (11px) the controls",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Cyberpunk, laptop dark: drawn as a finished panel — an edge all round and rounded corners",
+            "ok": true,
+            "detail": "radius 6px",
+            "kind": "expect"
+          },
+          {
+            "label": "Cyberpunk, phone light: the first control is 15px from the panel's left edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Cyberpunk, phone light: the last control is 15px from the panel's right edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Cyberpunk, phone light: air above (11px) and below (11px) the controls",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Cyberpunk, phone light: drawn as a finished panel — an edge all round and rounded corners",
+            "ok": true,
+            "detail": "radius 6px",
+            "kind": "expect"
+          },
+          {
+            "label": "Cyberpunk, phone dark: the first control is 15px from the panel's left edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Cyberpunk, phone dark: the last control is 15px from the panel's right edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Cyberpunk, phone dark: air above (11px) and below (11px) the controls",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Cyberpunk, phone dark: drawn as a finished panel — an edge all round and rounded corners",
+            "ok": true,
+            "detail": "radius 6px",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "Dark Premium",
+        "checks": [
+          {
+            "label": "Dark Premium, laptop light: the first control is 15px from the panel's left edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Dark Premium, laptop light: the last control is 226px from the panel's right edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Dark Premium, laptop light: air above (11px) and below (11px) the controls",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Dark Premium, laptop light: drawn as a finished panel — an edge all round and rounded corners",
+            "ok": true,
+            "detail": "radius 14px",
+            "kind": "expect"
+          },
+          {
+            "label": "Dark Premium, laptop dark: the first control is 15px from the panel's left edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Dark Premium, laptop dark: the last control is 226px from the panel's right edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Dark Premium, laptop dark: air above (11px) and below (11px) the controls",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Dark Premium, laptop dark: drawn as a finished panel — an edge all round and rounded corners",
+            "ok": true,
+            "detail": "radius 14px",
+            "kind": "expect"
+          },
+          {
+            "label": "Dark Premium, phone light: the first control is 15px from the panel's left edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Dark Premium, phone light: the last control is 15px from the panel's right edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Dark Premium, phone light: air above (11px) and below (11px) the controls",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Dark Premium, phone light: drawn as a finished panel — an edge all round and rounded corners",
+            "ok": true,
+            "detail": "radius 14px",
+            "kind": "expect"
+          },
+          {
+            "label": "Dark Premium, phone dark: the first control is 15px from the panel's left edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Dark Premium, phone dark: the last control is 15px from the panel's right edge (at least 10)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Dark Premium, phone dark: air above (11px) and below (11px) the controls",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Dark Premium, phone dark: drawn as a finished panel — an edge all round and rounded corners",
+            "ok": true,
+            "detail": "radius 14px",
+            "kind": "expect"
+          },
+          {
+            "label": "no page errors",
             "ok": true,
             "detail": "",
             "kind": "expect"

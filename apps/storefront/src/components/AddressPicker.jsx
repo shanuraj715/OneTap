@@ -289,7 +289,7 @@ const shareBtn                = {
   borderRadius: 10,
   border: "1.5px solid var(--color-primary)",
   background: "color-mix(in srgb, var(--color-primary) 8%, var(--color-bg))",
-  color: "var(--color-primary)",
+  color: "var(--color-primary-text, var(--color-primary))",
   cursor: "pointer",
 };
 const capturedChip                = {

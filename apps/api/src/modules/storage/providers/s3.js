@@ -12,6 +12,15 @@ import { createHash, createHmac } from "node:crypto";
  * path-style addressing; AWS itself uses virtual-hosted style.
  */
 
+/**
+ * Pictures are always saved under a NEW key (a fresh uuid per upload; "optimize" writes a new file too) and never overwritten, so a
+ * browser may keep one for a year without asking again. Without this header a browser guesses how long to keep a picture and often
+ * asks the server again on every visit (R2's public address sends no caching header of its own).
+ */
+export const IMAGE_CACHE_CONTROL = "public, max-age=31536000, immutable";
+/** the cache header a file of this type gets when it is stored (pictures only; documents and message media are left alone) */
+export const cacheControlFor = (contentType) => (/^image\//i.test(contentType ?? "") ? IMAGE_CACHE_CONTROL : undefined);
+
 const sha256hex = (data) => createHash("sha256").update(data).digest("hex");
 const hmac = (key, data) => createHmac("sha256", key).update(data).digest();
 
@@ -45,7 +54,7 @@ const canonicalQuery = (query) =>
     .join("&");
 
 /** (exported for tests: `now` fixes the clock so a signature can be compared with the one AWS documents) */
-export function signedRequest(cfg, { method, key, body, contentType, query, now: at }) {
+export function signedRequest(cfg, { method, key, body, contentType, query, now: at, cacheControl, copySource }) {
   const { host, protocol, path } = endpointFor(cfg, key);
   const region = cfg.region || "us-east-1";
   const now = at ?? new Date();
@@ -59,6 +68,12 @@ export function signedRequest(cfg, { method, key, body, contentType, query, now:
     "x-amz-date": amzDate,
   };
   if (contentType) headers["content-type"] = contentType;
+  if (cacheControl) headers["cache-control"] = cacheControl;
+  if (copySource) {
+    // copy an object onto itself and REPLACE its headers: the standard way to change a stored file's headers without touching its bytes
+    headers["x-amz-copy-source"] = copySource;
+    headers["x-amz-metadata-directive"] = "REPLACE";
+  }
 
   const signedHeaderNames = Object.keys(headers).sort();
   const canonicalHeaders = signedHeaderNames.map((h) => `${h}:${headers[h]}\n`).join("");
@@ -97,8 +112,8 @@ async function s3Fetch(cfg, opts) {
 export const s3Provider = {
   id: "s3",
 
-  async put(cfg, { key, body, contentType }) {
-    await s3Fetch(cfg, { method: "PUT", key, body, contentType });
+  async put(cfg, { key, body, contentType, cacheControl }) {
+    await s3Fetch(cfg, { method: "PUT", key, body, contentType, cacheControl: cacheControl ?? cacheControlFor(contentType) });
 
     const base = cfg.publicBaseUrl?.replace(/\/$/, "");
     if (base) return { key, url: `${base}/${encodeKey(key)}` };
@@ -122,7 +137,20 @@ export const s3Provider = {
     const res = await s3Fetch(cfg, { method: "HEAD", key });
     if (res.status === 404) return null;
     const modified = res.headers.get("last-modified");
-    return { size: Number(res.headers.get("content-length") ?? 0), modifiedAt: modified ? new Date(modified) : null };
+    return {
+      size: Number(res.headers.get("content-length") ?? 0),
+      modifiedAt: modified ? new Date(modified) : null,
+      contentType: res.headers.get("content-type") ?? "",
+      cacheControl: res.headers.get("cache-control") ?? "",
+    };
+  },
+
+  /** Give a file already in the bucket a cache header (same bytes, same type): a copy of the object onto itself with new headers. */
+  async setCacheControl(cfg, key, { contentType, cacheControl = IMAGE_CACHE_CONTROL }) {
+    const res = await s3Fetch(cfg, { method: "PUT", key, contentType, cacheControl, copySource: `/${cfg.bucket}/${encodeKey(key)}` });
+    const text = await res.text().catch(() => "");
+    if (/<Error>/.test(text)) throw new Error(`S3 COPY failed: ${text.match(/<Message>([^<]+)<\/Message>/)?.[1] ?? "error"}`); // S3 can answer 200 and still fail inside the body
+    return true;
   },
 
   /** Every object in the bucket (or under `prefix`), one `{ key, size, modifiedAt }` at a time — 1000 per request. */

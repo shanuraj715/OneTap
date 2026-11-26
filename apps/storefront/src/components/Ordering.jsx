@@ -336,7 +336,7 @@ function Customiser({ item, menu, popupCarouselVariant, onCancel, onAdd }) {
                     <label key={v.id} style={{ ...tile, ...(on ? tileOn : null) }}>
                       <input type="radio" name="variant" style={tileInput} checked={on} onChange={() => setVariantId(v.id)} />
                       <span style={{ flex: 1, fontWeight: on ? 700 : 500 }}>{v.label}</span>
-                      <span style={{ ...tilePrice, ...(on ? { color: "var(--color-primary)" } : null) }}>{formatINR(v.price)}</span>
+                      <span style={{ ...tilePrice, ...(on ? { color: "var(--color-primary-text, var(--color-primary))" } : null) }}>{formatINR(v.price)}</span>
                     </label>
                   );
                 })}
@@ -362,7 +362,7 @@ function Customiser({ item, menu, popupCarouselVariant, onCancel, onAdd }) {
                         onChange={(e) => setOptions((prev) => (e.target.checked ? [...prev, o.id] : prev.filter((x) => x !== o.id)))}
                       />
                       <span style={{ flex: 1, fontWeight: on ? 700 : 500 }}>{o.label}</span>
-                      <span style={{ ...tilePrice, ...(on ? { color: "var(--color-primary)" } : null) }}>{o.priceDelta ? `+${formatINR(o.priceDelta)}` : "Free"}</span>
+                      <span style={{ ...tilePrice, ...(on ? { color: "var(--color-primary-text, var(--color-primary))" } : null) }}>{o.priceDelta ? `+${formatINR(o.priceDelta)}` : "Free"}</span>
                     </label>
                   );
                 })}
@@ -443,12 +443,12 @@ const closeBtn = {
 };
 const titleRow = { display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 14 };
 const title = { margin: 0, display: "flex", gap: 9, alignItems: "flex-start", fontFamily: "var(--font-heading)", fontSize: 22, fontWeight: 800, lineHeight: 1.25, letterSpacing: "-0.01em" };
-const fromPrice = { flexShrink: 0, paddingTop: 3, fontSize: 17, fontWeight: 800, color: "var(--color-primary)", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap" };
+const fromPrice = { flexShrink: 0, paddingTop: 3, fontSize: 17, fontWeight: 800, color: "var(--color-primary-text, var(--color-primary))", fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap" };
 const description = { color: "var(--color-text-muted)", fontSize: 14.5, lineHeight: 1.55, margin: "8px 0 0" };
 const section = { margin: "20px 0 0" };
 const sectionHead = { display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, marginBottom: 10 };
 const legend = { fontSize: 12, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.07em", color: "var(--color-text-muted)" };
-const pillRequired = { fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 999, background: "color-mix(in srgb, var(--color-primary) 12%, var(--color-bg))", color: "var(--color-primary)" };
+const pillRequired = { fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 999, background: "color-mix(in srgb, var(--color-primary) 12%, var(--color-bg))", color: "var(--color-primary-text, var(--color-primary))" };
 const pillOptional = { fontSize: 11, fontWeight: 600, padding: "3px 10px", borderRadius: 999, background: "var(--color-surface)", color: "var(--color-text-muted)", border: "1px solid var(--color-border)" };
 const tileList = { display: "flex", flexDirection: "column", gap: 8 };
 const comboBox = { margin: "14px 0 0", padding: "12px 14px", borderRadius: 14, background: "color-mix(in srgb, var(--color-primary) 6%, var(--color-bg))", border: "1px solid var(--color-border)" };

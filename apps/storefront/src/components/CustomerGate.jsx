@@ -563,7 +563,7 @@ const iconBadge = {
   placeItems: "center",
   background:
     "radial-gradient(circle at 30% 25%, color-mix(in srgb, var(--color-primary) 22%, var(--color-bg)), color-mix(in srgb, var(--color-primary) 9%, var(--color-bg)))",
-  color: "var(--color-primary)",
+  color: "var(--color-primary-text, var(--color-primary))",
   marginBottom: 14,
   boxShadow: "0 6px 16px -6px color-mix(in srgb, var(--color-primary) 45%, transparent)",
 };
@@ -646,7 +646,7 @@ const segmentBtn = {
 const segmentBtnActive = {
   borderColor: "var(--color-primary)",
   background: "color-mix(in srgb, var(--color-primary) 10%, var(--color-bg))",
-  color: "var(--color-primary)",
+  color: "var(--color-primary-text, var(--color-primary))",
 };
 const otpRow = { display: "flex", gap: 8 };
 const otpBox = {
@@ -688,7 +688,7 @@ const linkBtn = {
   padding: "10px 6px",
   background: "none",
   border: "none",
-  color: "var(--color-primary)",
+  color: "var(--color-primary-text, var(--color-primary))",
   cursor: "pointer",
 };
 const linkBtnDisabled = { color: "var(--color-text-muted)", cursor: "default" };

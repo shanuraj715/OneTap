@@ -23,7 +23,7 @@ const tagStyle                = {
   fontWeight: 700,
   letterSpacing: "0.08em",
   textTransform: "uppercase",
-  color: "var(--color-primary)",
+  color: "var(--color-primary-text, var(--color-primary))",
   marginBottom: 6,
   display: "block",
 };

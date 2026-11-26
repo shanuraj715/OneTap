@@ -100,7 +100,7 @@ export function PaginationLoadMore({ page, pages: n }                 ) {
       <div style={{ fontSize: "0.78rem", color: "var(--color-text-muted)", marginBottom: 8 }}>
         Showing page {page} of {n}
       </div>
-      <span style={{ ...cell, display: "inline-grid", padding: "0 22px", height: 40, borderRadius: 999, border: "1px solid var(--color-primary)", color: "var(--color-primary)", fontWeight: 600 }}>
+      <span style={{ ...cell, display: "inline-grid", padding: "0 22px", height: 40, borderRadius: 999, border: "1px solid var(--color-primary)", color: "var(--color-primary-text, var(--color-primary))", fontWeight: 600 }}>
         Load more
       </span>
     </div>

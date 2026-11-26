@@ -42,7 +42,7 @@ export const ButtonSolid = make({
 /** 02 outline */
 export const ButtonOutline = make({
   background: "transparent",
-  color: "var(--color-primary)",
+  color: "var(--color-primary-text, var(--color-primary))",
   borderColor: "var(--color-primary)",
   borderRadius: "var(--radius-card)",
 });
@@ -50,7 +50,7 @@ export const ButtonOutline = make({
 /** 03 soft tinted fill */
 export const ButtonSoft = make({
   background: "color-mix(in srgb, var(--color-primary) 14%, transparent)",
-  color: "var(--color-primary)",
+  color: "var(--color-primary-text, var(--color-primary))",
   borderRadius: "var(--radius-card)",
 });
 
@@ -80,7 +80,7 @@ export const ButtonGhost = make({
 /** 07 link */
 export const ButtonLink = make({
   background: "transparent",
-  color: "var(--color-primary)",
+  color: "var(--color-primary-text, var(--color-primary))",
   padding: "4px 2px",
   textDecoration: "underline",
   textUnderlineOffset: 3,

@@ -232,6 +232,7 @@ export function MenuSections({
                       href={`#sec-${s.id}`}
                       className="ot-fx-chip"
                       aria-current={current ? "true" : undefined}
+                      data-active={current ? "true" : undefined}
                       style={fx("chip", { ...jumpLink, ...(current ? jumpLinkActive : null) })}
                       onClick={(e) => {
                         e.preventDefault();
@@ -871,7 +872,7 @@ const viewAllBtn                = {
   borderRadius: 999,
   border: "1px solid var(--color-primary)",
   background: "var(--color-bg)",
-  color: "var(--color-primary)",
+  color: "var(--color-primary-text, var(--color-primary))",
   cursor: "pointer",
 };
 const viewAllTitleBtn = {
@@ -882,7 +883,7 @@ const viewAllTitleBtn = {
   borderRadius: 999,
   border: "1px solid var(--color-primary)",
   background: "var(--color-bg)",
-  color: "var(--color-primary)",
+  color: "var(--color-primary-text, var(--color-primary))",
   cursor: "pointer",
   whiteSpace: "nowrap",
   flexShrink: 0,

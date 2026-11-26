@@ -26,6 +26,12 @@ export const css = (s, page) => `
     --fx-bar-border: 1px solid var(--dp-edge);
     --fx-bar-blur: saturate(140%) blur(12px);
   `)}
+  ${role(s, "bar", `
+    /* the category / filter strip is drawn as a floating panel of its own here: give its contents room from the panel's edge */
+    --fx-toolbar-edge: 1px solid var(--dp-edge);
+    --fx-toolbar-radius: 14px;
+    --fx-toolbar-pad-x: 14px;
+  `, "[data-fx-toolbar]")}
   ${role(s, "modal", `
     --fx-modal-bg: linear-gradient(180deg, var(--dp-lift), var(--color-surface));
     --fx-modal-border: 1px solid rgba(255,255,255,.09);

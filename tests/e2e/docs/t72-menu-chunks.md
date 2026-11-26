@@ -1,6 +1,6 @@
 # T72 — The storefront menu is drawn in chunks as the diner scrolls
 
-**Area:** storefront · **Last result:** ✅ PASSED (15 passed, 0 failed · 2026-11-26 10:40 · headless · 8.7 s)
+**Area:** storefront · **Last result:** ✅ PASSED (15 passed, 0 failed · 2026-11-26 11:49 · headless · 15.6 s)
 
 **Run it alone:** `node run.mjs --only t72` (add `--visible` to watch it)
 
@@ -62,6 +62,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-26 11:49 | pass | 15 | 0 | headless | 15.6 s |
 | 2026-11-26 10:40 | pass | 15 | 0 | headless | 8.7 s |
 | 2026-11-25 12:00 | pass | 15 | 0 | headless | 8.3 s |
 | 2026-11-25 10:49 | pass | 15 | 0 | headless | 10.4 s |

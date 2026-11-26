@@ -46,7 +46,7 @@
   --color-bg: #14130f;
   --color-surface: #1e1c17;
   --color-text: #ece6d8;
-  --color-text-muted: #9a9384;
+  --color-text-muted: #b4afa4;
   --color-border: #34302a;
 
   --tone-info: #6fa9c4;
@@ -64,7 +64,7 @@
     --color-bg: #14130f;
     --color-surface: #1e1c17;
     --color-text: #ece6d8;
-    --color-text-muted: #9a9384;
+    --color-text-muted: #b4afa4;
     --color-border: #34302a;
 
     --tone-info: #6fa9c4;
@@ -361,7 +361,7 @@
 .ot-prose p { margin: 0 0 1em; }
 .ot-prose ul, .ot-prose ol { margin: 0 0 1em; padding-left: 1.4em; }
 .ot-prose li { margin: 0.35em 0; }
-.ot-prose a { color: var(--color-primary); text-underline-offset: 3px; }
+.ot-prose a { color: var(--color-primary-text, var(--color-primary)); text-underline-offset: 3px; }
 .ot-prose hr { border: 0; border-top: 1px solid var(--color-border); margin: 1.8em 0; }
 .ot-prose code { background: var(--color-surface); padding: 0.1em 0.35em; border-radius: 4px; font-size: 0.92em; }
 

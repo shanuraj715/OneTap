@@ -844,7 +844,7 @@ function DoneView({ order, dineIn, tab, channel, menuHref, accountHref, trackHre
           <Link href={trackHref} className="ot-fx-btn" style={fx("btn", doneButton)} data-testid="done-follow">
             Follow your order
           </Link>
-          <Link href={menuHref} style={{ marginTop: 14, fontSize: 14, fontWeight: 700, color: "var(--color-primary)" }}>
+          <Link href={menuHref} style={{ marginTop: 14, fontSize: 14, fontWeight: 700, color: "var(--color-primary-text, var(--color-primary))" }}>
             Back to menu
           </Link>
         </>
@@ -854,7 +854,7 @@ function DoneView({ order, dineIn, tab, channel, menuHref, accountHref, trackHre
         </Link>
       )}
       {accountHref ? (
-        <Link href={accountHref} style={{ marginTop: 14, fontSize: 14, fontWeight: 700, color: "var(--color-primary)" }} data-testid="done-track">
+        <Link href={accountHref} style={{ marginTop: 14, fontSize: 14, fontWeight: 700, color: "var(--color-primary-text, var(--color-primary))" }} data-testid="done-track">
           All my orders
         </Link>
       ) : null}
@@ -1079,7 +1079,7 @@ const pageProgressWrap = {
 const main = { maxWidth: 640, margin: "0 auto", padding: "16px 16px 100px" };
 const section = { background: "var(--color-bg)", border: "1px solid var(--color-border)", borderRadius: 14, padding: 16, marginBottom: 12 };
 const sectionTitle = { display: "flex", alignItems: "center", gap: 8, margin: "0 0 12px", fontSize: 14, fontWeight: 700 };
-const sectionIcon = { display: "inline-flex", color: "var(--color-primary)" };
+const sectionIcon = { display: "inline-flex", color: "var(--color-primary-text, var(--color-primary))" };
 const itemRow = { display: "flex", alignItems: "center", gap: 10, paddingBottom: 10, borderBottom: "1px solid var(--color-border)" };
 const itemMeta = { fontSize: 12, color: "var(--color-text-muted)", marginTop: 2 };
 const itemPrice = { fontWeight: 700, fontVariantNumeric: "tabular-nums", minWidth: 64, textAlign: "right" };
@@ -1094,7 +1094,7 @@ const banner = { fontSize: 12.5, lineHeight: 1.5, margin: "0 0 12px", padding: "
 const bannerWarn = {};
 const bannerError = { background: "color-mix(in srgb, #B23B3B 14%, var(--color-surface))" };
 const choiceBtn = { font: "inherit", flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 4, padding: "12px 10px", borderRadius: 12, border: "1.5px solid var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)", fontSize: "0.85rem", fontWeight: 600, cursor: "pointer" };
-const choiceBtnActive = { border: "1.5px solid var(--color-primary)", background: "color-mix(in srgb, var(--color-primary) 10%, var(--color-bg))", color: "var(--color-primary)" };
+const choiceBtnActive = { border: "1.5px solid var(--color-primary)", background: "color-mix(in srgb, var(--color-primary) 10%, var(--color-bg))", color: "var(--color-primary-text, var(--color-primary))" };
 const choiceBtnOff = { opacity: 0.45, cursor: "not-allowed", background: "transparent", color: "var(--color-text-muted)", boxShadow: "none" };
 const payOption = { display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", border: "1px solid var(--color-border)", borderRadius: 9, fontSize: 14, cursor: "pointer" };
 const totalsList = { margin: 0, display: "flex", flexDirection: "column", gap: 7 };
@@ -1144,7 +1144,7 @@ const reorderList = { margin: "6px 0 0", paddingLeft: 18, fontSize: 14, lineHeig
 const reorderNotes = { margin: "8px 0 0", fontSize: 13.5, lineHeight: 1.5 };
 const reorderClose = { display: "grid", placeItems: "center", width: 30, height: 30, flexShrink: 0, border: "none", borderRadius: 8, background: "transparent", color: "var(--color-text-muted)", cursor: "pointer" };
 const dayChip = { font: "inherit", fontSize: 13, fontWeight: 600, padding: "7px 13px", borderRadius: 999, border: "1.5px solid var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)", cursor: "pointer" };
-const dayChipOn = { borderColor: "var(--color-primary)", background: "color-mix(in srgb, var(--color-primary) 10%, var(--color-bg))", color: "var(--color-primary)" };
+const dayChipOn = { borderColor: "var(--color-primary)", background: "color-mix(in srgb, var(--color-primary) 10%, var(--color-bg))", color: "var(--color-primary-text, var(--color-primary))" };
 const slotGrid = { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(86px, 1fr))", gap: 6, maxHeight: 220, overflowY: "auto", paddingRight: 2 };
 const slotBtn = { font: "inherit", fontSize: 13, fontWeight: 600, padding: "8px 6px", borderRadius: 10, border: "1.5px solid var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)", cursor: "pointer", fontVariantNumeric: "tabular-nums" };
 const suggestRow = { display: "flex", gap: 10, overflowX: "auto", paddingBottom: 4, scrollSnapType: "x mandatory" };

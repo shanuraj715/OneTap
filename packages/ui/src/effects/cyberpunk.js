@@ -32,6 +32,12 @@ export const css = (s, page) => `
     --fx-bar-shadow: 0 0 24px color-mix(in srgb, var(--cp-neon) 22%, transparent);
     --fx-bar-blur: blur(10px);
   `)}
+  ${role(s, "bar", `
+    /* the category / filter strip is drawn as a floating panel of its own here: give its contents room from the panel's edge */
+    --fx-toolbar-edge: 1px solid color-mix(in srgb, var(--cp-neon) 55%, transparent);
+    --fx-toolbar-radius: 6px;
+    --fx-toolbar-pad-x: 14px;
+  `, "[data-fx-toolbar]")}
   ${role(s, "modal", `
     --fx-modal-radius: 8px;
     --fx-modal-border: 1px solid var(--cp-neon);

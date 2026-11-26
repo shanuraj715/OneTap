@@ -46,8 +46,14 @@ export const css = (s, page) => `
     --fx-bar-border: 1px solid var(--au-edge);
     --fx-bar-blur: saturate(150%) blur(14px);
   `)}
+  ${role(s, "bar", `
+    /* the category / filter strip is drawn as a floating panel of its own here: give its contents room from the panel's edge */
+    --fx-toolbar-edge: 1px solid var(--au-edge);
+    --fx-toolbar-radius: 18px;
+    --fx-toolbar-pad-x: 14px;
+  `, "[data-fx-toolbar]")}
   ${role(s, "modal", `
-    --fx-modal-bg: color-mix(in srgb, var(--color-surface) 82%, transparent);
+    --fx-modal-bg: color-mix(in srgb, var(--color-surface) 94%, transparent); /* see glass.js: keep the page behind from greying the text */
     --fx-modal-border: 1px solid var(--au-edge);
     --fx-modal-shadow: 0 24px 70px var(--au-glow);
     --fx-modal-blur: saturate(150%) blur(20px);

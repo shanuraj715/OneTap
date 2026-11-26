@@ -164,7 +164,7 @@ export const DropdownFlat = (p               ) => (
 export const DropdownSoft = (p               ) => (
   <Shell
     {...p}
-    triggerStyle={{ background: "color-mix(in srgb, var(--color-primary) 12%, transparent)", color: "var(--color-primary)", borderColor: "transparent" }}
+    triggerStyle={{ background: "color-mix(in srgb, var(--color-primary) 12%, transparent)", color: "var(--color-primary-text, var(--color-primary))", borderColor: "transparent" }}
     panelStyle={{ borderRadius: 12 }}
   />
 );

@@ -67,7 +67,7 @@ const chevron = (open         ) => (
   </span>
 );
 const plus = (open         ) => (
-  <span aria-hidden style={{ color: "var(--color-primary)", fontSize: "1.2rem", lineHeight: 1 }}>{open ? "−" : "+"}</span>
+  <span aria-hidden style={{ color: "var(--color-primary-text, var(--color-primary))", fontSize: "1.2rem", lineHeight: 1 }}>{open ? "−" : "+"}</span>
 );
 
 /** 01 bordered box, divided */
@@ -177,7 +177,7 @@ export function AccordionNumbered({ items }                ) {
         <div key={it.q} style={{ padding: "14px 0", borderTop: i ? "1px solid var(--color-border)" : "none" }}>
           <button type="button" className="ot-press" style={q} aria-expanded={isOpen(i)} onClick={() => toggle(i)}>
             <span style={{ display: "flex", gap: 12 }}>
-              <span style={{ color: "var(--color-primary)", fontVariantNumeric: "tabular-nums" }}>{String(i + 1).padStart(2, "0")}</span>
+              <span style={{ color: "var(--color-primary-text, var(--color-primary))", fontVariantNumeric: "tabular-nums" }}>{String(i + 1).padStart(2, "0")}</span>
               {it.q}
             </span>
             {chevron(isOpen(i))}

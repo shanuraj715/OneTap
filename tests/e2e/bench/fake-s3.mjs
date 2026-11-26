@@ -3,13 +3,14 @@ import { createServer } from "node:http";
 /* ------------------------------------------------------------------ a stand-in for an S3-compatible service (R2, S3…) */
 /**
  * A stand-in for an S3-compatible service (Cloudflare R2, Amazon S3…) for tests: path-style `/<bucket>/<key>`, PUT / GET / HEAD /
- * DELETE and ListObjectsV2 in small pages. It wants a signed request (`AWS4-HMAC-SHA256 Credential=<accessKey>/…`) for everything
+ * DELETE, CopyObject (replace headers) and ListObjectsV2 in small pages. It wants a signed request (`AWS4-HMAC-SHA256 Credential=<accessKey>/…`) for everything
  * except reading a file when `state.publicRead` is on. `fail` holds keys whose upload it refuses; `state.slow` delays every answer.
  */
 export function fakeS3({ bucket = "media", accessKey = "AKTEST", publicRead = true, pageSize = 3 } = {}) {
   const store = new Map(); // key → { body, type, modified }
   const fail = new Set(); // keys whose upload is refused
-  const seen = { puts: 0, lists: 0, gets: 0, heads: 0, deletes: 0 };
+  const seen = { puts: 0, lists: 0, gets: 0, heads: 0, deletes: 0, copies: 0, signed: [] }; // signed: the header names each signed PUT carried
+  const copyFail = new Set(); // keys whose copy-in-place answers 200 with an <Error> inside (as S3 sometimes does)
   const state = { publicRead, slow: 0 };
   const server = createServer(async (req, res) => {
     const url = new URL(req.url, "http://x");
@@ -22,11 +23,22 @@ export function fakeS3({ bucket = "media", accessKey = "AKTEST", publicRead = tr
     const publicOk = (req.method === "GET" || req.method === "HEAD") && key && state.publicRead && !signed;
     if (!publicOk && signed?.[1] !== accessKey) return send(403, "<Error><Code>InvalidAccessKeyId</Code><Message>The access key you provided does not exist.</Message></Error>");
     if (req.method === "PUT") {
+      seen.signed.push({ key, signedHeaders: /SignedHeaders=([^,]+),/.exec(req.headers.authorization ?? "")?.[1]?.split(";") ?? [] });
+      const copyFrom = req.headers["x-amz-copy-source"];
+      if (copyFrom) { // CopyObject: the same bytes under a key, with the headers kept or (x-amz-metadata-directive: REPLACE) replaced
+        const src = store.get(decodeURIComponent(String(copyFrom)).replace(new RegExp(`^/?${bucket}/`), ""));
+        if (!src) return send(404, "<Error><Code>NoSuchKey</Code><Message>The specified key does not exist.</Message></Error>");
+        if (copyFail.has(key)) return send(200, "<Error><Code>InternalError</Code><Message>copy failed inside the body</Message></Error>");
+        const replace = req.headers["x-amz-metadata-directive"] === "REPLACE";
+        seen.copies += 1;
+        store.set(key, { body: src.body, type: replace ? req.headers["content-type"] ?? "" : src.type, cacheControl: replace ? req.headers["cache-control"] ?? "" : src.cacheControl ?? "", modified: new Date() });
+        return send(200, "<CopyObjectResult><ETag>x</ETag></CopyObjectResult>");
+      }
       const chunks = [];
       for await (const c of req) chunks.push(c);
       if (fail.has(key)) return send(500, "<Error><Code>InternalError</Code><Message>try again later</Message></Error>");
       seen.puts += 1;
-      store.set(key, { body: Buffer.concat(chunks), type: req.headers["content-type"] ?? "", modified: new Date() });
+      store.set(key, { body: Buffer.concat(chunks), type: req.headers["content-type"] ?? "", cacheControl: req.headers["cache-control"] ?? "", modified: new Date() });
       return send(200);
     }
     if (req.method === "DELETE") { seen.deletes += 1; store.delete(key); return send(204); }
@@ -34,7 +46,7 @@ export function fakeS3({ bucket = "media", accessKey = "AKTEST", publicRead = tr
       const o = store.get(key);
       if (req.method === "HEAD") seen.heads += 1; else seen.gets += 1;
       if (!o) return send(404, req.method === "HEAD" ? "" : "<Error><Code>NoSuchKey</Code></Error>");
-      return send(200, req.method === "HEAD" ? "" : o.body, { "content-length": o.body.length, "content-type": o.type, "last-modified": o.modified.toUTCString() });
+      return send(200, req.method === "HEAD" ? "" : o.body, { "content-length": o.body.length, "content-type": o.type, "last-modified": o.modified.toUTCString(), ...(o.cacheControl ? { "cache-control": o.cacheControl } : {}) });
     }
     if (req.method === "GET" && url.searchParams.get("list-type") === "2") {
       seen.lists += 1;
@@ -48,6 +60,6 @@ export function fakeS3({ bucket = "media", accessKey = "AKTEST", publicRead = tr
     }
     return send(400);
   });
-  return new Promise((r) => server.listen(0, "127.0.0.1", () => r({ server, store, fail, seen, state, bucket, port: server.address().port, endpoint: `http://127.0.0.1:${server.address().port}`, close: () => new Promise((d) => server.close(d)) })));
+  return new Promise((r) => server.listen(0, "127.0.0.1", () => r({ server, store, fail, copyFail, seen, state, bucket, port: server.address().port, endpoint: `http://127.0.0.1:${server.address().port}`, close: () => new Promise((d) => server.close(d)) })));
 }
 

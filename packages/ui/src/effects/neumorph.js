@@ -56,7 +56,7 @@ export const css = (s) => `
     --fx-chip-shadow: 3px 3px 7px var(--nm-lo), -3px -3px 7px var(--nm-hi);
   `)}
   ${role(s, "chip", `
-    --fx-chip-color: var(--color-primary);
+    --fx-chip-color: var(--color-primary-text, var(--color-primary));
     --fx-chip-shadow: inset 3px 3px 8px var(--nm-lo), inset -3px -3px 8px var(--nm-hi);
   `, '[data-active="true"]')}
   ${role(s, "chip", `

@@ -135,6 +135,7 @@ export function OrderBar({ current, outlets }) {
                           type="button"
                           disabled={!available}
                           aria-pressed={active}
+                          data-active={active ? "true" : undefined} /* the style effects restyle the selected chip through this (their own readable look) */
                           title={available ? undefined : `${ORDER_TYPE_LABELS[t]} isn't available from this outlet`}
                           onClick={() => available && choose(t)}
                           className="ot-fx-chip ot-ob-seg-btn"
@@ -152,7 +153,7 @@ export function OrderBar({ current, outlets }) {
               {several ? (
                 <div className="ot-ob-pill-wrap" style={{ position: "relative", flex: "1 1 240px", minWidth: 0 }}>
                   <button ref={pillRef} type="button" onClick={() => setOpen((o) => !o)} aria-haspopup="dialog" aria-expanded={open} className="ot-fx-chip ot-ob-pill" style={fx("chip", pill)}>
-                    <MapPin size={16} aria-hidden="true" style={{ flexShrink: 0, color: "var(--color-primary)" }} />
+                    <MapPin size={16} aria-hidden="true" style={{ flexShrink: 0, color: "var(--color-primary-text, var(--color-primary))" }} />
                     <span style={pillText}>
                       <span style={pillName}>{here.name}</span>
                       {mine?.km != null ? <span style={pillKm}>{kmText(mine.km)} away</span> : null}
@@ -322,7 +323,7 @@ const panel = {
   overflow: "hidden",
 };
 const panelHead = { display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, padding: "14px 16px 10px" };
-const textBtn = { font: "inherit", display: "inline-flex", alignItems: "center", gap: 5, border: 0, background: "transparent", color: "var(--color-primary)", fontSize: 12.5, fontWeight: 700, cursor: "pointer", padding: 0 };
+const textBtn = { font: "inherit", display: "inline-flex", alignItems: "center", gap: 5, border: 0, background: "transparent", color: "var(--color-primary-text, var(--color-primary))", fontSize: 12.5, fontWeight: 700, cursor: "pointer", padding: 0 };
 const locateBox = { margin: "0 16px 10px", padding: 12, borderRadius: 12, background: "var(--color-surface)", display: "flex", flexDirection: "column", gap: 8 };
 const locateBtn = { font: "inherit", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: 7, minHeight: 40, padding: "0 16px", borderRadius: 10, border: "none", background: "var(--color-primary)", color: "var(--color-on-primary)", fontSize: 13.5, fontWeight: 700, cursor: "pointer" };
 const hintText = { fontSize: 12.5, lineHeight: 1.45, color: "var(--color-text-muted)" };

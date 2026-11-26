@@ -21,6 +21,8 @@ export const effectSchema = z.object({
  * renders them dark whatever the theme's light/dark setting says, and their
  * palette goes into the dark token set.
  */
+// colorTextMuted of every palette below is chosen to stay at 5.8:1 or better on the page, on a card AND on panels tinted with up to 14% of any
+// brand colour (the location prompt, selected rows): a muted grey that passes on the plain palette can fall to 4:1 on those.
 export const EFFECT_PRESETS = {
   none: {
     label: "None",
@@ -33,8 +35,8 @@ export const EFFECT_PRESETS = {
     description: "Frosted, translucent surfaces floating over a soft gradient.",
     forcesDark: false,
     palette: {
-      light: { colorBg: "#EEF1F7", colorSurface: "#FFFFFF", colorText: "#14161C", colorTextMuted: "#5B6170", colorBorder: "#DDE2EC" },
-      dark: { colorBg: "#0E1118", colorSurface: "#1A1F2B", colorText: "#EDEFF5", colorTextMuted: "#9AA1B2", colorBorder: "#2A3142" },
+      light: { colorBg: "#EEF1F7", colorSurface: "#FFFFFF", colorText: "#14161C", colorTextMuted: "#4B505C", colorBorder: "#DDE2EC" },
+      dark: { colorBg: "#0E1118", colorSurface: "#1A1F2B", colorText: "#EDEFF5", colorTextMuted: "#ACB2C0", colorBorder: "#2A3142" },
     },
   },
   neumorph: {
@@ -42,8 +44,8 @@ export const EFFECT_PRESETS = {
     description: "Soft, monochrome UI with raised and pressed-in surfaces.",
     forcesDark: false,
     palette: {
-      light: { colorBg: "#E6E9EF", colorSurface: "#E6E9EF", colorText: "#2B2F38", colorTextMuted: "#5A606C", colorBorder: "#D5D9E0" },
-      dark: { colorBg: "#262A31", colorSurface: "#262A31", colorText: "#E4E7EC", colorTextMuted: "#9CA3AF", colorBorder: "#33383F" },
+      light: { colorBg: "#E6E9EF", colorSurface: "#E6E9EF", colorText: "#2B2F38", colorTextMuted: "#464B54", colorBorder: "#D5D9E0" },
+      dark: { colorBg: "#262A31", colorSurface: "#262A31", colorText: "#E4E7EC", colorTextMuted: "#BCC0C9", colorBorder: "#33383F" },
     },
   },
   clay: {
@@ -51,8 +53,8 @@ export const EFFECT_PRESETS = {
     description: "Puffy, rounded 3D cards in friendly pastel tones.",
     forcesDark: false,
     palette: {
-      light: { colorBg: "#F6F0FF", colorSurface: "#FFFFFF", colorText: "#2E2A3B", colorTextMuted: "#6E6880", colorBorder: "#EAE2F7" },
-      dark: { colorBg: "#221D2E", colorSurface: "#2D2740", colorText: "#F1ECFA", colorTextMuted: "#A79FBD", colorBorder: "#3A3350" },
+      light: { colorBg: "#F6F0FF", colorSurface: "#FFFFFF", colorText: "#2E2A3B", colorTextMuted: "#524C62", colorBorder: "#EAE2F7" },
+      dark: { colorBg: "#221D2E", colorSurface: "#2D2740", colorText: "#F1ECFA", colorTextMuted: "#C3BED2", colorBorder: "#3A3350" },
     },
   },
   aurora: {
@@ -60,8 +62,8 @@ export const EFFECT_PRESETS = {
     description: "Slowly drifting purple, blue, pink and cyan light behind the page.",
     forcesDark: false,
     palette: {
-      light: { colorBg: "#F5F3FF", colorSurface: "#FFFFFF", colorText: "#1B1530", colorTextMuted: "#625C7A", colorBorder: "#E4DEF7" },
-      dark: { colorBg: "#0B0A1A", colorSurface: "#15132B", colorText: "#EEEAFE", colorTextMuted: "#A39DC4", colorBorder: "#2A2650" },
+      light: { colorBg: "#F5F3FF", colorSurface: "#FFFFFF", colorText: "#1B1530", colorTextMuted: "#524D66", colorBorder: "#E4DEF7" },
+      dark: { colorBg: "#0B0A1A", colorSurface: "#15132B", colorText: "#EEEAFE", colorTextMuted: "#A9A3C8", colorBorder: "#2A2650" },
     },
   },
   cyberpunk: {
@@ -69,7 +71,7 @@ export const EFFECT_PRESETS = {
     description: "Dark, neon-glow borders and buttons over a faint grid. Always dark.",
     forcesDark: true,
     palette: {
-      dark: { colorBg: "#07060D", colorSurface: "#0F0E1A", colorText: "#E8F7FF", colorTextMuted: "#8A93B8", colorBorder: "#232046" },
+      dark: { colorBg: "#07060D", colorSurface: "#0F0E1A", colorText: "#E8F7FF", colorTextMuted: "#9AA2C2", colorBorder: "#232046" },
     },
   },
   "dark-premium": {
@@ -77,7 +79,7 @@ export const EFFECT_PRESETS = {
     description: "Deep black, refined borders and soft accent highlights. Always dark.",
     forcesDark: true,
     palette: {
-      dark: { colorBg: "#0B0B0C", colorSurface: "#151517", colorText: "#F2EFE9", colorTextMuted: "#9C978E", colorBorder: "#26252A" },
+      dark: { colorBg: "#0B0B0C", colorSurface: "#151517", colorText: "#F2EFE9", colorTextMuted: "#ACA8A0", colorBorder: "#26252A" },
     },
   },
 };

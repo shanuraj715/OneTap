@@ -28,7 +28,7 @@ export function Button({ variant = "primary", size = "md", style, ...rest }     
   const skin                =
     variant === "primary"
       ? { background: "var(--color-primary)", color: "var(--color-on-primary)" }
-      : { background: "transparent", color: "var(--color-primary)" };
+      : { background: "transparent", color: "var(--color-primary-text, var(--color-primary))" };
 
   return <button type="button" {...rest} style={{ ...base, ...SIZES[size], ...skin, ...style }} />;
 }

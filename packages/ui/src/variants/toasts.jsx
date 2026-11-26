@@ -12,7 +12,7 @@ const base                = {
   lineHeight: 1.45,
   maxWidth: 380,
 };
-const close                = { marginLeft: "auto", opacity: 0.5, fontSize: "1.05rem", lineHeight: 1, cursor: "pointer" };
+const close                = { marginLeft: "auto", opacity: 0.9, fontSize: "1.05rem", lineHeight: 1, cursor: "pointer" }; // a clickable mark: 3:1 at least on every tone
 
 /** 01 solid tone, elevated */
 export function ToastSolid({ title, message, tone = "info" }            ) {

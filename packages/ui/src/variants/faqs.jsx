@@ -107,7 +107,7 @@ export function FaqCollapsible({ items, heading: title = "Frequently asked" }) {
               style={{ ...qStyle, font: "inherit", fontWeight: 600, width: "100%", textAlign: "left", padding: "14px 16px", background: "none", border: "none", cursor: "pointer", display: "flex", justifyContent: "space-between", gap: 12, color: "var(--color-text)" }}
             >
               {it.q}
-              <span aria-hidden style={{ color: "var(--color-primary)" }}>{open === i ? "−" : "+"}</span>
+              <span aria-hidden style={{ color: "var(--color-primary-text, var(--color-primary))" }}>{open === i ? "−" : "+"}</span>
             </button>
             <div className="ot-collapse" data-open={open === i}>
               <div>

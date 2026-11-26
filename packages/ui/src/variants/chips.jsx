@@ -46,7 +46,7 @@ export function ChipSolid({ children, selected, removable, onRemove }           
 /** 02 soft tint when selected */
 export function ChipSoft({ children, selected, removable, onRemove }           ) {
   return (
-    <span className="ot-press" style={{ ...base, borderRadius: 999, ...(selected ? { background: "color-mix(in srgb, var(--color-primary) 15%, transparent)", color: "var(--color-primary)", borderColor: "transparent" } : {}) }}>
+    <span className="ot-press" style={{ ...base, borderRadius: 999, ...(selected ? { background: "color-mix(in srgb, var(--color-primary) 15%, transparent)", color: "var(--color-primary-text, var(--color-primary))", borderColor: "transparent" } : {}) }}>
       {children}
       <Remove show={removable} onRemove={onRemove} />
     </span>
@@ -56,7 +56,7 @@ export function ChipSoft({ children, selected, removable, onRemove }           )
 /** 03 square corners */
 export function ChipSquare({ children, selected, removable, onRemove }           ) {
   return (
-    <span className="ot-press" style={{ ...base, borderRadius: 4, ...(selected ? { borderColor: "var(--color-primary)", color: "var(--color-primary)" } : {}) }}>
+    <span className="ot-press" style={{ ...base, borderRadius: 4, ...(selected ? { borderColor: "var(--color-primary)", color: "var(--color-primary-text, var(--color-primary))" } : {}) }}>
       {children}
       <Remove show={removable} onRemove={onRemove} />
     </span>
@@ -66,7 +66,7 @@ export function ChipSquare({ children, selected, removable, onRemove }          
 /** 04 selection shows a tick */
 export function ChipTick({ children, selected, removable, onRemove }           ) {
   return (
-    <span className="ot-press" style={{ ...base, borderRadius: 999, ...(selected ? { borderColor: "var(--color-primary)", color: "var(--color-primary)" } : {}) }}>
+    <span className="ot-press" style={{ ...base, borderRadius: 999, ...(selected ? { borderColor: "var(--color-primary)", color: "var(--color-primary-text, var(--color-primary))" } : {}) }}>
       {selected ? <span aria-hidden>✓</span> : null}
       {children}
       <Remove show={removable} onRemove={onRemove} />

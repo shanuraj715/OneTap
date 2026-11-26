@@ -18,9 +18,9 @@ export const css = (s, page) => `
 
   ${backdrop(page, `
     background:
-      radial-gradient(60% 45% at 12% 8%, color-mix(in srgb, var(--color-primary) 30%, transparent), transparent 70%),
-      radial-gradient(50% 40% at 88% 22%, color-mix(in srgb, #5B8CFF 24%, transparent), transparent 70%),
-      radial-gradient(55% 45% at 50% 100%, color-mix(in srgb, var(--color-primary) 18%, transparent), transparent 70%),
+      radial-gradient(60% 45% at 12% 8%, color-mix(in srgb, var(--color-primary) 18%, transparent), transparent 70%),
+      radial-gradient(50% 40% at 88% 22%, color-mix(in srgb, #5B8CFF 10%, transparent), transparent 70%),
+      radial-gradient(55% 45% at 50% 100%, color-mix(in srgb, var(--color-primary) 12%, transparent), transparent 70%),
       var(--color-bg);
   `)}
 
@@ -35,14 +35,20 @@ export const css = (s, page) => `
     --fx-bar-shadow: 0 4px 24px var(--gl-shade);
     --fx-bar-blur: saturate(160%) blur(16px);
   `)}
+  ${role(s, "bar", `
+    /* the category / filter strip is drawn as a floating panel of its own here: give its contents room from the panel's edge */
+    --fx-toolbar-edge: 1px solid var(--gl-edge);
+    --fx-toolbar-radius: 18px;
+    --fx-toolbar-pad-x: 14px;
+  `, "[data-fx-toolbar]")}
   ${role(s, "modal", `
-    --fx-modal-bg: color-mix(in srgb, var(--color-surface) 86%, transparent);
+    --fx-modal-bg: color-mix(in srgb, var(--color-surface) 95%, transparent); /* still frosted, but the dimmed page behind it no longer greys the text */
     --fx-modal-border: 1px solid var(--gl-edge);
     --fx-modal-shadow: 0 24px 60px var(--gl-shade), inset 0 1px 0 var(--gl-edge);
     --fx-modal-blur: saturate(160%) blur(22px);
   `)}
   ${role(s, "btn", `
-    --fx-btn-bg: linear-gradient(135deg, var(--color-primary), color-mix(in srgb, var(--color-primary) 72%, #ffffff));
+    --fx-btn-bg: linear-gradient(135deg, var(--color-primary), color-mix(in srgb, var(--color-primary) 90%, #ffffff));
     --fx-btn-shadow: 0 6px 20px color-mix(in srgb, var(--color-primary) 35%, transparent), inset 0 1px 0 rgba(255,255,255,.35);
   `)}
   ${role(s, "input", `

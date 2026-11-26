@@ -121,7 +121,7 @@ body {
 
 .addr-btn-outline {
   background: transparent;
-  color: var(--color-primary);
+  color: var(--color-primary-text, var(--color-primary));
 }
 
 .addr-btn-outline:hover {

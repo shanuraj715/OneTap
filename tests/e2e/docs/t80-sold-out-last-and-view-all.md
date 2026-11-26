@@ -1,6 +1,6 @@
 # T80 — Menu: sold-out dishes go to the end of their category, and 'View all' disappears when a filter leaves only a few dishes
 
-**Area:** storefront · **Last result:** ✅ PASSED (28 passed, 0 failed · 2026-11-26 10:41 · headless · 20.1 s)
+**Area:** storefront · **Last result:** ✅ PASSED (28 passed, 0 failed · 2026-11-26 11:52 · headless · 24.3 s)
 
 **Run it alone:** `node run.mjs --only t80` (add `--visible` to watch it)
 
@@ -78,6 +78,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-26 11:52 | pass | 28 | 0 | headless | 24.3 s |
 | 2026-11-26 10:41 | pass | 28 | 0 | headless | 20.1 s |
 | 2026-11-25 12:02 | pass | 28 | 0 | headless | 18.6 s |
 | 2026-11-25 11:18 | error | 0 | 0 | headless | 0.8 s |

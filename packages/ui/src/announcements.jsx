@@ -202,7 +202,7 @@ export function AnnouncementSoft({ messages = [], dismissible = true, rotateSeco
       style={{ background: "color-mix(in srgb, var(--color-primary) 11%, var(--color-bg))", color: "var(--color-text)", borderBottom: "1px solid color-mix(in srgb, var(--color-primary) 22%, var(--color-border))" }}
     >
       <div className="ot-header-px" style={{ ...rowPad(dismissible), display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", flexWrap: "wrap" }} {...t.bind}>
-        <Turns messages={messages} index={t.index} render={(m) => <Message m={m} link={{ color: "var(--color-primary)" }} />} />
+        <Turns messages={messages} index={t.index} render={(m) => <Message m={m} link={{ color: "var(--color-primary-text, var(--color-primary))" }} />} />
         <Dots count={messages.length} index={t.index} onPick={t.setIndex} />
       </div>
     </Bar>
@@ -277,7 +277,7 @@ export function AnnouncementRotator({ messages = [], dismissible = true, rotateS
             ‹
           </button>
         ) : null}
-        <Turns messages={messages} index={t.index} enter="ot-anim-rise" itemStyle={{ textAlign: "center" }} render={(m) => <Message m={m} link={{ color: "var(--color-primary)" }} />} />
+        <Turns messages={messages} index={t.index} enter="ot-anim-rise" itemStyle={{ textAlign: "center" }} render={(m) => <Message m={m} link={{ color: "var(--color-primary-text, var(--color-primary))" }} />} />
         {messages.length > 1 ? (
           <>
             <button type="button" onClick={t.next} aria-label="Next message" style={arrow}>

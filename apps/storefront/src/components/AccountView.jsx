@@ -300,7 +300,7 @@ export function AccountView({ outletId, menuHref, outletSlug, reservationsEnable
 
               {active ? <Tracker status={o.status} channel={o.channel} /> : null}
               {active ? (
-                <Link href={`/${o.outlet?.slug || outletSlug}/order/${o.id}`} style={{ display: "inline-block", marginTop: 10, fontSize: 13, fontWeight: 700, color: "var(--color-primary)" }} data-testid="order-follow">
+                <Link href={`/${o.outlet?.slug || outletSlug}/order/${o.id}`} style={{ display: "inline-block", marginTop: 10, fontSize: 13, fontWeight: 700, color: "var(--color-primary-text, var(--color-primary))" }} data-testid="order-follow">
                   Follow this order →
                 </Link>
               ) : null}
@@ -539,7 +539,7 @@ const card = {
 const coinCard = { ...card, display: "flex", alignItems: "center", gap: 14, padding: "16px", borderLeft: "3px solid var(--color-primary)" };
 const coinIcon = { display: "grid", placeItems: "center", width: 42, height: 42, borderRadius: 12, background: "var(--tone-warning-wash)", color: "var(--tone-warning)" };
 const ghostBtn = { font: "inherit", fontSize: 13, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 6, padding: "8px 14px", borderRadius: "var(--radius-card)", border: "1px solid var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)", cursor: "pointer" };
-const linkBtn = { font: "inherit", fontSize: 12.5, fontWeight: 700, padding: "10px 0 2px", background: "none", border: "none", color: "var(--color-primary)", cursor: "pointer" };
+const linkBtn = { font: "inherit", fontSize: 12.5, fontWeight: 700, padding: "10px 0 2px", background: "none", border: "none", color: "var(--color-primary-text, var(--color-primary))", cursor: "pointer" };
 const primaryLink = { display: "inline-block", font: "inherit", fontWeight: 700, fontSize: 14, padding: "11px 20px", borderRadius: "var(--radius-card)", background: "var(--color-primary)", color: "var(--color-on-primary)", textDecoration: "none" };
 const errorBox = { color: "var(--tone-danger)", background: "var(--tone-danger-wash)", fontSize: 13, fontWeight: 500, padding: "10px 12px", borderRadius: "calc(var(--radius-card) - 2px)", marginBottom: 12 };
 const askBox = { marginTop: 8, padding: "12px 14px", borderRadius: "calc(var(--radius-card) - 2px)", background: "var(--color-surface)", border: "1px solid var(--color-border)" };
@@ -593,7 +593,7 @@ function RateBox({ outletId, order, onDone, onClose }) {
         {done.google ? (
           <p style={{ margin: "6px 0 0", fontSize: 13.5 }}>
             Glad you enjoyed it. Would you tell others on Google?{" "}
-            <a href={done.google} target="_blank" rel="noopener noreferrer" style={{ fontWeight: 700, color: "var(--color-primary)" }} data-testid="rate-google">
+            <a href={done.google} target="_blank" rel="noopener noreferrer" style={{ fontWeight: 700, color: "var(--color-primary-text, var(--color-primary))" }} data-testid="rate-google">
               Write a Google review
             </a>
           </p>
@@ -676,7 +676,7 @@ function MyBookings({ outletId, bookHref }) {
       <h2 style={{ ...h2, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
         <span>Your table bookings</span>
         {bookHref ? (
-          <Link href={bookHref} style={{ fontSize: 13, fontWeight: 700, color: "var(--color-primary)" }} data-testid="account-book">
+          <Link href={bookHref} style={{ fontSize: 13, fontWeight: 700, color: "var(--color-primary-text, var(--color-primary))" }} data-testid="account-book">
             <CalendarDays size={14} style={{ verticalAlign: -2 }} /> Book a table
           </Link>
         ) : null}
@@ -716,10 +716,10 @@ function MyBookings({ outletId, bookHref }) {
 const riderBox = { display: "flex", alignItems: "center", gap: 10, marginTop: 12, padding: "10px 12px", borderRadius: "calc(var(--radius-card) - 2px)", background: "var(--tone-info-wash)", color: "var(--tone-info)", fontSize: 13.5 };
 const callLink = { display: "inline-flex", alignItems: "center", gap: 5, fontWeight: 700, fontSize: 13, color: "inherit", textDecoration: "none", padding: "6px 10px", borderRadius: 999, background: "var(--color-bg)" };
 const rateBtn = { font: "inherit", fontSize: 13, fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 6, padding: "7px 12px", borderRadius: 999, border: "1px solid #F5A524", background: "color-mix(in srgb, #F5A524 12%, var(--color-bg))", color: "var(--color-text)", cursor: "pointer" };
-const againBtn = { font: "inherit", fontSize: 13, fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 6, padding: "7px 12px", borderRadius: 999, border: "1px solid var(--color-primary)", background: "var(--color-bg)", color: "var(--color-primary)", cursor: "pointer" };
+const againBtn = { font: "inherit", fontSize: 13, fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 6, padding: "7px 12px", borderRadius: 999, border: "1px solid var(--color-primary)", background: "var(--color-bg)", color: "var(--color-primary-text, var(--color-primary))", cursor: "pointer" };
 const rateBox = { marginTop: 10, padding: "12px 14px", borderRadius: "calc(var(--radius-card) - 2px)", background: "var(--color-surface)", border: "1px solid var(--color-border)" };
 const starBtn = { border: "none", background: "none", padding: 2, cursor: "pointer", lineHeight: 0 };
 const tagBtn = { font: "inherit", fontSize: 12.5, fontWeight: 600, padding: "5px 10px", borderRadius: 999, border: "1px solid var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)", cursor: "pointer" };
-const tagBtnOn = { borderColor: "var(--color-primary)", background: "color-mix(in srgb, var(--color-primary) 10%, var(--color-bg))", color: "var(--color-primary)" };
+const tagBtnOn = { borderColor: "var(--color-primary)", background: "color-mix(in srgb, var(--color-primary) 10%, var(--color-bg))", color: "var(--color-primary-text, var(--color-primary))" };
 const commentBox = { width: "100%", boxSizing: "border-box", font: "inherit", fontSize: 13.5, padding: "8px 10px", borderRadius: 9, border: "1px solid var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)", resize: "vertical" };
 const sendBtn = { font: "inherit", fontSize: 13, fontWeight: 700, padding: "8px 14px", borderRadius: "var(--radius-card)", border: "none", background: "var(--color-primary)", color: "var(--color-on-primary)", cursor: "pointer" };

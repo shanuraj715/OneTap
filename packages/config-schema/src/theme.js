@@ -31,9 +31,45 @@ export const themeSchema = z.object({
                                                 
 
 /** Turn resolved tokens into a CSS custom-property block. */
+/* ------------------------------------------------------------------ readable brand colour */
+// The brand colour is chosen to look good as a FILL (a button with white text on it). As the colour of TEXT or a small icon on a
+// page surface it can be too weak — a mid-dark magenta on a dark page is about 3:1 — so text and icons use `--color-primary-text`:
+// the brand colour itself where it already reads well on both the page and the card surface, otherwise the nearest shade that does
+// (lighter on a dark page, darker on a light one).
+const hexRgb = (hex) => {
+  const m = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(String(hex ?? "").trim());
+  if (!m) return null;
+  const h = m[1].length === 3 ? m[1].split("").map((c) => c + c).join("") : m[1];
+  return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16));
+};
+const rgbHex = (rgb) => `#${rgb.map((v) => Math.round(Math.max(0, Math.min(255, v))).toString(16).padStart(2, "0")).join("")}`;
+const luminanceOf = (rgb) => {
+  const [r, g, b] = rgb.map((v) => { const c = v / 255; return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+};
+const contrastOf = (a, b) => { const [hi, lo] = [luminanceOf(a), luminanceOf(b)].sort((x, y) => y - x); return (hi + 0.05) / (lo + 0.05); };
+export const READABLE_CONTRAST = 4.8; // 4.5 is the rule; the extra margin covers soft shadows and slightly tinted surfaces
+/** the brand colour as text / icon colour on `colorBg` and `colorSurface` (a hex string; the brand colour unchanged when it already reads well) */
+export function readablePrimary(colorPrimary, colorBg, colorSurface) {
+  const fg = hexRgb(colorPrimary), bg = hexRgb(colorBg), surface = hexRgb(colorSurface);
+  if (!fg || !bg) return colorPrimary; // not a plain hex colour: leave it alone
+  const grounds = surface ? [bg, surface] : [bg];
+  // pop-ups on a dark page sit a little LIGHTER than the surface (a lifted layer): the text must read there too
+  if (surface && luminanceOf(bg) < 0.4) grounds.push(surface.map((v) => v + (255 - v) * 0.1));
+  const worst = (c) => Math.min(...grounds.map((g) => contrastOf(c, g)));
+  if (worst(fg) >= READABLE_CONTRAST) return colorPrimary;
+  const toward = luminanceOf(bg) < 0.4 ? [255, 255, 255] : [0, 0, 0]; // a dark page: lighter; a light page: darker
+  for (let t = 0.04; t <= 1.0001; t += 0.04) {
+    const c = fg.map((v, i) => v + (toward[i] - v) * t);
+    if (worst(c) >= READABLE_CONTRAST) return rgbHex(c);
+  }
+  return rgbHex(toward);
+}
+
 export function tokensToCssVars(tokens             )                         {
   return {
     "--color-primary": tokens.colorPrimary,
+    "--color-primary-text": readablePrimary(tokens.colorPrimary, tokens.colorBg, tokens.colorSurface),
     "--color-on-primary": tokens.colorOnPrimary,
     "--color-bg": tokens.colorBg,
     "--color-surface": tokens.colorSurface,
@@ -77,7 +113,7 @@ const DARK_FALLBACK                       = {
   colorBg: "#14130F",
   colorSurface: "#1E1C17",
   colorText: "#ECE6D8",
-  colorTextMuted: "#9A9384",
+  colorTextMuted: "#B4AFA4", // 5.8:1+ on the page, a card and brand-tinted panels
   colorBorder: "#34302A",
 };
 
@@ -110,7 +146,10 @@ export function themeCss(theme       , { forceDark = false } = {})         {
 
   // An effect that only works on a dark page (see EFFECT_PRESETS.forcesDark)
   // ignores the visitor's OS preference entirely.
-  if (forceDark) return `:root {\n${block(darkVars)}\n  color-scheme: dark;\n}`;
+  // The selector list matters: the base stylesheet's own dark defaults sit behind `:root:not([data-theme="light"])` (inside a
+  // prefers-color-scheme: dark query) and `:root[data-theme="dark"]`. A bare `:root` is weaker than both, so on a visitor's dark device
+  // those defaults would silently replace this store's palette. Naming the same selectors makes the later rule (this one) win everywhere.
+  if (forceDark) return `:root,\n:root[data-theme="light"],\n:root[data-theme="dark"],\n:root:not([data-theme="light"]) {\n${block(darkVars)}\n  color-scheme: dark;\n}`;
 
   return [
     `:root {\n${block(lightVars)}\n}`,
