@@ -703,3 +703,38 @@ p { margin: 0; text-wrap: pretty; }
   .apps-card:hover, .apps-card:focus-within { transform: none; }
   .apps-bubble { display: none; }
 }
+
+/* ------------------------------------------------------- an app's own page (/apps/<app>)
+ * The page wears the colour of the app's card: --app (set on <main>) becomes the page's accent. A darker mix in the light theme and a lighter
+ * one in the dark theme keep text and buttons readable whatever the app's colour is. */
+.app-themed {
+  --brand: color-mix(in srgb, var(--app) 72%, #000);
+  --brand-ink: #ffffff;
+  --brand-wash: color-mix(in srgb, var(--brand) 9%, var(--surface));
+}
+@media (prefers-color-scheme: dark) {
+  .app-themed {
+    --brand: color-mix(in srgb, var(--app) 60%, #fff);
+    --brand-ink: #101010;
+    --brand-wash: color-mix(in srgb, var(--brand) 16%, var(--surface));
+  }
+}
+.app-themed .section.band { background: linear-gradient(180deg, color-mix(in srgb, var(--app) 6%, var(--surface)), var(--surface) 260px); }
+.apps-hero-layer { position: relative; z-index: 1; }
+/* on an app's own page every blob is the app's colour (the index paints one blob per app) */
+.apps-bg-solo .apps-blob { background: var(--app); }
+.apps-bg-solo .apps-blob-a { opacity: 0.3; }
+.apps-bg-solo .apps-blob-b { opacity: 0.22; }
+.apps-bg-solo .apps-blob-c { opacity: 0.2; }
+.apps-bg-solo .apps-beat { opacity: 0.75; bottom: 0; }
+/* room under the content, so the heartbeat line's tall spike passes beneath it instead of behind a box */
+.app-themed .apps-hero { padding-bottom: 150px; }
+
+.app-ident { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+.app-ident-text { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; min-width: 0; }
+.app-ident-text h1 { margin: 0; }
+.app-icon-lg { position: relative; display: block; flex: none; width: 112px; height: 112px; animation: apps-float 6s ease-in-out infinite; }
+.app-icon-lg::before { content: ""; position: absolute; inset: -22px; z-index: -1; border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--app) 45%, transparent), transparent 68%); animation: apps-glow 4.6s ease-in-out infinite; }
+.app-icon-lg img { display: block; width: 100%; height: 100%; border-radius: 26px; box-shadow: 0 22px 36px -14px color-mix(in srgb, var(--app) 80%, transparent), 0 0 0 1px rgb(255 255 255 / 0.08); }
+@keyframes apps-glow { 0%, 100% { opacity: 0.55; transform: scale(1); } 50% { opacity: 1; transform: scale(1.12); } }
+@media (prefers-reduced-motion: reduce) { .app-icon-lg, .app-icon-lg::before { animation: none !important; } }

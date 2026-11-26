@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { APP_CATALOG, APP_IDS, formatBytes } from "@rasoipulse/config-schema";
 import { Download, ShieldCheck, Smartphone } from "lucide-react";
+import { AppsBackdrop } from "@/components/AppsBackdrop";
+import { appArt } from "@/lib/app-art";
 import { getAppReleases, getSettings, siteUrl } from "@/lib/site";
 
 // Served from cache, refreshed every 5 minutes — and the moment a version is published, withdrawn or changed in the console.
@@ -34,7 +36,7 @@ const day = (d) => (d ? new Date(d).toLocaleDateString("en-IN", { day: "numeric"
 const lines = (text) => String(text ?? "").split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
 
 const steps = (app) => [
-  ["Download the file", `Tap the red button. Your phone saves a file called rasoi-pulse-${app.id}… .apk in Downloads.`],
+  ["Download the file", `Tap the Download button. Your phone saves a file called rasoi-pulse-${app.id}… .apk in Downloads.`],
   ["Open it and allow the install", "Android asks if this browser may install apps. Allow it for this one time, then tap Install."],
   ["Sign in", `Open ${app.name} and sign in with the account your manager gave you.`],
 ];
@@ -47,16 +49,27 @@ export default async function AppPage({ params }) {
   const releases = data?.releases ?? [];
   const latest = data?.latest ?? releases[0] ?? null;
   const older = releases.filter((r) => r.id !== latest?.id);
+  const art = appArt(app.id);
 
   return (
-    <main id="main" className="app-page">
-      <section className="hero">
-        <div className="wrap hero-grid">
+    // the page wears the app's own colour (the same as its card on /apps): .app-themed turns it into the page's accent
+    <main id="main" className="app-page app-themed" style={{ "--app": art.accent }}>
+      <section className="hero apps-hero">
+        <AppsBackdrop solo />
+        <div className="wrap hero-grid apps-hero-layer">
           <div>
-            <span className="eyebrow">{app.audience}</span>
-            <h1>
-              Rasoi Pulse <em>{app.code}</em>
-            </h1>
+            <div className="app-ident">
+              <span className="app-icon-lg">
+                <img src={art.icon} alt={`${app.name} app icon`} width="112" height="112" />
+              </span>
+              <div className="app-ident-text">
+                <span className="eyebrow">{app.audience}</span>
+                <h1>
+                  Rasoi Pulse <em>{app.code}</em>
+                </h1>
+                <span className="app-pill app-pill-brand">{app.tagline}</span>
+              </div>
+            </div>
             <p className="hero-sub">{app.description}</p>
             {latest ? (
               <>
