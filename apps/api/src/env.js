@@ -17,7 +17,7 @@ const schema = z.object({
   GEMINI_API_BASE_URL: z.string().default("https://generativelanguage.googleapis.com"),
   /** where the local storage provider writes uploads (relative to the API's working dir) */
   UPLOADS_DIR: z.string().default(".uploads"),
-  /** where the staff app's APK files are kept (never inside the code tree: a deploy must not delete them) */
+  /** scratch space for staff-app uploads IN PROGRESS (4 MB pieces). The finished APK goes to the platform storage chosen in the console (disk or S3/R2) and is removed from here */
   APP_RELEASES_DIR: z.string().default(".app-releases"),
   /** the biggest APK the console accepts (MB) */
   APP_RELEASE_MAX_MB: z.coerce.number().int().min(1).max(2000).default(300),

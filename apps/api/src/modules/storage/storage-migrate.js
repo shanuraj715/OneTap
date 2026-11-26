@@ -29,7 +29,7 @@ const MAX_FAILURES_KEPT = 100;
 const TYPES = {
   webp: "image/webp", jpg: "image/jpeg", jpeg: "image/jpeg", png: "image/png", gif: "image/gif", avif: "image/avif", heic: "image/heic", heif: "image/heif",
   svg: "image/svg+xml", tif: "image/tiff", tiff: "image/tiff", bmp: "image/bmp", mp4: "video/mp4", webm: "video/webm", mov: "video/quicktime",
-  mp3: "audio/mpeg", ogg: "audio/ogg", opus: "audio/ogg", m4a: "audio/mp4", pdf: "application/pdf", txt: "text/plain", json: "application/json",
+  mp3: "audio/mpeg", ogg: "audio/ogg", opus: "audio/ogg", m4a: "audio/mp4", pdf: "application/pdf", txt: "text/plain", json: "application/json", apk: "application/vnd.android.package-archive",
 };
 const contentTypeOf = (key) => TYPES[String(key).split(".").pop().toLowerCase()] ?? "application/octet-stream";
 

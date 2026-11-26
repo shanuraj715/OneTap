@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { createServer } from "node:http";
 
 /* ------------------------------------------------------------------ a stand-in for an S3-compatible service (R2, S3…) */
@@ -37,6 +38,10 @@ export function fakeS3({ bucket = "media", accessKey = "AKTEST", publicRead = tr
       const chunks = [];
       for await (const c of req) chunks.push(c);
       if (fail.has(key)) return send(500, "<Error><Code>InternalError</Code><Message>try again later</Message></Error>");
+      // the signature covers the body's SHA-256 (a streamed upload sends the one it computed): a body that doesn't match is refused, as S3 does
+      const claimed = String(req.headers["x-amz-content-sha256"] ?? "");
+      const actual = createHash("sha256").update(Buffer.concat(chunks)).digest("hex");
+      if (claimed && claimed !== "UNSIGNED-PAYLOAD" && claimed !== actual) return send(400, "<Error><Code>XAmzContentSHA256Mismatch</Code><Message>The provided x-amz-content-sha256 header does not match what was computed.</Message></Error>");
       seen.puts += 1;
       store.set(key, { body: Buffer.concat(chunks), type: req.headers["content-type"] ?? "", cacheControl: req.headers["cache-control"] ?? "", modified: new Date() });
       return send(200);
@@ -46,6 +51,12 @@ export function fakeS3({ bucket = "media", accessKey = "AKTEST", publicRead = tr
       const o = store.get(key);
       if (req.method === "HEAD") seen.heads += 1; else seen.gets += 1;
       if (!o) return send(404, req.method === "HEAD" ? "" : "<Error><Code>NoSuchKey</Code></Error>");
+      const range = req.method === "GET" ? /^bytes=(\d+)-(\d*)$/.exec(String(req.headers.range ?? "")) : null;
+      if (range) { // one byte range, as S3 / R2 answer it
+        const from = Number(range[1]), to = Math.min(o.body.length - 1, range[2] === "" ? o.body.length - 1 : Number(range[2]));
+        if (from >= o.body.length) return send(416, "<Error><Code>InvalidRange</Code></Error>");
+        return send(206, o.body.subarray(from, to + 1), { "content-length": to - from + 1, "content-range": `bytes ${from}-${to}/${o.body.length}`, "content-type": o.type });
+      }
       return send(200, req.method === "HEAD" ? "" : o.body, { "content-length": o.body.length, "content-type": o.type, "last-modified": o.modified.toUTCString(), ...(o.cacheControl ? { "cache-control": o.cacheControl } : {}) });
     }
     if (req.method === "GET" && url.searchParams.get("list-type") === "2") {

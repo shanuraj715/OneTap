@@ -118,9 +118,13 @@ The apps are not on the Play Store. New versions are uploaded in the platform co
   The server backs this up: while an update is required, `POST /api/auth/app-login` from an old build answers
   `426 update_required` (before any password is checked), so an old build can't get in even if it skipped the check.
   A phone that can't reach the server is never blocked by the check itself.
-- Files are stored on the API server's disk in `APP_RELEASES_DIR` (default `.app-releases` next to where the API runs —
-  **in production point it outside the code folder**, and keep it out of any `rsync --delete`). Settings:
-  `APP_RELEASES_DIR`, `APP_RELEASE_MAX_MB` (default 300), and `WEBSITE_URL` (the `/app` page address the app sends people to).
+- **Where the APK files are kept:** in the **same storage as every other file**, the one chosen in console → **Storage** (this
+  server's disk, or the S3/R2 bucket). A finished upload is streamed there (never held in memory) under
+  `app-releases/oma/<version>-<random>.apk`; the **Move files** tool carries them along when the storage is changed. They are
+  downloaded through the API (so withdrawing a version stops it at once, and the bucket needs no public access for them).
+  `APP_RELEASES_DIR` is only scratch space for uploads in progress. If the storage refuses the file (wrong keys, bucket down),
+  finishing the upload says so and the pieces are kept, so after fixing Storage the same upload can be finished without sending
+  it again. Settings: `APP_RELEASES_DIR`, `APP_RELEASE_MAX_MB` (default 300), and `WEBSITE_URL` (the `/app` page address the app sends people to).
   Public endpoints: `GET /api/app-updates/check`, `/releases`, `/download/:id` (resumable, rate-limited, never cached).
   The test for all of this is t93 (API), t94 (console page) and t95 (website page).
 - **Signing:** every update must be signed with the **same key** as the version it replaces, or Android refuses to install it
@@ -194,7 +198,7 @@ Local defaults work out of the box; each app ships a `.env.example`. The setting
 | `PUBLIC_API_URL` | the API's own public origin, used to build links to uploaded pictures |
 | `UPLOADS_DIR` | where the local storage provider writes uploads |
 | `WEBSITE_URL`, `WEBSITE_INTERNAL_URL`, `WEBSITE_REVALIDATE_SECRET` | how the API tells the marketing website to refresh; the secret must match the website's. `WEBSITE_URL` is also the address the staff app sends people to for updates (`<WEBSITE_URL>/app`) |
-| `APP_RELEASES_DIR`, `APP_RELEASE_MAX_MB` | where uploaded app files (APKs) are kept (outside the code folder in production) and the biggest allowed (default 300 MB) |
+| `APP_RELEASES_DIR`, `APP_RELEASE_MAX_MB` | scratch space for app uploads in progress (the finished APK goes to the Storage chosen in the console) and the biggest allowed (default 300 MB) |
 | `WHATSAPP_WORKER`, `MARKETING_WORKER` | see below |
 | `LOGIN_*`, `RATE_LIMITS`, `RATE_LIMIT_SCALE` | sign-in protection and API request limits (see the docs below) |
 | `TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY` | optional Cloudflare Turnstile on the website's enquiry form |

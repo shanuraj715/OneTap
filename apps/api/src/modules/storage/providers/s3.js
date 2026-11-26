@@ -1,4 +1,7 @@
 import { createHash, createHmac } from "node:crypto";
+import { createReadStream } from "node:fs";
+import http from "node:http";
+import https from "node:https";
 
 /**
  * A tiny S3 client — just PUT and DELETE, signed with AWS Signature V4 by hand.
@@ -54,13 +57,14 @@ const canonicalQuery = (query) =>
     .join("&");
 
 /** (exported for tests: `now` fixes the clock so a signature can be compared with the one AWS documents) */
-export function signedRequest(cfg, { method, key, body, contentType, query, now: at, cacheControl, copySource }) {
+export function signedRequest(cfg, { method, key, body, contentType, query, now: at, cacheControl, copySource, payloadHash: givenHash }) {
   const { host, protocol, path } = endpointFor(cfg, key);
   const region = cfg.region || "us-east-1";
   const now = at ?? new Date();
   const amzDate = now.toISOString().replace(/[:-]|\.\d{3}/g, "");
   const dateStamp = amzDate.slice(0, 8);
-  const payloadHash = sha256hex(body ?? Buffer.alloc(0));
+  // `payloadHash`: the caller already knows the body's SHA-256 (a big file sent as a stream, never held in memory)
+  const payloadHash = givenHash ?? sha256hex(body ?? Buffer.alloc(0));
 
   const headers = {
     host,
@@ -108,6 +112,19 @@ async function s3Fetch(cfg, opts) {
   return res;
 }
 
+/** A request whose body is streamed (a big file) or whose answer is streamed (a download): resolves with the response as soon as its headers arrive. */
+function rawRequest(url, { method, headers, source }) {
+  return new Promise((resolve, reject) => {
+    const u = new URL(url);
+    const req = (u.protocol === "http:" ? http : https).request(u, { method, headers }, resolve);
+    req.on("error", reject);
+    if (source) source.on("error", (e) => req.destroy(e)).pipe(req);
+    else req.end();
+  });
+}
+const readText = async (res) => { let t = ""; for await (const c of res) t += c; return t; };
+const errorText = (text, status) => text.match(/<Message>([^<]+)<\/Message>/)?.[1] || text.slice(0, 200) || String(status);
+
 /** @type {import("./types.js").StorageAdapter} */
 export const s3Provider = {
   id: "s3",
@@ -124,6 +141,22 @@ export const s3Provider = {
 
   async remove(cfg, key) {
     await s3Fetch(cfg, { method: "DELETE", key });
+  },
+  /** A big file from disk, streamed (a 100 MB app file is never held in memory). `sha256` is the file's SHA-256, which the signature needs. */
+  async putFile(cfg, { key, filePath, size, sha256, contentType }) {
+    const { url, headers } = signedRequest(cfg, { method: "PUT", key, contentType, payloadHash: sha256 });
+    const res = await rawRequest(url, { method: "PUT", headers: { ...headers, "content-length": String(size) }, source: createReadStream(filePath) });
+    if (res.statusCode < 200 || res.statusCode >= 300) throw new Error(`S3 PUT failed (${res.statusCode}): ${errorText(await readText(res), res.statusCode)}`);
+    res.resume();
+    return { key, url: s3Provider.urlFor(cfg, key) };
+  },
+  /** A stored file as a stream, optionally one byte range of it (`range` = a Range header). null when there is no such file. */
+  async openStream(cfg, key, { range } = {}) {
+    const { url, headers } = signedRequest(cfg, { method: "GET", key });
+    const res = await rawRequest(url, { method: "GET", headers: { ...headers, ...(range ? { range } : {}) } });
+    if (res.statusCode === 404) { res.resume(); return null; }
+    if (res.statusCode !== 200 && res.statusCode !== 206 && res.statusCode !== 416) throw new Error(`S3 GET failed (${res.statusCode}): ${errorText(await readText(res), res.statusCode)}`);
+    return { status: res.statusCode, headers: { "content-length": res.headers["content-length"], "content-range": res.headers["content-range"] }, stream: res };
   },
 
   /** The file's bytes. */

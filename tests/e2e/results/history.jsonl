@@ -1303,3 +1303,7 @@
 {"id":"t93-app-releases-api","status":"pass","pass":67,"fail":0,"mode":"headless","at":"2026-11-26T13:55:54.887Z","durationMs":5954}
 {"id":"t94-app-releases-ui","status":"pass","pass":45,"fail":0,"mode":"headless","at":"2026-11-26T13:56:09.285Z","durationMs":14378}
 {"id":"t95-app-releases-website-ui","status":"pass","pass":29,"fail":0,"mode":"headless","at":"2026-11-26T13:56:23.100Z","durationMs":13796}
+{"id":"t28-rate-limits-api","status":"pass","pass":133,"fail":0,"mode":"headless","at":"2026-11-26T14:38:41.300Z","durationMs":9685}
+{"id":"t93-app-releases-api","status":"pass","pass":82,"fail":0,"mode":"headless","at":"2026-11-26T14:38:46.075Z","durationMs":4741}
+{"id":"t94-app-releases-ui","status":"pass","pass":45,"fail":0,"mode":"headless","at":"2026-11-26T14:39:15.652Z","durationMs":14828}
+{"id":"t95-app-releases-website-ui","status":"pass","pass":29,"fail":0,"mode":"headless","at":"2026-11-26T14:39:18.133Z","durationMs":2459}

@@ -1,4 +1,4 @@
-import { mkdir, readdir, readFile, rm, stat, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, readdir, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { dirname, join, normalize, resolve, sep } from "node:path";
 
 /** Keys are always "/"-joined; use forward slashes in the URL regardless of OS. */
@@ -29,6 +29,19 @@ export const localProvider = {
     return { key, url: base ? `${base}/${keyToUrlPath(key)}` : `/uploads/${keyToUrlPath(key)}` };
   },
 
+  /** A big file from disk (copied, never held in memory). */
+  async putFile(cfg, { key, filePath }) {
+    const abs = safeAbsolute(cfg.uploadsRoot ?? "", key);
+    await mkdir(dirname(abs), { recursive: true });
+    await copyFile(filePath, abs);
+    const base = cfg.publicBaseUrl?.replace(/\/$/, "");
+    return { key, url: base ? `${base}/${keyToUrlPath(key)}` : `/uploads/${keyToUrlPath(key)}` };
+  },
+  /** Where a stored file is on this disk (so it can be sent with byte ranges), or null when it isn't there. */
+  async pathOf(cfg, key) {
+    const abs = safeAbsolute(cfg.uploadsRoot ?? "", key);
+    return (await stat(abs).then((i) => i.isFile(), () => false)) ? abs : null;
+  },
   async remove(cfg, key) {
     const root = cfg.uploadsRoot ?? "";
     try {

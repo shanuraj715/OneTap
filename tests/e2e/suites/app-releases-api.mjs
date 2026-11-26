@@ -6,10 +6,13 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { makeApk, startApi } from "./_api-harness.mjs";
+import { fakeS3 } from "../bench/fake-s3.mjs";
 // the folder is called ".app-releases" like the real one (Express refuses to send files under a dot-folder unless told it may)
 const base = fs.mkdtempSync(path.join(os.tmpdir(), "oma-releases-"));
 const dir = path.join(base, ".app-releases");
-const t = await startApi(3113, { APP_RELEASES_DIR: dir, APP_RELEASE_MAX_MB: "20", WEBSITE_URL: "https://site.example.test" });
+const t = await startApi(3113, { APP_RELEASES_DIR: dir, UPLOADS_DIR: ".uploads-t93", APP_RELEASE_MAX_MB: "20", WEBSITE_URL: "https://site.example.test" });
+const uploads = path.join(process.cwd(), ".uploads-t93"); // the platform storage on this disk (nothing is configured: the default)
+const apksIn = (d) => (fs.existsSync(d) ? fs.readdirSync(d, { recursive: true }).filter((f) => String(f).endsWith(".apk")) : []);
 const { call, ok, say } = t;
 const sha = (b) => createHash("sha256").update(b).digest("hex");
 const CHUNK = 4 * 1024 * 1024;
@@ -69,7 +72,8 @@ await t.run(async () => {
   const r1 = done.json.release;
   ok(done.status === 201 && r1?.version === "v-261126-001" && r1.versionCode === 1, "the release is created; its build number is read from the version", `${done.status} build ${r1?.versionCode}`);
   ok(r1.status === "draft" && r1.size === apk1.length && r1.sha256 === sha(apk1), "saved as a draft, with the file's real size and SHA-256", `${r1.size} bytes`);
-  ok(fs.readdirSync(dir).some((f) => f.endsWith(".apk")), "the file is on the server's disk, in the releases folder");
+  ok(apksIn(uploads).length === 1 && apksIn(uploads)[0].startsWith(`app-releases${path.sep}oma${path.sep}v-261126-001-`), "the file is in the platform storage (this disk, by default), under app-releases/oma/", apksIn(uploads).join());
+  ok(apksIn(dir).length === 0, "…and the scratch folder for uploads in progress holds no finished file");
   const dup = await upload(makeApk(5000), "v-261126-001");
   ok(dup.done?.status === 409 && /already exists/.test(dup.done.json.error ?? ""), "a version (build number) that already exists can't be uploaded again", dup.done?.json.error);
   const notApk = await upload(Buffer.concat([Buffer.from("this is not a zip file "), Buffer.alloc(5000, 1)]), "v-261126-009");
@@ -152,13 +156,54 @@ await t.run(async () => {
   ok(list.releases.length === 4 && list.releases[0].versionCode === 4 && list.forcedBelow === null && list.chunkSize === CHUNK, "the console's list: newest first, the rule in force (none now) and the piece size", `forcedBelow ${JSON.stringify(list.forcedBelow)}`);
   await admin("PATCH", `/${r3.id}`, { force: true });
   ok((await admin("GET", "")).json.forcedBelow?.version === "v-261126-003", "with 003 forced again the list says: apps older than v-261126-003 must update");
-  const key = fs.readdirSync(dir).filter((f) => f.endsWith(".apk")).length;
+  const key = apksIn(uploads).length;
   ok((await admin("DELETE", `/${r1.id}`)).status === 204, "a release can be deleted");
-  ok(fs.readdirSync(dir).filter((f) => f.endsWith(".apk")).length === key - 1, "…and its file goes from the disk too");
+  ok(apksIn(uploads).length === key - 1, "…and its file goes from the storage too");
   ok(!(await admin("GET", "")).json.releases.some((r) => r.id === r1.id), "…and from the list");
 
-  say("10. Nothing is left lying around");
+  say("10. The files follow the storage chosen in the console: a bucket instead of the disk");
+  const s3 = await fakeS3({ bucket: "media" });
+  const bucket = (accessKeyId = "AKTEST") => ({ provider: "s3", values: { bucket: "media", region: "auto", endpoint: s3.endpoint, accessKeyId, secretAccessKey: "sekret" } });
+  ok((await call("PUT", "/api/platform/storage", { cookie: s.su, body: bucket() })).status === 200, "the platform storage is switched to a bucket");
+  const before = apksIn(uploads).length;
+  const apkS3 = makeApk(5 * 1024 * 1024 + 77); // 2 pieces
+  const inBucket = await upload(apkS3, "v-261126-020", { notes: "in the bucket", publish: true });
+  const keys = [...s3.store.keys()].filter((k) => k.startsWith("app-releases/oma/"));
+  ok(inBucket.release?.status === "published" && keys.length === 1 && /^app-releases\/oma\/v-261126-020-[0-9a-f]{12}\.apk$/.test(keys[0]), "the finished upload lands in the bucket, under app-releases/oma/", keys.join());
+  ok(s3.store.get(keys[0]).body.equals(apkS3) && s3.store.get(keys[0]).type === "application/vnd.android.package-archive", "byte for byte, with the Android package type");
+  ok(apksIn(uploads).length === before && apksIn(dir).length === 0, "nothing was kept on this server's disk");
+  const dlS3 = await fetch(`${t.base}/api/app-updates/download/${inBucket.release.id}`, { headers: { "x-forwarded-for": "198.51.100.120" } });
+  ok(dlS3.status === 200 && Buffer.from(await dlS3.arrayBuffer()).equals(apkS3), "the download comes from the bucket, byte for byte");
+  ok(dlS3.headers.get("content-type") === "application/vnd.android.package-archive" && /attachment; filename="rasoi-pulse-oma-v-261126-020\.apk"/.test(dlS3.headers.get("content-disposition") ?? "") && dlS3.headers.get("accept-ranges") === "bytes" && dlS3.headers.get("cache-control") === "no-cache", "with the same name, type, range support and no-cache as from the disk");
+  const partS3 = await fetch(`${t.base}/api/app-updates/download/${inBucket.release.id}`, { headers: { range: "bytes=1000-1999", "x-forwarded-for": "198.51.100.121" } });
+  ok(partS3.status === 206 && Buffer.from(await partS3.arrayBuffer()).equals(apkS3.subarray(1000, 2000)) && partS3.headers.get("content-range") === `bytes 1000-1999/${apkS3.length}`, "a byte range is answered with 206 from the bucket (an interrupted download can resume)");
+  await new Promise((r) => setTimeout(r, 200));
+  ok((await admin("GET", "")).json.releases.find((r) => r.id === inBucket.release.id).downloads === 1, "the download counter counts it once");
+  await admin("PATCH", `/${inBucket.release.id}`, { status: "withdrawn" });
+  ok((await call("GET", `/api/app-updates/download/${inBucket.release.id}`)).status === 404 && s3.store.has(keys[0]), "withdrawn: the API stops serving it at once (the bucket's own address is never given out)");
+  await admin("PATCH", `/${inBucket.release.id}`, { status: "published" });
+  s3.store.delete(keys[0]);
+  const gone = await call("GET", `/api/app-updates/download/${inBucket.release.id}`);
+  ok(gone.status === 404 && /isn't available right now/.test(gone.json.error ?? ""), "a file that has gone missing from the bucket is a clear 404, not a crash", `${gone.status}`);
+  // the bucket refuses (wrong key): finishing says so, the pieces stay, and after the fix finishing again needs no new upload
+  await call("PUT", "/api/platform/storage", { cookie: s.su, body: bucket("WRONG") });
+  const apkB = makeApk(300_000);
+  const st2 = await admin("POST", "/uploads", { fileName: "b.apk", size: apkB.length });
+  await put(st2.json.uploadId, 0, apkB);
+  const refused = await admin("POST", `/uploads/${st2.json.uploadId}/complete`, { version: "v-261126-021", publish: true });
+  ok(refused.status === 502 && /Couldn't save the file to the storage bucket/.test(refused.json.error ?? ""), "when the bucket refuses, finishing answers 502 and says where it failed", refused.json.error);
+  ok(!(await admin("GET", "")).json.releases.some((r) => r.versionCode === 21), "…and no release is recorded");
+  await call("PUT", "/api/platform/storage", { cookie: s.su, body: bucket() });
+  const retry = await admin("POST", `/uploads/${st2.json.uploadId}/complete`, { version: "v-261126-021", publish: true });
+  ok(retry.status === 201 && [...s3.store.keys()].some((k) => /v-261126-021-/.test(k)), "after the fix, finishing the SAME upload works without sending anything again");
+  const rel21 = retry.json.release;
+  ok((await admin("DELETE", `/${rel21.id}`)).status === 204 && ![...s3.store.keys()].some((k) => /v-261126-021-/.test(k)), "deleting a release deletes its file from the bucket");
+  await call("PUT", "/api/platform/storage", { cookie: s.su, body: { provider: "local", values: {} } });
+  s3.server.close?.();
+
+  say("11. Nothing is left lying around");
   const leftover = fs.existsSync(path.join(dir, ".parts")) ? fs.readdirSync(path.join(dir, ".parts")).filter((f) => f.endsWith(".part")) : [];
   ok(leftover.length === 3, "unfinished uploads (the refused ones) stay as parts to be cleared after a day — finished ones are gone", `${leftover.length} parts`);
 });
 fs.rmSync(base, { recursive: true, force: true });
+fs.rmSync(uploads, { recursive: true, force: true });

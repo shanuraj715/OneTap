@@ -27,16 +27,28 @@ appUpdatesRouter.get("/releases", limiter("app-update-check"), async (_req, res)
 
 /** The APK itself. Streamed from disk with Range support, so an interrupted download on a poor connection can continue. */
 appUpdatesRouter.get("/download/:id", limiter("app-download"), async (req, res, next) => {
-  const { file, filename, release } = await svc.downloadable(req.params.id);
+  const { filename, release } = await svc.downloadable(req.params.id);
   const range = req.header("range");
+  const src = await svc.openRelease(release, range);
   if (!range || /^bytes=0-/.test(range)) svc.countDownload(release._id);
-  res.set("Content-Type", "application/vnd.android.package-archive");
   // always ask the server (a withdrawn version must stop being served at once, not after a cache expires)
   res.set("Cache-Control", "no-cache");
-  // dotfiles: the folder is ".app-releases" by default, and Express refuses to send anything under a dot-folder unless told it may
-  res.download(file, filename, { acceptRanges: true, dotfiles: "allow" }, (err) => {
-    if (err && !res.headersSent) next(err);
-  });
+  if (src.kind === "local") {
+    res.set("Content-Type", "application/vnd.android.package-archive");
+    // dotfiles: the storage folder may sit under a dot-folder, and Express refuses to send those unless told it may
+    res.download(src.path, filename, { acceptRanges: true, dotfiles: "allow" }, (err) => {
+      if (err && !res.headersSent) next(err);
+    });
+    return;
+  }
+  // from the bucket: passed through as it comes (a Range request gets its 206 the same way, so an interrupted download can resume)
+  res.status(src.status);
+  res.attachment(filename);
+  res.set("Content-Type", "application/vnd.android.package-archive");
+  res.set("Accept-Ranges", "bytes");
+  for (const h of ["content-length", "content-range"]) if (src.headers[h]) res.set(h, src.headers[h]);
+  src.stream.on("error", () => res.destroy());
+  src.stream.pipe(res);
 });
 
 /** The platform console's part (mounted under /api/platform/app-releases — super admin only, checked by the platform router). */

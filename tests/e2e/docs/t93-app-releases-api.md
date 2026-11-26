@@ -1,6 +1,6 @@
 # T93 — App updates: the platform admin uploads an APK in pieces and publishes it (optionally forcing an update); phones ask 'is there a newer version?'; old builds are turned away at sign-in when an update is forced
 
-**Area:** app · **Last result:** ✅ PASSED (67 passed, 0 failed · 2026-11-26 19:25 · headless · 6.0 s)
+**Area:** app · **Last result:** ✅ PASSED (82 passed, 0 failed · 2026-11-26 20:08 · headless · 4.7 s)
 
 **Run it alone:** `node run.mjs --only t93` (add `--visible` to watch it)
 
@@ -20,7 +20,8 @@ Runs suites/app-releases-api.mjs on a private API with an in-memory database and
 8. Downloading the APK
 9. The website's list
 10. Managing releases
-11. Nothing is left lying around
+11. The files follow the storage chosen in the console: a bucket instead of the disk
+12. Nothing is left lying around
 
 ## What to expect (these must happen)
 
@@ -40,7 +41,7 @@ Runs suites/app-releases-api.mjs on a private API with an in-memory database and
 
 _Nothing failed._
 
-### ✅ Passed (67)
+### ✅ Passed (82)
 
 **Step 2 — Only the platform admin manages releases**
 
@@ -70,7 +71,8 @@ _Nothing failed._
 
 - the release is created; its build number is read from the version — _201 build 1_
 - saved as a draft, with the file's real size and SHA-256 — _9437171 bytes_
-- the file is on the server's disk, in the releases folder
+- the file is in the platform storage (this disk, by default), under app-releases/oma/ — _app-releases/oma/v-261126-001-e4e129fb8581.apk_
+- …and the scratch folder for uploads in progress holds no finished file
 - a version (build number) that already exists can't be uploaded again — _Version v-261126-001 (build 1) already exists. Each build number can be used once._
 - a file that isn't an APK is refused when it is finished — _That file isn't an APK (it isn't a zip archive)._
 - a zip without an AndroidManifest.xml is refused too
@@ -132,10 +134,27 @@ _Nothing failed._
 - the console's list: newest first, the rule in force (none now) and the piece size — _forcedBelow null_
 - with 003 forced again the list says: apps older than v-261126-003 must update
 - a release can be deleted
-- …and its file goes from the disk too
+- …and its file goes from the storage too
 - …and from the list
 
-**Step 11 — Nothing is left lying around**
+**Step 11 — The files follow the storage chosen in the console: a bucket instead of the disk**
+
+- the platform storage is switched to a bucket
+- the finished upload lands in the bucket, under app-releases/oma/ — _app-releases/oma/v-261126-020-87182142309c.apk_
+- byte for byte, with the Android package type
+- nothing was kept on this server's disk
+- the download comes from the bucket, byte for byte
+- with the same name, type, range support and no-cache as from the disk
+- a byte range is answered with 206 from the bucket (an interrupted download can resume)
+- the download counter counts it once
+- withdrawn: the API stops serving it at once (the bucket's own address is never given out)
+- a file that has gone missing from the bucket is a clear 404, not a crash — _404_
+- when the bucket refuses, finishing answers 502 and says where it failed
+- …and no release is recorded
+- after the fix, finishing the SAME upload works without sending anything again
+- deleting a release deletes its file from the bucket
+
+**Step 12 — Nothing is left lying around**
 
 - unfinished uploads (the refused ones) stay as parts to be cleared after a day — finished ones are gone — _3 parts_
 
@@ -143,6 +162,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-26 20:08 | pass | 82 | 0 | headless | 4.7 s |
 | 2026-11-26 19:25 | pass | 67 | 0 | headless | 6.0 s |
 | 2026-11-26 19:00 | pass | 66 | 0 | headless | 4.3 s |
 | 2026-11-26 18:54 | pass | 66 | 0 | headless | 4.1 s |

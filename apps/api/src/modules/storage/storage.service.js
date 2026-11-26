@@ -347,3 +347,48 @@ export async function removeObject(ctx, key) {
     logger.warn({ err, key }, "storage object delete failed (ignored)");
   }
 }
+
+/* ------------------------------------------------------------- platform files (not tied to any store) */
+
+/** Files that belong to the platform itself (the staff app's APKs…): same storage as everything else, no store folder. */
+const PLATFORM_CTX = {};
+
+async function platformStorage() {
+  const cfg = await resolveStorage(PLATFORM_CTX);
+  if (missingOf(cfg).length) throw new HttpError(409, "File storage isn't fully set up. Finish it in the console's Storage page, then try again.");
+  return cfg;
+}
+
+/** Save a big file from disk (streamed, never held in memory) in the storage chosen in the console — disk, or the S3/R2 bucket. */
+export async function putLargeFile({ key, filePath, size, sha256, contentType }) {
+  const cfg = await platformStorage();
+  try {
+    await providerFor(cfg.provider).putFile(cfg, { key, filePath, size, sha256, contentType: contentType || "application/octet-stream" });
+  } catch (err) {
+    logger.error({ err, key, provider: cfg.provider }, "saving a large file to storage failed");
+    throw new HttpError(502, `Couldn't save the file to ${cfg.provider === "local" ? "this server's disk" : "the storage bucket"}: ${err.message}`);
+  }
+  return { key, provider: cfg.provider };
+}
+
+/**
+ * Open a stored platform file for sending out. On this server's disk: `{ kind: "local", path }` (sent with byte ranges by Express).
+ * In a bucket: `{ kind: "stream", status, headers, stream }` passed through, one byte range if asked. null when the file isn't there.
+ */
+export async function openStoredFile({ key, range }) {
+  const cfg = await platformStorage();
+  const adapter = providerFor(cfg.provider);
+  try {
+    if (cfg.provider === "local") {
+      const path = await adapter.pathOf(cfg, key);
+      return path ? { kind: "local", path } : null;
+    }
+    const opened = await adapter.openStream(cfg, key, { range });
+    return opened ? { kind: "stream", ...opened } : null;
+  } catch (err) {
+    logger.error({ err, key, provider: cfg.provider }, "opening a stored file failed");
+    throw new HttpError(502, "The file storage didn't answer. Please try again in a moment.");
+  }
+}
+
+export const removePlatformFile = (key) => removeObject(PLATFORM_CTX, key);

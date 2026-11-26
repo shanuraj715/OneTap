@@ -1,6 +1,6 @@
 # T94 — Console → App updates: choose an .apk, see the upload progress, publish it, make an update required, edit the notes, withdraw and delete
 
-**Area:** app · **Last result:** ✅ PASSED (45 passed, 0 failed · 2026-11-26 19:26 · headless · 14.4 s)
+**Area:** app · **Last result:** ✅ PASSED (45 passed, 0 failed · 2026-11-26 20:09 · headless · 14.8 s)
 
 **Run it alone:** `node run.mjs --only t94` (add `--visible` to watch it)
 
@@ -112,6 +112,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-26 20:09 | pass | 45 | 0 | headless | 14.8 s |
 | 2026-11-26 19:26 | pass | 45 | 0 | headless | 14.4 s |
 | 2026-11-26 19:01 | pass | 45 | 0 | headless | 14.5 s |
 | 2026-11-26 19:01 | fail | 44 | 1 | headless | 15.2 s |

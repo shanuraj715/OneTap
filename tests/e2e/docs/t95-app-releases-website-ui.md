@@ -1,6 +1,6 @@
 # T95 — Website → /app: the staff app's download page shows the latest published version, its notes and every version, and follows publish / withdraw / required in seconds
 
-**Area:** app · **Last result:** ✅ PASSED (29 passed, 0 failed · 2026-11-26 19:26 · headless · 13.8 s)
+**Area:** app · **Last result:** ✅ PASSED (29 passed, 0 failed · 2026-11-26 20:09 · headless · 2.5 s)
 
 **Run it alone:** `node run.mjs --only t95` (add `--visible` to watch it)
 
@@ -50,7 +50,7 @@ _Nothing failed._
 **Step 2 — A published version appears**
 
 - the download button names the version
-- …and points at the API's download address — _http://localhost:3097/api/app-updates/download/6b083a8625fb0b1fa77d9d75_
+- …and points at the API's download address — _http://localhost:3097/api/app-updates/download/6b084495b7279569b0515759_
 - it says Android 11 or newer and the file's size — _58 KB_
 - the ticket shows the version and its release notes
 - no 'Required' stamp on an optional version
@@ -65,7 +65,7 @@ _Nothing failed._
 - newest first: 002, marked Latest and Required
 - 001 below it, with neither mark
 - each keeps its own notes
-- 'Check the file' shows the file's SHA-256 — _ebe89f8ca265…_
+- 'Check the file' shows the file's SHA-256 — _3be58d4f8f51…_
 
 **Step 4 — Drafts and withdrawn versions stay hidden**
 
@@ -88,6 +88,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-26 20:09 | pass | 29 | 0 | headless | 2.5 s |
 | 2026-11-26 19:26 | pass | 29 | 0 | headless | 13.8 s |
 | 2026-11-26 19:06 | pass | 29 | 0 | headless | 1.9 s |
 | 2026-11-26 19:06 | fail | 25 | 4 | headless | 1.4 s |

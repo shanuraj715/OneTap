@@ -8,17 +8,20 @@ import { env, publicApiUrl } from "../../env.js";
 import { logger } from "../../logger.js";
 import { HttpError } from "../../middleware/error.js";
 import { notifyWebsite } from "../site/revalidate.js";
+import { openStoredFile, putLargeFile, removePlatformFile } from "../storage/storage.service.js";
 
 /**
- * The staff app's releases: the APK files (on this server's disk, outside the code tree), the records about them, and the decision "does
- * this phone have to update?". Uploads come in 4 MB pieces (one request each) so a 100 MB file never needs a bigger limit in nginx or
- * Cloudflare, and an interrupted upload can be resumed.
+ * The staff app's releases: the APK files, the records about them, and the decision "does this phone have to update?". The files live in
+ * the platform's storage (console → Storage: this server's disk or the S3/R2 bucket), like every other file; here on disk there is only
+ * a scratch folder for uploads in progress. Uploads come in 4 MB pieces (one request each) so a 100 MB file never needs a bigger limit
+ * in nginx or Cloudflare, and an interrupted upload can be resumed.
  */
 
 export const CHUNK_SIZE = 4 * 1024 * 1024;
 const PLATFORM = "android";
 const STALE_UPLOAD_MS = 24 * 60 * 60 * 1000;
 
+/** scratch space for uploads in progress (the finished file goes to the platform storage and is removed from here) */
 const root = () => path.resolve(env.APP_RELEASES_DIR || ".app-releases");
 const partsDir = () => path.join(root(), ".parts");
 const maxBytes = () => Math.min(env.APP_RELEASE_MAX_MB, MAX_APK_MB * 7) * 1024 * 1024;
@@ -105,12 +108,17 @@ export async function downloadable(id) {
   if (!/^[a-f\d]{24}$/i.test(String(id))) throw new HttpError(404, "That download doesn't exist.");
   const r = await AppReleaseModel.findOne({ _id: id, status: "published" }).lean();
   if (!r?.file?.key) throw new HttpError(404, "That download isn't available.");
-  const file = path.join(root(), r.file.key);
-  if (!fs.existsSync(file)) {
-    logger.error({ id, key: r.file.key }, "app release file is missing on disk");
+  return { filename: `rasoi-pulse-oma-${r.version}.apk`, release: r };
+}
+
+/** The file of a release from the platform storage (a disk path, or a stream from the bucket); 404 when it has gone missing. */
+export async function openRelease(release, range) {
+  const src = await openStoredFile({ key: release.file.key, range });
+  if (!src) {
+    logger.error({ id: String(release._id), key: release.file.key }, "app release file is missing from the storage");
     throw new HttpError(404, "That download isn't available right now.");
   }
-  return { file, filename: `rasoi-pulse-oma-${r.version}.apk`, release: r };
+  return src;
 }
 
 export const countDownload = (id) => void AppReleaseModel.updateOne({ _id: id }, { $inc: { downloads: 1 } }).catch(() => undefined);
@@ -153,7 +161,7 @@ export async function deleteRelease(id) {
   if (!r) throw new HttpError(404, "Release not found");
   const key = r.file?.key;
   await r.deleteOne();
-  if (key) await fsp.rm(path.join(root(), key), { force: true }).catch(() => undefined);
+  if (key) await removePlatformFile(key);
   notifyWebsite();
 }
 
@@ -282,9 +290,10 @@ export async function completeUpload(id, input, user) {
   if (!apk.ok) throw new HttpError(400, apk.why);
 
   const sha256 = await sha256Of(part);
-  await fsp.mkdir(root(), { recursive: true });
-  const key = `${body.version}-${sha256.slice(0, 12)}.apk`;
-  await fsp.rename(part, path.join(root(), key));
+  // the finished file goes to the platform storage (disk or bucket). If that fails the pieces stay here, so nothing has to be sent again
+  const key = `app-releases/${OMA_APP}/${body.version}-${randomBytes(6).toString("hex")}.apk`;
+  await putLargeFile({ key, filePath: part, size: u.size, sha256, contentType: "application/vnd.android.package-archive" });
+  await fsp.rm(part, { force: true });
   await fsp.rm(metaFile(id), { force: true });
   uploads.delete(id);
 
@@ -296,7 +305,7 @@ export async function completeUpload(id, input, user) {
       file: { name: u.name, key, size: u.size, sha256 }, createdBy: String(user._id), updatedBy: String(user._id),
     });
   } catch (e) {
-    await fsp.rm(path.join(root(), key), { force: true }).catch(() => undefined);
+    await removePlatformFile(key);
     if (e?.code === 11000) throw new HttpError(409, `Version ${body.version} already exists.`);
     throw e;
   }

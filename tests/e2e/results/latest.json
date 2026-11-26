@@ -9422,8 +9422,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T13:55:40.558Z",
-    "durationMs": 10644,
+    "at": "2026-11-26T14:38:41.300Z",
+    "durationMs": 9685,
     "steps": [
       {
         "n": 1,
@@ -31361,12 +31361,12 @@
     "id": "t93-app-releases-api",
     "title": "App updates: the platform admin uploads an APK in pieces and publishes it (optionally forcing an update); phones ask 'is there a newer version?'; old builds are turned away at sign-in when an update is forced",
     "status": "pass",
-    "pass": 67,
+    "pass": 82,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T13:55:54.887Z",
-    "durationMs": 5954,
+    "at": "2026-11-26T14:38:46.075Z",
+    "durationMs": 4741,
     "steps": [
       {
         "n": 1,
@@ -31510,7 +31510,13 @@
             "kind": "expect"
           },
           {
-            "label": "the file is on the server's disk, in the releases folder",
+            "label": "the file is in the platform storage (this disk, by default), under app-releases/oma/",
+            "ok": true,
+            "detail": "app-releases/oma/v-261126-001-e4e129fb8581.apk",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the scratch folder for uploads in progress holds no finished file",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -31810,7 +31816,7 @@
             "kind": "expect"
           },
           {
-            "label": "…and its file goes from the disk too",
+            "label": "…and its file goes from the storage too",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -31825,6 +31831,96 @@
       },
       {
         "n": 11,
+        "title": "The files follow the storage chosen in the console: a bucket instead of the disk",
+        "checks": [
+          {
+            "label": "the platform storage is switched to a bucket",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the finished upload lands in the bucket, under app-releases/oma/",
+            "ok": true,
+            "detail": "app-releases/oma/v-261126-020-87182142309c.apk",
+            "kind": "expect"
+          },
+          {
+            "label": "byte for byte, with the Android package type",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "nothing was kept on this server's disk",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the download comes from the bucket, byte for byte",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "with the same name, type, range support and no-cache as from the disk",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a byte range is answered with 206 from the bucket (an interrupted download can resume)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the download counter counts it once",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "withdrawn: the API stops serving it at once (the bucket's own address is never given out)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a file that has gone missing from the bucket is a clear 404, not a crash",
+            "ok": true,
+            "detail": "404",
+            "kind": "expect"
+          },
+          {
+            "label": "when the bucket refuses, finishing answers 502 and says where it failed",
+            "ok": true,
+            "detail": "Couldn't save the file to the storage bucket: S3 PUT failed (403): The access key you provided does not exist.",
+            "kind": "expect"
+          },
+          {
+            "label": "…and no release is recorded",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "after the fix, finishing the SAME upload works without sending anything again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "deleting a release deletes its file from the bucket",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 12,
         "title": "Nothing is left lying around",
         "checks": [
           {
@@ -31847,8 +31943,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T13:56:09.285Z",
-    "durationMs": 14378,
+    "at": "2026-11-26T14:39:15.652Z",
+    "durationMs": 14828,
     "steps": [
       {
         "n": 1,
@@ -32180,8 +32276,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T13:56:23.100Z",
-    "durationMs": 13796,
+    "at": "2026-11-26T14:39:18.133Z",
+    "durationMs": 2459,
     "steps": [
       {
         "n": 1,
@@ -32244,7 +32340,7 @@
           {
             "label": "…and points at the API's download address",
             "ok": true,
-            "detail": "http://localhost:3097/api/app-updates/download/6b083a8625fb0b1fa77d9d75",
+            "detail": "http://localhost:3097/api/app-updates/download/6b084495b7279569b0515759",
             "kind": "expect"
           },
           {
@@ -32322,7 +32418,7 @@
           {
             "label": "'Check the file' shows the file's SHA-256",
             "ok": true,
-            "detail": "ebe89f8ca265…",
+            "detail": "3be58d4f8f51…",
             "kind": "expect"
           }
         ]
