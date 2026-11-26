@@ -7,13 +7,13 @@ const record = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "app-versio
 const at = (y: number, m: number, d: number) => new Date(y, m - 1, d, 12, 0, 0);
 
 describe("the version is v-DDMMYY-NNN", () => {
-  it("the shipped app-version.json is valid and the FIRST version is v-261126-001", () => {
+  it("the shipped app-version.json is valid and the CURRENT version is v-261126-002 (the first was v-261126-001)", () => {
     expect(problems(record)).toEqual([]);
     expect(FORMAT.test(record.version)).toBe(true);
     // The first version ever cut. It changes only when the owner asks for an upgrade, so this test names it on purpose: if
     // someone bumps the version without being asked, this fails and says so.
-    expect(record.version).toBe("v-261126-001");
-    expect(record.versionCode).toBe(1);
+    expect(record.version).toBe("v-261126-002");
+    expect(record.versionCode).toBe(2);
   });
 
   it("formats a date and a build number", () => {

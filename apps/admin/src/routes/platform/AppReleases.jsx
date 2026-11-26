@@ -211,7 +211,7 @@ function EditNotes({ release, onClose }) {
   const [notes, setNotes] = useState(release.notes);
   const save = usePlatformMutation((body) => api.updateAppRelease(release.id, body));
   return (
-    <Modal onClose={onClose} width={560} ariaLabel={`Release notes for ${release.version}`}>
+    <Modal onClose={onClose} width={560} panelStyle={{ padding: 24, overflowY: "auto" }} ariaLabel={`Release notes for ${release.version}`}>
       <h2 style={modalTitle}>Release notes · {release.version}</h2>
       <p style={{ ...muted, margin: "0 0 12px" }}>Staff read this in the update pop-up and on the download page. Say what changed, in a line or two.</p>
       <textarea value={notes} onChange={(e) => setNotes(e.target.value.slice(0, 3000))} rows={7} style={textarea} aria-label="Release notes" />
@@ -297,7 +297,7 @@ function NewVersion({ data, onClose }) {
 
   if (done) {
     return (
-      <Modal onClose={onClose} width={520} ariaLabel="Version uploaded">
+      <Modal onClose={onClose} width={520} panelStyle={{ padding: 24, overflowY: "auto" }} ariaLabel="Version uploaded">
         <div style={{ textAlign: "center", padding: "6px 0 2px" }}>
           <div style={okBadge}>
             <Check size={26} aria-hidden="true" />
@@ -319,7 +319,7 @@ function NewVersion({ data, onClose }) {
   }
 
   return (
-    <Modal onClose={busy ? () => undefined : close} closeOnOverlay={!busy} width={600} ariaLabel="New app version">
+    <Modal onClose={busy ? () => undefined : close} closeOnOverlay={!busy} width={600} panelStyle={{ padding: 24, overflowY: "auto" }} ariaLabel="New app version">
       <h2 style={modalTitle}>New version of the staff app</h2>
 
       <input ref={pick} type="file" accept=".apk,application/vnd.android.package-archive" hidden onChange={(e) => choose(e.target.files?.[0])} />
@@ -350,12 +350,12 @@ function NewVersion({ data, onClose }) {
       {tooBig ? <Toast kind="error">That file is {formatBytes(file.size)}. The most allowed is {formatBytes(data.maxBytes)}.</Toast> : null}
 
       <div style={{ display: "grid", gap: 14, marginTop: 14 }}>
-        <Field label="Version" hint="Day, month, year and a build number: v-DDMMYY-NNN. The build number must be higher than the last one.">
+        <Field label="Version" style={{ maxWidth: "none", marginBottom: 0 }} hint="Day, month, year and a build number: v-DDMMYY-NNN. The build number must be higher than the last one.">
           <TextInput value={version} onChange={(e) => setVersion(e.target.value.trim().toLowerCase())} placeholder="v-261126-002" disabled={busy} aria-invalid={Boolean(versionProblem)} />
           {versionProblem ? <span style={{ color: "var(--tone-danger)", fontSize: 12.5 }}>{versionProblem}</span> : null}
           {versionWarning ? <span style={{ color: "var(--tone-warning)", fontSize: 12.5 }}>{versionWarning}</span> : null}
         </Field>
-        <Field label="What is new" hint="Shown to staff in the update pop-up and on the download page.">
+        <Field label="What is new" style={{ maxWidth: "none", marginBottom: 0 }} hint="Shown to staff in the update pop-up and on the download page.">
           <textarea value={notes} onChange={(e) => setNotes(e.target.value.slice(0, 3000))} rows={4} style={textarea} disabled={busy} placeholder="Faster menu, fixed the table list…" />
         </Field>
         <div style={{ display: "grid", gap: 10 }}>
