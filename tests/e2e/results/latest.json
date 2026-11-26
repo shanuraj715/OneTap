@@ -12776,8 +12776,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-25T06:29:12.041Z",
-    "durationMs": 21938,
+    "at": "2026-11-26T05:08:15.702Z",
+    "durationMs": 22187,
     "steps": [
       {
         "n": 1,
@@ -13013,8 +13013,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-25T06:29:24.405Z",
-    "durationMs": 12286,
+    "at": "2026-11-26T05:08:24.125Z",
+    "durationMs": 8323,
     "steps": [
       {
         "n": 1,
@@ -14210,8 +14210,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-25T06:30:04.495Z",
-    "durationMs": 40022,
+    "at": "2026-11-26T05:09:04.371Z",
+    "durationMs": 40152,
     "steps": [
       {
         "n": 0,
@@ -14255,8 +14255,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-25T06:33:07.175Z",
-    "durationMs": 47110,
+    "at": "2026-11-26T05:11:57.181Z",
+    "durationMs": 50307,
     "steps": [
       {
         "n": 1,
@@ -14493,7 +14493,7 @@
           {
             "label": "a narrow desktop window (mouse): 'Right side of the title' stays beside the title, with no second button under the cards",
             "ok": true,
-            "detail": "{\"count\":1,\"left\":738,\"right\":0,\"off\":369.2109375,\"below\":false,\"besideTitle\":true,\"cards\":3}",
+            "detail": "{\"count\":1,\"left\":738,\"right\":0,\"off\":369.21875,\"below\":false,\"besideTitle\":true,\"cards\":3}",
             "kind": "expect"
           },
           {
@@ -14619,7 +14619,7 @@
           {
             "label": "desktop: opening takes long enough to WATCH (about 0.8 s), without dragging",
             "ok": true,
-            "detail": "791 ms",
+            "detail": "790 ms",
             "kind": "expect"
           },
           {
@@ -14649,7 +14649,7 @@
           {
             "label": "desktop: closing is visible too (about 0.7 s)",
             "ok": true,
-            "detail": "666 ms",
+            "detail": "672 ms",
             "kind": "expect"
           },
           {
@@ -14727,7 +14727,7 @@
           {
             "label": "phone: opening takes long enough to WATCH (about 1.0 s), without dragging",
             "ok": true,
-            "detail": "1011 ms",
+            "detail": "1008 ms",
             "kind": "expect"
           },
           {
@@ -14755,9 +14755,9 @@
             "kind": "expect"
           },
           {
-            "label": "phone: closing is visible too (about 0.8 s)",
+            "label": "phone: closing is visible too (about 0.9 s)",
             "ok": true,
-            "detail": "850 ms",
+            "detail": "855 ms",
             "kind": "expect"
           },
           {
@@ -16157,8 +16157,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-25T06:34:36.967Z",
-    "durationMs": 82936,
+    "at": "2026-11-26T05:13:34.043Z",
+    "durationMs": 90078,
     "steps": [
       {
         "n": 1,
@@ -16826,8 +16826,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-25T06:30:30.820Z",
-    "durationMs": 26252,
+    "at": "2026-11-26T05:09:36.339Z",
+    "durationMs": 31869,
     "steps": [
       {
         "n": 1,
@@ -17291,8 +17291,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-25T06:30:49.204Z",
-    "durationMs": 18304,
+    "at": "2026-11-26T05:09:55.962Z",
+    "durationMs": 19550,
     "steps": [
       {
         "n": 1,
@@ -23306,8 +23306,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-25T06:30:57.568Z",
-    "durationMs": 8293,
+    "at": "2026-11-26T05:10:04.712Z",
+    "durationMs": 8661,
     "steps": [
       {
         "n": 1,
@@ -24962,8 +24962,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-25T06:30:59.829Z",
-    "durationMs": 2191,
+    "at": "2026-11-26T05:10:07.166Z",
+    "durationMs": 2377,
     "steps": [
       {
         "n": 1,
@@ -25172,8 +25172,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-25T06:32:13.696Z",
-    "durationMs": 18635,
+    "at": "2026-11-26T05:11:01.477Z",
+    "durationMs": 20102,
     "steps": [
       {
         "n": 1,
@@ -25373,23 +25373,23 @@
   },
   "t81-storefront-card-columns": {
     "id": "t81-storefront-card-columns",
-    "title": "Menu cards: '3 a row' shows 3 only where 3 fit — 2 on a portrait tablet, 1 on a phone — and no card is ever cut off, pushed past the screen or on top of another",
+    "title": "Menu cards resize with the screen (70–120% of their natural width) and the number per row follows — '3 a row' is only a maximum, nothing is cut off, squeezed or on top of another",
     "status": "pass",
-    "pass": 163,
+    "pass": 449,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-25T06:31:21.133Z",
-    "durationMs": 15863,
+    "at": "2026-11-26T05:07:37.125Z",
+    "durationMs": 36768,
     "steps": [
       {
         "n": 1,
         "title": "390px wide (a phone)",
         "checks": [
           {
-            "label": "card.row-compact, 3 per row: 1 column here (minimum card 320px, row 362px)",
+            "label": "card.row-compact, 3 per row: 1 here (natural width 368px, row 362px)",
             "ok": true,
-            "detail": "1 columns",
+            "detail": "1 columns, cards 362px = 98%",
             "kind": "expect"
           },
           {
@@ -25399,9 +25399,15 @@
             "kind": "expect"
           },
           {
-            "label": "card.row-thumb-left, 3 per row: 1 column here (minimum card 340px, row 362px)",
+            "label": "card.row-compact: no card squeezed below 70% of its natural width",
             "ok": true,
-            "detail": "1 columns",
+            "detail": "98%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left, 3 per row: 1 here (natural width 391px, row 362px)",
+            "ok": true,
+            "detail": "1 columns, cards 362px = 93%",
             "kind": "expect"
           },
           {
@@ -25411,9 +25417,15 @@
             "kind": "expect"
           },
           {
-            "label": "card.row-thumb-right, 3 per row: 1 column here (minimum card 340px, row 362px)",
+            "label": "card.row-thumb-left: no card squeezed below 70% of its natural width",
             "ok": true,
-            "detail": "1 columns",
+            "detail": "93%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right, 3 per row: 1 here (natural width 391px, row 362px)",
+            "ok": true,
+            "detail": "1 columns, cards 362px = 93%",
             "kind": "expect"
           },
           {
@@ -25423,9 +25435,15 @@
             "kind": "expect"
           },
           {
-            "label": "card.image-top, 3 per row: 1 column here (minimum card 240px, row 362px)",
+            "label": "card.row-thumb-right: no card squeezed below 70% of its natural width",
             "ok": true,
-            "detail": "1 columns",
+            "detail": "93%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top, 3 per row: 1 here (natural width 276px, row 362px)",
+            "ok": true,
+            "detail": "1 columns, cards 362px = 131%",
             "kind": "expect"
           },
           {
@@ -25435,9 +25453,15 @@
             "kind": "expect"
           },
           {
-            "label": "card.image-top-badge, 3 per row: 1 column here (minimum card 240px, row 362px)",
+            "label": "card.image-top: no card squeezed below 70% of its natural width",
             "ok": true,
-            "detail": "1 columns",
+            "detail": "131%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge, 3 per row: 1 here (natural width 276px, row 362px)",
+            "ok": true,
+            "detail": "1 columns, cards 362px = 131%",
             "kind": "expect"
           },
           {
@@ -25447,9 +25471,15 @@
             "kind": "expect"
           },
           {
-            "label": "card.text-above-image, 3 per row: 1 column here (minimum card 260px, row 362px)",
+            "label": "card.image-top-badge: no card squeezed below 70% of its natural width",
             "ok": true,
-            "detail": "1 columns",
+            "detail": "131%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image, 3 per row: 1 here (natural width 299px, row 362px)",
+            "ok": true,
+            "detail": "1 columns, cards 362px = 121%",
             "kind": "expect"
           },
           {
@@ -25459,9 +25489,15 @@
             "kind": "expect"
           },
           {
-            "label": "card.image-overlay, 3 per row: 1 column here (minimum card 260px, row 362px)",
+            "label": "card.text-above-image: no card squeezed below 70% of its natural width",
             "ok": true,
-            "detail": "1 columns",
+            "detail": "121%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay, 3 per row: 1 here (natural width 299px, row 362px)",
+            "ok": true,
+            "detail": "1 columns, cards 362px = 121%",
             "kind": "expect"
           },
           {
@@ -25471,9 +25507,15 @@
             "kind": "expect"
           },
           {
-            "label": "card.portrait, 3 per row: 1 column here (minimum card 210px, row 362px)",
+            "label": "card.image-overlay: no card squeezed below 70% of its natural width",
             "ok": true,
-            "detail": "1 columns",
+            "detail": "121%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait, 3 per row: 2 here (natural width 241px, row 362px)",
+            "ok": true,
+            "detail": "2 columns, cards 175px = 73%",
             "kind": "expect"
           },
           {
@@ -25483,9 +25525,27 @@
             "kind": "expect"
           },
           {
-            "label": "card.circle, 3 per row: 1 column here (minimum card 190px, row 362px)",
+            "label": "card.portrait: no card squeezed below 70% of its natural width",
             "ok": true,
-            "detail": "1 columns",
+            "detail": "73%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait: with fewer than the chosen 3, the cards stay within 120%",
+            "ok": true,
+            "detail": "73%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle, 3 per row: 2 here (natural width 218px, row 362px)",
+            "ok": true,
+            "detail": "2 columns, cards 175px = 80%",
             "kind": "expect"
           },
           {
@@ -25495,15 +25555,147 @@
             "kind": "expect"
           },
           {
-            "label": "card.menu-line, 3 per row: 1 column here (minimum card 280px, row 362px)",
+            "label": "card.circle: no card squeezed below 70% of its natural width",
             "ok": true,
-            "detail": "1 columns",
+            "detail": "80%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle: with fewer than the chosen 3, the cards stay within 120%",
+            "ok": true,
+            "detail": "80%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.menu-line, 3 per row: 1 here (natural width 322px, row 362px)",
+            "ok": true,
+            "detail": "1 columns, cards 362px = 112%",
             "kind": "expect"
           },
           {
             "label": "card.menu-line: every card inside the row, none on top of another",
             "ok": true,
             "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.menu-line: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "112%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-compact, no number chosen: 1 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "1 columns, cards 98% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-compact, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "98%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left, no number chosen: 1 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "1 columns, cards 93% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "93%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right, no number chosen: 1 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "1 columns, cards 93% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "93%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top, no number chosen: 1 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "1 columns, cards 131% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "131%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge, no number chosen: 1 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "1 columns, cards 131% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "131%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image, no number chosen: 1 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "1 columns, cards 121% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "121%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay, no number chosen: 1 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "1 columns, cards 121% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "121%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait, no number chosen: 2 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "2 columns, cards 73% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "73%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle, no number chosen: 2 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "2 columns, cards 80% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "80%",
             "kind": "expect"
           },
           {
@@ -25516,12 +25708,12 @@
       },
       {
         "n": 2,
-        "title": "744px wide (a tablet in portrait)",
+        "title": "600px wide (a phone)",
         "checks": [
           {
-            "label": "card.row-compact, 3 per row: 2 columns here (minimum card 320px, row 716px)",
+            "label": "card.row-compact, 3 per row: 2 here (natural width 368px, row 572px)",
             "ok": true,
-            "detail": "2 columns",
+            "detail": "2 columns, cards 280px = 76%",
             "kind": "expect"
           },
           {
@@ -25531,15 +25723,27 @@
             "kind": "expect"
           },
           {
+            "label": "card.row-compact: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "76%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-compact: with fewer than the chosen 3, the cards stay within 120%",
+            "ok": true,
+            "detail": "76%",
+            "kind": "expect"
+          },
+          {
             "label": "card.row-compact: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.row-thumb-left, 3 per row: 2 columns here (minimum card 340px, row 716px)",
+            "label": "card.row-thumb-left, 3 per row: 2 here (natural width 391px, row 572px)",
             "ok": true,
-            "detail": "2 columns",
+            "detail": "2 columns, cards 280px = 72%",
             "kind": "expect"
           },
           {
@@ -25549,15 +25753,27 @@
             "kind": "expect"
           },
           {
+            "label": "card.row-thumb-left: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "72%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left: with fewer than the chosen 3, the cards stay within 120%",
+            "ok": true,
+            "detail": "72%",
+            "kind": "expect"
+          },
+          {
             "label": "card.row-thumb-left: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.row-thumb-right, 3 per row: 2 columns here (minimum card 340px, row 716px)",
+            "label": "card.row-thumb-right, 3 per row: 2 here (natural width 391px, row 572px)",
             "ok": true,
-            "detail": "2 columns",
+            "detail": "2 columns, cards 280px = 72%",
             "kind": "expect"
           },
           {
@@ -25567,15 +25783,27 @@
             "kind": "expect"
           },
           {
+            "label": "card.row-thumb-right: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "72%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right: with fewer than the chosen 3, the cards stay within 120%",
+            "ok": true,
+            "detail": "72%",
+            "kind": "expect"
+          },
+          {
             "label": "card.row-thumb-right: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.image-top, 3 per row: 2 columns here (minimum card 240px, row 716px)",
+            "label": "card.image-top, 3 per row: 2 here (natural width 276px, row 572px)",
             "ok": true,
-            "detail": "2 columns",
+            "detail": "2 columns, cards 280px = 101%",
             "kind": "expect"
           },
           {
@@ -25585,15 +25813,27 @@
             "kind": "expect"
           },
           {
+            "label": "card.image-top: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "101%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top: with fewer than the chosen 3, the cards stay within 120%",
+            "ok": true,
+            "detail": "101%",
+            "kind": "expect"
+          },
+          {
             "label": "card.image-top: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.image-top-badge, 3 per row: 2 columns here (minimum card 240px, row 716px)",
+            "label": "card.image-top-badge, 3 per row: 2 here (natural width 276px, row 572px)",
             "ok": true,
-            "detail": "2 columns",
+            "detail": "2 columns, cards 280px = 101%",
             "kind": "expect"
           },
           {
@@ -25603,15 +25843,27 @@
             "kind": "expect"
           },
           {
+            "label": "card.image-top-badge: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "101%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge: with fewer than the chosen 3, the cards stay within 120%",
+            "ok": true,
+            "detail": "101%",
+            "kind": "expect"
+          },
+          {
             "label": "card.image-top-badge: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.text-above-image, 3 per row: 2 columns here (minimum card 260px, row 716px)",
+            "label": "card.text-above-image, 3 per row: 2 here (natural width 299px, row 572px)",
             "ok": true,
-            "detail": "2 columns",
+            "detail": "2 columns, cards 280px = 94%",
             "kind": "expect"
           },
           {
@@ -25621,15 +25873,27 @@
             "kind": "expect"
           },
           {
+            "label": "card.text-above-image: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "94%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image: with fewer than the chosen 3, the cards stay within 120%",
+            "ok": true,
+            "detail": "94%",
+            "kind": "expect"
+          },
+          {
             "label": "card.text-above-image: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.image-overlay, 3 per row: 2 columns here (minimum card 260px, row 716px)",
+            "label": "card.image-overlay, 3 per row: 2 here (natural width 299px, row 572px)",
             "ok": true,
-            "detail": "2 columns",
+            "detail": "2 columns, cards 280px = 94%",
             "kind": "expect"
           },
           {
@@ -25639,15 +25903,27 @@
             "kind": "expect"
           },
           {
+            "label": "card.image-overlay: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "94%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay: with fewer than the chosen 3, the cards stay within 120%",
+            "ok": true,
+            "detail": "94%",
+            "kind": "expect"
+          },
+          {
             "label": "card.image-overlay: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.portrait, 3 per row: 2 columns here (minimum card 210px, row 716px)",
+            "label": "card.portrait, 3 per row: 2 here (natural width 241px, row 572px)",
             "ok": true,
-            "detail": "2 columns",
+            "detail": "2 columns, cards 280px = 116%",
             "kind": "expect"
           },
           {
@@ -25657,15 +25933,27 @@
             "kind": "expect"
           },
           {
+            "label": "card.portrait: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "116%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait: with fewer than the chosen 3, the cards stay within 120%",
+            "ok": true,
+            "detail": "116%",
+            "kind": "expect"
+          },
+          {
             "label": "card.portrait: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.circle, 3 per row: 2 columns here (minimum card 190px, row 716px)",
+            "label": "card.circle, 3 per row: 3 here (natural width 218px, row 572px)",
             "ok": true,
-            "detail": "2 columns",
+            "detail": "3 columns, cards 183px = 84%",
             "kind": "expect"
           },
           {
@@ -25675,15 +25963,21 @@
             "kind": "expect"
           },
           {
+            "label": "card.circle: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "84%",
+            "kind": "expect"
+          },
+          {
             "label": "card.circle: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.menu-line, 3 per row: 2 columns here (minimum card 280px, row 716px)",
+            "label": "card.menu-line, 3 per row: 2 here (natural width 322px, row 572px)",
             "ok": true,
-            "detail": "2 columns",
+            "detail": "2 columns, cards 280px = 87%",
             "kind": "expect"
           },
           {
@@ -25693,31 +25987,133 @@
             "kind": "expect"
           },
           {
+            "label": "card.menu-line: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "87%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.menu-line: with fewer than the chosen 3, the cards stay within 120%",
+            "ok": true,
+            "detail": "87%",
+            "kind": "expect"
+          },
+          {
             "label": "card.menu-line: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
+            "label": "card.row-compact, no number chosen: 2 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "2 columns, cards 76% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-compact, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "76%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left, no number chosen: 2 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "2 columns, cards 72% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "72%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right, no number chosen: 2 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "2 columns, cards 72% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "72%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top, no number chosen: 2 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "2 columns, cards 101% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "101%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge, no number chosen: 2 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "2 columns, cards 101% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "101%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image, no number chosen: 2 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "2 columns, cards 94% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "94%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay, no number chosen: 2 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "2 columns, cards 94% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "94%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait, no number chosen: 2 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "2 columns, cards 116% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "116%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle, no number chosen: 3 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "3 columns, cards 84% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "84%",
+            "kind": "expect"
+          },
+          {
             "label": "the page does not scroll sideways",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "2 per row (image on top): 2 here",
-            "ok": true,
-            "detail": "row 716px",
-            "kind": "expect"
-          },
-          {
-            "label": "4 per row (image on top): only as many as fit — 2 here, nothing cut off",
-            "ok": true,
-            "detail": "row 716px",
-            "kind": "expect"
-          },
-          {
-            "label": "1 per row stays 1 at every width",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -25726,12 +26122,12 @@
       },
       {
         "n": 3,
-        "title": "820px wide (a tablet in portrait)",
+        "title": "744px wide (a tablet in portrait)",
         "checks": [
           {
-            "label": "card.row-compact, 3 per row: 2 columns here (minimum card 320px, row 792px)",
+            "label": "card.row-compact, 3 per row: 2 here (natural width 368px, row 716px)",
             "ok": true,
-            "detail": "2 columns",
+            "detail": "2 columns, cards 352px = 96%",
             "kind": "expect"
           },
           {
@@ -25741,15 +26137,27 @@
             "kind": "expect"
           },
           {
+            "label": "card.row-compact: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "96%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-compact: with fewer than the chosen 3, the cards stay within 120%",
+            "ok": true,
+            "detail": "96%",
+            "kind": "expect"
+          },
+          {
             "label": "card.row-compact: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.row-thumb-left, 3 per row: 2 columns here (minimum card 340px, row 792px)",
+            "label": "card.row-thumb-left, 3 per row: 2 here (natural width 391px, row 716px)",
             "ok": true,
-            "detail": "2 columns",
+            "detail": "2 columns, cards 352px = 90%",
             "kind": "expect"
           },
           {
@@ -25759,15 +26167,27 @@
             "kind": "expect"
           },
           {
+            "label": "card.row-thumb-left: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "90%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left: with fewer than the chosen 3, the cards stay within 120%",
+            "ok": true,
+            "detail": "90%",
+            "kind": "expect"
+          },
+          {
             "label": "card.row-thumb-left: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.row-thumb-right, 3 per row: 2 columns here (minimum card 340px, row 792px)",
+            "label": "card.row-thumb-right, 3 per row: 2 here (natural width 391px, row 716px)",
             "ok": true,
-            "detail": "2 columns",
+            "detail": "2 columns, cards 352px = 90%",
             "kind": "expect"
           },
           {
@@ -25777,15 +26197,27 @@
             "kind": "expect"
           },
           {
+            "label": "card.row-thumb-right: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "90%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right: with fewer than the chosen 3, the cards stay within 120%",
+            "ok": true,
+            "detail": "90%",
+            "kind": "expect"
+          },
+          {
             "label": "card.row-thumb-right: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.image-top, 3 per row: 2 columns here (minimum card 240px, row 792px)",
+            "label": "card.image-top, 3 per row: 3 here (natural width 276px, row 716px)",
             "ok": true,
-            "detail": "2 columns",
+            "detail": "3 columns, cards 231px = 84%",
             "kind": "expect"
           },
           {
@@ -25795,15 +26227,21 @@
             "kind": "expect"
           },
           {
+            "label": "card.image-top: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "84%",
+            "kind": "expect"
+          },
+          {
             "label": "card.image-top: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.image-top-badge, 3 per row: 2 columns here (minimum card 240px, row 792px)",
+            "label": "card.image-top-badge, 3 per row: 3 here (natural width 276px, row 716px)",
             "ok": true,
-            "detail": "2 columns",
+            "detail": "3 columns, cards 231px = 84%",
             "kind": "expect"
           },
           {
@@ -25813,15 +26251,21 @@
             "kind": "expect"
           },
           {
+            "label": "card.image-top-badge: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "84%",
+            "kind": "expect"
+          },
+          {
             "label": "card.image-top-badge: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.text-above-image, 3 per row: 2 columns here (minimum card 260px, row 792px)",
+            "label": "card.text-above-image, 3 per row: 2 here (natural width 299px, row 716px)",
             "ok": true,
-            "detail": "2 columns",
+            "detail": "2 columns, cards 352px = 118%",
             "kind": "expect"
           },
           {
@@ -25831,15 +26275,27 @@
             "kind": "expect"
           },
           {
+            "label": "card.text-above-image: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "118%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image: with fewer than the chosen 3, the cards stay within 120%",
+            "ok": true,
+            "detail": "118%",
+            "kind": "expect"
+          },
+          {
             "label": "card.text-above-image: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.image-overlay, 3 per row: 2 columns here (minimum card 260px, row 792px)",
+            "label": "card.image-overlay, 3 per row: 2 here (natural width 299px, row 716px)",
             "ok": true,
-            "detail": "2 columns",
+            "detail": "2 columns, cards 352px = 118%",
             "kind": "expect"
           },
           {
@@ -25849,15 +26305,27 @@
             "kind": "expect"
           },
           {
+            "label": "card.image-overlay: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "118%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay: with fewer than the chosen 3, the cards stay within 120%",
+            "ok": true,
+            "detail": "118%",
+            "kind": "expect"
+          },
+          {
             "label": "card.image-overlay: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.portrait, 3 per row: 2 columns here (minimum card 210px, row 792px)",
+            "label": "card.portrait, 3 per row: 3 here (natural width 241px, row 716px)",
             "ok": true,
-            "detail": "2 columns",
+            "detail": "3 columns, cards 231px = 96%",
             "kind": "expect"
           },
           {
@@ -25867,15 +26335,21 @@
             "kind": "expect"
           },
           {
+            "label": "card.portrait: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "96%",
+            "kind": "expect"
+          },
+          {
             "label": "card.portrait: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.circle, 3 per row: 2 columns here (minimum card 190px, row 792px)",
+            "label": "card.circle, 3 per row: 3 here (natural width 218px, row 716px)",
             "ok": true,
-            "detail": "2 columns",
+            "detail": "3 columns, cards 231px = 106%",
             "kind": "expect"
           },
           {
@@ -25885,15 +26359,21 @@
             "kind": "expect"
           },
           {
+            "label": "card.circle: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "106%",
+            "kind": "expect"
+          },
+          {
             "label": "card.circle: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.menu-line, 3 per row: 2 columns here (minimum card 280px, row 792px)",
+            "label": "card.menu-line, 3 per row: 2 here (natural width 322px, row 716px)",
             "ok": true,
-            "detail": "2 columns",
+            "detail": "2 columns, cards 352px = 109%",
             "kind": "expect"
           },
           {
@@ -25903,9 +26383,129 @@
             "kind": "expect"
           },
           {
+            "label": "card.menu-line: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "109%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.menu-line: with fewer than the chosen 3, the cards stay within 120%",
+            "ok": true,
+            "detail": "109%",
+            "kind": "expect"
+          },
+          {
             "label": "card.menu-line: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-compact, no number chosen: 2 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "2 columns, cards 96% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-compact, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "96%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left, no number chosen: 2 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "2 columns, cards 90% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "90%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right, no number chosen: 2 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "2 columns, cards 90% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "90%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top, no number chosen: 3 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "3 columns, cards 84% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "84%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge, no number chosen: 3 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "3 columns, cards 84% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "84%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image, no number chosen: 2 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "2 columns, cards 118% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "118%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay, no number chosen: 2 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "2 columns, cards 118% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "118%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait, no number chosen: 3 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "3 columns, cards 96% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "96%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle, no number chosen: 3 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "3 columns, cards 106% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "106%",
             "kind": "expect"
           },
           {
@@ -25917,13 +26517,13 @@
           {
             "label": "2 per row (image on top): 2 here",
             "ok": true,
-            "detail": "row 792px",
+            "detail": "row 716px",
             "kind": "expect"
           },
           {
-            "label": "4 per row (image on top): only as many as fit — 2 here, nothing cut off",
+            "label": "4 per row (image on top): 3 here, nothing cut off",
             "ok": true,
-            "detail": "row 792px",
+            "detail": "row 716px",
             "kind": "expect"
           },
           {
@@ -25936,12 +26536,12 @@
       },
       {
         "n": 4,
-        "title": "1024px wide (a tablet in landscape)",
+        "title": "820px wide (a tablet in portrait)",
         "checks": [
           {
-            "label": "card.row-compact, 3 per row: 3 columns here (minimum card 320px, row 976px)",
+            "label": "card.row-compact, 3 per row: 2 here (natural width 368px, row 792px)",
             "ok": true,
-            "detail": "3 columns",
+            "detail": "2 columns, cards 390px = 106%",
             "kind": "expect"
           },
           {
@@ -25951,15 +26551,27 @@
             "kind": "expect"
           },
           {
+            "label": "card.row-compact: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "106%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-compact: with fewer than the chosen 3, the cards stay within 120%",
+            "ok": true,
+            "detail": "106%",
+            "kind": "expect"
+          },
+          {
             "label": "card.row-compact: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.row-thumb-left, 3 per row: 2 columns here (minimum card 340px, row 976px)",
+            "label": "card.row-thumb-left, 3 per row: 2 here (natural width 391px, row 792px)",
             "ok": true,
-            "detail": "2 columns",
+            "detail": "2 columns, cards 390px = 100%",
             "kind": "expect"
           },
           {
@@ -25969,15 +26581,27 @@
             "kind": "expect"
           },
           {
+            "label": "card.row-thumb-left: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "100%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left: with fewer than the chosen 3, the cards stay within 120%",
+            "ok": true,
+            "detail": "100%",
+            "kind": "expect"
+          },
+          {
             "label": "card.row-thumb-left: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.row-thumb-right, 3 per row: 2 columns here (minimum card 340px, row 976px)",
+            "label": "card.row-thumb-right, 3 per row: 2 here (natural width 391px, row 792px)",
             "ok": true,
-            "detail": "2 columns",
+            "detail": "2 columns, cards 390px = 100%",
             "kind": "expect"
           },
           {
@@ -25987,15 +26611,27 @@
             "kind": "expect"
           },
           {
+            "label": "card.row-thumb-right: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "100%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right: with fewer than the chosen 3, the cards stay within 120%",
+            "ok": true,
+            "detail": "100%",
+            "kind": "expect"
+          },
+          {
             "label": "card.row-thumb-right: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.image-top, 3 per row: 3 columns here (minimum card 240px, row 976px)",
+            "label": "card.image-top, 3 per row: 3 here (natural width 276px, row 792px)",
             "ok": true,
-            "detail": "3 columns",
+            "detail": "3 columns, cards 256px = 93%",
             "kind": "expect"
           },
           {
@@ -26005,15 +26641,21 @@
             "kind": "expect"
           },
           {
+            "label": "card.image-top: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "93%",
+            "kind": "expect"
+          },
+          {
             "label": "card.image-top: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.image-top-badge, 3 per row: 3 columns here (minimum card 240px, row 976px)",
+            "label": "card.image-top-badge, 3 per row: 3 here (natural width 276px, row 792px)",
             "ok": true,
-            "detail": "3 columns",
+            "detail": "3 columns, cards 256px = 93%",
             "kind": "expect"
           },
           {
@@ -26023,15 +26665,21 @@
             "kind": "expect"
           },
           {
+            "label": "card.image-top-badge: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "93%",
+            "kind": "expect"
+          },
+          {
             "label": "card.image-top-badge: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.text-above-image, 3 per row: 3 columns here (minimum card 260px, row 976px)",
+            "label": "card.text-above-image, 3 per row: 3 here (natural width 299px, row 792px)",
             "ok": true,
-            "detail": "3 columns",
+            "detail": "3 columns, cards 256px = 86%",
             "kind": "expect"
           },
           {
@@ -26041,15 +26689,21 @@
             "kind": "expect"
           },
           {
+            "label": "card.text-above-image: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "86%",
+            "kind": "expect"
+          },
+          {
             "label": "card.text-above-image: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.image-overlay, 3 per row: 3 columns here (minimum card 260px, row 976px)",
+            "label": "card.image-overlay, 3 per row: 3 here (natural width 299px, row 792px)",
             "ok": true,
-            "detail": "3 columns",
+            "detail": "3 columns, cards 256px = 86%",
             "kind": "expect"
           },
           {
@@ -26059,15 +26713,21 @@
             "kind": "expect"
           },
           {
+            "label": "card.image-overlay: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "86%",
+            "kind": "expect"
+          },
+          {
             "label": "card.image-overlay: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.portrait, 3 per row: 3 columns here (minimum card 210px, row 976px)",
+            "label": "card.portrait, 3 per row: 3 here (natural width 241px, row 792px)",
             "ok": true,
-            "detail": "3 columns",
+            "detail": "3 columns, cards 256px = 106%",
             "kind": "expect"
           },
           {
@@ -26077,15 +26737,21 @@
             "kind": "expect"
           },
           {
+            "label": "card.portrait: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "106%",
+            "kind": "expect"
+          },
+          {
             "label": "card.portrait: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.circle, 3 per row: 3 columns here (minimum card 190px, row 976px)",
+            "label": "card.circle, 3 per row: 3 here (natural width 218px, row 792px)",
             "ok": true,
-            "detail": "3 columns",
+            "detail": "3 columns, cards 256px = 117%",
             "kind": "expect"
           },
           {
@@ -26095,15 +26761,21 @@
             "kind": "expect"
           },
           {
+            "label": "card.circle: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "117%",
+            "kind": "expect"
+          },
+          {
             "label": "card.circle: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.menu-line, 3 per row: 3 columns here (minimum card 280px, row 976px)",
+            "label": "card.menu-line, 3 per row: 3 here (natural width 322px, row 792px)",
             "ok": true,
-            "detail": "3 columns",
+            "detail": "3 columns, cards 256px = 80%",
             "kind": "expect"
           },
           {
@@ -26113,9 +26785,123 @@
             "kind": "expect"
           },
           {
+            "label": "card.menu-line: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "80%",
+            "kind": "expect"
+          },
+          {
             "label": "card.menu-line: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-compact, no number chosen: 2 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "2 columns, cards 106% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-compact, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "106%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left, no number chosen: 2 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "2 columns, cards 100% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "100%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right, no number chosen: 2 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "2 columns, cards 100% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "100%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top, no number chosen: 3 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "3 columns, cards 93% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "93%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge, no number chosen: 3 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "3 columns, cards 93% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "93%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image, no number chosen: 3 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "3 columns, cards 86% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "86%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay, no number chosen: 3 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "3 columns, cards 86% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "86%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait, no number chosen: 3 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "3 columns, cards 106% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "106%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle, no number chosen: 4 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "4 columns, cards 87% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "87%",
             "kind": "expect"
           },
           {
@@ -26127,13 +26913,13 @@
           {
             "label": "2 per row (image on top): 2 here",
             "ok": true,
-            "detail": "row 976px",
+            "detail": "row 792px",
             "kind": "expect"
           },
           {
-            "label": "4 per row (image on top): only as many as fit — 4 here, nothing cut off",
+            "label": "4 per row (image on top): 3 here, nothing cut off",
             "ok": true,
-            "detail": "row 976px",
+            "detail": "row 792px",
             "kind": "expect"
           },
           {
@@ -26146,12 +26932,12 @@
       },
       {
         "n": 5,
-        "title": "1280px wide (a laptop)",
+        "title": "930px wide (a tablet in landscape)",
         "checks": [
           {
-            "label": "card.row-compact, 3 per row: 3 columns here (minimum card 320px, row 1032px)",
+            "label": "card.row-compact, 3 per row: 3 here (natural width 368px, row 902px)",
             "ok": true,
-            "detail": "3 columns",
+            "detail": "3 columns, cards 293px = 80%",
             "kind": "expect"
           },
           {
@@ -26161,15 +26947,21 @@
             "kind": "expect"
           },
           {
+            "label": "card.row-compact: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "80%",
+            "kind": "expect"
+          },
+          {
             "label": "card.row-compact: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.row-thumb-left, 3 per row: 3 columns here (minimum card 340px, row 1032px)",
+            "label": "card.row-thumb-left, 3 per row: 2 here (natural width 391px, row 902px)",
             "ok": true,
-            "detail": "3 columns",
+            "detail": "2 columns, cards 445px = 114%",
             "kind": "expect"
           },
           {
@@ -26179,15 +26971,27 @@
             "kind": "expect"
           },
           {
+            "label": "card.row-thumb-left: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "114%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left: with fewer than the chosen 3, the cards stay within 120%",
+            "ok": true,
+            "detail": "114%",
+            "kind": "expect"
+          },
+          {
             "label": "card.row-thumb-left: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.row-thumb-right, 3 per row: 3 columns here (minimum card 340px, row 1032px)",
+            "label": "card.row-thumb-right, 3 per row: 2 here (natural width 391px, row 902px)",
             "ok": true,
-            "detail": "3 columns",
+            "detail": "2 columns, cards 445px = 114%",
             "kind": "expect"
           },
           {
@@ -26197,15 +27001,27 @@
             "kind": "expect"
           },
           {
+            "label": "card.row-thumb-right: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "114%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right: with fewer than the chosen 3, the cards stay within 120%",
+            "ok": true,
+            "detail": "114%",
+            "kind": "expect"
+          },
+          {
             "label": "card.row-thumb-right: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.image-top, 3 per row: 3 columns here (minimum card 240px, row 1032px)",
+            "label": "card.image-top, 3 per row: 3 here (natural width 276px, row 902px)",
             "ok": true,
-            "detail": "3 columns",
+            "detail": "3 columns, cards 293px = 106%",
             "kind": "expect"
           },
           {
@@ -26215,15 +27031,21 @@
             "kind": "expect"
           },
           {
+            "label": "card.image-top: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "106%",
+            "kind": "expect"
+          },
+          {
             "label": "card.image-top: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.image-top-badge, 3 per row: 3 columns here (minimum card 240px, row 1032px)",
+            "label": "card.image-top-badge, 3 per row: 3 here (natural width 276px, row 902px)",
             "ok": true,
-            "detail": "3 columns",
+            "detail": "3 columns, cards 293px = 106%",
             "kind": "expect"
           },
           {
@@ -26233,15 +27055,21 @@
             "kind": "expect"
           },
           {
+            "label": "card.image-top-badge: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "106%",
+            "kind": "expect"
+          },
+          {
             "label": "card.image-top-badge: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.text-above-image, 3 per row: 3 columns here (minimum card 260px, row 1032px)",
+            "label": "card.text-above-image, 3 per row: 3 here (natural width 299px, row 902px)",
             "ok": true,
-            "detail": "3 columns",
+            "detail": "3 columns, cards 293px = 98%",
             "kind": "expect"
           },
           {
@@ -26251,15 +27079,21 @@
             "kind": "expect"
           },
           {
+            "label": "card.text-above-image: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "98%",
+            "kind": "expect"
+          },
+          {
             "label": "card.text-above-image: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.image-overlay, 3 per row: 3 columns here (minimum card 260px, row 1032px)",
+            "label": "card.image-overlay, 3 per row: 3 here (natural width 299px, row 902px)",
             "ok": true,
-            "detail": "3 columns",
+            "detail": "3 columns, cards 293px = 98%",
             "kind": "expect"
           },
           {
@@ -26269,15 +27103,21 @@
             "kind": "expect"
           },
           {
+            "label": "card.image-overlay: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "98%",
+            "kind": "expect"
+          },
+          {
             "label": "card.image-overlay: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.portrait, 3 per row: 3 columns here (minimum card 210px, row 1032px)",
+            "label": "card.portrait, 3 per row: 3 here (natural width 241px, row 902px)",
             "ok": true,
-            "detail": "3 columns",
+            "detail": "3 columns, cards 293px = 121%",
             "kind": "expect"
           },
           {
@@ -26287,15 +27127,21 @@
             "kind": "expect"
           },
           {
+            "label": "card.portrait: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "121%",
+            "kind": "expect"
+          },
+          {
             "label": "card.portrait: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.circle, 3 per row: 3 columns here (minimum card 190px, row 1032px)",
+            "label": "card.circle, 3 per row: 3 here (natural width 218px, row 902px)",
             "ok": true,
-            "detail": "3 columns",
+            "detail": "3 columns, cards 293px = 134%",
             "kind": "expect"
           },
           {
@@ -26305,15 +27151,21 @@
             "kind": "expect"
           },
           {
+            "label": "card.circle: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "134%",
+            "kind": "expect"
+          },
+          {
             "label": "card.circle: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
             "kind": "expect"
           },
           {
-            "label": "card.menu-line, 3 per row: 3 columns here (minimum card 280px, row 1032px)",
+            "label": "card.menu-line, 3 per row: 3 here (natural width 322px, row 902px)",
             "ok": true,
-            "detail": "3 columns",
+            "detail": "3 columns, cards 293px = 91%",
             "kind": "expect"
           },
           {
@@ -26323,9 +27175,879 @@
             "kind": "expect"
           },
           {
+            "label": "card.menu-line: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "91%",
+            "kind": "expect"
+          },
+          {
             "label": "card.menu-line: the cards share the whole row (no unused strip at the right)",
             "ok": true,
             "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-compact, no number chosen: 3 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "3 columns, cards 80% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-compact, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "80%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left, no number chosen: 2 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "2 columns, cards 114% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "114%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right, no number chosen: 2 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "2 columns, cards 114% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "114%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top, no number chosen: 3 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "3 columns, cards 106% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "106%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge, no number chosen: 3 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "3 columns, cards 106% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "106%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image, no number chosen: 3 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "3 columns, cards 98% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "98%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay, no number chosen: 3 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "3 columns, cards 98% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "98%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait, no number chosen: 4 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "4 columns, cards 90% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "90%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle, no number chosen: 4 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "4 columns, cards 99% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "99%",
+            "kind": "expect"
+          },
+          {
+            "label": "the page does not scroll sideways",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "2 per row (image on top): 2 here",
+            "ok": true,
+            "detail": "row 902px",
+            "kind": "expect"
+          },
+          {
+            "label": "4 per row (image on top): 3 here, nothing cut off",
+            "ok": true,
+            "detail": "row 902px",
+            "kind": "expect"
+          },
+          {
+            "label": "1 per row stays 1 at every width",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "1024px wide (a tablet in landscape)",
+        "checks": [
+          {
+            "label": "card.row-compact, 3 per row: 3 here (natural width 368px, row 976px)",
+            "ok": true,
+            "detail": "3 columns, cards 317px = 86%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-compact: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-compact: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "86%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-compact: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left, 3 per row: 3 here (natural width 391px, row 976px)",
+            "ok": true,
+            "detail": "3 columns, cards 317px = 81%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "81%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right, 3 per row: 3 here (natural width 391px, row 976px)",
+            "ok": true,
+            "detail": "3 columns, cards 317px = 81%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "81%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top, 3 per row: 3 here (natural width 276px, row 976px)",
+            "ok": true,
+            "detail": "3 columns, cards 317px = 115%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "115%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge, 3 per row: 3 here (natural width 276px, row 976px)",
+            "ok": true,
+            "detail": "3 columns, cards 317px = 115%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "115%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image, 3 per row: 3 here (natural width 299px, row 976px)",
+            "ok": true,
+            "detail": "3 columns, cards 317px = 106%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "106%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay, 3 per row: 3 here (natural width 299px, row 976px)",
+            "ok": true,
+            "detail": "3 columns, cards 317px = 106%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "106%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait, 3 per row: 3 here (natural width 241px, row 976px)",
+            "ok": true,
+            "detail": "3 columns, cards 317px = 132%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "132%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle, 3 per row: 3 here (natural width 218px, row 976px)",
+            "ok": true,
+            "detail": "3 columns, cards 317px = 146%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "146%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.menu-line, 3 per row: 3 here (natural width 322px, row 976px)",
+            "ok": true,
+            "detail": "3 columns, cards 317px = 99%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.menu-line: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.menu-line: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "99%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.menu-line: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-compact, no number chosen: 3 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "3 columns, cards 86% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-compact, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "86%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left, no number chosen: 3 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "3 columns, cards 81% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "81%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right, no number chosen: 3 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "3 columns, cards 81% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "81%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top, no number chosen: 3 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "3 columns, cards 115% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "115%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge, no number chosen: 3 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "3 columns, cards 115% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "115%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image, no number chosen: 3 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "3 columns, cards 106% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "106%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay, no number chosen: 3 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "3 columns, cards 106% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "106%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait, no number chosen: 4 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "4 columns, cards 98% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "98%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle, no number chosen: 4 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "4 columns, cards 108% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "108%",
+            "kind": "expect"
+          },
+          {
+            "label": "the page does not scroll sideways",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "2 per row (image on top): 2 here",
+            "ok": true,
+            "detail": "row 976px",
+            "kind": "expect"
+          },
+          {
+            "label": "4 per row (image on top): 3 here, nothing cut off",
+            "ok": true,
+            "detail": "row 976px",
+            "kind": "expect"
+          },
+          {
+            "label": "1 per row stays 1 at every width",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "1280px wide (a laptop)",
+        "checks": [
+          {
+            "label": "card.row-compact, 3 per row: 3 here (natural width 368px, row 1032px)",
+            "ok": true,
+            "detail": "3 columns, cards 336px = 91%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-compact: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-compact: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "91%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-compact: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left, 3 per row: 3 here (natural width 391px, row 1032px)",
+            "ok": true,
+            "detail": "3 columns, cards 336px = 86%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "86%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right, 3 per row: 3 here (natural width 391px, row 1032px)",
+            "ok": true,
+            "detail": "3 columns, cards 336px = 86%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "86%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top, 3 per row: 3 here (natural width 276px, row 1032px)",
+            "ok": true,
+            "detail": "3 columns, cards 336px = 122%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "122%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge, 3 per row: 3 here (natural width 276px, row 1032px)",
+            "ok": true,
+            "detail": "3 columns, cards 336px = 122%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "122%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image, 3 per row: 3 here (natural width 299px, row 1032px)",
+            "ok": true,
+            "detail": "3 columns, cards 336px = 112%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "112%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay, 3 per row: 3 here (natural width 299px, row 1032px)",
+            "ok": true,
+            "detail": "3 columns, cards 336px = 112%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "112%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait, 3 per row: 3 here (natural width 241px, row 1032px)",
+            "ok": true,
+            "detail": "3 columns, cards 336px = 139%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "139%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle, 3 per row: 3 here (natural width 218px, row 1032px)",
+            "ok": true,
+            "detail": "3 columns, cards 336px = 154%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "154%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.menu-line, 3 per row: 3 here (natural width 322px, row 1032px)",
+            "ok": true,
+            "detail": "3 columns, cards 336px = 104%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.menu-line: every card inside the row, none on top of another",
+            "ok": true,
+            "detail": "0 outside, 0 overlapping",
+            "kind": "expect"
+          },
+          {
+            "label": "card.menu-line: no card squeezed below 70% of its natural width",
+            "ok": true,
+            "detail": "104%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.menu-line: the cards share the whole row (no unused strip at the right)",
+            "ok": true,
+            "detail": "0px left over",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-compact, no number chosen: 3 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "3 columns, cards 91% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-compact, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "91%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left, no number chosen: 3 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "3 columns, cards 86% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-left, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "86%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right, no number chosen: 3 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "3 columns, cards 86% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.row-thumb-right, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "86%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top, no number chosen: 4 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "4 columns, cards 90% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "90%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge, no number chosen: 4 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "4 columns, cards 90% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-top-badge, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "90%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image, no number chosen: 3 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "3 columns, cards 112% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.text-above-image, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "112%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay, no number chosen: 3 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "3 columns, cards 112% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.image-overlay, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "112%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait, no number chosen: 4 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "4 columns, cards 103% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.portrait, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "103%",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle, no number chosen: 5 here, nothing cut off or overlapping",
+            "ok": true,
+            "detail": "5 columns, cards 90% of natural",
+            "kind": "expect"
+          },
+          {
+            "label": "card.circle, no number chosen: every card between 70% and 120% of its natural width",
+            "ok": true,
+            "detail": "90%",
             "kind": "expect"
           },
           {
@@ -26341,7 +28063,7 @@
             "kind": "expect"
           },
           {
-            "label": "4 per row (image on top): only as many as fit — 4 here, nothing cut off",
+            "label": "4 per row (image on top): 4 here, nothing cut off",
             "ok": true,
             "detail": "row 1032px",
             "kind": "expect"
@@ -26355,29 +28077,35 @@
         ]
       },
       {
-        "n": 6,
-        "title": "The case from the report: image overlay, 3 per row, on a tablet",
+        "n": 8,
+        "title": "The case from the report: image overlay (C07), 3 per row, on tablets",
         "checks": [
           {
-            "label": "portrait tablet (744 / 820px): 2 cards a row, not 3 squeezed or cut off",
+            "label": "phone (390px): 1 a row",
             "ok": true,
-            "detail": "2 / 2",
+            "detail": "1",
             "kind": "expect"
           },
           {
-            "label": "landscape tablet (1024px): 3 cards a row, all inside the row (they used to run past the right edge and overlap)",
+            "label": "tablet in portrait (744px): 2 a row — three would be squeezed below 70%",
             "ok": true,
-            "detail": "3 columns",
+            "detail": "2, cards 118%",
             "kind": "expect"
           },
           {
-            "label": "laptop (1280px): 3 a row",
+            "label": "930px wide (the report's screenshot): 3 a row, all inside the row (they used to overlap and run past the edge)",
+            "ok": true,
+            "detail": "3 columns, cards 293px",
+            "kind": "expect"
+          },
+          {
+            "label": "tablet in landscape and laptop: 3 a row",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "phone: 1 a row",
+            "label": "from a tablet up, the cards are never smaller than 70% of their natural width",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -26408,8 +28136,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-25T06:31:48.614Z",
-    "durationMs": 27397,
+    "at": "2026-11-26T05:10:35.863Z",
+    "durationMs": 28629,
     "steps": [
       {
         "n": 1,
@@ -26586,7 +28314,7 @@
           {
             "label": "after 3 seconds it is still creeping, below the end",
             "ok": true,
-            "detail": "{\"state\":\"running\",\"ratio\":0.675}",
+            "detail": "{\"state\":\"running\",\"ratio\":0.674}",
             "kind": "expect"
           },
           {

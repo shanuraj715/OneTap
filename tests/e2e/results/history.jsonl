@@ -1225,3 +1225,17 @@
 {"id":"t80-sold-out-last-and-view-all","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-25T06:32:13.696Z","durationMs":18635}
 {"id":"t41-storefront-view-all","status":"pass","pass":85,"fail":0,"mode":"headless","at":"2026-11-25T06:33:07.175Z","durationMs":47110}
 {"id":"t47-storefront-pinned-bars","status":"pass","pass":101,"fail":0,"mode":"headless","at":"2026-11-25T06:34:36.967Z","durationMs":82936}
+{"id":"t81-storefront-card-columns","status":"fail","pass":446,"fail":3,"mode":"headless","at":"2026-11-26T05:01:41.352Z","durationMs":40868}
+{"id":"t81-storefront-card-columns","status":"fail","pass":431,"fail":18,"mode":"headless","at":"2026-11-26T05:05:37.088Z","durationMs":38334}
+{"id":"t81-storefront-card-columns","status":"pass","pass":449,"fail":0,"mode":"headless","at":"2026-11-26T05:07:37.125Z","durationMs":36768}
+{"id":"t35-storefront-category-bar","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-26T05:08:15.702Z","durationMs":22187}
+{"id":"t37-storefront-mobile-layout","status":"pass","pass":45,"fail":0,"mode":"headless","at":"2026-11-26T05:08:24.125Z","durationMs":8323}
+{"id":"t40-react-style-warnings","status":"pass","pass":4,"fail":0,"mode":"headless","at":"2026-11-26T05:09:04.371Z","durationMs":40152}
+{"id":"t48-hero-button-card-c02","status":"pass","pass":69,"fail":0,"mode":"headless","at":"2026-11-26T05:09:36.339Z","durationMs":31869}
+{"id":"t49-storefront-item-popup","status":"pass","pass":42,"fail":0,"mode":"headless","at":"2026-11-26T05:09:55.962Z","durationMs":19550}
+{"id":"t72-menu-chunks","status":"pass","pass":15,"fail":0,"mode":"headless","at":"2026-11-26T05:10:04.712Z","durationMs":8661}
+{"id":"t78-storefront-title","status":"pass","pass":16,"fail":0,"mode":"headless","at":"2026-11-26T05:10:07.166Z","durationMs":2377}
+{"id":"t82-storefront-nav-progress","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-26T05:10:35.863Z","durationMs":28629}
+{"id":"t80-sold-out-last-and-view-all","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-26T05:11:01.477Z","durationMs":20102}
+{"id":"t41-storefront-view-all","status":"pass","pass":85,"fail":0,"mode":"headless","at":"2026-11-26T05:11:57.181Z","durationMs":50307}
+{"id":"t47-storefront-pinned-bars","status":"pass","pass":101,"fail":0,"mode":"headless","at":"2026-11-26T05:13:34.043Z","durationMs":90078}

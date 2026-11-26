@@ -1,6 +1,6 @@
 # T82 — A thin progress bar across the top of the storefront while the page changes — starts at once, creeps, finishes and fades when the page arrives, ignores taps that go nowhere, gives up if nothing comes
 
-**Area:** storefront · **Last result:** ✅ PASSED (34 passed, 0 failed · 2026-11-25 12:01 · headless · 27.4 s)
+**Area:** storefront · **Last result:** ✅ PASSED (34 passed, 0 failed · 2026-11-26 10:40 · headless · 28.6 s)
 
 **Run it alone:** `node run.mjs --only t82` (add `--visible` to watch it)
 
@@ -75,7 +75,7 @@ _Nothing failed._
 **Step 5 — A link whose page never comes: the bar gives up by itself**
 
 - a plain tap on a link to another page starts the bar (here nothing will load)
-- after 3 seconds it is still creeping, below the end — _{"state":"running","ratio":0.675}_
+- after 3 seconds it is still creeping, below the end — _{"state":"running","ratio":0.674}_
 - within about 8 seconds it gives up and fades away instead of hanging for ever
 - (it closes with the same 'done' fade)
 
@@ -96,6 +96,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-26 10:40 | pass | 34 | 0 | headless | 28.6 s |
 | 2026-11-25 12:01 | pass | 34 | 0 | headless | 27.4 s |
 | 2026-11-25 10:50 | pass | 34 | 0 | headless | 30.3 s |
 | 2026-11-25 10:36 | pass | 34 | 0 | headless | 30.1 s |

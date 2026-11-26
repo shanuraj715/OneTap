@@ -51,9 +51,37 @@ export function MenuSections({
   // phones and tablets: the categories open in a sheet instead of a wall of chips
   const [sheetOpen, setSheetOpen] = useState(false);
   const toolbarRef = useRef(null);
+  // The room one row of cards has (the menu's width inside its padding). The cards are drawn 70–120% of their natural size and
+  // the NUMBER of them in a row follows this width (cardColumns.js). 0 until measured: the page built on the server, and the
+  // first paint, use the CSS-only grid, which gives the same count at the common widths.
+  const wrapRef = useRef(null);
+  const [menuWidth, setMenuWidth] = useState(0);
 
   /** Go to a category: a short pause (the sheet closes, the tap registers), then an eased glide that stops just below the sticky bar. */
   const sections = useMemo(() => resolveMenuSections(menu, layout), [menu, layout]);
+
+  const hasSections = sections.length > 0;
+  useLayoutEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return undefined;
+    const measure = () => {
+      const cs = window.getComputedStyle(el);
+      const room = el.clientWidth - (parseFloat(cs.paddingLeft) || 0) - (parseFloat(cs.paddingRight) || 0);
+      setMenuWidth((w) => (Math.abs(w - room) >= 1 ? Math.round(room) : w));
+    };
+    measure();
+    if (typeof ResizeObserver === "undefined") return undefined;
+    let frame = 0;
+    const watcher = new ResizeObserver(() => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(measure);
+    });
+    watcher.observe(el);
+    return () => {
+      cancelAnimationFrame(frame);
+      watcher.disconnect();
+    };
+  }, [hasSections]);
 
   const visibleSections = useMemo(() => {
     if (!foodFilter) return sections;
@@ -176,7 +204,7 @@ export function MenuSections({
   }
 
   return (
-    <div className="ot-menu-sections ot-page-px" style={wrap}>
+    <div ref={wrapRef} className="ot-menu-sections ot-page-px" style={wrap}>
       {wantsNav || (layout.showFoodTypeFilter && foodTypesPresent.length > 1) ? (
         <div ref={toolbarRef} className="ot-fx-bar" data-fx-toolbar="" style={toolbarStyle()}>
           {layout.showFoodTypeFilter && foodTypesPresent.length > 1 ? (
@@ -253,7 +281,8 @@ export function MenuSections({
       {plan.shown.map(({ section, count }) => {
         const variant = getItemCardVariant(section.cardVariant);
         const Card = variant.Component;
-        const gridProps = gridPropsFor(variant, section.columns);
+        // a category inside another is set in from the left (see the section's marginLeft below): its row is that much narrower
+        const gridProps = gridPropsFor(variant, section.columns, menuWidth > 0 ? menuWidth - ((section.depth ?? 0) > 1 ? ((section.depth ?? 0) - 1) * 14 : 0) : 0);
 
         // "View all" — collapsible sections show only the first `initialItems`
         // until the diner opens them, so a long category doesn't push the whole

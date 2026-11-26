@@ -174,10 +174,13 @@ export function TextAboveImage({ item, imageRatio }               ) {
 }
 
 /* 7 ─ full-bleed image with the text overlaid */
+// The card is as wide as its column (`width: 100%`) and may be narrower than 16:9 allows for its minimum height: a box that has a
+// photo shape (aspect-ratio) AND a minimum height otherwise works its own width out from that height (190px × 16/9 = 338px) and
+// runs out of its column when the column is narrower — that is what pushed these cards over each other on a tablet.
 export function ImageOverlay({ item, imageRatio }               ) {
   const ratio = own(imageRatio, "16:9");
   return (
-    <article className="ot-fx-card" style={{ ...fx("card", cardBase), ...dim(item), position: "relative", minHeight: 190, aspectRatio: css(ratio), display: "flex" }}>
+    <article className="ot-fx-card" style={{ ...fx("card", cardBase), ...dim(item), position: "relative", minHeight: 190, width: "100%", minWidth: 0, aspectRatio: css(ratio), display: "flex" }}>
       <Photo name={item.name} src={itemImageUrl(item, ratio)} style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} radius={0} />
       <div
         style={{

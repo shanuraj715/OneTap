@@ -193,7 +193,7 @@
 .ot-grid { display: grid; gap: var(--ot-grid-gap, 12px); }
 /* a card may always shrink to its column: without this a card with a minimum height and a photo shape (aspect-ratio), or
    a line that won't wrap, makes its own minimum width and pushes the columns past the screen */
-.ot-grid > *, .ot-grid-auto > * { min-width: 0; }
+.ot-grid > *, .ot-grid-auto > *, .ot-grid-fit > * { min-width: 0; }
 .ot-grid-cols-1 { grid-template-columns: minmax(0, 1fr); }
 .ot-grid-cols-2 { --cols: 2; }
 .ot-grid-cols-3 { --cols: 3; }

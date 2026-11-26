@@ -2,6 +2,7 @@
                                                       
                                              
 import { LEGACY_VARIANT_IDS } from "@rasoipulse/config-schema";
+import { CARD_GAP, cardBaseWidth, pickColumns } from "./cardColumns";
 import * as announcements from "./announcements";
 import * as cards from "./cards";
                                              
@@ -177,10 +178,18 @@ export const itemCardVariants                    = [
  *
  * @param {{ layout: "grid" | "list"; minWidth: number; defaultColumns?: number; id: string }} variant
  * @param {number} [columns] a section's explicit override, 0 or undefined = use the variant's own default
+ * @param {number} [width] the room for the row in px, once measured (then the cards are 70–120% of their natural width)
  * @returns {{ className?: string; style?: Record<string, unknown> }}
  */
-export function gridPropsFor(variant, columns) {
+export function gridPropsFor(variant, columns, width) {
   const explicit = columns || variant.defaultColumns;
+  // once the width of the row is known, the cards are drawn 70–120% of their natural size and the NUMBER in the row follows
+  // (see cardColumns.js); a list style with no number chosen stays a plain column
+  if (width > 0 && (explicit || variant.layout !== "list")) {
+    const cols = pickColumns(width, cardBaseWidth(variant), explicit ? Math.min(6, Math.max(1, explicit)) : undefined);
+    return { className: "ot-grid-fit", style: { display: "grid", gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`, gap: CARD_GAP } };
+  }
+  // before the first measurement (the server-built page, the first paint): the same idea in CSS alone
   if (explicit) {
     // the chosen count is a maximum: each card keeps at least its own minimum width (tokens.css), so a narrower screen holds fewer.
     // 97% of the style's auto-grid minimum: the menu area on a laptop is 1032px wide, and three 340px cards (+ gaps) need 1044 —
