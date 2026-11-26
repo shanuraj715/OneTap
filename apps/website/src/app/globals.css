@@ -604,12 +604,102 @@ p { margin: 0; text-wrap: pretty; }
 .app-verify summary:hover { color: var(--ink); }
 .app-verify p { margin-top: 8px; padding: 10px 12px; border-radius: 10px; background: var(--surface); border: 1px solid var(--line); font-size: 12.5px; line-height: 1.5; overflow-wrap: anywhere; color: var(--ink-2); }
 
-/* ------------------------------------------------------- the apps index (/apps) */
-.apps-grid { list-style: none; margin: 0; padding: 0; display: grid; gap: 18px; }
-@media (min-width: 760px) { .apps-grid { grid-template-columns: repeat(2, 1fr); } }
-.apps-card { display: flex; flex-direction: column; gap: 10px; padding: 26px; border: 1px solid var(--line); border-radius: 20px; background: var(--paper); }
-.apps-card-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-.apps-code { font-size: 30px; font-weight: 800; letter-spacing: -0.02em; color: var(--brand); }
-.apps-card h2 { font-size: 22px; font-weight: 750; }
+/* ------------------------------------------------------- the apps index (/apps)
+ * A hero with a moving backdrop (drifting colour, a slow dotted grid, rising rings, a heartbeat line that draws itself) and the app icons
+ * orbiting the Rasoi Pulse tile; below it, one glowing card per app. Only transform / opacity / stroke are animated, nothing needs script,
+ * and with "reduce motion" every animation stops and everything sits still, fully visible. */
+.apps-hero { position: relative; overflow: hidden; isolation: isolate; padding-bottom: 92px; }
+.apps-hero-grid { position: relative; z-index: 1; display: grid; gap: 30px; align-items: center; }
+@media (min-width: 900px) { .apps-hero-grid { grid-template-columns: 1.05fr 0.95fr; gap: 40px; } }
+.apps-hero-copy { min-width: 0; }
+
+.apps-bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.apps-blob { position: absolute; border-radius: 50%; filter: blur(72px); will-change: transform; }
+.apps-blob-a { width: 460px; height: 460px; left: -130px; top: -150px; background: var(--brand); opacity: 0.3; animation: apps-drift-a 23s ease-in-out infinite alternate; }
+.apps-blob-b { width: 420px; height: 420px; right: -110px; top: 6%; background: #12a58a; opacity: 0.24; animation: apps-drift-b 27s ease-in-out infinite alternate; }
+.apps-blob-c { width: 380px; height: 380px; left: 36%; bottom: -210px; background: #8b5cf6; opacity: 0.22; animation: apps-drift-c 31s ease-in-out infinite alternate; }
+@keyframes apps-drift-a { to { transform: translate3d(90px, 70px, 0) scale(1.18); } }
+@keyframes apps-drift-b { to { transform: translate3d(-80px, 90px, 0) scale(0.9); } }
+@keyframes apps-drift-c { to { transform: translate3d(-120px, -50px, 0) scale(1.2); } }
+
+.apps-dots { position: absolute; inset: -28px; opacity: 0.5; background-image: radial-gradient(color-mix(in srgb, var(--ink) 26%, transparent) 1.2px, transparent 1.5px); background-size: 28px 28px; -webkit-mask-image: radial-gradient(ellipse 72% 82% at 50% 45%, #000 18%, transparent 76%); mask-image: radial-gradient(ellipse 72% 82% at 50% 45%, #000 18%, transparent 76%); animation: apps-dots 16s linear infinite; }
+@keyframes apps-dots { to { transform: translate3d(28px, 28px, 0); } }
+
+.apps-beat { position: absolute; left: 0; right: 0; bottom: 5%; width: 100%; height: 130px; overflow: visible; -webkit-mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent); mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent); }
+.apps-beat path { fill: none; stroke: var(--brand); stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1 1; stroke-dashoffset: 0; }
+.apps-beat-line { stroke-width: 3; animation: apps-draw 6.5s ease-in-out infinite; }
+.apps-beat-glow { stroke-width: 10; stroke-opacity: 0.16; animation: apps-draw-glow 6.5s ease-in-out infinite; }
+@keyframes apps-draw { 0% { stroke-dashoffset: 1; stroke-opacity: 1; } 50% { stroke-dashoffset: 0; } 82% { stroke-dashoffset: 0; stroke-opacity: 1; } 100% { stroke-dashoffset: 0; stroke-opacity: 0; } }
+@keyframes apps-draw-glow { 0% { stroke-dashoffset: 1; stroke-opacity: 0.16; } 50% { stroke-dashoffset: 0; } 82% { stroke-dashoffset: 0; stroke-opacity: 0.16; } 100% { stroke-dashoffset: 0; stroke-opacity: 0; } }
+
+.apps-bubble { position: absolute; left: var(--x); bottom: -24px; width: var(--s); height: var(--s); border-radius: 50%; border: 1.5px solid color-mix(in srgb, var(--brand) 55%, transparent); opacity: 0; will-change: transform, opacity; animation: apps-rise var(--t) linear var(--d) infinite; }
+@keyframes apps-rise {
+  0% { transform: translate3d(0, 0, 0) scale(0.6); opacity: 0; }
+  12% { opacity: 0.75; }
+  55% { transform: translate3d(14px, -300px, 0) scale(1); opacity: 0.5; }
+  100% { transform: translate3d(-10px, -640px, 0) scale(1.25); opacity: 0; }
+}
+
+.apps-hero h1 em { position: relative; display: inline-block; white-space: nowrap; }
+.apps-scribble { position: absolute; left: -2%; bottom: -0.2em; width: 104%; height: 0.34em; overflow: visible; }
+.apps-scribble path { fill: none; stroke: var(--brand); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 1 1; stroke-dashoffset: 0; animation: apps-scribble 1.3s 0.5s cubic-bezier(0.6, 0.1, 0.2, 1) backwards; }
+@keyframes apps-scribble { from { stroke-dashoffset: 1; } }
+
+.apps-chips { list-style: none; margin: 28px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+.apps-chips li { display: inline-flex; align-items: center; gap: 7px; padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; background: color-mix(in srgb, var(--surface) 76%, transparent); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); font-size: 14px; font-weight: 600; color: var(--ink-2); animation: apps-fade-up 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) backwards; }
+.apps-chips li:nth-child(1) { animation-delay: 0.25s; }
+.apps-chips li:nth-child(2) { animation-delay: 0.35s; }
+.apps-chips li:nth-child(3) { animation-delay: 0.45s; }
+.apps-chips svg { color: var(--brand); flex-shrink: 0; }
+@keyframes apps-fade-up { from { opacity: 0; transform: translate3d(0, 24px, 0); } }
+
+/* the hero picture: the brand tile in the middle (it beats like a pulse), ripples spreading, a dashed ring turning, the apps floating round it */
+.apps-orbit { position: relative; width: min(100%, 400px); aspect-ratio: 1; justify-self: center; }
+.apps-orbit-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.apps-ripple { fill: none; stroke: var(--brand); stroke-width: 2; opacity: 0; transform-box: fill-box; transform-origin: center; animation: apps-ripple 5.4s ease-out infinite; }
+.apps-ripple-2 { animation-delay: 1.8s; }
+.apps-ripple-3 { animation-delay: 3.6s; }
+@keyframes apps-ripple { 0% { transform: scale(0.9); opacity: 0.55; } 100% { transform: scale(2.7); opacity: 0; } }
+.apps-spin { transform-box: fill-box; transform-origin: center; animation: apps-turn 48s linear infinite; }
+@keyframes apps-turn { to { transform: rotate(360deg); } }
+.apps-ring { fill: none; stroke: color-mix(in srgb, var(--ink) 24%, transparent); stroke-width: 1.5; stroke-dasharray: 3 9; stroke-linecap: round; }
+.apps-spark-1 { fill: #ff9008; }
+.apps-spark-2 { fill: #79f9bb; }
+.apps-spark-3 { fill: var(--brand); }
+.apps-core { position: absolute; left: 50%; top: 50%; width: 29%; aspect-ratio: 1; translate: -50% -50%; border-radius: 26%; box-shadow: 0 20px 44px -16px color-mix(in srgb, var(--brand) 75%, transparent); animation: apps-pulse 2.6s ease-in-out infinite; }
+.apps-core img { display: block; width: 100%; height: 100%; border-radius: 26%; }
+@keyframes apps-pulse { 0%, 100% { scale: 1; } 14% { scale: 1.09; } 28% { scale: 1; } 42% { scale: 1.05; } 56% { scale: 1; } }
+.apps-orb { position: absolute; width: 25%; aspect-ratio: 1; translate: -50% -50%; }
+.apps-orb-float { display: block; width: 100%; height: 100%; animation: apps-float 6.5s ease-in-out infinite; animation-delay: calc(var(--i, 0) * -1.7s); }
+.apps-orb img { display: block; width: 100%; height: 100%; border-radius: 24%; box-shadow: 0 18px 30px -12px color-mix(in srgb, var(--app, var(--brand)) 70%, transparent), 0 0 0 1px rgb(255 255 255 / 0.07); }
+@keyframes apps-float { 0%, 100% { transform: translate3d(0, 0, 0) rotate(-2.5deg); } 50% { transform: translate3d(0, -13px, 0) rotate(2.5deg); } }
+
+/* the cards */
+.apps-band { background: linear-gradient(180deg, color-mix(in srgb, var(--brand) 5%, var(--surface)), var(--surface) 240px); }
+.apps-grid { list-style: none; margin: 0; padding: 0; display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); }
+.apps-card { position: relative; overflow: hidden; isolation: isolate; display: flex; flex-direction: column; gap: 10px; padding: 28px; border: 1px solid color-mix(in srgb, var(--app, var(--brand)) 24%, var(--line)); border-radius: 24px; background: linear-gradient(165deg, color-mix(in srgb, var(--app, var(--brand)) 9%, var(--paper)), var(--paper) 58%); transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.35s, border-color 0.35s; animation: apps-fade-up 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) backwards; animation-delay: calc(var(--i, 0) * 130ms + 150ms); }
+.apps-card::before { content: ""; position: absolute; z-index: -1; right: -90px; top: -110px; width: 300px; height: 300px; border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--app, var(--brand)) 40%, transparent), transparent 68%); opacity: 0.55; transition: opacity 0.4s, transform 0.6s; }
+.apps-card::after { content: ""; position: absolute; z-index: 1; inset: 0; pointer-events: none; background: linear-gradient(110deg, transparent 40%, color-mix(in srgb, var(--app, var(--brand)) 16%, transparent) 50%, transparent 60%); transform: translateX(-120%); transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.apps-card:hover, .apps-card:focus-within { transform: translateY(-6px); border-color: color-mix(in srgb, var(--app, var(--brand)) 58%, var(--line)); box-shadow: 0 26px 46px -26px color-mix(in srgb, var(--app, var(--brand)) 65%, transparent); }
+.apps-card:hover::before, .apps-card:focus-within::before { opacity: 1; transform: scale(1.25); }
+.apps-card:hover::after, .apps-card:focus-within::after { transform: translateX(120%); }
+.apps-card-head { display: flex; align-items: center; gap: 16px; }
+.apps-icon { display: block; flex: none; width: 84px; height: 84px; animation: apps-float 6s ease-in-out infinite; animation-delay: calc(var(--i, 0) * -1.3s); }
+.apps-icon img { display: block; width: 100%; height: 100%; border-radius: 22px; box-shadow: 0 16px 28px -12px color-mix(in srgb, var(--app, var(--brand)) 75%, transparent), 0 0 0 1px rgb(255 255 255 / 0.07); transition: transform 0.45s cubic-bezier(0.3, 1.6, 0.5, 1); }
+.apps-card:hover .apps-icon img, .apps-card:focus-within .apps-icon img { transform: rotate(-6deg) scale(1.09); }
+.apps-card-id { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; min-width: 0; }
+.apps-code { font-size: 30px; font-weight: 800; line-height: 1; letter-spacing: -0.02em; color: color-mix(in srgb, var(--app, var(--brand)) 78%, var(--ink)); }
+.apps-tag { background: color-mix(in srgb, var(--app, var(--brand)) 14%, var(--surface)); color: color-mix(in srgb, var(--app, var(--brand)) 70%, var(--ink)); }
+.apps-card h2 { margin-top: 8px; font-size: 22px; font-weight: 750; }
 .apps-for { color: var(--muted); font-size: 14.5px; }
 .apps-card .hero-actions { margin-top: auto; padding-top: 8px; }
+.apps-card .btn-brand { background: color-mix(in srgb, var(--app, var(--brand)) 72%, #000); }
+.apps-card .btn-brand:hover { background: color-mix(in srgb, var(--app, var(--brand)) 60%, #000); }
+
+/* "reduce motion": nothing moves, nothing fades in — the page is simply drawn, complete */
+@media (prefers-reduced-motion: reduce) {
+  .apps-hero *, .apps-card, .apps-card *, .apps-chips li { animation: none !important; transition: none !important; }
+  .apps-card::before, .apps-card::after { transition: none !important; }
+  .apps-card:hover, .apps-card:focus-within { transform: none; }
+  .apps-bubble { display: none; }
+}
