@@ -47,6 +47,17 @@ try {
   await page.getByTestId(`rider-pin-${NAME}`).click();
   const dlg = page.getByTestId("pin-dialog");
   await dlg.waitFor({ timeout: 5000 });
+  // the dialog's layout: everything sits inside the panel with real padding (it once touched the edges)
+  const box = await page.getByRole("dialog").boundingBox();
+  const inner = await page.evaluate(() => {
+    const panel = document.querySelector('[role="dialog"]').getBoundingClientRect();
+    const edges = (sel) => { const r = document.querySelector(sel).getBoundingClientRect(); return { left: r.left - panel.left, right: panel.right - r.right, top: r.top - panel.top, bottom: panel.bottom - r.bottom }; };
+    const buttons = [...document.querySelectorAll('[data-testid="pin-dialog"] button')].map((b) => b.getBoundingClientRect());
+    return { title: edges('[data-testid="pin-dialog"] h2'), input: edges('[data-testid="pin-input"]'), buttonsRight: Math.min(...buttons.map((r) => panel.right - r.right)), buttonsBottom: Math.min(...buttons.map((r) => panel.bottom - r.bottom)) };
+  });
+  ok(inner.title.left >= 16 && inner.title.top >= 16 && inner.input.left >= 16 && inner.input.right >= 16, "the title and the PIN box sit inside the panel with at least 16 px around them", JSON.stringify({ title: inner.title, input: inner.input }));
+  ok(inner.buttonsRight >= 16 && inner.buttonsBottom >= 16, "the buttons are at least 16 px from the panel's right and bottom edges", `right ${Math.round(inner.buttonsRight)}, bottom ${Math.round(inner.buttonsBottom)}`);
+  ok(box.width <= 470 && inner.input.left + inner.input.right < box.width - 100, "the PIN box uses the width of the panel", `panel ${Math.round(box.width)} px`);
   const suggested = await page.getByTestId("pin-input").inputValue();
   ok(/^\d{4}$/.test(suggested) && !/^(\d)\1+$/.test(suggested), "the dialog suggests a 4-digit PIN that isn't 0000 or 1111", suggested);
   ok(new RegExp(PHONE).test(await dlg.innerText()) && /not shown again/i.test(await dlg.innerText()), "it says the phone number is the login name, and that the PIN is not shown again");

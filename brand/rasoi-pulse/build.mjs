@@ -4,7 +4,7 @@
 //
 // THE FAMILY RULE: every Rasoi Pulse product uses this same artwork. What tells them apart:
 //   the brand / website → the artwork alone      an app (OMA, KDA, and later ones) → the artwork a little smaller + the app's code under it
-// An app is told apart at a glance by its tile colour (OMA navy, KDA deep teal). To add the next app: add its code, tile colour and any new letters to APPS / GLYPHS and run this again.
+// An app is told apart at a glance by its tile colour (OMA indigo, KDA teal, RDA violet). To add the next app: add its code, tile colour and any new letters to APPS / GLYPHS and run this again.
 import { createRequire } from "node:module";
 import { copyFileSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -13,11 +13,12 @@ import { fileURLToPath } from "node:url";
 const HERE = dirname(fileURLToPath(import.meta.url));
 const sharp = createRequire(join(HERE, "../../apps/api/package.json"))("sharp");
 const art = JSON.parse(readFileSync(join(HERE, "artwork.json"), "utf8"));
-// tile = the colour of the app's icon tile and of the Android adaptive-icon background (written as a plain colour: K is defined below)
+// tile = the colour of the app's icon tile and of the Android adaptive-icon background. It is also the app's PRIMARY colour inside the app
+// (mobile-apps/<app>/src/ui/theme.ts) and the accent of its page on the website: one colour per app, everywhere.
 const APPS = {
-  oma: { code: "OMA", label: "Rasoi Pulse OMA", tile: "#10111b" }, // navy
-  kda: { code: "KDA", label: "Rasoi Pulse KDA", tile: "#0b2e2b" }, // deep teal: a kitchen's colour, and nothing else in the family uses it
-  rda: { code: "RDA", label: "Rasoi Pulse RDA", tile: "#2b1a4d" }, // deep plum: the rider app, clearly apart from navy and teal on a home screen
+  oma: { code: "OMA", label: "Rasoi Pulse OMA", tile: "#404db6" }, // indigo
+  kda: { code: "KDA", label: "Rasoi Pulse KDA", tile: "#0d7f6b" }, // teal: a kitchen's colour
+  rda: { code: "RDA", label: "Rasoi Pulse RDA", tile: "#764ed1" }, // violet: the rider app
 };
 
 /* ---------------------------------------------------------------- colours (from the two original images) */

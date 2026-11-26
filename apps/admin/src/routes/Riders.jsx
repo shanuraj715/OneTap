@@ -26,18 +26,18 @@ function PinDialog({ rider, busy, error, onSave, onClose }) {
   const [pin, setPin] = useState(() => suggestPin());
   const valid = /^\d{4,6}$/.test(pin);
   return (
-    <Modal onClose={onClose} width={440} ariaLabel={`Rider app login for ${rider.name}`}>
-      <form onSubmit={(e) => { e.preventDefault(); if (valid) onSave(pin); }} style={{ display: "grid", gap: 12 }} data-testid="pin-dialog">
+    <Modal onClose={onClose} width={460} panelStyle={{ padding: 24, overflowY: "auto" }} ariaLabel={`Rider app login for ${rider.name}`}>
+      <form onSubmit={(e) => { e.preventDefault(); if (valid) onSave(pin); }} style={{ display: "grid", gap: 14 }} data-testid="pin-dialog">
         <h2 style={{ margin: 0, fontSize: 18 }}>{rider.appLogin ? "New PIN" : "Rider app login"} for {rider.name}</h2>
         <p style={{ margin: 0, color: "var(--color-text-muted)", fontSize: 13.5, lineHeight: 1.5 }}>
           {rider.name} signs in to the Rasoi Pulse RDA app with their phone number <strong>{rider.phone}</strong> and this PIN. Tell them the PIN yourself:
           it is not shown again{rider.appLogin ? ", and the old PIN stops working at once (they are signed out of the app)" : ""}.
         </p>
-        <Field label="PIN (4 to 6 digits)">
+        <Field label="PIN (4 to 6 digits)" style={{ width: "100%" }}>
           <TextInput value={pin} onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 6))} inputMode="numeric" autoComplete="off" aria-label="Rider PIN" data-testid="pin-input" style={{ letterSpacing: 4, fontSize: 18, fontWeight: 700 }} />
         </Field>
         {error ? <Toast kind="error">{error}</Toast> : null}
-        <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", flexWrap: "wrap", marginTop: 4 }}>
           <Button type="button" variant="outline" onClick={() => setPin(suggestPin())}>Suggest another</Button>
           <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
           <Button type="submit" disabled={!valid || busy} data-testid="pin-save">{busy ? "Saving…" : rider.appLogin ? "Set new PIN" : "Turn on app login"}</Button>
