@@ -1,9 +1,10 @@
 import { useColorScheme, useWindowDimensions } from "react-native";
 
 /**
- * The look of Rasoi Pulse Admin: GLASS. A deep graphite-blue night (or a soft pastel day) with slowly drifting colour behind frosted, translucent
- * panels. The accent is the brand's heartbeat orange; the graphite is the icon's tile. Text colours are chosen to read at 4.5:1 or better on the
- * background they sit on (checked by __tests__/theme.test.ts). Follows the phone's light / dark setting.
+ * The look of Rasoi Pulse Admin: GLASS. A deep night-blue (or a soft pastel day) with slowly drifting colour behind frosted, translucent panels.
+ * Admin is amber-brown, like OMA is indigo, KDA teal and RDA violet: ONE `primary` (#B45F00) in light AND dark, and exactly the colour of the app's
+ * icon tile (brand/rasoi-pulse, app.config.ts) — a test keeps the three equal. `primaryText` is the lighter amber used for accent TEXT on the dark night.
+ * Text colours are chosen to read at 4.5:1 or better on the background they sit on (checked by __tests__/theme.test.ts). Follows the phone's light / dark setting.
  */
 export interface Colors {
   bgTop: string; bgBottom: string; blobA: string; blobB: string; blobC: string;
@@ -24,7 +25,7 @@ export const darkColors: Colors = {
   glass: "rgba(255,255,255,0.08)", glassStrong: "rgba(255,255,255,0.15)", border: "rgba(255,255,255,0.16)",
   solid: "#161C3C",
   text: "#F4F6FF", muted: "#AAB2D8",
-  primary: "#FF9A1F", onPrimary: "#1B1200", primaryText: "#FFB547",
+  primary: "#B45F00", onPrimary: "#FFFFFF", primaryText: "#FFB547",
   ok: "#4ADE9B", okWash: "rgba(74,222,155,0.16)", warn: "#FFC145", warnWash: "rgba(255,193,69,0.16)", danger: "#FF6B7A", dangerWash: "rgba(255,107,122,0.16)", info: "#7CB7FF", infoWash: "rgba(124,183,255,0.16)",
   overlay: "rgba(4,6,18,0.62)", shadow: "#000000",
   chart: ["#FF9A1F", "#7C8CFF", "#4ADE9B", "#FF6FA5", "#5CD6FF", "#C79BFF"],

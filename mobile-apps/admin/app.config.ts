@@ -22,7 +22,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     package: "com.rasoipulse.admin",
     versionCode: appVersion.versionCode,
     adaptiveIcon: {
-      backgroundColor: "#232A44", // the graphite of the Admin icon (a test keeps this equal to the icon tile colour)
+      backgroundColor: "#B45F00", // the amber-brown of the Admin icon: exactly the app's primary colour (a test keeps them equal)
       foregroundImage: "./assets/android-icon-foreground.png",
       backgroundImage: "./assets/android-icon-background.png",
       monochromeImage: "./assets/android-icon-monochrome.png",

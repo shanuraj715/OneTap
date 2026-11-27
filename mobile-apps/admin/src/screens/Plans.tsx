@@ -45,7 +45,7 @@ export function Plans() {
             <Section title="Limits"><Glass><Text variant="body" testID="plan-limits">{shown.custom ? "Set by hand on each store." : limitsLine(shown)}</Text></Glass></Section>
             <Section title="Features">
               <Glass>
-                {shown.custom ? <Text variant="body">Nothing is included by itself: each store's features are switched on by hand.</Text>
+                {shown.custom ? <Text variant="body">Nothing is included by itself: features are switched on by hand for each store.</Text>
                   : shown.entitlements.allFeatures ? <Text variant="body" testID="plan-features">Every feature.</Text>
                   : <View style={{ flexDirection: "row", gap: 6, flexWrap: "wrap" }} testID="plan-features">{shown.entitlements.features.length ? shown.entitlements.features.map((f) => <Pill key={f} tone="info">{LABELS[f] ?? f}</Pill>) : <Text variant="body" tone="muted">None.</Text>}</View>}
               </Glass>
