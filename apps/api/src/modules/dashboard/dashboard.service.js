@@ -109,7 +109,7 @@ export async function getDashboardStats(ctx               , { widgets } = {})   
       { $match: tenantFilter(ctx, { createdAt: { $gte: trend14 }, ...paid }) },
       {
         $group: {
-          _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt", timezone: "Asia/Kolkata" } },
+          _id: { day: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt", timezone: "Asia/Kolkata" } }, channel: "$channel" },
           revenue: { $sum: "$totals.grandTotal" },
           orders: { $sum: 1 },
         },
@@ -160,12 +160,21 @@ export async function getDashboardStats(ctx               , { widgets } = {})   
   const delivery = byStatus(r.deliveryRows);
   const bookings = byStatus(r.bookingRows);
 
-  const revenueByDay = new Map((r.revenueTrendRows ?? []).map((row) => [row._id          , row                                       ]));
+  // one row per day and order type came back: fold them into one entry per day, keeping the split for the stacked chart
+  const revenueByDay = new Map();
+  for (const row of r.revenueTrendRows ?? []) {
+    const day = revenueByDay.get(row._id.day) ?? { revenue: 0, orders: 0, channels: {} };
+    day.revenue += row.revenue;
+    day.orders += row.orders;
+    const channel = row._id.channel || "other";
+    day.channels[channel] = (day.channels[channel] ?? 0) + row.revenue;
+    revenueByDay.set(row._id.day, day);
+  }
   const revenueTrend = r.revenueTrendRows
     ? Array.from({ length: 14 }, (_, i) => {
         const date = ymd(daysAgo(today0, 13 - i));
         const row = revenueByDay.get(date);
-        return { date, revenue: row?.revenue ?? 0, orders: row?.orders ?? 0 };
+        return { date, revenue: row?.revenue ?? 0, orders: row?.orders ?? 0, channels: row?.channels ?? {} };
       })
     : [];
 

@@ -1,6 +1,6 @@
 # T111 — Dashboard: every widget needs a permission (some a plan feature), a person is only SENT the numbers they may see, plus deliveries / bookings / rating widgets and India's day boundary
 
-**Area:** dashboard · **Last result:** ✅ PASSED (46 passed, 0 failed · 2026-11-27 21:03 · headless · 5.5 s)
+**Area:** dashboard · **Last result:** ✅ PASSED (46 passed, 0 failed · 2026-11-28 04:09 · headless · 7.0 s)
 
 **Run it alone:** `node run.mjs --only t111` (add `--visible` to watch it)
 
@@ -59,7 +59,7 @@ _Nothing failed._
 - the owner's 'orders today' counts today's five (not the two from before India's midnight) — _5_
 - …revenue today is ₹500 (two paid orders; the unpaid and the delivery ones aren't paid) — _50000_
 - …and yesterday's ₹600 (₹400 + the ₹200 order one minute before midnight) is there for 'compared with yesterday' — _60000_
-- the 14-day trend's last day is TODAY in India (right date, right money), the day before it is yesterday — _2026-11-27 50000 / 2026-11-26 60000_
+- the 14-day trend's last day is TODAY in India (right date, right money), the day before it is yesterday — _2026-11-28 50000 / 2026-11-27 60000_
 - the hour chart agrees with India's clock: the order a minute past midnight is in hour 0 — _1,0,1,1,1,1_
 - deliveries: 1 on its way, 1 ready and waiting for a rider — _1/1_
 - bookings: 3 today (tomorrow's is left out), 1 waiting for a yes, 2 still to come — _3/1/2_
@@ -102,6 +102,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-28 04:09 | pass | 46 | 0 | headless | 7.0 s |
 | 2026-11-27 21:03 | pass | 46 | 0 | headless | 5.5 s |
 | 2026-11-27 16:42 | pass | 46 | 0 | headless | 4.6 s |
 | 2026-11-27 09:54 | pass | 46 | 0 | headless | 4.6 s |

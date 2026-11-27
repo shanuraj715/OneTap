@@ -16,6 +16,7 @@ import {
   Star,
   Truck,
 } from "lucide-react";
+import { AnalyticsChart } from "@rasoipulse/ui";
 import { BarChart, DonutChart, HBarList, LineChart, Sparkline, tint } from "../charts";
 import { FALLBACK_LOOK, WIDGET_LOOK } from "../lib/dashboardLook";
 import { Link } from "../lib/nav";
@@ -27,6 +28,13 @@ import { useStorePlan } from "../lib/useStorePlan";
 import { AwesomeLoader, Card, Empty, InfoHint, PageHeader, Pill, Table, Td, Th, Toast } from "../ui";
 
 const CHANNEL_LABEL = { takeaway: "Takeaway", "dine-in": "Dine-in", delivery: "Delivery" };
+const REVENUE_LAYERS = [["dine-in", "Dine-in"], ["takeaway", "Takeaway"], ["delivery", "Delivery"], ["other", "Other"]];
+/** An axis label for money in paise: ₹5K, ₹1.2L, ₹3Cr. */
+const rupeeAxis = (paise) => {
+  const r = paise / 100;
+  const a = Math.abs(r);
+  return `₹${a >= 1e7 ? `${+(r / 1e7).toFixed(1)}Cr` : a >= 1e5 ? `${+(r / 1e5).toFixed(1)}L` : a >= 1e3 ? `${+(r / 1e3).toFixed(1)}K` : Math.round(r)}`;
+};
 
 /** "Good morning, Asha" — from the viewer's own clock, so it is right wherever they sit. */
 function greeting(name) {
@@ -233,8 +241,12 @@ function renderWidget(id, s, { tone, phone }) {
         />
       );
 
-    case "revenue-trend":
-      return <LineChart points={s.revenueTrend.map((r) => ({ label: shortDate(r.date), value: r.revenue }))} formatValue={(v) => formatINR(v)} color={tone} />;
+    case "revenue-trend": {
+      // CHT01 in green: the last 14 days of sales stacked by where the order came from (a plain line when there is nothing to stack yet)
+      const layers = REVENUE_LAYERS.map(([key, label]) => ({ label, values: s.revenueTrend.map((r) => r.channels?.[key] ?? 0) })).filter((l) => l.values.some((v) => v > 0));
+      if (!layers.length) return <LineChart points={s.revenueTrend.map((r) => ({ label: shortDate(r.date), value: r.revenue }))} formatValue={(v) => formatINR(v)} color={tone} />;
+      return <AnalyticsChart bare palette="emerald" labels={s.revenueTrend.map((r) => shortDate(r.date))} layers={layers} formatValue={(v) => formatINR(Math.round(v))} axisFormat={rupeeAxis} />;
+    }
     case "orders-by-channel":
       return <DonutChart centerLabel="orders" segments={s.ordersByChannel.map((c) => ({ label: CHANNEL_LABEL[c.channel] ?? c.channel, value: c.count }))} />;
     case "orders-by-status":

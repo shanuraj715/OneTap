@@ -1,6 +1,6 @@
 # T112 — Dashboard: a cleaner, more modern look with a needs-attention strip, three new widgets, each role and plan sees only its own, and a clear Configure-dashboard grid
 
-**Area:** dashboard · **Last result:** ✅ PASSED (48 passed, 0 failed · 2026-11-27 09:54 · headless · 6.7 s)
+**Area:** dashboard · **Last result:** ✅ PASSED (48 passed, 0 failed · 2026-11-28 04:10 · headless · 8.0 s)
 
 **Run it alone:** `node run.mjs --only t112` (add `--visible` to watch it)
 
@@ -41,7 +41,7 @@ _Nothing failed._
 
 **Step 1 — A. The owner's dashboard**
 
-- a greeting by name, today's date and when the numbers were last updated — _Good morning, Owner Friday, November 27 — here is how the day is going. Updated 9:54 AM_
+- a greeting by name, today's date and when the numbers were last updated — _Good evening, Owner Saturday, November 28 — here is how the day is going. Updated 4:09 AM_
 - a strip says whether anything needs attention (all clear, or what to do)
 - the owner of a full plan sees the new widgets (deliveries, bookings, rating) beside the old ones — _20 widgets_
 - each card has a coloured icon chip beside its title
@@ -112,6 +112,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-28 04:10 | pass | 48 | 0 | headless | 8.0 s |
 | 2026-11-27 09:54 | pass | 48 | 0 | headless | 6.7 s |
 
 ---

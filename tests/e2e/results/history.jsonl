@@ -1552,3 +1552,12 @@
 {"id":"t131-business-reports-api","status":"pass","pass":94,"fail":0,"mode":"headless","at":"2026-11-27T21:46:37.168Z","durationMs":6928}
 {"id":"t17-analytics","status":"pass","pass":93,"fail":0,"mode":"headless","at":"2026-11-27T21:48:00.774Z","durationMs":71730}
 {"id":"t28-rate-limits-api","status":"pass","pass":133,"fail":0,"mode":"headless","at":"2026-11-27T21:48:12.666Z","durationMs":11851}
+{"id":"t134-cht01-dashboards-ui","status":"fail","pass":10,"fail":1,"mode":"headless","at":"2026-11-27T22:37:29.660Z","durationMs":6098}
+{"id":"t134-cht01-dashboards-ui","status":"fail","pass":29,"fail":1,"mode":"headless","at":"2026-11-27T22:37:56.110Z","durationMs":19866}
+{"id":"t134-cht01-dashboards-ui","status":"fail","pass":29,"fail":1,"mode":"headless","at":"2026-11-27T22:38:39.017Z","durationMs":34660}
+{"id":"t134-cht01-dashboards-ui","status":"pass","pass":33,"fail":0,"mode":"headless","at":"2026-11-27T22:38:57.461Z","durationMs":4757}
+{"id":"t134-cht01-dashboards-ui","status":"fail","pass":31,"fail":2,"mode":"headless","at":"2026-11-27T22:39:15.185Z","durationMs":5089}
+{"id":"t133-cht01-dashboards-api","status":"pass","pass":15,"fail":0,"mode":"headless","at":"2026-11-27T22:39:30.069Z","durationMs":4757}
+{"id":"t134-cht01-dashboards-ui","status":"pass","pass":33,"fail":0,"mode":"headless","at":"2026-11-27T22:39:34.973Z","durationMs":4873}
+{"id":"t111-dashboard-roles-api","status":"pass","pass":46,"fail":0,"mode":"headless","at":"2026-11-27T22:39:55.742Z","durationMs":6962}
+{"id":"t112-dashboard-ui","status":"pass","pass":48,"fail":0,"mode":"headless","at":"2026-11-27T22:40:03.731Z","durationMs":7950}

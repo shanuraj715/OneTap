@@ -1,6 +1,6 @@
 # Rasoi Pulse end-to-end tests — catalog
 
-**133 tests** · 127 passing · 3 failing/error · 3 not run yet
+**135 tests** · 129 passing · 3 failing/error · 3 not run yet
 
 | Test | Area | Result | Checks | Last run |
 |---|---|---|---|---|
@@ -27,8 +27,8 @@
 | [t109-table-limit-api](t109-table-limit-api.md) — Plans limit tables, in steps of 5 (Starter 5, Business 20, Custom by hand): only 5, 10, 15 … are accepted, a store can't add a table past its limit, and the price is per block of 5 | platform | ✅ PASSED | 63/63 | 2026-11-27 21:03 |
 | [t11-outlet-delete](t11-outlet-delete.md) — Delete an outlet from the dashboard — protection for outlets with orders, then the deleted outlet on the subdomain | domains | ✅ PASSED | 13/13 | 2026-11-21 13:19 |
 | [t110-plan-table-limit-ui](t110-plan-table-limit-ui.md) — Plans: a wide New plan pop-up that needs no scrolling, a tables limit in steps of 5 (plan, store, onboarding form), and the owner's Tables page when the plan's tables are all used | platform | ✅ PASSED | 48/48 | 2026-11-28 02:15 |
-| [t111-dashboard-roles-api](t111-dashboard-roles-api.md) — Dashboard: every widget needs a permission (some a plan feature), a person is only SENT the numbers they may see, plus deliveries / bookings / rating widgets and India's day boundary | dashboard | ✅ PASSED | 46/46 | 2026-11-27 21:03 |
-| [t112-dashboard-ui](t112-dashboard-ui.md) — Dashboard: a cleaner, more modern look with a needs-attention strip, three new widgets, each role and plan sees only its own, and a clear Configure-dashboard grid | dashboard | ✅ PASSED | 48/48 | 2026-11-27 09:54 |
+| [t111-dashboard-roles-api](t111-dashboard-roles-api.md) — Dashboard: every widget needs a permission (some a plan feature), a person is only SENT the numbers they may see, plus deliveries / bookings / rating widgets and India's day boundary | dashboard | ✅ PASSED | 46/46 | 2026-11-28 04:09 |
+| [t112-dashboard-ui](t112-dashboard-ui.md) — Dashboard: a cleaner, more modern look with a needs-attention strip, three new widgets, each role and plan sees only its own, and a clear Configure-dashboard grid | dashboard | ✅ PASSED | 48/48 | 2026-11-28 04:10 |
 | [t113-booking-advance-api](t113-booking-advance-api.md) — Table bookings: a start and an end time, a price, a 50% advance paid online, refunds and the WhatsApp number — the rules and the API | bookings | ✅ PASSED | 94/94 | 2026-11-27 16:57 |
 | [t114-booking-form-ui](t114-booking-form-ui.md) — Book a table page: open to everyone, a date picker, from/to time pickers, a searchable event list with Other, the WhatsApp number, the price — and sign-in only AFTER the form is filled | bookings | ✅ PASSED | 65/65 | 2026-11-27 16:58 |
 | [t115-booking-dashboard-ui](t115-booking-dashboard-ui.md) — Dashboard bookings: every upcoming booking in one list (the date is only a filter, chosen with our date picker), a status changed by hand, the approve / decline / cancel message window, refunds, and a coupon type with our date and time pickers | bookings | ✅ PASSED | 61/61 | 2026-11-27 16:58 |
@@ -51,6 +51,8 @@
 | [t130-subscriptions-ui](t130-subscriptions-ui.md) — Console → a store → Payments (write a payment down: new sale, then re-subscriptions) and the dashboard's 'Rasoi Pulse business': total sales, new sales, re-subscribed, one Day / Week / Month chart | platform | ✅ PASSED | 60/60 | 2026-11-28 02:06 |
 | [t131-business-reports-api](t131-business-reports-api.md) — Business app server side: owners / managers / accountants may sign in, others are turned away; coupon usage, table bookings, counted stock, plain-English insights, the sales goal, the expenses ledger (+ profit & loss from it) and Excel / PDF / CSV reports hold the right numbers | analytics | ✅ PASSED | 94/94 | 2026-11-28 03:16 |
 | [t132-app-visibility-ui](t132-app-visibility-ui.md) — App Management → every app has a Public / Private button; the Admin app has its own tab and starts private (not in the website's list, its page still opens by its link) | platform | ✅ PASSED | 31/31 | 2026-11-28 03:10 |
+| [t133-cht01-dashboards-api](t133-cht01-dashboards-api.md) — CHT01 data: the platform dashboard sends each of the last 12 months' sales split by order type, a store dashboard sends each of the last 14 days' sales split by order type — and the layers always add up to the totals | dashboard | ✅ PASSED | 15/15 | 2026-11-28 04:09 |
+| [t134-cht01-dashboards-ui](t134-cht01-dashboards-ui.md) — CHT01 in the dashboards: the platform console's 'Where sales come from' (violet) and the store dashboard's revenue widget (green) — real layers, legend, reading on hover — and the catalogue sample unchanged (sky blue) | dashboard | ✅ PASSED | 33/33 | 2026-11-28 04:09 |
 | [t14-marketing-plan](t14-marketing-plan.md) — Marketing is a plan feature — Basic doesn't have it, Pro does, and it can be unlocked or locked for one store | plans | ✅ PASSED | 16/16 | 2026-11-27 10:11 |
 | [t15-login-protection](t15-login-protection.md) — Sign-in protection — wrong guesses block the network, blocks grow longer, a blocked network sees no login form, the platform can unblock | security | ✅ PASSED | 28/28 | 2026-11-21 13:10 |
 | [t16-whatsapp-plan-gating](t16-whatsapp-plan-gating.md) — WhatsApp chat off (plan or per-store lock) — numbers unlinked at once, no WhatsApp requests, every WhatsApp address is a 404 | whatsapp | ✅ PASSED | 37/37 | 2026-11-21 13:12 |

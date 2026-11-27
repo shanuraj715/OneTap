@@ -35076,8 +35076,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T15:33:10.161Z",
-    "durationMs": 5550,
+    "at": "2026-11-27T22:39:55.742Z",
+    "durationMs": 6962,
     "steps": [
       {
         "n": 1,
@@ -35199,7 +35199,7 @@
           {
             "label": "the 14-day trend's last day is TODAY in India (right date, right money), the day before it is yesterday",
             "ok": true,
-            "detail": "2026-11-27 50000 / 2026-11-26 60000",
+            "detail": "2026-11-28 50000 / 2026-11-27 60000",
             "kind": "expect"
           },
           {
@@ -35402,8 +35402,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T04:24:39.630Z",
-    "durationMs": 6700,
+    "at": "2026-11-27T22:40:03.731Z",
+    "durationMs": 7950,
     "steps": [
       {
         "n": 1,
@@ -35412,7 +35412,7 @@
           {
             "label": "a greeting by name, today's date and when the numbers were last updated",
             "ok": true,
-            "detail": "Good morning, Owner Friday, November 27 — here is how the day is going. Updated 9:54 AM",
+            "detail": "Good evening, Owner Saturday, November 28 — here is how the day is going. Updated 4:09 AM",
             "kind": "expect"
           },
           {
@@ -45607,6 +45607,372 @@
             "label": "APP_REFRESH is { default: 8, min: 3, max: 600 } (each app's jest suite compares its own config to this line)",
             "ok": true,
             "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t134-cht01-dashboards-ui": {
+    "id": "t134-cht01-dashboards-ui",
+    "title": "CHT01 in the dashboards: the platform console's 'Where sales come from' (violet) and the store dashboard's revenue widget (green) — real layers, legend, reading on hover — and the catalogue sample unchanged (sky blue)",
+    "status": "pass",
+    "pass": 33,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-27T22:39:34.973Z",
+    "durationMs": 4873,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The platform dashboard: 'Where sales come from' (violet)",
+        "checks": [
+          {
+            "label": "the chart card is on the platform dashboard, titled 'Where sales come from'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "only one CHT01 card there",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "its big number is the twelve months' sales in rupees",
+            "ok": true,
+            "detail": "₹1,46,500",
+            "kind": "expect"
+          },
+          {
+            "label": "…with the change this month, in the green pill",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the legend names each order type (Other too, because there is some)",
+            "ok": true,
+            "detail": "Dine-in Takeaway Delivery Other",
+            "kind": "expect"
+          },
+          {
+            "label": "four layers are drawn",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the layers are violet (darkest at the bottom, lightest on top) — not the sample's sky blue",
+            "ok": true,
+            "detail": "rgb(91, 33, 182) | rgb(124, 58, 237) | color(srgb 0.57098 0.372157 0.948235) | rgb(196, 181, 253)",
+            "kind": "expect"
+          },
+          {
+            "label": "…and none of the original blues",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the left axis is in rupees, down to ₹0",
+            "ok": true,
+            "detail": "₹50K ₹40K ₹30K ₹20K ₹10K ₹0",
+            "kind": "expect"
+          },
+          {
+            "label": "the bottom axis names months",
+            "ok": true,
+            "detail": "Dec Feb Apr Jul Sep Nov",
+            "kind": "expect"
+          },
+          {
+            "label": "hovering the last month reads each layer: dine-in ₹12,000, takeaway ₹6,000, delivery ₹3,000, other ₹10,000",
+            "ok": true,
+            "detail": "Nov Other ₹10,000 Delivery ₹3,000 Takeaway ₹6,000 Dine-in ₹12,000 Total ₹31,000",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the total ₹31,000 (the layers added up)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "hovering the first month reads ₹1,000 + ₹500 + ₹250 = ₹1,750",
+            "ok": true,
+            "detail": "Dec Other ₹0 Delivery ₹250 Takeaway ₹500 Dine-in ₹1,000 Total ₹1,750",
+            "kind": "expect"
+          },
+          {
+            "label": "moving the pointer away hides the reading",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the platform's own charts (Sales by month …) are still there, untouched",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the dashboard still fits the screen's width",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "1b. A phone-width screen",
+        "checks": [
+          {
+            "label": "on a phone the page does not scroll sideways",
+            "ok": true,
+            "detail": "390",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the chart card fits inside the screen",
+            "ok": true,
+            "detail": "358",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "1c. No sales split yet",
+        "checks": [
+          {
+            "label": "when no month has any split sales the card is not shown (no empty chart)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "The store dashboard: the revenue widget (green)",
+        "checks": [
+          {
+            "label": "the revenue widget now holds the stacked chart",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "three layers: dine-in, takeaway, delivery (no 'Other', there is none)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the legend names them",
+            "ok": true,
+            "detail": "Dine-in Takeaway Delivery",
+            "kind": "expect"
+          },
+          {
+            "label": "the layers are green (emerald), a different colour from the platform's violet and the sample's blue",
+            "ok": true,
+            "detail": "rgb(4, 120, 87) | rgb(16, 185, 129) | rgb(167, 243, 208)",
+            "kind": "expect"
+          },
+          {
+            "label": "the widget keeps its own card: the chart inside has no second frame",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no sample text ('Sessions') leaks into the real chart",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "hovering today reads dine-in ₹700, takeaway ₹420, delivery ₹280, total ₹1,400",
+            "ok": true,
+            "detail": "Nov 28 Delivery ₹280 Takeaway ₹420 Dine-in ₹700 Total ₹1,400",
+            "kind": "expect"
+          },
+          {
+            "label": "the left axis is in rupees",
+            "ok": true,
+            "detail": "₹2K ₹1.6K ₹1.2K ₹800 ₹400 ₹0",
+            "kind": "expect"
+          },
+          {
+            "label": "the other widgets are untouched",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "2b. Nothing to stack yet",
+        "checks": [
+          {
+            "label": "with no sales the widget falls back to the plain line chart (no empty stacked chart)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "The components catalogue: the sample is unchanged",
+        "checks": [
+          {
+            "label": "CHT01's sample still reads 'Sessions 13,277 +35%'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…in its original sky blue",
+            "ok": true,
+            "detail": "rgb(3, 105, 161) | rgb(2, 132, 199) | rgb(125, 211, 252)",
+            "kind": "expect"
+          },
+          {
+            "label": "…with its original axis labels (25,000 … Apr 30)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the sample now also has a legend (Direct, Search, Social)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t133-cht01-dashboards-api": {
+    "id": "t133-cht01-dashboards-api",
+    "title": "CHT01 data: the platform dashboard sends each of the last 12 months' sales split by order type, a store dashboard sends each of the last 14 days' sales split by order type — and the layers always add up to the totals",
+    "status": "pass",
+    "pass": 15,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-27T22:39:30.069Z",
+    "durationMs": 4757,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The platform dashboard: last 12 months, split by order type",
+        "checks": [
+          {
+            "label": "the dashboard sends sales.monthlyChannels",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "twelve months, the last one this month",
+            "ok": true,
+            "detail": "2025-12 … 2026-11",
+            "kind": "expect"
+          },
+          {
+            "label": "they line up with the 12 monthly bars: same keys, each with a label, year and month",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "this month: dine-in ₹300, takeaway ₹200, delivery ₹100, anything else ₹50 (the cancelled ₹999 is not counted)",
+            "ok": true,
+            "detail": "{\"key\":\"2026-11\",\"label\":\"Nov\",\"year\":2026,\"month\":11,\"dine-in\":30000,\"takeaway\":20000,\"delivery\":10000,\"other\":5000}",
+            "kind": "expect"
+          },
+          {
+            "label": "last month: takeaway ₹400 only",
+            "ok": true,
+            "detail": "{\"key\":\"2026-10\",\"label\":\"Oct\",\"year\":2026,\"month\":10,\"dine-in\":0,\"takeaway\":40000,\"delivery\":0,\"other\":0}",
+            "kind": "expect"
+          },
+          {
+            "label": "the months before had no sales: all zero",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "in every month the layers add up to that month's sales bar (so the stacked chart and the column chart agree)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "A store's dashboard: last 14 days, split by order type",
+        "checks": [
+          {
+            "label": "the trend still has 14 days",
+            "ok": true,
+            "detail": "14",
+            "kind": "expect"
+          },
+          {
+            "label": "every day has a channels split",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "today: ₹300 dine-in + ₹200 takeaway = ₹500",
+            "ok": true,
+            "detail": "{\"date\":\"2026-11-28\",\"revenue\":50000,\"orders\":2,\"channels\":{\"takeaway\":20000,\"dine-in\":30000}}",
+            "kind": "expect"
+          },
+          {
+            "label": "yesterday: ₹100 dine-in + ₹500 delivery; the unpaid ₹777 takeaway is not counted",
+            "ok": true,
+            "detail": "{\"date\":\"2026-11-27\",\"revenue\":60000,\"orders\":2,\"channels\":{\"dine-in\":10000,\"delivery\":50000}}",
+            "kind": "expect"
+          },
+          {
+            "label": "the oldest day (13 days ago) is in it too",
+            "ok": true,
+            "detail": "{\"date\":\"2026-11-15\",\"revenue\":25000,\"orders\":1,\"channels\":{\"takeaway\":25000}}",
+            "kind": "expect"
+          },
+          {
+            "label": "on every day the layers add up to that day's revenue",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a day with no sales has an empty split, not missing data",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'compared with yesterday' still reads the same trend",
+            "ok": true,
+            "detail": "60000",
             "kind": "expect"
           }
         ]

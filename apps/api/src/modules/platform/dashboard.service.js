@@ -76,6 +76,7 @@ const sumBy = (rows, pick) => {
 async function build() {
   const { y, m, d } = istParts();
   const prev = addMonths(y, m, -1);
+  const first = addMonths(y, m, -11);
   const thisKey = monthKey(y, m);
   const prevKey = monthKey(prev.y, prev.m);
   const since30d = new Date(Date.now() - 30 * DAY_MS);
@@ -102,7 +103,8 @@ async function build() {
           },
         },
       ]),
-      OrderModel.aggregate([{ $match: { createdAt: { $gte: istStart(prev.y, prev.m) }, ...LIVE_ORDERS, ...ofStores } }, { $group: { _id: { channel: "$channel", month: bucket("%Y-%m") }, ...SUMS } }]),
+      // (twelve months, not two: this month and last give the order-type split, all twelve draw the stacked "where sales come from" chart)
+      OrderModel.aggregate([{ $match: { createdAt: { $gte: istStart(first.y, first.m) }, ...LIVE_ORDERS, ...ofStores } }, { $group: { _id: { channel: "$channel", month: bucket("%Y-%m") }, ...SUMS } }]),
       // the same stretch of the month last year, for a fair year-to-date comparison
       OrderModel.aggregate([{ $match: { createdAt: { $gte: istStart(y - 1, m), $lt: istStart(y - 1, m, d + 1) }, ...LIVE_ORDERS, ...ofStores } }, { $group: { _id: null, ...SUMS } }]),
       OutletModel.countDocuments({}).setOptions({ allowGlobalQuery: true }),
@@ -200,6 +202,12 @@ async function build() {
     return { channel, orders: now?.orders ?? 0, revenue: now?.revenue ?? 0, prevOrders: before?.orders ?? 0, prevRevenue: before?.revenue ?? 0 };
   });
 
+  // each of the twelve months' sales split by where the order came from (the stacked chart); anything that is none of the three is "other"
+  const monthlyChannels = monthly.map((row) => {
+    const part = Object.fromEntries(["dine-in", "takeaway", "delivery"].map((c) => [c, channelRows.find((r) => r._id.channel === c && r._id.month === row.key)?.revenue ?? 0]));
+    return { key: row.key, label: row.label, year: row.year, month: row.month, ...part, other: Math.max(0, row.revenue - part["dine-in"] - part.takeaway - part.delivery) };
+  });
+
   /* ------------------------------------------------------------ stores */
   const byPlanMap = new Map();
   for (const s of stores) {
@@ -280,6 +288,7 @@ async function build() {
       daily: dailySeries,
       topStores,
       channels,
+      monthlyChannels,
     },
     stores: {
       total: stores.length,

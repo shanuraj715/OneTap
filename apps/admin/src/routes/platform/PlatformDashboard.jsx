@@ -5,6 +5,7 @@ import { AlertTriangle, Building2, Inbox, LayoutDashboard, RefreshCw, ReceiptTex
 import * as api from "../../lib/api";
 import { useAuth } from "../../lib/useAuth";
 import { useDashboard } from "../../lib/usePlatform";
+import { AnalyticsChart } from "@rasoipulse/ui";
 import { Button, Card, Empty, PageHeader } from "../../ui";
 import { LoginActivity } from "./LoginActivity";
 import { BusinessSection } from "./PlatformBusiness";
@@ -157,6 +158,7 @@ export function PlatformDashboard() {
         ) : (
           <>
             <SalesByMonth monthly={sales.monthly} busy={busy} />
+            <SalesByOrderType sales={sales} />
 
             <div className="dash-2">
               <GrowthChart monthly={sales.monthly} busy={busy} />
@@ -339,6 +341,31 @@ export function PlatformDashboard() {
 }
 
 /* ------------------------------------------------------------------- the charts */
+
+/** CHT01 in violet (the console's charts are blue): the last 12 months of sales, stacked by where the order came from. */
+const TYPE_LABELS = [["dine-in", "Dine-in"], ["takeaway", "Takeaway"], ["delivery", "Delivery"], ["other", "Other"]];
+function SalesByOrderType({ sales }) {
+  const rows = sales.monthlyChannels ?? [];
+  const layers = TYPE_LABELS.map(([key, label]) => ({ key, label, values: rows.map((r) => (r[key] ?? 0) / 100) })).filter((l) => l.values.some((v) => v > 0));
+  if (!layers.length) return null;
+  const total = rows.reduce((s, r) => s + TYPE_LABELS.reduce((t, [k]) => t + (r[k] ?? 0), 0), 0);
+  const change = sales.month.revenueChangePct;
+  return (
+    <AnalyticsChart
+      className="dash-cht01"
+      palette="violet"
+      title="Where sales come from"
+      value={rupees(total)}
+      change={change === null || change === undefined ? null : `${signedPct(change)} this month`}
+      changeTone={change < 0 ? "bad" : "good"}
+      subtitle="Sales over the last 12 months, stacked by order type. Cancelled orders are left out."
+      labels={rows.map((r) => monthTick(r.label, r.year, r.month))}
+      layers={layers}
+      formatValue={(v) => rupeesFlat(Math.round(v))}
+      axisFormat={(v) => `₹${v >= 1e7 ? `${+(v / 1e7).toFixed(1)}Cr` : v >= 1e5 ? `${+(v / 1e5).toFixed(1)}L` : v >= 1e3 ? `${+(v / 1e3).toFixed(1)}K` : Math.round(v)}`}
+    />
+  );
+}
 
 function SalesByMonth({ monthly, busy }) {
   const [metric, setMetric] = useState("sales");
