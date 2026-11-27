@@ -12,6 +12,6 @@
   },
   "dependencies": {
     "@rasoipulse/config-schema": "workspace:*",
-    "mongoose": "^8.9.3"
+    "mongoose": "^8.24.11"
   }
 }

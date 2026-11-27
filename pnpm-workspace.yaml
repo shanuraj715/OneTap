@@ -14,3 +14,15 @@ allowBuilds:
   "@whiskeysockets/baileys": false
   # a notice about its optional command-line tools — not needed
   protobufjs: false
+
+minimumReleaseAgeExclude:
+  - postcss@8.5.34
+
+# Patched versions of packages we only get THROUGH other packages (security audit 2026-11-27, docs/security-review-2026-11-27.md).
+# Remove an entry when the package that pulls it in asks for a version at least this new.
+overrides:
+  proxy-addr: "^2.0.8" # IP spoofing through the trust-proxy subnet check (Express) — it matters for the per-address sign-in guards
+  body-parser: "^2.4.0" # denial of service by trailing bytes after a compressed request
+  qs: "^6.17.1"
+  "next>postcss": "^8.5.34" # build-time CSS tool Next carries inside itself (file-read advisories on attacker-controlled source maps)
+  source-map-js: "^1.2.2"

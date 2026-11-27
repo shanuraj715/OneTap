@@ -27,6 +27,22 @@ Scope: the new **platform roles** (who may do what in the console and the Admin 
 * **Sessions last 14 days** (like every dashboard sign-in) and one person may have several; switching a person off or a new password ends all of them.
 * **The Admin app is not in the update channel** (no forced updates for a security fix): a new APK has to be installed by hand.
 
-## Dependency audit (`pnpm audit --prod`, 2026-11-27): 22 known issues in existing packages — 2 critical, 9 high, 11 moderate
+## Dependency audit (`pnpm audit --prod`, 2026-11-27)
 
-Nothing in this list was introduced by the work above. See the commit that follows this review for what was updated.
+**Before: 22 known issues (2 critical, 9 high, 11 moderate). After: 2 (1 high, 1 moderate), none critical.** Nothing in the first list was introduced by the work above.
+
+| Package | Issue | What was done |
+|---|---|---|
+| `next` (storefront, website) | critical remote code execution through the image-optimisation API with SVG files; Server Actions denial of service; cache poisoning of SSG/ISR pages (5 more) | `^15.1.3` → `^15.5.29` (installed 15.5.29) |
+| `proxy-addr` (via Express) | critical IP spoofing through the IPv4-mapped IPv6 trust subnet — the per-address sign-in guards depend on the visitor's address | override `^2.0.8`; `express` `^5.3.0` |
+| `body-parser` (via Express) | high denial of service (trailing bytes after a compressed request) | override `^2.4.0` |
+| `qs` (via body-parser) | moderate uncaught TypeError | override `^6.17.1` |
+| `mongoose` | 2 high + 2 moderate (filter sanitising, inherited properties, prototype pollution) | `^8.9.3` → `^8.24.11` |
+| `sharp` (and baileys' copy) | high librsvg issue | `^0.35.5` |
+| `postcss`, `source-map-js` inside `next` | high file read through attacker-controlled source maps (build time only) | overrides `next>postcss ^8.5.34`, `source-map-js ^1.2.2` |
+| `zod` 3.x (API) | high: memory exhaustion validating oversized collections | **not fixed** — the patch is in zod 4, a major upgrade of every schema; every public body is already size-limited by the JSON parser (`express.json` limits) and the rate limits, so the exposure is small. Plan it as its own task. |
+| `uuid` 8 (via `exceljs`) | moderate: a missing bounds check when a caller passes its own buffer to v3/v5/v6 | **not applicable** — exceljs only uses v4 without a buffer; waits for exceljs |
+
+After the update the storefront and website build, and the suites that depend on request handling pass (t28 rate limits, t87 staff sign-in, t119 log redaction, t120 live connection, t121 roles, t53/t54/t69/t98, bookings t113–t118, tables t18, website t103/t117/t95, console t122).
+
+The three mobile apps' own packages (`npm audit --omit=dev`): 20 moderate each (the build tool's `glob`), none high or critical, none shipped in the APK's code.
