@@ -3,3 +3,6 @@ node_modules/
 .bench/
 results/shots/
 results/runs/
+
+# stray screenshots a test run can leave loose in this folder (real ones go to results/shots/) - never commit them
+/*.png
