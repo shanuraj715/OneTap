@@ -4,7 +4,7 @@ import { createRequire } from "node:module";
 import { pathToFileURL, fileURLToPath as __f } from "node:url";
 import { mkdirSync as __mk } from "node:fs";
 
-export async function startApi(port, extraEnv = {}) {
+export async function startApi(port, extraEnv = {}, options = {}) {
   const REPO = __f(new URL("../../..", import.meta.url)).replace(/\/$/, "");
   const API = `${REPO}/apps/api`;
   const __RUN = __f(new URL("../.bench/suite-run/", import.meta.url));
@@ -21,6 +21,8 @@ export async function startApi(port, extraEnv = {}) {
   const { ensureSuperAdmin } = await import(`${API}/src/modules/auth/auth.service.js`);
   const server = createApp().listen(port);
   await new Promise((r) => server.once("listening", r));
+  // the live connection (/realtime) is attached only where a suite asks for it
+  if (options.realtime) (await import(`${API}/src/realtime/hub.js`)).attachRealtime(server);
   await ensureSuperAdmin({ email: "super@sandbox.test", name: "Super", password: "Super123!" });
   env.RATE_LIMITS = "off";
 
@@ -67,7 +69,7 @@ export async function startApi(port, extraEnv = {}) {
     try { await body(); } catch (e) { ok(false, "the suite stopped with an error", String(e?.stack ?? e).split("\n").slice(0, 4).join(" | ")); }
     await finish();
   }
-  return { REPO, API, db, env, base, call, cookieLogin, ok, say, makeStore, finish, run, raw: (c) => db.mongoose.connection.db.collection(c) };
+  return { REPO, API, db, env, base, server, call, cookieLogin, ok, say, makeStore, finish, run, raw: (c) => db.mongoose.connection.db.collection(c) };
 }
 
 export { makeApk } from "./_apk.mjs";

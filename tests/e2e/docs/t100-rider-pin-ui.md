@@ -1,6 +1,6 @@
 # T100 — Dashboard: the manager gives a delivery rider an app login with a PIN, resets it and switches it off
 
-**Area:** delivery · **Last result:** ✅ PASSED (35 passed, 0 failed · 2026-11-27 09:53 · headless · 8.4 s)
+**Area:** delivery · **Last result:** ✅ PASSED (35 passed, 0 failed · 2026-11-27 16:11 · headless · 8.0 s)
 
 **Run it alone:** `node run.mjs --only t100` (add `--visible` to watch it)
 
@@ -49,7 +49,7 @@ _Nothing failed._
 - the title and the PIN box sit inside the panel with at least 16 px around them
 - the buttons are at least 16 px from the panel's right and bottom edges — _right 24, bottom 24_
 - the PIN box uses the width of the panel — _panel 432 px_
-- the dialog suggests a 4-digit PIN that isn't 0000 or 1111 — _5508_
+- the dialog suggests a 4-digit PIN that isn't 0000 or 1111 — _9099_
 - it says the phone number is the login name, and that the PIN can be looked up again later (Show PIN)
 - the PIN starts visible (the manager must tell it to the rider), with a 'Hide PIN' switch
 - 'Hide PIN' hides the digits without changing them, and the switch now says 'Show PIN'
@@ -92,6 +92,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-27 16:11 | pass | 35 | 0 | headless | 8.0 s |
 | 2026-11-27 09:53 | pass | 35 | 0 | headless | 8.4 s |
 | 2026-11-27 05:16 | pass | 35 | 0 | headless | 7.7 s |
 | 2026-11-27 05:16 | pass | 35 | 0 | headless | 7.8 s |

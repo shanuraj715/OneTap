@@ -1,6 +1,6 @@
 # T28 — Request limits — every protected API stops at its limit with a clear 429, per account sign-in guard, live connections, and nothing that changes data is left unprotected
 
-**Area:** security · **Last result:** ✅ PASSED (127 passed, 0 failed · 2026-11-27 12:08 · headless · 9.0 s)
+**Area:** security · **Last result:** ✅ PASSED (133 passed, 0 failed · 2026-11-27 16:13 · headless · 9.6 s)
 
 **Run it alone:** `node run.mjs --only t28` (add `--visible` to watch it)
 
@@ -45,7 +45,7 @@ Runs suites/rate-limits.mjs: its own in-memory API with every limit scaled to a 
 
 _Nothing failed._
 
-### ✅ Passed (127)
+### ✅ Passed (133)
 
 **Step 1 — visitors — each public entry point has its own limit (a fresh address for each)**
 
@@ -64,6 +64,7 @@ _Nothing failed._
 - site-lead: the first 1 requests are let through — _400_
 - site-lead: request 2 is refused with 429 and the policy's name — _429 site-lead_
 - site-lead: the answer carries Retry-After and a readable message
+- webhook: the first 24 requests are let through
 - webhook: request 25 is refused with 429 and the policy's name — _429 webhook_
 - webhook: the answer carries Retry-After and a readable message — _60s · Too many requests._
 - print-agent: the first 30 requests are let through
@@ -93,6 +94,7 @@ _Nothing failed._
 - otp-send-ip: the first 2 requests are let through — _200,200_
 - otp-send-ip: request 3 is refused with 429 and the policy's name — _429 otp-send-ip_
 - otp-send-ip: the answer carries Retry-After and a readable message — _600s · Too many code requests from this network. Please try again in 10 minutes._
+- otp-send-store: the store's remaining 28 codes, asked for from 28 different addresses, are all sent — _200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,_
 - otp-send-store: the next one — from a brand-new address — is refused: the store's own ceiling — _429 Too many codes have been requested for this store. Please try again in 60 minutes._
 - login-flood: the 9th sign-in request in a minute from one address is refused (8 allowed) — _400,400,400,400,400,400,400,400,429_
 - otp-flood: the same for code guesses (8 a minute per address) — _400,400,400,400,400,400,400,400,429_
@@ -102,6 +104,7 @@ _Nothing failed._
 - team-write (changes): the first 24 requests are let through
 - team-write (changes): request 25 is refused with 429 and the policy's name — _429 team-write_
 - team-write (changes): the answer carries Retry-After and a readable message — _60s · You're making changes too fast. Please wait 60 seconds._
+- team-write: reading is not counted — 40 reads in a row are fine
 - report: the first 12 requests are let through — _400,400,400,400,400,400,400,400,400,400,400,400_
 - report: request 13 is refused with 429 and the policy's name — _429 report_
 - report: the answer carries Retry-After and a readable message — _60s · Too many report requests. Please wait 60 seconds._
@@ -141,6 +144,7 @@ _Nothing failed._
 - coins-code: the first 4 requests are let through — _400,400,400,400_
 - coins-code: request 5 is refused with 429 and the policy's name — _429 coins-code_
 - coins-code: the answer carries Retry-After and a readable message — _600s · Too many coin-code attempts. Please wait 10 minutes._
+- api (a signed-in user): the first 150 requests are let through
 - api (a signed-in user): request 151 is refused with 429 and the policy's name — _429 api_
 - api (a signed-in user): the answer carries Retry-After and a readable message — _60s · You're sending requests too fast. Please wait 60 seconds and try again._
 
@@ -168,11 +172,13 @@ _Nothing failed._
 
 **Step 7 — one account, guessed from many addresses**
 
+- the 10th wrong password, from a new address each time, pauses the account — _401,401,401,401,401,401,401,401,401,429_
 - …and even the RIGHT password is refused from a brand-new address while it is paused — _429 Too many failed attempts for this account. Try again in 60 seconds._
 - …with a message that says what happened and how long
 - another account is not affected — _200_
 - an email that has no account behaves the same: 401 nine times, then paused — nothing is revealed — _401,401,401,401,401,401,401,401,401,429_
 - the console's Security page sees the account (masked as o•••@acme.test), never the whole email — _o•••@acme.test_
+- when the pause is over the right password works again — _200_
 - …and signing in cleared the account's count
 - the first pause is 1 minute, the second 5 minutes — _60s then 300s_
 
@@ -208,6 +214,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-27 16:13 | pass | 133 | 0 | headless | 9.6 s |
 | 2026-11-27 12:08 | pass | 127 | 0 | headless | 9.0 s |
 | 2026-11-27 10:51 | pass | 133 | 0 | headless | 9.7 s |
 | 2026-11-26 22:10 | pass | 133 | 0 | headless | 8.6 s |
@@ -217,7 +224,6 @@ _Nothing failed._
 | 2026-11-26 18:54 | pass | 133 | 0 | headless | 9.6 s |
 | 2026-11-26 18:54 | fail | 132 | 1 | headless | 8.7 s |
 | 2026-11-26 18:18 | pass | 124 | 0 | headless | 28.0 s |
-| 2026-11-26 16:49 | pass | 124 | 0 | headless | 9.4 s |
 
 ---
 _Generated by `tests/e2e/run.mjs` — edit the test file (`tests/t28-rate-limits-api.mjs`), not this page._

@@ -1,6 +1,6 @@
 # T53 — Orders that grow the business — out for delivery with a rider, pre-orders for later, stock counts, menu hours, combos and buy-X-get-Y coupons (API rules)
 
-**Area:** orders · **Last result:** ✅ PASSED (84 passed, 0 failed · 2026-11-27 12:08 · headless · 7.3 s)
+**Area:** orders · **Last result:** ✅ PASSED (84 passed, 0 failed · 2026-11-27 16:14 · headless · 6.7 s)
 
 **Run it alone:** `node run.mjs --only t53` (add `--visible` to watch it)
 
@@ -75,9 +75,9 @@ _Nothing failed._
 **Step 3 — dishes with hours (a breakfast menu)**
 
 - a category carries its hours in the menu
-- outside its hours a dish shows when it IS available instead of a price — _Available 2:08 PM – 3:08 PM_
+- outside its hours a dish shows when it IS available instead of a price — _Available 6:13 PM – 7:13 PM_
 - …or is hidden, when the outlet chooses that
-- a customer can't order it now — _409 {"error":"Poha is only available 2:08 PM – 3:08 PM"}_
+- a customer can't order it now — _409 {"error":"Poha is only available 6:13 PM – 7:13 PM"}_
 - staff at the till can still sell it — _201_
 - a window that starts and ends at the same time is refused — _400_
 - a day that doesn't exist is refused — _400_
@@ -86,10 +86,10 @@ _Nothing failed._
 **Step 4 — pre-orders — a later pickup time for takeaway**
 
 - off until the outlet switches pre-orders on — _{"enabled":false,"days":[]}_
-- now the outlet offers pickup times, grouped by day — _Today:45 Tomorrow:95_
+- now the outlet offers pickup times, grouped by day — _Today:29 Tomorrow:95_
 - …none sooner than 30 minutes from now
 - …every 15 minutes
-- a customer places a takeaway for a later time — _201 2026-11-27T08:00:00.000Z_
+- a customer places a takeaway for a later time — _201 2026-11-27T12:00:00.000Z_
 - a time that's full (1 per time here) is refused — _409_
 - …and is shown as full
 - a time that isn't on offer (too soon / not a slot) is refused — _409_
@@ -153,6 +153,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-27 16:14 | pass | 84 | 0 | headless | 6.7 s |
 | 2026-11-27 12:08 | pass | 84 | 0 | headless | 7.3 s |
 | 2026-11-27 10:53 | pass | 83 | 0 | headless | 7.2 s |
 | 2026-11-21 13:08 | pass | 84 | 0 | headless | 6.1 s |

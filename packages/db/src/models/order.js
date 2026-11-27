@@ -7,6 +7,7 @@ import {
   PLACED_BY_VALUES,
 } from "@rasoipulse/config-schema";
 import { tenantScope } from "../tenant-scope.js";
+import { writeEvents } from "../write-events.js";
 
 const { Schema, model, models } = mongoose;
 
@@ -101,6 +102,8 @@ const orderSchema = new Schema(
 );
 
 orderSchema.plugin(tenantScope);
+// the staff apps are told when an order changes (realtime/app-feed.js): every write is announced, whichever code made it
+orderSchema.plugin(writeEvents, { model: "Order", brandFrom: "brandId", outletFrom: "outletId", ignore: ["customerHiddenAt", "deliveryCodeTries"] });
 
 /**
  * "Deleting" an order marks it (deletedAt) and every query through this model then skips it — the orders list, the

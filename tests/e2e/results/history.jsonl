@@ -1394,3 +1394,17 @@
 {"id":"t114-booking-form-ui","status":"pass","pass":65,"fail":0,"mode":"headless","at":"2026-11-27T06:38:52.171Z","durationMs":17377}
 {"id":"t114-booking-form-ui","status":"pass","pass":65,"fail":0,"mode":"headless","at":"2026-11-27T06:39:10.379Z","durationMs":17356}
 {"id":"t119-log-redaction-api","status":"pass","pass":17,"fail":0,"mode":"headless","at":"2026-11-27T10:33:35.379Z","durationMs":5104}
+{"id":"t120-app-live-api","status":"fail","pass":19,"fail":1,"mode":"headless","at":"2026-11-27T10:40:38.678Z","durationMs":5628}
+{"id":"t120-app-live-api","status":"fail","pass":47,"fail":1,"mode":"headless","at":"2026-11-27T10:41:07.357Z","durationMs":22958}
+{"id":"t120-app-live-api","status":"pass","pass":48,"fail":0,"mode":"headless","at":"2026-11-27T10:41:42.729Z","durationMs":23965}
+{"id":"t100-rider-pin-ui","status":"pass","pass":35,"fail":0,"mode":"headless","at":"2026-11-27T10:41:58.137Z","durationMs":8022}
+{"id":"t18-tables","status":"pass","pass":56,"fail":0,"mode":"headless","at":"2026-11-27T10:42:46.102Z","durationMs":42772}
+{"id":"t19-dine-in","status":"pass","pass":54,"fail":0,"mode":"headless","at":"2026-11-27T10:43:45.554Z","durationMs":54241}
+{"id":"t28-rate-limits-api","status":"pass","pass":133,"fail":0,"mode":"headless","at":"2026-11-27T10:43:55.228Z","durationMs":9647}
+{"id":"t53-orders-growth-api","status":"pass","pass":84,"fail":0,"mode":"headless","at":"2026-11-27T10:44:01.938Z","durationMs":6687}
+{"id":"t54-engagement-api","status":"pass","pass":89,"fail":0,"mode":"headless","at":"2026-11-27T10:44:07.318Z","durationMs":5361}
+{"id":"t64-table-conflict","status":"pass","pass":22,"fail":0,"mode":"headless","at":"2026-11-27T10:44:08.934Z","durationMs":1593}
+{"id":"t65-kitchen-display","status":"pass","pass":43,"fail":0,"mode":"headless","at":"2026-11-27T10:44:18.304Z","durationMs":9351}
+{"id":"t66-ops-batch","status":"pass","pass":47,"fail":0,"mode":"headless","at":"2026-11-27T10:46:09.823Z","durationMs":111499}
+{"id":"t69-cache-audit-api","status":"pass","pass":55,"fail":0,"mode":"headless","at":"2026-11-27T10:46:17.651Z","durationMs":7759}
+{"id":"t98-rider-app-api","status":"pass","pass":105,"fail":0,"mode":"headless","at":"2026-11-27T10:46:24.163Z","durationMs":6490}

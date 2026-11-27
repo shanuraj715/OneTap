@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { RESERVATION_PAYMENT_STATUSES, RESERVATION_STATUSES } from "@rasoipulse/config-schema";
 import { tenantScope } from "../tenant-scope.js";
+import { writeEvents } from "../write-events.js";
 
 const { Schema, model, models } = mongoose;
 
@@ -28,6 +29,8 @@ const riderSchema = new Schema(
   { timestamps: true },
 );
 riderSchema.plugin(tenantScope);
+// a rider switched off or given a new PIN is let go from the live feed at once (realtime/app-feed.js)
+riderSchema.plugin(writeEvents, { model: "Rider", brandFrom: "brandId", outletFrom: "outletId" });
 riderSchema.index({ brandId: 1, outletId: 1, name: 1 });
 
 export const RiderModel = models.Rider ?? model("Rider", riderSchema);

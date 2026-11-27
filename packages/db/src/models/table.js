@@ -4,6 +4,7 @@ import {
   TABLE_STATUSES,
 } from "@rasoipulse/config-schema";
 import { tenantScope } from "../tenant-scope.js";
+import { writeEvents } from "../write-events.js";
 
 const { Schema, model, models } = mongoose;
 
@@ -20,6 +21,8 @@ const tableSchema = new Schema(
   { timestamps: true },
 );
 tableSchema.plugin(tenantScope);
+// the staff apps are told when a table or who sits at it changes (realtime/app-feed.js)
+tableSchema.plugin(writeEvents, { model: "Table", brandFrom: "brandId", outletFrom: "outletId" });
 tableSchema.index({ brandId: 1, outletId: 1, number: 1 }, { unique: true });
 
 export const TableModel = models.Table ?? model("Table", tableSchema);
@@ -46,6 +49,7 @@ const sessionSchema = new Schema(
   { timestamps: true },
 );
 sessionSchema.plugin(tenantScope);
+sessionSchema.plugin(writeEvents, { model: "TableSession", brandFrom: "brandId", outletFrom: "outletId" });
 sessionSchema.index({ brandId: 1, outletId: 1, status: 1 });
 
 export const TableSessionModel =

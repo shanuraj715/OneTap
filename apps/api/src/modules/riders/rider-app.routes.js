@@ -9,7 +9,8 @@ import { limiter, usesPolicy } from "../../middleware/rate-limit.js";
 import { assertAppCurrent } from "../app-releases/app-releases.service.js";
 import { assertStoreEnabled, requireFeature } from "../platform/plan.service.js";
 import { assignRider, updateStatus } from "../orders/orders.service.js";
-import { PIN_RE, checkPin, loginPhoneOf, readRiderToken, signRiderToken } from "./rider-auth.js";
+import { PIN_RE, checkPin, loginPhoneOf, signRiderToken } from "./rider-auth.js";
+import { riderFromToken } from "./rider-session.js";
 
 /**
  * The rider app's own API (`/api/rider/…`). A rider is not a dashboard user: they sign in with the phone number and PIN the manager
@@ -61,16 +62,7 @@ riderAppRouter.post("/login", loginFlood, usesPolicy("login-account"), async (re
 });
 
 /** Who is calling: the rider the token names, if they are still allowed in. → { rider, ctx } */
-async function riderContext(req) {
-  const t = readRiderToken(bearerToken(req));
-  if (!t) throw new HttpError(401, "Sign in to continue");
-  const rider = await RiderModel.findOne(tenantFilter({ brandId: t.brandId, outletId: t.outletId }, { _id: t.riderId })).lean();
-  if (!rider || !rider.loginPhone || (rider.pinVersion ?? 0) !== t.pinVersion) throw new HttpError(401, "Sign in to continue");
-  if (!rider.isActive) throw new HttpError(403, "Your login is switched off. Ask your manager.");
-  await assertStoreEnabled(rider.brandId);
-  await requireFeature(rider.brandId, "delivery", "Delivery");
-  return { rider, ctx: { brandId: rider.brandId, outletId: rider.outletId } };
-}
+const riderContext = (req) => riderFromToken(bearerToken(req));
 
 riderAppRouter.get("/me", async (req, res) => {
   const { rider } = await riderContext(req);

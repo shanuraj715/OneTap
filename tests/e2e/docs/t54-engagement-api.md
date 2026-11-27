@@ -1,6 +1,6 @@
 # T54 — Bringing customers back — table bookings, ratings, order again, suggestions and abandoned-cart reminders (API rules)
 
-**Area:** customers · **Last result:** ✅ PASSED (89 passed, 0 failed · 2026-11-27 12:06 · headless · 5.9 s)
+**Area:** customers · **Last result:** ✅ PASSED (89 passed, 0 failed · 2026-11-27 16:14 · headless · 5.4 s)
 
 **Run it alone:** `node run.mjs --only t54` (add `--visible` to watch it)
 
@@ -117,12 +117,12 @@ _Nothing failed._
 
 **Step 6 — 'goes well with your order'**
 
-- the owner picks what goes with momos (the dish itself and unknown dishes are dropped) — _["6b0924feb1edeb56b3ccd954","6b0924feb1edeb56b3ccd95b","6b0924feb1edeb56b3ccd956"]_
-- with momos in the cart: chai and lassi are suggested (the curry needs a spice choice, so it can't be one tap) — _["6b0924feb1edeb56b3ccd954","6b0924feb1edeb56b3ccd956"]_
+- the owner picks what goes with momos (the dish itself and unknown dishes are dropped) — _["6b095ef5faadd605c74475f8","6b095ef5faadd605c74475fe","6b095ef5faadd605c74475fa"]_
+- with momos in the cart: chai and lassi are suggested (the curry needs a spice choice, so it can't be one tap) — _["6b095ef5faadd605c74475f8","6b095ef5faadd605c74475fa"]_
 - under the outlet's title
 - nothing already in the cart is suggested
 - a sold-out dish isn't suggested
-- with no picks, what others often ordered with it is suggested (roll → cola, ordered together 3 times) — _[{"itemId":"6b0924feb1edeb56b3ccd959","variantId":null}]_
+- with no picks, what others often ordered with it is suggested (roll → cola, ordered together 3 times) — _[{"itemId":"6b095ef5faadd605c74475fc","variantId":null}]_
 - switched off, nothing is suggested
 
 **Step 7 — abandoned-cart reminders**
@@ -156,6 +156,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-27 16:14 | pass | 89 | 0 | headless | 5.4 s |
 | 2026-11-27 12:06 | pass | 89 | 0 | headless | 5.9 s |
 | 2026-11-27 10:53 | pass | 89 | 0 | headless | 5.2 s |
 | 2026-11-21 13:02 | pass | 89 | 0 | headless | 5.3 s |

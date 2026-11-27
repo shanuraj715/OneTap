@@ -141,6 +141,25 @@ The API side of the apps: `GET /api/menu/unavailable` (what can't be ordered now
 the dashboard keeps using its cookie), `GET /api/auth/guard` (is this address paused?) and the Bearer support in the
 `authenticate` middleware. Saved test: `tests/e2e/tests/t87-staff-app-auth-api.mjs`.
 
+### Live connection for the staff apps (OMA, KDA, RDA)
+
+The apps no longer ask the server every few seconds. Each keeps ONE WebSocket open to `wss://<api>/realtime` and asks for new data only when the server says
+something changed. **The server's side** (`apps/api/src/realtime/hub.js` + `app-feed.js`):
+
+- **Connecting:** `GET /realtime?app=oma|kda&outletId=<id>` with `Authorization: Bearer <the app's sign-in>` (RDA: `?app=rda` with the rider's own token — the token knows the outlet).
+  The SAME checks as the app's ordinary calls run on the upgrade (`requireOutletContext`: signed in, role — OMA needs `order:read`, KDA `kitchen:app` —, the outlets the person is
+  mapped to, a paused membership, a switched-off store; for a rider `riderFromToken`: still on the list, switched on, PIN not reset, Delivery in the plan). Refusals are plain
+  HTTP answers: 400 (bad app / no outlet), 401, 403, 404, 429 (too many connects from one address), 503 (the platform switched live updates off). The dashboard's own connection
+  (session cookie, no `app`) is unchanged.
+- **What an app is sent** — never data. Only `{type:"hello"}` once, `{type:"changed", what:["orders"|"tables"|"menu"|"deliveries", …], at}` and `{type:"tick"}` every 20 s
+  (so an app can tell a quiet restaurant from a dead line). OMA hears orders · tables · menu, KDA orders · menu, RDA deliveries. The app then fetches the new data through its normal
+  (permission-checked) calls. Changes within 250 ms are one message.
+- **What triggers it:** the database layer announces every write to `Order`, `Table`, `TableSession`, `MenuItem`/`MenuCategory`/`ModifierGroup` and `Rider` (`packages/db/src/write-events.js`),
+  whichever code made it — so a storefront order, a waiter's tap, a webhook, a background sweep and the dashboard all reach the apps without anyone remembering to say so. A dish going out of its
+  serving hours is not a write: a 30-second watcher compares the "can't be ordered now" list of each outlet that has an app listening with the last one.
+- **Letting go:** every 5 minutes (and at once for a rider whose record changes) each app connection is re-checked — sign out, a switched-off person, a paused store, a reset rider PIN end it
+  (close codes 4401 signed out · 4403 store off · 4410 the platform switched live updates off). Test: t120.
+
 ### How often the apps ask for new data (refresh interval, per app)
 
 - **One number per app**, in seconds, **default 8**, allowed **3 to 600**. The platform admin sets it in the console: **App updates → the app's tab → Refresh interval**. The delivery app (RDA) set to 15 asks the server for new deliveries every 15 seconds; OMA and KDA have their own numbers.
