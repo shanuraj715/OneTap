@@ -1,11 +1,16 @@
 import Constants from "expo-constants";
 
+/** Which app this is, as the server knows it (the update check, the sign-in rule, the live connection). */
+export const APP_ID = "oma";
 /** The app's name: "{our app name} OMA" — OMA = Order Management App. */
 export const APP_NAME = "Rasoi Pulse OMA";
 export const APP_TAGLINE = "Order Management App";
 
 /** Where the API lives (set per build by app.config.ts; the live API unless a build says otherwise). */
 export const API_URL: string = String((Constants.expoConfig?.extra as { apiUrl?: string } | undefined)?.apiUrl || "https://api.rasoipulse.in").replace(/\/$/, "");
+
+/** The live connection (WebSocket) address: the same server, `wss://` instead of `https://`. */
+export const LIVE_URL: string = `${API_URL.replace(/^http/, "ws")}/realtime`;
 
 /** The server's name without "https://" — shown on the sign-in and account screens, so it is always clear WHICH server the app is talking to. */
 export const API_HOST: string = API_URL.replace(/^https?:\/\//, "");

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { View, type TextInputInstance } from "react-native";
-import { Banner, Button, Icon, Screen, SwitchRow, Text, TextField, useTheme } from "@/ui";
+import { AppIcon, Banner, Button, Icon, Screen, SwitchRow, Text, TextField, useTheme } from "@/ui";
 import { describeSignInError, signInProblems, type SignInProblems } from "@/features/signin";
 import { API_HOST, APP_NAME, APP_TAGLINE, APP_VERSION } from "@/lib/config";
 import { countdown } from "@/lib/time";
@@ -64,9 +64,7 @@ export function SignInScreen() {
   return (
     <Screen scroll narrow edges={["top", "bottom", "left", "right"]} style={{ justifyContent: "center", paddingVertical: 32 }}>
       <View style={{ alignItems: "center", gap: 8, marginBottom: 8 }}>
-        <View style={{ width: 64, height: 64, borderRadius: 18, backgroundColor: c.primary, alignItems: "center", justifyContent: "center" }}>
-          <Icon name="store" size={32} color={c.onPrimary} />
-        </View>
+        <AppIcon size={88} label={`${APP_NAME} icon`} />
         <Text variant="title" accessibilityRole="header">{APP_NAME}</Text>
         <Text tone="muted">{APP_TAGLINE}</Text>
       </View>

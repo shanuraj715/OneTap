@@ -8,7 +8,9 @@ import { wireQueryClient } from "@/data/setup";
 import { APP_NAME, APP_TAGLINE } from "@/lib/config";
 import { RuntimeProvider, sharedRuntime } from "@/runtime";
 import { UpdateGate } from "@/updates/UpdateGate";
-import { ErrorState, Icon, QueryProgress, Spinner, Text, ToastHost, useTheme } from "@/ui";
+import { AppIcon, ErrorState, QueryProgress, Spinner, Text, ToastHost, useTheme } from "@/ui";
+import { LiveBanner } from "@/live/LiveBanner";
+import { LiveBridge } from "@/live/LiveBridge";
 
 const runtime = sharedRuntime();
 
@@ -26,7 +28,7 @@ function Splash() {
   const { c } = useTheme();
   return (
     <View style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, alignItems: "center", justifyContent: "center", gap: 10, backgroundColor: c.bg }} testID="splash">
-      <View style={{ width: 72, height: 72, borderRadius: 20, backgroundColor: c.primary, alignItems: "center", justifyContent: "center" }}><Icon name="store" size={36} color={c.onPrimary} /></View>
+      <AppIcon size={88} label={`${APP_NAME} icon`} />
       <Text variant="title">{APP_NAME}</Text>
       <Text tone="muted">{APP_TAGLINE}</Text>
       <View style={{ marginTop: 12 }}><Spinner label="Starting" /></View>
@@ -58,6 +60,9 @@ export default function RootLayout() {
           <Stack.Protected guard={status !== "signed-in"}><Stack.Screen name="sign-in" /></Stack.Protected>
         </Stack>
         <QueryProgress />
+        {/* one live connection while someone is signed in to an outlet; "Reconnecting…" while it comes back */}
+        <LiveBridge />
+        <LiveBanner />
         </View>
         {/* "a new version is out": a pop-up (or, when the update is required, a screen nobody gets past) above everything */}
         <UpdateGate />

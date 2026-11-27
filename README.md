@@ -160,8 +160,24 @@ something changed. **The server's side** (`apps/api/src/realtime/hub.js` + `app-
 - **Letting go:** every 5 minutes (and at once for a rider whose record changes) each app connection is re-checked — sign out, a switched-off person, a paused store, a reset rider PIN end it
   (close codes 4401 signed out · 4403 store off · 4410 the platform switched live updates off). Test: t120.
 
+**The apps' side** (each app has its own copy of `src/live/`: `connection.ts`, `store.ts`, `refresher.ts`, `LiveBridge.tsx`, `LiveBanner.tsx`; the logic is plain TypeScript with its own tests):
+
+- **`LiveBridge`** (mounted once in the root layout, draws nothing) keeps ONE connection while a person is signed in (OMA/KDA: to their outlet; RDA: as the rider). The sign-in travels in the
+  `Authorization` header (React Native's WebSocket accepts headers) — never in the address, so it can't end up in a log.
+- **Reconnecting by itself:** when the line drops the app tries again after 1 s, 2 s, 4 s … never more than 30 s (a little random, so a restaurant's tablets don't all knock at once after the
+  server restarts). A connection that has said nothing for 55 s is dead (the server ticks every 20 s) and is replaced. When the app comes back to the front or the internet returns, it
+  reconnects at once. **Every time it is (re)connected the app loads everything once**, so nothing that changed during a gap is missed.
+- **"Reconnecting…" loader:** `LiveBanner` shows a spinner and "Reconnecting… Showing the last information" at the top while the connection is coming back (after a 1.2 s grace, so a blink doesn't
+  flash it; it never blocks a touch).
+- **No timers while live:** the lists (`useRefreshPlan` in each app's `runtime.tsx`) don't poll while the connection is up or coming back. A burst of changes is one catch-up request per kind per second
+  (`refresher.ts`). **Fallback:** if the server REFUSES live updates (the platform switched them off, an older server without the app address, "not allowed", too many connects) the lists ask on their old
+  timer again, and the app quietly tries again every minute — an old API never breaks a new app, a new API never breaks an old app (old builds keep polling and ignore the socket).
+- **Sign-in and start-up screens show the app's real icon** (`assets/icon.png`, the same artwork as the launcher icon) instead of a drawn symbol.
+- **Tests:** each app's jest suite — `__tests__/live/*` (connection rules, refresher, polling switch) and `__tests__/screens/live.test.tsx` (the whole thing on screen with a fake WebSocket).
+
 ### How often the apps ask for new data (refresh interval, per app)
 
+- **Since the live connection (above) this number is the FALLBACK:** an app that has a live connection never asks on a timer; the interval applies only while there is no live connection (an old server, the platform switched live updates off, the server refused); otherwise it is how often the lists ask.
 - **One number per app**, in seconds, **default 8**, allowed **3 to 600**. The platform admin sets it in the console: **App updates → the app's tab → Refresh interval**. The delivery app (RDA) set to 15 asks the server for new deliveries every 15 seconds; OMA and KDA have their own numbers.
 - **How the app learns it:** every request an app makes carries `x-app-id`, and the API (`middleware/app-refresh.js`) adds `x-refresh-seconds: <n>` to **every answer** to it (errors too). The app keeps the last number it saw (`src/data/refresh.ts`; bad or out-of-range values are ignored) and uses it for its next refresh, so a change reaches a phone with its very next request — no new version to install. Until the first answer, an app uses 8. The server keeps the numbers in memory for 15 seconds (cleared at once on save).
 - **What it covers** (`refreshPlan` in each app's `src/lib/config.ts`): OMA — the table board and the orders list; KDA — the kitchen board; RDA — the list of deliveries. Slower background lists keep their own pace but never refresh faster than the setting (KDA dishes 15 s and today's numbers 30 s, OMA "can't be ordered" 60 s).

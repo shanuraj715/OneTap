@@ -9,12 +9,13 @@ import { createDraftStore, type DraftState, type DraftStore } from "@/cart/cart"
 import { createAreaPrefs, type AreaPrefs } from "@/prefs/areas";
 import { createUpdateStore, type UpdateStore } from "@/updates/store";
 import { createRefreshStore, type RefreshStore } from "@/data/refresh";
+import { createLiveStore, pollEvery, type LiveStore } from "@/live/store";
 import { prefsStorage, type PrefsStorage } from "@/prefs/storage";
 import { API_URL, APP_BUILD, APP_VERSION, refreshPlan } from "@/lib/config";
 import { keys } from "@/data/keys";
 
 /** Everything the screens share: the server calls, who is signed in, the orders being put together, and the remembered answers. */
-export interface Runtime { api: Api; session: SessionStore; drafts: DraftStore; areas: AreaPrefs; updates: UpdateStore; refresh: RefreshStore; queryClient: QueryClient }
+export interface Runtime { api: Api; session: SessionStore; drafts: DraftStore; areas: AreaPrefs; updates: UpdateStore; refresh: RefreshStore; live: LiveStore; queryClient: QueryClient }
 
 export interface RuntimeOptions {
   baseUrl?: string;
@@ -45,6 +46,8 @@ export function createRuntime(options: RuntimeOptions = {}): Runtime {
   let updates: UpdateStore;
   // how often to ask for new data: whatever the server last said for this app (the platform admin sets it in the console), else the default
   const refresh = createRefreshStore();
+  // where the live connection stands (the loader while reconnecting; whether lists must ask on a timer)
+  const live = createLiveStore();
   const client = createClient({
     baseUrl: options.baseUrl ?? API_URL,
     fetchImpl: options.fetchImpl,
@@ -77,7 +80,7 @@ export function createRuntime(options: RuntimeOptions = {}): Runtime {
   });
   // (preferences are NOT cleared when someone signs out: they belong to that person and come back when they sign in again)
   const areas = createAreaPrefs(options.prefs ?? prefsStorage);
-  return { api, session, drafts, areas, updates, refresh, queryClient };
+  return { api, session, drafts, areas, updates, refresh, live, queryClient };
 }
 
 let shared: Runtime | undefined;
@@ -100,10 +103,19 @@ export function useRuntime(): Runtime {
   return runtime;
 }
 export const useApi = (): Api => useRuntime().api;
-/** How long each thing the app refreshes by itself waits between asks: the server's number for this app (see lib/config.ts → refreshPlan). */
+/**
+ * How long each thing the app refreshes by itself waits between asks: the server's number for this app (see lib/config.ts → refreshPlan) —
+ * but `false` (never) while the live connection is up or coming back: the server says when something changed, so nobody asks on a timer.
+ * If the server refuses live updates the numbers apply again.
+ */
 export function useRefreshPlan() {
-  const seconds = useStore(useRuntime().refresh, (s) => s.seconds);
-  return useMemo(() => refreshPlan(seconds), [seconds]);
+  const runtime = useRuntime();
+  const seconds = useStore(runtime.refresh, (s) => s.seconds);
+  const status = useStore(runtime.live, (s) => s.status);
+  return useMemo(() => {
+    const plan = refreshPlan(seconds);
+    return Object.fromEntries(Object.entries(plan).map(([name, ms]) => [name, pollEvery(status, ms)])) as { [K in keyof typeof plan]: number | false };
+  }, [seconds, status]);
 }
 export function useSession<T>(selector: (state: SessionState) => T): T {
   return useStore(useRuntime().session, selector);
