@@ -44,10 +44,12 @@ export function Screen({ title, subtitle, back, right, onRefresh, refreshing = f
   );
 }
 
-export function Section({ title, action, children, hint }: { title: string; action?: ReactNode; children: ReactNode; hint?: string }) {
+export function Section({ title, action, children, hint, icon }: { title: string; action?: ReactNode; children: ReactNode; hint?: string; icon?: IconName }) {
+  const { c } = useTheme();
   return (
     <View style={{ gap: 10 }}>
       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+        {icon ? <Icon name={icon} size={16} color={c.primaryText} /> : null}
         <View style={{ flex: 1 }}>
           <Text variant="overline" tone="muted">{title}</Text>
           {hint ? <Text variant="caption" tone="muted">{hint}</Text> : null}

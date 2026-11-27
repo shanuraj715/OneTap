@@ -16,6 +16,11 @@ export const ICONS = {
   down: Lucide.ChevronDown, left: Lucide.ChevronLeft, up: Lucide.ChevronUp, mail: Lucide.Mail, lock: Lucide.Lock, eye: Lucide.Eye, eyeOff: Lucide.EyeOff, logout: Lucide.LogOut,
   refresh: Lucide.RefreshCw, alert: Lucide.TriangleAlert, info: Lucide.Info, trash: Lucide.Trash2, edit: Lucide.Pencil, power: Lucide.Power, key: Lucide.KeyRound, calendar: Lucide.CalendarDays,
   user: Lucide.User, shield: Lucide.Shield, outlet: Lucide.MapPin, rupee: Lucide.IndianRupee, orders: Lucide.ReceiptText, trend: Lucide.TrendingUp, cpu: Lucide.Cpu, memory: Lucide.MemoryStick,
+  truck: Lucide.Truck, qr: Lucide.QrCode, bag: Lucide.ShoppingBag, tag: Lucide.Tag, wallet: Lucide.Wallet, chat: Lucide.MessageCircle, megaphone: Lucide.Megaphone, chart: Lucide.ChartColumn,
+  chef: Lucide.ChefHat, calendarCheck: Lucide.CalendarCheck, calendarClock: Lucide.CalendarClock, star: Lucide.Star, bell: Lucide.BellRing, image: Lucide.Image, printer: Lucide.Printer,
+  card: Lucide.CreditCard, percent: Lucide.Percent, utensils: Lucide.Utensils, palette: Lucide.Palette, note: Lucide.StickyNote, person: Lucide.UserRound, clock: Lucide.Clock,
+  receipt: Lucide.Receipt, link: Lucide.Link2, cash: Lucide.Banknote, rocket: Lucide.Rocket, timer: Lucide.Timer, globe: Lucide.Globe, route: Lucide.Route, sparkles: Lucide.Sparkles,
+  circleCheck: Lucide.CircleCheck, circleX: Lucide.CircleX,
   network: Lucide.Network, disk: Lucide.HardDrive, history: Lucide.History, block: Lucide.Ban, unlock: Lucide.LockOpen, filter: Lucide.SlidersHorizontal, phone: Lucide.Phone, building: Lucide.Building2,
 } as const;
 
@@ -230,8 +235,8 @@ export function CountUp({ value, format, style, variant = "title" }: { value: nu
  * An on/off switch that reads in light AND dark: the "on" track is the app's colour, the "off" track is a visible grey (iOS draws its own off-track
  * behind a see-through one, which vanishes on a dark night), and the thumb is always light.
  */
-export function AppSwitch({ value, onValueChange, disabled, accessibilityLabel, testID }: { value: boolean; onValueChange?: (v: boolean) => void; disabled?: boolean; accessibilityLabel?: string; testID?: string }) {
+export function AppSwitch({ value, onValueChange, disabled, accessibilityLabel, testID, tone }: { value: boolean; onValueChange?: (v: boolean) => void; disabled?: boolean; accessibilityLabel?: string; testID?: string; /** the colour of the "on" track: the app's own by default; "ok" (green) or "warn" (amber) when the switch also says something */ tone?: "ok" | "warn" }) {
   const { c, dark } = useTheme();
   const off = dark ? "rgba(255,255,255,0.28)" : "rgba(22,26,51,0.28)";
-  return <Switch value={value} onValueChange={onValueChange} disabled={disabled} trackColor={{ true: c.primary, false: off }} ios_backgroundColor={off} thumbColor="#FFFFFF" accessibilityLabel={accessibilityLabel} testID={testID} />;
+  return <Switch value={value} onValueChange={onValueChange} disabled={disabled} trackColor={{ true: tone === "ok" ? c.ok : tone === "warn" ? c.warn : c.primary, false: off }} ios_backgroundColor={off} thumbColor="#FFFFFF" accessibilityLabel={accessibilityLabel} testID={testID} />;
 }

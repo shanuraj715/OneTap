@@ -147,6 +147,13 @@ export async function run(d, h) {
       const nYes = await yes.locator("[data-feature]").count(), nNo = await no.locator("[data-feature]").count();
       d.check("under the plan box, a list says what Starter INCLUDES (Takeaway, Dine-in, Coupons …) and one what it does NOT (Marketing, Delivery, Own domain name …)", /Coupons/.test(yesText) && /Takeaway/.test(yesText) && /Marketing/.test(noText) && /Delivery/.test(noText) && /Own domain name/.test(noText), `included: ${yesText.replace(/\s+/g, " ").slice(0, 90)} | not: ${noText.replace(/\s+/g, " ").slice(0, 90)}`);
       d.check("…a feature is in one list only", !/Marketing/.test(yesText) && !/Coupons/.test(noText));
+      const tones = async (loc) => [...new Set(await loc.locator("[data-feature]").evaluateAll((els) => els.map((e) => e.getAttribute("data-tone"))))];
+      d.check("…the included ones are green and the ones not included are red", JSON.stringify(await tones(yes)) === '["success"]' && JSON.stringify(await tones(no)) === '["danger"]', `${await tones(yes)} / ${await tones(no)}`);
+      const rowTone = (name) => d.page.locator("[data-feature-row]", { hasText: name }).first().getAttribute("data-tone");
+      d.check("in the Features list: Coupons (in the plan) is green and says 'In the Starter plan'; Marketing (not in it) is red", (await rowTone("Coupons")) === "success" && /In the Starter plan/.test(await feat("Coupons").innerText()) && (await rowTone("Marketing")) === "danger", `${await rowTone("Coupons")} / ${await rowTone("Marketing")}`);
+      const accent = (name) => d.page.locator("[data-feature-row]", { hasText: name }).first().locator('input[type="checkbox"]').evaluate((e) => getComputedStyle(e).accentColor);
+      d.check("…and the tick boxes differ: green for what the plan has, red for what it doesn't (the 'Add for this client' box)", (await accent("Coupons")) !== (await accent("Marketing")), `${await accent("Coupons")} vs ${await accent("Marketing")}`);
+      d.check("…every feature row has its own icon", (await d.page.locator("[data-feature-row] [data-feature-icon]").count()) >= 15, String(await d.page.locator("[data-feature-row] [data-feature-icon]").count()));
       d.check("…each list's title counts its items ('Included in Starter (n)', 'Not included (m)')", new RegExp(`Included in Starter \\(${nYes}\\)`).test(await d.page.getByTestId("plan-included-title").innerText()) && new RegExp(`Not included \\(${nNo}\\)`).test(await d.page.getByTestId("plan-not-included-title").innerText()), `${nYes} / ${nNo}`);
     }
     for (const f of ["Marketing", "Analytics & reports", "Own favicon", "Coin wallet", "Printing", "WhatsApp chat"]) {

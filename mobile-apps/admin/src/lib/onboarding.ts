@@ -1,4 +1,5 @@
 import type { OnboardingData, OnboardingOutlet, Plan } from "@/api/endpoints";
+import type { IconName } from "@/ui/primitives";
 
 /** The same rule the server uses for a web address: letters and numbers, single hyphens. */
 export const slugify = (s: string) =>
@@ -30,15 +31,15 @@ export function blankForm(): OnboardingData {
 }
 
 /** The optional features a client can ask for (the three ways to order are chosen per outlet instead). Same keys as the plans. */
-export const FEATURE_CHOICES = [
-  { key: "onlinePayments", label: "Online payments" }, { key: "coupons", label: "Coupons" }, { key: "wallet", label: "Coin wallet" }, { key: "printing", label: "Printing" },
-  { key: "notifications", label: "WhatsApp & SMS alerts" }, { key: "whatsappChat", label: "WhatsApp chat" }, { key: "marketing", label: "Marketing" }, { key: "analytics", label: "Analytics & reports" },
-  { key: "kitchenDisplay", label: "Kitchen display (KDS)" }, { key: "reservations", label: "Table reservations" }, { key: "scheduledOrders", label: "Pre-orders" }, { key: "feedback", label: "Ratings & feedback" },
-  { key: "cartReminders", label: "Abandoned-cart reminders" }, { key: "favicon", label: "Own favicon" }, { key: "customDomain", label: "Own domain name" },
-] as const;
-export const ORDER_MODE_CHOICES = [
-  { key: "takeaway", feature: "takeaway", label: "Takeaway" }, { key: "dineIn", feature: "dineInQr", label: "Dine-in (table QR)" }, { key: "delivery", feature: "delivery", label: "Delivery" },
-] as const;
+export const FEATURE_CHOICES: readonly { key: string; label: string; icon: IconName }[] = [
+  { key: "onlinePayments", label: "Online payments", icon: "card" }, { key: "coupons", label: "Coupons", icon: "tag" }, { key: "wallet", label: "Coin wallet", icon: "wallet" }, { key: "printing", label: "Printing", icon: "printer" },
+  { key: "notifications", label: "WhatsApp & SMS alerts", icon: "bell" }, { key: "whatsappChat", label: "WhatsApp chat", icon: "chat" }, { key: "marketing", label: "Marketing", icon: "megaphone" }, { key: "analytics", label: "Analytics & reports", icon: "chart" },
+  { key: "kitchenDisplay", label: "Kitchen display (KDS)", icon: "chef" }, { key: "reservations", label: "Table reservations", icon: "calendarCheck" }, { key: "scheduledOrders", label: "Pre-orders", icon: "calendarClock" }, { key: "feedback", label: "Ratings & feedback", icon: "star" },
+  { key: "cartReminders", label: "Abandoned-cart reminders", icon: "timer" }, { key: "favicon", label: "Own favicon", icon: "image" }, { key: "customDomain", label: "Own domain name", icon: "globe" },
+];
+export const ORDER_MODE_CHOICES: readonly { key: "takeaway" | "dineIn" | "delivery"; feature: string; label: string; icon: IconName }[] = [
+  { key: "takeaway", feature: "takeaway", label: "Takeaway", icon: "bag" }, { key: "dineIn", feature: "dineInQr", label: "Dine-in (table QR)", icon: "qr" }, { key: "delivery", feature: "delivery", label: "Delivery", icon: "truck" },
+];
 export const BUSINESS_TYPES = ["Café", "Quick-service restaurant", "Cloud kitchen", "Restaurant with seating", "Restaurant chain", "Bakery / sweets", "Other"];
 export const MENU_SOURCES = ["Client enters it themselves", "Client sends photos / PDF", "Client sends an Excel / CSV", "Rasoi Pulse enters it", "Not decided yet"];
 
@@ -48,6 +49,8 @@ export function offeredPlans(plans: Plan[]): Plan[] {
   const live = plans.filter((p) => !p.archived);
   return live.some((p) => p.custom) ? live : [...live, { id: CUSTOM_PLAN_ID, name: "Custom", description: "Limits and features set by hand for this client.", custom: true, limits: { maxUsers: null, maxOutlets: null, maxTables: null }, entitlements: { allFeatures: true, features: [] }, archived: false, storeCount: 0 }];
 }
+/** Is a feature part of the chosen plan? "in" / "out", or null when there is no plan yet or a Custom plan (there everything is chosen by hand). */
+export const planState = (plan: Plan | undefined, feature: string): "in" | "out" | null => (!plan || plan.custom ? null : planHas(plan, feature) ? "in" : "out");
 export const planHas = (plan: Plan | undefined, feature: string) => !plan || plan.custom || plan.entitlements.allFeatures || plan.entitlements.features.includes(feature);
 
 /** What the form asks for that the plan does not include, as the "forced" ids the server understands ("feature:delivery", "outlets", "users"). */

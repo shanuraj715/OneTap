@@ -1,4 +1,4 @@
-import { Lock, Minus, Plus } from "lucide-react";
+import { Check, Lock, Minus, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button, InfoHint } from "../../../ui";
 
@@ -38,6 +38,8 @@ export function Alert({ children, tone = "error" }) {
 
 const rs = (n) => `₹${new Intl.NumberFormat("en-IN").format(Math.round(n))}`;
 const checkbox = { width: 16, height: 16, accentColor: "var(--color-primary)", flexShrink: 0, margin: 0 };
+/** the tick box in the colour of where the feature stands: green (in the plan), red (not), amber (added for this client) */
+const toned = (tone) => (tone ? { ...checkbox, accentColor: `var(--tone-${tone})` } : checkbox);
 
 /**
  * One choice the client may want, in one of three states — so the representative always sees at a glance what they can do:
@@ -49,45 +51,62 @@ const checkbox = { width: 16, height: 16, accentColor: "var(--color-primary)", f
  *   outside  the plan lacks it           added  it has been added for this client anyway
  *   onAdd(on) add it for this client / take it away again          price  what adding it costs a month (₹), if known
  */
-export function FeatureRow({ label, info, note, checked, onChange, outside, planName, added, onAdd, price, disabled, state }) {
+export function FeatureRow({ label, info, note, checked, onChange, outside, planName, customPlan, added, onAdd, price, disabled, state, icon: Glyph }) {
   const status = outside ? (added ? "added" : "locked") : "included";
+  // colour only means something once a plan is chosen (a Custom plan includes nothing by itself: everything is chosen by hand)
+  const planned = Boolean(planName) && !customPlan;
+  const tone = !planned ? null : status === "included" ? "success" : status === "locked" ? "danger" : "warning";
+  const tint = tone ? `var(--tone-${tone})` : "var(--color-text-muted)";
+  const tile = Glyph ? (
+    <span data-feature-icon data-tone={tone ?? "none"} style={{ width: 28, height: 28, borderRadius: 9, display: "inline-grid", placeItems: "center", flexShrink: 0, background: tone ? `var(--tone-${tone}-wash)` : "rgba(127,127,127,.12)", color: tint }}>
+      <Glyph size={15} aria-hidden="true" />
+    </span>
+  ) : null;
   return (
     <div
       data-feature-row
       data-state={status}
+      data-tone={tone ?? "none"}
       data-wanted={checked ? "yes" : "no"}
       style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap", padding: "9px 4px", borderBottom: "1px solid var(--color-border)", minHeight: 40 }}
     >
       {status === "locked" ? (
         <>
-          <span style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "var(--color-text-muted)", fontSize: 14 }}>
-            <Lock size={14} aria-hidden="true" /> {label}
+          <span style={{ display: "inline-flex", alignItems: "center", gap: 10, color: "var(--color-text-muted)", fontSize: 14 }}>
+            {tile ?? <Lock size={14} aria-hidden="true" />} {label}
             {info ? <InfoHint text={info} title={label} /> : null}
           </span>
           <span style={{ display: "inline-flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-            <span style={{ fontSize: 12.5, color: "var(--tone-danger)" }}>Not in the {planName} plan</span>
+            <span data-status-text style={{ fontSize: 12.5, color: "var(--tone-danger)", display: "inline-flex", gap: 5, alignItems: "center" }}>
+              <Lock size={12} aria-hidden="true" /> Not in the {planName} plan
+            </span>
             <label style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 13, cursor: disabled ? "not-allowed" : "pointer" }}>
-              <input type="checkbox" checked={false} disabled={disabled} onChange={() => onAdd(true)} aria-label={`Add ${label} for this client`} style={checkbox} />
+              <input type="checkbox" checked={false} disabled={disabled} onChange={() => onAdd(true)} aria-label={`Add ${label} for this client`} style={toned("danger")} />
               Add for this client{price ? <span style={{ color: "var(--color-text-muted)" }}> · +{rs(price)} a month</span> : null}
             </label>
           </span>
         </>
       ) : (
         <>
-          <label style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 14, cursor: disabled ? "not-allowed" : "pointer" }}>
-            <input type="checkbox" checked={checked} disabled={disabled} onChange={(e) => onChange(e.target.checked)} style={checkbox} />
+          <label style={{ display: "inline-flex", alignItems: "center", gap: 10, fontSize: 14, cursor: disabled ? "not-allowed" : "pointer" }}>
+            <input type="checkbox" checked={checked} disabled={disabled} onChange={(e) => onChange(e.target.checked)} style={toned(tone)} />
+            {tile}
             {label}
             {note ? <span style={{ color: "var(--color-text-muted)", fontSize: 12.5 }}>{note}</span> : null}
           </label>
           {info ? <InfoHint text={info} title={label} /> : null}
           {status === "added" ? (
             <span style={{ marginLeft: "auto", display: "inline-flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-              <span style={{ fontSize: 12.5, color: "var(--tone-warning)", background: "var(--tone-warning-wash)", padding: "2px 9px", borderRadius: 999 }}>
+              <span data-status-text style={{ fontSize: 12.5, color: "var(--tone-warning)", background: "var(--tone-warning-wash)", padding: "2px 9px", borderRadius: 999 }}>
                 Added for this client{price ? ` · +${rs(price)} a month` : ""}
               </span>
               <button type="button" disabled={disabled} onClick={() => onAdd(false)} aria-label={`Take ${label} away`} style={{ font: "inherit", fontSize: 12.5, border: 0, background: "transparent", color: "var(--color-text-muted)", textDecoration: "underline", cursor: disabled ? "not-allowed" : "pointer", padding: 2 }}>
                 Take away
               </button>
+            </span>
+          ) : planned ? (
+            <span data-status-text style={{ marginLeft: "auto", fontSize: 12.5, color: "var(--tone-success)", display: "inline-flex", gap: 5, alignItems: "center" }}>
+              <Check size={12} aria-hidden="true" /> In the {planName} plan
             </span>
           ) : null}
         </>

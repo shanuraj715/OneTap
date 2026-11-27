@@ -6398,12 +6398,12 @@
     "id": "t21-onboarding",
     "title": "Client onboarding form — plan first, plan-fit alerts and 'allow anyway', full form, save / reset / cancel, PDF + print, publish as store",
     "status": "pass",
-    "pass": 124,
+    "pass": 128,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T15:21:48.658Z",
-    "durationMs": 54566,
+    "at": "2026-11-27T15:27:16.770Z",
+    "durationMs": 55991,
     "steps": [
       {
         "n": 1,
@@ -6472,13 +6472,37 @@
           {
             "label": "under the plan box, a list says what Starter INCLUDES (Takeaway, Dine-in, Coupons …) and one what it does NOT (Marketing, Delivery, Own domain name …)",
             "ok": true,
-            "detail": "included: ✓ Takeaway ✓ Dine-in (table QR) ✓ Coupons | not: ✕ Delivery ✕ Online payments ✕ Coin wallet ✕ Printing ✕ WhatsApp & SMS alerts ✕ WhatsApp c",
+            "detail": "included: Takeaway Dine-in (table QR) Coupons | not: Delivery Online payments Coin wallet Printing WhatsApp & SMS alerts WhatsApp chat Marketin",
             "kind": "expect"
           },
           {
             "label": "…a feature is in one list only",
             "ok": true,
             "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…the included ones are green and the ones not included are red",
+            "ok": true,
+            "detail": "success / danger",
+            "kind": "expect"
+          },
+          {
+            "label": "in the Features list: Coupons (in the plan) is green and says 'In the Starter plan'; Marketing (not in it) is red",
+            "ok": true,
+            "detail": "success / danger",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the tick boxes differ: green for what the plan has, red for what it doesn't (the 'Add for this client' box)",
+            "ok": true,
+            "detail": "rgb(46, 125, 70) vs rgb(165, 56, 47)",
+            "kind": "expect"
+          },
+          {
+            "label": "…every feature row has its own icon",
+            "ok": true,
+            "detail": "18",
             "kind": "expect"
           },
           {
@@ -6772,7 +6796,7 @@
           {
             "label": "Save: 'Saved.' and the form is now a saved draft with its own address",
             "ok": true,
-            "detail": "http://localhost:3171/platform/onboarding/6b099fea717f60b0038e8716",
+            "detail": "http://localhost:3171/platform/onboarding/6b09a1330d16af3bef6c97ea",
             "kind": "expect"
           },
           {

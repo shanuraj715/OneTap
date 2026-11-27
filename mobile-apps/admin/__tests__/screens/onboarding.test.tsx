@@ -1,8 +1,11 @@
+import * as RN from "react-native";
 import { fireEvent, screen, waitFor, within } from "@testing-library/react-native";
 import { router } from "expo-router";
 import { Onboarding } from "@/screens/Onboarding";
 import { OnboardingForm } from "@/screens/OnboardingForm";
-import { blankForm } from "@/lib/onboarding";
+import { blankForm, FEATURE_CHOICES, ORDER_MODE_CHOICES } from "@/lib/onboarding";
+import { ICONS } from "@/ui";
+import { darkColors, lightColors } from "@/ui/theme";
 import { fakeServer, renderApp } from "../../test/harness";
 
 const ROW = (o: Record<string, unknown>) => ({ id: "f1", storeName: "Curry House", repName: "Sam", status: "draft", planId: "starter", planName: "Starter", outlets: 2, brandId: null, publishedAt: null, createdAt: "2026-11-20T00:00:00Z", updatedAt: "2026-11-26T10:00:00Z", ...o });
@@ -130,6 +133,45 @@ describe("the requirement form", () => {
     expect(await screen.findByTestId("plan-summary")).toHaveTextContent(/includes nothing by itself/);
     expect(screen.queryByTestId("plan-included")).toBeNull();
     expect(screen.queryByText(/Not in the Custom plan/)).toBeNull(); // on a Custom plan everything is chosen by hand: no 'not in the plan'
+  });
+
+  describe.each([["light", lightColors], ["dark", darkColors]] as const)("what is in the plan and what is not look different (%s)", (mode, colours) => {
+    beforeEach(() => { jest.spyOn(RN, "useColorScheme").mockReturnValue(mode); });
+    afterEach(() => jest.restoreAllMocks());
+    const pickStarter = async () => { await open("new"); await fireEvent.press(screen.getByTestId("form-plan")); await fireEvent.press(await screen.findByTestId("form-plan-option-starter")); await screen.findByTestId("plan-summary"); };
+
+    it("the chips: included ones are green, the ones not included are red", async () => {
+      await pickStarter();
+      const yes = screen.getAllByTestId("chip-in"), no = screen.getAllByTestId("chip-out");
+      expect([yes.length, no.length]).toEqual([2, 16]);
+      for (const c of yes) expect(c).toHaveStyle({ borderColor: colours.ok, backgroundColor: colours.okWash });
+      for (const c of no) expect(c).toHaveStyle({ borderColor: colours.danger, backgroundColor: colours.dangerWash });
+    });
+
+    it("a feature row: green icon, green line and a green switch when the plan has it; red icon and line and an AMBER switch (an add-on) when it does not", async () => {
+      await pickStarter();
+      // Takeaway (ordering type on the outlet) is in Starter; Coupons is not
+      expect(screen.getByTestId("mode-takeaway-0-hint")).toHaveStyle({ color: colours.ok });
+      expect(screen.getByTestId("mode-takeaway-0").props.onTintColor).toBe(colours.ok);
+      expect(screen.getByTestId("feature-coupons-hint")).toHaveStyle({ color: colours.danger });
+      expect(screen.getByTestId("feature-coupons").props.onTintColor).toBe(colours.warn);
+      expect(screen.getByTestId("feature-coupons-icon")).toHaveStyle({ backgroundColor: colours.dangerWash });
+      expect(screen.getByTestId("mode-takeaway-0-icon")).toHaveStyle({ backgroundColor: colours.okWash });
+    });
+
+    it("with no plan chosen (or a Custom plan) nothing is coloured: the neutral icon and the app's own switch colour", async () => {
+      await open("new");
+      expect(screen.getByTestId("feature-coupons").props.onTintColor).toBe(colours.primary);
+      expect(screen.getByTestId("feature-coupons-icon")).toHaveStyle({ backgroundColor: colours.glassStrong });
+      expect(screen.queryByTestId("feature-coupons-hint")).toBeNull();
+    });
+  });
+
+  it("every feature and ordering type has a real icon, and its row shows it", async () => {
+    for (const f of [...FEATURE_CHOICES, ...ORDER_MODE_CHOICES]) expect(ICONS[f.icon]).toBeDefined();
+    await open("new");
+    for (const f of FEATURE_CHOICES) expect(screen.getByTestId(`feature-${f.key}-icon`)).toBeOnTheScreen();
+    for (const m of ORDER_MODE_CHOICES) expect(screen.getByTestId(`mode-${m.key}-0-icon`)).toBeOnTheScreen();
   });
 
   it("more outlets than the plan allows shows the reason and an Allow anyway switch", async () => {

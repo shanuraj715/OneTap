@@ -1474,3 +1474,4 @@
 {"id":"t124-store-owners-ui","status":"fail","pass":13,"fail":1,"mode":"headless","at":"2026-11-27T15:17:34.617Z","durationMs":2431}
 {"id":"t124-store-owners-ui","status":"pass","pass":14,"fail":0,"mode":"headless","at":"2026-11-27T15:18:07.983Z","durationMs":2988}
 {"id":"t21-onboarding","status":"pass","pass":124,"fail":0,"mode":"headless","at":"2026-11-27T15:21:48.658Z","durationMs":54566}
+{"id":"t21-onboarding","status":"pass","pass":128,"fail":0,"mode":"headless","at":"2026-11-27T15:27:16.770Z","durationMs":55991}

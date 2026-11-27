@@ -6,19 +6,27 @@ import { useApi } from "@/runtime";
 import type { OnboardingData, OnboardingOutlet, Plan } from "@/api/endpoints";
 import { useAction, messageOf } from "@/data/useAction";
 import { makePassword, strongEnough } from "@/lib/password";
-import { BUSINESS_TYPES, FEATURE_CHOICES, MENU_SOURCES, ORDER_MODE_CHOICES, beyondPlan, blankForm, isHHMM, newOutlet, offeredPlans, planHas, pointFrom, pruneForced, slugify } from "@/lib/onboarding";
+import { BUSINESS_TYPES, FEATURE_CHOICES, MENU_SOURCES, ORDER_MODE_CHOICES, beyondPlan, blankForm, isHHMM, newOutlet, offeredPlans, planHas, planState, pointFrom, pruneForced, slugify } from "@/lib/onboarding";
 import { limitsLine } from "./Plans";
-import { Button, ConfirmSheet, DateField, ErrorState, Field, Glass, Input, LoadingCards, Pill, Screen, Section, Select, Sheet, Text, toasts, AppSwitch, useTheme } from "@/ui";
+import { Button, ConfirmSheet, DateField, ErrorState, Field, Glass, Input, LoadingCards, Pill, Screen, Section, Select, Sheet, Text, toasts, AppSwitch, Icon, useTheme, type IconName } from "@/ui";
 
 /* ------------------------------------------------------------------------------------------------ small pieces */
-function Toggle({ label, hint, value, onChange, disabled, testID }: { label: string; hint?: string; value: boolean; onChange: (v: boolean) => void; disabled?: boolean; testID?: string }) {
+/**
+ * One switch row. With a plan chosen, a feature row also says where it stands (`state`): "in" — part of the plan (green icon, green line, green switch),
+ * "out" — not in the plan (red icon and line; if it is switched on anyway the switch is amber: it is something added on top of the plan).
+ */
+function Toggle({ label, hint, value, onChange, disabled, testID, icon, state }: { label: string; hint?: string; value: boolean; onChange: (v: boolean) => void; disabled?: boolean; testID?: string; icon?: IconName; state?: "in" | "out" | null }) {
+  const { c } = useTheme();
+  const tint = state === "in" ? c.ok : state === "out" ? c.danger : c.muted;
+  const wash = state === "in" ? c.okWash : state === "out" ? c.dangerWash : c.glassStrong;
   return (
     <View style={{ flexDirection: "row", alignItems: "center", gap: 12, opacity: disabled ? 0.55 : 1 }}>
+      {icon ? <View testID={testID ? `${testID}-icon` : undefined} style={{ width: 34, height: 34, borderRadius: 11, alignItems: "center", justifyContent: "center", backgroundColor: wash }}><Icon name={icon} size={17} color={tint} /></View> : null}
       <View style={{ flex: 1 }}>
         <Text variant="subheading">{label}</Text>
-        {hint ? <Text variant="caption" tone="muted">{hint}</Text> : null}
+        {hint ? <Text variant="caption" style={{ color: state ? tint : c.muted }} testID={testID ? `${testID}-hint` : undefined}>{hint}</Text> : null}
       </View>
-      <AppSwitch value={value} onValueChange={onChange} disabled={disabled} accessibilityLabel={label} testID={testID} />
+      <AppSwitch value={value} onValueChange={onChange} disabled={disabled} accessibilityLabel={label} testID={testID} tone={state === "in" ? "ok" : state === "out" ? "warn" : undefined} />
     </View>
   );
 }
@@ -26,12 +34,13 @@ function Toggle({ label, hint, value, onChange, disabled, testID }: { label: str
 const planStatus = (plan: Plan | undefined, feature: string): string | undefined => (!plan || plan.custom ? undefined : planHas(plan, feature) ? `✓ Included in the ${plan.name} plan` : `✕ Not in the ${plan.name} plan`);
 
 /** One feature in the plan summary: a tick and its name, or (not included) a cross and the name struck through. */
-function FeatureChip({ label, on }: { label: string; on: boolean }) {
+function FeatureChip({ label, on, icon }: { label: string; on: boolean; icon?: IconName }) {
   const { c } = useTheme();
+  const tint = on ? c.ok : c.danger;
   return (
-    <View style={{ flexDirection: "row", alignItems: "center", gap: 5, paddingVertical: 4, paddingHorizontal: 10, borderRadius: 999, borderWidth: 1, borderColor: c.border, backgroundColor: on ? c.okWash : "transparent" }}>
-      <Text variant="caption" style={{ color: on ? c.ok : c.muted, fontWeight: "800" }}>{on ? "✓" : "✕"}</Text>
-      <Text variant="caption" style={{ color: on ? c.text : c.muted, textDecorationLine: on ? "none" : "line-through" }}>{label}</Text>
+    <View testID={`chip-${on ? "in" : "out"}`} style={{ flexDirection: "row", alignItems: "center", gap: 6, paddingVertical: 5, paddingHorizontal: 10, borderRadius: 999, borderWidth: 1, borderColor: tint, backgroundColor: on ? c.okWash : c.dangerWash }}>
+      <Icon name={icon ?? (on ? "circleCheck" : "circleX")} size={13} color={tint} />
+      <Text variant="caption" style={{ color: tint, fontWeight: "700" }}>{label}</Text>
     </View>
   );
 }
@@ -44,7 +53,7 @@ function PlanSummary({ plan }: { plan: Plan }) {
   if (plan.custom) {
     return <Text variant="caption" tone="muted" testID="plan-summary">{plan.name} includes nothing by itself: the limits above and the features you tick below are exactly what this client gets.</Text>;
   }
-  const all = [...ORDER_MODE_CHOICES.map((m) => ({ key: m.feature, label: m.label })), ...FEATURE_CHOICES.map((f) => ({ key: f.key, label: f.label }))];
+  const all = [...ORDER_MODE_CHOICES.map((m) => ({ key: m.feature, label: m.label, icon: m.icon })), ...FEATURE_CHOICES.map((f) => ({ key: f.key, label: f.label, icon: f.icon }))];
   const yes = all.filter((f) => planHas(plan, f.key));
   const no = all.filter((f) => !planHas(plan, f.key));
   return (
@@ -52,12 +61,12 @@ function PlanSummary({ plan }: { plan: Plan }) {
       <Text variant="caption" tone="muted" testID="plan-limits">{plan.description ? `${plan.description} · ` : ""}{limitsLine(plan)}</Text>
       <View style={{ gap: 6 }}>
         <Text variant="subheading" testID="plan-included-title">Included in {plan.name} ({yes.length})</Text>
-        <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }} testID="plan-included">{yes.map((f) => <FeatureChip key={f.key} label={f.label} on />)}</View>
+        <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }} testID="plan-included">{yes.map((f) => <FeatureChip key={f.key} label={f.label} icon={f.icon} on />)}</View>
       </View>
       {no.length ? (
         <View style={{ gap: 6 }}>
           <Text variant="subheading" testID="plan-not-included-title">Not included ({no.length})</Text>
-          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }} testID="plan-not-included">{no.map((f) => <FeatureChip key={f.key} label={f.label} on={false} />)}</View>
+          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }} testID="plan-not-included">{no.map((f) => <FeatureChip key={f.key} label={f.label} icon={f.icon} on={false} />)}</View>
           <Text variant="caption" tone="muted">You can still add these for this client: switch the feature on below and choose “Allow anyway”.</Text>
         </View>
       ) : <Text variant="caption" tone="muted" testID="plan-not-included-none">Every feature is included.</Text>}
@@ -131,7 +140,7 @@ export function OnboardingForm({ id }: { id: string }) {
       right={!ro ? <Button size="sm" icon="check" title="Save" loading={save.isPending} disabled={!dirty && Boolean(formId)} onPress={() => save.mutate()} testID="form-save" /> : undefined}>
       {ro ? <Glass strong><Text variant="body" testID="form-published">This form was published as a store{form?.publishedAt ? "" : ""}. It stays here to read; the store is managed under Stores.</Text></Glass> : null}
 
-      <Section title="Plan" hint="Choose it first: it decides what the rest of the form may ask for.">
+      <Section icon="plans" title="Plan" hint="Choose it first: it decides what the rest of the form may ask for.">
         <Glass><View style={{ gap: 12 }}>
           <Select label="Plan" value={data.planId} options={planOptions} onChange={(v) => set({ planId: v, forced: [] })} disabled={ro} testID="form-plan" />
           {plan?.custom ? (
@@ -147,9 +156,9 @@ export function OnboardingForm({ id }: { id: string }) {
         </View></Glass>
       </Section>
 
-      <Section title="Meeting">
+      <Section icon="calendar" title="Meeting">
         <Glass><View style={{ gap: 12 }}>
-          <Field label="Representative"><Input value={data.meeting.repName} onChangeText={(t) => group("meeting", { repName: t })} autoCapitalize="words" editable={!ro} testID="form-rep" /></Field>
+          <Field label="Representative"><Input value={data.meeting.repName} onChangeText={(t) => group("meeting", { repName: t })} autoCapitalize="words" editable={!ro} testID="form-rep" leftIcon="person" /></Field>
           <View style={{ flexDirection: "row", gap: 10 }}>
             <View style={{ flex: 1 }}><DateField label="Meeting date" value={data.meeting.date} onChange={(v) => group("meeting", { date: v })} testID="form-date" clearable={!ro} /></View>
             <View style={{ flex: 1 }}><DateField label="Go-live" value={data.meeting.goLive} onChange={(v) => group("meeting", { goLive: v })} testID="form-golive" min={data.meeting.date || undefined} clearable={!ro} /></View>
@@ -158,30 +167,30 @@ export function OnboardingForm({ id }: { id: string }) {
         </View></Glass>
       </Section>
 
-      <Section title="Business and owner">
+      <Section icon="building" title="Business and owner">
         <Glass><View style={{ gap: 12 }}>
-          <Field label="Store name" hint={b.storeName.trim() ? `Its address will be ${subdomain}` : undefined}><Input value={b.storeName} onChangeText={(t) => group("business", { storeName: t })} autoCapitalize="words" editable={!ro} testID="form-store" /></Field>
-          <Field label="Tagline"><Input value={b.tagline} onChangeText={(t) => group("business", { tagline: t })} autoCapitalize="sentences" editable={!ro} /></Field>
+          <Field label="Store name" hint={b.storeName.trim() ? `Its address will be ${subdomain}` : undefined}><Input value={b.storeName} onChangeText={(t) => group("business", { storeName: t })} autoCapitalize="words" editable={!ro} testID="form-store" leftIcon="stores" /></Field>
+          <Field label="Tagline"><Input leftIcon="note" value={b.tagline} onChangeText={(t) => group("business", { tagline: t })} autoCapitalize="sentences" editable={!ro} /></Field>
           <Select label="Business type" value={b.type} options={BUSINESS_TYPES.map((t) => ({ value: t, label: t }))} onChange={(v) => group("business", { type: v })} disabled={ro} testID="form-type" />
-          <Field label="Owner's name"><Input value={b.ownerName} onChangeText={(t) => group("business", { ownerName: t })} autoCapitalize="words" editable={!ro} testID="form-owner" /></Field>
-          <Field label="Owner's email" hint="It becomes their sign-in."><Input value={b.ownerEmail} onChangeText={(t) => group("business", { ownerEmail: t.trim() })} keyboardType="email-address" editable={!ro} testID="form-email" /></Field>
-          <Field label="Owner's phone"><Input value={b.ownerPhone} onChangeText={(t) => group("business", { ownerPhone: t })} keyboardType="phone-pad" editable={!ro} testID="form-phone" /></Field>
-          <Field label="City"><Input value={b.city} onChangeText={(t) => group("business", { city: t })} autoCapitalize="words" editable={!ro} /></Field>
+          <Field label="Owner's name"><Input value={b.ownerName} onChangeText={(t) => group("business", { ownerName: t })} autoCapitalize="words" editable={!ro} testID="form-owner" leftIcon="person" /></Field>
+          <Field label="Owner's email" hint="It becomes their sign-in."><Input value={b.ownerEmail} onChangeText={(t) => group("business", { ownerEmail: t.trim() })} keyboardType="email-address" editable={!ro} testID="form-email" leftIcon="mail" /></Field>
+          <Field label="Owner's phone"><Input value={b.ownerPhone} onChangeText={(t) => group("business", { ownerPhone: t })} keyboardType="phone-pad" editable={!ro} testID="form-phone" leftIcon="phone" /></Field>
+          <Field label="City"><Input leftIcon="outlet" value={b.city} onChangeText={(t) => group("business", { city: t })} autoCapitalize="words" editable={!ro} /></Field>
           <View style={{ flexDirection: "row", gap: 10 }}>
-            <View style={{ flex: 1 }}><Field label="GSTIN"><Input value={b.gstin} onChangeText={(t) => group("business", { gstin: t.toUpperCase() })} editable={!ro} /></Field></View>
-            <View style={{ flex: 1 }}><Field label="FSSAI"><Input value={b.fssai} onChangeText={(t) => group("business", { fssai: t })} keyboardType="numeric" editable={!ro} /></Field></View>
+            <View style={{ flex: 1 }}><Field label="GSTIN"><Input leftIcon="receipt" value={b.gstin} onChangeText={(t) => group("business", { gstin: t.toUpperCase() })} editable={!ro} /></Field></View>
+            <View style={{ flex: 1 }}><Field label="FSSAI"><Input leftIcon="shield" value={b.fssai} onChangeText={(t) => group("business", { fssai: t })} keyboardType="numeric" editable={!ro} /></Field></View>
           </View>
         </View></Glass>
       </Section>
 
-      <Section title="Features" hint={plan && !plan.custom ? `What ${plan.name} includes is on; the rest can be added for this client.` : "What the client wants besides ordering."}>
+      <Section icon="sparkles" title="Features" hint={plan && !plan.custom ? `What ${plan.name} includes is on; the rest can be added for this client.` : "What the client wants besides ordering."}>
         <Glass><View style={{ gap: 14 }}>
           {FEATURE_CHOICES.map((f) => {
             const inPlan = planHas(plan, f.key);
             const on = data.features.includes(f.key);
             return (
               <View key={f.key} style={{ gap: 6 }}>
-                <Toggle label={f.label} value={on} disabled={ro} testID={`feature-${f.key}`} hint={planStatus(plan, f.key)}
+                <Toggle label={f.label} icon={f.icon} state={planState(plan, f.key)} value={on} disabled={ro} testID={`feature-${f.key}`} hint={planStatus(plan, f.key)}
                   onChange={(v) => set({ features: v ? [...data.features, f.key] : data.features.filter((x) => x !== f.key), ...(v ? {} : { forced: data.forced.filter((x) => x !== `feature:${f.key}`) }) })} />
                 {on && !inPlan ? <Toggle label="Allow anyway" hint="Unlock it for this client although the plan lacks it." value={data.forced.includes(`feature:${f.key}`)} onChange={(v) => allow(`feature:${f.key}`, v)} disabled={ro} testID={`allow-feature:${f.key}`} /> : null}
               </View>
@@ -190,7 +199,7 @@ export function OnboardingForm({ id }: { id: string }) {
         </View></Glass>
       </Section>
 
-      <Section title="Outlets" hint={`${data.outlets.length} outlet${data.outlets.length === 1 ? "" : "s"}`} action={!ro ? <Button size="sm" variant="glass" icon="plus" title="Add outlet" onPress={() => set({ outlets: [...data.outlets, newOutlet()] })} testID="add-outlet" /> : undefined}>
+      <Section icon="stores" title="Outlets" hint={`${data.outlets.length} outlet${data.outlets.length === 1 ? "" : "s"}`} action={!ro ? <Button size="sm" variant="glass" icon="plus" title="Add outlet" onPress={() => set({ outlets: [...data.outlets, newOutlet()] })} testID="add-outlet" /> : undefined}>
         <View style={{ gap: 12 }}>
           {data.outlets.map((o, i) => (
             <Glass key={o.id} testID={`outlet-${i}`}><View style={{ gap: 12 }}>
@@ -198,9 +207,9 @@ export function OnboardingForm({ id }: { id: string }) {
                 <Text variant="heading">Outlet {i + 1}</Text>
                 {!ro && data.outlets.length > 1 ? <Button size="sm" variant="ghost" icon="trash" title="Remove" onPress={() => set({ outlets: data.outlets.filter((x) => x.id !== o.id) })} testID={`remove-outlet-${i}`} /> : null}
               </View>
-              <Field label="Name"><Input value={o.name} onChangeText={(t) => setOutlet(o.id, { name: t })} autoCapitalize="words" editable={!ro} testID={`outlet-name-${i}`} /></Field>
-              <Field label="Web address (slug)" hint={`Left empty it is ${slugify(o.name) || "made from the name"}.`}><Input value={o.slug} onChangeText={(t) => setOutlet(o.id, { slug: slugify(t) })} editable={!ro} testID={`outlet-slug-${i}`} /></Field>
-              <Field label="Phone"><Input value={o.phone} onChangeText={(t) => setOutlet(o.id, { phone: t })} keyboardType="phone-pad" editable={!ro} /></Field>
+              <Field label="Name"><Input value={o.name} onChangeText={(t) => setOutlet(o.id, { name: t })} autoCapitalize="words" editable={!ro} testID={`outlet-name-${i}`} leftIcon="stores" /></Field>
+              <Field label="Web address (slug)" hint={`Left empty it is ${slugify(o.name) || "made from the name"}.`}><Input value={o.slug} onChangeText={(t) => setOutlet(o.id, { slug: slugify(t) })} editable={!ro} testID={`outlet-slug-${i}`} leftIcon="link" /></Field>
+              <Field label="Phone"><Input leftIcon="phone" value={o.phone} onChangeText={(t) => setOutlet(o.id, { phone: t })} keyboardType="phone-pad" editable={!ro} /></Field>
               <Field label="Address"><Input value={o.address} onChangeText={(t) => setOutlet(o.id, { address: t })} multiline autoCapitalize="sentences" editable={!ro} testID={`outlet-address-${i}`} /></Field>
               <MapPoint outlet={o} readOnly={ro} index={i} onChange={(patch) => setOutlet(o.id, patch)} />
               <View style={{ gap: 12 }}>
@@ -209,7 +218,7 @@ export function OnboardingForm({ id }: { id: string }) {
                   const inPlan = planHas(plan, m.feature);
                   return (
                     <View key={m.key} style={{ gap: 6 }}>
-                      <Toggle label={m.label} value={o.modes[m.key]} onChange={(v) => setOutlet(o.id, { modes: { ...o.modes, [m.key]: v } })} disabled={ro} testID={`mode-${m.key}-${i}`} hint={planStatus(plan, m.feature)} />
+                      <Toggle label={m.label} icon={m.icon} state={planState(plan, m.feature)} value={o.modes[m.key]} onChange={(v) => setOutlet(o.id, { modes: { ...o.modes, [m.key]: v } })} disabled={ro} testID={`mode-${m.key}-${i}`} hint={planStatus(plan, m.feature)} />
                       {o.modes[m.key] && !inPlan ? <Toggle label="Allow anyway" value={data.forced.includes(`feature:${m.feature}`)} onChange={(v) => allow(`feature:${m.feature}`, v)} disabled={ro} testID={`allow-feature:${m.feature}-${i}`} /> : null}
                     </View>
                   );
@@ -219,20 +228,20 @@ export function OnboardingForm({ id }: { id: string }) {
                 <View style={{ gap: 10 }}>
                   <Text variant="label" tone="muted">Delivery</Text>
                   <View style={{ flexDirection: "row", gap: 10 }}>
-                    <View style={{ flex: 1 }}><Field label="Distance (km)"><Input value={String(o.delivery.radiusKm)} onChangeText={(t) => setOutlet(o.id, { delivery: { ...o.delivery, radiusKm: Math.min(50, Number(t.replace(/[^\d.]/g, "")) || 0) } })} keyboardType="numeric" editable={!ro} testID={`delivery-km-${i}`} /></Field></View>
-                    <View style={{ flex: 1 }}><Field label="Fee (₹)"><Input value={String(o.delivery.fee)} onChangeText={(t) => setOutlet(o.id, { delivery: { ...o.delivery, fee: num(t, 100000) } })} keyboardType="numeric" editable={!ro} /></Field></View>
+                    <View style={{ flex: 1 }}><Field label="Distance (km)"><Input value={String(o.delivery.radiusKm)} onChangeText={(t) => setOutlet(o.id, { delivery: { ...o.delivery, radiusKm: Math.min(50, Number(t.replace(/[^\d.]/g, "")) || 0) } })} keyboardType="numeric" editable={!ro} testID={`delivery-km-${i}`} leftIcon="route" /></Field></View>
+                    <View style={{ flex: 1 }}><Field label="Fee (₹)"><Input leftIcon="rupee" value={String(o.delivery.fee)} onChangeText={(t) => setOutlet(o.id, { delivery: { ...o.delivery, fee: num(t, 100000) } })} keyboardType="numeric" editable={!ro} /></Field></View>
                   </View>
                   <View style={{ flexDirection: "row", gap: 10 }}>
-                    <View style={{ flex: 1 }}><Field label="Free above (₹)"><Input value={String(o.delivery.freeAbove)} onChangeText={(t) => setOutlet(o.id, { delivery: { ...o.delivery, freeAbove: num(t) } })} keyboardType="numeric" editable={!ro} /></Field></View>
-                    <View style={{ flex: 1 }}><Field label="Minimum order (₹)"><Input value={String(o.delivery.minOrder)} onChangeText={(t) => setOutlet(o.id, { delivery: { ...o.delivery, minOrder: num(t) } })} keyboardType="numeric" editable={!ro} /></Field></View>
+                    <View style={{ flex: 1 }}><Field label="Free above (₹)"><Input leftIcon="rupee" value={String(o.delivery.freeAbove)} onChangeText={(t) => setOutlet(o.id, { delivery: { ...o.delivery, freeAbove: num(t) } })} keyboardType="numeric" editable={!ro} /></Field></View>
+                    <View style={{ flex: 1 }}><Field label="Minimum order (₹)"><Input leftIcon="rupee" value={String(o.delivery.minOrder)} onChangeText={(t) => setOutlet(o.id, { delivery: { ...o.delivery, minOrder: num(t) } })} keyboardType="numeric" editable={!ro} /></Field></View>
                   </View>
                 </View>
               ) : null}
-              <Toggle label="Same hours as the other outlets" value={o.hours.useCommon} onChange={(v) => setOutlet(o.id, { hours: { ...o.hours, useCommon: v } })} disabled={ro} testID={`hours-common-${i}`} />
+              <Toggle label="Same hours as the other outlets" icon="clock" value={o.hours.useCommon} onChange={(v) => setOutlet(o.id, { hours: { ...o.hours, useCommon: v } })} disabled={ro} testID={`hours-common-${i}`} />
               {!o.hours.useCommon ? (
                 <View style={{ flexDirection: "row", gap: 10 }}>
-                  <View style={{ flex: 1 }}><Field label="Opens" error={isHHMM(o.hours.opensAt) ? undefined : "Like 11:00"}><Input value={o.hours.opensAt} onChangeText={(t) => setOutlet(o.id, { hours: { ...o.hours, opensAt: t } })} editable={!ro} testID={`hours-open-${i}`} /></Field></View>
-                  <View style={{ flex: 1 }}><Field label="Closes" error={isHHMM(o.hours.closesAt) ? undefined : "Like 23:00"}><Input value={o.hours.closesAt} onChangeText={(t) => setOutlet(o.id, { hours: { ...o.hours, closesAt: t } })} editable={!ro} testID={`hours-close-${i}`} /></Field></View>
+                  <View style={{ flex: 1 }}><Field label="Opens" error={isHHMM(o.hours.opensAt) ? undefined : "Like 11:00"}><Input value={o.hours.opensAt} onChangeText={(t) => setOutlet(o.id, { hours: { ...o.hours, opensAt: t } })} editable={!ro} testID={`hours-open-${i}`} leftIcon="clock" /></Field></View>
+                  <View style={{ flex: 1 }}><Field label="Closes" error={isHHMM(o.hours.closesAt) ? undefined : "Like 23:00"}><Input value={o.hours.closesAt} onChangeText={(t) => setOutlet(o.id, { hours: { ...o.hours, closesAt: t } })} editable={!ro} testID={`hours-close-${i}`} leftIcon="clock" /></Field></View>
                 </View>
               ) : null}
             </View></Glass>
@@ -246,47 +255,47 @@ export function OnboardingForm({ id }: { id: string }) {
         </View>
       </Section>
 
-      <Section title="Common settings" hint="Used by every outlet that has no hours of its own.">
+      <Section icon="settings" title="Common settings" hint="Used by every outlet that has no hours of its own.">
         <Glass><View style={{ gap: 12 }}>
           <View style={{ flexDirection: "row", gap: 10 }}>
-            <View style={{ flex: 1 }}><Field label="Opens" error={isHHMM(data.common.hours.opensAt) ? undefined : "Like 11:00"}><Input value={data.common.hours.opensAt} onChangeText={(t) => set({ common: { ...data.common, hours: { ...data.common.hours, opensAt: t } } })} editable={!ro} testID="common-open" /></Field></View>
-            <View style={{ flex: 1 }}><Field label="Closes" error={isHHMM(data.common.hours.closesAt) ? undefined : "Like 23:00"}><Input value={data.common.hours.closesAt} onChangeText={(t) => set({ common: { ...data.common, hours: { ...data.common.hours, closesAt: t } } })} editable={!ro} testID="common-close" /></Field></View>
+            <View style={{ flex: 1 }}><Field label="Opens" error={isHHMM(data.common.hours.opensAt) ? undefined : "Like 11:00"}><Input value={data.common.hours.opensAt} onChangeText={(t) => set({ common: { ...data.common, hours: { ...data.common.hours, opensAt: t } } })} editable={!ro} testID="common-open" leftIcon="clock" /></Field></View>
+            <View style={{ flex: 1 }}><Field label="Closes" error={isHHMM(data.common.hours.closesAt) ? undefined : "Like 23:00"}><Input value={data.common.hours.closesAt} onChangeText={(t) => set({ common: { ...data.common, hours: { ...data.common.hours, closesAt: t } } })} editable={!ro} testID="common-close" leftIcon="clock" /></Field></View>
           </View>
-          <Field label="Preparation time (minutes)"><Input value={String(data.common.prepMinutes)} onChangeText={(t) => group("common", { prepMinutes: Math.min(180, Math.max(1, num(t))) })} keyboardType="numeric" editable={!ro} /></Field>
-          <Toggle label="Cash" value={data.common.payments.cash} onChange={(v) => set({ common: { ...data.common, payments: { ...data.common.payments, cash: v } } })} disabled={ro} />
-          <Toggle label="Online payments" value={data.common.payments.online} onChange={(v) => set({ common: { ...data.common, payments: { ...data.common.payments, online: v } } })} disabled={ro} />
-          <Toggle label="Prices include GST" value={data.common.tax.pricesIncludeTax} onChange={(v) => set({ common: { ...data.common, tax: { ...data.common.tax, pricesIncludeTax: v } } })} disabled={ro} />
+          <Field label="Preparation time (minutes)"><Input leftIcon="timer" value={String(data.common.prepMinutes)} onChangeText={(t) => group("common", { prepMinutes: Math.min(180, Math.max(1, num(t))) })} keyboardType="numeric" editable={!ro} /></Field>
+          <Toggle label="Cash" icon="cash" value={data.common.payments.cash} onChange={(v) => set({ common: { ...data.common, payments: { ...data.common.payments, cash: v } } })} disabled={ro} />
+          <Toggle label="Online payments" icon="card" value={data.common.payments.online} onChange={(v) => set({ common: { ...data.common, payments: { ...data.common.payments, online: v } } })} disabled={ro} />
+          <Toggle label="Prices include GST" icon="percent" value={data.common.tax.pricesIncludeTax} onChange={(v) => set({ common: { ...data.common, tax: { ...data.common.tax, pricesIncludeTax: v } } })} disabled={ro} />
           <View style={{ flexDirection: "row", gap: 10 }}>
-            <View style={{ flex: 1 }}><Field label="GST (%)"><Input value={String(data.common.tax.gstRatePct)} onChangeText={(t) => set({ common: { ...data.common, tax: { ...data.common.tax, gstRatePct: Math.min(40, Number(t.replace(/[^\d.]/g, "")) || 0) } } })} keyboardType="numeric" editable={!ro} /></Field></View>
-            <View style={{ flex: 1 }}><Field label="Service charge (%)"><Input value={String(data.common.tax.serviceChargePct)} onChangeText={(t) => set({ common: { ...data.common, tax: { ...data.common.tax, serviceChargePct: Math.min(25, Number(t.replace(/[^\d.]/g, "")) || 0) } } })} keyboardType="numeric" editable={!ro} /></Field></View>
+            <View style={{ flex: 1 }}><Field label="GST (%)"><Input leftIcon="percent" value={String(data.common.tax.gstRatePct)} onChangeText={(t) => set({ common: { ...data.common, tax: { ...data.common.tax, gstRatePct: Math.min(40, Number(t.replace(/[^\d.]/g, "")) || 0) } } })} keyboardType="numeric" editable={!ro} /></Field></View>
+            <View style={{ flex: 1 }}><Field label="Service charge (%)"><Input leftIcon="percent" value={String(data.common.tax.serviceChargePct)} onChangeText={(t) => set({ common: { ...data.common, tax: { ...data.common.tax, serviceChargePct: Math.min(25, Number(t.replace(/[^\d.]/g, "")) || 0) } } })} keyboardType="numeric" editable={!ro} /></Field></View>
           </View>
         </View></Glass>
       </Section>
 
-      <Section title="Address">
+      <Section icon="globe" title="Address">
         <Glass><View style={{ gap: 12 }}>
           <AddressField value={data.address.subdomain} fallback={slugify(b.storeName)} readOnly={ro} onChange={(v) => group("address", { subdomain: v })} />
-          <Field label="Own domain" hint={planHas(plan, "customDomain") ? "Optional, like dominos.com" : `Not in the ${plan?.name ?? "chosen"} plan; add "Own domain name" under Features first.`}><Input value={data.address.ownDomain} onChangeText={(t) => group("address", { ownDomain: t.trim().toLowerCase() })} editable={!ro} testID="form-own-domain" /></Field>
+          <Field label="Own domain" hint={planHas(plan, "customDomain") ? "Optional, like dominos.com" : `Not in the ${plan?.name ?? "chosen"} plan; add "Own domain name" under Features first.`}><Input value={data.address.ownDomain} onChangeText={(t) => group("address", { ownDomain: t.trim().toLowerCase() })} editable={!ro} testID="form-own-domain" leftIcon="globe" /></Field>
         </View></Glass>
       </Section>
 
-      <Section title="Setup notes">
+      <Section icon="note" title="Setup notes">
         <Glass><View style={{ gap: 12 }}>
           <Select label="How the menu will arrive" value={data.setup.menuSource} options={MENU_SOURCES.map((t) => ({ value: t, label: t }))} onChange={(v) => group("setup", { menuSource: v })} disabled={ro} />
           <View style={{ flexDirection: "row", gap: 10 }}>
-            <View style={{ flex: 1 }}><Field label="Dishes (about)"><Input value={data.setup.itemCount} onChangeText={(t) => group("setup", { itemCount: t.replace(/[^\d]/g, "") })} keyboardType="numeric" editable={!ro} /></Field></View>
-            <View style={{ flex: 1 }}><Field label="Team members"><Input value={String(data.setup.teamCount)} onChangeText={(t) => group("setup", { teamCount: num(t, 500) })} keyboardType="numeric" editable={!ro} testID="form-team" /></Field></View>
+            <View style={{ flex: 1 }}><Field label="Dishes (about)"><Input leftIcon="utensils" value={data.setup.itemCount} onChangeText={(t) => group("setup", { itemCount: t.replace(/[^\d]/g, "") })} keyboardType="numeric" editable={!ro} /></Field></View>
+            <View style={{ flex: 1 }}><Field label="Team members"><Input value={String(data.setup.teamCount)} onChangeText={(t) => group("setup", { teamCount: num(t, 500) })} keyboardType="numeric" editable={!ro} testID="form-team" leftIcon="team" /></Field></View>
           </View>
           {beyond.some((x) => x.id === "users") ? (
             <View style={{ gap: 6 }}><Text variant="caption" tone="warn">{beyond.find((x) => x.id === "users")!.label}.</Text><Toggle label="Allow anyway" value={data.forced.includes("users")} onChange={(v) => allow("users", v)} disabled={ro} testID="allow-users" /></View>
           ) : null}
-          <Field label="Printers"><Input value={data.setup.printers} onChangeText={(t) => group("setup", { printers: t })} autoCapitalize="sentences" editable={!ro} /></Field>
+          <Field label="Printers"><Input leftIcon="printer" value={data.setup.printers} onChangeText={(t) => group("setup", { printers: t })} autoCapitalize="sentences" editable={!ro} /></Field>
           <Field label="Other notes"><Input value={data.setup.notes} onChangeText={(t) => group("setup", { notes: t })} multiline autoCapitalize="sentences" editable={!ro} /></Field>
         </View></Glass>
       </Section>
 
       {!ro ? (
-        <Section title="Ready to publish?" hint="Save first; the server then checks everything, including that the address and the owner's email are free.">
+        <Section icon="rocket" title="Ready to publish?" hint="Save first; the server then checks everything, including that the address and the owner's email are free.">
           <Glass strong testID="form-check"><View style={{ gap: 10 }}>
             {!formId || dirty ? <Text tone="muted">Save the form to see whether it is ready.</Text> : check.isLoading ? <Text tone="muted">Checking…</Text> : checkNow ? (
               <>
@@ -359,7 +368,7 @@ function AddressField({ value, fallback, onChange, readOnly }: { value: string; 
   return (
     <Field label="Rasoi Pulse address" hint={value ? undefined : fallback ? `Left empty it is ${fallback}.` : "Made from the store's name."}>
       <View style={{ gap: 6 }}>
-        <Input value={value} onChangeText={(t) => onChange(slugify(t))} editable={!readOnly} testID="form-subdomain" />
+        <Input value={value} onChangeText={(t) => onChange(slugify(t))} editable={!readOnly} testID="form-subdomain" leftIcon="link" />
         {typed && q.data ? <Text variant="caption" tone={q.data.available ? "ok" : "danger"} testID="address-status">{q.data.available ? `${typed} is free.` : q.data.reason ?? `${typed} is taken.`}</Text> : null}
       </View>
     </Field>

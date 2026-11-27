@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { BarChart3, BellRing, Building2, CalendarCheck, CalendarClock, CalendarDays, Check, ChefHat, CreditCard, Globe, Image as ImageIcon, Layers, Megaphone, MessageCircle, Palette, Printer, QrCode, Settings, ShoppingBag, Sparkles, Star, StickyNote, Store, Tag, Timer, Truck, Wallet, X } from "lucide-react";
 import { DatePickerInput } from "@rasoipulse/ui";
 import {
   BUSINESS_TYPES,
@@ -35,7 +36,7 @@ const timeBox = { width: 120 };
 
 export function MeetingSection({ data, P }) {
   return (
-    <Card title="2 · The meeting" subtitle="Who spoke to the client, and when.">
+    <Card title="2 · The meeting" icon={<CalendarDays size={16} />} subtitle="Who spoke to the client, and when.">
       <div style={grid}>
         <Field label="Representative"><TextInput value={data.meeting.repName} onChange={(e) => P("meeting.repName", e.target.value)} maxLength={80} /></Field>
         <Field label="Meeting date"><DatePickerInput value={data.meeting.date} onChange={(v) => P("meeting.date", typeof v === "string" ? v : "")} placeholder="Pick a date" /></Field>
@@ -48,11 +49,17 @@ export function MeetingSection({ data, P }) {
   );
 }
 
+/** One icon per feature, the same in the plan lists and in the rows (the app uses the same pictures). */
+const FEATURE_ICONS = {
+  takeaway: ShoppingBag, dineInQr: QrCode, delivery: Truck, onlinePayments: CreditCard, coupons: Tag, wallet: Wallet, printing: Printer, notifications: BellRing, whatsappChat: MessageCircle,
+  marketing: Megaphone, analytics: BarChart3, kitchenDisplay: ChefHat, reservations: CalendarCheck, scheduledOrders: CalendarClock, feedback: Star, cartReminders: Timer, favicon: ImageIcon, customDomain: Globe,
+};
+
 export function PlanSection({ data, P, ctx }) {
   const { plans, allow } = ctx;
   const chosen = plans.find((p) => p.id === data.planId);
   return (
-    <Card title="1 · Plan" subtitle="Choose this first — what the client can have in the rest of the form depends on it.">
+    <Card title="1 · Plan" icon={<Layers size={16} />} subtitle="Choose this first — what the client can have in the rest of the form depends on it.">
       <div style={{ ...grid, alignItems: "end" }}>
         <Field label="Plan">
           <Select value={data.planId} onChange={(e) => P("planId", e.target.value)} aria-label="Plan">
@@ -102,11 +109,15 @@ function PlanIncludes({ planName, allow }) {
   }
   const yes = all.filter((f) => planHasFeature(allow, f.key));
   const no = all.filter((f) => !planHasFeature(allow, f.key));
-  const chip = (f, on) => (
-    <span key={f.key} data-feature={f.key} style={{ display: "inline-flex", gap: 5, alignItems: "center", padding: "3px 9px", borderRadius: 999, fontSize: 12.5, border: "1px solid var(--color-border)", color: on ? "var(--tone-success, #17703f)" : "var(--color-muted, #6b6b6b)", textDecoration: on ? "none" : "line-through", opacity: on ? 1 : 0.85 }}>
-      <span aria-hidden style={{ textDecoration: "none", display: "inline-block" }}>{on ? "✓" : "✕"}</span> {f.label}
-    </span>
-  );
+  const chip = (f, on) => {
+    const Glyph = FEATURE_ICONS[f.key];
+    const tone = on ? "success" : "danger";
+    return (
+      <span key={f.key} data-feature={f.key} data-tone={tone} style={{ display: "inline-flex", gap: 6, alignItems: "center", padding: "4px 10px", borderRadius: 999, fontSize: 12.5, fontWeight: 600, border: `1px solid var(--tone-${tone})`, background: `var(--tone-${tone}-wash)`, color: `var(--tone-${tone})` }}>
+        {Glyph ? <Glyph size={13} aria-hidden="true" /> : on ? <Check size={13} aria-hidden="true" /> : <X size={13} aria-hidden="true" />} {f.label}
+      </span>
+    );
+  };
   return (
     <div data-testid="plan-includes" style={{ marginTop: 12, display: "grid", gap: 10 }}>
       <div>
@@ -134,7 +145,7 @@ export function BusinessSection({ data, P }) {
     </Field>
   );
   return (
-    <Card title="3 · The business and its owner">
+    <Card title="3 · The business and its owner" icon={<Building2 size={16} />}>
       <div style={grid}>
         {f("storeName", "Store name", { maxLength: 80 })}
         {f("tagline", "Tagline", { maxLength: 120 })}
@@ -160,7 +171,7 @@ export function FeaturesSection({ data, P, ctx }) {
   const { allow, forceFlag, pricing } = ctx;
   const toggle = (key, on) => P("features", on ? [...new Set([...data.features, key])] : data.features.filter((k) => k !== key));
   return (
-    <Card title="4 · Features" subtitle="Tick what the client wants. A lock means the plan doesn't have it — you can still add it for this client.">
+    <Card title="4 · Features" icon={<Sparkles size={16} />} subtitle="Tick what the client wants. A lock means the plan doesn't have it — you can still add it for this client.">
       <div data-feature-list style={{ borderTop: "1px solid var(--color-border)" }}>
         {CHECKLIST_FEATURES.map((f) => {
           const outside = Boolean(allow) && !planHasFeature(allow, f.key);
@@ -168,6 +179,8 @@ export function FeaturesSection({ data, P, ctx }) {
           return (
             <FeatureRow
               key={f.key}
+              icon={FEATURE_ICONS[f.key]}
+              customPlan={allow?.custom}
               label={f.label}
               info={f.description}
               checked={data.features.includes(f.key)}
@@ -289,6 +302,8 @@ function OutletCard({ index, outlet: o, P, ctx, canRemove, disabled }) {
           return (
             <div key={m.key} data-mode={m.key}>
               <FeatureRow
+                icon={FEATURE_ICONS[m.feature]}
+                customPlan={allow?.custom}
                 label={m.label}
                 info={m.help}
                 checked={o.modes[m.key]}
@@ -355,7 +370,7 @@ export function OutletsSection({ data, P, ctx, disabled }) {
   };
   const over = Boolean(allow) && !allow.custom && count > allow.maxOutlets;
   return (
-    <Card title="5 · Outlets" subtitle="Every location the client runs — address, map pin, how customers order, delivery distance and opening hours.">
+    <Card title="5 · Outlets" icon={<Store size={16} />} subtitle="Every location the client runs — address, map pin, how customers order, delivery distance and opening hours.">
       <Field label="Total outlets" style={{ marginBottom: 0 }}>
         <Stepper value={count} onChange={setCount} min={1} max={100} label="outlet" plural="outlets" disabled={disabled} />
       </Field>
@@ -385,7 +400,7 @@ export function CommonSection({ data, P, ctx }) {
   const { allow, forceFlag } = ctx;
   const c = data.common;
   return (
-    <Card title="6 · Settings every outlet shares" subtitle="Used by outlets that follow the common hours, and by every outlet for the rest.">
+    <Card title="6 · Settings every outlet shares" icon={<Settings size={16} />} subtitle="Used by outlets that follow the common hours, and by every outlet for the rest.">
       <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
         <Field label="Common opening time"><TextInput type="time" value={c.hours.opensAt} onChange={(e) => P("common.hours.opensAt", e.target.value)} style={timeBox} aria-label="Common opening time" /></Field>
         <Field label="Common closing time"><TextInput type="time" value={c.hours.closesAt} onChange={(e) => P("common.hours.closesAt", e.target.value)} style={timeBox} aria-label="Common closing time" /></Field>
@@ -431,7 +446,7 @@ export function LookSection({ data, P, ctx }) {
   const effectOutside = Boolean(allow) && !planHasEffect(allow, l.effect);
   const dark = l.background.toLowerCase() < "#808080";
   return (
-    <Card title="7 · Look and feel" subtitle="The store's colours and style. These are shared by every outlet and can be changed later in the store's own settings.">
+    <Card title="7 · Look and feel" icon={<Palette size={16} />} subtitle="The store's colours and style. These are shared by every outlet and can be changed later in the store's own settings.">
       <p style={{ margin: "0 0 8px", fontWeight: 600, fontSize: 13 }}>Colour scheme</p>
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }} role="radiogroup" aria-label="Colour scheme">
         {ONBOARDING_PALETTES.map((p) => (
@@ -525,7 +540,7 @@ export function AddressSection({ data, P, ctx }) {
   }, [label, base]);
   const ownOutside = Boolean(allow) && !planHasFeature(allow, "customDomain");
   return (
-    <Card title="8 · The store's address" subtitle="Where customers open the store.">
+    <Card title="8 · The store's address" icon={<Globe size={16} />} subtitle="Where customers open the store.">
       <div style={grid}>
         <Field label="Rasoi Pulse address" info="Free, instant, nothing to set up on the server.">
           <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
@@ -566,7 +581,7 @@ export function SetupSection({ data, P, ctx, disabled }) {
   const overTables = Boolean(allow) && !allow.custom && tables > 0 && roundUpTables(tables) > allow.maxTables;
   const forceTables = data.forced.includes("tables");
   return (
-    <Card title="9 · Setting up" subtitle="What the client will need help with.">
+    <Card title="9 · Setting up" icon={<StickyNote size={16} />} subtitle="What the client will need help with.">
       <div style={grid}>
         <Field label="The menu will come from">
           <Select value={s.menuSource} onChange={(e) => P("setup.menuSource", e.target.value)}>
