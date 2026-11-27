@@ -119,6 +119,60 @@ try {
   save("error-quote-sold-out", { status: quoteSoldOut.status, ...quoteSoldOut.json });
   const chefLogin = must(await call("POST", "/api/auth/app-login", { body: { email: "chef@sandbox.test", password: "Staff123!" } }), "chef login");
   save("auth-app-login-kitchen", { ...chefLogin, token: "TEST-TOKEN-KITCHEN-0123456789", expiresAt: "2026-12-10T00:00:00.000Z" });
+
+  // ---- the Orders tab: takeaway + delivery orders, moving them along, a rider, an edit, a printer, a delete (what the dashboard's Orders page does)
+  const own = (method, path, body) => call(method, path, { cookie: owner, headers: hdr, body });
+  const raw = (c) => db.mongoose.connection.db.collection(c);
+  const oid = (s) => new db.mongoose.Types.ObjectId(String(s));
+  must(await own("PATCH", `/api/outlets/${outlet}/config`, { identity: { name: "Gazab Momos Noida", location: { point: { lat: 28.5355, lng: 77.391 } } }, features: { ordering: { takeaway: true, delivery: true } }, operations: { limits: { deliveryRadiusKm: 6 } } }), "outlet config for takeaway + delivery");
+  const chaiItem = menu.items.find((i) => i.name === "Masala Chai");
+  const asCustomer = async (channel, lines, who, extra = {}) => {
+    const order = must(await own("POST", "/api/orders", { outletId: outlet, channel, name: who.name, cart: { lines }, gateway: who.cod ? "cod" : "mock", ...extra }), `${channel} order`).order;
+    // a customer's own order carries their mobile number (a staff-placed one doesn't): give it one, as it would have
+    await raw("orders").updateOne({ _id: oid(order.id) }, { $set: { "customer.phone": who.phone, "customer.name": who.name, "payment.status": who.paid ? "paid" : "pending" } });
+    return order;
+  };
+  const take = await asCustomer("takeaway", [{ itemId: veg.id, variantId: veg.variants[0].id, quantity: 1, modifierOptionIds: [] }, { itemId: chaiItem.id, quantity: 2, modifierOptionIds: [] }], { name: "Priya Nair", phone: "9811122233", paid: false, cod: true }, { note: "Pack the dip separately" });
+  const del1 = await asCustomer("delivery", [{ itemId: kurkure.id, modifierOptionIds: [menu.modifierGroups.find((g) => g.name === "Spice level").options[0].id], quantity: 2 }], { name: "Neha Gupta", phone: "9876512345", paid: true }, { deliveryAddress: { text: "B-14, Sector 18, Noida", landmark: "Opposite the metro station", lat: 28.5455, lng: 77.397 } });
+  const del2 = await asCustomer("delivery", [{ itemId: chaiItem.id, quantity: 3, modifierOptionIds: [] }], { name: "Karan Malhotra", phone: "9876554321", paid: true }, { deliveryAddress: { text: "Flat 4B, Tower C, Sector 62, Noida", lat: 28.5655, lng: 77.381 } });
+  const waiter = (method, path, body) => call(method, path, { bearer, headers: hdr, body });
+  // the waiter moves the takeaway order along (and back, by hand, with a reason)
+  save("order-status-accepted", must(await waiter("PATCH", `/api/orders/${take.id}/status`, { status: "accepted" }), "accept"));
+  save("order-status-manual", must(await waiter("PATCH", `/api/orders/${take.id}/status/manual`, { status: "placed", reason: "Tapped by mistake" }), "manual"));
+  const flow = await waiter("PATCH", `/api/orders/${take.id}/status`, { status: "completed" });
+  save("error-status-flow", { status: flow.status, ...flow.json });
+  // an edit: the note and the customer, then the items (re-priced by the server)
+  save("order-edited-details", must(await waiter("PATCH", `/api/orders/${take.id}`, { note: "No onions please", customerName: "Priya N.", customerPhone: "9811122233" }), "edit details"));
+  save("order-edited-items", must(await waiter("PATCH", `/api/orders/${take.id}`, { cart: { lines: [{ itemId: veg.id, variantId: veg.variants[0].id, quantity: 2, modifierOptionIds: [] }, { itemId: chaiItem.id, quantity: 1, modifierOptionIds: [] }] } }), "edit items"));
+  // a delivery order: made, then handed to a rider
+  for (const s2 of ["accepted", "preparing", "ready"]) { must(await waiter("PATCH", `/api/orders/${del1.id}/status`, { status: s2 }), `del1 ${s2}`); must(await waiter("PATCH", `/api/orders/${del2.id}/status`, { status: s2 }), `del2 ${s2}`); }
+  const ramesh = must(await own("POST", "/api/riders", { name: "Ramesh", phone: "98765 43210" }), "rider").rider;
+  must(await own("POST", "/api/riders", { name: "Suresh", phone: "98111 22233" }), "rider 2");
+  save("riders", must(await waiter("GET", "/api/riders"), "riders"));
+  save("order-rider-assigned", must(await waiter("PATCH", `/api/orders/${del1.id}/rider`, { riderId: ramesh.id }), "assign rider"));
+  save("order-rider-sendout", must(await waiter("PATCH", `/api/orders/${del2.id}/rider`, { name: "Walk-in rider", phone: "9000011111", sendOut: true }), "send out"));
+  const locked = await waiter("PATCH", `/api/orders/${del1.id}`, { note: "too late" });
+  save("error-edit-locked", { status: locked.status, ...locked.json });
+  // a printer, and printing an order on it
+  const printer = must(await own("POST", "/api/printing/printers", { name: "Kitchen printer", station: "kitchen", docType: "kot", target: "agent", paperWidth: "80mm" }), "printer").printer;
+  // (the printer's connection details are left out of the file: the app never reads them)
+  save("printers", { printers: must(await waiter("GET", "/api/printing/printers"), "printers").printers.map(({ connection, ...p }) => p) });
+  const printed = await waiter("POST", `/api/orders/${take.id}/print`.replace("/api/orders", "/api/printing/orders"), { printerId: printer.id });
+  save("print-order", { status: printed.status, ...printed.json });
+  // the orders as they stand: a takeaway just placed, two deliveries (one ready, one out), the dine-in rounds from before
+  save("orders-mixed", must(await waiter("GET", "/api/orders?limit=100"), "orders mixed"));
+  // a completed dine-in order put back by hand while its table has another party: the server answers 409 + the free tables
+  const done = must(await waiter("GET", "/api/orders?limit=100"), "orders").orders.find((o) => o.channel === "dine-in");
+  if (done) {
+    await raw("orders").updateOne({ _id: oid(done.id) }, { $set: { status: "completed" } });
+    const reopen = await waiter("PATCH", `/api/orders/${done.id}/status/manual`, { status: "preparing" });
+    if (reopen.status === 409) save("error-manual-table-taken", { status: reopen.status, ...reopen.json });
+  }
+  // the owner deletes an order (the staff role may not)
+  const doomed = await asCustomer("takeaway", [{ itemId: chaiItem.id, quantity: 1, modifierOptionIds: [] }], { name: "Test Delete", phone: "9000000001", paid: false, cod: true });
+  const refused = await waiter("DELETE", `/api/orders/${doomed.id}`);
+  save("error-delete-forbidden", { status: refused.status, ...refused.json });
+  save("order-deleted", must(await own("DELETE", `/api/orders/${doomed.id}`), "delete"));
 } finally {
   server.close();
   await mongod.stop();

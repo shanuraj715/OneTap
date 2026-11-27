@@ -1,0 +1,24 @@
+{
+  "riders": [
+    {
+      "id": "6b09ab559d8c7a6a15d9a424",
+      "name": "Ramesh",
+      "phone": "98765 43210",
+      "isActive": true,
+      "createdAt": "2026-11-27T16:09:57.500Z",
+      "appLogin": false,
+      "pinSetAt": null,
+      "lastLoginAt": null
+    },
+    {
+      "id": "6b09ab559d8c7a6a15d9a427",
+      "name": "Suresh",
+      "phone": "98111 22233",
+      "isActive": true,
+      "createdAt": "2026-11-27T16:09:57.503Z",
+      "appLogin": false,
+      "pinSetAt": null,
+      "lastLoginAt": null
+    }
+  ]
+}

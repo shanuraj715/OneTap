@@ -1,31 +1,31 @@
 {
   "session": {
-    "_id": "6b0826d970b3aff5bb1baf50",
-    "tableId": "6b0826d970b3aff5bb1baf28",
-    "customerId": "6b0826d970b3aff5bb1baf4c",
+    "_id": "6b09ab549d8c7a6a15d9a2fb",
+    "tableId": "6b09ab549d8c7a6a15d9a2c5",
+    "customerId": "6b09ab549d8c7a6a15d9a2f7",
     "status": "open",
     "tableHistory": [
       {
-        "tableId": "6b0826d970b3aff5bb1baf24",
+        "tableId": "6b09ab549d8c7a6a15d9a2be",
         "number": "T1",
-        "at": "2026-11-26T12:32:25.456Z"
+        "at": "2026-11-27T16:09:56.729Z"
       },
       {
-        "tableId": "6b0826d970b3aff5bb1baf28",
+        "tableId": "6b09ab549d8c7a6a15d9a2c5",
         "number": "T2",
-        "at": "2026-11-26T12:32:25.579Z",
-        "by": "6b0826d970b3aff5bb1baef9"
+        "at": "2026-11-27T16:09:56.901Z",
+        "by": "6b09ab549d8c7a6a15d9a290"
       }
     ],
-    "brandId": "6b0826d970b3aff5bb1baed6",
-    "outletId": "6b0826d970b3aff5bb1baed9",
-    "openedAt": "2026-11-26T12:32:25.457Z",
-    "createdAt": "2026-11-26T12:32:25.457Z",
-    "updatedAt": "2026-11-26T12:32:25.579Z",
+    "brandId": "6b09ab549d8c7a6a15d9a26b",
+    "outletId": "6b09ab549d8c7a6a15d9a26e",
+    "openedAt": "2026-11-27T16:09:56.729Z",
+    "createdAt": "2026-11-27T16:09:56.729Z",
+    "updatedAt": "2026-11-27T16:09:56.901Z",
     "__v": 1
   },
   "from": {
-    "id": "6b0826d970b3aff5bb1baf24",
+    "id": "6b09ab549d8c7a6a15d9a2be",
     "number": "T1",
     "zone": "Ground floor",
     "seats": 4,
@@ -34,12 +34,12 @@
     "activeSessionId": null
   },
   "to": {
-    "id": "6b0826d970b3aff5bb1baf28",
+    "id": "6b09ab549d8c7a6a15d9a2c5",
     "number": "T2",
     "zone": "Ground floor",
     "seats": 2,
     "status": "seated",
     "isActive": true,
-    "activeSessionId": "6b0826d970b3aff5bb1baf50"
+    "activeSessionId": "6b09ab549d8c7a6a15d9a2fb"
   }
 }

@@ -1,0 +1,516 @@
+{
+  "orders": [
+    {
+      "id": "6b09ab559d8c7a6a15d9a3e3",
+      "orderNumber": "0006",
+      "channel": "delivery",
+      "placedBy": "staff",
+      "staffName": "Owner",
+      "status": "out_for_delivery",
+      "lines": [
+        {
+          "itemId": "6b09ab549d8c7a6a15d9a2b7",
+          "name": "Masala Chai",
+          "foodType": "veg",
+          "modifiers": [],
+          "quantity": 3,
+          "unitPrice": 3000,
+          "lineTotal": 9000,
+          "gstRatePct": 5
+        }
+      ],
+      "totals": {
+        "subtotal": 9000,
+        "discount": 0,
+        "deliveryFee": 0,
+        "coinsRedeemed": 0,
+        "coinsDiscount": 0,
+        "coinsEarned": 0,
+        "taxable": 8571,
+        "cgst": 215,
+        "sgst": 214,
+        "taxAmount": 429,
+        "serviceCharge": 0,
+        "roundOff": 0,
+        "grandTotal": 9000
+      },
+      "pricesIncludeTax": true,
+      "payment": {
+        "gateway": "mock",
+        "status": "paid"
+      },
+      "note": null,
+      "customer": {
+        "name": "Karan Malhotra",
+        "phone": "9876554321"
+      },
+      "tableId": null,
+      "sessionId": null,
+      "couponCode": null,
+      "deliveryAddress": {
+        "text": "Flat 4B, Tower C, Sector 62, Noida",
+        "lat": 28.5655,
+        "lng": 77.381,
+        "distanceKm": 3.5
+      },
+      "etaMinutes": 29,
+      "scheduledFor": null,
+      "rider": {
+        "riderId": null,
+        "name": "Walk-in rider",
+        "phone": "9000011111",
+        "assignedAt": "2026-11-27T16:09:57.521Z"
+      },
+      "statusHistory": [
+        {
+          "status": "placed",
+          "at": "2026-11-27T16:09:57.390Z"
+        },
+        {
+          "status": "accepted",
+          "at": "2026-11-27T16:09:57.467Z",
+          "by": "6b09ab549d8c7a6a15d9a290"
+        },
+        {
+          "status": "preparing",
+          "at": "2026-11-27T16:09:57.478Z",
+          "by": "6b09ab549d8c7a6a15d9a290"
+        },
+        {
+          "status": "ready",
+          "at": "2026-11-27T16:09:57.491Z",
+          "by": "6b09ab549d8c7a6a15d9a290"
+        },
+        {
+          "status": "out_for_delivery",
+          "at": "2026-11-27T16:09:57.521Z",
+          "by": "6b09ab549d8c7a6a15d9a290",
+          "reason": "with Walk-in rider"
+        }
+      ],
+      "createdAt": "2026-11-27T16:09:57.391Z"
+    },
+    {
+      "id": "6b09ab559d8c7a6a15d9a3d5",
+      "orderNumber": "0005",
+      "channel": "delivery",
+      "placedBy": "staff",
+      "staffName": "Owner",
+      "status": "ready",
+      "lines": [
+        {
+          "itemId": "6b09ab549d8c7a6a15d9a2b3",
+          "name": "Chicken Kurkure Momos",
+          "foodType": "non-veg",
+          "modifiers": [
+            {
+              "id": "2e3c6742-9399-4fdf-a4e9-05acfc6e7446",
+              "label": "Mild",
+              "priceDelta": 0
+            }
+          ],
+          "quantity": 2,
+          "unitPrice": 14000,
+          "lineTotal": 28000,
+          "gstRatePct": 5
+        }
+      ],
+      "totals": {
+        "subtotal": 28000,
+        "discount": 0,
+        "deliveryFee": 0,
+        "coinsRedeemed": 0,
+        "coinsDiscount": 0,
+        "coinsEarned": 0,
+        "taxable": 26667,
+        "cgst": 667,
+        "sgst": 666,
+        "taxAmount": 1333,
+        "serviceCharge": 0,
+        "roundOff": 0,
+        "grandTotal": 28000
+      },
+      "pricesIncludeTax": true,
+      "payment": {
+        "gateway": "mock",
+        "status": "paid"
+      },
+      "note": null,
+      "customer": {
+        "name": "Neha Gupta",
+        "phone": "9876512345"
+      },
+      "tableId": null,
+      "sessionId": null,
+      "couponCode": null,
+      "deliveryAddress": {
+        "text": "B-14, Sector 18, Noida",
+        "lat": 28.5455,
+        "lng": 77.397,
+        "distanceKm": 1.3,
+        "landmark": "Opposite the metro station"
+      },
+      "etaMinutes": 20,
+      "scheduledFor": null,
+      "rider": {
+        "riderId": "6b09ab559d8c7a6a15d9a424",
+        "name": "Ramesh",
+        "phone": "98765 43210",
+        "assignedAt": "2026-11-27T16:09:57.514Z"
+      },
+      "statusHistory": [
+        {
+          "status": "placed",
+          "at": "2026-11-27T16:09:57.381Z"
+        },
+        {
+          "status": "accepted",
+          "at": "2026-11-27T16:09:57.463Z",
+          "by": "6b09ab549d8c7a6a15d9a290"
+        },
+        {
+          "status": "preparing",
+          "at": "2026-11-27T16:09:57.473Z",
+          "by": "6b09ab549d8c7a6a15d9a290"
+        },
+        {
+          "status": "ready",
+          "at": "2026-11-27T16:09:57.483Z",
+          "by": "6b09ab549d8c7a6a15d9a290"
+        }
+      ],
+      "createdAt": "2026-11-27T16:09:57.382Z"
+    },
+    {
+      "id": "6b09ab559d8c7a6a15d9a3c4",
+      "orderNumber": "0004",
+      "channel": "takeaway",
+      "placedBy": "staff",
+      "staffName": "Owner",
+      "status": "placed",
+      "lines": [
+        {
+          "itemId": "6b09ab549d8c7a6a15d9a2b0",
+          "name": "Veg Steamed Momos",
+          "foodType": "veg",
+          "variantId": "bddb9d31-c033-4e9e-b619-64dec62bda68",
+          "variantLabel": "Half (4 pcs)",
+          "modifiers": [],
+          "quantity": 2,
+          "unitPrice": 6000,
+          "lineTotal": 12000,
+          "gstRatePct": 5
+        },
+        {
+          "itemId": "6b09ab549d8c7a6a15d9a2b7",
+          "name": "Masala Chai",
+          "foodType": "veg",
+          "modifiers": [],
+          "quantity": 1,
+          "unitPrice": 3000,
+          "lineTotal": 3000,
+          "gstRatePct": 5
+        }
+      ],
+      "totals": {
+        "subtotal": 15000,
+        "discount": 0,
+        "deliveryFee": 0,
+        "coinsRedeemed": 0,
+        "coinsDiscount": 0,
+        "coinsEarned": 0,
+        "taxable": 14286,
+        "cgst": 357,
+        "sgst": 357,
+        "taxAmount": 714,
+        "serviceCharge": 0,
+        "roundOff": 0,
+        "grandTotal": 15000
+      },
+      "pricesIncludeTax": true,
+      "payment": {
+        "gateway": "cod",
+        "status": "pending"
+      },
+      "note": "No onions please",
+      "customer": {
+        "name": "Priya N.",
+        "phone": "9811122233"
+      },
+      "tableId": null,
+      "sessionId": null,
+      "couponCode": null,
+      "deliveryAddress": null,
+      "etaMinutes": 15,
+      "scheduledFor": null,
+      "rider": null,
+      "statusHistory": [
+        {
+          "status": "placed",
+          "at": "2026-11-27T16:09:57.299Z"
+        },
+        {
+          "status": "accepted",
+          "at": "2026-11-27T16:09:57.413Z",
+          "by": "6b09ab549d8c7a6a15d9a290"
+        },
+        {
+          "status": "placed",
+          "at": "2026-11-27T16:09:57.428Z",
+          "by": "6b09ab549d8c7a6a15d9a290",
+          "manual": true,
+          "from": "accepted",
+          "reason": "Tapped by mistake"
+        },
+        {
+          "status": "placed",
+          "at": "2026-11-27T16:09:57.447Z",
+          "by": "6b09ab549d8c7a6a15d9a290",
+          "edited": true,
+          "from": "placed",
+          "reason": "details edited"
+        },
+        {
+          "status": "placed",
+          "at": "2026-11-27T16:09:57.456Z",
+          "by": "6b09ab549d8c7a6a15d9a290",
+          "edited": true,
+          "from": "placed",
+          "reason": "items edited · 120.00 → 150.00"
+        }
+      ],
+      "createdAt": "2026-11-27T16:09:57.300Z"
+    },
+    {
+      "id": "6b09ab549d8c7a6a15d9a343",
+      "orderNumber": "0003",
+      "channel": "dine-in",
+      "placedBy": "staff",
+      "staffName": "Asha (waiter)",
+      "status": "cancelled",
+      "lines": [
+        {
+          "itemId": "6b09ab549d8c7a6a15d9a2b7",
+          "name": "Masala Chai",
+          "foodType": "veg",
+          "modifiers": [],
+          "quantity": 1,
+          "unitPrice": 3000,
+          "lineTotal": 3000,
+          "gstRatePct": 5
+        }
+      ],
+      "totals": {
+        "subtotal": 3000,
+        "discount": 0,
+        "deliveryFee": 0,
+        "coinsRedeemed": 0,
+        "coinsDiscount": 0,
+        "coinsEarned": 0,
+        "taxable": 2857,
+        "cgst": 72,
+        "sgst": 71,
+        "taxAmount": 143,
+        "serviceCharge": 0,
+        "roundOff": 0,
+        "grandTotal": 3000
+      },
+      "pricesIncludeTax": true,
+      "payment": {
+        "gateway": "cod",
+        "status": "pending"
+      },
+      "note": null,
+      "customer": {
+        "customerId": "6b09ab549d8c7a6a15d9a336",
+        "name": "Sita Verma",
+        "phone": "9876599999"
+      },
+      "tableId": "6b09ab549d8c7a6a15d9a2c5",
+      "sessionId": "6b09ab549d8c7a6a15d9a33a",
+      "couponCode": null,
+      "deliveryAddress": null,
+      "etaMinutes": 15,
+      "scheduledFor": null,
+      "rider": null,
+      "statusHistory": [
+        {
+          "status": "placed",
+          "at": "2026-11-27T16:09:56.825Z"
+        },
+        {
+          "status": "accepted",
+          "at": "2026-11-27T16:09:56.830Z",
+          "by": "6b09ab549d8c7a6a15d9a290"
+        },
+        {
+          "status": "cancelled",
+          "at": "2026-11-27T16:09:56.855Z",
+          "by": "6b09ab549d8c7a6a15d9a290",
+          "manual": true,
+          "from": "accepted",
+          "reason": "Table voided"
+        }
+      ],
+      "createdAt": "2026-11-27T16:09:56.825Z"
+    },
+    {
+      "id": "6b09ab549d8c7a6a15d9a326",
+      "orderNumber": "0002",
+      "channel": "dine-in",
+      "placedBy": "staff",
+      "staffName": "Asha (waiter)",
+      "status": "accepted",
+      "lines": [
+        {
+          "itemId": "6b09ab549d8c7a6a15d9a2b7",
+          "name": "Masala Chai",
+          "foodType": "veg",
+          "modifiers": [],
+          "quantity": 2,
+          "unitPrice": 3000,
+          "lineTotal": 6000,
+          "gstRatePct": 5
+        }
+      ],
+      "totals": {
+        "subtotal": 6000,
+        "discount": 0,
+        "deliveryFee": 0,
+        "coinsRedeemed": 0,
+        "coinsDiscount": 0,
+        "coinsEarned": 0,
+        "taxable": 5714,
+        "cgst": 143,
+        "sgst": 143,
+        "taxAmount": 286,
+        "serviceCharge": 0,
+        "roundOff": 0,
+        "grandTotal": 6000
+      },
+      "pricesIncludeTax": true,
+      "payment": {
+        "gateway": "cod",
+        "status": "paid"
+      },
+      "note": null,
+      "customer": {
+        "customerId": "6b09ab549d8c7a6a15d9a2f7",
+        "name": "Mehta family",
+        "phone": "9876543210"
+      },
+      "tableId": "6b09ab549d8c7a6a15d9a2c5",
+      "sessionId": "6b09ab549d8c7a6a15d9a2fb",
+      "couponCode": null,
+      "deliveryAddress": null,
+      "etaMinutes": 15,
+      "scheduledFor": null,
+      "rider": null,
+      "statusHistory": [
+        {
+          "status": "placed",
+          "at": "2026-11-27T16:09:56.797Z"
+        },
+        {
+          "status": "accepted",
+          "at": "2026-11-27T16:09:56.803Z",
+          "by": "6b09ab549d8c7a6a15d9a290"
+        }
+      ],
+      "createdAt": "2026-11-27T16:09:56.798Z"
+    },
+    {
+      "id": "6b09ab549d8c7a6a15d9a303",
+      "orderNumber": "0001",
+      "channel": "dine-in",
+      "placedBy": "staff",
+      "staffName": "Asha (waiter)",
+      "status": "accepted",
+      "lines": [
+        {
+          "itemId": "6b09ab549d8c7a6a15d9a2b0",
+          "name": "Veg Steamed Momos",
+          "foodType": "veg",
+          "variantId": "29dfd17d-09f2-4da6-ace2-acca33c3c6eb",
+          "variantLabel": "Full (8 pcs)",
+          "modifiers": [
+            {
+              "id": "920b42e9-77d7-4db8-8fe3-86e3ee510b12",
+              "label": "Mayo dip",
+              "priceDelta": 1000
+            }
+          ],
+          "quantity": 2,
+          "unitPrice": 10000,
+          "lineTotal": 20000,
+          "gstRatePct": 5,
+          "note": "less salt"
+        },
+        {
+          "itemId": "6b09ab549d8c7a6a15d9a2b3",
+          "name": "Chicken Kurkure Momos",
+          "foodType": "non-veg",
+          "modifiers": [
+            {
+              "id": "b463e66d-6cc8-428c-bf08-212e707313a5",
+              "label": "Hot",
+              "priceDelta": 0
+            }
+          ],
+          "quantity": 1,
+          "unitPrice": 14000,
+          "lineTotal": 14000,
+          "gstRatePct": 5
+        }
+      ],
+      "totals": {
+        "subtotal": 34000,
+        "discount": 0,
+        "deliveryFee": 0,
+        "coinsRedeemed": 0,
+        "coinsDiscount": 0,
+        "coinsEarned": 0,
+        "taxable": 32381,
+        "cgst": 810,
+        "sgst": 809,
+        "taxAmount": 1619,
+        "serviceCharge": 0,
+        "roundOff": 0,
+        "grandTotal": 34000
+      },
+      "pricesIncludeTax": true,
+      "payment": {
+        "gateway": "cod",
+        "status": "paid"
+      },
+      "note": "birthday table",
+      "customer": {
+        "customerId": "6b09ab549d8c7a6a15d9a2f7",
+        "name": "Mehta family",
+        "phone": "9876543210"
+      },
+      "tableId": "6b09ab549d8c7a6a15d9a2c5",
+      "sessionId": "6b09ab549d8c7a6a15d9a2fb",
+      "couponCode": null,
+      "deliveryAddress": null,
+      "etaMinutes": 15,
+      "scheduledFor": null,
+      "rider": null,
+      "statusHistory": [
+        {
+          "status": "placed",
+          "at": "2026-11-27T16:09:56.737Z"
+        },
+        {
+          "status": "accepted",
+          "at": "2026-11-27T16:09:56.743Z",
+          "by": "6b09ab549d8c7a6a15d9a290"
+        }
+      ],
+      "createdAt": "2026-11-27T16:09:56.738Z"
+    }
+  ],
+  "counts": {
+    "paymentPending": 0
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "status": 409,
+  "error": "An order that's placed can't move to completed"
+}

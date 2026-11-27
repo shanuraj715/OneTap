@@ -1,0 +1,24 @@
+{
+  "status": 201,
+  "job": {
+    "id": "6b09ab559d8c7a6a15d9a441",
+    "status": "queued",
+    "docType": "kot",
+    "printerId": "6b09ab559d8c7a6a15d9a437",
+    "printerName": "Kitchen printer",
+    "station": "kitchen",
+    "target": "agent",
+    "orderId": "6b09ab559d8c7a6a15d9a3c4",
+    "orderNumber": "0004",
+    "attemptCount": 0,
+    "maxAttempts": 5,
+    "lastError": null,
+    "nextAttemptAt": "2026-11-27T16:09:57.562Z",
+    "isReprint": false,
+    "reprintOf": null,
+    "ticketKind": "kot",
+    "copies": 1,
+    "createdAt": "2026-11-27T16:09:57.563Z",
+    "printedAt": null
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "printers": [
+    {
+      "id": "6b09ab559d8c7a6a15d9a437",
+      "name": "Kitchen printer",
+      "station": "kitchen",
+      "docType": "kot",
+      "target": "agent",
+      "paperWidth": "80mm",
+      "templateId": null,
+      "autoPrintOn": [],
+      "channels": [],
+      "copies": 1,
+      "cutAfter": true,
+      "openDrawer": false,
+      "isActive": true,
+      "lastOkAt": null,
+      "lastErrorAt": null,
+      "lastError": null,
+      "cloudApiKeySet": false,
+      "configError": "Give this printer an agent id, and use the same id when you install the agent."
+    }
+  ]
+}

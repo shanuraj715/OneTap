@@ -1,7 +1,7 @@
 {
   "categories": [
     {
-      "id": "6b0826d970b3aff5bb1baf0f",
+      "id": "6b09ab549d8c7a6a15d9a2a7",
       "name": "Momos",
       "parentId": null,
       "image": null,
@@ -11,7 +11,7 @@
       "availability": null
     },
     {
-      "id": "6b0826d970b3aff5bb1baf13",
+      "id": "6b09ab549d8c7a6a15d9a2aa",
       "name": "Drinks",
       "parentId": null,
       "image": null,
@@ -23,8 +23,8 @@
   ],
   "items": [
     {
-      "id": "6b0826d970b3aff5bb1baf1b",
-      "categoryId": "6b0826d970b3aff5bb1baf0f",
+      "id": "6b09ab549d8c7a6a15d9a2b3",
+      "categoryId": "6b09ab549d8c7a6a15d9a2a7",
       "name": "Chicken Kurkure Momos",
       "description": "Crispy fried",
       "foodType": "non-veg",
@@ -35,8 +35,8 @@
       "basePrice": 14000,
       "variants": [],
       "modifierGroupIds": [
-        "6b0826d970b3aff5bb1baf15",
-        "6b0826d970b3aff5bb1baf17"
+        "6b09ab549d8c7a6a15d9a2ac",
+        "6b09ab549d8c7a6a15d9a2ae"
       ],
       "gstRatePct": 5,
       "isAvailable": true,
@@ -48,8 +48,8 @@
       "pairsWith": []
     },
     {
-      "id": "6b0826d970b3aff5bb1baf21",
-      "categoryId": "6b0826d970b3aff5bb1baf13",
+      "id": "6b09ab549d8c7a6a15d9a2ba",
+      "categoryId": "6b09ab549d8c7a6a15d9a2aa",
       "name": "Cold Coffee",
       "description": "",
       "foodType": "veg",
@@ -68,8 +68,8 @@
       "pairsWith": []
     },
     {
-      "id": "6b0826d970b3aff5bb1baf1f",
-      "categoryId": "6b0826d970b3aff5bb1baf13",
+      "id": "6b09ab549d8c7a6a15d9a2b7",
+      "categoryId": "6b09ab549d8c7a6a15d9a2aa",
       "name": "Masala Chai",
       "description": "",
       "foodType": "veg",
@@ -94,8 +94,8 @@
       "pairsWith": []
     },
     {
-      "id": "6b0826d970b3aff5bb1baf1d",
-      "categoryId": "6b0826d970b3aff5bb1baf0f",
+      "id": "6b09ab549d8c7a6a15d9a2b5",
+      "categoryId": "6b09ab549d8c7a6a15d9a2a7",
       "name": "Paneer Tandoori Momos",
       "description": "",
       "foodType": "veg",
@@ -114,8 +114,8 @@
       "pairsWith": []
     },
     {
-      "id": "6b0826d970b3aff5bb1baf19",
-      "categoryId": "6b0826d970b3aff5bb1baf0f",
+      "id": "6b09ab549d8c7a6a15d9a2b0",
+      "categoryId": "6b09ab549d8c7a6a15d9a2a7",
       "name": "Veg Steamed Momos",
       "description": "Cabbage, carrot and herbs",
       "foodType": "veg",
@@ -126,18 +126,18 @@
       "basePrice": 0,
       "variants": [
         {
-          "id": "eaae6041-16a0-4c14-93c0-dbbdc97c5e42",
+          "id": "bddb9d31-c033-4e9e-b619-64dec62bda68",
           "label": "Half (4 pcs)",
           "price": 6000
         },
         {
-          "id": "95d76a49-8dd5-4e9e-ab23-1ff02b6d9c4c",
+          "id": "29dfd17d-09f2-4da6-ace2-acca33c3c6eb",
           "label": "Full (8 pcs)",
           "price": 9000
         }
       ],
       "modifierGroupIds": [
-        "6b0826d970b3aff5bb1baf15"
+        "6b09ab549d8c7a6a15d9a2ac"
       ],
       "gstRatePct": 5,
       "isAvailable": true,
@@ -151,43 +151,43 @@
   ],
   "modifierGroups": [
     {
-      "id": "6b0826d970b3aff5bb1baf15",
+      "id": "6b09ab549d8c7a6a15d9a2ac",
       "name": "Extra dip",
       "required": false,
       "minSelect": 0,
       "maxSelect": 2,
       "options": [
         {
-          "id": "f9a925ca-6661-4b47-a61b-17797d5c0790",
+          "id": "920b42e9-77d7-4db8-8fe3-86e3ee510b12",
           "label": "Mayo dip",
           "priceDelta": 1000
         },
         {
-          "id": "416ef831-1039-4539-8c0e-19f1a8ccc713",
+          "id": "0c97e1e4-2ea4-46a7-9278-28c339e21160",
           "label": "Schezwan dip",
           "priceDelta": 1500
         }
       ]
     },
     {
-      "id": "6b0826d970b3aff5bb1baf17",
+      "id": "6b09ab549d8c7a6a15d9a2ae",
       "name": "Spice level",
       "required": true,
       "minSelect": 1,
       "maxSelect": 1,
       "options": [
         {
-          "id": "a37d2e76-4ace-44e2-91af-0f53c4fa2712",
+          "id": "2e3c6742-9399-4fdf-a4e9-05acfc6e7446",
           "label": "Mild",
           "priceDelta": 0
         },
         {
-          "id": "0023f557-04ca-481a-bc87-0070a23b939e",
+          "id": "b463e66d-6cc8-428c-bf08-212e707313a5",
           "label": "Hot",
           "priceDelta": 0
         }
       ]
     }
   ],
-  "version": "_P8qjmVDun3u"
+  "version": "B4fktfnDUmYX"
 }

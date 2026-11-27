@@ -1,6 +1,6 @@
 import { createStore } from "zustand/vanilla";
 import type { CartInput } from "@/api/endpoints";
-import type { FoodType, MenuItem, ModifierGroup } from "@/api/schemas";
+import type { FoodType, MenuItem, ModifierGroup, Order } from "@/api/schemas";
 
 /**
  * The order being put together at a table (a "draft"), kept per table so a waiter can go from one table to another and back without losing
@@ -107,6 +107,32 @@ export function toCartInput(draft: Draft): CartInput {
   };
 }
 
+/**
+ * An order that was already placed, as a draft to change (editing an order): its lines, with the prices the server charged, and who it is for.
+ * (The server prices the whole cart again when the edit is saved; these prices are only what is shown meanwhile.)
+ */
+export function draftFromOrder(order: Pick<Order, "lines" | "customer" | "note">): Draft {
+  const lines = order.lines.map((l): DraftLine => {
+    const optionIds = l.modifiers.map((m) => m.id);
+    const note = l.note?.trim() || undefined;
+    return { key: lineKey(l.itemId, l.variantId ?? undefined, optionIds, note), itemId: l.itemId, name: l.name, foodType: l.foodType, variantId: l.variantId ?? undefined, variantLabel: l.variantLabel ?? undefined, modifierOptionIds: optionIds, modifierLabels: l.modifiers.map((m) => m.label), unitPrice: l.unitPrice, quantity: l.quantity, note };
+  });
+  // the same dish chosen the same way twice is one line (the draft merges them)
+  const merged = lines.reduce<Draft>((d, line) => addLine(d, line), emptyDraft());
+  return { ...merged, name: order.customer?.name ?? "", phone: order.customer?.phone ?? "", note: order.note ?? "" };
+}
+
+/** What an edit would change, in the three parts the server takes: the items (as a cart), the note, the customer. Only what differs is returned. */
+export function editChanges(original: Draft, now: Draft): { cart?: CartInput; note?: string; customerName?: string; customerPhone?: string } {
+  const out: { cart?: CartInput; note?: string; customerName?: string; customerPhone?: string } = {};
+  const sig = (d: Draft) => JSON.stringify(toCartInput(d).lines.map((l) => [l.itemId, l.variantId ?? "", [...l.modifierOptionIds].sort(), l.quantity, l.note ?? ""]).sort());
+  if (sig(original) !== sig(now)) out.cart = toCartInput(now);
+  if (now.note.trim() !== original.note.trim()) out.note = now.note.trim();
+  if (now.name.trim() !== original.name.trim()) out.customerName = now.name.trim();
+  if (cleanPhone(now.phone) !== cleanPhone(original.phone)) out.customerPhone = cleanPhone(now.phone);
+  return out;
+}
+
 /** A mobile number as the server wants it: digits (a leading + is kept), 8 to 20 of them. */
 export function cleanPhone(raw: string): string {
   const trimmed = raw.trim();
@@ -127,6 +153,8 @@ export interface DraftState {
   add(tableId: string, line: DraftLine): void;
   setQty(tableId: string, key: string, quantity: number): void;
   setCustomer(tableId: string, patch: Partial<Pick<Draft, "name" | "phone" | "note">>): void;
+  /** put a whole draft in place (editing an order starts from the order as it is) */
+  set(tableId: string, draft: Draft): void;
   clear(tableId: string): void;
   clearAll(): void;
 }
@@ -138,6 +166,7 @@ export function createDraftStore() {
     add: (tableId, line) => set((s) => ({ drafts: { ...s.drafts, [tableId]: addLine(s.drafts[tableId] ?? emptyDraft(), line) } })),
     setQty: (tableId, key, quantity) => set((s) => ({ drafts: { ...s.drafts, [tableId]: setQuantity(s.drafts[tableId] ?? emptyDraft(), key, quantity) } })),
     setCustomer: (tableId, patch) => set((s) => ({ drafts: { ...s.drafts, [tableId]: { ...(s.drafts[tableId] ?? emptyDraft()), ...patch } } })),
+    set: (tableId, draft) => set((s) => ({ drafts: { ...s.drafts, [tableId]: draft } })),
     clear: (tableId) => set((s) => { const { [tableId]: _gone, ...rest } = s.drafts; return { drafts: rest }; }),
     clearAll: () => set({ drafts: {} }),
   }));

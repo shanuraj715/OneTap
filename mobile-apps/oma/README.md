@@ -192,6 +192,18 @@ phone's ordinary preference storage, not the secure store) and applied when the 
 found, open, without changing what is remembered. "Move table" shows free tables as tiles — "Table", the number, and "4 seats" written
 out — under their area (the party's own area open; the others follow what the board keeps open).
 
+## Managing orders (the Orders tab)
+
+The same things the store dashboard's Orders page does, for **dine-in, takeaway and delivery** orders alike. A button the signed-in person
+may not use is not shown (the server checks every call again): `order:update` moves, cancels, edits, hands to a rider; `print:job` +
+`printer:read` prints; `order:delete` (the store owner and the platform admin) deletes.
+
+- **The list** — newest first. *In progress* by default; chips for every status and for the type (dine-in / takeaway / delivery), with counts that follow the type and the search. **Search** finds an order by number (`#0006`), customer, phone (typed with spaces, `+91` or only the last digits), table, rider or address. Each card shows the customer, the rider, a pre-order time and how long the order has been in its status, and has **the next step as one button** ("Accept", "Start preparing", "Mark ready", "Send out", "Mark delivered", "Handed over") — always behind an "are you sure?"; "Send out" asks **who is taking it** instead (a listed rider, someone typed in once, or nobody), because that is what the customer is told.
+- **The order's own page** (tap a card) — type, who placed it, when, pre-order time, quoted time, table, coupon, rider; the customer with **Call** and **WhatsApp** buttons; for a delivery the address, its distance, and **Open in Maps**; how it is paid; every item with its sizes, add-ons and notes; the totals (discount, coins, delivery fee, CGST/SGST or tax, service charge, round-off); and the **history** of every step (who forced a status by hand and why, every edit).
+- **Buttons on that page** — the next step (and "Cancel order" while the food is not ready); **Set status…** (any status, with a reason — the correction for a mis-tap; if a finished dine-in order is put back while its table has another party, the server says so and the app asks which free table to seat them at); **Assign / Change rider**; **Edit order** (below); **Print** (pick one of the outlet's printers; the ticket is queued for its agent or cloud service); **Open table**; **Delete this order** (owner).
+- **Edit order** — the menu of the take-order screen, starting from the order's own lines: more or fewer of a dish, add a dish, change the customer's name or number, the note. The app sends **the whole cart** (only if the items changed) and the server prices it again; the server also refuses an order that is too far along or an outlet that has editing switched off — its words are shown as they are.
+- **The flow is the server's own**: the statuses and which can follow which are a copy of `packages/config-schema/src/order.js`, and a test compares them, so a change there fails the app's tests until the app follows.
+
 ## How an order is taken (and why it is safe)
 
 1. Pick a table. A table that already has a party shows their bill and orders; a free table asks for the customer's mobile number at the review step — typing 3 or more digits lists customers with that number (tap one to fill the number and name), and a full 10-digit number that matches exactly one customer fills the empty name box by itself.
@@ -217,7 +229,7 @@ If one of these changes in the storefront or dashboard, **ask the owner whether 
 
 - Taking an order for a table: dish choices (sizes, add-ons, required/optional rules), notes, customer phone rule, sold-out handling, pricing shown to the waiter.
 - Table states and what each action does (move, confirm payment, free, cancel / void).
-- Order status names and what they mean.
+- Order status names, the order flow (which status follows which) and what each button on an order does.
 - Who may use the app and which permissions gate which button.
 - Sign-in and blocking rules.
 
@@ -228,7 +240,7 @@ app.config.ts        the app's configuration (name, package, Android 11+, plugin
 app-version.json     THE version
 plugins/             with-fast-gradle.js
 scripts/             version.js (show/bump/check), build-android.js
-src/app/             screens' routes (Expo Router): sign-in, (app)/(tabs) tables · orders · account, table/[id], take-order/[tableId]
+src/app/             screens' routes (Expo Router): sign-in, (app)/(tabs) tables · orders · account, table/[id], take-order/[tableId], order/[id], edit-order/[id]
 src/screens/         the screens themselves (testable without the router)
 src/ui/              the component kit: buttons, text fields, dropdown, bottom sheet, dialogs, toasts, loaders, progress bars, skeletons…
 src/api/             API client, endpoint list, response schemas (zod)

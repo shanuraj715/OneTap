@@ -1,0 +1,92 @@
+{
+  "order": {
+    "id": "6b09ab559d8c7a6a15d9a3e3",
+    "orderNumber": "0006",
+    "channel": "delivery",
+    "placedBy": "staff",
+    "staffName": "Owner",
+    "status": "out_for_delivery",
+    "lines": [
+      {
+        "itemId": "6b09ab549d8c7a6a15d9a2b7",
+        "name": "Masala Chai",
+        "foodType": "veg",
+        "modifiers": [],
+        "quantity": 3,
+        "unitPrice": 3000,
+        "lineTotal": 9000,
+        "gstRatePct": 5
+      }
+    ],
+    "totals": {
+      "subtotal": 9000,
+      "discount": 0,
+      "deliveryFee": 0,
+      "coinsRedeemed": 0,
+      "coinsDiscount": 0,
+      "coinsEarned": 0,
+      "taxable": 8571,
+      "cgst": 215,
+      "sgst": 214,
+      "taxAmount": 429,
+      "serviceCharge": 0,
+      "roundOff": 0,
+      "grandTotal": 9000
+    },
+    "pricesIncludeTax": true,
+    "payment": {
+      "gateway": "mock",
+      "status": "paid"
+    },
+    "note": null,
+    "customer": {
+      "name": "Karan Malhotra",
+      "phone": "9876554321"
+    },
+    "tableId": null,
+    "sessionId": null,
+    "couponCode": null,
+    "deliveryAddress": {
+      "text": "Flat 4B, Tower C, Sector 62, Noida",
+      "lat": 28.5655,
+      "lng": 77.381,
+      "distanceKm": 3.5
+    },
+    "etaMinutes": 29,
+    "scheduledFor": null,
+    "rider": {
+      "riderId": null,
+      "name": "Walk-in rider",
+      "phone": "9000011111",
+      "assignedAt": "2026-11-27T16:09:57.521Z"
+    },
+    "statusHistory": [
+      {
+        "status": "placed",
+        "at": "2026-11-27T16:09:57.390Z"
+      },
+      {
+        "status": "accepted",
+        "at": "2026-11-27T16:09:57.467Z",
+        "by": "6b09ab549d8c7a6a15d9a290"
+      },
+      {
+        "status": "preparing",
+        "at": "2026-11-27T16:09:57.478Z",
+        "by": "6b09ab549d8c7a6a15d9a290"
+      },
+      {
+        "status": "ready",
+        "at": "2026-11-27T16:09:57.491Z",
+        "by": "6b09ab549d8c7a6a15d9a290"
+      },
+      {
+        "status": "out_for_delivery",
+        "at": "2026-11-27T16:09:57.521Z",
+        "by": "6b09ab549d8c7a6a15d9a290",
+        "reason": "with Walk-in rider"
+      }
+    ],
+    "createdAt": "2026-11-27T16:09:57.391Z"
+  }
+}

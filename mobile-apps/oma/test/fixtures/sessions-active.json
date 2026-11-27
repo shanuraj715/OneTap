@@ -1,13 +1,13 @@
 {
   "sessions": [
     {
-      "id": "6b0826d970b3aff5bb1baf50",
-      "tableId": "6b0826d970b3aff5bb1baf24",
+      "id": "6b09ab549d8c7a6a15d9a2fb",
+      "tableId": "6b09ab549d8c7a6a15d9a2be",
       "tableNumber": "T1",
-      "customerId": "6b0826d970b3aff5bb1baf4c",
+      "customerId": "6b09ab549d8c7a6a15d9a2f7",
       "customerName": "Mehta family",
       "customerPhone": "9876543210",
-      "openedAt": "2026-11-26T12:32:25.457Z",
+      "openedAt": "2026-11-27T16:09:56.729Z",
       "orderCount": 1,
       "openOrders": 1,
       "tab": 34000,
@@ -15,9 +15,9 @@
       "allPaid": false,
       "tableHistory": [
         {
-          "tableId": "6b0826d970b3aff5bb1baf24",
+          "tableId": "6b09ab549d8c7a6a15d9a2be",
           "number": "T1",
-          "at": "2026-11-26T12:32:25.456Z"
+          "at": "2026-11-27T16:09:56.729Z"
         }
       ]
     }

@@ -1,16 +1,16 @@
 {
   "tables": [
     {
-      "id": "6b0826d970b3aff5bb1baf24",
+      "id": "6b09ab549d8c7a6a15d9a2be",
       "number": "T1",
       "zone": "Ground floor",
       "seats": 4,
       "status": "seated",
       "isActive": true,
-      "activeSessionId": "6b0826d970b3aff5bb1baf50"
+      "activeSessionId": "6b09ab549d8c7a6a15d9a2fb"
     },
     {
-      "id": "6b0826d970b3aff5bb1baf28",
+      "id": "6b09ab549d8c7a6a15d9a2c5",
       "number": "T2",
       "zone": "Ground floor",
       "seats": 2,
@@ -19,7 +19,7 @@
       "activeSessionId": null
     },
     {
-      "id": "6b0826d970b3aff5bb1baf2b",
+      "id": "6b09ab549d8c7a6a15d9a2cc",
       "number": "T3",
       "zone": "Terrace",
       "seats": 6,

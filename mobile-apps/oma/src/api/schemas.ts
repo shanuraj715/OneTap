@@ -152,23 +152,55 @@ export const totalsSchema = z.object({
   serviceCharge: z.number(),
   roundOff: z.number(),
   grandTotal: z.number(),
+  /** takeaway/delivery orders only (a table's order has none of these) */
+  deliveryFee: z.number().optional(),
+  coinsDiscount: z.number().optional(),
+  cgst: z.number().optional(),
+  sgst: z.number().optional(),
 });
 export type Totals = z.infer<typeof totalsSchema>;
 
 export const quoteSchema = z.object({ lines: z.array(lineSchema), totals: totalsSchema, pricesIncludeTax: z.boolean() });
 export type Quote = z.infer<typeof quoteSchema>;
 
+const nullable = <T extends z.ZodType>(t: T) => t.nullish().transform((v) => v ?? null);
+
+/** One step of an order's life: what it became, when, by whom (an id — names are not sent), and whether a person forced it or edited the order. */
+export const statusStepSchema = z.object({
+  status: z.string(),
+  at: z.string(),
+  by: nullable(z.string()),
+  manual: z.boolean().optional(),
+  edited: z.boolean().optional(),
+  from: nullable(z.string()),
+  reason: nullable(z.string()),
+});
+export type StatusStep = z.infer<typeof statusStepSchema>;
+
+export const deliveryAddressSchema = z.object({ text: nullable(z.string()), landmark: nullable(z.string()), lat: nullable(z.number()), lng: nullable(z.number()), distanceKm: nullable(z.number()) });
+export const orderRiderSchema = z.object({ riderId: nullable(z.string()), name: z.string(), phone: nullable(z.string()), assignedAt: nullable(z.string()) });
+
 export const orderSchema = z.object({
   id: z.string(),
   orderNumber: z.string(),
+  /** "dine-in" | "takeaway" | "delivery" */
+  channel: z.string().default("dine-in"),
   status: z.string(),
   lines: z.array(lineSchema),
   totals: totalsSchema,
-  payment: z.object({ gateway: z.string().nullish(), status: z.string() }),
+  pricesIncludeTax: z.boolean().default(true),
+  payment: z.object({ gateway: z.string().nullish(), status: z.string(), paymentId: nullable(z.string()) }),
   note: z.string().nullish().transform((v) => v ?? null),
-  customer: z.object({ name: z.string().nullish(), phone: z.string().nullish() }).nullish(),
+  customer: z.object({ name: z.string().nullish(), phone: z.string().nullish(), email: z.string().nullish() }).nullish(),
   tableId: z.string().nullish().transform((v) => v ?? null),
   sessionId: z.string().nullish().transform((v) => v ?? null),
+  couponCode: nullable(z.string()),
+  deliveryAddress: deliveryAddressSchema.nullish().transform((v) => v ?? null),
+  etaMinutes: nullable(z.number()),
+  /** a pre-order: when the customer wants it */
+  scheduledFor: nullable(z.string()),
+  rider: orderRiderSchema.nullish().transform((v) => v ?? null),
+  statusHistory: z.array(statusStepSchema).default([]),
   placedBy: z.string().optional(),
   staffName: z.string().nullish().transform((v) => v ?? null),
   createdAt: z.string(),
@@ -176,6 +208,19 @@ export const orderSchema = z.object({
 export type Order = z.infer<typeof orderSchema>;
 export const placedOrderSchema = z.object({ order: orderSchema });
 export const ordersSchema = z.object({ orders: z.array(orderSchema) });
+
+/* ------------------------------------------------------- managing an order */
+
+/** After a status change: the order, and — when a re-opened order had to be seated again — the table. */
+export const orderChangedSchema = z.object({ order: orderSchema, table: z.object({ id: z.string().optional(), number: z.string().optional(), moved: z.boolean().optional() }).passthrough().optional() });
+export const orderDeletedSchema = z.object({ ok: z.boolean().optional(), orderNumber: z.string().optional() });
+export const riderSchema = z.object({ id: z.string(), name: z.string(), phone: nullable(z.string()), isActive: z.boolean().default(true) });
+export type Rider = z.infer<typeof riderSchema>;
+export const ridersSchema = z.object({ riders: z.array(riderSchema) });
+export const printerSchema = z.object({ id: z.string(), name: z.string(), station: z.string(), docType: z.string(), target: z.string(), isActive: z.boolean().default(true), configError: nullable(z.string()) });
+export type Printer = z.infer<typeof printerSchema>;
+export const printersSchema = z.object({ printers: z.array(printerSchema) });
+export const printJobSchema = z.object({ job: z.object({ id: z.string(), status: z.string(), printerName: nullable(z.string()), docType: nullable(z.string()), lastError: nullable(z.string()) }) });
 
 /* --------------------------------------------------------- table actions */
 

@@ -1,5 +1,5 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { CartInput, PlaceOrderInput } from "@/api/endpoints";
+import type { CartInput, EditOrderInput, PlaceOrderInput, RiderInput } from "@/api/endpoints";
 import { keys } from "./keys";
 import { useApi, useOutletId, useRuntime, useSession, useRefreshPlan } from "@/runtime";
 import { useStore } from "zustand";
@@ -126,6 +126,58 @@ export function usePlaceOrder() {
   const refresh = useRefreshBoard();
   return useMutation({ mutationFn: (input: PlaceOrderInput) => api.placeOrder(outletId, input), onSettled: () => void refresh() });
 }
+/* ------------------------------------------------------------------ managing an order */
+
+/** The outlet's riders, for the "who is taking it?" pop-up. Asked only when it is opened. */
+export function useRiders(enabled: boolean) {
+  const api = useApi();
+  const outletId = useOutletId();
+  return useQuery({ queryKey: keys.riders(outletId), queryFn: () => api.riders(outletId), select: (d) => d.riders.filter((r) => r.isActive), enabled: enabled && !!outletId, staleTime: 60_000 });
+}
+/** The outlet's printers, for "print this order on…". */
+export function usePrinters(enabled: boolean) {
+  const api = useApi();
+  const outletId = useOutletId();
+  return useQuery({ queryKey: keys.printers(outletId), queryFn: () => api.printers(outletId), select: (d) => d.printers.filter((p) => p.isActive), enabled: enabled && !!outletId, staleTime: 60_000 });
+}
+/** Move an order to the next step (or cancel it). */
+export function useSetOrderStatus() {
+  const api = useApi();
+  const outletId = useOutletId();
+  const refresh = useRefreshBoard();
+  return useMutation({ mutationFn: (v: { id: string; status: string }) => api.setOrderStatus(outletId, v.id, v.status), onSettled: () => void refresh() });
+}
+/** Set any status by hand (the correction for a mis-tap); `tableId` seats a re-opened order's party at another free table. */
+export function useSetOrderStatusManual() {
+  const api = useApi();
+  const outletId = useOutletId();
+  const refresh = useRefreshBoard();
+  return useMutation({ mutationFn: (v: { id: string; status: string; reason?: string; tableId?: string }) => api.setOrderStatusManual(outletId, v.id, v.status, v.reason, v.tableId), onSettled: () => void refresh() });
+}
+export function useAssignRider() {
+  const api = useApi();
+  const outletId = useOutletId();
+  const refresh = useRefreshBoard();
+  return useMutation({ mutationFn: (v: { id: string; body: RiderInput }) => api.assignRider(outletId, v.id, v.body), onSettled: () => void refresh() });
+}
+export function useEditOrder() {
+  const api = useApi();
+  const outletId = useOutletId();
+  const refresh = useRefreshBoard();
+  return useMutation({ mutationFn: (v: { id: string; body: EditOrderInput }) => api.editOrder(outletId, v.id, v.body), onSettled: () => void refresh() });
+}
+export function useDeleteOrder() {
+  const api = useApi();
+  const outletId = useOutletId();
+  const refresh = useRefreshBoard();
+  return useMutation({ mutationFn: (id: string) => api.deleteOrder(outletId, id), onSettled: () => void refresh() });
+}
+export function usePrintOrder() {
+  const api = useApi();
+  const outletId = useOutletId();
+  return useMutation({ mutationFn: (v: { orderId: string; printerId: string }) => api.printOrder(outletId, v.orderId, v.printerId) });
+}
+
 export function useMoveSession() {
   const api = useApi();
   const outletId = useOutletId();

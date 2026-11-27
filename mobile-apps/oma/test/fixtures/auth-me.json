@@ -1,11 +1,11 @@
 {
   "user": {
-    "id": "6b0826d970b3aff5bb1baef9",
+    "id": "6b09ab549d8c7a6a15d9a290",
     "email": "waiter@sandbox.test",
     "name": "Asha (waiter)",
     "isSuperAdmin": false,
     "role": "staff",
-    "brandId": "6b0826d970b3aff5bb1baed6",
+    "brandId": "6b09ab549d8c7a6a15d9a26b",
     "blockedAt": null,
     "permissions": [
       "outlet:read",
@@ -21,6 +21,11 @@
       "reservation:read",
       "reservation:manage"
     ],
+    "platform": {
+      "access": false,
+      "features": [],
+      "role": null
+    },
     "realtime": {
       "websocket": true
     },

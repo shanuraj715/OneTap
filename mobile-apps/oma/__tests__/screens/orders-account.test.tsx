@@ -4,7 +4,6 @@ import { OrdersScreen } from "@/screens/OrdersScreen";
 import { toasts } from "@/ui";
 import { fakeServer, fx, renderApp } from "../../test/harness";
 
-const T1 = (fx("tables-seated").tables as Array<{ id: string; number: string }>).find((t) => t.number === "T1")!.id;
 beforeEach(() => toasts.clear());
 
 describe("the orders list", () => {
@@ -32,11 +31,11 @@ describe("the orders list", () => {
     expect(within(screen.getByTestId("order-0002")).getByText("Served")).toBeOnTheScreen();
   });
 
-  it("tapping an order opens its table", async () => {
+  it("tapping an order opens it (its own page: everything about it and everything that can be done with it)", async () => {
     const onOpen = jest.fn();
-    await renderApp(<OrdersScreen onOpenTable={onOpen} />);
+    await renderApp(<OrdersScreen onOpenOrder={onOpen} />);
     await fireEvent.press(await screen.findByTestId("order-0001"));
-    expect(onOpen).toHaveBeenCalledWith(T1);
+    expect(onOpen).toHaveBeenCalledWith(fx("orders-list").orders.find((o: { orderNumber: string }) => o.orderNumber === "0001").id);
   });
 
   it("nothing in progress: says so, and offers the full list", async () => {

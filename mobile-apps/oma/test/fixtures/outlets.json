@@ -1,7 +1,7 @@
 {
   "outlets": [
     {
-      "_id": "6b0826d970b3aff5bb1baed9",
+      "_id": "6b09ab549d8c7a6a15d9a26e",
       "name": "Noida",
       "slug": "noida",
       "hostnames": [
@@ -318,6 +318,36 @@
               ]
             },
             {
+              "id": "deliveries-active",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "staff",
+                "kitchen"
+              ]
+            },
+            {
+              "id": "bookings-today",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager",
+                "staff"
+              ]
+            },
+            {
+              "id": "customer-rating",
+              "enabled": true,
+              "roles": [
+                "super_admin",
+                "owner",
+                "manager"
+              ]
+            },
+            {
               "id": "revenue-trend",
               "enabled": true,
               "roles": [
@@ -413,6 +443,9 @@
         "reservations": {
           "slotMinutes": 30,
           "durationMinutes": 90,
+          "minDurationMinutes": 60,
+          "maxDurationMinutes": 240,
+          "pricePerPersonHour": 0,
           "minPartySize": 1,
           "maxPartySize": 10,
           "maxDaysAhead": 14,
@@ -421,7 +454,11 @@
           "maxGuestsPerSlot": 0,
           "autoConfirm": false,
           "cancelUntilMinutes": 60,
-          "guestNote": ""
+          "guestNote": "",
+          "whatsappTemplate": {
+            "name": "",
+            "languageCode": "en"
+          }
         },
         "kitchenDisplay": {
           "notifyWaiter": false,
@@ -443,9 +480,9 @@
         }
       },
       "blocked": null,
-      "brandId": "6b0826d970b3aff5bb1baed6",
-      "createdAt": "2026-11-26T12:32:25.140Z",
-      "updatedAt": "2026-11-26T12:32:25.140Z",
+      "brandId": "6b09ab549d8c7a6a15d9a26b",
+      "createdAt": "2026-11-27T16:09:56.268Z",
+      "updatedAt": "2026-11-27T16:09:56.268Z",
       "__v": 0,
       "brandName": "Gazab Momos"
     }

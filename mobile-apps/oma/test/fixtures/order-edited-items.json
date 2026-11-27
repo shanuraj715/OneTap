@@ -1,0 +1,102 @@
+{
+  "order": {
+    "id": "6b09ab559d8c7a6a15d9a3c4",
+    "orderNumber": "0004",
+    "channel": "takeaway",
+    "placedBy": "staff",
+    "staffName": "Owner",
+    "status": "placed",
+    "lines": [
+      {
+        "itemId": "6b09ab549d8c7a6a15d9a2b0",
+        "name": "Veg Steamed Momos",
+        "foodType": "veg",
+        "variantId": "bddb9d31-c033-4e9e-b619-64dec62bda68",
+        "variantLabel": "Half (4 pcs)",
+        "modifiers": [],
+        "quantity": 2,
+        "unitPrice": 6000,
+        "lineTotal": 12000,
+        "gstRatePct": 5
+      },
+      {
+        "itemId": "6b09ab549d8c7a6a15d9a2b7",
+        "name": "Masala Chai",
+        "foodType": "veg",
+        "modifiers": [],
+        "quantity": 1,
+        "unitPrice": 3000,
+        "lineTotal": 3000,
+        "gstRatePct": 5
+      }
+    ],
+    "totals": {
+      "subtotal": 15000,
+      "discount": 0,
+      "deliveryFee": 0,
+      "coinsRedeemed": 0,
+      "coinsDiscount": 0,
+      "coinsEarned": 0,
+      "taxable": 14286,
+      "cgst": 357,
+      "sgst": 357,
+      "taxAmount": 714,
+      "serviceCharge": 0,
+      "roundOff": 0,
+      "grandTotal": 15000
+    },
+    "pricesIncludeTax": true,
+    "payment": {
+      "gateway": "cod",
+      "status": "pending"
+    },
+    "note": "No onions please",
+    "customer": {
+      "name": "Priya N.",
+      "phone": "9811122233"
+    },
+    "tableId": null,
+    "sessionId": null,
+    "couponCode": null,
+    "deliveryAddress": null,
+    "etaMinutes": 15,
+    "scheduledFor": null,
+    "rider": null,
+    "statusHistory": [
+      {
+        "status": "placed",
+        "at": "2026-11-27T16:09:57.299Z"
+      },
+      {
+        "status": "accepted",
+        "at": "2026-11-27T16:09:57.413Z",
+        "by": "6b09ab549d8c7a6a15d9a290"
+      },
+      {
+        "status": "placed",
+        "at": "2026-11-27T16:09:57.428Z",
+        "by": "6b09ab549d8c7a6a15d9a290",
+        "manual": true,
+        "from": "accepted",
+        "reason": "Tapped by mistake"
+      },
+      {
+        "status": "placed",
+        "at": "2026-11-27T16:09:57.447Z",
+        "by": "6b09ab549d8c7a6a15d9a290",
+        "edited": true,
+        "from": "placed",
+        "reason": "details edited"
+      },
+      {
+        "status": "placed",
+        "at": "2026-11-27T16:09:57.456Z",
+        "by": "6b09ab549d8c7a6a15d9a290",
+        "edited": true,
+        "from": "placed",
+        "reason": "items edited · 120.00 → 150.00"
+      }
+    ],
+    "createdAt": "2026-11-27T16:09:57.300Z"
+  }
+}

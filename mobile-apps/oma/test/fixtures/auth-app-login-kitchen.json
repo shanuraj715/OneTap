@@ -2,12 +2,12 @@
   "token": "TEST-TOKEN-KITCHEN-0123456789",
   "expiresAt": "2026-12-10T00:00:00.000Z",
   "user": {
-    "id": "6b0826d970b3aff5bb1baf06",
+    "id": "6b09ab549d8c7a6a15d9a29c",
     "email": "chef@sandbox.test",
     "name": "Ravi (kitchen)",
     "isSuperAdmin": false,
     "role": "kitchen",
-    "brandId": "6b0826d970b3aff5bb1baed6",
+    "brandId": "6b09ab549d8c7a6a15d9a26b",
     "blockedAt": null,
     "permissions": [
       "outlet:read",
@@ -16,8 +16,15 @@
       "order:update",
       "table:read",
       "printer:read",
-      "print:job"
+      "print:job",
+      "kitchen:app",
+      "menu:availability"
     ],
+    "platform": {
+      "access": false,
+      "features": [],
+      "role": null
+    },
     "realtime": {
       "websocket": true
     },

@@ -85,7 +85,7 @@ permission and limit.
 
 | App | For | Platform | Folder |
 | --- | --- | --- | --- |
-| **Rasoi Pulse OMA** | Staff who walk to tables: take orders, manage tables (move, confirm payment, free, cancel), watch orders | Android 11+ phones and tablets | [`mobile-apps/oma`](mobile-apps/oma/README.md) |
+| **Rasoi Pulse OMA** | Staff who walk to tables and run the counter: take orders, manage tables (move, confirm payment, free, cancel), and **manage every order** — dine-in, takeaway and delivery: find it, move it along, cancel, set a status by hand, hand it to a rider, edit it, print it, delete it (owner) | Android 11+ phones and tablets | [`mobile-apps/oma`](mobile-apps/oma/README.md) |
 | **Rasoi Pulse KDA** | Kitchen staff and the kitchen manager: the live order board, the prep list, sold-out / unavailable / available for every dish | Android 11+ phones and tablets | [`mobile-apps/kda`](mobile-apps/kda/README.md) |
 | **Rasoi Pulse RDA** | Delivery riders: the deliveries handed to them, directions in their own maps app, call / WhatsApp the customer, picked up and delivered (with the customer's 4-digit code) | Android 11+ phones | [`mobile-apps/rda`](mobile-apps/rda/README.md) |
 | **Rasoi Pulse Admin** | The Rasoi Pulse team only (the owner and the roles under them): dashboard, stores, onboarding, leads, server, security, cache, settings, team — each person sees only what their role holds. **Not on the website, not in the apps catalog** | Android 11+ phones and tablets | [`mobile-apps/admin`](mobile-apps/admin/README.md) |

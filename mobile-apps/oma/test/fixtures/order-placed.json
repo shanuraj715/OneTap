@@ -1,6 +1,6 @@
 {
   "order": {
-    "id": "6b0826d970b3aff5bb1baf58",
+    "id": "6b09ab549d8c7a6a15d9a303",
     "orderNumber": "0001",
     "channel": "dine-in",
     "placedBy": "staff",
@@ -8,14 +8,14 @@
     "status": "accepted",
     "lines": [
       {
-        "itemId": "6b0826d970b3aff5bb1baf19",
+        "itemId": "6b09ab549d8c7a6a15d9a2b0",
         "name": "Veg Steamed Momos",
         "foodType": "veg",
-        "variantId": "95d76a49-8dd5-4e9e-ab23-1ff02b6d9c4c",
+        "variantId": "29dfd17d-09f2-4da6-ace2-acca33c3c6eb",
         "variantLabel": "Full (8 pcs)",
         "modifiers": [
           {
-            "id": "f9a925ca-6661-4b47-a61b-17797d5c0790",
+            "id": "920b42e9-77d7-4db8-8fe3-86e3ee510b12",
             "label": "Mayo dip",
             "priceDelta": 1000
           }
@@ -27,12 +27,12 @@
         "note": "less salt"
       },
       {
-        "itemId": "6b0826d970b3aff5bb1baf1b",
+        "itemId": "6b09ab549d8c7a6a15d9a2b3",
         "name": "Chicken Kurkure Momos",
         "foodType": "non-veg",
         "modifiers": [
           {
-            "id": "0023f557-04ca-481a-bc87-0070a23b939e",
+            "id": "b463e66d-6cc8-428c-bf08-212e707313a5",
             "label": "Hot",
             "priceDelta": 0
           }
@@ -65,12 +65,12 @@
     },
     "note": "birthday table",
     "customer": {
-      "customerId": "6b0826d970b3aff5bb1baf4c",
+      "customerId": "6b09ab549d8c7a6a15d9a2f7",
       "name": "Mehta family",
       "phone": "9876543210"
     },
-    "tableId": "6b0826d970b3aff5bb1baf24",
-    "sessionId": "6b0826d970b3aff5bb1baf50",
+    "tableId": "6b09ab549d8c7a6a15d9a2be",
+    "sessionId": "6b09ab549d8c7a6a15d9a2fb",
     "kds": null,
     "couponCode": null,
     "deliveryAddress": null,
@@ -80,14 +80,14 @@
     "statusHistory": [
       {
         "status": "placed",
-        "at": "2026-11-26T12:32:25.462Z"
+        "at": "2026-11-27T16:09:56.737Z"
       },
       {
         "status": "accepted",
-        "at": "2026-11-26T12:32:25.468Z",
-        "by": "6b0826d970b3aff5bb1baef9"
+        "at": "2026-11-27T16:09:56.743Z",
+        "by": "6b09ab549d8c7a6a15d9a290"
       }
     ],
-    "createdAt": "2026-11-26T12:32:25.463Z"
+    "createdAt": "2026-11-27T16:09:56.738Z"
   }
 }
