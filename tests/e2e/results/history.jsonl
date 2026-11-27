@@ -1324,3 +1324,28 @@
 {"id":"t65-kitchen-display","status":"pass","pass":43,"fail":0,"mode":"headless","at":"2026-11-26T16:40:22.103Z","durationMs":9028}
 {"id":"t87-staff-app-auth-api","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-26T16:40:27.176Z","durationMs":5048}
 {"id":"t90-staff-outlet-access-api","status":"pass","pass":33,"fail":0,"mode":"headless","at":"2026-11-26T16:40:31.172Z","durationMs":3980}
+{"id":"t08-plans-outlets-settings","status":"error","pass":25,"fail":0,"mode":"headless","at":"2026-11-26T23:46:11.168Z","durationMs":152573,"error":"locator.waitFor: Target page, context or browser has been closed Call log:   - waiting for getByRole('button', { name: /^(Share my location|Update)$/ }).first().first() to be visible"}
+{"id":"t100-rider-pin-ui","status":"pass","pass":35,"fail":0,"mode":"headless","at":"2026-11-26T23:46:21.947Z","durationMs":7778}
+{"id":"t108-plan-features","status":"pass","pass":51,"fail":0,"mode":"headless","at":"2026-11-26T23:46:28.857Z","durationMs":6887}
+{"id":"t10-plan-downgrade","status":"error","pass":14,"fail":0,"mode":"headless","at":"2026-11-26T23:46:28.914Z","durationMs":17744,"error":"locator.waitFor: Target page, context or browser has been closed"}
+{"id":"t100-rider-pin-ui","status":"pass","pass":35,"fail":0,"mode":"headless","at":"2026-11-26T23:46:36.570Z","durationMs":7656}
+{"id":"t100-rider-pin-ui","status":"pass","pass":35,"fail":0,"mode":"headless","at":"2026-11-27T04:23:37.960Z","durationMs":8357}
+{"id":"t108-plan-features","status":"pass","pass":51,"fail":0,"mode":"headless","at":"2026-11-27T04:23:45.036Z","durationMs":7054}
+{"id":"t109-table-limit-api","status":"pass","pass":61,"fail":0,"mode":"headless","at":"2026-11-27T04:23:50.137Z","durationMs":5082}
+{"id":"t110-plan-table-limit-ui","status":"error","pass":44,"fail":0,"mode":"headless","at":"2026-11-27T04:24:28.269Z","durationMs":38111,"error":"plan-table-limit-ui.mjs exited with code 1. }  Node.js v24.3.0"}
+{"id":"t111-dashboard-roles-api","status":"pass","pass":46,"fail":0,"mode":"headless","at":"2026-11-27T04:24:32.912Z","durationMs":4622}
+{"id":"t112-dashboard-ui","status":"pass","pass":48,"fail":0,"mode":"headless","at":"2026-11-27T04:24:39.630Z","durationMs":6700}
+{"id":"t18-tables","status":"pass","pass":56,"fail":0,"mode":"headless","at":"2026-11-27T04:25:28.259Z","durationMs":43422}
+{"id":"t21-onboarding","status":"fail","pass":118,"fail":2,"mode":"headless","at":"2026-11-27T04:26:25.734Z","durationMs":52252}
+{"id":"t22-onboarding-price","status":"pass","pass":55,"fail":0,"mode":"headless","at":"2026-11-27T04:27:07.148Z","durationMs":36201}
+{"id":"t66-ops-batch","status":"pass","pass":47,"fail":0,"mode":"headless","at":"2026-11-27T04:28:58.072Z","durationMs":110901}
+{"id":"t69-cache-audit-api","status":"fail","pass":48,"fail":1,"mode":"headless","at":"2026-11-27T04:29:05.096Z","durationMs":7003}
+{"id":"t92-dashboard-reopen-outlets-ui","status":"fail","pass":51,"fail":1,"mode":"headless","at":"2026-11-27T04:29:12.800Z","durationMs":7685}
+{"id":"t98-rider-app-api","status":"pass","pass":105,"fail":0,"mode":"headless","at":"2026-11-27T04:29:18.766Z","durationMs":5948}
+{"id":"t109-table-limit-api","status":"pass","pass":63,"fail":0,"mode":"headless","at":"2026-11-27T04:30:58.986Z","durationMs":5229}
+{"id":"t21-onboarding","status":"pass","pass":120,"fail":0,"mode":"headless","at":"2026-11-27T04:31:56.217Z","durationMs":52010}
+{"id":"t69-cache-audit-api","status":"pass","pass":55,"fail":0,"mode":"headless","at":"2026-11-27T04:32:03.639Z","durationMs":7393}
+{"id":"t92-dashboard-reopen-outlets-ui","status":"pass","pass":52,"fail":0,"mode":"headless","at":"2026-11-27T04:32:11.359Z","durationMs":7702}
+{"id":"t08-plans-outlets-settings","status":"error","pass":25,"fail":0,"mode":"headless","at":"2026-11-27T04:39:38.256Z","durationMs":152870,"error":"locator.waitFor: Timeout 15000ms exceeded. Call log:   - waiting for getByRole('button', { name: /^(Share my location|Update)$/ }).first().first() to be visible"}
+{"id":"t10-plan-downgrade","status":"pass","pass":38,"fail":0,"mode":"headless","at":"2026-11-27T04:40:30.282Z","durationMs":51979}
+{"id":"t14-marketing-plan","status":"pass","pass":16,"fail":0,"mode":"headless","at":"2026-11-27T04:41:40.369Z","durationMs":64864}

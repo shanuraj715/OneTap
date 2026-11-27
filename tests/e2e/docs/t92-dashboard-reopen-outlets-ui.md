@@ -1,6 +1,6 @@
 # T92 — Dashboard: an order put back from Completed seats its table again (or asks which free table); Users & roles gives team members outlets
 
-**Area:** orders · **Last result:** ✅ PASSED (30 passed, 0 failed · 2026-11-26 17:49 · headless · 7.5 s)
+**Area:** orders · **Last result:** ✅ PASSED (52 passed, 0 failed · 2026-11-27 10:02 · headless · 7.7 s)
 
 **Run it alone:** `node run.mjs --only t92` (add `--visible` to watch it)
 
@@ -14,8 +14,9 @@ Runs suites/dashboard-reopen-outlets-ui.mjs in Chrome against the bench. Orders:
 2. Somebody else is at the table: the operator picks another
 3. 'Leave the order as it is'
 4. Users & roles: giving a new person outlets
-5. The mapped person sees only their outlet
-6. Changing a person's outlets later
+5. 4b. The outlet picker: a dropdown with search
+6. The mapped person sees only their outlet
+7. Changing a person's outlets later
 
 ## What to expect (these must happen)
 
@@ -35,7 +36,7 @@ Runs suites/dashboard-reopen-outlets-ui.mjs in Chrome against the bench. Orders:
 
 _Nothing failed._
 
-### ✅ Passed (30)
+### ✅ Passed (52)
 
 **Step 1 — An order put back from Completed: its table is seated again**
 
@@ -46,7 +47,7 @@ _Nothing failed._
 
 **Step 2 — Somebody else is at the table: the operator picks another**
 
-- another party sits at T1 — _0013_
+- another party sits at T1 — _0003_
 - a pop-up explains that T1 has another party
 - it offers free tables (T3 yes) and not the taken T1
 - the tables are grouped by area — _Ground floor \| Terrace_
@@ -69,19 +70,44 @@ _Nothing failed._
 - the form asks which outlets (the store has several)
 - Add user is off until an outlet is chosen
 - and says why
-- choosing one outlet turns it on
-- the new person is listed with their outlet only — _Outlets: Main · Change outlets_
-- saved: exactly the ticked outlet — _["6b08238779af1425e839ff6c"]_
 
-**Step 5 — The mapped person sees only their outlet**
+**Step 5 — 4b. The outlet picker: a dropdown with search**
+
+- the closed outlet box is the same height as the Role select beside it, and no taller than the text boxes — _{"select":32,"input":35,"trigger":32}_
+- closed, the box says 'Choose outlets' (nothing is picked yet)
+- …and there is no list of checkboxes sitting in the form any more
+- clicking opens the panel and puts the cursor in the search box
+- it lists an 'All outlets' row and one row for each outlet of this store — _3 rows for 2 outlets_
+- the footer counts what is picked: 0 of N
+- typing "SEC" keeps only outlets that match, whatever the capital letters — _Second_
+- …and hides the 'All outlets' row while searching
+- a search with no match says 'No outlet matches …'
+- Enter in the search box ticks the first match — _Second_
+- clearing the search brings every outlet back
+- the footer now says 1 selected
+- Clear unticks everything
+- 'All outlets' shows every outlet ticked and locked
+- the closed box shows an 'All outlets' chip and the warning is gone
+- ArrowDown in the search box moves to the first checkbox
+- Escape closes the panel and the box has the focus again
+- with two outlets picked (chips) the box is still the same height as the other fields
+- two picked: the closed box shows both names as chips; a click outside closes the panel — _Main Second_
+- and Add user is on
+- unticking one and pressing Done leaves just the other
+- choosing one outlet turns Add user on
+- the new person is listed with their outlet only — _Outlets: Main · Change outlets_
+- saved: exactly the ticked outlet — _["6b0907869f95f01848e3f632"]_
+
+**Step 6 — The mapped person sees only their outlet**
 
 - nothing of "Second" is on their dashboard
 - the outlet list they get has just their outlet — _Main_
 - another outlet is refused outright (403) — _403_
 
-**Step 6 — Changing a person's outlets later**
+**Step 7 — Changing a person's outlets later**
 
-- after ticking All outlets the row says All outlets
+- the dialog's picker opens with the person's current outlet already ticked
+- after choosing All outlets the row says All outlets — _All outlets · Change outlets_
 - and they see every outlet now — without signing in again — _2_
 - no errors in the browser
 
@@ -89,6 +115,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-27 10:02 | pass | 52 | 0 | headless | 7.7 s |
+| 2026-11-27 09:59 | fail | 51 | 1 | headless | 7.7 s |
 | 2026-11-26 17:49 | pass | 30 | 0 | headless | 7.5 s |
 | 2026-11-26 17:48 | error | 18 | 0 | headless | 7.2 s |
 

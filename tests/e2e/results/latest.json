@@ -2199,13 +2199,13 @@
   "t08-plans-outlets-settings": {
     "id": "t08-plans-outlets-settings",
     "title": "Plans & outlets — Basic → Pro upgrade, outlets 1-3 with menus, all outlet settings, delivery distance, load management",
-    "status": "pass",
-    "pass": 44,
+    "status": "error",
+    "pass": 25,
     "fail": 0,
-    "error": "",
+    "error": "locator.waitFor: Timeout 15000ms exceeded. Call log:   - waiting for getByRole('button', { name: /^(Share my location|Update)$/ }).first().first() to be visible",
     "mode": "headless",
-    "at": "2026-11-21T07:47:50.132Z",
-    "durationMs": 190794,
+    "at": "2026-11-27T04:39:38.256Z",
+    "durationMs": 152870,
     "steps": [
       {
         "n": 1,
@@ -2220,13 +2220,13 @@
           {
             "label": "Basic shows 3 people · 1 outlet",
             "ok": true,
-            "detail": "Lifecycle Basic One outlet — takeaway and dine-in QR 0 stores 3 people · 1 outlet (multi-outlet off) Not on the website 7/18 features · 6/6 ",
+            "detail": "Lifecycle Basic One outlet — takeaway and dine-in QR 0 stores 3 people · 1 outlet (multi-outlet off) · 5 tables Not on the website 7/18 feat",
             "kind": "expect"
           },
           {
             "label": "Pro shows 10 people · 3 outlets",
             "ok": true,
-            "detail": "Lifecycle Pro Up to 3 outlets, everything unlocked 0 stores 10 people · 3 outlets Not on the website 18/18 features · 6/6 effects · 9/9 card",
+            "detail": "Lifecycle Pro Up to 3 outlets, everything unlocked 0 stores 10 people · 3 outlets · 5 tables Not on the website 18/18 features · 6/6 effects",
             "kind": "expect"
           },
           {
@@ -2298,7 +2298,7 @@
           {
             "label": "the store page now shows the Pro plan and 1 of 3 outlets",
             "ok": true,
-            "detail": "Within plan People 1 / 10 Outlets 1 / 3 Store name Shown in the storefront header, on recei",
+            "detail": "Within plan People 1 / 10 Outlets 1 / 3 Tables 0 / 5 Store name Shown in the storefront hea",
             "kind": "expect"
           }
         ]
@@ -2413,134 +2413,7 @@
       {
         "n": 10,
         "title": "Delivery distance on the storefront: inside and outside each outlet's radius (using the browser's location)",
-        "checks": [
-          {
-            "label": "Central, 1.2 km away (radius 3 km): 'We deliver here' with the ₹20 fee",
-            "ok": true,
-            "detail": "We deliver here 1.2 km away · ₹20 delivery · about 20 min Coupon Apply Tota",
-            "kind": "expect"
-          },
-          {
-            "label": "Central offers delivery 5 km away (radius 3 km)",
-            "ok": true,
-            "detail": "",
-            "kind": "never"
-          },
-          {
-            "label": "…and the customer is told it is too far",
-            "ok": true,
-            "detail": "Location shared We'll use this to check the delivery distance Update Delivery address Landmark (optional) Delivery not available at this address That address is about 5 km awa",
-            "kind": "expect"
-          },
-          {
-            "label": "Third, 5 km away (radius 8 km): 'We deliver here' with Third's own ₹40 fee — every outlet uses its own radius and fee",
-            "ok": true,
-            "detail": "We deliver here 5 km away · ₹40 delivery · about 62 min Coupon Apply Total ",
-            "kind": "expect"
-          }
-        ]
-      },
-      {
-        "n": 11,
-        "title": "Load management on Second (busy at 2 orders, stop at 4): the customer's checkout and the dashboard",
-        "checks": [
-          {
-            "label": "2 orders in the queue: checkout shows Second's own 'busy' message",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "4 orders: checkout shows Second's own 'not taking orders' message",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "Delivery is still listed in checkout but greyed out while load management has it stopped",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "a customer can still choose Delivery while load management has it stopped",
-            "ok": true,
-            "detail": "",
-            "kind": "never"
-          },
-          {
-            "label": "Central (busy only at 5 orders) shows no load message",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "the dashboard's Orders screen lists the four orders",
-            "ok": true,
-            "detail": "0001, 0002, 0003, 0004",
-            "kind": "expect"
-          },
-          {
-            "label": "all four orders are cancelled in the dashboard",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "after the orders are cancelled the load messages are gone again",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          }
-        ]
-      },
-      {
-        "n": 12,
-        "title": "The Pro store and the Custom store get what their plans give them",
-        "checks": [
-          {
-            "label": "Pro store: Pro plan, up to 3 outlets and 10 people",
-            "ok": true,
-            "detail": "Within plan People 1 / 10 Outlets 1 / 3 Store name Shown in the storefr",
-            "kind": "expect"
-          },
-          {
-            "label": "Custom store starts with nothing: 1 outlet, 1 person",
-            "ok": true,
-            "detail": "Within plan People 1 / 1 Outlets 1 / 1 Store name Shown in the storefro",
-            "kind": "expect"
-          },
-          {
-            "label": "the platform sets the Custom store to 2 outlets by hand",
-            "ok": true,
-            "detail": "Within plan People 1 / 1 Outlets 1 / 2 Store name Shown in the storefro",
-            "kind": "expect"
-          },
-          {
-            "label": "Custom store: a 2nd outlet can be added",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "a Custom store limited to 2 outlets gets a 3rd",
-            "ok": true,
-            "detail": "",
-            "kind": "never"
-          },
-          {
-            "label": "…the button says why",
-            "ok": true,
-            "detail": "Your plan allows 2 outlets.",
-            "kind": "expect"
-          },
-          {
-            "label": "the browser logged JavaScript errors",
-            "ok": true,
-            "detail": "",
-            "kind": "never"
-          }
-        ]
+        "checks": []
       }
     ],
     "findings": [],
@@ -2809,8 +2682,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T07:49:15.617Z",
-    "durationMs": 52218,
+    "at": "2026-11-27T04:40:30.282Z",
+    "durationMs": 51979,
     "steps": [
       {
         "n": 1,
@@ -2819,7 +2692,7 @@
           {
             "label": "the platform shows Pro with 3 of 3 outlets and no grace period",
             "ok": true,
-            "detail": "Within plan People 1 / 10 Outlets 3 / 3 Store name Shown in the storefr",
+            "detail": "Within plan People 1 / 10 Outlets 3 / 3 Tables 0 / 5 Store name Shown i",
             "kind": "expect"
           },
           {
@@ -2843,13 +2716,13 @@
           {
             "label": "the platform page now shows Basic with 3 outlets against a limit of 1",
             "ok": true,
-            "detail": "Over its limits since Nov 21, 2026. Everything keeps working until Nov 28, 2026; aft",
+            "detail": "Over its limits since Nov 27, 2026. Everything keeps working until Dec 4, 2026; afte",
             "kind": "expect"
           },
           {
             "label": "…and says the store is over its limits, with the 7-day grace deadline",
             "ok": true,
-            "detail": "Over its limits since Nov 21, 2026. Everything keeps working until Nov 28, 2026; after that you'll be asked to choose what to block.",
+            "detail": "Over its limits since Nov 27, 2026. Everything keeps working until Dec 4, 2026; after that you'll be asked to choose what to block.",
             "kind": "expect"
           },
           {
@@ -2867,7 +2740,7 @@
           {
             "label": "the owner's dashboard shows 'Your store has 3 outlets (plan allows 1)' and 'Everything keeps working until …'",
             "ok": true,
-            "detail": "Your store has 3 outlets (plan allows 1). Everything keeps working until Nov 28, 2026. Remove the extras, or contact TablePe to upgrade your plan. Dashboard Lifecycle Central",
+            "detail": "Your store has 3 outlets (plan allows 1). Everything keeps working until Dec 4, 2026. Remove the extras, or contact Rasoi Pulse to upgrade your plan. Dashboard Lifecycle Cent",
             "kind": "expect"
           },
           {
@@ -2957,7 +2830,7 @@
           {
             "label": "a customer can still place a takeaway order at outlet 2",
             "ok": true,
-            "detail": "order #0005",
+            "detail": "order #0001",
             "kind": "expect"
           }
         ]
@@ -2969,7 +2842,7 @@
           {
             "label": "the platform page says the grace period has ended",
             "ok": true,
-            "detail": "This store went over its limits on Nov 21, 2026 and its 0-day grace period ended on Nov 21, 2026. Choose what to block on the Outlets and People tabs — or raise its limits.",
+            "detail": "This store went over its limits on Nov 27, 2026 and its 0-day grace period ended on Nov 27, 2026. Choose what to block on the Outlets and People tabs — or raise its limits.",
             "kind": "expect"
           },
           {
@@ -2993,7 +2866,7 @@
           {
             "label": "…and still order",
             "ok": true,
-            "detail": "order #0006",
+            "detail": "order #0002",
             "kind": "expect"
           },
           {
@@ -3053,7 +2926,7 @@
           {
             "label": "the disabled outlet no longer counts toward the limit: 2 outlets in use",
             "ok": true,
-            "detail": "Over limit People 1 / 3 Outlets 2 / 1 1 outlet, 0 people blocked Store name Shown in",
+            "detail": "Over limit People 1 / 3 Outlets 2 / 1 Tables 0 / 5 1 outlet, 0 people blocked Store ",
             "kind": "expect"
           },
           {
@@ -3889,8 +3762,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T07:41:35.119Z",
-    "durationMs": 64089,
+    "at": "2026-11-27T04:41:40.369Z",
+    "durationMs": 64864,
     "steps": [
       {
         "n": 1,
@@ -3935,7 +3808,7 @@
           {
             "label": "opening /marketing/new says 'Marketing isn't in your plan'",
             "ok": true,
-            "detail": "Marketing Send an offer or an announcement to your customers. Marketing isn't in your plan Ask TablePe to add it to your",
+            "detail": "Marketing Send an offer or an announcement to your customers. Marketing isn't in your plan Ask Rasoi Pulse to add it to ",
             "kind": "expect"
           },
           {
@@ -5198,12 +5071,12 @@
     "id": "t18-tables",
     "title": "Tables — add a table (number, zone, seats), zones, limits and duplicates, QR panel, remove, per-outlet and per-store, who can manage",
     "status": "pass",
-    "pass": 54,
+    "pass": 56,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T23:13:09.303Z",
-    "durationMs": 44746,
+    "at": "2026-11-27T04:25:28.259Z",
+    "durationMs": 43422,
     "steps": [
       {
         "n": 1,
@@ -5324,9 +5197,9 @@
             "kind": "expect"
           },
           {
-            "label": "a number of 21 characters is refused",
+            "label": "a number of 21 characters is refused, and says why: 'The table number can be at most 20 characters.'",
             "ok": true,
-            "detail": "Validation failed",
+            "detail": "The table number can be at most 20 characters.",
             "kind": "expect"
           },
           {
@@ -5336,7 +5209,7 @@
             "kind": "never"
           },
           {
-            "label": "51 seats is refused",
+            "label": "51 seats is refused, and says why: 'A table can have at most 50 seats.'",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -5348,15 +5221,27 @@
             "kind": "expect"
           },
           {
-            "label": "0 seats is not refused — it becomes the default 4",
+            "label": "a refused table says only 'Validation failed'",
             "ok": true,
-            "detail": "Z0 Free 4 seats",
+            "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "0 seats is refused out loud ('Seats must be a whole number, at least 1'), not turned into 4",
+            "ok": true,
+            "detail": "",
             "kind": "expect"
           },
           {
-            "label": "numbers are case-sensitive: 't9' is accepted next to 'T9'",
+            "label": "Z0 was saved with a made-up 4 seats",
             "ok": true,
             "detail": "",
+            "kind": "never"
+          },
+          {
+            "label": "'t9' is the same table as 'T9': refused with 'Table T9 already exists — table numbers don't care about capital letters'",
+            "ok": true,
+            "detail": "Table T9 already exists — table numbers don't care about capital letters, so ",
             "kind": "expect"
           }
         ]
@@ -5368,7 +5253,7 @@
           {
             "label": "the panel says 'Table T9' and 'Rooftop · 6 seats · Free'",
             "ok": true,
-            "detail": "Table T9 Rooftop · 6 seats · Free http://localhost:3170/t/6b00d3ddc7ea431ff66b6f",
+            "detail": "Table T9 Rooftop · 6 seats · Free http://localhost:3170/t/6b0906111ea6655e1f6415",
             "kind": "expect"
           },
           {
@@ -5380,7 +5265,7 @@
           {
             "label": "the address printed under it is /t/<id>?k=<code> on the store's own site",
             "ok": true,
-            "detail": "http://localhost:3170/t/6b00d3ddc7ea431ff66b6f86?k=3Bh-lveUcDIuhBv0kwH39mBg",
+            "detail": "http://localhost:3170/t/6b0906111ea6655e1f641574?k=RFaPRhU1K_APci2yZtpkHBWj",
             "kind": "expect"
           },
           {
@@ -5404,7 +5289,7 @@
           {
             "label": "every table has its own address and its own code",
             "ok": true,
-            "detail": "http://localhost:3170/t/6b00d3ddc7ea431ff66b6f86?k=3Bh-lveUcDIuhBv0kwH39mBg | http://localhost:3170/t/6b00d3dec7ea431ff66b6f96?k=PgJKmH8hl28guoB0rRsYh7Nx | http://localhost:3170/t/6b00d3d7c7ea431ff66b6ac0?k=cbwsF1Vg4nNWhK5orZ7e9bKN",
+            "detail": "http://localhost:3170/t/6b0906111ea6655e1f641574?k=RFaPRhU1K_APci2yZtpkHBWj | http://localhost:3170/t/6b0906121ea6655e1f641581?k=sX04JcvRp5_jSby7JGVVLzs8 | http://localhost:3170/t/6b09060b1ea6655e1f6410ea?k=FhyCpTUV24_k2pTQWtnrQA8h",
             "kind": "expect"
           },
           {
@@ -5482,7 +5367,7 @@
           {
             "label": "back on Main, nothing changed: the same tables, T1 still 4 seats",
             "ok": true,
-            "detail": "10 tables",
+            "detail": "8 tables",
             "kind": "expect"
           },
           {
@@ -5572,11 +5457,7 @@
         ]
       }
     ],
-    "findings": [
-      "A refused table (too long a number, too many seats) says only 'Validation failed' — it doesn't say which box is wrong.",
-      "Typing 0 (or nothing) as the seats quietly saves 4 seats instead of saying 0 isn't allowed.",
-      "'T9' and 't9' count as different tables — two tables that look alike to a person can both exist."
-    ],
+    "findings": [],
     "problems": []
   },
   "t19-dine-in": {
@@ -6521,8 +6402,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T07:51:53.642Z",
-    "durationMs": 51448,
+    "at": "2026-11-27T04:31:56.217Z",
+    "durationMs": 52010,
     "steps": [
       {
         "n": 1,
@@ -6577,9 +6458,9 @@
             "kind": "expect"
           },
           {
-            "label": "choosing Starter shows what it includes: 'Up to 1 outlet and 3 people'",
+            "label": "choosing Starter shows what it includes: 'Up to 1 outlet, 5 tables and 3 people'",
             "ok": true,
-            "detail": "Takeaway, dine-in QR and coupons · Up to 1 outlet and 3 people.",
+            "detail": "Takeaway, dine-in QR and coupons · Up to 1 outlet, 5 tables and 3 people.",
             "kind": "expect"
           },
           {
@@ -6817,7 +6698,7 @@
             "kind": "expect"
           },
           {
-            "label": "the TablePe address is checked live: 'onboardcafe.localhost:3170 is free'",
+            "label": "the Rasoi Pulse address is checked live: 'onboardcafe.localhost:3170 is free'",
             "ok": true,
             "detail": "onboardcafe.localhost:3170 is free",
             "kind": "expect"
@@ -6873,7 +6754,7 @@
           {
             "label": "Save: 'Saved.' and the form is now a saved draft with its own address",
             "ok": true,
-            "detail": "http://localhost:3171/platform/onboarding/6b014d79a99bf3a7791d3767",
+            "detail": "http://localhost:3171/platform/onboarding/6b09079b9f95f01848e3fc1a",
             "kind": "expect"
           },
           {
@@ -7059,7 +6940,7 @@
           {
             "label": "no blank pages: every page has real content (not just a footer) — printing it gives no empty sheets",
             "ok": true,
-            "detail": "1187 / 1040 / 624",
+            "detail": "1213 / 1044 / 668",
             "kind": "expect"
           },
           {
@@ -7173,7 +7054,7 @@
           {
             "label": "the store is in Stores on the Starter plan with 2 of 2 outlets",
             "ok": true,
-            "detail": "Onboard Cafe ola@onboardcafe.test Plan Starter People 1 / 3 Outlets 2 / 2 Within plan",
+            "detail": "Onboard Cafe ola@onboardcafe.test Plan Starter People 1 / 3 Outlets 2 / 2 Tables 0 / 5 Within plan",
             "kind": "expect"
           },
           {
@@ -7251,7 +7132,7 @@
           {
             "label": "it lists what is taken: the store name, the owner's email and the address",
             "ok": true,
-            "detail": "A store called “onboard-cafe” already exists on TablePe — change the store's name.\nonboardcafe.localhost:3170 is already used by another store.\nThat email already has a TablePe account. Use a different email for this owner (it becomes their sign-in).",
+            "detail": "A store called “onboard-cafe” already exists on Rasoi Pulse — change the store's name.\nonboardcafe.localhost:3170 is already used by another store.\nThat email already has a Rasoi Pulse account. Use a different email for this owner (it becomes their sign-in).",
             "kind": "expect"
           },
           {
@@ -7322,8 +7203,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T07:52:34.938Z",
-    "durationMs": 35276,
+    "at": "2026-11-27T04:27:07.148Z",
+    "durationMs": 36201,
     "steps": [
       {
         "n": 1,
@@ -7510,9 +7391,9 @@
         "title": "The Custom plan: starts from the dearest plan and goes up in steps",
         "checks": [
           {
-            "label": "a small need on Custom is just the dearest plan: 'Business plan — every feature, up to 3 outlets and 20 people ₹2,499'",
+            "label": "a small need on Custom is just the dearest plan: 'Business plan — every feature, up to 3 outlets, 20 tables and 20 people ₹2,499'",
             "ok": true,
-            "detail": "Business plan — every feature, up to 3 outlets and 20 people ₹2,499",
+            "detail": "Business plan — every feature, up to 3 outlets, 20 tables and 20 people ₹2,499",
             "kind": "expect"
           },
           {
@@ -7530,13 +7411,13 @@
           {
             "label": "5 outlets and 25 people: Business ₹2,499 + 2 more outlets × ₹250 (₹500) + 5 more people × ₹15 (₹75)",
             "ok": true,
-            "detail": "Business plan — every feature, up to 3 outlets and 20 people ₹2,499 | 2 more outlets (5 in all) × ₹250 ₹500 | 5 more people (25 in all) × ₹15 ₹75",
+            "detail": "Business plan — every feature, up to 3 outlets, 20 tables and 20 people ₹2,499 | 2 more outlets (5 in all) × ₹250 ₹500 | 5 more people (25 in all) × ₹15 ₹75",
             "kind": "expect"
           },
           {
             "label": "total ₹3,074 a month — dearer than Business's ₹2,499 and Basic's ₹999",
             "ok": true,
-            "detail": "Business plan — every feature, up to 3 outlets and 20 people ₹2,499 2 more outlets (5 in all) × ₹250 ₹500 5 more people (25 in all) × ₹15 ₹75 A month ₹3,074 GST (18%) ₹553 Pays a month ₹3,627 Paying for the year up front (10% off): ₹39,175 with GST — about ₹2,767 a month before GST, saving ₹3,689. Discount for this client (%) Negotiated — taken off the monthly price No standard plan fits this on its own. Edit the price list",
+            "detail": "Business plan — every feature, up to 3 outlets, 20 tables and 20 people ₹2,499 2 more outlets (5 in all) × ₹250 ₹500 5 more people (25 in all) × ₹15 ₹75 A month ₹3,074 GST (18%) ₹553 Pays a month ₹3,627 Paying for the year up front (10% off): ₹39,175 with GST — about ₹2,767 a month before GST, saving ₹3,689. Discount for this client (%) Negotiated — taken off the monthly price No standard plan fits this on its own. Edit the price list",
             "kind": "expect"
           },
           {
@@ -7560,7 +7441,7 @@
           {
             "label": "setting the outlets the client was promised (8) prices them even before the cards exist: 5 more outlets × ₹250",
             "ok": true,
-            "detail": "Business plan — every feature, up to 3 outlets and 20 people ₹2,499 5 more outlets (8 in all) × ₹250 ₹1,250 6 more people (26 in all) × ₹15 ₹90 A month ₹3,839 GST (18%) ₹691 Pays a month ₹4,530 Paying for the year up front (10% off): ₹48,924 with GST — about ₹3,455 a month before GST, saving ₹4,607. Discount for this client (%) Negotiated — taken off the monthly price No standard plan fits this on its own. Edit the price list",
+            "detail": "Business plan — every feature, up to 3 outlets, 20 tables and 20 people ₹2,499 5 more outlets (8 in all) × ₹250 ₹1,250 6 more people (26 in all) × ₹15 ₹90 A month ₹3,839 GST (18%) ₹691 Pays a month ₹4,530 Paying for the year up front (10% off): ₹48,924 with GST — about ₹3,455 a month before GST, saving ₹4,607. Discount for this client (%) Negotiated — taken off the monthly price No standard plan fits this on its own. Edit the price list",
             "kind": "expect"
           }
         ]
@@ -7662,7 +7543,7 @@
           {
             "label": "in Stores: Custom Cafe is on the Custom plan with 2 of 2 outlets and 1 of 3 people",
             "ok": true,
-            "detail": "Custom Cafe pricing@custom-cafe.test Plan Custom People 1 / 3 Outlets 2 / 2 Within plan",
+            "detail": "Custom Cafe pricing@custom-cafe.test Plan Custom People 1 / 3 Outlets 2 / 2 Tables 0 / 5 Within plan",
             "kind": "expect"
           },
           {
@@ -7678,27 +7559,27 @@
         "title": "The New plan dialog: tidy limits, Save always in reach, room for the dropdown arrow",
         "checks": [
           {
-            "label": "the 'Multi-outlet' box sits directly under the people limit, on the same left edge",
+            "label": "the limits sit side by side on one row: people, tables, and the 'Multi-outlet' box all at the same height, left to right",
             "ok": true,
-            "detail": "people x=381 y=323 · multi x=385 y=376",
+            "detail": "people 61,343 · tables 397,343 · multi 736,352",
             "kind": "expect"
           },
           {
             "label": "'Unlimited' is on the same line as the people number",
             "ok": true,
-            "detail": "333 vs 323",
+            "detail": "354 vs 343",
             "kind": "expect"
           },
           {
-            "label": "ticking Multi-outlet shows the 'Outlets' limit below it, aligned with the others",
+            "label": "ticking Multi-outlet shows the 'Outlets' limit on that same row, after it",
             "ok": true,
-            "detail": "383 vs 381",
+            "detail": "1066,344 vs 736,343",
             "kind": "expect"
           },
           {
             "label": "'Save plan' is in view without scrolling the dialog (it stays at the bottom)",
             "ok": true,
-            "detail": "button at y=811–840 of 900",
+            "detail": "button at y=724–753 of 900",
             "kind": "expect"
           },
           {
@@ -21896,8 +21777,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T07:34:39.619Z",
-    "durationMs": 110853,
+    "at": "2026-11-27T04:28:58.072Z",
+    "durationMs": 110901,
     "steps": [
       {
         "n": 1,
@@ -22008,7 +21889,7 @@
           {
             "label": "every card is inside the screen",
             "ok": true,
-            "detail": "16–183 193–359 16–183 193–359 16–183 193–359 16–183 193–359 16–183 193–359 16–359 16–183 193–359 16–359 16–183 16–359 16–183",
+            "detail": "16–183 193–359 16–183 193–359 16–183 193–359 16–183 193–359 16–183 193–359 16–183 193–359 16–183 16–359 16–183 193–359 16–359 16–183 16–359 16–183",
             "kind": "expect"
           },
           {
@@ -22026,7 +21907,7 @@
           {
             "label": "cards in a row are the same height",
             "ok": true,
-            "detail": "137 vs 137",
+            "detail": "117 vs 117",
             "kind": "expect"
           },
           {
@@ -22580,8 +22461,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T07:29:35.255Z",
-    "durationMs": 6345,
+    "at": "2026-11-27T04:32:03.639Z",
+    "durationMs": 7393,
     "steps": [
       {
         "n": 1,
@@ -22866,7 +22747,7 @@
           {
             "label": "the dashboard numbers: every request reads orders from the database",
             "ok": true,
-            "detail": "orders.aggregate+orders.aggregate+orders.aggregate+orders.aggregate+orders.aggregate+orders.aggregate+orders.countDocuments+orders.find+orders.countDocuments+orders.find / orders.aggregate+orders.aggregate+orders.aggregate+orders.aggregate+orders.aggregate+orders.aggregate+orders.countDocuments+orders.find+orders.countDocuments+orders.find",
+            "detail": "orders.aggregate+orders.aggregate+orders.aggregate+orders.aggregate+orders.aggregate+orders.aggregate+orders.aggregate+orders.countDocuments+orders.find+orders.countDocuments+orders.find / orders.aggregate+orders.aggregate+orders.aggregate+orders.aggregate+orders.aggregate+orders.aggregate+orders.aggregate+orders.countDocuments+orders.find+orders.countDocuments+orders.find",
             "kind": "expect"
           },
           {
@@ -22902,19 +22783,19 @@
           {
             "label": "sign-in entries are never listed (they are about people)",
             "ok": true,
-            "detail": "cfg,menu,outlet,outletaccess,plan",
+            "detail": "cfg,menu,outlet,outletaccess",
             "kind": "expect"
           },
           {
             "label": "the new kinds (settings, access check, offers) are listed with words, not codes",
             "ok": true,
-            "detail": "cfg,menu,outlet,outletaccess,plan",
+            "detail": "cfg,menu,outlet,outletaccess",
             "kind": "expect"
           },
           {
             "label": "Store by store: Acme has remembered items",
             "ok": true,
-            "detail": "{\"id\":\"6b01485d6ee7ce68736e54fc\",\"name\":\"Acme\",\"entries\":5,\"bytes\":7341}",
+            "detail": "{\"id\":\"6b0907c2d514a195bc3ad477\",\"name\":\"Acme\",\"entries\":4,\"bytes\":6805}",
             "kind": "expect"
           },
           {
@@ -22932,7 +22813,7 @@
           {
             "label": "clearing ONE store's cache removes its items",
             "ok": true,
-            "detail": "{\"scope\":\"store\",\"store\":{\"id\":\"6b01485d6ee7ce68736e54fc\",\"name\":\"Acme\"},\"removed\":5,\"at\":\"2026-11-21T07:29:34.704Z\"}",
+            "detail": "{\"scope\":\"store\",\"store\":{\"id\":\"6b0907c2d514a195bc3ad477\",\"name\":\"Acme\"},\"removed\":4,\"at\":\"2026-11-27T04:32:03.144Z\"}",
             "kind": "expect"
           },
           {
@@ -22944,7 +22825,7 @@
           {
             "label": "other stores keep what they had when one store is cleared",
             "ok": true,
-            "detail": "{\"id\":\"6b01485d6ee7ce68736e550c\",\"name\":\"Beta\",\"entries\":2,\"bytes\":124}",
+            "detail": "{\"id\":\"6b0907c2d514a195bc3ad486\",\"name\":\"Beta\",\"entries\":2,\"bytes\":149}",
             "kind": "expect"
           },
           {
@@ -31130,12 +31011,12 @@
     "id": "t92-dashboard-reopen-outlets-ui",
     "title": "Dashboard: an order put back from Completed seats its table again (or asks which free table); Users & roles gives team members outlets",
     "status": "pass",
-    "pass": 30,
+    "pass": 52,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T12:19:13.755Z",
-    "durationMs": 7550,
+    "at": "2026-11-27T04:32:11.359Z",
+    "durationMs": 7702,
     "steps": [
       {
         "n": 1,
@@ -31174,13 +31055,13 @@
           {
             "label": "another party sits at T1",
             "ok": true,
-            "detail": "0013",
+            "detail": "0003",
             "kind": "expect"
           },
           {
             "label": "a pop-up explains that T1 has another party",
             "ok": true,
-            "detail": "That table has someone else now Table T1 has another party now. Pick a different table for this order. Order #0012 will go back to Preparing",
+            "detail": "That table has someone else now Table T1 has another party now. Pick a different table for this order. Order #0002 will go back to Preparing",
             "kind": "expect"
           },
           {
@@ -31284,9 +31165,141 @@
             "ok": true,
             "detail": "",
             "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "4b. The outlet picker: a dropdown with search",
+        "checks": [
+          {
+            "label": "the closed outlet box is the same height as the Role select beside it, and no taller than the text boxes",
+            "ok": true,
+            "detail": "{\"select\":32,\"input\":35,\"trigger\":32}",
+            "kind": "expect"
           },
           {
-            "label": "choosing one outlet turns it on",
+            "label": "closed, the box says 'Choose outlets' (nothing is picked yet)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and there is no list of checkboxes sitting in the form any more",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "clicking opens the panel and puts the cursor in the search box",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it lists an 'All outlets' row and one row for each outlet of this store",
+            "ok": true,
+            "detail": "3 rows for 2 outlets",
+            "kind": "expect"
+          },
+          {
+            "label": "the footer counts what is picked: 0 of N",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "typing \"SEC\" keeps only outlets that match, whatever the capital letters",
+            "ok": true,
+            "detail": "Second",
+            "kind": "expect"
+          },
+          {
+            "label": "…and hides the 'All outlets' row while searching",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a search with no match says 'No outlet matches …'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Enter in the search box ticks the first match",
+            "ok": true,
+            "detail": "Second",
+            "kind": "expect"
+          },
+          {
+            "label": "clearing the search brings every outlet back",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the footer now says 1 selected",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Clear unticks everything",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'All outlets' shows every outlet ticked and locked",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the closed box shows an 'All outlets' chip and the warning is gone",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "ArrowDown in the search box moves to the first checkbox",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Escape closes the panel and the box has the focus again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "with two outlets picked (chips) the box is still the same height as the other fields",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "two picked: the closed box shows both names as chips; a click outside closes the panel",
+            "ok": true,
+            "detail": "Main Second",
+            "kind": "expect"
+          },
+          {
+            "label": "and Add user is on",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "unticking one and pressing Done leaves just the other",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "choosing one outlet turns Add user on",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -31300,13 +31313,13 @@
           {
             "label": "saved: exactly the ticked outlet",
             "ok": true,
-            "detail": "[\"6b08238779af1425e839ff6c\"]",
+            "detail": "[\"6b0907869f95f01848e3f632\"]",
             "kind": "expect"
           }
         ]
       },
       {
-        "n": 5,
+        "n": 6,
         "title": "The mapped person sees only their outlet",
         "checks": [
           {
@@ -31330,13 +31343,19 @@
         ]
       },
       {
-        "n": 6,
+        "n": 7,
         "title": "Changing a person's outlets later",
         "checks": [
           {
-            "label": "after ticking All outlets the row says All outlets",
+            "label": "the dialog's picker opens with the person's current outlet already ticked",
             "ok": true,
             "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "after choosing All outlets the row says All outlets",
+            "ok": true,
+            "detail": "All outlets · Change outlets",
             "kind": "expect"
           },
           {
@@ -33109,6 +33128,2792 @@
             "label": "today's summary with no orders: zeros, no average",
             "ok": true,
             "detail": "{\"ready\":0,\"averageMinutes\":null,\"lateCount\":0,\"slowest\":null,\"topDishes\":[]}",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t100-rider-pin-ui": {
+    "id": "t100-rider-pin-ui",
+    "title": "Dashboard: the manager gives a delivery rider an app login with a PIN, resets it and switches it off",
+    "status": "pass",
+    "pass": 35,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-27T04:23:37.960Z",
+    "durationMs": 8357,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The 'Add a rider' form lines up",
+        "checks": [
+          {
+            "label": "the Add rider button's bottom edge is level with the bottom of the Name and Phone boxes",
+            "ok": true,
+            "detail": "{\"boxBottoms\":[274,274],\"boxHeights\":[35,35],\"btnBottom\":274,\"btnHeight\":35,\"btnTop\":239,\"boxTop\":239}",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the button is as tall as the boxes",
+            "ok": true,
+            "detail": "35 vs 35,35",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Turning the app login on",
+        "checks": [
+          {
+            "label": "the riders table has a 'Rider app' column, and a new rider has 'No login'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a rider's actions are ONE ⋮ button, not a row of buttons",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "its menu offers app login, duty list, edit and remove — and no 'Show PIN' while there is no login",
+            "ok": true,
+            "detail": "PIN RIDER 10608 Set up app login Phone number + a PIN you choose Take off the duty list Not offered when an order goes out Edit name and phone Remove rider",
+            "kind": "expect"
+          },
+          {
+            "label": "'Remove rider' is coloured as a dangerous action",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the title and the PIN box sit inside the panel with at least 16 px around them",
+            "ok": true,
+            "detail": "{\"title\":{\"left\":23.5,\"right\":23.5,\"top\":23.5,\"bottom\":281.0600280761719},\"input\":{\"left\":23.5,\"right\":23.5,\"top\":166.3800048828125,\"bottom\":121.260009765625}}",
+            "kind": "expect"
+          },
+          {
+            "label": "the buttons are at least 16 px from the panel's right and bottom edges",
+            "ok": true,
+            "detail": "right 24, bottom 24",
+            "kind": "expect"
+          },
+          {
+            "label": "the PIN box uses the width of the panel",
+            "ok": true,
+            "detail": "panel 432 px",
+            "kind": "expect"
+          },
+          {
+            "label": "the dialog suggests a 4-digit PIN that isn't 0000 or 1111",
+            "ok": true,
+            "detail": "5508",
+            "kind": "expect"
+          },
+          {
+            "label": "it says the phone number is the login name, and that the PIN can be looked up again later (Show PIN)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the PIN starts visible (the manager must tell it to the rider), with a 'Hide PIN' switch",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Hide PIN' hides the digits without changing them, and the switch now says 'Show PIN'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Show PIN' shows them again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "only digits can be typed, and fewer than 4 can't be saved",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the row now says 'Login on'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "its menu now offers Show PIN, Reset PIN and Switch off app login",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the PIN is not left on the page after the dialog closes",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the rider can sign in to the app with that phone number and PIN",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Show PIN",
+        "checks": [
+          {
+            "label": "the PIN starts hidden: four dots, no digits anywhere in the dialog",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it names the phone number the rider signs in with",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Show' reveals the PIN the manager set (4821)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the button becomes 'Hide'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Copy' puts the PIN on the clipboard and says 'Copied'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Hide' covers it again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "opened again, it is hidden again (nothing is remembered between looks)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the answer carries Cache-Control: no-store",
+            "ok": true,
+            "detail": "no-store",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Resetting it",
+        "checks": [
+          {
+            "label": "the dialog says the old PIN stops working",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the old PIN stops working and the new one works",
+            "ok": true,
+            "detail": "old 401, new 200",
+            "kind": "expect"
+          },
+          {
+            "label": "Show PIN now shows the new PIN (7777), not the old one",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Switching it off",
+        "checks": [
+          {
+            "label": "'Switch off app login' switches it off: the row says 'No login' and the rider can't sign in",
+            "ok": true,
+            "detail": "401 Incorrect phone number or PIN",
+            "kind": "expect"
+          },
+          {
+            "label": "the stored PIN is gone with the login: asking for it answers 'no login', never a PIN",
+            "ok": true,
+            "detail": "{\"appLogin\":false,\"pin\":null,\"reason\":\"no_login\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "and the menu no longer offers Show PIN",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "A rider with no phone number",
+        "checks": [
+          {
+            "label": "the dialog explains that a phone number is needed first (the server's sentence)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors or warnings in the browser console",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t108-plan-features": {
+    "id": "t108-plan-features",
+    "title": "Plans → Business includes every feature (also future ones), Starter gains pre-orders and ratings, features that need another are flagged, and update-plans.js brings existing plans up to date safely",
+    "status": "pass",
+    "pass": 51,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-27T04:23:45.036Z",
+    "durationMs": 7054,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The rules",
+        "checks": [
+          {
+            "label": "the product has 18 plan features",
+            "ok": true,
+            "detail": "18",
+            "kind": "expect"
+          },
+          {
+            "label": "every feature named in the dependency table really exists",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "delivery without online payments is flagged, in plain words",
+            "ok": true,
+            "detail": "Delivery needs Online payments (delivery orders are paid online).",
+            "kind": "expect"
+          },
+          {
+            "label": "…and not when it has them",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "abandoned-cart reminders need the WhatsApp & SMS alerts",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "marketing needs alerts; pre-orders need takeaway",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no features, or every feature, is never a problem",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "The shared presets",
+        "checks": [
+          {
+            "label": "two presets: Starter (once called Basic) and Business (once called Pro)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "neither preset offers a feature without what it needs",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Starter keeps what it always had (takeaway, dine-in QR, coupons, printing)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and gains pre-orders and ratings (they cost the restaurant nothing to run and win it customers)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…but not the features that need a team or a sender account (kitchen display, bookings, reminders, delivery, marketing…)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business includes every feature, with the 'every feature' switch on",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "limits unchanged: Starter 1 outlet and 5 people, Business 3 outlets and 20 people",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "tables: Starter 5, Business 20 (tables are sold in fives)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "'Includes every feature' in the rules",
+        "checks": [
+          {
+            "label": "a plan WITHOUT the switch keeps only its own list (a feature added later never reaches it: the problem we had)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a plan WITH the switch gets every feature, whatever its saved list says (so also features added in future)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a store can still have one feature locked on such a plan",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a Custom plan still includes nothing by itself (the switch is ignored there)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "effectiveFeatures: all when the switch is on, else the list, else nothing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Through the console's API",
+        "checks": [
+          {
+            "label": "creating a plan with the switch on stores it and answers with every feature",
+            "ok": true,
+            "detail": "201 18",
+            "kind": "expect"
+          },
+          {
+            "label": "the list of plans shows it the same way (so the console and the website show every feature)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "switching it off goes back to the plan's own list",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a feature that doesn't exist is refused (400)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a Custom plan saved with the switch on still stores nothing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a store on that plan has the five newest features (kitchen display, bookings, pre-orders, ratings, cart reminders)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the switch is what is stored in the database",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "update-plans.js on a database laid out like production's",
+        "checks": [
+          {
+            "label": "the default run is a dry run and says so",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it says Starter would gain pre-orders and ratings",
+            "ok": true,
+            "detail": "adds: scheduledOrders, feedback",
+            "kind": "expect"
+          },
+          {
+            "label": "…and Business would gain the five newest features and switch on 'includes every feature'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Custom is not mentioned, and the dry run changed NOTHING in the database",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "--apply updates the two plans",
+            "ok": true,
+            "detail": "| 2 plan(s) updated. |",
+            "kind": "expect"
+          },
+          {
+            "label": "Starter: everything it had is kept, plus pre-orders and ratings (6 features)",
+            "ok": true,
+            "detail": "takeaway,dineInQr,coupons,printing,scheduledOrders,feedback",
+            "kind": "expect"
+          },
+          {
+            "label": "Business: the switch is on and the list is all 18",
+            "ok": true,
+            "detail": "18",
+            "kind": "expect"
+          },
+          {
+            "label": "Custom is untouched",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "outlet and people limits and website prices are untouched",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the plans that had no table limit get one (Starter 5, Business 20); Custom is left alone",
+            "ok": true,
+            "detail": "5/20/undefined",
+            "kind": "expect"
+          },
+          {
+            "label": "the dry run said so beforehand",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "run again: everything is already up to date (safe to repeat)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a table limit someone has already set is never changed by the update",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a store on the updated Business plan now has the new features",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a store on Starter has ratings and pre-orders, and still no delivery or kitchen display",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a plan that isn't there is skipped, never invented",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "seed-plans.js",
+        "checks": [
+          {
+            "label": "on an empty database it creates Starter, Business and Custom",
+            "ok": true,
+            "detail": "Business,Custom,Starter",
+            "kind": "expect"
+          },
+          {
+            "label": "Starter is made from the preset, at ₹799",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business is made with 'includes every feature', at ₹2,499, as the highlighted plan",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Custom is made as a custom plan",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the new plans carry their table limits (Starter 5, Business 20)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "running it twice creates nothing new",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an install whose plans are still called Basic and Pro keeps them (no duplicate Starter / Business appears)",
+            "ok": true,
+            "detail": "Basic,Custom,Pro",
+            "kind": "expect"
+          },
+          {
+            "label": "…and update-plans.js still finds them by their old names and brings them up to date",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t109-table-limit-api": {
+    "id": "t109-table-limit-api",
+    "title": "Plans limit tables, in steps of 5 (Starter 5, Business 20, Custom by hand): only 5, 10, 15 … are accepted, a store can't add a table past its limit, and the price is per block of 5",
+    "status": "pass",
+    "pass": 63,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-27T04:30:58.986Z",
+    "durationMs": 5229,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The rules: only 5, 10, 15 …",
+        "checks": [
+          {
+            "label": "tables are sold in blocks of 5",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "5, 10, 15, 20 and 100 are accepted",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "12, 19, 54, 7, 4, 0, 2.5 and -5 are refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…with a plain message (\"Tables go up in fives…\", \"at least 5\")",
+            "ok": true,
+            "detail": "Tables go up in fives: 5, 10, 15, 20 … | A plan has at least 5 tables.",
+            "kind": "expect"
+          },
+          {
+            "label": "no limit (null / not given) means unlimited — how every plan made before this behaves",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "12 tables are 3 blocks of five",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a store's size rounds UP to the next five (12 → 15, 21 → 25, never below 5)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "tableLimit: Infinity when unlimited",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a plan saved before tables had a limit resolves to unlimited (nothing is cut off)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a Custom plan has no limit of its own; the store's own number is the limit",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a store's own table limit follows the same rule (12 refused, 15 accepted)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the shared presets: Starter 5 tables, Business 20",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Plans through the console's API",
+        "checks": [
+          {
+            "label": "a plan with 12 tables is refused (400) — and the answer says why",
+            "ok": true,
+            "detail": "400 Tables go up in fives: 5, 10, 15, 20 …",
+            "kind": "expect"
+          },
+          {
+            "label": "a plan with 10 tables is created",
+            "ok": true,
+            "detail": "201 10",
+            "kind": "expect"
+          },
+          {
+            "label": "…and raised to 15",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "editing it to 19 is refused and the plan keeps 15",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a plan can still have no table limit (unlimited)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a Custom plan stores no limit of its own",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the list of plans shows the limit",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "A store with a 5-table plan",
+        "checks": [
+          {
+            "label": "the owner adds five tables, three at one outlet and two at the other",
+            "ok": true,
+            "detail": "201,201,201,201,201",
+            "kind": "expect"
+          },
+          {
+            "label": "a sixth table is refused at either outlet (the limit is for the whole store)",
+            "ok": true,
+            "detail": "409/409",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the message says what the plan allows and that tables are added 5 at a time",
+            "ok": true,
+            "detail": "Your plan allows 5 tables and all are in use. Remove a table, or ask Rasoi Pulse to add more (tables are added 5 at a time).",
+            "kind": "expect"
+          },
+          {
+            "label": "nothing was created by the refused requests",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the store's plan answer shows 5 of 5 tables in use",
+            "ok": true,
+            "detail": "[{\"users\":1,\"outlets\":2,\"tables\":5},{\"users\":5,\"outlets\":3,\"tables\":5}]",
+            "kind": "expect"
+          },
+          {
+            "label": "the console shows the same, and a full table limit is not an 'over limit' problem",
+            "ok": true,
+            "detail": "5/5 ok",
+            "kind": "expect"
+          },
+          {
+            "label": "a table is removed",
+            "ok": true,
+            "detail": "204",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the room it leaves can be used again at once (the count is read fresh, not remembered)",
+            "ok": true,
+            "detail": "201",
+            "kind": "expect"
+          },
+          {
+            "label": "switching a table off doesn't free its place (it still counts); only removing it does",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "removing a table keeps everything else remembered about the store (its menu etc.) — only the plan answer is renewed",
+            "ok": true,
+            "detail": "menu,outlet,outletaccess,outletaccess,plan → menu,outlet,outletaccess,outletaccess",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the plan answer WAS dropped, so 'tables in use' is right at once",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Raising the limit for one store, and the platform's own door",
+        "checks": [
+          {
+            "label": "a store's own limit of 12 is refused (fives only)",
+            "ok": true,
+            "detail": "400",
+            "kind": "expect"
+          },
+          {
+            "label": "…10 is accepted for this store",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the owner can add a sixth table straight away (the new limit is seen at once)",
+            "ok": true,
+            "detail": "201",
+            "kind": "expect"
+          },
+          {
+            "label": "the platform's own admin can add tables beyond the limit",
+            "ok": true,
+            "detail": "201/201 count 8",
+            "kind": "expect"
+          },
+          {
+            "label": "a store that has MORE than its limit keeps every table but can't add one",
+            "ok": true,
+            "detail": "409 8/5",
+            "kind": "expect"
+          },
+          {
+            "label": "…and it is NOT put into the 'over its limits' grace period (tables can't be blocked like outlets and people)",
+            "ok": true,
+            "detail": "ok over=false",
+            "kind": "expect"
+          },
+          {
+            "label": "no table was removed or switched off",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Stores that existed before the limit",
+        "checks": [
+          {
+            "label": "a store with no plan at all can still add as many tables as it likes (7 here)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and so can a store on a plan saved before tables had a limit",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "The Custom plan",
+        "checks": [
+          {
+            "label": "a store with 8 tables put on Custom gets a limit that holds them, in fives (8 → 10)",
+            "ok": true,
+            "detail": "10",
+            "kind": "expect"
+          },
+          {
+            "label": "…so it has room for two more and then stops — even when three are added at the very same moment",
+            "ok": true,
+            "detail": "201,201,409",
+            "kind": "expect"
+          },
+          {
+            "label": "…and exactly 10 tables exist afterwards (the one that didn't fit was taken back out)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a store with no tables put on Custom starts at 5 (the smallest size)",
+            "ok": true,
+            "detail": "5",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the number set by hand is kept (15)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "The onboarding form: plan fit",
+        "checks": [
+          {
+            "label": "Starter with 5 tables: fine, nothing to add",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Starter with 12 tables: an issue in plain words, and it blocks publishing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…'add for this client' lets it through, and the store is published with 15 tables (12 rounded up to the next five)",
+            "ok": true,
+            "detail": "15",
+            "kind": "expect"
+          },
+          {
+            "label": "Business allows 20 tables, not 25",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'0 tables' (takeaway only, or not decided) never raises an issue",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Custom: the store gets what was asked for, rounded up to fives (12 → 15) even when the typed limit was lower",
+            "ok": true,
+            "detail": "15",
+            "kind": "expect"
+          },
+          {
+            "label": "Custom: the limit typed for the client (30) is what the store is published with",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a form saved before tables existed opens fine (0 tables; Custom starts at 5)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "applying those overrides to a Starter store gives it 15 tables",
+            "ok": true,
+            "detail": "200 15",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "The price: per block of 5 tables",
+        "checks": [
+          {
+            "label": "the price list starts with ₹100 for every 5 extra tables",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Starter with 5 tables: just the plan's price (₹799)",
+            "ok": true,
+            "detail": "799",
+            "kind": "expect"
+          },
+          {
+            "label": "Starter with 15 tables: two more blocks of 5 × ₹100 = ₹200 on top (₹999)",
+            "ok": true,
+            "detail": "200 999",
+            "kind": "expect"
+          },
+          {
+            "label": "12 tables are charged as 15: the price is always by the block of 5",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "the price per block is the one on the Price list page (₹150 → ₹300)",
+            "ok": true,
+            "detail": "300",
+            "kind": "expect"
+          },
+          {
+            "label": "Business with 25 tables: one block of 5 beyond its 20 (₹2,599)",
+            "ok": true,
+            "detail": "100 2599",
+            "kind": "expect"
+          },
+          {
+            "label": "Custom starts from the dearest plan (20 tables) and charges the blocks beyond it (30 → ₹200)",
+            "ok": true,
+            "detail": "200 | Business plan — every feature, up to 3 outlets, 20 tables and 20 people",
+            "kind": "expect"
+          },
+          {
+            "label": "Custom with 10 tables is inside what the dearest plan already has — nothing added",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'what else would do' knows tables: 15 tables don't fit Starter but fit Business",
+            "ok": true,
+            "detail": "Business",
+            "kind": "expect"
+          },
+          {
+            "label": "the 'do the prices add up' page counts the 15 extra tables a plan adds (3 blocks)",
+            "ok": true,
+            "detail": "tables 15, rate card 1975",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t110-plan-table-limit-ui": {
+    "id": "t110-plan-table-limit-ui",
+    "title": "Plans: a wide New plan pop-up that needs no scrolling, a tables limit in steps of 5 (plan, store, onboarding form), and the owner's Tables page when the plan's tables are all used",
+    "status": "error",
+    "pass": 44,
+    "fail": 0,
+    "error": "plan-table-limit-ui.mjs exited with code 1. }  Node.js v24.3.0",
+    "mode": "headless",
+    "at": "2026-11-27T04:24:28.269Z",
+    "durationMs": 38111,
+    "steps": [
+      {
+        "n": 0,
+        "title": "Setup",
+        "checks": [
+          {
+            "label": "the bench's Beta store is on a 5-table plan and has at most 3 tables to begin with",
+            "ok": true,
+            "detail": "max 5, has 2",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 1,
+        "title": "A. Plans: tables on the cards, and the wide New plan pop-up",
+        "checks": [
+          {
+            "label": "the Starter card says '… · 5 tables'",
+            "ok": true,
+            "detail": "3 people · 1 outlet (multi-outlet off) · 5 tables",
+            "kind": "expect"
+          },
+          {
+            "label": "a plan with no table limit says 'Unlimited tables'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the pop-up is wide (at least 1,200 px on a 1,440 px screen — it used to be 720)",
+            "ok": true,
+            "detail": "1360px",
+            "kind": "expect"
+          },
+          {
+            "label": "…and a normal screen shows the whole plan without scrolling",
+            "ok": true,
+            "detail": "content 630px in 630px",
+            "kind": "expect"
+          },
+          {
+            "label": "Features, Visual effects and On the website stand side by side, level at the top",
+            "ok": true,
+            "detail": "[{\"x\":65,\"y\":391},{\"x\":621,\"y\":391},{\"x\":1014,\"y\":391}]",
+            "kind": "expect"
+          },
+          {
+            "label": "the limits are on one row: people, then tables",
+            "ok": true,
+            "detail": "[{\"x\":65,\"y\":344},{\"x\":399,\"y\":344}]",
+            "kind": "expect"
+          },
+          {
+            "label": "with the website's price fields opened too, it still fits without scrolling",
+            "ok": true,
+            "detail": "content 747px in 747px",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "A2. The tables limit goes up in fives",
+        "checks": [
+          {
+            "label": "a new plan starts with 5 tables",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "typing 12, 4, 54, 0, 20, 7 gives 15, 5, 55, 5, 20, 10 (rounded UP to the next five, never below 5)",
+            "ok": true,
+            "detail": "{\"0\":\"5\",\"4\":\"5\",\"7\":\"10\",\"12\":\"15\",\"20\":\"20\",\"54\":\"55\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "pressing Enter in the box rounds it (12 → 15) and does NOT save the plan",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "ticking Unlimited beside Tables switches the number off",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and un-ticking it brings back a number (5)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "A3. 'Include every feature' (this crashed before: it used a function the pop-up didn't have)",
+        "checks": [
+          {
+            "label": "ticking it ticks every feature and locks the list (no crash)",
+            "ok": true,
+            "detail": "[{\"on\":true,\"off\":true},{\"on\":true,\"off\":true},{\"on\":true,\"off\":true}]",
+            "kind": "expect"
+          },
+          {
+            "label": "…and un-ticking it frees the list again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "A4. Custom plans have no limits of their own",
+        "checks": [
+          {
+            "label": "ticking Custom hides the limits and the note says people, outlets and tables are set on each store",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "A5. Save, and edit",
+        "checks": [
+          {
+            "label": "the plan is saved with 15 tables",
+            "ok": true,
+            "detail": "15",
+            "kind": "expect"
+          },
+          {
+            "label": "its card says '15 tables'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "editing it shows 15 tables",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and 25 is saved",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "B. Console → the store → Plan & limits",
+        "checks": [
+          {
+            "label": "the store's header shows 'Tables n / 5'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the Tables limit says 'From plan — 5' to begin with",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "choosing 'Custom number' starts from the plan's 5",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "typing 12 gives 15 (rounded up to the next five)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "saved: this store now has 15 tables (the plan still says 5)",
+            "ok": true,
+            "detail": "15 / 15",
+            "kind": "expect"
+          },
+          {
+            "label": "the header now says 'Tables n / 15'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'From plan' takes the store back to the plan's 5",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "C. The owner's Tables page when the plan's tables are all used",
+        "checks": [
+          {
+            "label": "with 3 tables the page says '3 of 5 tables used (all outlets together)'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…no warning, and Add table works",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "adding the 4th table updates the count at once ('4 of 5 tables used')",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "with 5 of 5 used, a warning says so, and that tables are added 5 at a time",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the Add table button is switched off",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…the page says '5 of 5 tables used'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the server refuses a 6th table too (409)",
+            "ok": true,
+            "detail": "409 Your plan allows 5 tables and all are in use. Remove a table, or ask Rasoi Pulse to add more (tables are added 5 at a time).",
+            "kind": "expect"
+          },
+          {
+            "label": "after a table is removed the warning goes and Add table works again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "adding the last free table brings the warning up straight away, without reloading the page",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "D. Onboarding form: tables",
+        "checks": [
+          {
+            "label": "the Tables box starts at 0 (not needed / not decided)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the + button moves by five (0 → 5), and 5 fits Starter: no warning",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "10 tables on Starter: a red warning says what the plan allows and what the form has",
+            "ok": true,
+            "detail": "The Starter plan allows 5 tables and this form has 10. Reduce the tables, choose another plan, or add the extra ones for",
+            "kind": "expect"
+          },
+          {
+            "label": "the Plan fit panel lists it as a problem to fix",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Add the extra tables for this client' turns it into a note (amber) and clears the problem",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "typing 12 gives 15, and the note says 15 will be allowed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "stepping back down to 0 removes the warning",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "25 tables on a plan with no table limit (Pro here): no warning",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t111-dashboard-roles-api": {
+    "id": "t111-dashboard-roles-api",
+    "title": "Dashboard: every widget needs a permission (some a plan feature), a person is only SENT the numbers they may see, plus deliveries / bookings / rating widgets and India's day boundary",
+    "status": "pass",
+    "pass": 46,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-27T04:24:32.912Z",
+    "durationMs": 4622,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The rules",
+        "checks": [
+          {
+            "label": "20 widgets, every one in the catalogue",
+            "ok": true,
+            "detail": "20",
+            "kind": "expect"
+          },
+          {
+            "label": "every widget names a permission that really exists",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and a plan feature that really exists, when it names one",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no widget is shown BY DEFAULT to a role that may not read its numbers",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the roles that have a dashboard are those who can read orders (the content editor has none)",
+            "ok": true,
+            "detail": "super_admin,owner,manager,staff,kitchen,accountant",
+            "kind": "expect"
+          },
+          {
+            "label": "the kitchen can't be given Revenue (it needs Reports)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…the accountant and owner can; a cashier can't",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "bookings: a cashier yes, the accountant no (no access to Bookings)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a plan without Delivery can't have the deliveries widget; asking only about the role leaves the plan out",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no role / the editor: nothing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the recommended dashboard has every widget on",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a tick left on a role that may not read the numbers shows nothing (the permission wins over the tick)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a widget switched off is gone for everyone, the platform's super admin included — who otherwise sees every enabled widget",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a dashboard with nothing saved shows each role the widgets it is a default for (a store's saved list is only ever added to)",
+            "ok": true,
+            "detail": "8",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Two stores: the full plan and a small one",
+        "checks": []
+      },
+      {
+        "n": 3,
+        "title": "What each role is SENT",
+        "checks": [
+          {
+            "label": "the owner's 'orders today' counts today's five (not the two from before India's midnight)",
+            "ok": true,
+            "detail": "5",
+            "kind": "expect"
+          },
+          {
+            "label": "…revenue today is ₹500 (two paid orders; the unpaid and the delivery ones aren't paid)",
+            "ok": true,
+            "detail": "50000",
+            "kind": "expect"
+          },
+          {
+            "label": "…and yesterday's ₹600 (₹400 + the ₹200 order one minute before midnight) is there for 'compared with yesterday'",
+            "ok": true,
+            "detail": "60000",
+            "kind": "expect"
+          },
+          {
+            "label": "the 14-day trend's last day is TODAY in India (right date, right money), the day before it is yesterday",
+            "ok": true,
+            "detail": "2026-11-27 50000 / 2026-11-26 60000",
+            "kind": "expect"
+          },
+          {
+            "label": "the hour chart agrees with India's clock: the order a minute past midnight is in hour 0",
+            "ok": true,
+            "detail": "1,0,1,1,1,1",
+            "kind": "expect"
+          },
+          {
+            "label": "deliveries: 1 on its way, 1 ready and waiting for a rider",
+            "ok": true,
+            "detail": "1/1",
+            "kind": "expect"
+          },
+          {
+            "label": "bookings: 3 today (tomorrow's is left out), 1 waiting for a yes, 2 still to come",
+            "ok": true,
+            "detail": "3/1/2",
+            "kind": "expect"
+          },
+          {
+            "label": "rating: 4.0 from 3 ratings (the 40-day-old 1-star is outside the 30 days)",
+            "ok": true,
+            "detail": "4 / 3",
+            "kind": "expect"
+          },
+          {
+            "label": "the owner also gets the charts and lists",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a manager gets the same",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the KITCHEN is sent no revenue, no average and no trend — even though paid orders exist (the numbers are never computed for them)",
+            "ok": true,
+            "detail": "revenue 0, trend 0",
+            "kind": "expect"
+          },
+          {
+            "label": "…but gets what a kitchen needs: today's orders, the queue, orders by status, recent orders",
+            "ok": true,
+            "detail": "5/1",
+            "kind": "expect"
+          },
+          {
+            "label": "…nothing about customers, coins, ratings or bookings (it has no access to those pages)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the deliveries on their way (the kitchen hands them over)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a cashier: no revenue, the queue, and the bookings (they take them)",
+            "ok": true,
+            "detail": "0/1/3",
+            "kind": "expect"
+          },
+          {
+            "label": "the accountant: the money and the trend, no bookings",
+            "ok": true,
+            "detail": "50000/14/0",
+            "kind": "expect"
+          },
+          {
+            "label": "…and only the lists and charts that were set for the accountant (no recent orders or top items by default, the hour chart yes)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the content editor has no dashboard at all (403)",
+            "ok": true,
+            "detail": "403",
+            "kind": "expect"
+          },
+          {
+            "label": "the platform's super admin sees everything that is switched on",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "The plan",
+        "checks": [
+          {
+            "label": "on the small plan the owner still gets orders and revenue",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…but nothing about deliveries (no Delivery in the plan), though delivery orders exist",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…nothing about bookings or ratings (no Table reservations / Ratings in the plan)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "unlock Delivery for that one store and its deliveries appear at once",
+            "ok": true,
+            "detail": "1",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "The owner's own choices",
+        "checks": [
+          {
+            "label": "the owner switches Revenue, Average and the trend off",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the server stops computing them (revenue 0, no trend) while the rest still comes",
+            "ok": true,
+            "detail": "0/0/5",
+            "kind": "expect"
+          },
+          {
+            "label": "ticking Revenue for the kitchen and a cashier changes nothing: the permission still wins (they are sent 0)",
+            "ok": true,
+            "detail": "0/0",
+            "kind": "expect"
+          },
+          {
+            "label": "taking the kitchen off 'Orders today' stops them being sent it, the owner still gets it",
+            "ok": true,
+            "detail": "0/5",
+            "kind": "expect"
+          },
+          {
+            "label": "with every widget off, nothing is computed or sent — and the call still answers 200",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "back to the recommended dashboard, everything is there again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "A store saved before the new widgets existed",
+        "checks": [
+          {
+            "label": "a dashboard saved with only the 17 older widgets is accepted and stored as it is",
+            "ok": true,
+            "detail": "200 17",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the three newest widgets still arrive for it, with their defaults (nobody has to re-save Settings to get them)",
+            "ok": true,
+            "detail": "1/3/3",
+            "kind": "expect"
+          },
+          {
+            "label": "they are appended in their catalogue order",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t112-dashboard-ui": {
+    "id": "t112-dashboard-ui",
+    "title": "Dashboard: a cleaner, more modern look with a needs-attention strip, three new widgets, each role and plan sees only its own, and a clear Configure-dashboard grid",
+    "status": "pass",
+    "pass": 48,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-27T04:24:39.630Z",
+    "durationMs": 6700,
+    "steps": [
+      {
+        "n": 1,
+        "title": "A. The owner's dashboard",
+        "checks": [
+          {
+            "label": "a greeting by name, today's date and when the numbers were last updated",
+            "ok": true,
+            "detail": "Good morning, Owner Friday, November 27 — here is how the day is going. Updated 9:54 AM",
+            "kind": "expect"
+          },
+          {
+            "label": "a strip says whether anything needs attention (all clear, or what to do)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the owner of a full plan sees the new widgets (deliveries, bookings, rating) beside the old ones",
+            "ok": true,
+            "detail": "20 widgets",
+            "kind": "expect"
+          },
+          {
+            "label": "each card has a coloured icon chip beside its title",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the revenue chart is drawn at the card's width",
+            "ok": true,
+            "detail": "671×176",
+            "kind": "expect"
+          },
+          {
+            "label": "pointing at the chart reads out that day's revenue",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the read-out goes away again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the Refresh button can be pressed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "B. Needs-attention chips and the new cards (the numbers are made up for this check)",
+        "checks": [
+          {
+            "label": "with trouble, the strip lists what needs a person",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'3 orders are over the time limit' → the Orders page",
+            "ok": true,
+            "detail": "3 orders are over the time limit",
+            "kind": "expect"
+          },
+          {
+            "label": "'2 online orders are waiting for payment' → Orders",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'1 delivery is ready and waiting for a rider'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'2 bookings are waiting for your yes' → Bookings",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'4 messages could not be sent today' → Notifications",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the revenue card says '125% of yesterday' and what yesterday was",
+            "ok": true,
+            "detail": "Revenue today ₹5,000 Yesterday: ₹4,000 125% of yesterday",
+            "kind": "expect"
+          },
+          {
+            "label": "…with a little trend line",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the rating card shows 4.5 with five stars and '12 ratings, last 30 days'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the deliveries card says 2 on the way, 1 to hand over",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the bookings card says '2 need a yes'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "C. Other roles, and a small plan",
+        "checks": [
+          {
+            "label": "the kitchen sees its queue and recent orders — no revenue, rating or bookings",
+            "ok": true,
+            "detail": "orders-today,active-queue,missed-orders,deliveries-active,orders-by-status,top-items,recent-orders,low-stock",
+            "kind": "expect"
+          },
+          {
+            "label": "the owner of the small Starter plan has no deliveries, bookings, rating, coins or message-failure cards (not in the plan)",
+            "ok": true,
+            "detail": "revenue-today,orders-today,avg-order-value-today,active-queue,missed-orders,new-customers-today,coupons-redeemed-today,payment-pending,revenue-trend,orders-by-channel,orders-by-status,orders-by-hour,top-items,recent-orders,low-stock",
+            "kind": "expect"
+          },
+          {
+            "label": "…but does have revenue, orders and coupons (in the plan)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "D. Configure dashboard",
+        "checks": [
+          {
+            "label": "one row for each of the 20 widgets",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a column for each role (Owner, Manager, Cashier / Staff, Kitchen, Accountant) — and none for the platform's super admin",
+            "ok": true,
+            "detail": "WIDGET | ON | OWNER none | MANAGER none | CASHIER / STAFF all | KITCHEN all | ACCOUNTANT all",
+            "kind": "expect"
+          },
+          {
+            "label": "Revenue for the Kitchen is a padlock that says why (they can't open Reports)",
+            "ok": true,
+            "detail": "Kitchen can't open Reports, so its numbers are not for them",
+            "kind": "expect"
+          },
+          {
+            "label": "…the accountant has a tick, the cashier a padlock",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'20 of 20 widgets on'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "nothing changed: the button says Saved and is off",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the manager is ticked for 'Orders today'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "unticking the manager turns the button to 'Save changes'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "switching 'Sold out right now' off makes it '19 of 20 widgets on'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Move down' swaps the first two rows",
+            "ok": true,
+            "detail": "revenue-today,orders-today,avg-order-value-today → orders-today,revenue-today,avg-order-value-today",
+            "kind": "expect"
+          },
+          {
+            "label": "Save: 'Dashboard configuration saved.' and the button is back to Saved",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "what was saved: the new order, no manager on Orders today, Sold out switched off",
+            "ok": true,
+            "detail": "orders-today,revenue-today",
+            "kind": "expect"
+          },
+          {
+            "label": "the manager's own dashboard now has no 'Orders today' and no 'Sold out', but still has Revenue",
+            "ok": true,
+            "detail": "revenue-today,avg-order-value-today,active-queue,missed-orders,new-customers-today",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the new order is the one everyone sees",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "D2. All / none, and back to recommended",
+        "checks": [
+          {
+            "label": "pressing the Kitchen column's link ticks every widget the kitchen may be given",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and pressing it again does the opposite",
+            "ok": true,
+            "detail": "false,false,false,false,false,false,false,false,false,false,false",
+            "kind": "expect"
+          },
+          {
+            "label": "the padlocked widgets for the kitchen are never ticked by 'all'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Recommended' puts the usual order, every widget on and the usual roles back — waiting for Save",
+            "ok": true,
+            "detail": "revenue-today,orders-today",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "D3. A small plan: widgets the plan doesn't include",
+        "checks": [
+          {
+            "label": "on the Starter plan the Deliveries switch is off and can't be turned on",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and its role cells say 'Not in your plan (Delivery…)'",
+            "ok": true,
+            "detail": "Not in your plan (Delivery)",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the row says what it needs ('needs Delivery')",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "widgets the plan does include can still be switched",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "D4. On a phone",
+        "checks": [
+          {
+            "label": "on a phone the widgets are stacked (no wide grid) and the page doesn't scroll sideways",
+            "ok": true,
+            "detail": "{\"rows\":20,\"table\":false,\"sideScroll\":false,\"locked\":17}",
+            "kind": "expect"
+          },
+          {
+            "label": "…with the roles as chips and the unavailable ones marked",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the new dashboard on a phone: two cards a row, no sideways scroll",
+            "ok": true,
+            "detail": "{\"cols\":2,\"side\":false}",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors or warnings in the browser",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t98-rider-app-api": {
+    "id": "t98-rider-app-api",
+    "title": "Rider app (RDA) API: a rider signs in with their phone number and a PIN the manager sets, sees only the deliveries handed to them, marks them picked up and delivered (with the customer's 4-digit code); a new delivery order needs a map pin and gets a code; nothing else of the store opens to a rider",
+    "status": "pass",
+    "pass": 105,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-27T04:29:18.766Z",
+    "durationMs": 5948,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The manager gives a rider an app login",
+        "checks": [
+          {
+            "label": "a new rider has no app login yet",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a rider with no phone number can't be given a login (the number IS the login name)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a PIN of \"123\" is refused (4 to 6 digits)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a PIN of \"1234567\" is refused (4 to 6 digits)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a PIN of \"12ab\" is refused (4 to 6 digits)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a PIN of \"\" is refused (4 to 6 digits)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "setting a PIN turns the login on, and the answer never carries the PIN or its hash",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "only a salted hash is stored, and the login name is the last 10 digits of the phone",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the rider list never carries a hash",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a person without 'manage riders' can't set a PIN",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "1b. Show PIN — the manager can look the PIN up again",
+        "checks": [
+          {
+            "label": "the manager who set a PIN can look it up again",
+            "ok": true,
+            "detail": "{\"appLogin\":true,\"pin\":\"4821\",\"reason\":null}",
+            "kind": "expect"
+          },
+          {
+            "label": "the answer says 'no-store', so no browser or proxy keeps a copy",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it is stored locked with the server's key (an AES envelope), not as digits, and differently for each rider",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the rider list never carries the PIN or its locked copy",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "neither does the rider's sign-in answer nor the answer to setting a PIN",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a rider with no app login has no PIN to show",
+            "ok": true,
+            "detail": "{\"appLogin\":false,\"pin\":null,\"reason\":\"no_login\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "nobody signed in: refused (401)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a person without 'manage riders' (the kitchen) can't look a PIN up (403)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "another store's owner (whose plan has Delivery) can't read it: 404, as if the rider didn't exist",
+            "ok": true,
+            "detail": "404 {\"error\":\"Rider not found\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "a store whose plan has no Delivery is turned away (403)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an id that isn't an id is a 404",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a PIN set before PINs could be shown says so, and shows nothing",
+            "ok": true,
+            "detail": "{\"appLogin\":true,\"pin\":null,\"reason\":\"set_before\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "…and setting it again makes it show from then on",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a damaged stored copy is reported as unreadable, not as a crash or a wrong PIN",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Signing in",
+        "checks": [
+          {
+            "label": "a wrong PIN: 401, with how many tries are left",
+            "ok": true,
+            "detail": "{\"error\":\"Incorrect phone number or PIN\",\"details\":{\"attemptsLeft\":4}}",
+            "kind": "expect"
+          },
+          {
+            "label": "an unknown phone number gets the SAME answer (nobody can find out who is a rider)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a short number or PIN is refused before anything is checked",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the right PIN signs in (the number may be typed with +91 and spaces), and says who and where",
+            "ok": true,
+            "detail": "{\"id\":\"6b09071ca2b60167b53f2a46\",\"name\":\"Ramesh\",\"phone\":\"98765 43210\",\"outletId\":\"6b09071ca2b60167b53f2a06\",\"outletName\":\"Main\",\"storeName\":\"acme\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "the sign-in answer has no hash",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "GET /me says who is signed in",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "A rider's token opens the rider routes and nothing else",
+        "checks": [
+          {
+            "label": "the dashboard's orders say 401 to a rider's token",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and so does the rider list",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the kitchen board",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no token: 401",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a dashboard cookie (even the owner's) does not open the rider routes",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a token with its signature changed is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a token edited to name another rider is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an expired or re-signed-by-nobody token is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "The deliveries",
+        "checks": [
+          {
+            "label": "a rider sees the deliveries handed to THEM (ready, being made, out) — not another rider's, not an unassigned one, not a takeaway",
+            "ok": true,
+            "detail": "4 rows",
+            "kind": "expect"
+          },
+          {
+            "label": "each delivery has the address, the pin, the landmark, the distance, who to call and what is in the bag",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the delivery code is NEVER sent to the rider (only that one is needed)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an older order with no code needs none",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "nothing else of the order or the store leaks (no ids of the store, no totals)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the other rider sees only theirs",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Picked up",
+        "checks": [
+          {
+            "label": "an order still being made can't be picked up (409, in words)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "someone else's delivery is 'not found' (a rider can't tell it exists)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an unassigned order too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a takeaway order too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a bad id is a 404, not an error",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "picking up a Ready order sends it Out for delivery",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the order's history says the rider did it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "picking up twice is harmless",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the dashboard's orders list never shows the delivery code",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "Delivered, with the customer's code",
+        "checks": [
+          {
+            "label": "no code: asked for it, in words",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a wrong code: 409 and how many tries are left (asking for the code without typing one did not use a try)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the order is still out for delivery",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the right code completes the order",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the history says who delivered it and why",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "marking it again is harmless",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it moves from 'to deliver' to 'delivered today'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "five wrong guesses are each refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "after that even the RIGHT code is refused: a code can't be guessed (the store can still mark it delivered)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the manager can still complete it from the dashboard",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an older order with no code is completed without one",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "another rider can't complete my delivery",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an order that was never picked up can't be marked delivered",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "The customer can see the code for as long as the delivery is still to come",
+        "checks": [
+          {
+            "label": "an Out-for-delivery order shows the customer the 4 digits and the rider",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "while it is still being made the customer can already see it (so they can remember it)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "after it is delivered, no code is shown",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a cancelled delivery shows no code",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a takeaway order never has one",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 9,
+        "title": "A new delivery order gets a code",
+        "checks": [
+          {
+            "label": "a delivery order is placed (from a pin on the map)",
+            "ok": true,
+            "detail": "201 {\"order\":{\"id\":\"6b09071da2b60167b53f2bb5\",\"orderNumber\":\"0001\",\"channel\":\"delivery\",\"placedBy\":\"staff\",\"staffName\":\"Owner\",\"status\":\"placed\",\"lines\":[{\"itemId\":\"6b09071ca2b60167b53f2b18\",\"name\":\"Masal",
+            "kind": "expect"
+          },
+          {
+            "label": "it has a 4-digit delivery code",
+            "ok": true,
+            "detail": "4070",
+            "kind": "expect"
+          },
+          {
+            "label": "the distance was measured by the server from the chosen pin to the outlet",
+            "ok": true,
+            "detail": "1",
+            "kind": "expect"
+          },
+          {
+            "label": "a delivery order with NO pin is refused (the location is mandatory)",
+            "ok": true,
+            "detail": "400",
+            "kind": "expect"
+          },
+          {
+            "label": "a pin outside the delivery area is refused",
+            "ok": true,
+            "detail": "409",
+            "kind": "expect"
+          },
+          {
+            "label": "a takeaway order has no code",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 10,
+        "title": "Handing an order to a rider never fails because of WhatsApp",
+        "checks": [
+          {
+            "label": "with no WhatsApp number linked the hand-over still works (the message to the rider is just not sent)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 11,
+        "title": "Taking the login away",
+        "checks": [
+          {
+            "label": "(the rider is signed in)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the manager sets a new PIN",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "after a reset, Show PIN shows the NEW PIN",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "every earlier sign-in ends at once",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the old PIN stops working, the new one works",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a rider switched off in the list is refused, in words",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and can't sign in either",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "switched back on, the same sign-in works again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the manager switches the app login off",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "switching the login off also deletes the locked copy: nothing is left to show",
+            "ok": true,
+            "detail": "{\"appLogin\":false,\"pin\":null,\"reason\":\"no_login\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "the rider is signed out everywhere and can't sign in",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "turning it on again does not revive an old sign-in",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "changing the rider's phone number changes the number they sign in with",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and it can't be a number another rider signs in with",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…nor one too short to sign in with",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a rider removed from the list is signed out",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 12,
+        "title": "Plan, store and app version",
+        "checks": [
+          {
+            "label": "a store whose plan has no Delivery can't even list riders (so none can get a login)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a rider of such a store is refused at sign-in, in words",
+            "ok": true,
+            "detail": "{\"error\":\"Delivery isn't included in your plan.\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "a store the platform switched off turns its riders away too",
+            "ok": true,
+            "detail": "200 / 403 This store is disabled. Please contact Rasoi Pulse to turn it back on.",
+            "kind": "expect"
+          },
+          {
+            "label": "…and they can't sign in either",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "switched back on, the same sign-in works again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an old build of the rider app is turned away (426) while an update is required, before any PIN is checked",
+            "ok": true,
+            "detail": "426",
+            "kind": "expect"
+          },
+          {
+            "label": "the current build signs in",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the update check knows the rider app",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and OMA's releases are separate",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 13,
+        "title": "Guessing PINs",
+        "checks": [
+          {
+            "label": "many wrong PINs for one phone number — even from different addresses — pause that login",
+            "ok": true,
+            "detail": "401,401,401,401,401,401,401,401,401,429,429,429",
+            "kind": "expect"
+          },
+          {
+            "label": "…and then even the right PIN waits",
+            "ok": true,
+            "detail": "",
             "kind": "expect"
           }
         ]

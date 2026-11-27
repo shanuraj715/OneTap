@@ -1,12 +1,12 @@
 # T22 — Onboarding price estimate — price list, plan + extras, Custom starts above the dearest plan, discount / GST / yearly, the Custom plan, plan dialog
 
-**Area:** onboarding · **Last result:** ✅ PASSED (55 passed, 0 failed · 2026-11-21 13:22 · headless · 35.3 s)
+**Area:** onboarding · **Last result:** ✅ PASSED (55 passed, 0 failed · 2026-11-27 09:57 · headless · 36.2 s)
 
 **Run it alone:** `node run.mjs --only t22` (add `--visible` to watch it) · starts from fresh fake data
 
 ## What this test does
 
-In Chrome. With no priced plans yet the Custom estimate says what to do first. Two plans are created: Basic (one outlet, 5 people, four features, ₹999 a month) and Business (three outlets, 20 people, every feature, ₹2,499). The Price list page shows the starting prices (each extra outlet ₹250, person ₹15, GST 18%, a price per feature) and that they add up: Basic → Business adds nine features (₹775), two outlets (₹500) and fifteen people (₹225) = ₹1,500 — exactly the plans' difference. On the onboarding form, Basic alone is ₹999 (+GST ₹180 = ₹1,179 a month; ₹12,731 for a year paid up front); ticking Marketing and Delivery, a second outlet and a team of seven adds ₹100 + ₹100 + ₹250 + 3 × ₹15, a 10% discount and GST are applied, and the form says only Business fits as it is. The Custom plan (listed even though nobody created it) starts from the dearest plan, ₹2,499, and adds ₹250 per outlet and ₹15 per person beyond Business's limits, so it is always dearer than every standard plan, and warns when a standard plan would do. Editing the price list changes the estimate. Prices never appear on the PDF. Publishing a Custom form creates the real Custom plan and puts the store on it with the limits asked for. The 'New plan' dialog has its limits stacked and aligned, its Save button always in view, and dropdown arrows with room to spare.
+In Chrome. With no priced plans yet the Custom estimate says what to do first. Two plans are created: Basic (one outlet, 5 people, four features, ₹999 a month) and Business (three outlets, 20 people, every feature, ₹2,499). The Price list page shows the starting prices (each extra outlet ₹250, person ₹15, GST 18%, a price per feature) and that they add up: Basic → Business adds nine features (₹775), two outlets (₹500) and fifteen people (₹225) = ₹1,500 — exactly the plans' difference. On the onboarding form, Basic alone is ₹999 (+GST ₹180 = ₹1,179 a month; ₹12,731 for a year paid up front); ticking Marketing and Delivery, a second outlet and a team of seven adds ₹100 + ₹100 + ₹250 + 3 × ₹15, a 10% discount and GST are applied, and the form says only Business fits as it is. The Custom plan (listed even though nobody created it) starts from the dearest plan, ₹2,499, and adds ₹250 per outlet and ₹15 per person beyond Business's limits, so it is always dearer than every standard plan, and warns when a standard plan would do. Editing the price list changes the estimate. Prices never appear on the PDF. Publishing a Custom form creates the real Custom plan and puts the store on it with the limits asked for. The 'New plan' dialog is wide, with its limits side by side on one row, its Save button always in view, and dropdown arrows with room to spare.
 
 ## Steps
 
@@ -33,7 +33,7 @@ In Chrome. With no priced plans yet the Custom estimate says what to do first. T
 - A plan with no monthly price says so in the estimate.
 - The PDF has no prices.
 - Publishing on Custom creates the real Custom plan; the store is on it with 2 outlets / 3 people and Marketing unlocked.
-- The New plan dialog: limits stacked and left-aligned, Save always visible, dropdown arrow with space on its right.
+- The New plan dialog: limits side by side on one row, Save always visible, dropdown arrow with space on its right.
 
 ## What must NOT happen
 
@@ -94,7 +94,7 @@ _Nothing failed._
 
 **Step 7 — The Custom plan: starts from the dearest plan and goes up in steps**
 
-- a small need on Custom is just the dearest plan: 'Business plan — every feature, up to 3 outlets and 20 people ₹2,499' — _Business plan — every feature, up to 3 outlets and 20 people ₹2,499_
+- a small need on Custom is just the dearest plan: 'Business plan — every feature, up to 3 outlets, 20 tables and 20 people ₹2,499' — _Business plan — every feature, up to 3 outlets, 20 tables and 20 people ₹2,499_
 - and says a standard plan would do: 'These needs fit the Basic plan (₹999)… Custom is for clients who need more'
 - no limits to set beyond Business: the form shows the Custom limits boxes (outlets, people)
 - 5 outlets and 25 people: Business ₹2,499 + 2 more outlets × ₹250 (₹500) + 5 more people × ₹15 (₹75)
@@ -123,15 +123,15 @@ _Nothing failed._
 - the estimate: Business ₹2,499 (3 outlets and 20 people cover it) — it says a standard plan would do
 - the store was created
 - the Custom plan now exists, as a real plan, with this store on it
-- in Stores: Custom Cafe is on the Custom plan with 2 of 2 outlets and 1 of 3 people — _Custom Cafe pricing@custom-cafe.test Plan Custom People 1 / 3 Outlets 2 / 2 Within plan_
+- in Stores: Custom Cafe is on the Custom plan with 2 of 2 outlets and 1 of 3 people
 - Marketing, which was ticked, is unlocked for the store — _Unlocked for this store_
 
 **Step 10 — The New plan dialog: tidy limits, Save always in reach, room for the dropdown arrow**
 
-- the 'Multi-outlet' box sits directly under the people limit, on the same left edge — _people x=381 y=323 · multi x=385 y=376_
-- 'Unlimited' is on the same line as the people number — _333 vs 323_
-- ticking Multi-outlet shows the 'Outlets' limit below it, aligned with the others — _383 vs 381_
-- 'Save plan' is in view without scrolling the dialog (it stays at the bottom) — _button at y=811–840 of 900_
+- the limits sit side by side on one row: people, tables, and the 'Multi-outlet' box all at the same height, left to right — _people 61,343 · tables 397,343 · multi 736,352_
+- 'Unlimited' is on the same line as the people number — _354 vs 343_
+- ticking Multi-outlet shows the 'Outlets' limit on that same row, after it — _1066,344 vs 736,343_
+- 'Save plan' is in view without scrolling the dialog (it stays at the bottom) — _button at y=724–753 of 900_
 - a dropdown (the Plan box) has room for its arrow: more padding on the right than the left, its own arrow drawn — _{"pr":32,"pl":10,"bg":"url(\"data:im","app":"none"}_
 - did not happen: the browser logged JavaScript errors
 
@@ -139,6 +139,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-27 09:57 | pass | 55 | 0 | headless | 36.2 s |
 | 2026-11-21 13:22 | pass | 55 | 0 | headless | 35.3 s |
 | 2026-11-21 04:48 | pass | 55 | 0 | headless | 36.6 s |
 | 2026-11-21 00:34 | pass | 55 | 0 | headless | 35.3 s |
@@ -148,7 +149,6 @@ _Nothing failed._
 | 2026-11-20 04:53 | pass | 55 | 0 | headless | 36.0 s |
 | 2026-11-20 04:28 | pass | 55 | 0 | headless | 35.7 s |
 | 2026-11-20 00:20 | pass | 55 | 0 | headless | 35.7 s |
-| 2026-11-19 12:41 | pass | 55 | 0 | headless | 36.1 s |
 
 ---
 _Generated by `tests/e2e/run.mjs` — edit the test file (`tests/t22-onboarding-price.mjs`), not this page._
