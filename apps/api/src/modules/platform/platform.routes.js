@@ -260,10 +260,15 @@ platformRouter.put("/cache/settings", async (req, res) => {
   res.json({ cache: await cacheAdmin.setCacheTtl(body.ttlSeconds) });
 });
 
-/** Expire everything, or just one store's cache: { scope: "all" } or { scope: "store", storeId }. */
+/** Expire the cache: { scope: "all" } · { scope: "admin" } · { scope: "store", storeId } · { scope: "outlet", storeId, outletId } (what each drops: see cache.service.js). */
 platformRouter.post("/cache/expire", async (req, res) => {
   const body = z
-    .discriminatedUnion("scope", [z.object({ scope: z.literal("all") }), z.object({ scope: z.literal("store"), storeId: z.string().min(1) })])
+    .discriminatedUnion("scope", [
+      z.object({ scope: z.literal("all") }),
+      z.object({ scope: z.literal("admin") }),
+      z.object({ scope: z.literal("store"), storeId: z.string().min(1) }),
+      z.object({ scope: z.literal("outlet"), storeId: z.string().min(1), outletId: z.string().min(1) }),
+    ])
     .parse(req.body);
   const result = await cacheAdmin.expireCache(body);
   res.json({ result, cache: await cacheAdmin.cacheOverview() });

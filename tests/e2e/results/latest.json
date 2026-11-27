@@ -22487,12 +22487,12 @@
     "id": "t69-cache-audit-api",
     "title": "Cache audit — what is remembered is dropped the moment it changes; orders, tables and bookings are always read live",
     "status": "pass",
-    "pass": 55,
+    "pass": 69,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T11:31:03.029Z",
-    "durationMs": 9893,
+    "at": "2026-11-27T15:15:39.344Z",
+    "durationMs": 12005,
     "steps": [
       {
         "n": 1,
@@ -22825,7 +22825,7 @@
           {
             "label": "Store by store: Acme has remembered items",
             "ok": true,
-            "detail": "{\"id\":\"6b0969f42299bc15a077ccb7\",\"name\":\"Acme\",\"entries\":4,\"bytes\":6928}",
+            "detail": "{\"id\":\"6b099e99685c6a6ca80b252f\",\"name\":\"Acme\",\"entries\":4,\"bytes\":6928}",
             "kind": "expect"
           },
           {
@@ -22843,7 +22843,7 @@
           {
             "label": "clearing ONE store's cache removes its items",
             "ok": true,
-            "detail": "{\"scope\":\"store\",\"store\":{\"id\":\"6b0969f42299bc15a077ccb7\",\"name\":\"Acme\"},\"removed\":4,\"at\":\"2026-11-27T11:31:02.459Z\"}",
+            "detail": "{\"scope\":\"store\",\"store\":{\"id\":\"6b099e99685c6a6ca80b252f\",\"name\":\"Acme\"},\"removed\":4,\"at\":\"2026-11-27T15:15:38.719Z\"}",
             "kind": "expect"
           },
           {
@@ -22855,11 +22855,95 @@
           {
             "label": "other stores keep what they had when one store is cleared",
             "ok": true,
-            "detail": "{\"id\":\"6b0969f52299bc15a077cccd\",\"name\":\"Beta\",\"entries\":2,\"bytes\":149}",
+            "detail": "{\"id\":\"6b099e99685c6a6ca80b2541\",\"name\":\"Beta\",\"entries\":2,\"bytes\":149}",
             "kind": "expect"
           },
           {
             "label": "after clearing, the store's team is not signed out and everything still works",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "items that belong to no store are the console's own (dashboard, website, unknown addresses)",
+            "ok": true,
+            "detail": "dash",
+            "kind": "expect"
+          },
+          {
+            "label": "'admin' drops exactly the items listed as belonging to no store (the number it reports = the list)",
+            "ok": true,
+            "detail": "1 vs 1",
+            "kind": "expect"
+          },
+          {
+            "label": "…they are gone from the list",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and not one store's item was touched (all of them are still remembered)",
+            "ok": true,
+            "detail": "7 before",
+            "kind": "expect"
+          },
+          {
+            "label": "an outlet's own items are listed under it (its menu among them)",
+            "ok": true,
+            "detail": "menu, outlet, outletaccess",
+            "kind": "expect"
+          },
+          {
+            "label": "'outlet' names the outlet and its store",
+            "ok": true,
+            "detail": "{\"scope\":\"outlet\",\"store\":{\"id\":\"6b099e99685c6a6ca80b252f\",\"name\":\"Acme\"},\"outlet\":{\"id\":\"6b099e99685c6a6ca80b2532\",\"name\":\"Main\"},\"removed\":3,\"at\":\"2026-11-27T15:15:38.794Z\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "…and drops exactly that outlet's listed items (the number it reports = the list)",
+            "ok": true,
+            "detail": "3 vs 3",
+            "kind": "expect"
+          },
+          {
+            "label": "…none of that outlet's items remain",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…the store's own items (look, plan, addresses) stay",
+            "ok": true,
+            "detail": "1 items",
+            "kind": "expect"
+          },
+          {
+            "label": "…and so do every other store's outlets",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an outlet that is not in that store is refused (404), not silently ignored",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'outlet' without an outlet is refused (400)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an unknown scope is refused (400)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a store owner can't expire the admin panel's cache (403)",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -23055,81 +23139,237 @@
   },
   "t70-cache-console-ui": {
     "id": "t70-cache-console-ui",
-    "title": "Cache page store by store — see what each store has remembered and clear one store's cache",
+    "title": "Cache page — Admin Panel Cache and Store Cache (stores → a store → its outlets), and every Expire says what it will drop first",
     "status": "pass",
-    "pass": 12,
+    "pass": 34,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T07:35:10.530Z",
-    "durationMs": 1863,
+    "at": "2026-11-27T15:15:42.793Z",
+    "durationMs": 3417,
     "steps": [
       {
-        "n": 0,
-        "title": "Setup",
+        "n": 1,
+        "title": "Two groups, the stores folded away",
         "checks": [
           {
-            "label": "Cache page has a 'Store by store' table",
+            "label": "there is an 'Admin Panel Cache' group",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "each store that has something remembered has its own row",
+            "label": "…and a 'Store Cache' group",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "…with how many items and how big",
-            "ok": true,
-            "detail": "Acme Momos 8 42 KB View items Clear this store's cache",
-            "kind": "expect"
-          },
-          {
-            "label": "…a 'View items' button and a 'Clear this store's cache' button",
+            "label": "the stores are folded away until Store Cache is opened (the page is not a wall of tables)",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "'View items' lists only that store's items",
-            "ok": true,
-            "detail": "ITEM STORE SIZE REMEMBERED RELOADS IN USED Menu Only Beta Bites 1.8 KB 0 s ago 5 min 0 Outlet's store Only Beta Bites 76",
-            "kind": "expect"
-          },
-          {
-            "label": "'Clear this store's cache' says how much it cleared",
-            "ok": true,
-            "detail": "Acme Momos: 8 items cleared. Its next visitor loads fresh data.",
-            "kind": "expect"
-          },
-          {
-            "label": "Acme's remembered items are gone from the server",
-            "ok": true,
-            "detail": "1",
-            "kind": "expect"
-          },
-          {
-            "label": "Beta Bites kept everything it had",
-            "ok": true,
-            "detail": "4 → 4",
-            "kind": "expect"
-          },
-          {
-            "label": "the table updates by itself",
+            "label": "…the Store Cache header says it is collapsed (aria-expanded=false)",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "Acme's storefront still works right after (it reloads from the database)",
+            "label": "…and says how many stores and items are inside",
+            "ok": true,
+            "detail": "Store Cache 3 stores · 10 items · 24 KB — open it to pick a store",
+            "kind": "expect"
+          },
+          {
+            "label": "Admin Panel Cache lists exactly the items that belong to no store",
+            "ok": true,
+            "detail": "1 items",
+            "kind": "expect"
+          },
+          {
+            "label": "…with its own Expire button, and one 'Expire everything' at the top",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Store Cache → stores → a store → its outlets",
+        "checks": [
+          {
+            "label": "opening it lists the stores that have something remembered",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "the store's own page (Cache tab) has its cache and the same clear button too",
+            "label": "…none of them is open yet (no outlets shown until a store is picked)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "picking a store opens ITS outlets only (Beta Bites stays closed)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "one group per outlet that has something remembered",
+            "ok": true,
+            "detail": "Main",
+            "kind": "expect"
+          },
+          {
+            "label": "an outlet's group lists its own items (its Menu among them)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "items that are not an outlet's (look, plan, addresses) are shown apart as 'The whole store'",
+            "ok": true,
+            "detail": "1 items",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Every Expire says first what it will drop",
+        "checks": [
+          {
+            "label": "the outlet's dialog names the outlet",
+            "ok": true,
+            "detail": "Main",
+            "kind": "expect"
+          },
+          {
+            "label": "…the number of items in it is exactly the number listed for that outlet",
+            "ok": true,
+            "detail": "4 items · 19 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "…it lists what they are, in words (Menu …)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and has the three parts: what will expire, what stays, what happens next",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…it says the store's look, plan and addresses stay",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Cancel expires nothing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "confirming says how many were cleared — the same number the dialog showed",
+            "ok": true,
+            "detail": "Main (Acme Momos): 4 items cleared. The next visit loads fresh data.",
+            "kind": "expect"
+          },
+          {
+            "label": "that outlet's items are gone from the server",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…the store's own items stayed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and Beta Bites kept what it had",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "A whole store, the admin panel, everything",
+        "checks": [
+          {
+            "label": "the store's dialog counts ALL of the store's items (its outlets' and its own)",
+            "ok": true,
+            "detail": "3 items",
+            "kind": "expect"
+          },
+          {
+            "label": "confirming clears Acme Momos",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and not one item of Beta Bites",
+            "ok": true,
+            "detail": "4 kept",
+            "kind": "expect"
+          },
+          {
+            "label": "the admin panel's dialog counts exactly the items that belong to no store",
+            "ok": true,
+            "detail": "1 item · 4.1 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "…and says no store is touched",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Expire everything' counts everything that is listed",
+            "ok": true,
+            "detail": "7 items",
+            "kind": "expect"
+          },
+          {
+            "label": "…and says people stay signed in",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "The other places",
+        "checks": [
+          {
+            "label": "Platform settings → Cache has no Expire buttons any more (one place to expire: the Cache page)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…it points to the Cache page instead",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the store's own page asks too (it shows the same 'what will expire' window before clearing)",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -40939,6 +41179,195 @@
             "label": "…and never a password",
             "ok": true,
             "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t123-cache-lifetime-ui": {
+    "id": "t123-cache-lifetime-ui",
+    "title": "Console → Platform settings → Cache lifetime: one input in seconds with the time in words (900 → 15 minutes); no preset buttons",
+    "status": "pass",
+    "pass": 25,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-27T15:15:49.689Z",
+    "durationMs": 1438,
+    "steps": [
+      {
+        "n": 1,
+        "title": "A value set elsewhere (900 s, as the app would) shows in the box and in words",
+        "checks": [
+          {
+            "label": "set 900 seconds through the API",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the input shows 900",
+            "ok": true,
+            "detail": "900",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the words say '= 15 minutes'",
+            "ok": true,
+            "detail": "= 15 minutes",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "No preset buttons",
+        "checks": [
+          {
+            "label": "there is no '30 s' button",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "there is no '1 min' button",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "there is no '5 min' button",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "there is no '15 min' button",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "there is no '1 hour' button",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "there is no 'Off' button",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the cache box has its Save button",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "The words follow what is typed",
+        "checks": [
+          {
+            "label": "30 → '= 30 seconds'",
+            "ok": true,
+            "detail": "= 30 seconds",
+            "kind": "expect"
+          },
+          {
+            "label": "60 → '= 1 minute'",
+            "ok": true,
+            "detail": "= 1 minute",
+            "kind": "expect"
+          },
+          {
+            "label": "90 → '= 1 minute 30 seconds'",
+            "ok": true,
+            "detail": "= 1 minute 30 seconds",
+            "kind": "expect"
+          },
+          {
+            "label": "300 → '= 5 minutes'",
+            "ok": true,
+            "detail": "= 5 minutes",
+            "kind": "expect"
+          },
+          {
+            "label": "5400 → '= 1 hour 30 minutes'",
+            "ok": true,
+            "detail": "= 1 hour 30 minutes",
+            "kind": "expect"
+          },
+          {
+            "label": "3600 → '= 1 hour'",
+            "ok": true,
+            "detail": "= 1 hour",
+            "kind": "expect"
+          },
+          {
+            "label": "7200 → '= 2 hours'",
+            "ok": true,
+            "detail": "= 2 hours",
+            "kind": "expect"
+          },
+          {
+            "label": "86400 → '= 24 hours'",
+            "ok": true,
+            "detail": "= 24 hours",
+            "kind": "expect"
+          },
+          {
+            "label": "0 → '= off'",
+            "ok": true,
+            "detail": "= off",
+            "kind": "expect"
+          },
+          {
+            "label": "100000 (more than a day) shows '—' and Save is off",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an empty box can't be saved",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Saving",
+        "checks": [
+          {
+            "label": "the value that is already saved leaves Save off",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "1800 is what the server now holds",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "after a reload the box says 1800 and '= 30 minutes'",
+            "ok": true,
+            "detail": "1800 = 30 minutes",
             "kind": "expect"
           },
           {

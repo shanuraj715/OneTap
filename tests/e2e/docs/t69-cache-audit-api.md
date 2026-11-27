@@ -1,12 +1,12 @@
 # T69 — Cache audit — what is remembered is dropped the moment it changes; orders, tables and bookings are always read live
 
-**Area:** platform · **Last result:** ✅ PASSED (55 passed, 0 failed · 2026-11-27 17:01 · headless · 9.9 s)
+**Area:** platform · **Last result:** ✅ PASSED (69 passed, 0 failed · 2026-11-27 20:45 · headless · 12.0 s)
 
 **Run it alone:** `node run.mjs --only t69` (add `--visible` to watch it)
 
 ## What this test does
 
-Runs suites/cache-audit-api.mjs on its own in-memory API and counts every database read a request causes. Remembered (and dropped at once on change): who is signed in — the second request reads nothing; signing out, switching a person off, changing their role and pausing their access are each effective on the very next request, an expired session is refused; the outlet check (blocking an outlet turns the team away on the very next request, unblocking lets them back); a store's settings (pickup times, delivery distance) and the offers list (a new coupon appears, a used-up or out-of-date one disappears, at once); a customer's sign-in with their coins always current and a profile change visible at once. Always live (every request reads the database): the order list, one order's status, the kitchen screen, tables, which tables are taken, running tables, bookings, booking summary, print jobs, dashboard numbers, riders — and a change is seen on the very next read. The console: sign-in items are never listed or openable, the new kinds are named, Store by store lists each store, clearing one store removes its items and leaves other stores' alone.
+(Also: clearing the cache has four scopes — everything, the admin panel's own items (those that belong to no store), one store, one outlet — and the number each reports equals the list the console shows for it; an outlet of another store is refused 404, a missing outlet or an unknown scope 400, a store owner 403.) Runs suites/cache-audit-api.mjs on its own in-memory API and counts every database read a request causes. Remembered (and dropped at once on change): who is signed in — the second request reads nothing; signing out, switching a person off, changing their role and pausing their access are each effective on the very next request, an expired session is refused; the outlet check (blocking an outlet turns the team away on the very next request, unblocking lets them back); a store's settings (pickup times, delivery distance) and the offers list (a new coupon appears, a used-up or out-of-date one disappears, at once); a customer's sign-in with their coins always current and a profile change visible at once. Always live (every request reads the database): the order list, one order's status, the kitchen screen, tables, which tables are taken, running tables, bookings, booking summary, print jobs, dashboard numbers, riders — and a change is seen on the very next read. The console: sign-in items are never listed or openable, the new kinds are named, Store by store lists each store, clearing one store removes its items and leaves other stores' alone.
 
 ## Steps
 
@@ -36,7 +36,7 @@ Runs suites/cache-audit-api.mjs on its own in-memory API and counts every databa
 
 _Nothing failed._
 
-### ✅ Passed (55)
+### ✅ Passed (69)
 
 **Step 1 — who is signed in is remembered — and forgotten at once when it changes**
 
@@ -106,18 +106,33 @@ _Nothing failed._
 
 - sign-in entries are never listed (they are about people) — _cfg,menu,outlet,outletaccess_
 - the new kinds (settings, access check, offers) are listed with words, not codes — _cfg,menu,outlet,outletaccess_
-- Store by store: Acme has remembered items — _{"id":"6b0969f42299bc15a077ccb7","name":"Acme","entries":4,"bytes":6928}_
+- Store by store: Acme has remembered items — _{"id":"6b099e99685c6a6ca80b252f","name":"Acme","entries":4,"bytes":6928}_
 - an item can be opened and read
 - a sign-in item can never be opened
 - clearing ONE store's cache removes its items
 - …and Acme's row shrinks (or goes) in the list
-- other stores keep what they had when one store is cleared — _{"id":"6b0969f52299bc15a077cccd","name":"Beta","entries":2,"bytes":149}_
+- other stores keep what they had when one store is cleared — _{"id":"6b099e99685c6a6ca80b2541","name":"Beta","entries":2,"bytes":149}_
 - after clearing, the store's team is not signed out and everything still works
+- items that belong to no store are the console's own (dashboard, website, unknown addresses) — _dash_
+- 'admin' drops exactly the items listed as belonging to no store (the number it reports = the list) — _1 vs 1_
+- …they are gone from the list
+- …and not one store's item was touched (all of them are still remembered) — _7 before_
+- an outlet's own items are listed under it (its menu among them) — _menu, outlet, outletaccess_
+- 'outlet' names the outlet and its store
+- …and drops exactly that outlet's listed items (the number it reports = the list) — _3 vs 3_
+- …none of that outlet's items remain
+- …the store's own items (look, plan, addresses) stay — _1 items_
+- …and so do every other store's outlets
+- an outlet that is not in that store is refused (404), not silently ignored
+- 'outlet' without an outlet is refused (400)
+- an unknown scope is refused (400)
+- a store owner can't expire the admin panel's cache (403)
 
 ## History (latest 10 runs)
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-27 20:45 | pass | 69 | 0 | headless | 12.0 s |
 | 2026-11-27 17:01 | pass | 55 | 0 | headless | 9.9 s |
 | 2026-11-27 16:45 | pass | 55 | 0 | headless | 8.6 s |
 | 2026-11-27 16:16 | pass | 55 | 0 | headless | 7.8 s |

@@ -1,6 +1,6 @@
 # Rasoi Pulse end-to-end tests — catalog
 
-**123 tests** · 116 passing · 2 failing/error · 5 not run yet
+**124 tests** · 117 passing · 2 failing/error · 5 not run yet
 
 | Test | Area | Result | Checks | Last run |
 |---|---|---|---|---|
@@ -40,6 +40,7 @@
 | [t120-app-live-api](t120-app-live-api.md) — Staff apps (OMA, KDA, RDA): the live connection — who may listen, what they are told, who is let go (server side) | apps | ✅ PASSED | 48/48 | 2026-11-27 16:59 |
 | [t121-platform-roles-api](t121-platform-roles-api.md) — Rasoi Pulse team roles: only the super admin makes roles and people; a team member can do exactly what their role holds, in every part of the platform API | platform | ✅ PASSED | 61/61 | 2026-11-27 16:59 |
 | [t122-platform-team-ui](t122-platform-team-ui.md) — Console → Team & roles: make a role and a person, and what that person sees (only what the role allows); the sidebar says App Management | platform | ✅ PASSED | 28/28 | 2026-11-27 16:59 |
+| [t123-cache-lifetime-ui](t123-cache-lifetime-ui.md) — Console → Platform settings → Cache lifetime: one input in seconds with the time in words (900 → 15 minutes); no preset buttons | platform | ✅ PASSED | 25/25 | 2026-11-27 20:45 |
 | [t13-marketing](t13-marketing.md) — Marketing — channels, audience filters (last visit, items, age, gender, order type, area), imports, lists, sending and the sidebar | marketing | ✅ PASSED | 70/70 | 2026-11-21 13:07 |
 | [t14-marketing-plan](t14-marketing-plan.md) — Marketing is a plan feature — Basic doesn't have it, Pro does, and it can be unlocked or locked for one store | plans | ✅ PASSED | 16/16 | 2026-11-27 10:11 |
 | [t15-login-protection](t15-login-protection.md) — Sign-in protection — wrong guesses block the network, blocks grow longer, a blocked network sees no login form, the platform can unblock | security | ✅ PASSED | 28/28 | 2026-11-21 13:10 |
@@ -96,8 +97,8 @@
 | [t66-ops-batch](t66-ops-batch.md) — Completed dine-in order frees the table (no Needs cleaning) · phone layouts · platform live-updates switch · print station every 8 s with check, loader and countdown | operations | ✅ PASSED | 47/47 | 2026-11-27 16:16 |
 | [t67-order-tracking-api](t67-order-tracking-api.md) — Following an order — the tracking API, lateness, cancelling an order nobody accepts, and error messages that name the box | orders | ✅ PASSED | 50/50 | 2026-11-21 12:59 |
 | [t68-order-tracking-ui](t68-order-tracking-ui.md) — Following an order on the storefront — a page that moves by itself, links from Order placed and Account, cancelled, someone else's link, a phone | storefront | ✅ PASSED | 23/23 | 2026-11-27 10:54 |
-| [t69-cache-audit-api](t69-cache-audit-api.md) — Cache audit — what is remembered is dropped the moment it changes; orders, tables and bookings are always read live | platform | ✅ PASSED | 55/55 | 2026-11-27 17:01 |
-| [t70-cache-console-ui](t70-cache-console-ui.md) — Cache page store by store — see what each store has remembered and clear one store's cache | platform | ✅ PASSED | 12/12 | 2026-11-21 13:05 |
+| [t69-cache-audit-api](t69-cache-audit-api.md) — Cache audit — what is remembered is dropped the moment it changes; orders, tables and bookings are always read live | platform | ✅ PASSED | 69/69 | 2026-11-27 20:45 |
+| [t70-cache-console-ui](t70-cache-console-ui.md) — Cache page — Admin Panel Cache and Store Cache (stores → a store → its outlets), and every Expire says what it will drop first | platform | ✅ PASSED | 34/34 | 2026-11-27 20:45 |
 | [t71-soft-navigation](t71-soft-navigation.md) — Storefront links move between pages without reloading the app (header, Order button, footer pages, message bar, phone menu) | storefront | ✅ PASSED | 14/14 | 2026-11-27 10:54 |
 | [t72-menu-chunks](t72-menu-chunks.md) — The storefront menu is drawn in chunks as the diner scrolls | storefront | ✅ PASSED | 15/15 | 2026-11-26 12:38 |
 | [t73-reorder-notice](t73-reorder-notice.md) — 'Order again' says clearly which dishes couldn't be added, with space below | storefront | ✅ PASSED | 9/9 | 2026-11-27 10:54 |

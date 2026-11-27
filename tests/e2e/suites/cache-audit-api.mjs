@@ -260,6 +260,41 @@ say("7. the console's cache pages");
   ok(beta && beta.entries > 0, "other stores keep what they had when one store is cleared", JSON.stringify(beta));
   // the very next request after clearing a store still works (it just reads fresh)
   ok((await call("GET", "/api/orders?limit=5", { cookie: ownerA, headers: hdr(A) })).status === 200, "after clearing, the store's team is not signed out and everything still works");
+
+  /* ---- the two narrower ways to expire: the admin panel's own items, and one outlet */
+  const expireUrl = "/api/platform/cache/expire";
+  const list = async () => (await call("GET", "/api/platform/cache/entries", { cookie: su })).json;
+  await call("GET", `/api/menu?outletId=${A.outlet}`);
+  await call("GET", `/api/menu?outletId=${B.outlet}`);
+  await call("GET", "/api/platform/dashboard", { cookie: su }); // makes an item that belongs to no store (the console's numbers)
+  const l1 = await list();
+  const adminRows = l1.entries.filter((e) => !e.store);
+  const storeRows = l1.entries.filter((e) => e.store);
+  ok(adminRows.length > 0 && adminRows.every((e) => ["dash", "site", "host", "brandslug"].includes(e.kind)), "items that belong to no store are the console's own (dashboard, website, unknown addresses)", [...new Set(adminRows.map((e) => e.kind))].join(", "));
+  const adm = await call("POST", expireUrl, { cookie: su, body: { scope: "admin" } });
+  ok(adm.status === 200 && adm.json.result.scope === "admin" && adm.json.result.removed === adminRows.length, "'admin' drops exactly the items listed as belonging to no store (the number it reports = the list)", `${adm.json.result?.removed} vs ${adminRows.length}`);
+  const l2 = await list();
+  ok(l2.entries.filter((e) => !e.store).length < adminRows.length || adminRows.length === 0, "…they are gone from the list");
+  ok(storeRows.every((r) => l2.entries.some((e) => e.key === r.key)), "…and not one store's item was touched (all of them are still remembered)", `${storeRows.length} before`);
+
+  await call("GET", `/api/menu?outletId=${A.outlet}`);
+  await call("GET", `/api/menu?outletId=${B.outlet}`);
+  const l3 = await list();
+  const outletRows = l3.entries.filter((e) => e.outlet?.id === String(A.outlet));
+  const wholeRows = l3.entries.filter((e) => e.store?.id === String(A.brand) && !e.outlet);
+  const otherOutlet = l3.entries.filter((e) => e.outlet?.id === String(B.outlet));
+  ok(outletRows.length > 0 && outletRows.some((e) => e.kind === "menu"), "an outlet's own items are listed under it (its menu among them)", [...new Set(outletRows.map((e) => e.kind))].join(", "));
+  const out = await call("POST", expireUrl, { cookie: su, body: { scope: "outlet", storeId: A.brand, outletId: A.outlet } });
+  ok(out.status === 200 && out.json.result.scope === "outlet" && out.json.result.outlet.id === String(A.outlet) && out.json.result.store.name === "Acme", "'outlet' names the outlet and its store", JSON.stringify(out.json.result));
+  ok(out.json.result.removed === outletRows.length, "…and drops exactly that outlet's listed items (the number it reports = the list)", `${out.json.result.removed} vs ${outletRows.length}`);
+  const l4 = await list();
+  ok(!l4.entries.some((e) => e.outlet?.id === String(A.outlet)), "…none of that outlet's items remain");
+  ok(wholeRows.every((r) => l4.entries.some((e) => e.key === r.key)), "…the store's own items (look, plan, addresses) stay", `${wholeRows.length} items`);
+  ok(otherOutlet.every((r) => l4.entries.some((e) => e.key === r.key)), "…and so do every other store's outlets");
+  ok((await call("POST", expireUrl, { cookie: su, body: { scope: "outlet", storeId: A.brand, outletId: B.outlet } })).status === 404, "an outlet that is not in that store is refused (404), not silently ignored");
+  ok((await call("POST", expireUrl, { cookie: su, body: { scope: "outlet", storeId: A.brand } })).status === 400, "'outlet' without an outlet is refused (400)");
+  ok((await call("POST", expireUrl, { cookie: su, body: { scope: "nothing" } })).status === 400, "an unknown scope is refused (400)");
+  ok((await call("POST", expireUrl, { cookie: ownerA, body: { scope: "admin" }, headers: hdr(A) })).status === 403, "a store owner can't expire the admin panel's cache (403)");
   void ownerB;
 }
 

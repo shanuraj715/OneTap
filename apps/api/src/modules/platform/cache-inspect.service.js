@@ -3,7 +3,7 @@ import { HttpError } from "../../middleware/error.js";
 import { cache } from "../cache/cache.js";
 import { platformConfig } from "../cache/platform-config.js";
 import { presentValue } from "./cache-present.js";
-import { HIDDEN_KINDS, lifetimeOf, visibleEntries } from "./cache.service.js";
+import { HIDDEN_KINDS, idsOf, lifetimeOf, visibleEntries } from "./cache.service.js";
 
 /**
  * Looking inside the cache from the console: what is remembered right now, for which store, how big it is, how
@@ -33,16 +33,6 @@ export const KINDS = {
   coupons: { label: "Offers", what: "The coupons a storefront advertises for an outlet" },
 };
 
-
-/** The store and the outlet an entry is about, found from its tags and its key. */
-function idsOf(e) {
-  const tag = e.tags.find((t) => t.startsWith("brand:"));
-  const brandId = tag ? tag.slice("brand:".length) : null;
-  let outletId = null;
-  if (e.namespace === "menu") outletId = e.key.split(":")[2] ?? null; // menu:<store>:<outlet>
-  else if (["outlet", "cap", "pages", "cfg", "outletaccess", "coupons"].includes(e.namespace)) outletId = e.key.slice(e.namespace.length + 1);
-  return { brandId, outletId };
-}
 
 const SITE_TITLES = { settings: "Website settings", pages: "Website page list", pricing: "Website pricing cards" };
 

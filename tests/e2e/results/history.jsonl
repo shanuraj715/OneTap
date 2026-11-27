@@ -1459,3 +1459,14 @@
 {"id":"t69-cache-audit-api","status":"pass","pass":55,"fail":0,"mode":"headless","at":"2026-11-27T11:31:03.029Z","durationMs":9893}
 {"id":"t87-staff-app-auth-api","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-27T11:31:10.069Z","durationMs":7021}
 {"id":"t98-rider-app-api","status":"pass","pass":105,"fail":0,"mode":"headless","at":"2026-11-27T11:31:17.886Z","durationMs":7775}
+{"id":"t123-cache-lifetime-ui","status":"fail","pass":18,"fail":1,"mode":"headless","at":"2026-11-27T14:51:14.676Z","durationMs":1935}
+{"id":"t123-cache-lifetime-ui","status":"pass","pass":25,"fail":0,"mode":"headless","at":"2026-11-27T14:51:35.756Z","durationMs":2401}
+{"id":"t70-cache-console-ui","status":"fail","pass":18,"fail":1,"mode":"headless","at":"2026-11-27T14:58:11.701Z","durationMs":13132}
+{"id":"t70-cache-console-ui","status":"error","pass":19,"fail":0,"mode":"headless","at":"2026-11-27T14:58:33.563Z","durationMs":12513,"error":"cache-console-ui.mjs exited with code 1. }  Node.js v24.3.0"}
+{"id":"t70-cache-console-ui","status":"error","pass":19,"fail":0,"mode":"headless","at":"2026-11-27T14:58:53.615Z","durationMs":12745,"error":"cache-console-ui.mjs exited with code 1. }  Node.js v24.3.0"}
+{"id":"t70-cache-console-ui","status":"fail","pass":33,"fail":1,"mode":"headless","at":"2026-11-27T14:59:47.824Z","durationMs":4194}
+{"id":"t70-cache-console-ui","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-27T15:00:03.700Z","durationMs":3904}
+{"id":"t123-cache-lifetime-ui","status":"fail","pass":23,"fail":2,"mode":"headless","at":"2026-11-27T15:15:27.322Z","durationMs":1938}
+{"id":"t69-cache-audit-api","status":"pass","pass":69,"fail":0,"mode":"headless","at":"2026-11-27T15:15:39.344Z","durationMs":12005}
+{"id":"t70-cache-console-ui","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-27T15:15:42.793Z","durationMs":3417}
+{"id":"t123-cache-lifetime-ui","status":"pass","pass":25,"fail":0,"mode":"headless","at":"2026-11-27T15:15:49.689Z","durationMs":1438}
