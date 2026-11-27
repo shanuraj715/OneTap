@@ -19,8 +19,8 @@ const APPS = {
   oma: { code: "OMA", label: "Rasoi Pulse OMA", tile: "#404db6" }, // indigo
   kda: { code: "KDA", label: "Rasoi Pulse KDA", tile: "#0d7f6b" }, // teal: a kitchen's colour
   rda: { code: "RDA", label: "Rasoi Pulse RDA", tile: "#764ed1" }, // violet: the rider app
-  // the Admin app is for the Rasoi Pulse team only (never on the website): graphite, so it is never mistaken for a restaurant's app
-  admin: { code: "ADM", label: "Rasoi Pulse Admin", tile: "#232a44" },
+  // the Admin app is for the Rasoi Pulse team only (never on the website). Its colour is amber-brown: exactly the light theme's `primary` in mobile-apps/admin/src/ui/theme.ts
+  admin: { code: "ADM", label: "Rasoi Pulse Admin", tile: "#b45f00" },
 };
 
 /* ---------------------------------------------------------------- colours (from the two original images) */
