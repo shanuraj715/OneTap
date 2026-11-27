@@ -19,6 +19,8 @@ const APPS = {
   oma: { code: "OMA", label: "Rasoi Pulse OMA", tile: "#404db6" }, // indigo
   kda: { code: "KDA", label: "Rasoi Pulse KDA", tile: "#0d7f6b" }, // teal: a kitchen's colour
   rda: { code: "RDA", label: "Rasoi Pulse RDA", tile: "#764ed1" }, // violet: the rider app
+  // the Admin app is for the Rasoi Pulse team only (never on the website): graphite, so it is never mistaken for a restaurant's app
+  admin: { code: "ADM", label: "Rasoi Pulse Admin", tile: "#232a44" },
 };
 
 /* ---------------------------------------------------------------- colours (from the two original images) */
@@ -103,7 +105,7 @@ const out = (...p) => join(HERE, ...p);
 const png = (svg, size) => sharp(Buffer.from(svg), { density: Math.max(72, (72 * size) / 512) }).resize(size, size).png({ compressionLevel: 9 }).toBuffer();
 const files = [];
 const write = (path, data) => { mkdirSync(dirname(out(path)), { recursive: true }); writeFileSync(out(path), data); files.push(path); };
-for (const d of ["favicon", "logo", "oma-app-icon", "kda-app-icon", "rda-app-icon", "source"]) rmSync(out(d), { recursive: true, force: true });
+for (const d of ["favicon", "logo", "oma-app-icon", "kda-app-icon", "rda-app-icon", "admin-app-icon", "source"]) rmSync(out(d), { recursive: true, force: true });
 const IMAGES = "/private/tmp/claude-501/-Users-shanu-raj-Raj-Gazab-Momos/04b5269f-6be5-4e77-a7b8-73a9c95b0058/images";
 mkdirSync(out("source"), { recursive: true });
 copyFileSync(`${IMAGES}/42.png`, out("source/rasoi-pulse-original-dark.png"));
