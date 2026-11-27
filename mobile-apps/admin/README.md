@@ -16,6 +16,7 @@ Each person sees **only the areas their role holds** (the owner sees all); the s
 | **Dashboard** | Sales this month against last month (an interactive chart: touch and drag to read a day), totals, month-by-month, top stores, where orders come from |
 | **Stores** | Every client: search, filter, plan, standing. Open one to rename it, change its plan, switch it off or on, block an outlet or a person, delete it (each only if the role may) |
 | **Onboarding** | Requirement forms for new clients: plan first, outlets, features (with "allow anyway" beyond the plan), save as a draft, the server's "ready?" check, **Publish as store** |
+| **Plans** | What each plan includes: limits, price, features, how many stores use it (read only) |
 | **Leads** | Website enquiries: call, WhatsApp, email, mark contacted / won / lost, notes |
 | **Server** | A 0–10 health score with the reasons, processor, memory, disks, network, the API (refreshes itself) |
 | **Security** | Blocked and watched networks, unblock one or all, how the guard works |
@@ -23,7 +24,7 @@ Each person sees **only the areas their role holds** (the owner sees all); the s
 | **Settings** | Grace days and the live-updates switch |
 | **Team & roles** | The owner only: roles, people, their activity |
 
-Still on the web console only: the website editor, storage, AI picture keys, the plan editor, App Management, the PDF / print of an onboarding form,
+Still on the web console only: the website editor, storage, AI picture keys, the plan editor (the app only reads plans), App Management, the PDF / print of an onboarding form,
 and the look-and-feel of a form (it is kept untouched when the app saves).
 
 ## What you need

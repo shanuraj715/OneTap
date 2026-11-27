@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { AREAS, APP_AREAS, areasFor, canDo } from "@/lib/access";
+import { SCREENS } from "@/screens/AreaScreen";
 import { OWNER, SALES, SUPPORT } from "../test/harness";
 
 describe("who sees what", () => {
@@ -24,8 +25,14 @@ describe("who sees what", () => {
     expect(canDo(SALES, "stores:read")).toBe(false);
     expect(canDo(null, "dashboard:read")).toBe(false);
   });
-  it("the app has a screen for every area it lists as its own", () => {
-    for (const id of APP_AREAS) expect(AREAS.some((a) => a.id === id)).toBe(true);
+  it("the app has a REAL screen for every area it lists as its own (a listed area without one would tell the person their role lacks it)", () => {
+    for (const id of APP_AREAS) {
+      expect(AREAS.some((a) => a.id === id)).toBe(true);
+      expect(SCREENS[id]).toBeDefined();
+    }
+  });
+  it("what the web console keeps for itself is not offered in the app", () => {
+    for (const id of ["website", "storage", "ai", "app-management"]) expect(APP_AREAS.has(id)).toBe(false);
   });
 
   it("uses the same areas and features as the server (packages/config-schema PLATFORM_AREAS)", () => {
