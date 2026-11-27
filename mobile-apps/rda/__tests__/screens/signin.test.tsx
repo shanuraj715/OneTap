@@ -19,6 +19,15 @@ describe("the sign-in screen", () => {
     expect(screen.getByText(/v-\d{2}\.\d{2}\.\d{2}-\d{3}|dev/)).toBeOnTheScreen();
   });
 
+  it("shows the app's own icon at the top (the artwork on the phone's home screen), not a drawn symbol", async () => {
+    await open();
+    const icon = screen.getByTestId("app-icon");
+    expect(icon).toBeOnTheScreen();
+    expect(icon.props.accessibilityLabel).toBe("Rasoi Pulse RDA icon");
+    expect(JSON.stringify(icon.props.source)).toContain("assets/icon.png");
+    expect(icon.props.style.width).toBeGreaterThanOrEqual(80);
+  });
+
   it("asks for both fields before sending anything", async () => {
     const { server } = await open();
     await submit();
