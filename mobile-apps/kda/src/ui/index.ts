@@ -18,3 +18,4 @@ export * from "./Toast";
 export * from "./toast-store";
 export * from "./Banner";
 export * from "./IconTile";
+export * from "./AppIcon";

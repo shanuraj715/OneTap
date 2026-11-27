@@ -126,9 +126,8 @@ describe("the order app's live connection", () => {
     await wait(200);
     await act(async () => { sock().drop(); });
     const down = counts(server);
-    await wait(900); // still inside the first pause
+    await wait(10_000); // longer than the 8-second timer: still no request, the line is being made again
     expect(counts(server)).toEqual(down);
-    await wait(500);
     await act(async () => { sock().open(); });
     await wait(200);
     const c = counts(server);
