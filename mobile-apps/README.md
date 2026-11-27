@@ -8,10 +8,11 @@ the web apps) and talks to the same API as the dashboard and storefront.
 | [`oma/`](oma/README.md) | **Rasoi Pulse OMA** — Order Management App | Staff who take orders at the tables | Android 11+ (phones and tablets) |
 | [`kda/`](kda/README.md) | **Rasoi Pulse KDA** — Kitchen Display App | Kitchen staff and the kitchen manager: the order board, the prep list, sold-out switches | Android 11+ (phones and tablets) |
 | [`rda/`](rda/README.md) | **Rasoi Pulse RDA** — Rider Delivery App | Delivery riders: their deliveries, directions in their own maps app, call / WhatsApp, picked up and delivered (with the customer's code) | Android 11+ (phones) |
+| [`admin/`](admin/README.md) | **Rasoi Pulse Admin** | The Rasoi Pulse team only (owner + roles): dashboard, stores, onboarding, leads, server, security, cache, settings, team. Not on the website | Android 11+ (phones and tablets) |
 
 ## Naming
 
-Display name: `{our app name} {ROLE CODE}`, e.g. **Rasoi Pulse OMA** (OMA = Order Management App), **Rasoi Pulse KDA** (KDA =
+Display name: `{our app name} {ROLE CODE}` (the Admin app is the one exception: **Rasoi Pulse Admin**, id `admin`, never in the apps catalog), e.g. **Rasoi Pulse OMA** (OMA = Order Management App), **Rasoi Pulse KDA** (KDA =
 Kitchen Display App, RDA = Rider Delivery App). Folder: the role code in lower case (`oma`, `kda`, `rda`). Android package: `com.rasoipulse.<code>`. The code is also
 the app's id on the server (`x-app-id`, the console's App updates tabs, the website page `/apps/<code>`).
 

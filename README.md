@@ -88,6 +88,7 @@ permission and limit.
 | **Rasoi Pulse OMA** | Staff who walk to tables: take orders, manage tables (move, confirm payment, free, cancel), watch orders | Android 11+ phones and tablets | [`mobile-apps/oma`](mobile-apps/oma/README.md) |
 | **Rasoi Pulse KDA** | Kitchen staff and the kitchen manager: the live order board, the prep list, sold-out / unavailable / available for every dish | Android 11+ phones and tablets | [`mobile-apps/kda`](mobile-apps/kda/README.md) |
 | **Rasoi Pulse RDA** | Delivery riders: the deliveries handed to them, directions in their own maps app, call / WhatsApp the customer, picked up and delivered (with the customer's 4-digit code) | Android 11+ phones | [`mobile-apps/rda`](mobile-apps/rda/README.md) |
+| **Rasoi Pulse Admin** | The Rasoi Pulse team only (the owner and the roles under them): dashboard, stores, onboarding, leads, server, security, cache, settings, team — each person sees only what their role holds. **Not on the website, not in the apps catalog** | Android 11+ phones and tablets | [`mobile-apps/admin`](mobile-apps/admin/README.md) |
 
 Rules for the apps (decided with the owner):
 
@@ -356,8 +357,23 @@ roles and people: **Console → Team & roles** (People · Roles · Activity).
   so it has no page on the website.
 - **Tests:** t121 (API: roles, people, 33+ denied requests, role changes at once, the app's token, the log, every route decided) and t122 (the console: make a role and a person, what Sam sees, view-only Sue).
 
-A plan is **limits** (people, outlets, **tables**) plus **features** (what the store can switch on), and a Custom plan has nothing of its own: each store's
-limits and features are set by hand on its page. The shared rules live in `packages/config-schema/src/plan.js` and `plan-presets.js`.
+### Admin app (Rasoi Pulse Admin)
+
+`mobile-apps/admin` — the platform console in a phone or tablet, for the owner and the team roles. Nothing in it is decided locally: every screen calls `/api/platform/*` and the API's access table
+(`platform-access.js`) refuses what a role may not do; the app only hides what a role does not hold (`src/lib/access.ts`, compared with `PLATFORM_AREAS` by a test so the two lists cannot drift).
+
+- **Glass look:** one scenery (a gradient and three slowly drifting colour blobs) is drawn once behind the whole app; hero cards, the floating tab bar (phone) and the side rail (tablet) really blur it
+  (`expo-blur`, Android needs the scenery registered as the blur target — `Background` / `Frost` in `src/ui/primitives.tsx`). Small list rows are plain translucent panels (no blur, no Android elevation
+  shadow, which shows through see-through fills). Dark by default, light when the phone is light.
+- **Reduced motion:** the drifting background, shimmer placeholders, row reveals, counting numbers and chart drawing all stop when the phone's "remove animations" is on (`useReducedMotion`).
+- **Interactive:** charts draw themselves and can be touched and dragged to read a day; the date picker and dropdowns are our own sheets (never the phone's native boxes); phones get a floating tab bar
+  (3 areas + More), tablets (wider than 700) a side rail with every area.
+- **What it has:** Dashboard, Stores (+ a store's page), Onboarding (list + the requirement form: plan first, outlets with a map point, "allow anyway" beyond the plan, the server's ready-check, Publish as
+  store with a made-for-you owner password shown once), Leads, Server, Security, Cache, Settings, Team & roles. **Web console only:** the website editor, Storage, AI keys, the plan editor, App Management,
+  the form's PDF / print and its look-and-feel (kept untouched when the app saves).
+- **Sign-in:** `x-app-id: admin`; not in the apps catalog, so no update gate and no page on the website — install the APK yourself (the same company signing key as the other apps).
+- **Tests:** `npm test` in the app (access rules, API client, every screen against a fake server, reduced motion, onboarding rules incl. mutation checks); server side t121/t122.
+
 ### Table bookings: a stay, a price, a 50% advance
 
 The storefront's **Book a table** page (`/<outlet>/book`, `BookingView.jsx`) and the API behind it (`reservations.*`, rules in `packages/config-schema/src/reservations.js`).
@@ -410,6 +426,10 @@ size (`?pageSize=10`, 1–30). Removing the last order on a page drops back to t
 `packages/ui` has `TimePicker` / `TimePickerInput` (TP01, TP02 in the catalogue; options can be switched off), `SearchSelect` (DRP08) and `useAnchoredPopover` (the shared popover placement); `DatePickerInput`
 now takes `minDate`, `maxDate`, `fullWidth`, `formatValue` and lets a store's style effects reach its box. See Settings → Components catalogue (Pickers & Inputs).
 
+### Plans: features, the table limit, and the plan editor
+
+A plan is **limits** (people, outlets, **tables**) plus **features** (what the store can switch on), and a Custom plan has nothing of its own: each store's
+limits and features are set by hand on its page. The shared rules live in `packages/config-schema/src/plan.js` and `plan-presets.js`.
 
 - **Tables are sold in fives** — 5, 10, 15 … never 12 or 19 (`TABLE_STEP`; the schema refuses anything else, and the box rounds what is typed **up**: 12 → 15).
   The limit counts the **whole store** (every outlet together; a table switched off still counts). It is enforced when a table is created
@@ -494,15 +514,15 @@ Never commit secrets. `.env` files are git-ignored. Restaurant payment keys, SMT
 platform's picture storage and AI keys are entered in the admin or console and stored **encrypted** in MongoDB — they
 never live in code or env files in production.
 
-## Tests
-
-`tests/e2e` is a saved, repeatable test library that drives Chrome through the real screens. It runs against a
-**throwaway bench** — its own in-memory database, two fake stores and its own builds on ports 3097 / 3171 / 3170 — so
 **Logs never hold a secret.** The API's request log (`apps/api/src/logger.js`) replaces the session cookie, an app's `Authorization`
 Bearer token, the website/print-agent/site secret headers, a sign-in's `Set-Cookie` and any `password` / `token` field with `[hidden]`
 before a line is written (`HIDDEN_IN_LOGS` is the list — add a header there when a new secret header is introduced). Test: t119.
 Logs written before 2026-11-27 contain the visitors' session cookies — treat them as exposed (delete them; sessions expire by themselves).
 
+## Tests
+
+`tests/e2e` is a saved, repeatable test library that drives Chrome through the real screens. It runs against a
+**throwaway bench** — its own in-memory database, two fake stores and its own builds on ports 3097 / 3171 / 3170 — so
 it never touches real data or your dev servers.
 
 ```bash
