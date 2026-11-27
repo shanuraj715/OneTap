@@ -1,3 +1,5 @@
+import fs from "node:fs";
+import path from "node:path";
 import type { ConfigContext, ExpoConfig } from "expo/config";
 
 // The version lives in ONE file (app-version.json) and only changes when the owner asks for an upgrade (see scripts/version.js).
@@ -5,6 +7,11 @@ import type { ConfigContext, ExpoConfig } from "expo/config";
 const appVersion = require("./app-version.json") as { version: string; versionCode: number };
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL?.trim() || "https://api.rasoipulse.in";
+
+// Push notifications (a delivery for you, with the app closed) need the Firebase project's `google-services.json` for com.rasoipulse.rda in this
+// folder (never committed — see the README). Without it the app still builds and works; it just can't get a device token ("not available").
+const GOOGLE_SERVICES = "./google-services.json";
+const hasFirebase = fs.existsSync(path.join(__dirname, GOOGLE_SERVICES));
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
@@ -28,10 +35,13 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       monochromeImage: "./assets/android-icon-monochrome.png",
     },
     predictiveBackGestureEnabled: false,
+    ...(hasFirebase ? { googleServicesFile: GOOGLE_SERVICES } : {}),
   },
   plugins: [
     "expo-router",
     ["expo-secure-store", { configureAndroidBackup: true }],
+    // the small status-bar icon (white on transparent: the phone colours it), its colour (the app's violet), and the loud channel the server names
+    ["expo-notifications", { icon: "./assets/android-icon-monochrome.png", color: "#764ED1", defaultChannel: "deliveries" }],
     [
       "expo-build-properties",
       {

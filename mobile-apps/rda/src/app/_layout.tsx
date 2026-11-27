@@ -11,6 +11,7 @@ import { UpdateGate } from "@/updates/UpdateGate";
 import { AppIcon, ErrorState, QueryProgress, Spinner, Text, ToastHost, useTheme } from "@/ui";
 import { LiveBanner } from "@/live/LiveBanner";
 import { LiveBridge } from "@/live/LiveBridge";
+import { PushBridge } from "@/notifications/PushBridge";
 
 const runtime = sharedRuntime();
 
@@ -60,6 +61,8 @@ export default function RootLayout() {
         {/* one live connection while a rider is signed in; "Reconnecting…" while it comes back */}
         <LiveBridge />
         <LiveBanner />
+        {/* notifications for new deliveries while the app is closed or minimised */}
+        <PushBridge />
         </View>
         {/* "a new version is out": a pop-up (or, when the update is required, a screen nobody gets past) above everything */}
         <UpdateGate />

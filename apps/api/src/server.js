@@ -9,6 +9,7 @@ import { attachRealtime } from "./realtime/hub.js";
 import { attachPreview } from "./realtime/preview.js";
 import { startMarketingWorker } from "./modules/marketing/worker.js";
 import { startWhatsAppWorker } from "./modules/whatsapp/worker.js";
+import { configured as pushConfigured, projectId as pushProject } from "./modules/notify/push.js";
 import { startCartReminderWorker } from "./modules/carts/carts.service.js";
 import { startStockSweeper } from "./modules/menu/stock.service.js";
 import { startBookingSweeper } from "./modules/reservations/reservations.service.js";
@@ -65,6 +66,7 @@ function main()       {
 
   server.on("listening", () => {
     logger.info(`Rasoi Pulse API → http://localhost:${env.API_PORT}`);
+    logger.info(pushConfigured() ? `Push notifications ON (Firebase project ${pushProject()})` : "Push notifications OFF (no FCM_SERVICE_ACCOUNT_FILE / FCM_SERVICE_ACCOUNT_JSON): riders hear about a delivery with the app open, and on WhatsApp");
   });
 
   server.on("error", (err                       ) => {

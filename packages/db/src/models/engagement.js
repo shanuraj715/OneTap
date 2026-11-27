@@ -25,12 +25,15 @@ const riderSchema = new Schema(
     pinVersion: { type: Number, default: 0 },
     pinSetAt: { type: Date, default: null },
     lastLoginAt: { type: Date, default: null },
+    // The phones this rider has signed in on and allowed notifications on: each one's Firebase (FCM) device token, newest last, at most 5.
+    // Never returned by any list (the manager's rider list does not need them); only the push sender reads them.
+    pushTokens: { type: [new Schema({ token: { type: String, required: true }, addedAt: { type: Date, default: Date.now } }, { _id: false })], default: [], select: false },
   },
   { timestamps: true },
 );
 riderSchema.plugin(tenantScope);
 // a rider switched off or given a new PIN is let go from the live feed at once (realtime/app-feed.js)
-riderSchema.plugin(writeEvents, { model: "Rider", brandFrom: "brandId", outletFrom: "outletId" });
+riderSchema.plugin(writeEvents, { model: "Rider", brandFrom: "brandId", outletFrom: "outletId", ignore: ["pushTokens"] });
 riderSchema.index({ brandId: 1, outletId: 1, name: 1 });
 
 export const RiderModel = models.Rider ?? model("Rider", riderSchema);

@@ -74,6 +74,16 @@ const schema = z.object({
   RATE_LIMIT_SCALE: z.coerce.number().positive().default(1),
   /** the ONE process that sends queued SMS / WhatsApp Business API marketing messages (same rule as WHATSAPP_WORKER) */
   MARKETING_WORKER: z.enum(["on", "off"]).default("off"),
+  /**
+   * Push notifications to the staff apps through Firebase Cloud Messaging (today: "a delivery for you" to the rider app when it is closed or
+   * minimised). The Firebase project's SERVICE ACCOUNT key — the downloaded JSON — either as a file path or as the JSON text itself (for hosts
+   * that only take environment variables). Neither set = push is off (nothing breaks; riders still get the WhatsApp message and the live feed).
+   */
+  FCM_SERVICE_ACCOUNT_FILE: z.string().default(""),
+  FCM_SERVICE_ACCOUNT_JSON: z.string().default(""),
+  /** Google's FCM and OAuth addresses. Only ever changed to point a test at a stand-in server — leave them alone. */
+  FCM_API_URL: z.string().url().default("https://fcm.googleapis.com"),
+  FCM_OAUTH_URL: z.string().url().default("https://oauth2.googleapis.com/token"),
   /** Meta's WhatsApp Cloud API address. Only ever changed to point a test at a stand-in — leave it alone. */
   WHATSAPP_GRAPH_URL: z.string().url().default("https://graph.facebook.com"),
   WEBSITE_REVALIDATE_SECRET: z.string().default("dev-only-website-revalidate-secret"),

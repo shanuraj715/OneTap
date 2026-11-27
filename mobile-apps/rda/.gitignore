@@ -22,3 +22,6 @@ keystore.properties
 .DS_Store
 .idea/
 *.log
+
+# Firebase client config for push notifications (per project: see the README)
+/google-services.json

@@ -1489,3 +1489,13 @@
 {"id":"t110-plan-table-limit-ui","status":"pass","pass":48,"fail":0,"mode":"headless","at":"2026-11-27T15:37:24.294Z","durationMs":9675}
 {"id":"t125-plan-memory-api","status":"pass","pass":26,"fail":0,"mode":"headless","at":"2026-11-27T15:37:29.850Z","durationMs":5528}
 {"id":"t126-plan-memory-ui","status":"pass","pass":17,"fail":0,"mode":"headless","at":"2026-11-27T15:37:32.295Z","durationMs":2417}
+{"id":"t127-printer-secret-api","status":"pass","pass":21,"fail":0,"mode":"headless","at":"2026-11-27T16:21:03.887Z","durationMs":12162}
+{"id":"t127-printer-secret-api","status":"fail","pass":12,"fail":9,"mode":"headless","at":"2026-11-27T16:21:23.855Z","durationMs":13738}
+{"id":"t28-rate-limits-api","status":"pass","pass":133,"fail":0,"mode":"headless","at":"2026-11-27T16:21:51.539Z","durationMs":16950}
+{"id":"t51-kot-tickets","status":"pass","pass":62,"fail":0,"mode":"headless","at":"2026-11-27T16:22:20.318Z","durationMs":28651}
+{"id":"t53-orders-growth-api","status":"pass","pass":84,"fail":0,"mode":"headless","at":"2026-11-27T16:22:28.444Z","durationMs":8099}
+{"id":"t128-rider-push-api","status":"pass","pass":38,"fail":0,"mode":"headless","at":"2026-11-27T16:35:39.484Z","durationMs":10344}
+{"id":"t28-rate-limits-api","status":"pass","pass":133,"fail":0,"mode":"headless","at":"2026-11-27T16:36:00.807Z","durationMs":14337}
+{"id":"t120-app-live-api","status":"pass","pass":48,"fail":0,"mode":"headless","at":"2026-11-27T16:36:28.432Z","durationMs":23838}
+{"id":"t121-platform-roles-api","status":"pass","pass":61,"fail":0,"mode":"headless","at":"2026-11-27T16:36:36.986Z","durationMs":8523}
+{"id":"t98-rider-app-api","status":"pass","pass":105,"fail":0,"mode":"headless","at":"2026-11-27T16:36:44.520Z","durationMs":7513}

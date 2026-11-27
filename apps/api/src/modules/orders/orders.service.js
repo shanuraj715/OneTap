@@ -850,6 +850,7 @@ export async function assignRider(ctx, id, { riderId, name, phone, sendOut = fal
   order.rider = rider ? { ...rider, assignedAt: new Date(), assignedBy: String(user._id) } : undefined;
   await order.save();
   if (handedOver && rider.phone) tellRiderAboutDelivery(ctx, order, rider);
+  if (handedOver) import("../riders/rider-push.js").then((m) => m.notifyRiderOfDelivery(ctx, order.toObject(), rider.riderId)); // a push to their phones (never throws)
 
   const updated = order.toObject();
   broadcast(ctx.outletId, { type: "order.updated", order: wire(updated) });

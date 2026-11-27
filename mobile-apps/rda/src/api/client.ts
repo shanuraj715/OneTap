@@ -39,7 +39,7 @@ export interface ClientOptions {
 }
 
 export interface RequestOptions<S extends z.ZodType | undefined> {
-  method?: "GET" | "POST" | "PATCH" | "DELETE";
+  method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
   body?: unknown;
   /** which outlet this is about (the server also checks the person may use it) */
   outletId?: string;

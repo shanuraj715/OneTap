@@ -22,6 +22,12 @@ manager can still mark it delivered in the dashboard. Older orders with no code 
 **Free, no keys.** Navigate opens `https://www.google.com/maps/dir/?api=1&destination=<lat>,<lng>` in the rider's own maps app (or the
 phone's generic `geo:` link): a plain link, no API key, no account, no per-use bill. Call is `tel:`, WhatsApp is `https://wa.me/…`.
 
+## Notifications when the app is closed
+
+When the manager hands you a delivery, your phone is told even if the app is closed or minimised ("New delivery #0006 — Sector 62 · 3.5 km · ₹440 · Karan"); tap it to open the deliveries. After you sign in the app asks Android's permission (once), and the **Account** page has a **Notifications** card that says where it stands (on · blocked → *Open phone settings* · not available on this build · couldn't tell the server → *Turn on*). Signing out stops them for that phone.
+
+It needs the Firebase file: put **`google-services.json`** (for the package `com.rasoipulse.rda`) in this folder before building — it is git-ignored. Without it the app builds and works as before, but the card says "not available on this build". The server side (the service-account key, `FCM_SERVICE_ACCOUNT_FILE`) and the whole one-time set-up are in the root [`README.md`](../../README.md) under *Rider app (RDA)*. **After changing `app.config.ts` or adding the file, run the build again** (the Android project is generated from them).
+
 ## Who may sign in
 
 A rider is a name and phone number on **Settings → Delivery riders**. The manager gives them an app login there (**App login** → a PIN of 4–6

@@ -9345,8 +9345,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T11:30:34.626Z",
-    "durationMs": 11731,
+    "at": "2026-11-27T16:36:00.807Z",
+    "durationMs": 14337,
     "steps": [
       {
         "n": 1,
@@ -10117,7 +10117,7 @@
           {
             "label": "the inventory sees the whole API",
             "ok": true,
-            "detail": "364 routes, 212 change data",
+            "detail": "366 routes, 214 change data",
             "kind": "expect"
           },
           {
@@ -17796,8 +17796,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T23:31:08.036Z",
-    "durationMs": 26220,
+    "at": "2026-11-27T16:22:20.318Z",
+    "durationMs": 28651,
     "steps": [
       {
         "n": 1,
@@ -17968,7 +17968,7 @@
           {
             "label": "changing only the kitchen note sends a ticket that says what the note is now",
             "ok": true,
-            "detail": "*** ORDER CHANGED *** | Only the kitchen note changed | ------------------------------------------------ | KITCHEN ORDER | ------------------------------------------------ | Order #0006 | Takeaway | 21 Nov 2026, 05:00 am | ------------------------------------------------ | Note is now: less spicy please | ------------------------------------------------ |",
+            "detail": "*** ORDER CHANGED *** | Only the kitchen note changed | ------------------------------------------------ | KITCHEN ORDER | ------------------------------------------------ | Order #0006 | Takeaway | 27 Nov 2026, 09:51 pm | ------------------------------------------------ | Note is now: less spicy please | ------------------------------------------------ |",
             "kind": "expect"
           },
           {
@@ -18384,8 +18384,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T11:30:44.228Z",
-    "durationMs": 9581,
+    "at": "2026-11-27T16:22:28.444Z",
+    "durationMs": 8099,
     "steps": [
       {
         "n": 1,
@@ -18544,7 +18544,7 @@
           {
             "label": "outside its hours a dish shows when it IS available instead of a price",
             "ok": true,
-            "detail": "Available 7 PM – 8 PM",
+            "detail": "Available 11:52 PM – 12:52 AM",
             "kind": "expect"
           },
           {
@@ -18556,7 +18556,7 @@
           {
             "label": "a customer can't order it now",
             "ok": true,
-            "detail": "409 {\"error\":\"Poha is only available 7 PM – 8 PM\"}",
+            "detail": "409 {\"error\":\"Poha is only available 11:52 PM – 12:52 AM\"}",
             "kind": "expect"
           },
           {
@@ -18598,7 +18598,7 @@
           {
             "label": "now the outlet offers pickup times, grouped by day",
             "ok": true,
-            "detail": "Today:25 Tomorrow:95",
+            "detail": "Today:6 Tomorrow:95",
             "kind": "expect"
           },
           {
@@ -18616,7 +18616,7 @@
           {
             "label": "a customer places a takeaway for a later time",
             "ok": true,
-            "detail": "201 2026-11-27T13:00:00.000Z",
+            "detail": "201 2026-11-27T17:45:00.000Z",
             "kind": "expect"
           },
           {
@@ -18646,7 +18646,7 @@
           {
             "label": "breakfast can be pre-ordered for a time when breakfast is served (hours are checked at the pickup time)",
             "ok": true,
-            "detail": "201 {\"order\":{\"id\":\"6b0969e1fee9935c3a56bb85\",\"orderNumber\":\"0007\",\"channel\":\"takeaway\",\"placedBy\":\"cust",
+            "detail": "201 {\"order\":{\"id\":\"6b09ae41c3d5679a7246717a\",\"orderNumber\":\"0007\",\"channel\":\"takeaway\",\"placedBy\":\"cust",
             "kind": "expect"
           },
           {
@@ -18820,7 +18820,7 @@
           {
             "label": "the storefront can show what it saves (₹130 separately, ₹110 as a combo → saves ₹20)",
             "ok": true,
-            "detail": "{\"parts\":[{\"itemId\":\"6b0969e0fee9935c3a56ba83\",\"name\":\"Veg Momos\",\"variantLabel\":null,\"quantity\":1,\"missing\":false},{\"itemId\":\"6b0969e0fee9935c3a56ba85\",\"name\":\"Masala Chai\",\"variantLabel\":null,\"quantity\":1,\"missing\":false}],\"separately\":13000,\"saves\":2000}",
+            "detail": "{\"parts\":[{\"itemId\":\"6b09ae41c3d5679a7246707a\",\"name\":\"Veg Momos\",\"variantLabel\":null,\"quantity\":1,\"missing\":false},{\"itemId\":\"6b09ae41c3d5679a7246707d\",\"name\":\"Masala Chai\",\"variantLabel\":null,\"quantity\":1,\"missing\":false}],\"separately\":13000,\"saves\":2000}",
             "kind": "expect"
           },
           {
@@ -18844,7 +18844,7 @@
           {
             "label": "an ordered combo carries what it is made of",
             "ok": true,
-            "detail": "[{\"itemId\":\"6b0969e0fee9935c3a56ba83\",\"name\":\"Veg Momos\",\"variantLabel\":null,\"quantity\":1},{\"itemId\":\"6b0969e0fee9935c3a56ba85\",\"name\":\"Masala Chai\",\"variantLabel\":null,\"quantity\":1}]",
+            "detail": "[{\"itemId\":\"6b09ae41c3d5679a7246707a\",\"name\":\"Veg Momos\",\"variantLabel\":null,\"quantity\":1},{\"itemId\":\"6b09ae41c3d5679a7246707d\",\"name\":\"Masala Chai\",\"variantLabel\":null,\"quantity\":1}]",
             "kind": "expect"
           },
           {
@@ -18868,7 +18868,7 @@
           {
             "label": "a pre-order's kitchen ticket starts with PRE-ORDER and the full pickup time",
             "ok": true,
-            "detail": "PRE-ORDER |            Pickup 6:30 PM, Fri 27 Nov | ------------------------------------------------ |                  KITCHEN ORDER",
+            "detail": "PRE-ORDER |           Pickup 11:15 PM, Fri 27 Nov | ------------------------------------------------ |                  KITCHEN ORDER",
             "kind": "expect"
           }
         ]
@@ -18880,7 +18880,7 @@
           {
             "label": "a 'buy 1 get 1 free' coupon on the Food category is created",
             "ok": true,
-            "detail": "201 {\"coupon\":{\"id\":\"6b0969e2fee9935c3a56bc5a\",\"code\":\"B1G1MOMO\",\"description\":\"\",\"discountType\":\"bogo\",\"value\":1,\"maxDiscou",
+            "detail": "201 {\"coupon\":{\"id\":\"6b09ae43c3d5679a7246727a\",\"code\":\"B1G1MOMO\",\"description\":\"\",\"discountType\":\"bogo\",\"value\":1,\"maxDiscou",
             "kind": "expect"
           },
           {
@@ -35747,8 +35747,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T11:31:17.886Z",
-    "durationMs": 7775,
+    "at": "2026-11-27T16:36:44.520Z",
+    "durationMs": 7513,
     "steps": [
       {
         "n": 1,
@@ -35931,7 +35931,7 @@
           {
             "label": "the right PIN signs in (the number may be typed with +91 and spaces), and says who and where",
             "ok": true,
-            "detail": "{\"id\":\"6b096a02b2060bab7b983ff0\",\"name\":\"Ramesh\",\"phone\":\"98765 43210\",\"outletId\":\"6b096a02b2060bab7b983fba\",\"outletName\":\"Main\",\"storeName\":\"acme\"}",
+            "detail": "{\"id\":\"6b09b1985a6eb51ea8db304d\",\"name\":\"Ramesh\",\"phone\":\"98765 43210\",\"outletId\":\"6b09b1985a6eb51ea8db3016\",\"outletName\":\"Main\",\"storeName\":\"acme\"}",
             "kind": "expect"
           },
           {
@@ -36231,13 +36231,13 @@
           {
             "label": "a delivery order is placed (from a pin on the map)",
             "ok": true,
-            "detail": "201 {\"order\":{\"id\":\"6b096a03b2060bab7b98416a\",\"orderNumber\":\"0001\",\"channel\":\"delivery\",\"placedBy\":\"staff\",\"staffName\":\"Owner\",\"status\":\"placed\",\"lines\":[{\"itemId\":\"6b096a03b2060bab7b9840c9\",\"name\":\"Masal",
+            "detail": "201 {\"order\":{\"id\":\"6b09b1995a6eb51ea8db31bf\",\"orderNumber\":\"0001\",\"channel\":\"delivery\",\"placedBy\":\"staff\",\"staffName\":\"Owner\",\"status\":\"placed\",\"lines\":[{\"itemId\":\"6b09b1995a6eb51ea8db3120\",\"name\":\"Masal",
             "kind": "expect"
           },
           {
             "label": "it has a 4-digit delivery code",
             "ok": true,
-            "detail": "1849",
+            "detail": "6035",
             "kind": "expect"
           },
           {
@@ -39977,8 +39977,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T11:29:13.539Z",
-    "durationMs": 22901,
+    "at": "2026-11-27T16:36:28.432Z",
+    "durationMs": 23838,
     "steps": [
       {
         "n": 0,
@@ -40601,8 +40601,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T15:33:18.191Z",
-    "durationMs": 8010,
+    "at": "2026-11-27T16:36:36.986Z",
+    "durationMs": 8523,
     "steps": [
       {
         "n": 1,
@@ -40701,7 +40701,7 @@
           {
             "label": "the session says: a team member, role Sales, the one feature Onboarding (not even 'Plans' in the sidebar), no store, no store permissions",
             "ok": true,
-            "detail": "{\"access\":true,\"features\":[\"onboarding:manage\"],\"role\":{\"id\":\"6b09a2b9ee59855f3452b62a\",\"name\":\"Sales\"}}",
+            "detail": "{\"access\":true,\"features\":[\"onboarding:manage\"],\"role\":{\"id\":\"6b09b1907a24d4f26c69094d\",\"name\":\"Sales\"}}",
             "kind": "expect"
           },
           {
@@ -41921,6 +41921,444 @@
           },
           {
             "label": "no errors in the browser",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t127-printer-secret-api": {
+    "id": "t127-printer-secret-api",
+    "title": "A printer's cloud API key never leaves the server: create, list (owner and waiter) and change answers carry only 'a key is set' and a masked tail, no stored copy, no database internals",
+    "status": "fail",
+    "pass": 12,
+    "fail": 9,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-27T16:21:23.855Z",
+    "durationMs": 13738,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Creating a cloud printer with a key",
+        "checks": [
+          {
+            "label": "the printer is created",
+            "ok": true,
+            "detail": "HTTP 201",
+            "kind": "expect"
+          },
+          {
+            "label": "in the database the key is stored scrambled (encrypted), not as typed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the create answer: the key itself is not in the answer",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the create answer: no database internals ($__parent, _doc …) in the answer",
+            "ok": false,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the create answer does not carry the stored (scrambled) copy either",
+            "ok": false,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it says a key is set (cloudApiKeySet)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and shows only a short masked tail",
+            "ok": true,
+            "detail": "v1.Q••••oMz0",
+            "kind": "expect"
+          },
+          {
+            "label": "the other connection fields are all still there (the dashboard reads them)",
+            "ok": false,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Listing, as the owner and as a waiter",
+        "checks": [
+          {
+            "label": "the owner's list: the key itself is not in the answer",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the owner's list: no database internals ($__parent, _doc …) in the answer",
+            "ok": false,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the owner's list does not carry the stored copy",
+            "ok": false,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the list still shows the printer's connection details",
+            "ok": false,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a waiter can read the printers",
+            "ok": true,
+            "detail": "HTTP 200",
+            "kind": "expect"
+          },
+          {
+            "label": "the waiter's list: the key itself is not in the answer",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the waiter's list: no database internals ($__parent, _doc …) in the answer",
+            "ok": false,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the waiter's list does not carry the stored copy",
+            "ok": false,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Changing the printer",
+        "checks": [
+          {
+            "label": "a rename works",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the change answer: the key itself is not in the answer",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the change answer: no database internals ($__parent, _doc …) in the answer",
+            "ok": false,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "renaming keeps the key (still set)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the stored key is untouched",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t128-rider-push-api": {
+    "id": "t128-rider-push-api",
+    "title": "Rider push notifications: a phone registers its Firebase token; a NEW hand-over pushes 'New delivery #…' (where, how far, how much) to that rider's phones only; dead tokens are forgotten; no key set up = nothing breaks",
+    "status": "pass",
+    "pass": 38,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-27T16:35:39.484Z",
+    "durationMs": 10344,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The phone asks for notifications",
+        "checks": [
+          {
+            "label": "no sign-in → refused (401)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a token that can't be one is refused (400)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no token is refused (400)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a rider registers a phone (204)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the same phone again is kept once",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a rider keeps their five newest phones",
+            "ok": true,
+            "detail": "03,04,05,06,07",
+            "kind": "expect"
+          },
+          {
+            "label": "a phone signed in as someone else moves to them (one phone, one rider)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "signing out takes the phone off",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the manager's rider list never carries a device token",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "A delivery is handed to a rider → a push, with the app closed",
+        "checks": [
+          {
+            "label": "the hand-over itself works",
+            "ok": true,
+            "detail": "HTTP 200",
+            "kind": "expect"
+          },
+          {
+            "label": "Google is asked to send a notification",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…to Ramesh's phone only, through the right Firebase project",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "title: 'New delivery #0001'",
+            "ok": true,
+            "detail": "New delivery #0001",
+            "kind": "expect"
+          },
+          {
+            "label": "body: where it goes, how far, what it is worth, who for",
+            "ok": true,
+            "detail": "B-14, Sector 18, Noida · 1.3 km · ₹260 · Neha Gupta",
+            "kind": "expect"
+          },
+          {
+            "label": "data (all text): what happened, which order — so a tap can open it",
+            "ok": true,
+            "detail": "{\"type\":\"delivery.assigned\",\"orderId\":\"6b09b1561bc97536a96b7323\",\"orderNumber\":\"0001\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "high priority (wakes a sleeping phone), on the 'deliveries' channel, with a time limit",
+            "ok": true,
+            "detail": "{\"priority\":\"HIGH\",\"ttl\":\"1800s\",\"notification\":{\"channel_id\":\"deliveries\",\"sound\":\"default\"}}",
+            "kind": "expect"
+          },
+          {
+            "label": "sent with the access token Google gave",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the sign-in request to Google was signed with the service account's key, with the right claims",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no delivery code in the notification",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Only when it is a NEW hand-over",
+        "checks": [
+          {
+            "label": "saving the same rider again sends nothing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a rider typed in by name (no phone app) gets no push",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "moving it to another rider pushes the NEW rider",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…to Suresh's phone, not Ramesh's",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "taking the rider off sends nothing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the rider marks it picked up",
+            "ok": true,
+            "detail": "HTTP 200",
+            "kind": "expect"
+          },
+          {
+            "label": "…which does not push the rider about their own delivery",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "The access token is kept, and renewed once if Google says it ran out",
+        "checks": [
+          {
+            "label": "many messages, one sign-in to Google (the access token is reused)",
+            "ok": true,
+            "detail": "1 vs 1",
+            "kind": "expect"
+          },
+          {
+            "label": "a 401 from Google → a fresh access token and one more try → delivered",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…exactly one new sign-in to Google",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "A phone Google says is gone is forgotten; a hiccup is not",
+        "checks": [
+          {
+            "label": "the good phone still got its notification",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the dead one was tried",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the dead phone was removed from the rider",
+            "ok": true,
+            "detail": "10",
+            "kind": "expect"
+          },
+          {
+            "label": "a failure on Google's side does NOT remove the phone, and the hand-over still works",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "No Firebase key set up: nothing breaks",
+        "checks": [
+          {
+            "label": "push reports itself off",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the hand-over works and nothing is sent",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a phone can still register (it will be used once push is set up)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a broken key file is 'off' too (and logged), not a crash",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and a good one switches it on again",
             "ok": true,
             "detail": "",
             "kind": "expect"

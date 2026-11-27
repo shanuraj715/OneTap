@@ -11,6 +11,7 @@ import { assertStoreEnabled, requireFeature } from "../platform/plan.service.js"
 import { assignRider, updateStatus } from "../orders/orders.service.js";
 import { PIN_RE, checkPin, loginPhoneOf, signRiderToken } from "./rider-auth.js";
 import { riderFromToken } from "./rider-session.js";
+import { registerRiderPushToken, removeRiderPushToken } from "./rider-push.js";
 
 /**
  * The rider app's own API (`/api/rider/…`). A rider is not a dashboard user: they sign in with the phone number and PIN the manager
@@ -149,6 +150,22 @@ riderAppRouter.post("/deliveries/:id/delivered", limiter("rider-action"), async 
   }
   const updated = await updateStatus(ctx, String(order._id), "completed", `rider:${rider._id}`, { reason: "delivered by the rider" });
   res.json({ delivery: shape(updated) });
+});
+
+const pushTokenBody = z.object({ token: z.string().trim().min(20, "That doesn't look like a device token.").max(4096) });
+
+/** "Send my notifications to this phone" — called each time the app opens signed in, and again whenever Google gives the phone a new token. */
+riderAppRouter.put("/push-token", limiter("rider-action"), async (req, res) => {
+  const { rider } = await riderContext(req);
+  await registerRiderPushToken(rider, pushTokenBody.parse(req.body ?? {}).token);
+  res.status(204).end();
+});
+
+/** Signing out: this phone stops getting this rider's notifications. */
+riderAppRouter.delete("/push-token", limiter("rider-action"), async (req, res) => {
+  const { rider } = await riderContext(req);
+  await removeRiderPushToken(rider, pushTokenBody.parse(req.body ?? {}).token);
+  res.status(204).end();
 });
 
 /** Nothing is kept on the server for a rider's sign-in (the token just expires), so signing out is the phone forgetting it. */

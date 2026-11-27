@@ -9,11 +9,13 @@ import { createSettings, type Settings } from "@/prefs/settings";
 import { createUpdateStore, type UpdateStore } from "@/updates/store";
 import { createRefreshStore, type RefreshStore } from "@/data/refresh";
 import { createLiveStore, pollEvery, type LiveStore } from "@/live/store";
+import * as ExpoNotifications from "expo-notifications";
+import { createPush, type NotificationsModule, type Push } from "@/notifications/push";
 import { prefsStorage, type PrefsStorage } from "@/prefs/storage";
 import { API_URL, APP_BUILD, APP_ID, APP_VERSION, refreshPlan } from "@/lib/config";
 
 /** Everything the screens share: the server calls, who is signed in, and the remembered answers. */
-export interface Runtime { api: Api; session: SessionStore; settings: Settings; updates: UpdateStore; refresh: RefreshStore; live: LiveStore; queryClient: QueryClient }
+export interface Runtime { api: Api; session: SessionStore; settings: Settings; updates: UpdateStore; refresh: RefreshStore; live: LiveStore; push: Push; queryClient: QueryClient }
 
 export interface RuntimeOptions {
   baseUrl?: string;
@@ -26,6 +28,8 @@ export interface RuntimeOptions {
   /** which build / version this app says it is (tests pass their own; the app uses its real ones) */
   build?: number;
   version?: string;
+  /** the phone's notification module (tests pass a stand-in) */
+  notifications?: NotificationsModule;
 }
 
 /** A failed call is tried again (twice) only when trying again could help: no answer, or a server problem — not "wrong PIN" or "wrong code". */
@@ -64,7 +68,9 @@ export function createRuntime(options: RuntimeOptions = {}): Runtime {
   });
   // (preferences are NOT cleared when someone signs out: they belong to that person and come back when they sign in again)
   const settings = createSettings(options.prefs ?? prefsStorage);
-  return { api, session, settings, updates, refresh, live, queryClient };
+  // notifications for new deliveries while the app is closed (the phone's Firebase token ↔ the server)
+  const push = createPush({ notifications: options.notifications ?? ExpoNotifications, register: (token) => api.registerPush(token), unregister: (token) => api.unregisterPush(token) });
+  return { api, session, settings, updates, refresh, live, push, queryClient };
 }
 
 let shared: Runtime | undefined;

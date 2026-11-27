@@ -26,3 +26,17 @@ jest.mock("expo-constants", () => ({
 
 // Safe-area insets come from the phone's window; in Node they are zero.
 jest.mock("react-native-safe-area-context", () => jest.requireActual("react-native-safe-area-context/jest/mock").default);
+
+// the phone's notification module does not exist in Node: a stand-in that says "allowed" and hands out one token
+jest.mock("expo-notifications", () => ({
+  __esModule: true,
+  AndroidImportance: { MAX: 5, HIGH: 4, DEFAULT: 3 },
+  setNotificationHandler: jest.fn(),
+  setNotificationChannelAsync: jest.fn(async () => null),
+  getPermissionsAsync: jest.fn(async () => ({ granted: true, canAskAgain: true, status: "granted" })),
+  requestPermissionsAsync: jest.fn(async () => ({ granted: true, canAskAgain: true, status: "granted" })),
+  getDevicePushTokenAsync: jest.fn(async () => ({ type: "android", data: "device-token-0123456789-abcdefghij" })),
+  addPushTokenListener: jest.fn(() => ({ remove: jest.fn() })),
+  addNotificationResponseReceivedListener: jest.fn(() => ({ remove: jest.fn() })),
+  getLastNotificationResponse: jest.fn(() => null),
+}));

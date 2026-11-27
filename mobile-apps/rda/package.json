@@ -10,6 +10,7 @@
     "expo-build-properties": "~58.0.12",
     "expo-constants": "~58.0.16",
     "expo-linking": "~58.0.17",
+    "expo-notifications": "~58.1.10",
     "expo-router": "~58.0.32",
     "expo-secure-store": "~58.0.3",
     "expo-status-bar": "~58.0.5",
@@ -56,7 +57,7 @@
     "phone:live": "node scripts/phone.js --live"
   },
   "private": true,
-  "description": "Rasoi Pulse RDA (Rider Delivery App) \u2014 Android app for delivery riders: their deliveries, directions in their own maps app, call or message the customer, and mark each order delivered",
+  "description": "Rasoi Pulse RDA (Rider Delivery App) — Android app for delivery riders: their deliveries, directions in their own maps app, call or message the customer, and mark each order delivered",
   "jest": {
     "preset": "jest-expo",
     "setupFilesAfterEnv": [

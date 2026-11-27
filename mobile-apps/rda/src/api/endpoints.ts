@@ -15,6 +15,10 @@ export function createApi(client: ApiClient) {
     /* is there a newer version of the app? (no sign-in needed; the phone says which build it is on) */
     checkForUpdate: (versionCode: number) => request(`/api/app-updates/check?app=${APP_ID}&platform=android&versionCode=${versionCode}`, { auth: false, schema: updateCheckSchema }),
 
+    /* notifications when the app is closed: this phone's Firebase token (sent again whenever Google changes it; removed when signing out) */
+    registerPush: (token: string) => request("/api/rider/push-token", { method: "PUT", body: { token } }),
+    unregisterPush: (token: string) => request("/api/rider/push-token", { method: "DELETE", body: { token } }),
+
     /* the rider's own deliveries: to do now, and done today */
     deliveries: () => request("/api/rider/deliveries", { schema: deliveriesSchema }),
     /** "I have the food": Ready → Out for delivery (the customer is told) */

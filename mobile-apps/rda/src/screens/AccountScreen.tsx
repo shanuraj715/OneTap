@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { View } from "react-native";
+import { Linking, View } from "react-native";
 import { useStore } from "zustand";
 import { API_HOST, APP_BUILD, APP_NAME, APP_TAGLINE, APP_VERSION } from "@/lib/config";
 import { useRuntime, useSession } from "@/runtime";
+import type { PushStatus } from "@/notifications/push";
 import { Button, Card, ConfirmDialog, Divider, Icon, IconTile, Screen, ScreenTitle, SwitchRow, Text, toasts, useTheme, type IconName } from "@/ui";
 
 function Fact({ label, value, icon }: { label: string; value: string; icon: IconName }) {
@@ -16,10 +17,41 @@ function Fact({ label, value, icon }: { label: string; value: string; icon: Icon
   );
 }
 
-/** Who is signed in, where they work, the new-delivery alert, the app's version, and Sign out. */
+const PUSH_TEXT: Record<PushStatus, { line: string; tone: "default" | "success" | "warning" | "muted" }> = {
+  unknown: { line: "Checking…", tone: "muted" },
+  on: { line: "On. A new delivery reaches you even when the app is closed or minimised.", tone: "success" },
+  denied: { line: "Blocked. Allow notifications for this app in your phone's settings, or you will only hear about a delivery with the app open.", tone: "warning" },
+  unavailable: { line: "Not available on this phone or build. You will hear about a new delivery with the app open (and on WhatsApp, if your store sends it).", tone: "warning" },
+  failed: { line: "Allowed, but the server could not be told (no internet?). It is tried again when you open the app.", tone: "warning" },
+};
+
+/** Notifications for new deliveries while the app is closed: where they stand, and a way to turn them on or fix them. */
+function NotificationsCard() {
+  const { push } = useRuntime();
+  const status = useStore(push.store, (s) => s.status);
+  const [busy, setBusy] = useState(false);
+  const { line, tone } = PUSH_TEXT[status];
+  async function turnOn() { setBusy(true); try { await push.enable(); } finally { setBusy(false); } }
+  return (
+    <Card style={{ gap: 10 }} testID="notifications-card">
+      <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+        <IconTile icon="bell" tone={status === "on" ? "ok" : status === "unknown" ? "neutral" : "warn"} size={36} />
+        <View style={{ flex: 1 }}>
+          <Text variant="subheading">Notifications</Text>
+          <Text variant="caption" tone="muted">When a delivery is handed to you</Text>
+        </View>
+      </View>
+      <Text tone={tone} testID="notifications-status">{line}</Text>
+      {status === "denied" ? <Button title="Open phone settings" icon="external" variant="outline" fullWidth onPress={() => void Linking.openSettings()} testID="notifications-settings" /> : null}
+      {status === "failed" || status === "unknown" ? <Button title="Turn on" icon="bell" variant="outline" fullWidth loading={busy} onPress={() => void turnOn()} testID="notifications-turn-on" /> : null}
+    </Card>
+  );
+}
+
+/** Who is signed in, where they work, notifications, the new-delivery alert, the app's version, and Sign out. */
 export function AccountScreen() {
   const { c } = useTheme();
-  const { session, settings, updates } = useRuntime();
+  const { session, settings, updates, push } = useRuntime();
   const rider = useSession((s) => s.rider);
   const prefs = useStore(settings.store);
   const updateStatus = useStore(updates, (s) => s.status);
@@ -39,7 +71,10 @@ export function AccountScreen() {
   }
   async function signOut() {
     setLeaving(true);
-    try { await session.getState().signOut(); } finally { setLeaving(false); setConfirming(false); }
+    try {
+      await push.disable(); // while the sign-in still works: this phone stops getting this rider's notifications
+      await session.getState().signOut();
+    } finally { setLeaving(false); setConfirming(false); }
   }
 
   return (
@@ -58,6 +93,8 @@ export function AccountScreen() {
         <Fact icon="store" label="Store" value={rider.storeName || "—"} />
         <Fact icon="pin" label="Outlet" value={rider.outletName || "—"} />
       </Card>
+
+      <NotificationsCard />
 
       <Card style={{ gap: 14 }}>
         <SwitchRow icon="bell" label="New-delivery alert" hint="Vibrate and say so when the manager hands you an order." value={prefs.alerts} onChange={(v) => void settings.set({ alerts: v })} testID="switch-alerts" />

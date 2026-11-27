@@ -5,6 +5,7 @@ import { render, type RenderResult } from "@testing-library/react-native";
 import type { TokenStorage } from "@/auth/storage";
 import type { PrefsStorage } from "@/prefs/storage";
 import { createRuntime, RuntimeProvider, type Runtime } from "@/runtime";
+import type { NotificationsModule } from "@/notifications/push";
 
 /** Recorded real answers of the Rasoi Pulse API (see tests/e2e/suites/_record-rider-app-fixtures.mjs in the repository root). */
 export const fx = <T = any>(name: string): T => JSON.parse(fs.readFileSync(path.join(__dirname, "fixtures", `${name}.json`), "utf8"));
@@ -17,6 +18,8 @@ const defaults = (): Record<string, Handler> => ({
   "GET /api/auth/guard": { json: fx("auth-guard") },
   "POST /api/rider/login": { json: fx("rider-login") },
   "POST /api/rider/logout": { status: 204 },
+  "PUT /api/rider/push-token": { status: 204 },
+  "DELETE /api/rider/push-token": { status: 204 },
   "GET /api/rider/me": { json: { rider: fx("rider-login").rider } },
   "GET /api/app-updates/check": { json: fx("update-check-none") },
   "GET /api/rider/deliveries": { json: fx("deliveries") },
@@ -89,14 +92,14 @@ export function memoryPrefs(initial: Record<string, string> = {}) {
   return prefs;
 }
 
-export interface AppOptions { server?: FakeServer; storage?: ReturnType<typeof memoryStorage>; prefs?: ReturnType<typeof memoryPrefs>; signedIn?: boolean; /** which build number this app says it is (default: the test config's, 0) */ build?: number }
+export interface AppOptions { notifications?: NotificationsModule; server?: FakeServer; storage?: ReturnType<typeof memoryStorage>; prefs?: ReturnType<typeof memoryPrefs>; signedIn?: boolean; /** which build number this app says it is (default: the test config's, 0) */ build?: number }
 
 /** A screen, inside the app's own providers, talking to a fake server — signed in as the sandbox rider unless said otherwise. */
 export async function renderApp(ui: ReactElement, options: AppOptions = {}): Promise<RenderResult & { runtime: Runtime; server: FakeServer; storage: ReturnType<typeof memoryStorage>; prefs: ReturnType<typeof memoryPrefs> }> {
   const server = options.server ?? fakeServer();
   const storage = options.storage ?? memoryStorage();
   const prefs = options.prefs ?? memoryPrefs();
-  const runtime = createRuntime({ baseUrl: "https://api.test", fetchImpl: server.fetch, storage, prefs, retry: false, build: options.build });
+  const runtime = createRuntime({ baseUrl: "https://api.test", fetchImpl: server.fetch, storage, prefs, retry: false, build: options.build, notifications: options.notifications });
   liveRuntimes.push(runtime);
   if (options.signedIn !== false) await runtime.session.getState().signIn("9876543210", "4821", false);
   const result = await render(<RuntimeProvider runtime={runtime}>{ui}</RuntimeProvider>);
