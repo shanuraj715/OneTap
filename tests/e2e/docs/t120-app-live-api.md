@@ -1,6 +1,6 @@
 # T120 — Staff apps (OMA, KDA, RDA): the live connection — who may listen, what they are told, who is let go (server side)
 
-**Area:** apps · **Last result:** ✅ PASSED (48 passed, 0 failed · 2026-11-27 16:11 · headless · 24.0 s)
+**Area:** apps · **Last result:** ✅ PASSED (48 passed, 0 failed · 2026-11-27 16:59 · headless · 22.9 s)
 
 **Run it alone:** `node run.mjs --only t120` (add `--visible` to watch it)
 
@@ -116,6 +116,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-27 16:59 | pass | 48 | 0 | headless | 22.9 s |
 | 2026-11-27 16:11 | pass | 48 | 0 | headless | 24.0 s |
 | 2026-11-27 16:11 | fail | 47 | 1 | headless | 23.0 s |
 | 2026-11-27 16:10 | fail | 19 | 1 | headless | 5.6 s |

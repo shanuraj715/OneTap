@@ -1,6 +1,6 @@
 # T122 — Console → Team & roles: make a role and a person, and what that person sees (only what the role allows); the sidebar says App Management
 
-**Area:** platform · **Last result:** ✅ PASSED (28 passed, 0 failed · 2026-11-27 16:52 · headless · 8.9 s)
+**Area:** platform · **Last result:** ✅ PASSED (28 passed, 0 failed · 2026-11-27 16:59 · headless · 9.1 s)
 
 **Run it alone:** `node run.mjs --only t122` (add `--visible` to watch it)
 
@@ -50,7 +50,7 @@ _Nothing failed._
 - the role window lists every feature, grouped, each with a line saying what it lets a person do
 - …Team & roles is not one of them (it stays the super admin's alone)
 - 'Make the role' waits for a name
-- the role is in the list, holding Onboarding only — _Sales 553390 Onboarding 0_
+- the role is in the list, holding Onboarding only — _Sales 963262 Onboarding 0_
 - saved with exactly that one feature
 
 **Step 3 — A person with that role**
@@ -95,6 +95,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-27 16:59 | pass | 28 | 0 | headless | 9.1 s |
 | 2026-11-27 16:52 | pass | 28 | 0 | headless | 8.9 s |
 
 ---

@@ -1,6 +1,6 @@
 # T103 — Website → header keeps to Product / Pricing / Apps / FAQ (About + Contact in the footer); homepage has a short animated 'We have apps too' note (no cards); hero backdrop fades out; livelier Features and moments; motion that stops under reduce-motion; no text selection or text cursor
 
-**Area:** website · **Last result:** ✅ PASSED (61 passed, 0 failed · 2026-11-27 10:50 · headless · 9.7 s)
+**Area:** website · **Last result:** ✅ PASSED (61 passed, 0 failed · 2026-11-27 16:56 · headless · 9.8 s)
 
 **Run it alone:** `node run.mjs --only t103` (add `--visible` to watch it)
 
@@ -78,7 +78,7 @@ _Nothing failed._
 
 **Step 3 — …and it moves**
 
-- the order ticket slides along the line — _0px → 62px_
+- the order ticket slides along the line — _0px → 65px_
 - the dashed line marches, each app bobs and lights up when the ticket arrives — _{"ticket":"apps-ticket","line":"apps-march","ring":"apps-node-ping","bob":"apps-bob"}_
 
 **Step 4 — The hero's coloured backdrop fades out — it must not end in a line**
@@ -151,6 +151,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-27 16:56 | pass | 61 | 0 | headless | 9.8 s |
 | 2026-11-27 10:50 | pass | 61 | 0 | headless | 9.7 s |
 
 ---

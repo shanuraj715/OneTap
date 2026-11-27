@@ -1,6 +1,6 @@
 # T119 — The API's request log never contains a secret (session cookie, Bearer token, secret headers, Set-Cookie)
 
-**Area:** security · **Last result:** ✅ PASSED (17 passed, 0 failed · 2026-11-27 16:03 · headless · 5.1 s)
+**Area:** security · **Last result:** ✅ PASSED (17 passed, 0 failed · 2026-11-27 16:58 · headless · 5.5 s)
 
 **Run it alone:** `node run.mjs --only t119` (add `--visible` to watch it)
 
@@ -66,6 +66,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-27 16:58 | pass | 17 | 0 | headless | 5.5 s |
 | 2026-11-27 16:03 | pass | 17 | 0 | headless | 5.1 s |
 
 ---

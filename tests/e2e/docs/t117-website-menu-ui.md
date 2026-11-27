@@ -1,6 +1,6 @@
 # T117 — Rasoi Pulse website: About Us / Contact Us live in the footer, not the header menu; the phone menu closes after a link is pressed
 
-**Area:** website · **Last result:** ✅ PASSED (36 passed, 0 failed · 2026-11-27 12:08 · headless · 5.7 s)
+**Area:** website · **Last result:** ✅ PASSED (36 passed, 0 failed · 2026-11-27 16:57 · headless · 6.7 s)
 
 **Run it alone:** `node run.mjs --only t117` (add `--visible` to watch it)
 
@@ -83,6 +83,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-27 16:57 | pass | 36 | 0 | headless | 6.7 s |
 | 2026-11-27 12:08 | pass | 36 | 0 | headless | 5.7 s |
 | 2026-11-27 10:51 | pass | 36 | 0 | headless | 5.7 s |
 

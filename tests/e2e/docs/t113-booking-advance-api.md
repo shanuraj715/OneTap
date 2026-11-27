@@ -1,6 +1,6 @@
 # T113 — Table bookings: a start and an end time, a price, a 50% advance paid online, refunds and the WhatsApp number — the rules and the API
 
-**Area:** bookings · **Last result:** ✅ PASSED (94 passed, 0 failed · 2026-11-27 12:06 · headless · 6.9 s)
+**Area:** bookings · **Last result:** ✅ PASSED (94 passed, 0 failed · 2026-11-27 16:57 · headless · 8.2 s)
 
 **Run it alone:** `node run.mjs --only t113` (add `--visible` to watch it)
 
@@ -127,7 +127,7 @@ _Nothing failed._
 - the payment record says it is for a booking: ₹1,000, pending
 - another guest can't confirm it either — and it is NOT settled by the attempt (the owner is checked before anything is verified) — _403_
 - a payment with a wrong signature is refused and the booking stays unpaid
-- her real payment is accepted — _200 {"status":"paid","orderId":"6b0924e380e91b417e5dc41d","subject":"reservation"}_
+- her real payment is accepted — _200 {"status":"paid","orderId":"6b096938bacd7443e3cef88b","subject":"reservation"}_
 - the booking is now paid and waits for the restaurant (still 'requested': a person approves it)
 - now the team sees it: ₹1,000 paid, the event and the WhatsApp number
 - the 'to confirm' badge counts it
@@ -191,6 +191,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-27 16:57 | pass | 94 | 0 | headless | 8.2 s |
 | 2026-11-27 12:06 | pass | 94 | 0 | headless | 6.9 s |
 | 2026-11-27 10:50 | pass | 93 | 0 | headless | 6.1 s |
 

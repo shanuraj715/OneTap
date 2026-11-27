@@ -1,6 +1,6 @@
 # T114 — Book a table page: open to everyone, a date picker, from/to time pickers, a searchable event list with Other, the WhatsApp number, the price — and sign-in only AFTER the form is filled
 
-**Area:** bookings · **Last result:** ✅ PASSED (65 passed, 0 failed · 2026-11-27 12:09 · headless · 17.4 s)
+**Area:** bookings · **Last result:** ✅ PASSED (65 passed, 0 failed · 2026-11-27 16:58 · headless · 18.4 s)
 
 **Run it alone:** `node run.mjs --only t114` (add `--visible` to watch it)
 
@@ -84,10 +84,10 @@ _Nothing failed._
 **Step 4 — C2. A coupon for the booking**
 
 - a 'Have a coupon?' box is on the page
-- the restaurant's table-booking offer is listed as a chip, the food-only coupon is not — _TBL533615_
+- the restaurant's table-booking offer is listed as a chip, the food-only coupon is not — _TBL875237_
 - a food-only coupon is refused with a clear message and the price stays ₹1,600 — _This coupon can't be used on a table booking._
 - an unknown code is refused with a message too — _That coupon code isn't recognised._
-- pressing the offer applies it: 'you save ₹200' — _TBL533615 — you save ₹200_
+- pressing the offer applies it: 'you save ₹200' — _TBL875237 — you save ₹200_
 - the box shows ₹1,600, the coupon − ₹200, and the booking amount after it: ₹1,400
 - the 50% advance follows the lower amount: ₹700 now, ₹700 + food & drinks at the restaurant — _₹700 / ₹700 + your food & drinks_
 - 3 guests: the coupon is worked out again (₹2,400 − ₹200 = ₹2,200, ₹1,100 now)
@@ -118,7 +118,7 @@ _Nothing failed._
 
 - the page says the request was received, with the time range and the party
 - …that ₹700 was paid and ₹700 is paid at the restaurant
-- …and the coupon line: 'saved you ₹200' — _Coupon TBL533615 saved you ₹200._
+- …and the coupon line: 'saved you ₹200' — _Coupon TBL875237 saved you ₹200._
 - …the event, and that the update comes on WhatsApp at the number given
 - the restaurant sees it: waiting for approval, ₹700 paid after the ₹200 coupon, the WhatsApp number, 2 hours, the note
 - the account page lists it: range, length, event, '₹700 paid in advance', waiting to be confirmed
@@ -126,7 +126,7 @@ _Nothing failed._
 **Step 8 — G. On a phone**
 
 - the page doesn't scroll sideways on a phone
-- the time list fits inside the phone screen — _{"x":31,"y":491.625,"width":300,"height":301.5625}_
+- the time list fits inside the phone screen — _{"x":31,"y":634.625,"width":300,"height":158.78125}_
 - …and so does the calendar — _{"x":31,"y":221.546875,"width":320,"height":392.796875}_
 - …and the event list
 - still no sideways scroll with a list open
@@ -136,6 +136,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-27 16:58 | pass | 65 | 0 | headless | 18.4 s |
 | 2026-11-27 12:09 | pass | 65 | 0 | headless | 17.4 s |
 | 2026-11-27 12:08 | pass | 65 | 0 | headless | 17.4 s |
 | 2026-11-27 12:07 | fail | 64 | 1 | headless | 17.5 s |

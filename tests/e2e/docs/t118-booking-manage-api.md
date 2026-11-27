@@ -1,6 +1,6 @@
 # T118 — Table bookings (the team's side): every upcoming booking in one list, a status changed by hand, an approve/decline/cancel message sent automatically, and coupons for bookings — the API
 
-**Area:** bookings · **Last result:** ✅ PASSED (80 passed, 0 failed · 2026-11-27 12:06 · headless · 9.4 s)
+**Area:** bookings · **Last result:** ✅ PASSED (80 passed, 0 failed · 2026-11-27 16:58 · headless · 12.8 s)
 
 **Run it alone:** `node run.mjs --only t118` (add `--visible` to watch it)
 
@@ -152,6 +152,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-27 16:58 | pass | 80 | 0 | headless | 12.8 s |
 | 2026-11-27 12:06 | pass | 80 | 0 | headless | 9.4 s |
 
 ---

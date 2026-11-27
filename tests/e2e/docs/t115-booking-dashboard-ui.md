@@ -1,6 +1,6 @@
 # T115 — Dashboard bookings: every upcoming booking in one list (the date is only a filter, chosen with our date picker), a status changed by hand, the approve / decline / cancel message window, refunds, and a coupon type with our date and time pickers
 
-**Area:** bookings · **Last result:** ✅ PASSED (61 passed, 0 failed · 2026-11-27 12:07 · headless · 11.3 s)
+**Area:** bookings · **Last result:** ✅ PASSED (61 passed, 0 failed · 2026-11-27 16:58 · headless · 12.1 s)
 
 **Run it alone:** `node run.mjs --only t115` (add `--visible` to watch it)
 
@@ -57,8 +57,8 @@ _Nothing failed._
 **Step 2 — Bookings: every upcoming booking, soonest first — no date to change**
 
 - the page opens on 'Upcoming' — no date to pick first
-- the five new bookings are all listed, soonest first (tomorrow 1 PM, tomorrow 7 PM, in 2 days, in 3 days, in 6 days) — _B-0027,B-0028,B-0029,B-0026,B-0025_
-- they are grouped under one heading per day, the days in order — _2026-11-28,2026-11-29,2026-11-30,2026-12-01,2026-12-02,2026-12-03_
+- the five new bookings are all listed, soonest first (tomorrow 1 PM, tomorrow 7 PM, in 2 days, in 3 days, in 6 days) — _B-0005,B-0006,B-0007,B-0004,B-0003_
+- they are grouped under one heading per day, the days in order — _2026-11-28,2026-11-29,2026-11-30,2026-12-03_
 - …the nearest says 'Tomorrow' — _TOMORROW · SAT 28 NOV \| SUN 29 NOV \| MON 30 NOV_
 - the counts cover the whole list, as the server counts it
 - there is NO browser date or time box on the page — only our own date picker
@@ -66,7 +66,7 @@ _Nothing failed._
 **Step 3 — The date is only a filter, chosen with our date picker**
 
 - the box reads 'Filter by date'
-- choosing a day shows just that day's bookings — _B-0002,B-0010,B-0019,B-0026_
+- choosing a day shows just that day's bookings — _B-0004_
 - …and a note says it is filtered
 - …with a 'Show all upcoming' button
 - it goes back to the full list
@@ -144,6 +144,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-27 16:58 | pass | 61 | 0 | headless | 12.1 s |
 | 2026-11-27 12:07 | pass | 61 | 0 | headless | 11.3 s |
 | 2026-11-27 12:07 | pass | 61 | 0 | headless | 11.4 s |
 | 2026-11-27 12:06 | fail | 60 | 1 | headless | 11.6 s |

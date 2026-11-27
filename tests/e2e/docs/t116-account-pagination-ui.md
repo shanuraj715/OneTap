@@ -1,6 +1,6 @@
 # T116 — Order history: five orders a page with the joined pagination (PAG03), numbered pages, newest first, '…' for many pages, removing orders on the last page
 
-**Area:** orders · **Last result:** ✅ PASSED (32 passed, 0 failed · 2026-11-27 12:08 · headless · 5.4 s)
+**Area:** orders · **Last result:** ✅ PASSED (32 passed, 0 failed · 2026-11-27 16:58 · headless · 6.9 s)
 
 **Run it alone:** `node run.mjs --only t116` (add `--visible` to watch it)
 
@@ -51,14 +51,14 @@ _Nothing failed._
 
 **Step 2 — The page: five orders and PAG03**
 
-- the Account page shows 5 orders to begin with, newest first — _0015,0014,0013,0012,0011_
+- the Account page shows 5 orders to begin with, newest first — _0012,0011,0010,0009,0008_
 - a page-number control sits under the list
 - it shows 1 2 3 (3 pages for 12 orders) — _1 2 3_
 - page 1 is marked as the current one
 - it is the joined control (PAG03): numbers in one bordered strip — _{"display":"flex","radius":"8px","border":"1px"}_
 - a line says 'Page 1 of 3 · 12 orders'
 - the old 'Show older orders' button is gone
-- pressing 2 shows the next 5 orders and marks 2 as current — _0010,0009,0008,0007,0006_
+- pressing 2 shows the next 5 orders and marks 2 as current — _0007,0006,0005,0004,0003_
 - …and the line says 'Page 2 of 3'
 - page 3 shows the last 2 orders
 - …and the current page is marked for screen readers (aria-current)
@@ -84,13 +84,14 @@ _Nothing failed._
 **Step 6 — Removing orders on the last page**
 
 - removing one order on page 3 leaves 1 there and the count says 11 orders
-- removing the last order there drops back to the new last page (2 of 2) — never an empty page — _0010,0009,0008,0007,0006_
+- removing the last order there drops back to the new last page (2 of 2) — never an empty page — _0007,0006,0005,0004,0003_
 - no errors in the browser
 
 ## History (latest 10 runs)
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-27 16:58 | pass | 32 | 0 | headless | 6.9 s |
 | 2026-11-27 12:08 | pass | 32 | 0 | headless | 5.4 s |
 | 2026-11-27 10:50 | pass | 32 | 0 | headless | 6.4 s |
 
