@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { FEATURES, FEATURE_KEYS, outletLimit, userLimit } from "./plan.js";
+import { FEATURES, FEATURE_KEYS, outletLimit, roundUpTables, TABLE_STEP, tableLimit, userLimit } from "./plan.js";
 import { planAllowances, wantedFeatures } from "./onboarding.js";
 
 /**
@@ -9,8 +9,8 @@ import { planAllowances, wantedFeatures } from "./onboarding.js";
  * a Custom plan — more than the biggest plan has. The price list says what each extra costs, per month in rupees before
  * GST, and the estimate adds those onto a plan's price: the price goes up in steps, it is never worked out from nothing.
  *
- *   • A standard plan  = that plan's price + each feature, outlet or person asked for beyond it.
- *   • The Custom plan  = the dearest standard plan's price (it has every feature) + each outlet / person beyond ITS limits.
+ *   • A standard plan  = that plan's price + each feature, outlet, person or block of 5 tables asked for beyond it.
+ *   • The Custom plan  = the dearest standard plan's price (it has every feature) + each outlet / person / block of 5 tables beyond ITS limits.
  *                        So Custom always costs more than every standard plan.
  */
 
@@ -48,6 +48,8 @@ export const pricingSchema = z.object({
   extraOutlet: money.default(250),
   /** per month, ₹, for each person (the owner counts) beyond what the plan allows */
   extraPerson: money.default(15),
+  /** per month, ₹, for each block of 5 tables beyond what the plan allows (tables are only ever sold in fives) */
+  extraTables: money.default(100),
   /** added on top of every price shown */
   gstPct: z.number().min(0).max(40).default(18),
 });
@@ -83,7 +85,13 @@ export function estimatePrice({ data, plan, plans, pricing }) {
   const want = Object.keys(wantedFeatures(data));
   const people = data.setup.teamCount + 1;
   const outlets = data.outlets.length;
+  // tables are priced per block of five: 12 tables are three blocks, so the next 5 above the plan's limit are charged as one
+  const tables = data.setup.tableCount > 0 ? roundUpTables(data.setup.tableCount) : 0;
   const add = (text, amount, detail) => lines.push({ label: text, amount: Math.round(amount), detail });
+  const tableLine = (need, have, planName) => {
+    const blocks = Math.ceil((need - have) / TABLE_STEP);
+    add(`${blocks} more ${blocks === 1 ? "block" : "blocks"} of ${TABLE_STEP} tables (${need} in all) × ${rupees(price.extraTables)}`, blocks * price.extraTables, `beyond the ${planName} plan's ${Number.isFinite(have) ? have : "any number of"} tables`);
+  };
   const featureLine = (key) => {
     const cost = price.features[key] ?? 0;
     if (!cost) notes.push(`${label(key)} has no price in the price list, so it adds ₹0.`);
@@ -98,14 +106,15 @@ export function estimatePrice({ data, plan, plans, pricing }) {
     if (!startPlan) {
       return { mode, planName: plan.name, lines: [], subtotal: 0, notes: ["Custom starts from your dearest plan — give your Basic and Pro plans a monthly price (Plans → edit → Website) and the estimate appears."], fits: [], unavailable: true };
     }
-    const startLimits = { outlets: outletLimit(startPlan.limits ?? {}), people: userLimit(startPlan.limits ?? {}) };
+    const startLimits = { outlets: outletLimit(startPlan.limits ?? {}), people: userLimit(startPlan.limits ?? {}), tables: tableLimit(startPlan.limits ?? {}) };
     const startFeatures = startPlan.entitlements?.features ?? FEATURE_KEYS;
-    add(`${startPlan.name} plan — ${startFeatures.length >= FEATURE_KEYS.length ? "every feature" : `${startFeatures.length} features`}, up to ${Number.isFinite(startLimits.outlets) ? startLimits.outlets : "any number of"} outlet${startLimits.outlets === 1 ? "" : "s"} and ${Number.isFinite(startLimits.people) ? startLimits.people : "any number of"} people`, monthlyOf(startPlan), "where Custom starts");
+    add(`${startPlan.name} plan — ${startFeatures.length >= FEATURE_KEYS.length ? "every feature" : `${startFeatures.length} features`}, up to ${Number.isFinite(startLimits.outlets) ? startLimits.outlets : "any number of"} outlet${startLimits.outlets === 1 ? "" : "s"}, ${Number.isFinite(startLimits.tables) ? startLimits.tables : "any number of"} tables and ${Number.isFinite(startLimits.people) ? startLimits.people : "any number of"} people`, monthlyOf(startPlan), "where Custom starts");
     for (const key of want) if (!startFeatures.includes(key)) featureLine(key);
     const needOutlets = Math.max(allow.maxOutlets, outlets);
     const needPeople = Math.max(allow.maxUsers, people);
     if (needOutlets > startLimits.outlets) add(`${needOutlets - startLimits.outlets} more outlet${needOutlets - startLimits.outlets === 1 ? "" : "s"} (${needOutlets} in all) × ${rupees(price.extraOutlet)}`, (needOutlets - startLimits.outlets) * price.extraOutlet, "beyond the " + startPlan.name + " plan");
     if (needPeople > startLimits.people) add(`${needPeople - startLimits.people} more ${needPeople - startLimits.people === 1 ? "person" : "people"} (${needPeople} in all) × ${rupees(price.extraPerson)}`, (needPeople - startLimits.people) * price.extraPerson, "beyond the " + startPlan.name + " plan");
+    if (allow.maxTables > startLimits.tables) tableLine(allow.maxTables, startLimits.tables, startPlan.name);
   } else {
     const base = monthlyOf(plan);
     if (!base) notes.push(`The ${plan.name} plan has no monthly price yet (Plans → edit → Website), so the estimate starts from ₹0.`);
@@ -113,6 +122,7 @@ export function estimatePrice({ data, plan, plans, pricing }) {
     for (const key of want) if (!allow.features.includes(key)) featureLine(key);
     if (outlets > allow.maxOutlets) add(`${outlets - allow.maxOutlets} extra outlet${outlets - allow.maxOutlets === 1 ? "" : "s"} × ${rupees(price.extraOutlet)}`, (outlets - allow.maxOutlets) * price.extraOutlet, `the plan allows ${allow.maxOutlets}`);
     if (people > allow.maxUsers) add(`${people - allow.maxUsers} extra ${people - allow.maxUsers === 1 ? "person" : "people"} × ${rupees(price.extraPerson)}`, (people - allow.maxUsers) * price.extraPerson, `the plan allows ${allow.maxUsers}`);
+    if (tables > allow.maxTables) tableLine(tables, allow.maxTables, plan.name);
   }
 
   const subtotal = lines.reduce((a, l) => a + l.amount, 0);
@@ -128,7 +138,7 @@ export function estimatePrice({ data, plan, plans, pricing }) {
   const fits = priced(plans)
     .filter((p) => {
       const a = planAllowances(p, data);
-      return want.every((k) => a.features.includes(k)) && outlets <= a.maxOutlets && people <= a.maxUsers;
+      return want.every((k) => a.features.includes(k)) && outlets <= a.maxOutlets && people <= a.maxUsers && tables <= a.maxTables;
     })
     .reverse()
     .map((p) => ({ id: p.id, name: p.name, monthly: monthlyOf(p) }));
@@ -156,13 +166,16 @@ export function priceSteps(plans, pricing) {
     const ob = outletLimit(b.limits ?? {});
     const ua = userLimit(a.limits ?? {});
     const ub = userLimit(b.limits ?? {});
-    const finite = Number.isFinite(ob) && Number.isFinite(oa) && Number.isFinite(ub) && Number.isFinite(ua);
+    const ta = tableLimit(a.limits ?? {});
+    const tb = tableLimit(b.limits ?? {});
+    const finite = Number.isFinite(ob) && Number.isFinite(oa) && Number.isFinite(ub) && Number.isFinite(ua) && Number.isFinite(tb) && Number.isFinite(ta);
     const outlets = finite ? Math.max(0, ob - oa) : null;
     const people = finite ? Math.max(0, ub - ua) : null;
+    const tableBlocksMore = finite ? Math.max(0, tb - ta) / TABLE_STEP : null;
     const featureCost = added.reduce((sum, k) => sum + (price.features[k] ?? 0), 0);
-    const rateCard = featureCost + (outlets ?? 0) * price.extraOutlet + (people ?? 0) * price.extraPerson;
+    const rateCard = featureCost + (outlets ?? 0) * price.extraOutlet + (people ?? 0) * price.extraPerson + (tableBlocksMore ?? 0) * price.extraTables;
     const planDifference = monthlyOf(b) - monthlyOf(a);
-    steps.push({ from: a.name, to: b.name, features: added.map(label), outlets, people, rateCard, planDifference, gap: planDifference - rateCard, comparable: finite });
+    steps.push({ from: a.name, to: b.name, features: added.map(label), outlets, people, tables: finite ? Math.max(0, tb - ta) : null, rateCard, planDifference, gap: planDifference - rateCard, comparable: finite });
   }
   return steps;
 }

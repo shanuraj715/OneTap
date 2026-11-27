@@ -1,4 +1,4 @@
-import { planMarketingSchema, planSchema } from "@rasoipulse/config-schema";
+import { PLAN_PRESETS, planMarketingSchema, planSchema } from "@rasoipulse/config-schema";
 import { connectDb, disconnectDb, PlanModel } from "@rasoipulse/db";
 import { env } from "../env.js";
 import { logger } from "../logger.js";
@@ -15,23 +15,14 @@ import { logger } from "../logger.js";
  *
  *   node src/scripts/seed-plans.js
  */
+/** What the website's Pricing shows for each plan (prices are in rupees; edit them in the console's Plans page afterwards). */
+const MARKETING = {
+  Starter: { show: true, monthly: 799, yearlyDiscount: 10, pitch: "Everything one outlet needs to take orders.", order: 10 },
+  Business: { show: true, monthly: 2499, yearlyDiscount: 10, highlight: true, pitch: "Every feature, up to three outlets and twenty people.", order: 20 },
+};
+
 const PLANS = [
-  {
-    name: "Basic",
-    description: "One outlet, a small team, the essentials.",
-    limits: { maxUsers: 5, multiOutlet: false, maxOutlets: 1 },
-    entitlements: { features: ["takeaway", "dineInQr", "coupons", "printing"], effects: ["glass", "neumorph"], qrCardFamilies: ["minimal", "headline", "frame"] },
-    // ₹999 a month; paying for the year up front takes 10% off (edit both in the console's Plans page)
-    marketing: { show: true, monthly: 999, yearlyDiscount: 10, pitch: "Everything one outlet needs to take orders.", order: 10 },
-  },
-  {
-    name: "Pro",
-    description: "Up to three outlets, delivery and every look.",
-    limits: { maxUsers: 20, multiOutlet: true, maxOutlets: 3 },
-    entitlements: {},
-    // ₹2,499 a month; 10% off for the year up front
-    marketing: { show: true, monthly: 2499, yearlyDiscount: 10, highlight: true, pitch: "Every feature, up to three outlets and twenty people.", order: 20 },
-  },
+  ...PLAN_PRESETS.map((p) => ({ name: p.names[0], description: p.description, limits: p.limits, entitlements: p.entitlements, marketing: MARKETING[p.names[0]] })),
   {
     name: "Custom",
     description: "Built around one restaurant — only the features and limits you agree on.",
@@ -49,7 +40,9 @@ const PLANS = [
 async function run() {
   await connectDb({ uri: env.MONGODB_URI, dbName: env.MONGODB_DB });
   for (const p of PLANS) {
-    if (await PlanModel.exists({ name: p.name })) {
+    // an install that already has the plan under an older name (Basic / Pro) keeps it: `update-plans.js` brings that one up to date
+    const known = PLAN_PRESETS.find((x) => x.names[0] === p.name)?.names ?? [p.name];
+    if (await PlanModel.exists({ name: { $in: known } })) {
       logger.info({ plan: p.name }, "Plan already exists — skipped");
       continue;
     }

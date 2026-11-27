@@ -62,7 +62,8 @@ const createBody = z.object({
 
 tablesRouter.post("/", async (req, res) => {
   const ctx = await requireOutletContext(req, "table:manage");
-  res.status(201).json({ table: await createTable(ctx, createBody.parse(req.body)) });
+  // the platform's own super admin may go past the plan's table limit; a store's team may not
+  res.status(201).json({ table: await createTable(ctx, createBody.parse(req.body), { asPlatform: Boolean(requireUser(req).isSuperAdmin) }) });
 });
 
 const updateBody = createBody.partial().extend({

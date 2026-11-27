@@ -124,6 +124,7 @@ export function renderOnboardingPdf({ form, data, plan }) {
     if (allow) {
       field("Outlets allowed", Number.isFinite(allow.maxOutlets) ? String(allow.maxOutlets) : "Unlimited");
       field("People allowed", Number.isFinite(allow.maxUsers) ? `${allow.maxUsers} (owner included)` : "Unlimited");
+      field("Tables allowed", Number.isFinite(allow.maxTables) ? String(allow.maxTables) : "Unlimited");
       if (allow.custom) field("Custom plan", "No fixed limits — the limits above were set for this client.");
     }
     const beyond = fit.issues.filter((i) => i.forced);
@@ -219,6 +220,7 @@ export function renderOnboardingPdf({ form, data, plan }) {
     field("About how many items", data.setup.itemCount);
     field("Kitchen printers", data.setup.printers);
     field("Team besides the owner", String(data.setup.teamCount));
+    field("Tables", data.setup.tableCount > 0 ? String(data.setup.tableCount) : "Not needed / not decided");
     field("Notes", data.setup.notes);
 
     ensure(120);

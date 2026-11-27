@@ -26,6 +26,7 @@ function useTableMutation   (outlet                    , fn                     
     mutationFn: (a   ) => fn(outlet , a),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["tables"] });
+      qc.invalidateQueries({ queryKey: ["store-plan"] }); // adding or removing a table changes "tables in use"
       qc.invalidateQueries({ queryKey: ["sessions"] });
       // moving or voiding a party changes its orders' table / status too
       qc.invalidateQueries({ queryKey: ["orders"] });

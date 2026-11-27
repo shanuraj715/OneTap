@@ -10,12 +10,13 @@ import {
                 
                      
 } from "@rasoipulse/db";
-import { normalizeTableStatus } from "@rasoipulse/config-schema";
+import { normalizeTableStatus, tableLimit } from "@rasoipulse/config-schema";
 import { env } from "../../env.js";
 import { safeEqual } from "../../lib/crypto.js";
 import { HttpError } from "../../middleware/error.js";
 import { cancelOrdersForSession } from "../orders/orders.service.js";
 import { assertOutletOpen } from "../outlets/config.service.js";
+import { invalidateStoreUsage, storePlan } from "../platform/plan.service.js";
 
 /* ---------------------------------------------------------------------- QR */
 
@@ -78,7 +79,22 @@ async function sameNumber(ctx, number, exceptId) {
     .lean();
 }
 
-export async function createTable(ctx               , input                                                   ) {
+/**
+ * The plan decides how many tables a store may have, all its outlets together (sold in fives: 5, 10, 15 …). The count is read fresh — a store
+ * adding tables one after another must never get ahead of a remembered number. The platform itself can always add.
+ */
+const tableLimitError = (max) => new HttpError(409, `Your plan allows ${max} tables and all are in use. Remove a table, or ask Rasoi Pulse to add more (tables are added 5 at a time).`, { code: "table_limit" });
+
+/** The store's table limit (`Infinity` when it has none); throws when the store is already full. */
+async function assertRoomForTable(ctx) {
+  const plan = await storePlan(ctx.brandId);
+  const max = tableLimit(plan.limits);
+  if (Number.isFinite(max) && (await TableModel.countDocuments({ brandId: ctx.brandId })) >= max) throw tableLimitError(max);
+  return max;
+}
+
+export async function createTable(ctx               , input                                                   , { asPlatform = false } = {}) {
+  const max = asPlatform ? Infinity : await assertRoomForTable(ctx);
   const twin = await sameNumber(ctx, input.number);
   if (twin) {
     throw new HttpError(409, twin.number === input.number ? `Table ${twin.number} already exists.` : `Table ${twin.number} already exists — table numbers don't care about capital letters, so "${input.number}" is the same table.`);
@@ -92,6 +108,13 @@ export async function createTable(ctx               , input                     
     seats: input.seats ?? 4,
     qrSecret: randomBytes(16).toString("base64url"),
   });
+  // Several tables added in the same instant all see room before any is saved. So once saved, a table keeps its place only if it is among the first
+  // `max` of the store (by creation order); the ones past that are taken back out. Nobody is turned away who should have fitted.
+  if (Number.isFinite(max) && (await TableModel.countDocuments({ brandId: ctx.brandId, _id: { $lte: doc._id } })) > max) {
+    await TableModel.deleteOne(tenantFilter(ctx, { _id: doc._id }));
+    throw tableLimitError(max);
+  }
+  invalidateStoreUsage(ctx.brandId); // the store's "tables in use" changed
   return shape(doc.toObject());
 }
 
@@ -114,6 +137,7 @@ export async function deleteTable(ctx               , id        ) {
   if (!table) throw new HttpError(404, "Table not found");
   if (table.activeSessionId) throw new HttpError(409, "Close the open session before removing this table");
   await TableModel.deleteOne(tenantFilter(ctx, { _id: id }));
+  invalidateStoreUsage(ctx.brandId);
 }
 
 /** Rotating the secret kills every QR already printed for this table. */

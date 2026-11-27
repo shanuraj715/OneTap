@@ -6,6 +6,7 @@ import { formatINR, TABLE_STATUS_LABELS,                              } from "@r
 import { getTableQr, rotateTableQr,                    } from "../lib/api";
 import { useAuth } from "../lib/useAuth";
 import { useOutlet } from "../lib/useOutlet";
+import { useStorePlan } from "../lib/useStorePlan";
 import {
   useActiveSessions,
   useCloseSession,
@@ -27,6 +28,7 @@ export function Tables() {
   const sessions = useActiveSessions(outlet, canRead);
   const create = useCreateTable(outlet);
   const remove = useDeleteTable(outlet);
+  const { canAddTable, tableLimitReason, tables: tableUsage } = useStorePlan();
   const [form, setForm] = useState({ number: "", zone: "", seats: "4" });
   const [formError, setFormError] = useState(null);
   useEffect(() => setFormError(null), [form]); // typing in a box takes the old complaint away
@@ -85,7 +87,15 @@ export function Tables() {
       ))}
 
       {canManage ? (
-        <Card title="Add a table">
+        <Card
+          title="Add a table"
+          subtitle={tableUsage?.max != null ? `${tableUsage.used} of ${tableUsage.max} tables used (all outlets together)` : undefined}
+        >
+          {!canAddTable ? (
+            <div data-testid="table-limit-note" role="alert" style={{ marginBottom: 12, padding: "9px 12px", borderRadius: 8, fontSize: 13, background: "var(--tone-warning-wash)", color: "var(--tone-warning)" }}>
+              {tableLimitReason}
+            </div>
+          ) : null}
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -106,7 +116,7 @@ export function Tables() {
             <Field label="Zone" info="Groups tables on this screen — Ground, Terrace, AC Hall. Purely for finding a table quickly during service; diners never see it."><TextInput value={form.zone} placeholder="Ground" onChange={(e) => setForm({ ...form, zone: e.target.value })} style={{ width: 140 }} /></Field>
             <Field label="Seats" info="How many people the table takes. Used when deciding where to move a party, so a group of six is not offered a two-seater."><TextInput type="number" value={form.seats} onChange={(e) => setForm({ ...form, seats: e.target.value })} style={{ width: 80 }} /></Field>
             <div style={{ marginBottom: 14 }}>
-              <Button type="submit" disabled={create.isPending}>{create.isPending ? "Adding…" : "Add table"}</Button>
+              <Button type="submit" disabled={create.isPending || !canAddTable} title={canAddTable ? undefined : tableLimitReason ?? undefined}>{create.isPending ? "Adding…" : "Add table"}</Button>
             </div>
           </form>
           {formError ? <Toast kind="error">{formError}</Toast> : null}

@@ -37,6 +37,7 @@ export function PublishDialog({ formId, data, plan, allow, base, onClose }) {
   const limits = [];
   if (extras.limits.maxOutlets && !allow.custom) limits.push(`${extras.limits.maxOutlets} outlets`);
   if (extras.limits.maxUsers && !allow.custom && extras.limits.maxUsers > allow.maxUsers) limits.push(`${extras.limits.maxUsers} people`);
+  if (extras.limits.maxTables && !allow.custom && extras.limits.maxTables > allow.maxTables) limits.push(`${extras.limits.maxTables} tables`);
   const address = onboardingSubdomain(data);
   const problem = publish.error?.message;
 

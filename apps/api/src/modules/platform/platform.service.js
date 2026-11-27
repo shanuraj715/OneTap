@@ -1,4 +1,4 @@
-import { CUSTOM_PLAN_BASE, hasFeature, planMarketingSchema, planOverridesSchema, planSchema } from "@rasoipulse/config-schema";
+import { CUSTOM_PLAN_BASE, FEATURE_KEYS, hasFeature, planMarketingSchema, planOverridesSchema, planSchema, roundUpTables } from "@rasoipulse/config-schema";
 import {
   BrandModel,
   MenuCategoryModel,
@@ -23,7 +23,7 @@ import { expireStore } from "../cache/cache.js";
 import { savePlatformConfig } from "../cache/platform-config.js";
 import { ensureOwner } from "../auth/auth.service.js";
 import { hashPassword } from "../auth/password.js";
-import { countActiveOutlets, countActiveUsers, invalidateStorePlan, platformSettings, storePlan } from "./plan.service.js";
+import { countActiveOutlets, countActiveUsers, countTables, invalidateStorePlan, platformSettings, storePlan } from "./plan.service.js";
 import { configuredBase, normalizeHostnames, setStoreDomains, storeDomains } from "../outlets/domains.js";
 import { assertStoreMayAddDomains, removeStoreSubdomain, setStoreSubdomain, subdomainInfo } from "../outlets/subdomains.js";
 import { notifyWebsite } from "../site/revalidate.js";
@@ -40,7 +40,9 @@ import { enforceWhatsAppPlan } from "../whatsapp/whatsapp.service.js";
 /** A custom plan stores nothing of its own — its stores' settings are all there is. */
 const planData = (input) => {
   const data = planSchema.parse(input);
-  return data.custom ? { ...data, limits: { ...CUSTOM_PLAN_BASE.limits }, entitlements: { features: [], effects: [], qrCardFamilies: [] } } : data;
+  if (data.custom) return { ...data, limits: { ...CUSTOM_PLAN_BASE.limits }, entitlements: { allFeatures: false, features: [], effects: [], qrCardFamilies: [] } };
+  // a plan that includes every feature always carries today's full list (what the console and the website read), whatever it was saved with
+  return data.entitlements.allFeatures ? { ...data, entitlements: { ...data.entitlements, features: [...FEATURE_KEYS] } } : data;
 };
 
 const shapePlan = (p, storeCount = 0) => ({
@@ -226,18 +228,19 @@ export async function removeSubdomain(id) {
 
 /**
  * A store on a custom plan always carries its own limits. Any it's missing
- * are set to what it uses right now (at least the owner and one outlet), so
- * putting a store on a custom plan never pushes it over its limits.
+ * are set to what it uses right now (at least the owner and one outlet, and
+ * its tables rounded up to the next five), so putting a store on a custom
+ * plan never pushes it over its limits.
  */
 async function fillCustomLimits(brand) {
   if (!brand.planId) return;
   const plan = await PlanModel.findById(brand.planId).select("custom").lean();
   if (!plan?.custom) return;
   const o = planOverridesSchema.parse(brand.overrides ?? {});
-  const missing = ["maxUsers", "multiOutlet", "maxOutlets"].filter((k) => o.limits[k] === undefined);
+  const missing = ["maxUsers", "multiOutlet", "maxOutlets", "maxTables"].filter((k) => o.limits[k] === undefined);
   if (!missing.length) return;
-  const [users, outlets] = await Promise.all([countActiveUsers(brand._id), countActiveOutlets(brand._id)]);
-  const now = { maxUsers: Math.max(1, users), multiOutlet: outlets > 1, maxOutlets: Math.max(1, outlets) };
+  const [users, outlets, tables] = await Promise.all([countActiveUsers(brand._id), countActiveOutlets(brand._id), countTables(brand._id)]);
+  const now = { maxUsers: Math.max(1, users), multiOutlet: outlets > 1, maxOutlets: Math.max(1, outlets), maxTables: roundUpTables(tables) };
   for (const k of missing) o.limits[k] = now[k];
   brand.overrides = o;
   brand.markModified("overrides");

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { EFFECT_IDS } from "./effect.js";
-import { FEATURES, FEATURE_KEYS, outletLimit, resolvePlan } from "./plan.js";
+import { FEATURES, FEATURE_KEYS, outletLimit, resolvePlan, roundUpTables, TABLE_STEP, tableLimit } from "./plan.js";
 import { FONT_FAMILIES } from "./typography.js";
 import { isReservedOutletSlug, slugSchema } from "./slug.js";
 
@@ -142,6 +142,8 @@ export const onboardingSchema = z.object({
     .object({
       maxOutlets: z.number().int().min(1).max(500).default(1),
       maxUsers: z.number().int().min(1).max(5000).default(3),
+      /** tables, in steps of 5 */
+      maxTables: z.number().int().min(TABLE_STEP).max(5000).default(TABLE_STEP),
     })
     .default({}),
   business: z
@@ -207,6 +209,8 @@ export const onboardingSchema = z.object({
       itemCount: text(20),
       printers: text(120),
       teamCount: z.number().int().min(0).max(500).default(0),
+      /** tables the client will have (all outlets together), in steps of 5; 0 = not known / no tables */
+      tableCount: z.number().int().min(0).max(5000).default(0),
       notes: text(2000),
     })
     .default({}),
@@ -263,6 +267,7 @@ export function planAllowances(planDoc, data) {
       custom: true,
       maxOutlets: Math.max(data.customLimits.maxOutlets, data.outlets.length || 1),
       maxUsers: Math.max(data.customLimits.maxUsers, data.setup.teamCount + 1),
+      maxTables: Math.max(roundUpTables(data.customLimits.maxTables), roundUpTables(data.setup.tableCount)),
       features: null,
       effects: null,
     };
@@ -273,6 +278,7 @@ export function planAllowances(planDoc, data) {
     custom: false,
     maxOutlets: outletLimit(limits),
     maxUsers: limits.maxUsers ?? Infinity,
+    maxTables: tableLimit(limits),
     features: entitlements.features,
     effects: entitlements.effects,
   };
@@ -324,6 +330,13 @@ export function planFit(data, allow) {
         message: `The ${planName} plan allows ${count(allow.maxUsers, "person", "people")} (owner included) and this form expects ${data.setup.teamCount + 1}. Reduce the team, choose another plan, or add the extra people for this client.`,
       });
     }
+    if (roundUpTables(data.setup.tableCount) > allow.maxTables && data.setup.tableCount > 0) {
+      add({
+        id: "tables",
+        kind: "tables",
+        message: `The ${planName} plan allows ${count(allow.maxTables, "table", "tables")} and this form has ${data.setup.tableCount}. Reduce the tables, choose another plan, or add the extra ones for this client (tables are added 5 at a time).`,
+      });
+    }
   }
   return { issues, blocking: issues.some((i) => !i.forced) };
 }
@@ -338,7 +351,7 @@ export function forcedOverrides(data, allow) {
   const wanted = Object.keys(wantedFeatures(data));
   if (allow.custom) {
     overrides.entitlements.features.unlock = wanted;
-    overrides.limits = { maxOutlets: allow.maxOutlets, multiOutlet: allow.maxOutlets > 1, maxUsers: allow.maxUsers };
+    overrides.limits = { maxOutlets: allow.maxOutlets, multiOutlet: allow.maxOutlets > 1, maxUsers: allow.maxUsers, maxTables: allow.maxTables };
     if (data.look.effect !== "none") overrides.entitlements.effects.unlock = [data.look.effect];
     return overrides;
   }
@@ -346,6 +359,7 @@ export function forcedOverrides(data, allow) {
   if (!planHasEffect(allow, data.look.effect)) overrides.entitlements.effects.unlock = [data.look.effect];
   if (data.outlets.length > allow.maxOutlets) overrides.limits = { ...overrides.limits, multiOutlet: true, maxOutlets: data.outlets.length };
   if (data.setup.teamCount + 1 > allow.maxUsers) overrides.limits = { ...overrides.limits, maxUsers: data.setup.teamCount + 1 };
+  if (data.setup.tableCount > 0 && roundUpTables(data.setup.tableCount) > allow.maxTables) overrides.limits = { ...overrides.limits, maxTables: roundUpTables(data.setup.tableCount) };
   return overrides;
 }
 

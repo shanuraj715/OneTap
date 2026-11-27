@@ -94,7 +94,7 @@ export async function openPlatform(d, path = "") {
  * Plans → New plan → fill the form → Save plan.
  *   features: caption list to tick (exact captions from the plan form), or "all"
  */
-export async function createPlan(d, { name, description = "", custom = false, people, multiOutlet = false, outlets, features = [], monthly, yearly }) {
+export async function createPlan(d, { name, description = "", custom = false, people, tables, multiOutlet = false, outlets, features = [], monthly, yearly }) {
   await openPlatform(d, "/plans");
   await d.click(d.page.getByRole("button", { name: "New plan" }));
   const form = d.page.locator("form, [role=dialog]").filter({ has: d.page.getByRole("button", { name: "Save plan" }) }).last();
@@ -103,6 +103,8 @@ export async function createPlan(d, { name, description = "", custom = false, pe
   if (custom) { await tick(d, "Custom plan", true, form); }
   else {
     if (people) { await tick(d, "Unlimited", false, form).catch(() => {}); await fill(d, "People (owners included)", people, form); }
+    // tables go up in fives; a new plan starts with 5. A typed number is rounded up when the box is left (Tab).
+    if (tables) { await fill(d, "Tables", tables, form); await d.page.keyboard.press("Tab"); }
     await tick(d, "Multi-outlet", multiOutlet, form);
     if (multiOutlet && outlets) await fill(d, "Outlets", outlets, form);
     // the form starts with every feature ticked: set EACH box to exactly what this plan should have

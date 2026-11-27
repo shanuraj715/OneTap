@@ -139,7 +139,7 @@ export async function run(d, h) {
     d.check("the disabled Publish button is visibly greyed out (faded, grey, 'not-allowed' pointer)", /grayscale/.test(greyed.filter) && greyed.opacity < 0.7 && greyed.cursor === "not-allowed", JSON.stringify(greyed));
     d.check("and next to it says how much is left: '… things to finish before it can be published'", /things? to finish before it can be published/.test(await d.page.locator("[data-blocked-hint]").innerText()));
     await ui.pick(d, "Plan", "Starter");
-    d.check("choosing Starter shows what it includes: 'Up to 1 outlet and 3 people'", /Up to 1 outlet and 3 people/.test(await d.page.locator("[data-plan-summary]").innerText()), await d.page.locator("[data-plan-summary]").innerText());
+    d.check("choosing Starter shows what it includes: 'Up to 1 outlet, 5 tables and 3 people'", /Up to 1 outlet, 5 tables and 3 people/.test(await d.page.locator("[data-plan-summary]").innerText()), await d.page.locator("[data-plan-summary]").innerText());
     d.check("Coupons (in the plan) is a plain tick box", (await stateOf(feat("Coupons"))) === "included");
     for (const f of ["Marketing", "Analytics & reports", "Own favicon", "Coin wallet", "Printing", "WhatsApp chat"]) {
       d.check(`${f} is locked — 'Not in the Starter plan'`, (await stateOf(feat(f))) === "locked" && /Not in the Starter plan/.test(await feat(f).innerText()));
@@ -155,7 +155,7 @@ export async function run(d, h) {
 
     // ------------------------------------------------------------------------------------------------------------- 3
     await d.step("Asking for more than the plan: error alerts, and 'Add … for this client'");
-    d.check("'Total outlets' is a − / + stepper: at 1 the − is greyed out", await d.page.getByRole("button", { name: "One fewer outlet" }).isDisabled() && (await d.page.locator("[data-stepper]").count()) === 1);
+    d.check("'Total outlets' is a − / + stepper: at 1 the − is greyed out", await d.page.getByRole("button", { name: "One fewer outlet" }).isDisabled() && (await d.page.locator("[data-stepper]").count()) === 2 /* the outlets box, and the tables box further down */);
     await d.click(d.page.getByRole("button", { name: "One more outlet" }), { after: 300 });
     d.check("+ adds an outlet card (2 cards, the box says 2)", (await d.page.locator("[data-outlet-card]").count()) === 2 && (await d.page.getByLabel("Total outlets", { exact: true }).inputValue()) === "2");
     await d.click(d.page.getByRole("button", { name: "One fewer outlet" }), { after: 300 });

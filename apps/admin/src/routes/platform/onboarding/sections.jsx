@@ -17,6 +17,8 @@ import {
   planHasEffect,
   planHasFeature,
   slugifyName,
+  roundUpTables,
+  TABLE_STEP,
 } from "@rasoipulse/config-schema";
 import { MapPin, Trash2 } from "lucide-react";
 import * as api from "../../../lib/api";
@@ -68,13 +70,16 @@ export function PlanSection({ data, P, ctx }) {
             <Field label="People for this client" info="Everyone who can sign in to the store, the owner included.">
               <TextInput type="number" min={1} max={5000} value={data.customLimits.maxUsers} onChange={(e) => P("customLimits.maxUsers", Math.max(1, Math.round(Number(e.target.value) || 1)))} />
             </Field>
+            <Field label="Tables for this client" info={`All outlets together. Tables are sold in fives: ${TABLE_STEP}, 10, 15 …`}>
+              <Stepper value={data.customLimits.maxTables} onChange={(n) => P("customLimits.maxTables", n)} min={TABLE_STEP} max={5000} step={TABLE_STEP} label="five tables" plural="tables for this client" />
+            </Field>
           </>
         ) : null}
       </div>
       {chosen ? (
         <p style={{ ...subtle, marginTop: 10 }} data-plan-summary>
           {chosen.description ? `${chosen.description} · ` : ""}
-          {allow.custom ? "Custom plan: the client gets exactly the limits above and the features ticked below." : `Up to ${Number.isFinite(allow.maxOutlets) ? allow.maxOutlets : "unlimited"} outlet${allow.maxOutlets === 1 ? "" : "s"} and ${Number.isFinite(allow.maxUsers) ? allow.maxUsers : "unlimited"} ${allow.maxUsers === 1 ? "person" : "people"}.`}
+          {allow.custom ? "Custom plan: the client gets exactly the limits above and the features ticked below." : `Up to ${Number.isFinite(allow.maxOutlets) ? allow.maxOutlets : "unlimited"} outlet${allow.maxOutlets === 1 ? "" : "s"}, ${Number.isFinite(allow.maxTables) ? allow.maxTables : "unlimited"} tables and ${Number.isFinite(allow.maxUsers) ? allow.maxUsers : "unlimited"} ${allow.maxUsers === 1 ? "person" : "people"}.`}
         </p>
       ) : null}
     </Card>
@@ -514,8 +519,12 @@ export function AddressSection({ data, P, ctx }) {
   );
 }
 
-export function SetupSection({ data, P }) {
+export function SetupSection({ data, P, ctx, disabled }) {
   const s = data.setup;
+  const allow = ctx?.allow;
+  const tables = s.tableCount;
+  const overTables = Boolean(allow) && !allow.custom && tables > 0 && roundUpTables(tables) > allow.maxTables;
+  const forceTables = data.forced.includes("tables");
   return (
     <Card title="9 · Setting up" subtitle="What the client will need help with.">
       <div style={grid}>
@@ -530,7 +539,25 @@ export function SetupSection({ data, P }) {
         <Field label="Team members besides the owner" info="Counted against the plan's people limit.">
           <TextInput type="number" min={0} max={500} value={s.teamCount} onChange={(e) => P("setup.teamCount", Math.max(0, Math.round(Number(e.target.value) || 0)))} aria-label="Team members besides the owner" />
         </Field>
+        <Field label="Tables" info={`How many tables the client has, all outlets together. Tables are sold in fives (${TABLE_STEP}, 10, 15 …); 0 = not needed.`}>
+          <div data-tables-field>
+            <Stepper value={tables} onChange={(n) => P("setup.tableCount", n)} min={0} max={5000} step={TABLE_STEP} label="five tables" plural="tables" disabled={disabled} />
+          </div>
+        </Field>
       </div>
+      {overTables ? (
+        <div data-extra-tables style={{ marginTop: 10 }}>
+          <Alert tone={forceTables ? "warn" : "error"}>
+            {forceTables
+              ? `Added for this client: the ${allow.name} plan allows ${allow.maxTables} tables; ${roundUpTables(tables)} will be allowed.`
+              : `The ${allow.name} plan allows ${allow.maxTables} tables and this form has ${tables}. Reduce the tables, choose another plan, or add the extra ones for this client.`}
+          </Alert>
+          <label style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 13, marginTop: 8, cursor: "pointer" }}>
+            <input type="checkbox" checked={forceTables} onChange={(e) => ctx.forceFlag("tables", e.target.checked)} disabled={disabled} aria-label="Add extra tables for this client" style={{ width: 16, height: 16, accentColor: "var(--color-primary)", margin: 0 }} />
+            Add the extra tables for this client{ctx.pricing?.extraTables ? <span style={{ color: "var(--color-text-muted)" }}> · +₹{ctx.pricing.extraTables} a month for every 5</span> : null}
+          </label>
+        </div>
+      ) : null}
       <Field label="Anything else to know" style={{ marginTop: 14 }}>
         <textarea value={s.notes} onChange={(e) => P("setup.notes", e.target.value)} style={area} maxLength={2000} />
       </Field>

@@ -503,6 +503,12 @@ function CompareTable({ plans }) {
               ))}
             </tr>
             <tr>
+              <th scope="row">Tables</th>
+              {plans.map((p) => (
+                <td key={p.id}>{p.compare.tables ?? "—"}</td>
+              ))}
+            </tr>
+            <tr>
               <th scope="row">Staff logins</th>
               {plans.map((p) => (
                 <td key={p.id}>{p.compare.staff}</td>

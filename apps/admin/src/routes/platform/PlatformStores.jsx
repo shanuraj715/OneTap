@@ -221,6 +221,7 @@ export function PlatformStores() {
                   </div>
                   <Meter label="People" used={s.usage.users} max={s.max.users} />
                   <Meter label="Outlets" used={s.usage.outlets} max={s.max.outlets} />
+                  <Meter label="Tables" used={s.usage.tables} max={s.max.tables} />
                   {/* a fixed width, so a longer pill ("Disabled Nov 15, 2026") doesn't push this row's columns out of line with the others */}
                   <div style={{ display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "flex-end", width: 176, flexShrink: 0 }}>
                     {s.disabled ? <DisabledPill store={s} withDate /> : <StatusPill store={s} />}

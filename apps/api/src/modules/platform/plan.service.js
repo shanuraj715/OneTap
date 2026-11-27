@@ -1,5 +1,5 @@
-import { outletLimit, resolvePlan, userLimit } from "@rasoipulse/config-schema";
-import { BrandModel, OutletModel, PlanModel, UserModel } from "@rasoipulse/db";
+import { outletLimit, resolvePlan, tableLimit, userLimit } from "@rasoipulse/config-schema";
+import { BrandModel, OutletModel, PlanModel, TableModel, UserModel } from "@rasoipulse/db";
 import { HttpError } from "../../middleware/error.js";
 import { cache } from "../cache/cache.js";
 import { platformConfig } from "../cache/platform-config.js";
@@ -28,6 +28,14 @@ export function invalidateStorePlan(brandId) {
   else cache.expireTags(["ns:plan", "ns:store", "ns:site", "ns:dash"]);
 }
 
+/**
+ * One store's "how much it uses" changed (a table was added or removed) — drop only that store's remembered plan answer. (Not `invalidateStorePlan`,
+ * which expires everything remembered about the store: its menu, settings and offers would all be read from the database again.)
+ */
+export function invalidateStoreUsage(brandId) {
+  cache.expireKey(`plan:${String(brandId)}`);
+}
+
 export async function platformSettings() {
   const { graceDays, realtimeWebsocket } = await platformConfig();
   return { graceDays, realtimeWebsocket };
@@ -46,6 +54,11 @@ export function countActiveOutlets(brandId) {
   return OutletModel.countDocuments({ brandId: String(brandId), blocked: null });
 }
 
+/** Tables counted toward the limit: every table of the store, in every outlet, switched on or off. */
+export function countTables(brandId) {
+  return TableModel.countDocuments({ brandId: String(brandId) });
+}
+
 export function storePlan(brandId) {
   const key = String(brandId);
   return cache.wrap(`plan:${key}`, () => loadStorePlan(key), { maxAgeMs: PLAN_MS, tags: [`brand:${key}`, "ns:plan"] });
@@ -57,10 +70,12 @@ async function loadStorePlan(key) {
 
   const plan = brand.planId ? await PlanModel.findById(brand.planId).lean() : null;
   const { limits, entitlements } = resolvePlan(plan, brand.overrides);
-  const [users, outlets, settings] = await Promise.all([countActiveUsers(key), countActiveOutlets(key), platformSettings()]);
+  const [users, outlets, tables, settings] = await Promise.all([countActiveUsers(key), countActiveOutlets(key), countTables(key), platformSettings()]);
 
   const maxUsers = userLimit(limits);
   const maxOutlets = outletLimit(limits);
+  const maxTables = tableLimit(limits);
+  // (tables are not part of `over`: unlike outlets and people they can't be blocked, so a store with too many just can't add more)
   const over = users > maxUsers || outlets > maxOutlets;
 
   // Stamp the moment a store first goes over, and clear it once it's back
@@ -85,8 +100,8 @@ async function loadStorePlan(key) {
     disabled: brand.disabled ? { at: brand.disabled.at, message: brand.disabled.message ?? "" } : null,
     limits,
     entitlements,
-    usage: { users, outlets },
-    max: { users: Number.isFinite(maxUsers) ? maxUsers : null, outlets: Number.isFinite(maxOutlets) ? maxOutlets : null },
+    usage: { users, outlets, tables },
+    max: { users: Number.isFinite(maxUsers) ? maxUsers : null, outlets: Number.isFinite(maxOutlets) ? maxOutlets : null, tables: Number.isFinite(maxTables) ? maxTables : null },
     grace: { over, since, until, ended: Boolean(until && Date.now() > until.getTime()), days: settings.graceDays },
   };
 }

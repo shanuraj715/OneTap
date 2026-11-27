@@ -245,6 +245,7 @@ function planLines(plan) {
   const ent = entitlementsSchema.parse(plan.entitlements ?? {});
   const lines = [];
   lines.push(limits.multiOutlet ? (limits.maxOutlets === null ? "Unlimited outlets" : `Up to ${limits.maxOutlets} outlets`) : "1 outlet");
+  lines.push(limits.maxTables === null ? "Unlimited tables" : `Up to ${limits.maxTables} tables`);
   lines.push(limits.maxUsers === null ? "Unlimited staff logins" : `Up to ${limits.maxUsers} staff logins`);
   for (const f of FEATURES) if (ent.features.includes(f.key)) lines.push(f.label);
   if (ent.effects.filter((e) => e !== "none").length) lines.push(`${ent.effects.filter((e) => e !== "none").length} storefront styles`);
@@ -253,11 +254,12 @@ function planLines(plan) {
 
 /** One plan's row values for the comparison table: limits in words, and which features it has. */
 function planCompare(plan) {
-  if (plan.custom) return { custom: true, outlets: "As you need", staff: "As you need", styles: 0, features: [] };
+  if (plan.custom) return { custom: true, outlets: "As you need", tables: "As you need", staff: "As you need", styles: 0, features: [] };
   const limits = planLimitsSchema.parse(plan.limits ?? {});
   const ent = entitlementsSchema.parse(plan.entitlements ?? {});
   return {
     outlets: limits.multiOutlet ? (limits.maxOutlets === null ? "Unlimited" : `Up to ${limits.maxOutlets}`) : "1",
+    tables: limits.maxTables === null ? "Unlimited" : `Up to ${limits.maxTables}`,
     staff: limits.maxUsers === null ? "Unlimited" : `Up to ${limits.maxUsers}`,
     styles: ent.effects.filter((e) => e !== "none").length,
     features: ent.features,

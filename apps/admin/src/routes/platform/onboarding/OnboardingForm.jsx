@@ -256,7 +256,7 @@ export function OnboardingForm() {
           <CommonSection data={data} P={P} ctx={ctx} />
           <LookSection data={data} P={P} ctx={ctx} />
           <AddressSection data={data} P={P} ctx={ctx} />
-          <SetupSection data={data} P={P} />
+          <SetupSection data={data} P={P} ctx={ctx} disabled={readOnly} />
         </fieldset>
 
         <aside style={{ flex: "0 0 310px", position: "sticky", top: 64, display: "flex", flexDirection: "column", gap: 14 }}>

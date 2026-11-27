@@ -54,7 +54,42 @@ export const FEATURES = [
 ];
 export const FEATURE_KEYS = FEATURES.map((f) => f.key);
 
+/**
+ * Features that do nothing without another one. A plan (or a Custom store's unlocks) that has the first but not the second is a mistake the
+ * console warns about: the customer would pay for something that can't work. `featureProblems` lists them in plain words.
+ */
+export const FEATURE_REQUIRES = Object.freeze({
+  delivery: [["onlinePayments", "delivery orders are paid online"]],
+  scheduledOrders: [["takeaway", "pre-orders are for takeaway"]],
+  cartReminders: [["notifications", "a reminder is sent as a WhatsApp or SMS message"]],
+  marketing: [["notifications", "offers are sent as WhatsApp or SMS messages"]],
+});
+
+/** What is wrong with a set of features: [{ feature, needs, why, text }] (empty = fine). */
+export function featureProblems(keys) {
+  const have = new Set(keys);
+  const label = (k) => FEATURES.find((f) => f.key === k)?.label ?? k;
+  const out = [];
+  for (const [feature, needs] of Object.entries(FEATURE_REQUIRES)) {
+    if (!have.has(feature)) continue;
+    for (const [need, why] of needs) if (!have.has(need)) out.push({ feature, needs: need, why, text: `${label(feature)} needs ${label(need)} (${why}).` });
+  }
+  return out;
+}
+
 export const QR_CARD_FAMILY_IDS = CARD_TEMPLATE_FAMILIES.map((f) => f.id);
+
+/**
+ * Tables are sold in blocks of five: a plan offers 5, 10, 15 … tables, never 12 or 19, and the price list charges per block of five.
+ * (A restaurant with 12 tables is on the 15 plan — the limit is a size, not a count.)
+ */
+export const TABLE_STEP = 5;
+
+/** How many blocks of five cover `tables` tables (12 → 3). */
+export const tableBlocks = (tables) => Math.ceil(Math.max(0, tables) / TABLE_STEP);
+
+/** The smallest allowed table limit that holds `tables` (never below one block): 0 → 5, 5 → 5, 12 → 15. */
+export const roundUpTables = (tables) => Math.max(1, tableBlocks(tables)) * TABLE_STEP;
 
 /** `null` means unlimited. */
 export const planLimitsSchema = z.object({
@@ -63,9 +98,23 @@ export const planLimitsSchema = z.object({
   /** off → the store is capped at one outlet, whatever maxOutlets says */
   multiOutlet: z.boolean().default(true),
   maxOutlets: z.number().int().min(1).nullable().default(null),
+  /** tables in the whole store (every outlet together), in steps of 5; `null` = unlimited */
+  maxTables: z
+    .number()
+    .int()
+    .min(TABLE_STEP, `A plan has at least ${TABLE_STEP} tables.`)
+    .max(5000, "That is more tables than a plan can hold.")
+    .refine((n) => n % TABLE_STEP === 0, `Tables go up in fives: 5, 10, 15, 20 …`)
+    .nullable()
+    .default(null),
 });
 
 export const entitlementsSchema = z.object({
+  /**
+   * On: the plan includes EVERY feature, also the ones added to the product later (a plan's own list is a snapshot, so a feature shipped after the
+   * plan was made would otherwise never reach it). The list below is then just a copy of what exists today.
+   */
+  allFeatures: z.boolean().default(false),
   features: z.array(z.enum(FEATURE_KEYS)).default(() => [...FEATURE_KEYS]),
   /** "none" is always allowed, listed or not */
   effects: z.array(z.enum(EFFECT_IDS)).default(() => [...EFFECT_IDS]),
@@ -92,7 +141,8 @@ export const planSchema = z.object({
  * practice this only shows through if those are cleared.
  */
 export const CUSTOM_PLAN_BASE = Object.freeze({
-  limits: Object.freeze({ maxUsers: 1, multiOutlet: false, maxOutlets: 1 }),
+  // (tables: no cap until one is set — a store that was on a custom plan before tables had a limit keeps all it has)
+  limits: Object.freeze({ maxUsers: 1, multiOutlet: false, maxOutlets: 1, maxTables: null }),
   entitlements: Object.freeze({ features: [], effects: [], qrCardFamilies: [] }),
 });
 
@@ -124,6 +174,9 @@ const UNLIMITED = Object.freeze({
   entitlements: entitlementsSchema.parse({}),
 });
 
+/** The features a plan's entitlements really give: every feature when `allFeatures` is on, otherwise its list. */
+export const effectiveFeatures = (entitlements) => (entitlements?.allFeatures ? [...FEATURE_KEYS] : (entitlements?.features ?? []));
+
 const defined = (obj = {}) => Object.fromEntries(Object.entries(obj).filter(([, v]) => v !== undefined));
 
 /** The limits and entitlements that actually apply to a store: its plan, with the store's overrides on top. */
@@ -132,7 +185,10 @@ export function resolvePlan(plan, overrides) {
     ? UNLIMITED
     : plan.custom
       ? CUSTOM_PLAN_BASE
-      : { limits: planLimitsSchema.parse(plan.limits ?? {}), entitlements: entitlementsSchema.parse(plan.entitlements ?? {}) };
+      : (() => {
+          const entitlements = entitlementsSchema.parse(plan.entitlements ?? {});
+          return { limits: planLimitsSchema.parse(plan.limits ?? {}), entitlements: { ...entitlements, features: effectiveFeatures(entitlements) } };
+        })();
   const o = planOverridesSchema.parse(overrides ?? {});
   const adjust = (list, { unlock, lock }) => [...new Set([...list, ...unlock])].filter((k) => !lock.includes(k));
   return {
@@ -152,6 +208,9 @@ export function outletLimit(limits) {
 }
 
 export const userLimit = (limits) => limits.maxUsers ?? Infinity;
+
+/** How many tables a store may have, all outlets together — `Infinity` when unlimited. */
+export const tableLimit = (limits) => limits.maxTables ?? Infinity;
 
 export const hasFeature = (entitlements, key) => entitlements.features.includes(key);
 

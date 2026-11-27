@@ -72,6 +72,9 @@ export function PricingPage() {
               <Field label="Each extra person (₹)" info="For every person (the owner counts) beyond what the plan allows." style={{ marginBottom: 0 }}>
                 <TextInput type="number" min={0} value={draft.extraPerson} onChange={(e) => setDraft({ ...draft, extraPerson: num(e.target.value) })} style={{ width: 120 }} aria-label="Each extra person price" />
               </Field>
+              <Field label="Every 5 extra tables (₹)" info="Tables are only sold in fives (5, 10, 15 …), so this is the price of one block of 5 beyond what the plan allows." style={{ marginBottom: 0 }}>
+                <TextInput type="number" min={0} value={draft.extraTables} onChange={(e) => setDraft({ ...draft, extraTables: num(e.target.value) })} style={{ width: 120 }} aria-label="Every five extra tables price" />
+              </Field>
               <Field label="GST (%)" info="Added on top of every price shown." style={{ marginBottom: 0 }}>
                 <TextInput type="number" min={0} max={40} step="0.5" value={draft.gstPct} onChange={(e) => setDraft({ ...draft, gstPct: Math.min(40, num(e.target.value)) })} style={{ width: 100 }} aria-label="GST percent" />
               </Field>
@@ -104,7 +107,7 @@ export function PricingPage() {
                   <strong>{s.from} → {s.to}</strong>
                   <div style={muted}>
                     adds {s.features.length ? `${s.features.length} feature${s.features.length === 1 ? "" : "s"}` : "no features"}
-                    {s.comparable ? `, ${s.outlets} outlet${s.outlets === 1 ? "" : "s"}, ${s.people} ${s.people === 1 ? "person" : "people"}` : ", a different limit"}
+                    {s.comparable ? `, ${s.outlets} outlet${s.outlets === 1 ? "" : "s"}${s.tables ? `, ${s.tables} table${s.tables === 1 ? "" : "s"}` : ""}, ${s.people} ${s.people === 1 ? "person" : "people"}` : ", a different limit"}
                   </div>
                   <div>This list charges {rs(s.rateCard)} · the plans differ by {rs(s.planDifference)}</div>
                   <div style={{ color: s.gap === 0 ? "var(--tone-success)" : "var(--tone-warning)" }} data-step-gap={s.gap}>

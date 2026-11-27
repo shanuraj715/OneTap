@@ -1,4 +1,5 @@
 import { Lock, Minus, Plus } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Button, InfoHint } from "../../../ui";
 
 /** Small things every section of the onboarding form shares. */
@@ -95,26 +96,46 @@ export function FeatureRow({ label, info, note, checked, onChange, outside, plan
   );
 }
 
-/** A − and + around a number: for "how many". The number can still be typed. */
-export function Stepper({ value, onChange, min = 1, max = 100, label, plural, disabled }) {
-  const clamp = (n) => Math.max(min, Math.min(max, Math.round(n) || min));
+/**
+ * A − and + around a number: for "how many". The number can still be typed.
+ * With `step` above 1 (tables go up in fives) − and + move by that much and a typed number is rounded UP to the next step when you leave the box.
+ */
+export function Stepper({ value, onChange, min = 1, max = 100, step = 1, label, plural, disabled }) {
+  const snap = (n) => (step > 1 ? Math.ceil((Number(n) || 0) / step) * step : Math.round(n));
+  const clamp = (n) => Math.max(min, Math.min(max, snap(n) || min));
+  // a stepped number is typed in full ("1", "12", then it becomes 15), so it is held as text until the box is left
+  const [typed, setTyped] = useState(null);
+  useEffect(() => setTyped(null), [value]);
   const btn = { width: 36, height: 36, display: "grid", placeItems: "center", border: "1px solid var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)", borderRadius: 8, cursor: "pointer", padding: 0 };
   return (
     <span data-stepper style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-      <button type="button" onClick={() => onChange(clamp(value - 1))} disabled={disabled || value <= min} aria-label={`One fewer ${label}`} style={{ ...btn, opacity: disabled || value <= min ? 0.45 : 1 }}><Minus size={15} /></button>
+      <button type="button" onClick={() => onChange(clamp(value - step))} disabled={disabled || value <= min} aria-label={`One fewer ${label}`} style={{ ...btn, opacity: disabled || value <= min ? 0.45 : 1 }}><Minus size={15} /></button>
       <input
         type="number"
         inputMode="numeric"
         min={min}
         max={max}
-        value={value}
-        onChange={(e) => onChange(clamp(Number(e.target.value)))}
+        step={step}
+        value={typed ?? value}
+        onChange={(e) => (step > 1 ? setTyped(e.target.value) : onChange(clamp(Number(e.target.value))))}
+        onBlur={() => {
+          if (typed === null) return;
+          setTyped(null);
+          onChange(clamp(Number(typed)));
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && typed !== null) {
+            e.preventDefault();
+            setTyped(null);
+            onChange(clamp(Number(typed)));
+          }
+        }}
         aria-label={`Total ${plural ?? label}`}
         disabled={disabled}
         className="no-spin"
         style={{ width: 64, height: 36, textAlign: "center", font: "inherit", fontSize: 15, fontWeight: 600, border: "1px solid var(--color-border)", borderRadius: 8, background: "var(--color-bg)", color: "var(--color-text)", MozAppearance: "textfield" }}
       />
-      <button type="button" onClick={() => onChange(clamp(value + 1))} disabled={disabled || value >= max} aria-label={`One more ${label}`} style={{ ...btn, opacity: disabled || value >= max ? 0.45 : 1 }}><Plus size={15} /></button>
+      <button type="button" onClick={() => onChange(clamp(value + step))} disabled={disabled || value >= max} aria-label={`One more ${label}`} style={{ ...btn, opacity: disabled || value >= max ? 0.45 : 1 }}><Plus size={15} /></button>
     </span>
   );
 }

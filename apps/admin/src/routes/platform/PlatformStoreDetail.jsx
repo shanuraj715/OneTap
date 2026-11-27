@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link, storeUrl, useNavigate, useParams } from "../../lib/nav";
-import { CARD_TEMPLATE_FAMILIES, EFFECT_IDS, EFFECT_PRESETS, FEATURES } from "@rasoipulse/config-schema";
+import { CARD_TEMPLATE_FAMILIES, EFFECT_IDS, EFFECT_PRESETS, FEATURES, roundUpTables, TABLE_STEP } from "@rasoipulse/config-schema";
 import { ArrowLeft, Ban, Check, ExternalLink, Globe, RefreshCw, Save, Store, Trash2, X } from "lucide-react";
 import * as api from "../../lib/api";
 import { useMedia } from "../../lib/useMedia";
@@ -121,6 +121,7 @@ export function PlatformStoreDetail() {
         <StatusPill store={store} />
         <Pill>People {usageText(store.usage.users, store.max.users)}</Pill>
         <Pill>Outlets {usageText(store.usage.outlets, store.max.outlets)}</Pill>
+        <Pill tone={store.max.tables !== null && store.usage.tables > store.max.tables ? "warn" : undefined}>Tables {usageText(store.usage.tables, store.max.tables)}</Pill>
         {store.blocked.outlets + store.blocked.people > 0 ? (
           <Pill tone="warn">
             {store.blocked.outlets} outlet{store.blocked.outlets === 1 ? "" : "s"}, {store.blocked.people} {store.blocked.people === 1 ? "person" : "people"} blocked
@@ -195,7 +196,7 @@ function StoreNameCard({ store }) {
 /* ---------------------------------------------------------------- plan tab */
 
 function PlanTab({ store, draft, setDraft, plans, selectedPlan }) {
-  const base = selectedPlan?.limits ?? { maxUsers: null, multiOutlet: true, maxOutlets: null };
+  const base = selectedPlan?.limits ?? { maxUsers: null, multiOutlet: true, maxOutlets: null, maxTables: null };
   const setLimit = (key, value) => setDraft({ ...draft, limits: { ...draft.limits, [key]: value } });
   const unset = (key) => {
     const { [key]: _drop, ...rest } = draft.limits;
@@ -212,7 +213,8 @@ function PlanTab({ store, draft, setDraft, plans, selectedPlan }) {
       const keep = (list) => ({ unlock: list.filter((k) => k !== "none"), lock: [] });
       setDraft({
         planId,
-        limits: { maxUsers: store.limits.maxUsers, multiOutlet: store.limits.multiOutlet, maxOutlets: store.limits.maxOutlets },
+        // (a store with no table limit yet gets one that holds the tables it has, in fives, so moving it never leaves it over)
+        limits: { maxUsers: store.limits.maxUsers, multiOutlet: store.limits.multiOutlet, maxOutlets: store.limits.maxOutlets, maxTables: store.limits.maxTables ?? roundUpTables(store.usage.tables) },
         entitlements: {
           features: keep(store.entitlements.features),
           effects: keep(store.entitlements.effects),
@@ -290,14 +292,31 @@ function PlanTab({ store, draft, setDraft, plans, selectedPlan }) {
             onSet={(v) => setLimit("maxOutlets", v)}
             onInherit={() => unset("maxOutlets")}
           />
+          <NumberLimit
+            label="Tables (all outlets)"
+            custom={custom}
+            base={base.maxTables ?? null}
+            value={draft.limits.maxTables}
+            onSet={(v) => setLimit("maxTables", v)}
+            onInherit={() => unset("maxTables")}
+            step={TABLE_STEP}
+            testId="store-limit-tables"
+          />
         </div>
+        <p style={{ ...muted, margin: "12px 0 0", fontSize: 12.5 }}>Tables are sold in fives — 5, 10, 15 … The store can't add a table once it has this many; the tables it already has stay.</p>
       </Card>
 
       <Card title="Usage">
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 12 }}>
           <Pill>People {usageText(store.usage.users, store.max.users)}</Pill>
           <Pill>Outlets {usageText(store.usage.outlets, store.max.outlets)}</Pill>
+          <Pill tone={store.max.tables !== null && store.usage.tables > store.max.tables ? "warn" : undefined}>Tables {usageText(store.usage.tables, store.max.tables)}</Pill>
         </div>
+        {store.max.tables !== null && store.usage.tables > store.max.tables ? (
+          <p style={{ ...muted, margin: "0 0 10px", fontSize: 13 }} data-testid="tables-over">
+            This store has {store.usage.tables} tables and its plan allows {store.max.tables}. Nothing is switched off — it just can't add more until you raise the limit.
+          </p>
+        ) : null}
         {store.grace.over ? (
           <Note>
             {store.grace.ended
@@ -313,9 +332,19 @@ function PlanTab({ store, draft, setDraft, plans, selectedPlan }) {
 }
 
 /** A limit: from the plan, a number, or unlimited. On a custom plan there's no "from the plan" — it's always the store's own. */
-function NumberLimit({ label, base, value, onSet, onInherit, custom = false }) {
+function NumberLimit({ label, base, value, onSet, onInherit, custom = false, step = 1, testId }) {
   if (custom && value === undefined) value = base;
   const mode = value === undefined ? "plan" : value === null ? "unlimited" : "custom";
+  const min = step > 1 ? step : 1;
+  const snap = (n) => Math.max(min, step > 1 ? Math.ceil((Number(n) || 0) / step) * step : Math.floor(Number(n) || 1));
+  // a stepped number (tables: 5, 10, 15 …) is held as typed and rounded UP when the box is left
+  const [typed, setTyped] = useState(null);
+  useEffect(() => setTyped(null), [value]);
+  const commit = () => {
+    if (typed === null) return;
+    setTyped(null);
+    onSet(snap(typed));
+  };
   return (
     <Field label={label}>
       <div style={{ display: "flex", gap: 8 }}>
@@ -325,7 +354,7 @@ function NumberLimit({ label, base, value, onSet, onInherit, custom = false }) {
             const m = e.target.value;
             if (m === "plan") onInherit();
             else if (m === "unlimited") onSet(null);
-            else onSet(base ?? 5);
+            else onSet(base ?? (step > 1 ? step : 5));
           }}
           style={{ flex: 1 }}
         >
@@ -336,9 +365,19 @@ function NumberLimit({ label, base, value, onSet, onInherit, custom = false }) {
         {mode === "custom" ? (
           <TextInput
             type="number"
-            min={1}
-            value={value}
-            onChange={(e) => onSet(Math.max(1, Math.floor(Number(e.target.value) || 1)))}
+            min={min}
+            step={step}
+            value={typed ?? value}
+            data-testid={testId}
+            aria-label={label}
+            onChange={(e) => (step > 1 ? setTyped(e.target.value) : onSet(snap(e.target.value)))}
+            onBlur={commit}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && typed !== null) {
+                e.preventDefault();
+                commit();
+              }
+            }}
             style={{ width: 90 }}
           />
         ) : null}

@@ -200,7 +200,7 @@ const starter = (await call("POST", "/api/platform/plans", {
   body: {
     name: "Starter",
     description: "Takeaway, dine-in QR and coupons",
-    limits: { maxUsers: 3, multiOutlet: false, maxOutlets: 1 },
+    limits: { maxUsers: 3, multiOutlet: false, maxOutlets: 1, maxTables: 5 },
     entitlements: { features: ["takeaway", "dineInQr", "coupons"], effects: [] },
   },
 })).plan;

@@ -14,7 +14,7 @@ export const meta = {
   title: "Onboarding price estimate — price list, plan + extras, Custom starts above the dearest plan, discount / GST / yearly, the Custom plan, plan dialog",
   area: "onboarding",
   fresh: true,
-  summary: "In Chrome. With no priced plans yet the Custom estimate says what to do first. Two plans are created: Basic (one outlet, 5 people, four features, ₹999 a month) and Business (three outlets, 20 people, every feature, ₹2,499). The Price list page shows the starting prices (each extra outlet ₹250, person ₹15, GST 18%, a price per feature) and that they add up: Basic → Business adds nine features (₹775), two outlets (₹500) and fifteen people (₹225) = ₹1,500 — exactly the plans' difference. On the onboarding form, Basic alone is ₹999 (+GST ₹180 = ₹1,179 a month; ₹12,731 for a year paid up front); ticking Marketing and Delivery, a second outlet and a team of seven adds ₹100 + ₹100 + ₹250 + 3 × ₹15, a 10% discount and GST are applied, and the form says only Business fits as it is. The Custom plan (listed even though nobody created it) starts from the dearest plan, ₹2,499, and adds ₹250 per outlet and ₹15 per person beyond Business's limits, so it is always dearer than every standard plan, and warns when a standard plan would do. Editing the price list changes the estimate. Prices never appear on the PDF. Publishing a Custom form creates the real Custom plan and puts the store on it with the limits asked for. The 'New plan' dialog has its limits stacked and aligned, its Save button always in view, and dropdown arrows with room to spare.",
+  summary: "In Chrome. With no priced plans yet the Custom estimate says what to do first. Two plans are created: Basic (one outlet, 5 people, four features, ₹999 a month) and Business (three outlets, 20 people, every feature, ₹2,499). The Price list page shows the starting prices (each extra outlet ₹250, person ₹15, GST 18%, a price per feature) and that they add up: Basic → Business adds nine features (₹775), two outlets (₹500) and fifteen people (₹225) = ₹1,500 — exactly the plans' difference. On the onboarding form, Basic alone is ₹999 (+GST ₹180 = ₹1,179 a month; ₹12,731 for a year paid up front); ticking Marketing and Delivery, a second outlet and a team of seven adds ₹100 + ₹100 + ₹250 + 3 × ₹15, a 10% discount and GST are applied, and the form says only Business fits as it is. The Custom plan (listed even though nobody created it) starts from the dearest plan, ₹2,499, and adds ₹250 per outlet and ₹15 per person beyond Business's limits, so it is always dearer than every standard plan, and warns when a standard plan would do. Editing the price list changes the estimate. Prices never appear on the PDF. Publishing a Custom form creates the real Custom plan and puts the store on it with the limits asked for. The 'New plan' dialog is wide, with its limits side by side on one row, its Save button always in view, and dropdown arrows with room to spare.",
   expect: [
     "Before any plan has a price, Custom's estimate says to give Basic and Pro a monthly price.",
     "The Price list shows the starting prices and, with Basic ₹999 and Business ₹2,499, 'They agree' for Basic → Business (₹1,500 = ₹1,500).",
@@ -26,7 +26,7 @@ export const meta = {
     "A plan with no monthly price says so in the estimate.",
     "The PDF has no prices.",
     "Publishing on Custom creates the real Custom plan; the store is on it with 2 outlets / 3 people and Marketing unlocked.",
-    "The New plan dialog: limits stacked and left-aligned, Save always visible, dropdown arrow with space on its right.",
+    "The New plan dialog: limits side by side on one row, Save always visible, dropdown arrow with space on its right.",
   ],
   expectNot: [
     "Custom must NOT cost less than, or the same as, the dearest standard plan.",
@@ -66,8 +66,9 @@ export async function run(d, h) {
 
   // ------------------------------------------------------------------------------------------------------------- 2
   await d.step("Two plans with prices: Basic ₹999 and Business ₹2,499");
-  await ui.createPlan(d, { name: "Basic", description: "One outlet, the essentials", people: 5, multiOutlet: false, features: ["Takeaway ordering", "Dine-in QR ordering", "Coupons", "Printing"], monthly: 999, yearly: 10 });
-  await ui.createPlan(d, { name: "Business", description: "Every feature, up to three outlets", people: 20, multiOutlet: true, outlets: 3, features: "all", monthly: 2499, yearly: 10 });
+  // (both plans get the same 20 tables: this test is about features, outlets and people — table prices are tested in t109)
+  await ui.createPlan(d, { name: "Basic", description: "One outlet, the essentials", people: 5, tables: 20, multiOutlet: false, features: ["Takeaway ordering", "Dine-in QR ordering", "Coupons", "Printing"], monthly: 999, yearly: 10 });
+  await ui.createPlan(d, { name: "Business", description: "Every feature, up to three outlets", people: 20, tables: 20, multiOutlet: true, outlets: 3, features: "all", monthly: 2499, yearly: 10 });
   await ui.openPlatform(d, "/plans");
   d.check("both plans are listed", /Basic/.test(await page()) && /Business/.test(await page()));
 
@@ -139,8 +140,8 @@ export async function run(d, h) {
   await d.step("The Custom plan: starts from the dearest plan and goes up in steps");
   await newForm();
   await ui.pick(d, "Plan", "Custom");
-  await waitEstimate(/Business plan — every feature, up to 3 outlets and 20 people/);
-  d.check("a small need on Custom is just the dearest plan: 'Business plan — every feature, up to 3 outlets and 20 people ₹2,499'", (await lines()).length === 1 && /Business plan/.test((await lines())[0]) && (await money("subtotal")) === 2499, (await lines()).join(" | "));
+  await waitEstimate(/Business plan — every feature, up to 3 outlets, 20 tables and 20 people/);
+  d.check("a small need on Custom is just the dearest plan: 'Business plan — every feature, up to 3 outlets, 20 tables and 20 people ₹2,499'", (await lines()).length === 1 && /Business plan/.test((await lines())[0]) && (await money("subtotal")) === 2499, (await lines()).join(" | "));
   d.check("and says a standard plan would do: 'These needs fit the Basic plan (₹999)… Custom is for clients who need more'", /fit the Basic plan \(₹999 a month\)/.test(await estText()) && /Custom is for clients who need more/.test(await estText()), await d.page.locator("[data-estimate-notes]").innerText().catch(() => "no note"));
   d.check("no limits to set beyond Business: the form shows the Custom limits boxes (outlets, people)", (await d.page.getByLabel("Outlets for this client").count()) === 1 && (await d.page.getByLabel("People for this client").count()) === 1);
   await ui.fill(d, "Total outlets", "5");
@@ -245,12 +246,14 @@ export async function run(d, h) {
   const multi = modal.getByRole("checkbox", { name: /^\s*Multi-outlet/ });
   const pb = await people.boundingBox();
   const mb = await multi.boundingBox();
-  d.check("the 'Multi-outlet' box sits directly under the people limit, on the same left edge", Math.abs(pb.x - mb.x) < 24 && mb.y > pb.y + pb.height - 4, `people x=${Math.round(pb.x)} y=${Math.round(pb.y)} · multi x=${Math.round(mb.x)} y=${Math.round(mb.y)}`);
+  // the plan dialog is wide, with the limits side by side on ONE row (people, tables, multi-outlet, then outlets), so nothing needs scrolling
+  const tablesBox = await modal.getByLabel("Tables", { exact: true }).boundingBox();
+  d.check("the limits sit side by side on one row: people, tables, and the 'Multi-outlet' box all at the same height, left to right", Math.abs(pb.y - tablesBox.y) < 6 && Math.abs(pb.y - mb.y) < 30 && pb.x < tablesBox.x && tablesBox.x < mb.x, `people ${Math.round(pb.x)},${Math.round(pb.y)} · tables ${Math.round(tablesBox.x)},${Math.round(tablesBox.y)} · multi ${Math.round(mb.x)},${Math.round(mb.y)}`);
   const unl = await modal.getByRole("checkbox", { name: /^\s*Unlimited/ }).first().boundingBox();
   d.check("'Unlimited' is on the same line as the people number", Math.abs(unl.y - pb.y) < 14, `${Math.round(unl.y)} vs ${Math.round(pb.y)}`);
   await multi.check();
   const outlets = await modal.locator("label", { has: d.page.locator("span", { hasText: /^Outlets$/ }) }).locator("input[type=number]").boundingBox();
-  d.check("ticking Multi-outlet shows the 'Outlets' limit below it, aligned with the others", Math.abs(outlets.x - pb.x) < 4 && outlets.y > mb.y, `${Math.round(outlets.x)} vs ${Math.round(pb.x)}`);
+  d.check("ticking Multi-outlet shows the 'Outlets' limit on that same row, after it", Math.abs(outlets.y - pb.y) < 8 && outlets.x > mb.x, `${Math.round(outlets.x)},${Math.round(outlets.y)} vs ${Math.round(mb.x)},${Math.round(pb.y)}`);
   const save = modal.getByRole("button", { name: "Save plan" });
   const sb = await save.boundingBox();
   const vh = await d.page.evaluate(() => window.innerHeight);
