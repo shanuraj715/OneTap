@@ -8,36 +8,48 @@ import { Input } from "./Sheet";
 import { radius, useResponsive, useTheme } from "./theme";
 import { toasts } from "./toast-store";
 
-/** One screen: the glass background, a big title, and a scrolling column of cards (centred and 2–3 wide on a tablet). Pull down to refresh. */
+/**
+ * One screen: a title bar that stays put, and under it a scrolling column of cards (centred and 2–3 wide on a tablet). Pull down to refresh.
+ * The title bar (back arrow, title, and whatever `right` holds — Save, New form …) is NOT inside the scroll area: only the cards move, and they
+ * are cut off cleanly at the bar. A hairline appears under the bar once the cards have scrolled.
+ */
 export function Screen({ title, subtitle, back, right, onRefresh, refreshing = false, children, testID, scroll = true }: { title: string; subtitle?: string; back?: () => void; right?: ReactNode; onRefresh?: () => void; refreshing?: boolean; children: ReactNode; testID?: string; scroll?: boolean }) {
   const { c, dark } = useTheme();
   const insets = useSafeAreaInsets();
   const { contentWidth } = useResponsive();
   const { scrollProps, pull } = usePullToRefresh(onRefresh, refreshing);
-  const head = (
-    <View style={{ flexDirection: "row", alignItems: "center", gap: 12, paddingTop: 8, paddingBottom: 4 }}>
-      {back ? <Pressable onPress={back} accessibilityRole="button" accessibilityLabel="Back" hitSlop={10} style={{ width: 40, height: 40, borderRadius: 20, alignItems: "center", justifyContent: "center", backgroundColor: c.glassStrong }} testID="back"><Icon name="left" size={22} /></Pressable> : null}
-      <View style={{ flex: 1 }}>
-        <Text variant="title" accessibilityRole="header" numberOfLines={1}>{title}</Text>
-        {subtitle ? <Text variant="caption" tone="muted" numberOfLines={2}>{subtitle}</Text> : null}
+  const [scrolled, setScrolled] = useState(false);
+  const bar = (
+    <View testID="screen-header" style={{ paddingTop: insets.top + 8, paddingHorizontal: 16, paddingBottom: 8, alignItems: "center" }}>
+      <View style={{ width: "100%", maxWidth: contentWidth, flexDirection: "row", alignItems: "center", gap: 12, paddingTop: 8, paddingBottom: 4 }}>
+        {back ? <Pressable onPress={back} accessibilityRole="button" accessibilityLabel="Back" hitSlop={10} style={{ width: 40, height: 40, borderRadius: 20, alignItems: "center", justifyContent: "center", backgroundColor: c.glassStrong }} testID="back"><Icon name="left" size={22} /></Pressable> : null}
+        <View style={{ flex: 1 }}>
+          <Text variant="title" accessibilityRole="header" numberOfLines={1}>{title}</Text>
+          {subtitle ? <Text variant="caption" tone="muted" numberOfLines={2}>{subtitle}</Text> : null}
+        </View>
+        {right}
       </View>
-      {right}
+      <View testID="screen-header-line" style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: 1, backgroundColor: c.border, opacity: scrolled ? 1 : 0 }} />
     </View>
   );
   return (
     <View style={{ flex: 1 }} testID={testID}>
+      {bar}
       {scroll ? (
         <ScrollView
           testID="screen-scroll"
+          style={{ flex: 1 }}
           indicatorStyle={dark ? "white" : "black"}
-          contentContainerStyle={{ paddingTop: insets.top + 8, paddingBottom: 120, paddingHorizontal: 16, gap: 16, alignItems: "center" }}
+          contentContainerStyle={{ paddingTop: 8, paddingBottom: 120, paddingHorizontal: 16, gap: 16, alignItems: "center" }}
+          scrollEventThrottle={16}
           {...scrollProps}
+          onScroll={(e) => { scrollProps.onScroll?.(e); setScrolled(e.nativeEvent.contentOffset.y > 2); }}
           keyboardShouldPersistTaps="handled"
         >
-          <View style={{ width: "100%", maxWidth: contentWidth, gap: 16 }}>{head}{children}</View>
+          <View style={{ width: "100%", maxWidth: contentWidth, gap: 16 }}>{children}</View>
         </ScrollView>
       ) : (
-        <View style={{ flex: 1, paddingTop: insets.top + 8, paddingHorizontal: 16, alignItems: "center" }}><View style={{ width: "100%", maxWidth: contentWidth, flex: 1, gap: 16 }}>{head}{children}</View></View>
+        <View style={{ flex: 1, paddingTop: 8, paddingHorizontal: 16, alignItems: "center" }}><View style={{ width: "100%", maxWidth: contentWidth, flex: 1, gap: 16 }}>{children}</View></View>
       )}
       {onRefresh && scroll ? <RefreshIndicator refreshing={refreshing} pull={pull} /> : null}
     </View>

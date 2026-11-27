@@ -64,3 +64,16 @@ describe("the app's frame decides the lit item from the real address", () => {
     expect(src).not.toContain("useSegments");
   });
 });
+
+describe("the tablet's side rail keeps the account pinned", () => {
+  /** is this element inside a scrolling list? */
+  const inScroll = (el: { parent: unknown }): boolean => { let n = el as { parent: unknown; type?: unknown } | null; while (n) { if (n.type === "RCTScrollView") return true; n = n.parent as typeof n; } return false; };
+  it("the Account item is outside the scrolling list of areas (so a short tablet can't push it out of sight); the areas are inside it", async () => {
+    await open(<Rail items={[...ITEMS.filter((i) => i.id !== "more"), { id: "more", label: "Account", icon: "user" as const }]} current="stores" onPick={() => undefined} />);
+    const account = screen.getByTestId("nav-rail-account");
+    expect(within(account).getByTestId("nav-more")).toBeOnTheScreen();
+    expect(within(account).queryByTestId("nav-stores")).toBeNull();
+    expect(inScroll(screen.getByTestId("nav-more"))).toBe(false);
+    expect(inScroll(screen.getByTestId("nav-stores"))).toBe(true);
+  });
+});

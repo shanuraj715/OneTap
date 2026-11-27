@@ -1,15 +1,17 @@
 import { View } from "react-native";
 import { router } from "expo-router";
 import { APP_AREAS, areasFor } from "@/lib/access";
+import { showAreasOnAccount } from "@/lib/nav";
 import { API_HOST, APP_NAME, APP_VERSION } from "@/lib/config";
 import { useMe, useRuntime } from "@/runtime";
-import { Button, Glass, Row, Screen, Section, Text, initialsOf, type IconName, useTheme } from "@/ui";
+import { Button, Glass, Row, Screen, Section, Text, initialsOf, type IconName, useResponsive, useTheme } from "@/ui";
 
-/** The person's own account, and every area of the app that doesn't fit the tab bar. */
+/** The person's own account — and, on a phone whose tab bar can't hold every area, the list of areas. (A tablet's side rail already shows them all.) */
 export function More() {
   const me = useMe();
   const { session } = useRuntime();
   const { c } = useTheme();
+  const { tablet } = useResponsive();
   const areas = areasFor(me).filter((a) => APP_AREAS.has(a.id));
   return (
     <Screen title="Account" testID="screen-more">
@@ -23,10 +25,12 @@ export function More() {
           </View>
         </View>
       </Glass>
-      <Section title="Areas">
-        <View style={{ gap: 10 }}>{areas.map((a, i) => <Row key={a.id} index={i} icon={a.id as IconName} title={a.label} onPress={() => router.navigate(`/${a.id}` as never)} testID={`more-${a.id}`} />)}</View>
-      </Section>
-      <Section title="This phone">
+      {showAreasOnAccount(areas.length, tablet) ? (
+        <Section title="Areas">
+          <View style={{ gap: 10 }}>{areas.map((a, i) => <Row key={a.id} index={i} icon={a.id as IconName} title={a.label} onPress={() => router.navigate(`/${a.id}` as never)} testID={`more-${a.id}`} />)}</View>
+        </Section>
+      ) : null}
+      <Section title={tablet ? "This tablet" : "This phone"}>
         <Glass>
           <View style={{ gap: 12 }}>
             <Text variant="caption" tone="muted">{APP_NAME} · {APP_VERSION} · {API_HOST}</Text>

@@ -34,9 +34,11 @@ export function Rail({ items, current, onPick, footer }: { items: NavItem[]; cur
     <View style={{ width: 92, paddingTop: insets.top + 10, paddingBottom: insets.bottom + 10, borderRightWidth: StyleSheet.hairlineWidth * 1.5, borderRightColor: c.border, overflow: "hidden" }} testID="nav-rail">
       <Frost intensity={dark ? 45 : 60} />
       <View style={{ alignItems: "center", marginBottom: 8 }}><AppIcon size={46} label="Rasoi Pulse Admin" /></View>
-      <ScrollView contentContainerStyle={{ alignItems: "center", gap: 6, paddingVertical: 8 }} showsVerticalScrollIndicator={false}>
-        {items.map((it) => <RailButton key={it.id} item={it} on={it.id === current} onPress={() => onPick(it.id)} />)}
+      {/* the areas scroll if the tablet is short; the account (id "more") is pinned at the bottom so it is never pushed out of sight */}
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ alignItems: "center", gap: 6, paddingVertical: 8 }} showsVerticalScrollIndicator={false}>
+        {items.filter((it) => it.id !== "more").map((it) => <RailButton key={it.id} item={it} on={it.id === current} onPress={() => onPick(it.id)} />)}
       </ScrollView>
+      {items.filter((it) => it.id === "more").map((it) => <View key={it.id} testID="nav-rail-account" style={{ alignItems: "center", paddingTop: 6 }}><RailButton item={it} on={it.id === current} onPress={() => onPick(it.id)} /></View>)}
       {footer}
     </View>
   );
