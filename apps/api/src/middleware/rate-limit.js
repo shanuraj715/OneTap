@@ -354,7 +354,7 @@ export const POLICIES = {
     windowMs: 10 * MINUTE,
     limit: 20,
     key: "user",
-    why: "Deleting an order, a chat, an outlet or a store (or switching a store off); publishing a client onboarding as a live store; creating stores; deleting a store's subscription payment from the sales list. A stolen super-admin session can't wipe the platform at machine speed.",
+    why: "Deleting an order, a chat, an outlet or a store (or switching a store off); publishing a client onboarding as a live store; creating stores; deleting a store's subscription payment from the sales list; deleting an expense from a store's expenses ledger. A stolen super-admin session can't wipe the platform at machine speed.",
     message: "Too many of these actions. Please wait {wait}.",
   },
 

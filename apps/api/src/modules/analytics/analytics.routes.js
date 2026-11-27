@@ -1,10 +1,11 @@
 import { Router } from "express";
 import { z } from "zod";
-import { analyticsRangeSchema, permissionsForRole, DEFAULT_FOOD_COST_PCT, DEFAULT_STOCK_SAFETY_PCT, EXPORT_FORMATS, exportRequestSchema, EXPORT_SECTIONS, presetRange } from "@rasoipulse/config-schema";
+import { analyticsRangeSchema, LEDGER_CATEGORIES, PAYMENT_MODES, expenseInputSchema, salesGoalSchema, permissionsForRole, DEFAULT_FOOD_COST_PCT, DEFAULT_STOCK_SAFETY_PCT, EXPORT_FORMATS, exportRequestSchema, EXPORT_SECTIONS, presetRange } from "@rasoipulse/config-schema";
 import { AnalyticsProfileModel, BrandModel } from "@rasoipulse/db";
 import { requireOutletContext } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
-import { requireFeature } from "../platform/plan.service.js";
+import { requireFeature, storePlan } from "../platform/plan.service.js";
+import * as extra from "./analytics.extra.service.js";
 import { buildReport, toCsv, toJson, toPdf, toXlsx } from "./analytics.export.js";
 import * as svc from "./analytics.service.js";
 import { limiter } from "../../middleware/rate-limit.js";
@@ -42,9 +43,10 @@ function rangeOf(req) {
 
 /** who the person is for analytics: the outlets they may look at, and what they may open */
 analyticsRouter.get("/options", async (req, res) => {
-  const { outlets, role } = await access(req, "analytics:read");
+  const { ctx, outlets, role } = await access(req, "analytics:read");
   const perms = permissionsForRole(role);
-  res.json({ outlets, canFinance: perms.includes("analytics:finance"), canExport: perms.includes("analytics:export"), formats: EXPORT_FORMATS.map(({ id, label, help }) => ({ id, label, help })), sections: EXPORT_SECTIONS, defaults: { foodCostPct: DEFAULT_FOOD_COST_PCT, safetyPct: DEFAULT_STOCK_SAFETY_PCT } });
+  const features = (await storePlan(ctx.brandId)).entitlements.features;
+  res.json({ outlets, canFinance: perms.includes("analytics:finance"), canExport: perms.includes("analytics:export"), formats: EXPORT_FORMATS.map(({ id, label, help }) => ({ id, label, help })), sections: EXPORT_SECTIONS, defaults: { foodCostPct: DEFAULT_FOOD_COST_PCT, safetyPct: DEFAULT_STOCK_SAFETY_PCT }, features, canWriteExpenses: perms.includes("analytics:finance"), ledgerCategories: LEDGER_CATEGORIES, paymentModes: PAYMENT_MODES });
 });
 
 analyticsRouter.get("/overview", async (req, res) => {
@@ -87,7 +89,61 @@ analyticsRouter.get("/cash", async (req, res) => {
 });
 analyticsRouter.get("/pnl", async (req, res) => {
   const { ctx, ids, outlets } = await access(req, "analytics:finance");
-  res.json(await svc.pnlInputs(ctx, rangeOf(req), ids, outlets));
+  const range = rangeOf(req);
+  // `recorded` = the expenses written in the ledger for this range, by category (rupees): the app can work the profit out from them instead of the monthly estimates
+  res.json({ ...(await svc.pnlInputs(ctx, range, ids, outlets)), recorded: await extra.recordedByCategory(ctx, range, ids) });
+});
+
+/* ---- the reports of the Rasoi Pulse Business app */
+
+/** coupon usage ({ enabled: false } when the plan has no coupons) */
+analyticsRouter.get("/coupons", async (req, res) => {
+  const { ctx, ids } = await access(req, "analytics:read");
+  res.json(await extra.couponsReport(ctx, rangeOf(req), ids));
+});
+/** table bookings ({ enabled: false } when the plan has no reservations) */
+analyticsRouter.get("/reservations", async (req, res) => {
+  const { ctx, ids } = await access(req, "analytics:read");
+  res.json(await extra.reservationsReport(ctx, rangeOf(req), ids));
+});
+/** counted stock: what is left, how fast it sells, how long it lasts */
+analyticsRouter.get("/inventory", async (req, res) => {
+  const { ctx, ids } = await access(req, "analytics:read");
+  res.json(await extra.inventoryReport(ctx, ids));
+});
+/** plain-English things worth knowing about the range */
+analyticsRouter.get("/insights", async (req, res) => {
+  const { ctx, ids } = await access(req, "analytics:read");
+  res.json(await extra.insights(ctx, rangeOf(req), ids));
+});
+
+/** the monthly sales target and how this month is going against it */
+analyticsRouter.get("/goals", async (req, res) => {
+  const { ctx, ids } = await access(req, "analytics:read");
+  res.json(await extra.goalProgress(ctx, ids));
+});
+analyticsRouter.put("/goals", async (req, res) => {
+  const { ctx, userId, ids } = await access(req, "analytics:finance");
+  await extra.setGoal(ctx, userId, salesGoalSchema.parse(req.body ?? {}).monthlySales);
+  res.json(await extra.goalProgress(ctx, ids));
+});
+
+/* ---- the expenses ledger: bills written down on the day they were paid (money figures: owner and accountant) */
+analyticsRouter.get("/expenses", async (req, res) => {
+  const { ctx, ids } = await access(req, "analytics:finance");
+  res.json(await extra.listExpenses(ctx, rangeOf(req), ids, { category: typeof req.query.category === "string" ? req.query.category : "" }));
+});
+analyticsRouter.post("/expenses", async (req, res) => {
+  const { ctx } = await access(req, "analytics:finance");
+  res.status(201).json({ expense: await extra.createExpense(ctx, req.user, expenseInputSchema.parse(req.body ?? {})) });
+});
+analyticsRouter.put("/expenses/:id", async (req, res) => {
+  const { ctx } = await access(req, "analytics:finance");
+  res.json({ expense: await extra.updateExpense(ctx, req.user, req.params.id, expenseInputSchema.parse(req.body ?? {})) });
+});
+analyticsRouter.delete("/expenses/:id", limiter("destructive"), async (req, res) => {
+  const { ctx } = await access(req, "analytics:finance");
+  res.json(await extra.deleteExpense(ctx, req.params.id));
 });
 
 /** the expenses the owner chose to "Save to my store" */

@@ -439,3 +439,6 @@ export async function pnlInputs(ctx, range, outletIds, outletList) {
   const total = perOutlet.reduce((acc, o) => ({ sales: acc.sales + o.sales, net: acc.net + o.net, tax: acc.tax + o.tax, orders: acc.orders + o.orders }), { sales: 0, net: 0, tax: 0, orders: 0 });
   return { range, total, perOutlet };
 }
+
+/** The same match the reports use (a range of Indian days, some outlets; `salesMatch` = paid, not cancelled), for the extra reports. */
+export { scope as scopeMatch, sales as salesMatch };

@@ -30,7 +30,13 @@ export const daysBetween = (from, to) => Math.round((dayStart(to) - dayStart(fro
 export const weekdayOf = (key) => new Date(`${key}T12:00:00.000Z`).getUTCDay();
 export const WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-const dayString = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Use a date like 2026-11-16");
+/** A real calendar day: "2026-02-30" has the right shape but is not a day. */
+const isRealDay = (key) => {
+  const [y, m, d] = key.split("-").map(Number);
+  const t = new Date(Date.UTC(y, m - 1, d));
+  return t.getUTCFullYear() === y && t.getUTCMonth() === m - 1 && t.getUTCDate() === d;
+};
+const dayString = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Use a date like 2026-11-16").refine(isRealDay, "That is not a real date");
 
 /** A range of whole days, both ends included. At most about three years, so one request can't read the whole database. */
 export const analyticsRangeSchema = z
@@ -115,6 +121,45 @@ export const EXPENSE_LINES = [
   { key: "other", label: "Other", scope: "store" },
 ];
 
+/**
+ * The expenses LEDGER: bills the owner writes down on the day they are paid (vegetables bought, a repair, the electricity bill), as opposed to
+ * the monthly ESTIMATES above that the profit calculator spreads over a range. A ledger entry's category is one of these keys.
+ */
+export const LEDGER_CATEGORIES = [
+  { key: "raw_materials", label: "Raw materials & groceries" },
+  { key: "vegetables_dairy", label: "Vegetables, dairy & meat" },
+  ...EXPENSE_LINES.map(({ key, label }) => ({ key, label })),
+];
+export const LEDGER_CATEGORY_KEYS = LEDGER_CATEGORIES.map((c) => c.key);
+export const PAYMENT_MODES = [
+  { id: "cash", label: "Cash" },
+  { id: "upi", label: "UPI" },
+  { id: "card", label: "Card" },
+  { id: "bank", label: "Bank transfer" },
+  { id: "other", label: "Other" },
+];
+
+/** What a person sends to write an expense down (money in rupees, written to the ledger as paise). `outletId: null` = a cost of the whole store. */
+export const expenseInputSchema = z.object({
+  day: dayString,
+  amount: z
+    .number({ invalid_type_error: "Enter the amount in rupees", required_error: "Enter the amount in rupees" })
+    .positive("The amount must be more than 0")
+    .max(10_000_000, "That amount looks too big — check the number")
+    .refine((n) => Math.abs(n * 100 - Math.round(n * 100)) < 1e-6, "Use at most two decimals (paise)"),
+  category: z.string().min(1, "Pick a category").max(40),
+  label: z.string().trim().max(80, "Keep the title under 80 characters").default(""),
+  outletId: z.string().max(40).nullable().default(null),
+  vendor: z.string().trim().max(80, "Keep the vendor under 80 characters").default(""),
+  note: z.string().trim().max(300, "Keep the note under 300 characters").default(""),
+  paymentMode: z.enum(["cash", "upi", "card", "bank", "other"]).default("cash"),
+});
+
+/** The sales target an owner sets: a monthly amount for the whole store (rupees), 0/null = none. */
+export const salesGoalSchema = z.object({
+  monthlySales: z.number().min(0).max(1e10).nullable().default(null),
+});
+
 export const DEFAULT_FOOD_COST_PCT = 35;
 export const DEFAULT_STOCK_SAFETY_PCT = 15;
 
@@ -149,6 +194,32 @@ export function computeProfitLoss({ netSalesPaise, foodCostPct, expenses, range 
   };
 }
 
+/**
+ * The same profit calculation, but from expenses that were actually RECORDED in the range (the ledger) instead of monthly estimates.
+ * `recorded`: [{ label, amount }] in rupees, already summed for the range. Same answer shape as {@link computeProfitLoss}
+ * (`months` is the range in months; each line's `monthly` is what that cost per month on average over the range).
+ */
+export function computeProfitLossRecorded({ netSalesPaise, foodCostPct, recorded, range }) {
+  const sales = (netSalesPaise ?? 0) / 100;
+  const pct = Math.max(0, Math.min(100, Number(foodCostPct) || 0));
+  const foodCost = (sales * pct) / 100;
+  const grossProfit = sales - foodCost;
+  const months = monthsInRange(range) || 1;
+  const lines = (recorded ?? [])
+    .map((e) => ({ label: e.label, cost: Number(e.amount) || 0, monthly: (Number(e.amount) || 0) / months }))
+    .filter((l) => l.cost > 0);
+  const totalExpenses = lines.reduce((s, l) => s + l.cost, 0);
+  const net = grossProfit - totalExpenses;
+  const days = daysBetween(range.from, range.to);
+  return {
+    sales, foodCost, grossProfit, lines, totalExpenses, net,
+    marginPct: sales > 0 ? (net / sales) * 100 : null,
+    days, months,
+    breakEvenSales: pct < 100 ? totalExpenses / (1 - pct / 100) : null,
+    breakEvenPerDay: pct < 100 ? totalExpenses / (1 - pct / 100) / days : null,
+  };
+}
+
 /* ------------------------------------------------------------------ exports */
 
 export const EXPORT_FORMATS = [
@@ -169,8 +240,11 @@ export const EXPORT_SECTIONS = [
   { id: "gst", label: "GST", csv: true },
   { id: "outlets", label: "Outlets compared", csv: true },
   { id: "customers", label: "Top customers", csv: true },
+  { id: "coupons", label: "Coupon usage", csv: true },
+  { id: "reservations", label: "Table reservations", csv: true },
   { id: "orders", label: "Every order", csv: true },
   { id: "pnl", label: "Profit & loss", csv: true, finance: true },
+  { id: "expenses", label: "Expenses recorded", csv: true, finance: true },
 ];
 
 export const exportRequestSchema = z.object({
@@ -186,7 +260,9 @@ export const exportRequestSchema = z.object({
   pnl: z
     .object({
       foodCostPct: z.number().min(0).max(100),
-      expenses: z.array(z.object({ label: z.string().max(80), monthly: z.number().min(0).max(1e9) })).max(60),
+      /** "monthly" = the owner's monthly estimates (`expenses`); "recorded" = the bills written in the expenses ledger for the range (the server reads them) */
+      mode: z.enum(["monthly", "recorded"]).default("monthly"),
+      expenses: z.array(z.object({ label: z.string().max(80), monthly: z.number().min(0).max(1e9) })).max(60).default([]),
     })
     .nullable()
     .default(null),

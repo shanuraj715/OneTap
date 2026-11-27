@@ -1,7 +1,8 @@
 import ExcelJS from "exceljs";
 import PDFDocument from "pdfkit";
-import { computeProfitLoss, dayEnd, dayKey, dayStart, daysBetween, EXPORT_SECTIONS } from "@rasoipulse/config-schema";
+import { computeProfitLoss, computeProfitLossRecorded, dayEnd, dayKey, dayStart, daysBetween, EXPORT_SECTIONS } from "@rasoipulse/config-schema";
 import { OrderModel } from "@rasoipulse/db";
+import * as extra from "./analytics.extra.service.js";
 import * as svc from "./analytics.service.js";
 
 /**
@@ -103,6 +104,46 @@ export async function buildReport(ctx, input, outlets, { canFinance }) {
     ], c.top.map((r) => ({ name: r.name, phone: r.phone, orders: r.orders, spend: rupees(r.spend), last: dayKey(r.last) })));
   }
 
+  if (wanted.has("coupons")) {
+    const c = await extra.couponsReport(ctx, range, ids);
+    if (c.enabled) {
+      add("coupons", "Coupon usage", [
+        { key: "code", label: "Coupon", kind: "text" }, { key: "uses", label: "Times used", kind: "int" }, { key: "discount", label: "Discount given", kind: "money" },
+        { key: "sales", label: "Sales from these orders", kind: "money" }, { key: "avg", label: "Average order", kind: "money" }, { key: "customers", label: "Customers", kind: "int" },
+        { key: "share", label: "Share of all orders", kind: "pct" }, { key: "last", label: "Last used", kind: "text" },
+      ], c.coupons.map((r) => ({ code: r.code, uses: r.uses, discount: rupees(r.discount), sales: rupees(r.sales), avg: rupees(r.avgOrder), customers: r.customers, share: pct(r.shareOfOrders), last: r.lastUsed ?? "" })));
+    }
+  }
+
+  if (wanted.has("reservations")) {
+    const r = await extra.reservationsReport(ctx, range, ids);
+    if (r.enabled) {
+      const t = r.totals;
+      add("reservations", "Table reservations", [
+        { key: "measure", label: "Measure", kind: "text" }, { key: "value", label: "This period", kind: "auto" },
+      ], [
+        { measure: "Bookings", value: t.bookings, fmt: "int" }, { measure: "Bookings in the period before", value: t.previousBookings, fmt: "int" },
+        { measure: "Guests", value: t.guests, fmt: "int" }, { measure: "Average party size", value: t.avgParty, fmt: "dec" },
+        { measure: "Guests who came (seated or completed)", value: t.kept, fmt: "int" }, { measure: "No-shows", value: t.noShows, fmt: "int" },
+        { measure: "Cancelled", value: t.cancelled, fmt: "int" }, { measure: "Declined", value: t.declined, fmt: "int" },
+        { measure: "No-show rate", value: pct(t.noShowRate), fmt: "pct" }, { measure: "Advance collected", value: rupees(t.advanceCollected), fmt: "money" },
+        { measure: "Advance to refund", value: rupees(t.refundDue), fmt: "money" }, { measure: "Value of bookings", value: rupees(t.bookedValue), fmt: "money" },
+        { measure: "Busiest weekday", value: r.busiestWeekday ?? "" }, { measure: "Busiest hour", value: r.busiestHour === null ? "" : hourLabel(r.busiestHour) },
+      ]);
+    }
+  }
+
+  if (wanted.has("expenses") && canFinance) {
+    const ex = await extra.listExpenses(ctx, range, ids);
+    add("expenses", "Expenses recorded", [
+      { key: "day", label: "Day", kind: "text" }, { key: "outlet", label: "Outlet", kind: "text" }, { key: "category", label: "Category", kind: "text" }, { key: "title", label: "Title", kind: "text" },
+      { key: "vendor", label: "Vendor", kind: "text" }, { key: "mode", label: "Paid by", kind: "text" }, { key: "amount", label: "Amount", kind: "money" }, { key: "note", label: "Note", kind: "text" },
+    ], [
+      ...ex.entries.slice().reverse().map((e) => ({ day: e.day, outlet: e.outlet, category: e.categoryLabel, title: e.label, vendor: e.vendor, mode: e.paymentMode, amount: e.amount, note: e.note })),
+      { day: "Total", outlet: "", category: "", title: "", vendor: "", mode: "", amount: ex.totals.amount, note: "" },
+    ]);
+  }
+
   if (wanted.has("orders")) {
     const match = { brandId: ctx.brandId, createdAt: { $gte: dayStart(range.from), $lt: dayEnd(range.to) }, ...(ids.length ? { outletId: { $in: ids } } : {}) };
     const orders = await OrderModel.find(match).sort({ createdAt: 1 }).limit(50_000).select("createdAt outletId orderNumber channel status payment customer lines totals couponCode").lean();
@@ -123,7 +164,10 @@ export async function buildReport(ctx, input, outlets, { canFinance }) {
   }
 
   if (wanted.has("pnl") && canFinance && input.pnl) {
-    const r = computeProfitLoss({ netSalesPaise: k.net, foodCostPct: input.pnl.foodCostPct, expenses: input.pnl.expenses, range });
+    const recorded = input.pnl.mode === "recorded";
+    const r = recorded
+      ? computeProfitLossRecorded({ netSalesPaise: k.net, foodCostPct: input.pnl.foodCostPct, recorded: await extra.recordedByCategory(ctx, range, ids), range })
+      : computeProfitLoss({ netSalesPaise: k.net, foodCostPct: input.pnl.foodCostPct, expenses: input.pnl.expenses, range });
     const rows = [
       { line: "Net sales (excl. GST)", amount: round2(r.sales) },
       { line: `Food cost (${input.pnl.foodCostPct}% of sales)`, amount: -round2(r.foodCost) },

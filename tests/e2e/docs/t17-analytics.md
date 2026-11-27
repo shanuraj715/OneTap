@@ -1,6 +1,6 @@
 # T17 — Analytics — sales, per-outlet graphs, compare outlets, best sellers + what to prepare, profit & loss, weekly/monthly/yearly exports, plan and role access
 
-**Area:** analytics · **Last result:** ✅ PASSED (93 passed, 0 failed · 2026-11-21 13:26 · headless · 1 min 10 s)
+**Area:** analytics · **Last result:** ✅ PASSED (93 passed, 0 failed · 2026-11-28 03:18 · headless · 1 min 12 s)
 
 **Run it alone:** `node run.mjs --only t17` (add `--visible` to watch it) · starts from fresh fake data
 
@@ -71,10 +71,10 @@ _Nothing failed._
 
 - the figures equal the worked-out totals (Sales ₹52,164, Net sales ₹49,719, Orders 285, Items sold 558, Cancelled 32, Discounts given ₹496, Average order ₹183)
 - Sales says how it moved against the 30 days before (-0.8%) — _Sales ₹52,164 −0.8% vs the period before incl. GST_
-- the range shown is the last 30 days — _23 Oct 2026 – 21 Nov 2026 · 30 days_
+- the range shown is the last 30 days — _30 Oct 2026 – 28 Nov 2026 · 30 days_
 - did not happen: cancelled orders are counted as sales (orders + cancelled would be 318)
 - the day-by-day table has 30 days that add up to 285 orders — _30 rows, 285 orders_
-- the hour-by-hour table adds up to 285 orders — _10 hours_
+- the hour-by-hour table adds up to 285 orders — _11 hours_
 - the 'Busiest times' heat map and the order-type and payment charts are there
 
 **Step 3 — Choosing an outlet, a shorter period or custom dates changes every figure**
@@ -85,8 +85,8 @@ _Nothing failed._
 - did not happen: one outlet's page still shows the other outlet's sales or the whole store's
 - Last 7 days: ₹9,828, 54 orders
 - 'Custom dates…' shows two date pickers (From, To) that start from the range just used
-- picking an earlier start date in the calendar widens the figures — _499 orders from 2026-10-01_
-- custom dates 2026-11-15 to 2026-11-21, picked in the calendar, give the same ₹9,828 as 'Last 7 days'
+- picking an earlier start date in the calendar widens the figures — _566 orders from 2026-10-01_
+- custom dates 2026-11-22 to 2026-11-28, picked in the calendar, give the same ₹9,828 as 'Last 7 days'
 - Today (no paid orders yet in the sample) shows ₹0 and 0 orders, not an error
 
 **Step 4 — Sales: one line per outlet, and the order types add up**
@@ -118,7 +118,7 @@ _Nothing failed._
 - the second outlet's sales are compared with the first (-41%) — _₹19,290 −41% vs Marketing Mart — Main_
 - each outlet has its own best sellers (Paneer Steamed Momos — 105 and Chicken Momos — 62)
 - there is a day-by-day line for each outlet
-- for 2026-11-15 to 2026-11-21, picked in the calendar, the two outlets add up to the store's ₹9,828 — _9828_
+- for 2026-11-22 to 2026-11-28, picked in the calendar, the two outlets add up to the store's ₹9,828 — _9828_
 
 **Step 8 — Operations: cancellations and discounts**
 
@@ -129,23 +129,23 @@ _Nothing failed._
 **Step 9 — Profit & loss: type the monthly bills once, get the profit**
 
 - the 'Shared by every outlet' list adds up to ₹2,500 a month — _₹2,500_
-- net profit = 49719 net sales − 35% food − 22500 a month × 0.990 months = ₹10035 — _saw 10035_
+- net profit = 49719 net sales − 35% food − 22500 a month × 0.998 months = ₹9865 — _saw 9865_
 - it is called a profit (not a loss)
 - the table lists every bill by name with its share for these days
-- profit by outlet: Marketing Mart — Main ≈ ₹5940, Marketing Mart — Second ≈ ₹4094 (own bills + a share of the shared ones by sales)
-- a bill added by hand counts (₹1,000 a month more) — _saw 9044_
+- profit by outlet: Marketing Mart — Main ≈ ₹5831, Marketing Mart — Second ≈ ₹4035 (own bills + a share of the shared ones by sales)
+- a bill added by hand counts (₹1,000 a month more) — _saw 8868_
 - did not happen: the removed bill still counts in the profit
-- food cost 30% instead of 35% raises the profit to match — _saw 12521_
+- food cost 30% instead of 35% raises the profit to match — _saw 12351_
 
 **Step 10 — The bills are remembered; 'Save to my store' keeps a copy for other devices**
 
 - after a reload the rent typed for the first outlet is still there — _5000_
-- …and so is the profit — _saw 10035_
+- …and so is the profit — _saw 9865_
 - 'Save to my store' says it was saved — _Saved to your store — any device you sign in on will have these numbers._
 - with the browser's memory wiped (a new device) the saved bills load by themselves — _Loaded the numbers saved to your store._
-- …and the profit is the same again — _saw 10035_
-- changing a bill changes the profit — _saw 5084_
-- 'Use the version saved to my store' puts the saved bill back — _saw 10035_
+- …and the profit is the same again — _saw 9865_
+- changing a bill changes the profit — _saw 4877_
+- 'Use the version saved to my store' puts the saved bill back — _saw 9865_
 
 **Step 11 — Reports: this week / last week / this month / last month / this year / last year**
 
@@ -153,27 +153,27 @@ _Nothing failed._
 
 **Step 12 — Reports: Excel — a sheet per section with the right totals**
 
-- the file is named like a report and ends .xlsx — _tablepe-marketing-mart-2026-10-23_to_2026-11-21.xlsx_
+- the file is named like a report and ends .xlsx — _rasoipulse-marketing-mart-2026-10-30_to_2026-11-28.xlsx_
 - there is a sheet for each chosen section
 - did not happen: a section that was not chosen (Sales by hour, Every order) is in the file
 - Summary: sales 52164, net 49718.57, GST 2445.43, orders 285, cancelled 32
 - 'Sales by day' has 30 days adding up to ₹52164 — _30 rows_
 - the GST sheet's days add up to ₹2445.43 GST, and its Total row says ₹2445.43 too — _29 days, total row ["Total",285,48918.57,1222.08,1223.35,2445.43,0,52164]_
-- the Profit & loss sheet uses the bills typed earlier: net profit ≈ ₹10035 — _sheet says 10034.81_
+- the Profit & loss sheet uses the bills typed earlier: net profit ≈ ₹9865 — _sheet says 9865.46_
 
 **Step 13 — Reports: one outlet as CSV, and PDF and JSON**
 
 - the CSV has a header and one row per day, with the BOM Excel needs — _Day,Orders,Sales (incl. GST),Net sales_
 - Marketing Mart — Main's CSV adds up to ₹32874 and 177 orders (not the whole store's)
 - did not happen: the outlet's CSV contains the whole store's sales
-- the weekly PDF is a real PDF file — _7337 bytes_
+- the weekly PDF is a real PDF file — _7345 bytes_
 - the yearly JSON says 2026-01-01 to 2026-12-31 for the whole store — _[{"from":"2026-01-01","to":"2026-12-31"},"Whole store"]_
 - …and its summary holds at least the last 30 days' sales (the whole year includes them) — _125855_
 
 **Step 14 — GST and the daily cash close agree**
 
 - the GST total row: 285 orders, taxable ₹48,919, CGST ₹1,222, SGST ₹1,223, GST ₹2,445 — _Total 285 ₹48,919 ₹1,222 ₹1,223 ₹2,445 ₹52,164_
-- the cash close for 2026-11-20, picked in the calendar, equals that day's invoice total in the GST table (₹2062) — _₹2,062 vs 2062_
+- the cash close for 2026-11-27, picked in the calendar, equals that day's invoice total in the GST table (₹2062) — _₹2,062 vs 2062_
 
 **Step 15 — Who can see what: manager, accountant, cashier**
 
@@ -207,6 +207,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-28 03:18 | pass | 93 | 0 | headless | 1 min 12 s |
 | 2026-11-21 13:26 | pass | 93 | 0 | headless | 1 min 10 s |
 | 2026-11-21 04:42 | pass | 93 | 0 | headless | 1 min 12 s |
 | 2026-11-20 11:06 | pass | 93 | 0 | headless | 1 min 9 s |
@@ -216,7 +217,6 @@ _Nothing failed._
 | 2026-11-20 04:21 | pass | 93 | 0 | headless | 1 min 8 s |
 | 2026-11-20 00:32 | pass | 93 | 0 | headless | 1 min 10 s |
 | 2026-11-20 00:30 | fail | 92 | 1 | headless | 1 min 9 s |
-| 2026-11-20 00:14 | fail | 92 | 1 | headless | 1 min 9 s |
 
 ---
 _Generated by `tests/e2e/run.mjs` — edit the test file (`tests/t17-analytics.mjs`), not this page._

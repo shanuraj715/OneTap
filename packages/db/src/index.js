@@ -9,7 +9,7 @@ export { AppReleaseModel, AppSettingModel } from "./models/app-release.js";
 export { UserModel, SessionModel } from "./models/user.js";
 export { PlatformRoleModel, PlatformAuditModel } from "./models/platform-role.js";
 export { SubscriptionPaymentModel } from "./models/subscription.js";
-export { AnalyticsProfileModel } from "./models/analytics.js";
+export { AnalyticsProfileModel, ExpenseModel } from "./models/analytics.js";
 export { OnboardingModel, PricingModel } from "./models/onboarding.js";
 export { LoginLogModel } from "./models/audit.js";
 export { LoginGuardModel } from "./models/security.js";

@@ -4400,8 +4400,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T07:56:07.834Z",
-    "durationMs": 69750,
+    "at": "2026-11-27T21:48:00.774Z",
+    "durationMs": 71730,
     "steps": [
       {
         "n": 1,
@@ -4440,7 +4440,7 @@
           {
             "label": "the range shown is the last 30 days",
             "ok": true,
-            "detail": "23 Oct 2026 – 21 Nov 2026 · 30 days",
+            "detail": "30 Oct 2026 – 28 Nov 2026 · 30 days",
             "kind": "expect"
           },
           {
@@ -4458,7 +4458,7 @@
           {
             "label": "the hour-by-hour table adds up to 285 orders",
             "ok": true,
-            "detail": "10 hours",
+            "detail": "11 hours",
             "kind": "expect"
           },
           {
@@ -4512,11 +4512,11 @@
           {
             "label": "picking an earlier start date in the calendar widens the figures",
             "ok": true,
-            "detail": "499 orders from 2026-10-01",
+            "detail": "566 orders from 2026-10-01",
             "kind": "expect"
           },
           {
-            "label": "custom dates 2026-11-15 to 2026-11-21, picked in the calendar, give the same ₹9,828 as 'Last 7 days'",
+            "label": "custom dates 2026-11-22 to 2026-11-28, picked in the calendar, give the same ₹9,828 as 'Last 7 days'",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -4536,7 +4536,7 @@
           {
             "label": "the chart has a line for each outlet (their names are in the legend)",
             "ok": true,
-            "detail": "Sales by outlet Each day — one line per outlet Table Marketing Mart — Main Marketing Mart — Second ₹0 ₹500 ₹1,000 ₹1,500 ₹2,000 24 Oct 28 Oct 1 Nov 5 Nov 9 Nov ",
+            "detail": "Sales by outlet Each day — one line per outlet Table Marketing Mart — Main Marketing Mart — Second ₹0 ₹500 ₹1,000 ₹1,500 ₹2,000 31 Oct 4 Nov 8 Nov 12 Nov 16 Nov",
             "kind": "expect"
           },
           {
@@ -4650,7 +4650,7 @@
           {
             "label": "each outlet has its own best sellers (Paneer Steamed Momos — 105 and Chicken Momos — 62)",
             "ok": true,
-            "detail": " Delivery: ₹11,116 · Dine-in: ₹7,090 Marketing Mart — Second Best sellers and how the orders arrive Chicken Momos — 62 Cold Coffee — 46 Paneer Steamed Momos — 34 Veg Steamed Momos — 31 Paneer Gravy Momos — 29 31% 39% 30% Takeaway Delivery Dine-in Takeaway: ₹6,020 · Delivery: ₹7,478 · Dine-in: ₹5,792",
+            "detail": "akeaway: ₹14,668 · Delivery: ₹11,116 Marketing Mart — Second Best sellers and how the orders arrive Chicken Momos — 62 Cold Coffee — 46 Paneer Steamed Momos — 34 Veg Steamed Momos — 31 Paneer Gravy Momos — 29 30% 39% 31% Dine-in Delivery Takeaway Dine-in: ₹5,792 · Delivery: ₹7,478 · Takeaway: ₹6,020",
             "kind": "expect"
           },
           {
@@ -4660,7 +4660,7 @@
             "kind": "expect"
           },
           {
-            "label": "for 2026-11-15 to 2026-11-21, picked in the calendar, the two outlets add up to the store's ₹9,828",
+            "label": "for 2026-11-22 to 2026-11-28, picked in the calendar, the two outlets add up to the store's ₹9,828",
             "ok": true,
             "detail": "9828",
             "kind": "expect"
@@ -4702,9 +4702,9 @@
             "kind": "expect"
           },
           {
-            "label": "net profit = 49719 net sales − 35% food − 22500 a month × 0.990 months = ₹10035",
+            "label": "net profit = 49719 net sales − 35% food − 22500 a month × 0.998 months = ₹9865",
             "ok": true,
-            "detail": "saw 10035",
+            "detail": "saw 9865",
             "kind": "expect"
           },
           {
@@ -4716,31 +4716,31 @@
           {
             "label": "the table lists every bill by name with its share for these days",
             "ok": true,
-            "detail": "Where the money goes Every expense for these days (monthly amounts shared out by the day) Net sales (without GST) ₹49,719 Food cost (35%) − ₹17,401 Gross profit ₹32,317 Marketing & ads − ₹2,476 Rent —",
+            "detail": "Where the money goes Every expense for these days (monthly amounts shared out by the day) Net sales (without GST) ₹49,719 Food cost (35%) − ₹17,401 Gross profit ₹32,317 Marketing & ads − ₹2,495 Rent —",
             "kind": "expect"
           },
           {
-            "label": "profit by outlet: Marketing Mart — Main ≈ ₹5940, Marketing Mart — Second ≈ ₹4094 (own bills + a share of the shared ones by sales)",
+            "label": "profit by outlet: Marketing Mart — Main ≈ ₹5831, Marketing Mart — Second ≈ ₹4035 (own bills + a share of the shared ones by sales)",
             "ok": true,
-            "detail": "[[\"Marketing Mart — Main\",\"₹31,347\",\"₹10,971\",\"₹14,435\",\"₹5,940\",\"19.0%\"],[\"Marketing Mart — Second\",\"₹18,372\",\"₹6,430\",\"₹7,847\",\"₹4,094\",\"22.3%\"]]",
+            "detail": "[[\"Marketing Mart — Main\",\"₹31,347\",\"₹10,971\",\"₹14,545\",\"₹5,831\",\"18.6%\"],[\"Marketing Mart — Second\",\"₹18,372\",\"₹6,430\",\"₹7,907\",\"₹4,035\",\"22.0%\"]]",
             "kind": "expect"
           },
           {
             "label": "a bill added by hand counts (₹1,000 a month more)",
             "ok": true,
-            "detail": "saw 9044",
+            "detail": "saw 8868",
             "kind": "expect"
           },
           {
             "label": "the removed bill still counts in the profit",
             "ok": true,
-            "detail": "saw 10035",
+            "detail": "saw 9865",
             "kind": "never"
           },
           {
             "label": "food cost 30% instead of 35% raises the profit to match",
             "ok": true,
-            "detail": "saw 12521",
+            "detail": "saw 12351",
             "kind": "expect"
           }
         ]
@@ -4758,7 +4758,7 @@
           {
             "label": "…and so is the profit",
             "ok": true,
-            "detail": "saw 10035",
+            "detail": "saw 9865",
             "kind": "expect"
           },
           {
@@ -4776,19 +4776,19 @@
           {
             "label": "…and the profit is the same again",
             "ok": true,
-            "detail": "saw 10035",
+            "detail": "saw 9865",
             "kind": "expect"
           },
           {
             "label": "changing a bill changes the profit",
             "ok": true,
-            "detail": "saw 5084",
+            "detail": "saw 4877",
             "kind": "expect"
           },
           {
             "label": "'Use the version saved to my store' puts the saved bill back",
             "ok": true,
-            "detail": "saw 10035",
+            "detail": "saw 9865",
             "kind": "expect"
           }
         ]
@@ -4812,7 +4812,7 @@
           {
             "label": "the file is named like a report and ends .xlsx",
             "ok": true,
-            "detail": "tablepe-marketing-mart-2026-10-23_to_2026-11-21.xlsx",
+            "detail": "rasoipulse-marketing-mart-2026-10-30_to_2026-11-28.xlsx",
             "kind": "expect"
           },
           {
@@ -4846,9 +4846,9 @@
             "kind": "expect"
           },
           {
-            "label": "the Profit & loss sheet uses the bills typed earlier: net profit ≈ ₹10035",
+            "label": "the Profit & loss sheet uses the bills typed earlier: net profit ≈ ₹9865",
             "ok": true,
-            "detail": "sheet says 10034.81",
+            "detail": "sheet says 9865.46",
             "kind": "expect"
           }
         ]
@@ -4878,7 +4878,7 @@
           {
             "label": "the weekly PDF is a real PDF file",
             "ok": true,
-            "detail": "7337 bytes",
+            "detail": "7345 bytes",
             "kind": "expect"
           },
           {
@@ -4906,7 +4906,7 @@
             "kind": "expect"
           },
           {
-            "label": "the cash close for 2026-11-20, picked in the calendar, equals that day's invoice total in the GST table (₹2062)",
+            "label": "the cash close for 2026-11-27, picked in the calendar, equals that day's invoice total in the GST table (₹2062)",
             "ok": true,
             "detail": "₹2,062 vs 2062",
             "kind": "expect"
@@ -9345,8 +9345,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T20:25:48.848Z",
-    "durationMs": 11030,
+    "at": "2026-11-27T21:48:12.666Z",
+    "durationMs": 11851,
     "steps": [
       {
         "n": 1,
@@ -10117,7 +10117,7 @@
           {
             "label": "the inventory sees the whole API",
             "ok": true,
-            "detail": "370 routes, 216 change data",
+            "detail": "381 routes, 221 change data",
             "kind": "expect"
           },
           {
@@ -31888,14 +31888,14 @@
   },
   "t93-app-releases-api": {
     "id": "t93-app-releases-api",
-    "title": "App updates: the platform admin uploads an APK in pieces and publishes it (optionally forcing an update); phones ask 'is there a newer version?'; old builds are turned away at sign-in when an update is forced",
+    "title": "App Management: the platform admin uploads an APK in pieces and publishes it (optionally forcing an update); phones ask 'is there a newer version?'; old builds are turned away at sign-in when an update is forced",
     "status": "pass",
     "pass": 98,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T16:34:26.338Z",
-    "durationMs": 4717,
+    "at": "2026-11-27T21:41:45.754Z",
+    "durationMs": 6628,
     "steps": [
       {
         "n": 1,
@@ -32041,7 +32041,7 @@
           {
             "label": "the file is in the platform storage (this disk, by default), under app-releases/oma/",
             "ok": true,
-            "detail": "app-releases/oma/v-26.11.26-001-0d3bfd087376.apk",
+            "detail": "app-releases/oma/v-26.11.26-001-e090db329f0a.apk",
             "kind": "expect"
           },
           {
@@ -32227,7 +32227,7 @@
           {
             "label": "as an Android package, with a clear file name",
             "ok": true,
-            "detail": "attachment; filename=\"rasoi-pulse-oma-v-26.11.26-002.apk\"",
+            "detail": "attachment; filename=rasoi-pulse-oma-v-26.11.26-002.apk",
             "kind": "expect"
           },
           {
@@ -32443,7 +32443,7 @@
           {
             "label": "/api/app-updates/apps lists every app with its newest version and page",
             "ok": true,
-            "detail": "oma:v-26.11.26-003 kda:v-26.11.28-002",
+            "detail": "oma:v-26.11.26-003 kda:v-26.11.28-002 rda:undefined",
             "kind": "expect"
           },
           {
@@ -32473,7 +32473,7 @@
           {
             "label": "the finished upload lands in the bucket, under app-releases/oma/",
             "ok": true,
-            "detail": "app-releases/oma/v-26.11.26-020-c343821552cc.apk",
+            "detail": "app-releases/oma/v-26.11.26-020-1a9e494a6e42.apk",
             "kind": "expect"
           },
           {
@@ -32574,8 +32574,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T11:03:48.520Z",
-    "durationMs": 23556,
+    "at": "2026-11-27T21:40:46.411Z",
+    "durationMs": 15973,
     "steps": [
       {
         "n": 1,
@@ -32716,7 +32716,7 @@
           {
             "label": "the version is listed: Published, its size, 0 downloads and its notes",
             "ok": true,
-            "detail": "v-26.11.26-001 Published 9.0 MB · 0 downloads · published Nov 27, 2026 First version: sign in, take orders at the tables. Withdraw Required Notes APK File",
+            "detail": "v-26.11.26-001 Published 9.0 MB · 0 downloads · published Nov 28, 2026 First version: sign in, take orders at the tables. Withdraw Required Notes APK File",
             "kind": "expect"
           },
           {
@@ -32967,8 +32967,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T11:27:04.685Z",
-    "durationMs": 2189,
+    "at": "2026-11-27T21:40:48.782Z",
+    "durationMs": 2347,
     "steps": [
       {
         "n": 1,
@@ -33031,7 +33031,7 @@
           {
             "label": "…and points at the API's download address",
             "ok": true,
-            "detail": "http://localhost:3097/api/app-updates/download/6b096907ee3d1485be75ec28",
+            "detail": "http://localhost:3097/api/app-updates/download/6b09f8df13c61ed53d8749c2",
             "kind": "expect"
           },
           {
@@ -33109,7 +33109,7 @@
           {
             "label": "'Check the file' shows the file's SHA-256",
             "ok": true,
-            "detail": "e78524c71897…",
+            "detail": "1764073e12c7…",
             "kind": "expect"
           }
         ]
@@ -33399,8 +33399,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T16:35:28.329Z",
-    "durationMs": 4605,
+    "at": "2026-11-27T21:40:54.841Z",
+    "durationMs": 6041,
     "steps": [
       {
         "n": 1,
@@ -33517,7 +33517,7 @@
           {
             "label": "the staff app's 'unavailable now' list has it at once, labelled Sold out",
             "ok": true,
-            "detail": "[{\"id\":\"6b085fcfacf5a265ef851c9f\",\"label\":\"Sold out\"},{\"id\":\"6b085fcfacf5a265ef851c9d\",\"label\":\"Sold out\"}]",
+            "detail": "[{\"id\":\"6b09f8e6116a99d70dd93ffb\",\"label\":\"Sold out\"},{\"id\":\"6b09f8e6116a99d70dd93ff8\",\"label\":\"Sold out\"}]",
             "kind": "expect"
           },
           {
@@ -40328,8 +40328,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T11:05:02.408Z",
-    "durationMs": 4278,
+    "at": "2026-11-27T21:40:15.719Z",
+    "durationMs": 4431,
     "steps": [
       {
         "n": 1,
@@ -41042,8 +41042,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T20:45:48.763Z",
-    "durationMs": 9058,
+    "at": "2026-11-27T21:40:24.069Z",
+    "durationMs": 8328,
     "steps": [
       {
         "n": 1,
@@ -41094,7 +41094,7 @@
           {
             "label": "the role is in the list, holding Onboarding only",
             "ok": true,
-            "detail": "Sales 340452 Onboarding 0",
+            "detail": "Sales 616220 Onboarding 0",
             "kind": "expect"
           },
           {
@@ -44456,6 +44456,1155 @@
           },
           {
             "label": "no errors in the browser console",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t131-business-reports-api": {
+    "id": "t131-business-reports-api",
+    "title": "Business app server side: owners / managers / accountants may sign in, others are turned away; coupon usage, table bookings, counted stock, plain-English insights, the sales goal, the expenses ledger (+ profit & loss from it) and Excel / PDF / CSV reports hold the right numbers",
+    "status": "pass",
+    "pass": 94,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-27T21:46:37.168Z",
+    "durationMs": 6928,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Who may sign in to the Business app (the server decides, not the app)",
+        "checks": [
+          {
+            "label": "the owner, a manager and an accountant can sign in",
+            "ok": true,
+            "detail": "200,200,200",
+            "kind": "expect"
+          },
+          {
+            "label": "the owner's answer lists what they may do (so the app can show only that)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "waiter is turned away, in words",
+            "ok": true,
+            "detail": "Rasoi Pulse Business is for store owners and the people they share reports with (managers and accountants). This account can't use it.",
+            "kind": "expect"
+          },
+          {
+            "label": "cook is turned away, in words",
+            "ok": true,
+            "detail": "Rasoi Pulse Business is for store owners and the people they share reports with (managers and accountants). This account can't use it.",
+            "kind": "expect"
+          },
+          {
+            "label": "the other apps' sign-ins are exactly as before (a waiter still signs in to OMA, a cook to the Kitchen app)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the Kitchen app still says it is for the kitchen team",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the console's app list names Rasoi Pulse Business (code BIZ); it starts private, so it is not on the website yet",
+            "ok": true,
+            "detail": "{\"app\":\"business\",\"code\":\"BIZ\",\"name\":\"Rasoi Pulse Business\",\"public\":false,\"publicByDefault\":false,\"usesRefreshInterval\":false,\"pageUrl\":\"h",
+            "kind": "expect"
+          },
+          {
+            "label": "the public list still has only the staff apps",
+            "ok": true,
+            "detail": "oma,kda,rda",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Seeding made-up data (worked out independently below)",
+        "checks": [
+          {
+            "label": "the made-up orders, coupons and bookings are in",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Business app options: what the plan includes and what the person may do",
+        "checks": [
+          {
+            "label": "the owner's options list the plan's features and that money, files and expenses are allowed",
+            "ok": true,
+            "detail": "[\"takeaway\",\"dineInQr\",\"analytics\",\"coupons\",\"reservations\",\"feedback\"]",
+            "kind": "expect"
+          },
+          {
+            "label": "…the outlets, the expense categories and the payment methods",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the report sections now include coupons, reservations and (a money figure) expenses",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a manager sees analytics but not money figures, and can't write expenses",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Coupon usage",
+        "checks": [
+          {
+            "label": "6 orders used a coupon in the last 7 days: ₹400 given away on ₹2,950 of sales (cancelled, unpaid and older orders left out)",
+            "ok": true,
+            "detail": "{\"uses\":6,\"discount\":40000,\"sales\":295000,\"codes\":2,\"shareOfOrders\":0.75,\"avgOrderWithCoupon\":49167,\"avgOrderWithoutCoupon\":50000,\"previousUses\":1,\"previousDiscount\":5000,\"usesChange\":500,\"discountChange\":700}",
+            "kind": "expect"
+          },
+          {
+            "label": "SAVE10 (also typed in lower case) was used 4 times by 3 customers: ₹200 given, ₹1,650 of sales",
+            "ok": true,
+            "detail": "{\"code\":\"SAVE10\",\"description\":\"SAVE10 test\",\"discountType\":\"flat\",\"value\":5000,\"active\":true,\"redemptionCount\":0,\"maxRedemptions\":0,\"validUntil\":\"\",\"uses\":4,\"d",
+            "kind": "expect"
+          },
+          {
+            "label": "WELCOME: 2 uses, ₹200 given, ₹1,300 of sales",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the most used coupon comes first",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "75% of the 8 orders used a coupon; an order with a coupon averaged ₹491.67, one without ₹500",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "against the period before (1 use): all coupons up 500%, SAVE10 alone up 300%",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a coupon that is switched on but nobody used is listed as unused (a switched-off one is not)",
+            "ok": true,
+            "detail": "UNUSED5",
+            "kind": "expect"
+          },
+          {
+            "label": "by outlet: 4 uses at one, 2 at the other",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "choosing only the second outlet shows only its coupon uses",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a manager can read coupon usage",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a bad or missing date range is refused (400)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Table reservations",
+        "checks": [
+          {
+            "label": "4 bookings for 20 guests (average party 5): 2 came, 1 no-show, 1 cancelled",
+            "ok": true,
+            "detail": "{\"bookings\":4,\"previousBookings\":1,\"change\":300,\"guests\":20,\"avgParty\":5,\"kept\":2,\"noShows\":1,\"cancelled\":1,\"declined\":0,\"noShowRate\":0.25,\"cancelRate\":0.25,\"advanceCollected\":20000,\"refundDue\":10000,",
+            "kind": "expect"
+          },
+          {
+            "label": "no-show rate 25%; ₹200 advance collected, ₹100 to refund; ₹1,200 of bookings that count",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "1 booking coming up this week; 1 taken by staff; up 300% on the period before",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "party sizes: one booking in each band",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the most common reason is a Birthday (2)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the busiest day is the one with 2 bookings; the chart has a point for each of the 7 days",
+            "ok": true,
+            "detail": "Thursday",
+            "kind": "expect"
+          },
+          {
+            "label": "by outlet: 3 and 1",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Counted stock",
+        "checks": [
+          {
+            "label": "3 dishes are counted (1 out, 1 low), 2 are not, 1 is switched off",
+            "ok": true,
+            "detail": "{\"dishes\":5,\"counted\":3,\"notCounted\":2,\"out\":1,\"low\":1,\"switchedOff\":1}",
+            "kind": "expect"
+          },
+          {
+            "label": "the riskiest are first: out of stock, then low, then fine",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Veg Momos sells about the number of portions worked out from the last 7 days; a dish nobody ordered has no 'days left'",
+            "ok": true,
+            "detail": "2.6",
+            "kind": "expect"
+          },
+          {
+            "label": "the switched-off dish is named",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a dish whose stock is not counted is only counted, not listed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "Insights in plain words",
+        "checks": [
+          {
+            "label": "the sales insight says sales are up 387.7% on the period before",
+            "ok": true,
+            "detail": "{\"id\":\"sales-trend\",\"tone\":\"good\",\"title\":\"Sales are up\",\"text\":\"₹3,950 against ₹810 in the period before — up 387.7%.\",\"value\":387.7}",
+            "kind": "expect"
+          },
+          {
+            "label": "the best seller is named",
+            "ok": true,
+            "detail": "Veg Momos is your best seller",
+            "kind": "expect"
+          },
+          {
+            "label": "a warning says dishes are out or low, naming them",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the most used coupon is mentioned",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "every insight has a title, a sentence and a tone",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "with no orders in the dates it says so, instead of making things up",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "A plan without coupons or bookings simply leaves them out",
+        "checks": [
+          {
+            "label": "a store whose plan lacks coupons and reservations gets { enabled: false } (the app hides those sections)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "its options do not list coupons",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a store whose plan has no analytics is told so (403), in words",
+            "ok": true,
+            "detail": "Analytics isn't included in your plan.",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 9,
+        "title": "The expenses ledger",
+        "checks": [
+          {
+            "label": "an amount of 0 is refused",
+            "ok": true,
+            "detail": "400 The amount must be more than 0",
+            "kind": "expect"
+          },
+          {
+            "label": "a negative amount is refused",
+            "ok": true,
+            "detail": "400 The amount must be more than 0",
+            "kind": "expect"
+          },
+          {
+            "label": "a fraction of a paisa is refused",
+            "ok": true,
+            "detail": "400 Use at most two decimals (paise)",
+            "kind": "expect"
+          },
+          {
+            "label": "an absurd amount is refused",
+            "ok": true,
+            "detail": "400 That amount looks too big — check the number",
+            "kind": "expect"
+          },
+          {
+            "label": "a date that is not a date is refused",
+            "ok": true,
+            "detail": "400 Use a date like 2026-11-16",
+            "kind": "expect"
+          },
+          {
+            "label": "a missing category is refused",
+            "ok": true,
+            "detail": "400 Category is required.",
+            "kind": "expect"
+          },
+          {
+            "label": "an outlet that is not the store's is refused",
+            "ok": true,
+            "detail": "400 That outlet doesn't belong to your store.",
+            "kind": "expect"
+          },
+          {
+            "label": "a very long note is refused",
+            "ok": true,
+            "detail": "400 Keep the note under 300 characters",
+            "kind": "expect"
+          },
+          {
+            "label": "an expense is written (rupees in, rupees out, paise kept exactly), with its outlet and who wrote it",
+            "ok": true,
+            "detail": "{\"expense\":{\"id\":\"6b09fa3b1ab2d2f3a697c175\",\"day\":\"2026-11-27\",\"category\":\"raw_materials\",\"categoryLabel\":\"Raw materials & groceries\",\"label\":\"Vegetables\",\"amou",
+            "kind": "expect"
+          },
+          {
+            "label": "an expense with no outlet is a cost of the whole store",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the ledger adds up (₹36,750.50 over 4 bills) and lists the newest first",
+            "ok": true,
+            "detail": "{\"amount\":36750.5,\"entries\":4,\"previous\":1000,\"change\":3575.1,\"perDay\":5250.07}",
+            "kind": "expect"
+          },
+          {
+            "label": "against the period before it is compared",
+            "ok": true,
+            "detail": "3575.1",
+            "kind": "expect"
+          },
+          {
+            "label": "by category: rent first, raw materials ₹1,950.50, each with its share",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "by payment method",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "by vendor (the same shop typed in two ways is one vendor)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the chart has a point a day and they add up to the total",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "by outlet, with the whole-store costs on their own line",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "choosing one outlet shows only its bills (the whole-store rent is left out)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a category can be picked",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an expense can be corrected",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a bill that is not there is a 404",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a wrong bill is taken off, and the total follows (the earlier correction to ₹1,300 included)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an accountant can write a bill",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a manager can neither read nor write the ledger (money figures) — 403",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a waiter can't read any of it (403)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "not signed in: 401",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 10,
+        "title": "Profit & loss from the recorded bills",
+        "checks": [
+          {
+            "label": "the profit & loss answer carries the bills recorded for the range, by category",
+            "ok": true,
+            "detail": "[{\"key\":\"rent\",\"label\":\"Rent\",\"amount\":30000},{\"key\":\"electricity\",\"label\":\"Electricity\",\"amount\":4800},{\"key\":\"raw_materials\",\"label\":\"Raw",
+            "kind": "expect"
+          },
+          {
+            "label": "worked from the ledger: net sales − 30% food cost − the recorded bills = net profit (arithmetic done separately)",
+            "ok": true,
+            "detail": "-33585 vs -33585",
+            "kind": "expect"
+          },
+          {
+            "label": "each recorded category is a line of its own",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the old way (monthly estimates typed in) still works exactly as before",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 11,
+        "title": "Reports as files: Excel and PDF",
+        "checks": [
+          {
+            "label": "Excel: a real .xlsx file comes back",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…with a sheet for each section asked for, including the new ones",
+            "ok": true,
+            "detail": "Summary | Sales by day | Items sold | Coupon usage | Table reservations | Expenses recorded | Profit & loss",
+            "kind": "expect"
+          },
+          {
+            "label": "the Coupon usage sheet: SAVE10 used 4 times, ₹200 given, ₹1,650 of sales",
+            "ok": true,
+            "detail": "[\"SAVE10\",4,200,1650,412.5,3,0.5,\"2026-11-27\"]",
+            "kind": "expect"
+          },
+          {
+            "label": "the Expenses sheet ends with a total equal to the ledger",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "PDF: a real PDF file comes back",
+            "ok": true,
+            "detail": "2461 bytes",
+            "kind": "expect"
+          },
+          {
+            "label": "CSV: the coupons table",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a manager can't download a report with money figures (403)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and a manager can't download any report file (files are for owners and accountants)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a bad range in a report request is refused (400)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 12,
+        "title": "The monthly sales goal",
+        "checks": [
+          {
+            "label": "no goal yet: nothing is claimed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the goal is saved, and 'so far this month' equals the paid orders of this month",
+            "ok": true,
+            "detail": "4760 vs 4760",
+            "kind": "expect"
+          },
+          {
+            "label": "…the percentage reached and the daily average are worked out",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and what is needed per remaining day",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a manager can see the goal but not change it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a negative goal is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the goal can be cleared",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 13,
+        "title": "The older analytics and the other apps are untouched",
+        "checks": [
+          {
+            "label": "the overview still counts the same orders and sales as before",
+            "ok": true,
+            "detail": "8/395000",
+            "kind": "expect"
+          },
+          {
+            "label": "every report section that existed before is still there",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the store dashboard (browser cookie) reads analytics exactly as before",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t132-app-visibility-ui": {
+    "id": "t132-app-visibility-ui",
+    "title": "App Management → every app has a Public / Private button; the Admin app has its own tab and starts private (not in the website's list, its page still opens by its link)",
+    "status": "pass",
+    "pass": 31,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-27T21:40:01.191Z",
+    "durationMs": 2381,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The server: who is public to begin with",
+        "checks": [
+          {
+            "label": "the public list has the staff apps (OMA, KDA, RDA) and NOT the Admin or Business app",
+            "ok": true,
+            "detail": "oma,kda,rda",
+            "kind": "expect"
+          },
+          {
+            "label": "the console's app list has the Admin and Business apps too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "settings: the staff apps are public, the Admin and Business apps private",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…each says what its default is, its page address, and whether the refresh interval applies to it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a private app's own page data is still available (so its page opens for anyone with the link) and says it is not listed",
+            "ok": true,
+            "detail": "{\"id\":\"admin\",\"slug\":\"admin\",\"listed\":false,\"usesRefreshInterval\":false,\"code\":\"ADM\",\"name\":\"Rasoi P",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "The console: a tab for the Admin app with a Public / Private button",
+        "checks": [
+          {
+            "label": "App Management has a tab for every app, the Admin app and the Business app included",
+            "ok": true,
+            "detail": "oma,kda,rda,admin,business",
+            "kind": "expect"
+          },
+          {
+            "label": "the Admin app's tab is named",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA's tab: Public, the button says 'Make private', no link box",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and OMA still has its Refresh interval card",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the Admin tab says Private: not in the list of apps on the website",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…with a 'Make public' button",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the link to share with the team, with a Copy button",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the Refresh interval card is not shown for the Admin app (it does not use that setting)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the upload of a new version is there as for the other apps",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Make public, then private again",
+        "checks": [
+          {
+            "label": "pressing Make public (and agreeing to the question) turns it Public; the link box goes",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the server's public list now has the Admin app",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and its page data says listed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "after a reload it is still Public (the choice was saved)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the staff apps are still in the list",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Make private takes it out of the public list again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "A staff app can be made private too (and back)",
+        "checks": [
+          {
+            "label": "any app can be made private: RDA leaves the list, the others stay",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and public again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an app that doesn't exist is a 404; something that is not true / false is a 400",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "someone not signed in can't change it (401)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "saving the refresh interval does not change who is public",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "The website: the list leaves it out, its own page still opens",
+        "checks": [
+          {
+            "label": "the website's /apps page lists the three staff apps",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and does NOT list the Admin or Business app",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the Admin app's own page opens by its link (200), and tells search engines to skip it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it says who the app is for",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the home page does not mention the private apps either",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser console",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t104-app-refresh-interval-api": {
+    "id": "t104-app-refresh-interval-api",
+    "title": "Apps → the refresh interval is one number per app (default 8 s), set by the platform admin, and announced to the app in every answer",
+    "status": "pass",
+    "pass": 34,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-27T21:41:39.093Z",
+    "durationMs": 5751,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Nothing set yet: every app asks every 8 seconds",
+        "checks": [
+          {
+            "label": "oma: the answer says 8 seconds",
+            "ok": true,
+            "detail": "8",
+            "kind": "expect"
+          },
+          {
+            "label": "kda: the answer says 8 seconds",
+            "ok": true,
+            "detail": "8",
+            "kind": "expect"
+          },
+          {
+            "label": "rda: the answer says 8 seconds",
+            "ok": true,
+            "detail": "8",
+            "kind": "expect"
+          },
+          {
+            "label": "the console is told the limits (default 8, from 3 to 600)",
+            "ok": true,
+            "detail": "{\"default\":8,\"min\":3,\"max\":600}",
+            "kind": "expect"
+          },
+          {
+            "label": "and lists every app (the three staff apps, the Admin app and the Business app), all at the default",
+            "ok": true,
+            "detail": "[[\"oma\",8,true],[\"kda\",8,true],[\"rda\",8,true],[\"admin\",8,true],[\"business\",8,true]]",
+            "kind": "expect"
+          },
+          {
+            "label": "with their codes (OMA, KDA, RDA, ADM, BIZ)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Only the platform admin can see or change it",
+        "checks": [
+          {
+            "label": "a store owner is refused (read and change)",
+            "ok": true,
+            "detail": "403/403",
+            "kind": "expect"
+          },
+          {
+            "label": "a waiter is refused (read and change)",
+            "ok": true,
+            "detail": "403/403",
+            "kind": "expect"
+          },
+          {
+            "label": "nobody signed in is refused (read and change)",
+            "ok": true,
+            "detail": "401/401",
+            "kind": "expect"
+          },
+          {
+            "label": "…and nothing changed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Each app has its own number: the delivery app set to 15 asks every 15 seconds",
+        "checks": [
+          {
+            "label": "saving 15 for RDA is accepted",
+            "ok": true,
+            "detail": "{\"setting\":{\"app\":\"rda\",\"code\":\"RDA\",\"name\":\"Rasoi Pulse RDA\",\"public\":true,\"publicByDefault\":true,\"usesRefreshInterval\":true,\"pageUrl\":\"http://localhost:3073/apps/rda\",\"refreshSeconds\":15,\"isDefault\":false,\"updatedAt\":\"2026-11-27T21:41:38.455Z\"}}",
+            "kind": "expect"
+          },
+          {
+            "label": "the very next answer to the delivery app says 15",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the order app and the kitchen app are still at 8",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the number rides on every kind of answer, e.g. the rider's delivery list (a refusal for no sign-in)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and on errors (404) too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the kitchen app at 5, the order app at 600 (the largest allowed), the delivery app at 15",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the console's list shows each app's own number (the apps nobody changed stay at the default)",
+            "ok": true,
+            "detail": "[[\"oma\",600],[\"kda\",5],[\"rda\",15],[\"admin\",8],[\"business\",8]]",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "A change is seen at once, and again by a fresh read of the database",
+        "checks": [
+          {
+            "label": "changing 15 → 30: the next answer already says 30",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it is stored in the database (one document per app)",
+            "ok": true,
+            "detail": "{\"_id\":\"6b09f912cbcecbbe2cd18961\",\"app\":\"rda\",\"__v\":0,\"createdAt\":\"2026-11-27T21:41:38.455Z\",\"isPublic\":null,\"refreshSeconds\":30,\"updatedAt\":\"2026-11-27T21:41:38.499Z\",\"updatedBy\":\"6b09f910514963baccbd7b21\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "setting it back to 8 works",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Wrong numbers are refused with a message a person can act on",
+        "checks": [
+          {
+            "label": "2 is refused (400)",
+            "ok": true,
+            "detail": "400 At least 3 seconds: asking more often than that only loads the server.",
+            "kind": "expect"
+          },
+          {
+            "label": "601 is refused (400)",
+            "ok": true,
+            "detail": "400 At most 600 seconds (10 minutes): longer than that and new orders would show far too late.",
+            "kind": "expect"
+          },
+          {
+            "label": "7.5 is refused (400)",
+            "ok": true,
+            "detail": "400 Enter a whole number of seconds, from 3 to 600.",
+            "kind": "expect"
+          },
+          {
+            "label": "\"abc\" is refused (400)",
+            "ok": true,
+            "detail": "400 Enter a whole number of seconds, from 3 to 600.",
+            "kind": "expect"
+          },
+          {
+            "label": "null is refused (400)",
+            "ok": true,
+            "detail": "400 Enter a whole number of seconds, from 3 to 600.",
+            "kind": "expect"
+          },
+          {
+            "label": "undefined is refused (400)",
+            "ok": true,
+            "detail": "400 Enter how many seconds to wait between refreshes.",
+            "kind": "expect"
+          },
+          {
+            "label": "-4 is refused (400)",
+            "ok": true,
+            "detail": "400 At least 3 seconds: asking more often than that only loads the server.",
+            "kind": "expect"
+          },
+          {
+            "label": "0 is refused (400)",
+            "ok": true,
+            "detail": "400 At least 3 seconds: asking more often than that only loads the server.",
+            "kind": "expect"
+          },
+          {
+            "label": "and the number did not change",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an app that doesn't exist is refused (404)",
+            "ok": true,
+            "detail": "404",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Only mobile apps are told: the dashboard, the storefront and old builds get nothing added",
+        "checks": [
+          {
+            "label": "a request with no app id has no refresh header (an old OMA build sent none)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an unknown app id gets none either",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the dashboard's own calls carry none",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "The apps' own copy of the limits matches the server's",
+        "checks": [
+          {
+            "label": "APP_REFRESH is { default: 8, min: 3, max: 600 } (each app's jest suite compares its own config to this line)",
             "ok": true,
             "detail": "",
             "kind": "expect"

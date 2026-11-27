@@ -65,14 +65,14 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | `app-update-check` | visitor's address | 120 per min | Every phone running the staff app asks once when it starts whether a newer version exists. A restaurant's whole Wi-Fi shares one address and the staff all open the app at the same time, so the budget is generous — it only stops a script hammering the question. | `GET /api/app-updates/apps`<br>`GET /api/app-updates/check`<br>`GET /api/app-updates/releases` |
 | `app-download` | visitor's address | 40 per 10 min | Downloading the app's APK (tens of MB). 40 downloads per 10 minutes per address leaves room for a whole team installing at once behind one Wi-Fi, and stops someone using the download as a bandwidth drain. | `GET /api/app-updates/download/:id` |
 | `release-upload` | signed-in user (else address) | 200 per 10 min | Uploading a new app version: a 100 MB file goes up in 4 MB pieces, one request each (a 300 MB file is 75). 200 pieces in 10 minutes is room for a couple of uploads plus retries, and it is kept under the dashboard's own 240-changes-a-minute cap so a stuck page or a script is stopped by this one. Only the platform's super admin can upload. | `POST /api/platform/app-releases/uploads`<br>`PUT /api/platform/app-releases/uploads/:id/chunks/:index`<br>`POST /api/platform/app-releases/uploads/:id/complete` |
-| `team-write` | signed-in user (else address) | 240 per min | Every change a team member makes to the dashboard (menu, outlets, orders, tables, pages, settings…). 240 a minute is four a second — more than any person — so a stolen session can't mass-delete or mass-edit in a blink. | 190 routes (see the full list below) |
+| `team-write` | signed-in user (else address) | 240 per min | Every change a team member makes to the dashboard (menu, outlets, orders, tables, pages, settings…). 240 a minute is four a second — more than any person — so a stolen session can't mass-delete or mass-edit in a blink. | 195 routes (see the full list below) |
 | `account-write` | signed-in user (else address) | 30 per 10 min | Creating team members, changing roles and resetting passwords. Takeover of accounts is the worst thing that can happen to a store, so it is slow on purpose. | 15 routes (see the full list below) |
 | `ai-images` | signed-in user (else address) | 15 per 10 min | Making dish pictures with Gemini. Every picture is a paid call to Google, one request can make up to four, and only the platform's super admin can start one — this is a brake on a stuck button or a script, not on normal use. | `POST /api/menu/items/:id/generate-images` |
 | `storage-heavy` | signed-in user (else address) | 60 per 10 min | Scanning the storage for pictures that are too big, and starting an optimize run. A scan reads every stored file's name and every collection of the database, and a run compresses pictures (a few at a time) — only the platform's super admin can start either, so this is a brake on a stuck button or a script, not on normal use. | `POST /api/platform/storage/optimize`<br>`POST /api/platform/storage/optimize/scan` |
 | `secrets` | signed-in user (else address) | 30 per 10 min | Saving or revealing payment-gateway keys, SMS / WhatsApp connections, storage credentials and printer-agent tokens. They are rarely touched; a flood means something is wrong. | 18 routes (see the full list below) |
 | `pii-read` | signed-in user (else address) | 120 per min | Looking up customers and their wallets by phone number. A person looks one up at a time; a loop is someone (or a stolen session) copying the customer list or trying phone numbers to see who has coins. | `GET /api/customers`<br>`GET /api/customers/:id/wallet`<br>`GET /api/orders/staff/customer`<br>`GET /api/orders/staff/customers` |
 | `upload` | signed-in user (else address) | 60 per 10 min | Uploads write files to storage and cost bandwidth (images, menu imports, contact files). Stops a session filling the store's disk or bill. | `POST /api/marketing/contacts/parse`<br>`POST /api/menu/import`<br>`POST /api/platform/site/upload`<br>`PUT /api/qr-cards/design`<br>`POST /api/storage/upload`<br>`POST /api/whatsapp/media` |
-| `report` | signed-in user (else address) | 120 per min | Analytics screens run aggregations over a store's whole order history. A person opening screens and changing filters stays well under two a second; a loop does not. | 20 routes (see the full list below) |
+| `report` | signed-in user (else address) | 120 per min | Analytics screens run aggregations over a store's whole order history. A person opening screens and changing filters stays well under two a second; a loop does not. | 30 routes (see the full list below) |
 | `preview` | signed-in user (else address) | 30 per 10 min | Each live-preview session is kept in the server's memory for three hours; this stops a session being opened thousands of times to fill it. | `POST /api/preview` |
 | `export` | signed-in user (else address) | 10 per min | Spreadsheet / PDF exports build a whole file in memory from many database rows — the most expensive requests the API serves. | `POST /api/analytics/export`<br>`GET /api/platform/onboarding/:id/pdf`<br>`POST /api/platform/server/folders/scan` |
 | `outbound-fetch` | signed-in user (else address) | 30 per 10 min | Resolving a Google Maps short link makes the SERVER call out to the internet. Limited so it can't be used to probe or hammer other sites. | `POST /api/platform/onboarding/resolve-map`<br>`GET /api/platform/stores/:id/subdomain/status`<br>`GET /api/platform/subdomains/probe` |
@@ -80,7 +80,7 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | `chat-send` | signed-in user (else address) | 120 per min | Sending and retrying chat messages from the store's own WhatsApp number. (The WhatsApp worker also paces what actually goes out.) | `POST /api/whatsapp/chats`<br>`POST /api/whatsapp/chats/:id/messages`<br>`POST /api/whatsapp/chats/:id/messages/:messageId/retry` |
 | `wa-link` | signed-in user (else address) | 30 per 10 min | Linking, relinking and unlinking WhatsApp numbers. Repeated linking attempts are what get a number logged out or banned. | `POST /api/whatsapp/accounts`<br>`DELETE /api/whatsapp/accounts/:id`<br>`POST /api/whatsapp/accounts/:id/relink`<br>`POST /api/whatsapp/accounts/:id/unlink` |
 | `hardware` | signed-in user (else address) | 60 per min | Test prints, reprints and retries physically drive a printer in the restaurant. | `POST /api/printing/jobs/:id/reprint`<br>`POST /api/printing/jobs/:id/retry`<br>`POST /api/printing/orders/:orderId/print`<br>`POST /api/printing/printers/:id/test` |
-| `destructive` | signed-in user (else address) | 20 per 10 min | Deleting an order, a chat, an outlet or a store (or switching a store off); publishing a client onboarding as a live store; creating stores; deleting a store's subscription payment from the sales list. A stolen super-admin session can't wipe the platform at machine speed. | 13 routes (see the full list below) |
+| `destructive` | signed-in user (else address) | 20 per 10 min | Deleting an order, a chat, an outlet or a store (or switching a store off); publishing a client onboarding as a live store; creating stores; deleting a store's subscription payment from the sales list; deleting an expense from a store's expenses ledger. A stolen super-admin session can't wipe the platform at machine speed. | 14 routes (see the full list below) |
 | `ws-connect` | visitor's address | 30 per min | Live-order and live-preview WebSocket connections: each one is a held-open socket. 30 new connections a minute per address (a few browser tabs reconnecting) is plenty. | the live-order connection `/realtime` and the live-preview connection `/preview` (WebSocket upgrades — not routes, so not in the route list) |
 
 ### Every route
@@ -89,9 +89,18 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 |---|---|---|
 | GET | `/api/analytics/cash` | `api`, `report` |
 | GET | `/api/analytics/compare` | `api`, `report` |
+| GET | `/api/analytics/coupons` | `api`, `report` |
 | GET | `/api/analytics/customers` | `api`, `report` |
+| GET | `/api/analytics/expenses` | `api`, `report` |
+| POST | `/api/analytics/expenses` | `api`, `team-write`, `report` |
+| DELETE | `/api/analytics/expenses/:id` | `api`, `team-write`, `report`, `destructive` |
+| PUT | `/api/analytics/expenses/:id` | `api`, `team-write`, `report` |
 | POST | `/api/analytics/export` | `api`, `team-write`, `report`, `export` |
+| GET | `/api/analytics/goals` | `api`, `report` |
+| PUT | `/api/analytics/goals` | `api`, `team-write`, `report` |
 | GET | `/api/analytics/gst` | `api`, `report` |
+| GET | `/api/analytics/insights` | `api`, `report` |
+| GET | `/api/analytics/inventory` | `api`, `report` |
 | GET | `/api/analytics/items` | `api`, `report` |
 | GET | `/api/analytics/operations` | `api`, `report` |
 | GET | `/api/analytics/options` | `api`, `report` |
@@ -99,6 +108,7 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | GET | `/api/analytics/pnl` | `api`, `report` |
 | GET | `/api/analytics/profile` | `api`, `report` |
 | PUT | `/api/analytics/profile` | `api`, `team-write`, `report` |
+| GET | `/api/analytics/reservations` | `api`, `report` |
 | GET | `/api/analytics/sales` | `api`, `report` |
 | GET | `/api/analytics/stock` | `api`, `report` |
 | GET | `/api/app-updates/apps` | `api`, `app-update-check` |
@@ -241,6 +251,7 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | POST | `/api/platform/app-releases/uploads` | `api`, `team-write`, `release-upload` |
 | PUT | `/api/platform/app-releases/uploads/:id/chunks/:index` | `api`, `team-write`, `release-upload` |
 | POST | `/api/platform/app-releases/uploads/:id/complete` | `api`, `team-write`, `release-upload` |
+| PUT | `/api/platform/app-releases/visibility/:app` | `api`, `team-write` |
 | GET | `/api/platform/audit` | `api` |
 | GET | `/api/platform/business` | `api` |
 | GET | `/api/platform/cache` | `api` |
