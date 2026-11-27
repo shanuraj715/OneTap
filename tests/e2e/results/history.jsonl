@@ -1470,3 +1470,7 @@
 {"id":"t69-cache-audit-api","status":"pass","pass":69,"fail":0,"mode":"headless","at":"2026-11-27T15:15:39.344Z","durationMs":12005}
 {"id":"t70-cache-console-ui","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-27T15:15:42.793Z","durationMs":3417}
 {"id":"t123-cache-lifetime-ui","status":"pass","pass":25,"fail":0,"mode":"headless","at":"2026-11-27T15:15:49.689Z","durationMs":1438}
+{"id":"t124-store-owners-ui","status":"fail","pass":13,"fail":1,"mode":"headless","at":"2026-11-27T15:17:22.561Z","durationMs":2402}
+{"id":"t124-store-owners-ui","status":"fail","pass":13,"fail":1,"mode":"headless","at":"2026-11-27T15:17:34.617Z","durationMs":2431}
+{"id":"t124-store-owners-ui","status":"pass","pass":14,"fail":0,"mode":"headless","at":"2026-11-27T15:18:07.983Z","durationMs":2988}
+{"id":"t21-onboarding","status":"pass","pass":124,"fail":0,"mode":"headless","at":"2026-11-27T15:21:48.658Z","durationMs":54566}

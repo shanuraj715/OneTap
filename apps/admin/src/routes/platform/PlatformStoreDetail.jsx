@@ -782,40 +782,48 @@ function OwnersTab({ store }) {
       <Card title={`Owners — ${owners.length}`} subtitle="Owners have full access to this store. Only you can add or remove them.">
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {owners.map((o) => (
-            <div key={o.id} style={row}>
-              <div style={{ flex: 1, minWidth: 180 }}>
-                <div style={{ fontWeight: 600 }}>{o.name}</div>
-                <div style={muted}>
+            <div key={o.id} style={{ ...row, flexWrap: "wrap", alignItems: "center", gap: "10px 12px" }} data-testid="owner-row">
+              <div style={{ flex: "1 1 240px", minWidth: 0 }}>
+                <div style={{ fontWeight: 600, display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+                  {o.name}
+                  {!o.isActive ? <Pill tone="warn">Deactivated</Pill> : null}
+                  {o.blockedAt ? <Pill tone="error">Blocked</Pill> : null}
+                </div>
+                <div style={{ ...muted, overflowWrap: "anywhere" }}>
                   {o.email} · last sign-in {fmtDate(o.lastLoginAt)}
                 </div>
               </div>
-              {!o.isActive ? <Pill tone="warn">Deactivated</Pill> : null}
-              {o.blockedAt ? <Pill tone="error">Blocked</Pill> : null}
-              {resetFor === o.id ? (
-                <>
-                  <TextInput type="password" placeholder="New password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} style={{ width: 170 }} />
-                  <Button
-                    disabled={newPassword.length < 8 || update.isPending}
-                    onClick={() => update.mutate({ userId: o.id, body: { password: newPassword } }, { onSuccess: () => setResetFor(null) })}
-                  >
-                    Set
+              {/* the actions stay together (they wrap as one group), on the right */}
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", marginLeft: "auto" }}>
+                {resetFor === o.id ? (
+                  <>
+                    <TextInput type="password" placeholder="New password (8+ characters)" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} style={{ width: 210 }} aria-label={`New password for ${o.name}`} />
+                    <Button
+                      disabled={newPassword.length < 8 || update.isPending}
+                      onClick={() => update.mutate({ userId: o.id, body: { password: newPassword } }, { onSuccess: () => setResetFor(null) })}
+                    >
+                      Set
+                    </Button>
+                    <Button variant="outline" onClick={() => setResetFor(null)}>
+                      Cancel
+                    </Button>
+                  </>
+                ) : (
+                  <Button variant="outline" onClick={() => (setResetFor(o.id), setNewPassword(""))}>
+                    Reset password
                   </Button>
-                </>
-              ) : (
-                <Button variant="outline" onClick={() => (setResetFor(o.id), setNewPassword(""))}>
-                  Reset password
+                )}
+                <Button variant="outline" onClick={() => update.mutate({ userId: o.id, body: { isActive: !o.isActive } })}>
+                  {o.isActive ? "Deactivate" : "Activate"}
                 </Button>
-              )}
-              <Button variant="outline" onClick={() => update.mutate({ userId: o.id, body: { isActive: !o.isActive } })}>
-                {o.isActive ? "Deactivate" : "Activate"}
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => window.confirm(`Remove ${o.name} as an owner of ${store.name}?`) && remove.mutate(o.id)}
-                style={{ color: "var(--tone-danger)" }}
-              >
-                Remove
-              </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => window.confirm(`Remove ${o.name} as an owner of ${store.name}?`) && remove.mutate(o.id)}
+                  style={{ color: "var(--tone-danger)" }}
+                >
+                  Remove
+                </Button>
+              </div>
             </div>
           ))}
         </div>
@@ -829,22 +837,24 @@ function OwnersTab({ store }) {
             e.preventDefault();
             add.mutate({ ...form, password: form.password || undefined }, { onSuccess: () => setForm({ name: "", email: "", password: "" }) });
           }}
-          style={{ display: "flex", gap: 12, alignItems: "flex-end", flexWrap: "wrap" }}
+          // a grid, every field starting on the same line: the Password hint adds height UNDER its box without pushing the others, and the button sits level with the boxes
+          style={{ display: "grid", gap: "0 14px", gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))", alignItems: "start" }}
+          data-testid="add-owner-form"
         >
           <Field label="Name">
-            <TextInput value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
+            <TextInput value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required style={{ width: "100%" }} />
           </Field>
           <Field label="Email">
-            <TextInput type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required />
+            <TextInput type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required style={{ width: "100%" }} />
           </Field>
           <Field label="Password" hint="for a new login">
-            <TextInput type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} minLength={8} />
+            <TextInput type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} minLength={8} style={{ width: "100%" }} />
           </Field>
-          <div style={{ marginBottom: 14 }}>
-            <Button type="submit" disabled={add.isPending}>
+          <Field as="div" label={"\u00A0"}>
+            <Button type="submit" disabled={add.isPending} style={{ width: "100%" }}>
               {add.isPending ? "Adding…" : "Add owner"}
             </Button>
-          </div>
+          </Field>
         </form>
       </Card>
     </>

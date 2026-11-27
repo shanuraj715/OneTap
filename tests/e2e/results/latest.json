@@ -6398,12 +6398,12 @@
     "id": "t21-onboarding",
     "title": "Client onboarding form — plan first, plan-fit alerts and 'allow anyway', full form, save / reset / cancel, PDF + print, publish as store",
     "status": "pass",
-    "pass": 120,
+    "pass": 124,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T04:31:56.217Z",
-    "durationMs": 52010,
+    "at": "2026-11-27T15:21:48.658Z",
+    "durationMs": 54566,
     "steps": [
       {
         "n": 1,
@@ -6467,6 +6467,24 @@
             "label": "Coupons (in the plan) is a plain tick box",
             "ok": true,
             "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "under the plan box, a list says what Starter INCLUDES (Takeaway, Dine-in, Coupons …) and one what it does NOT (Marketing, Delivery, Own domain name …)",
+            "ok": true,
+            "detail": "included: ✓ Takeaway ✓ Dine-in (table QR) ✓ Coupons | not: ✕ Delivery ✕ Online payments ✕ Coin wallet ✕ Printing ✕ WhatsApp & SMS alerts ✕ WhatsApp c",
+            "kind": "expect"
+          },
+          {
+            "label": "…a feature is in one list only",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…each list's title counts its items ('Included in Starter (n)', 'Not included (m)')",
+            "ok": true,
+            "detail": "3 / 15",
             "kind": "expect"
           },
           {
@@ -6754,7 +6772,7 @@
           {
             "label": "Save: 'Saved.' and the form is now a saved draft with its own address",
             "ok": true,
-            "detail": "http://localhost:3171/platform/onboarding/6b09079b9f95f01848e3fc1a",
+            "detail": "http://localhost:3171/platform/onboarding/6b099fea717f60b0038e8716",
             "kind": "expect"
           },
           {
@@ -6940,7 +6958,7 @@
           {
             "label": "no blank pages: every page has real content (not just a footer) — printing it gives no empty sheets",
             "ok": true,
-            "detail": "1213 / 1044 / 668",
+            "detail": "1212 / 1044 / 668",
             "kind": "expect"
           },
           {
@@ -7167,6 +7185,12 @@
         "checks": [
           {
             "label": "it shows the limits to set for this client (outlets, people) and says what 'custom' means",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the plan box says a Custom plan includes nothing by itself (no included / not-included lists)",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -41368,6 +41392,123 @@
             "label": "after a reload the box says 1800 and '= 30 minutes'",
             "ok": true,
             "detail": "1800 = 30 minutes",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t124-store-owners-ui": {
+    "id": "t124-store-owners-ui",
+    "title": "Console → a store → Owners tab: the Add-an-owner fields line up (same top edge, button level), stack on a narrow window; an owner's actions stay together",
+    "status": "pass",
+    "pass": 14,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-27T15:18:07.983Z",
+    "durationMs": 2988,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Wide window: one level row",
+        "checks": [
+          {
+            "label": "Name, Email and Password boxes share the same top edge",
+            "ok": true,
+            "detail": "619 / 619 / 619",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the same height",
+            "ok": true,
+            "detail": "35 / 35",
+            "kind": "expect"
+          },
+          {
+            "label": "the 'Add owner' button sits level with the boxes (inside their top and bottom edges)",
+            "ok": true,
+            "detail": "button 619–648, boxes 619–654",
+            "kind": "expect"
+          },
+          {
+            "label": "they are side by side in order, none over another",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "each box has real width",
+            "ok": true,
+            "detail": "247 px",
+            "kind": "expect"
+          },
+          {
+            "label": "the Password hint is still there",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Narrow window: stacked, nothing sticks out",
+        "checks": [
+          {
+            "label": "no two fields overlap",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the page does not scroll sideways",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "every field is inside the window",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "An owner's row",
+        "checks": [
+          {
+            "label": "Reset password, Deactivate and Remove are inside the owner's row",
+            "ok": true,
+            "detail": "3 buttons",
+            "kind": "expect"
+          },
+          {
+            "label": "…on one line, on the right",
+            "ok": true,
+            "detail": "y 443/443/443, first button at x 988, row 277–1307",
+            "kind": "expect"
+          },
+          {
+            "label": "'Reset password' opens a password box with Set (waiting for 8+ characters) and Cancel",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Cancel closes it again",
+            "ok": true,
+            "detail": "",
             "kind": "expect"
           },
           {

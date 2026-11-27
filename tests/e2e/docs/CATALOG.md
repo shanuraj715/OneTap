@@ -1,6 +1,6 @@
 # Rasoi Pulse end-to-end tests — catalog
 
-**124 tests** · 117 passing · 2 failing/error · 5 not run yet
+**125 tests** · 118 passing · 2 failing/error · 5 not run yet
 
 | Test | Area | Result | Checks | Last run |
 |---|---|---|---|---|
@@ -41,6 +41,7 @@
 | [t121-platform-roles-api](t121-platform-roles-api.md) — Rasoi Pulse team roles: only the super admin makes roles and people; a team member can do exactly what their role holds, in every part of the platform API | platform | ✅ PASSED | 61/61 | 2026-11-27 16:59 |
 | [t122-platform-team-ui](t122-platform-team-ui.md) — Console → Team & roles: make a role and a person, and what that person sees (only what the role allows); the sidebar says App Management | platform | ✅ PASSED | 28/28 | 2026-11-27 16:59 |
 | [t123-cache-lifetime-ui](t123-cache-lifetime-ui.md) — Console → Platform settings → Cache lifetime: one input in seconds with the time in words (900 → 15 minutes); no preset buttons | platform | ✅ PASSED | 25/25 | 2026-11-27 20:45 |
+| [t124-store-owners-ui](t124-store-owners-ui.md) — Console → a store → Owners tab: the Add-an-owner fields line up (same top edge, button level), stack on a narrow window; an owner's actions stay together | platform | ✅ PASSED | 14/14 | 2026-11-27 20:48 |
 | [t13-marketing](t13-marketing.md) — Marketing — channels, audience filters (last visit, items, age, gender, order type, area), imports, lists, sending and the sidebar | marketing | ✅ PASSED | 70/70 | 2026-11-21 13:07 |
 | [t14-marketing-plan](t14-marketing-plan.md) — Marketing is a plan feature — Basic doesn't have it, Pro does, and it can be unlocked or locked for one store | plans | ✅ PASSED | 16/16 | 2026-11-27 10:11 |
 | [t15-login-protection](t15-login-protection.md) — Sign-in protection — wrong guesses block the network, blocks grow longer, a blocked network sees no login form, the platform can unblock | security | ✅ PASSED | 28/28 | 2026-11-21 13:10 |
@@ -49,7 +50,7 @@
 | [t18-tables](t18-tables.md) — Tables — add a table (number, zone, seats), zones, limits and duplicates, QR panel, remove, per-outlet and per-store, who can manage | tables | ✅ PASSED | 56/56 | 2026-11-27 17:00 |
 | [t19-dine-in](t19-dine-in.md) — Dine-in at a table — create tables, scan the QR, order onto a running tab, staff move / settle / void, occupied tables, rotated codes, switch-off | tables | ✅ PASSED | 54/54 | 2026-11-27 16:13 |
 | [t20-missed-order-alerts](t20-missed-order-alerts.md) — Missed-order alerts — with the feature off nothing warns anyone; with it on: banner, red row, sound, repeat, per-status messages, roles, dashboard, customer | orders | ✅ PASSED | 75/75 | 2026-11-21 04:47 |
-| [t21-onboarding](t21-onboarding.md) — Client onboarding form — plan first, plan-fit alerts and 'allow anyway', full form, save / reset / cancel, PDF + print, publish as store | onboarding | ✅ PASSED | 120/120 | 2026-11-27 10:01 |
+| [t21-onboarding](t21-onboarding.md) — Client onboarding form — plan first, plan-fit alerts and 'allow anyway', full form, save / reset / cancel, PDF + print, publish as store | onboarding | ✅ PASSED | 124/124 | 2026-11-27 20:51 |
 | [t22-onboarding-price](t22-onboarding-price.md) — Onboarding price estimate — price list, plan + extras, Custom starts above the dearest plan, discount / GST / yearly, the Custom plan, plan dialog | onboarding | ✅ PASSED | 55/55 | 2026-11-27 09:57 |
 | [t23-message-sending](t23-message-sending.md) — Message sending — codes by linked WhatsApp / WhatsApp Business / SMS, chosen by the owner | notifications | ✅ PASSED | 81/81 | 2026-11-21 13:23 |
 | [t24-message-sending-api](t24-message-sending-api.md) — Message sending — API rules: codes by linked WhatsApp / WhatsApp Business / SMS, never stored, never shown, capped, plan-gated | notifications | ✅ PASSED | 61/61 | 2026-11-21 13:08 |

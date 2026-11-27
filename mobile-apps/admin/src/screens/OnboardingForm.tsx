@@ -3,11 +3,12 @@ import { View } from "react-native";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { useApi } from "@/runtime";
-import type { OnboardingData, OnboardingOutlet } from "@/api/endpoints";
+import type { OnboardingData, OnboardingOutlet, Plan } from "@/api/endpoints";
 import { useAction, messageOf } from "@/data/useAction";
 import { makePassword, strongEnough } from "@/lib/password";
 import { BUSINESS_TYPES, FEATURE_CHOICES, MENU_SOURCES, ORDER_MODE_CHOICES, beyondPlan, blankForm, isHHMM, newOutlet, offeredPlans, planHas, pointFrom, pruneForced, slugify } from "@/lib/onboarding";
-import { Button, ConfirmSheet, DateField, ErrorState, Field, Glass, Input, LoadingCards, Pill, Screen, Section, Select, Sheet, Text, toasts, AppSwitch } from "@/ui";
+import { limitsLine } from "./Plans";
+import { Button, ConfirmSheet, DateField, ErrorState, Field, Glass, Input, LoadingCards, Pill, Screen, Section, Select, Sheet, Text, toasts, AppSwitch, useTheme } from "@/ui";
 
 /* ------------------------------------------------------------------------------------------------ small pieces */
 function Toggle({ label, hint, value, onChange, disabled, testID }: { label: string; hint?: string; value: boolean; onChange: (v: boolean) => void; disabled?: boolean; testID?: string }) {
@@ -21,6 +22,49 @@ function Toggle({ label, hint, value, onChange, disabled, testID }: { label: str
     </View>
   );
 }
+/** The line under a feature: is it part of the chosen plan? (Nothing for no plan, or a Custom plan: there everything is set by hand.) */
+const planStatus = (plan: Plan | undefined, feature: string): string | undefined => (!plan || plan.custom ? undefined : planHas(plan, feature) ? `✓ Included in the ${plan.name} plan` : `✕ Not in the ${plan.name} plan`);
+
+/** One feature in the plan summary: a tick and its name, or (not included) a cross and the name struck through. */
+function FeatureChip({ label, on }: { label: string; on: boolean }) {
+  const { c } = useTheme();
+  return (
+    <View style={{ flexDirection: "row", alignItems: "center", gap: 5, paddingVertical: 4, paddingHorizontal: 10, borderRadius: 999, borderWidth: 1, borderColor: c.border, backgroundColor: on ? c.okWash : "transparent" }}>
+      <Text variant="caption" style={{ color: on ? c.ok : c.muted, fontWeight: "800" }}>{on ? "✓" : "✕"}</Text>
+      <Text variant="caption" style={{ color: on ? c.text : c.muted, textDecorationLine: on ? "none" : "line-through" }}>{label}</Text>
+    </View>
+  );
+}
+
+/**
+ * What the chosen plan includes and what it doesn't (the web console shows the same two lists): the limits, then every feature as included or not,
+ * so there is no need to scroll the Features list to find out. A Custom plan includes nothing by itself.
+ */
+function PlanSummary({ plan }: { plan: Plan }) {
+  if (plan.custom) {
+    return <Text variant="caption" tone="muted" testID="plan-summary">{plan.name} includes nothing by itself: the limits above and the features you tick below are exactly what this client gets.</Text>;
+  }
+  const all = [...ORDER_MODE_CHOICES.map((m) => ({ key: m.feature, label: m.label })), ...FEATURE_CHOICES.map((f) => ({ key: f.key, label: f.label }))];
+  const yes = all.filter((f) => planHas(plan, f.key));
+  const no = all.filter((f) => !planHas(plan, f.key));
+  return (
+    <View style={{ gap: 12 }} testID="plan-summary">
+      <Text variant="caption" tone="muted" testID="plan-limits">{plan.description ? `${plan.description} · ` : ""}{limitsLine(plan)}</Text>
+      <View style={{ gap: 6 }}>
+        <Text variant="subheading" testID="plan-included-title">Included in {plan.name} ({yes.length})</Text>
+        <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }} testID="plan-included">{yes.map((f) => <FeatureChip key={f.key} label={f.label} on />)}</View>
+      </View>
+      {no.length ? (
+        <View style={{ gap: 6 }}>
+          <Text variant="subheading" testID="plan-not-included-title">Not included ({no.length})</Text>
+          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }} testID="plan-not-included">{no.map((f) => <FeatureChip key={f.key} label={f.label} on={false} />)}</View>
+          <Text variant="caption" tone="muted">You can still add these for this client: switch the feature on below and choose “Allow anyway”.</Text>
+        </View>
+      ) : <Text variant="caption" tone="muted" testID="plan-not-included-none">Every feature is included.</Text>}
+    </View>
+  );
+}
+
 const num = (t: string, max = 1_000_000) => Math.min(max, Number(t.replace(/\D/g, "")) || 0);
 
 /* ------------------------------------------------------------------------------------------------ the form */
@@ -99,6 +143,7 @@ export function OnboardingForm({ id }: { id: string }) {
               </View>
             </View>
           ) : null}
+          {plan ? <PlanSummary plan={plan} /> : null}
         </View></Glass>
       </Section>
 
@@ -136,7 +181,7 @@ export function OnboardingForm({ id }: { id: string }) {
             const on = data.features.includes(f.key);
             return (
               <View key={f.key} style={{ gap: 6 }}>
-                <Toggle label={f.label} value={on} disabled={ro} testID={`feature-${f.key}`} hint={on && !inPlan ? `Not in the ${plan?.name} plan` : undefined}
+                <Toggle label={f.label} value={on} disabled={ro} testID={`feature-${f.key}`} hint={planStatus(plan, f.key)}
                   onChange={(v) => set({ features: v ? [...data.features, f.key] : data.features.filter((x) => x !== f.key), ...(v ? {} : { forced: data.forced.filter((x) => x !== `feature:${f.key}`) }) })} />
                 {on && !inPlan ? <Toggle label="Allow anyway" hint="Unlock it for this client although the plan lacks it." value={data.forced.includes(`feature:${f.key}`)} onChange={(v) => allow(`feature:${f.key}`, v)} disabled={ro} testID={`allow-feature:${f.key}`} /> : null}
               </View>
@@ -164,7 +209,7 @@ export function OnboardingForm({ id }: { id: string }) {
                   const inPlan = planHas(plan, m.feature);
                   return (
                     <View key={m.key} style={{ gap: 6 }}>
-                      <Toggle label={m.label} value={o.modes[m.key]} onChange={(v) => setOutlet(o.id, { modes: { ...o.modes, [m.key]: v } })} disabled={ro} testID={`mode-${m.key}-${i}`} hint={o.modes[m.key] && !inPlan ? `Not in the ${plan?.name} plan` : undefined} />
+                      <Toggle label={m.label} value={o.modes[m.key]} onChange={(v) => setOutlet(o.id, { modes: { ...o.modes, [m.key]: v } })} disabled={ro} testID={`mode-${m.key}-${i}`} hint={planStatus(plan, m.feature)} />
                       {o.modes[m.key] && !inPlan ? <Toggle label="Allow anyway" value={data.forced.includes(`feature:${m.feature}`)} onChange={(v) => allow(`feature:${m.feature}`, v)} disabled={ro} testID={`allow-feature:${m.feature}-${i}`} /> : null}
                     </View>
                   );

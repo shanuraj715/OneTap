@@ -141,6 +141,14 @@ export async function run(d, h) {
     await ui.pick(d, "Plan", "Starter");
     d.check("choosing Starter shows what it includes: 'Up to 1 outlet, 5 tables and 3 people'", /Up to 1 outlet, 5 tables and 3 people/.test(await d.page.locator("[data-plan-summary]").innerText()), await d.page.locator("[data-plan-summary]").innerText());
     d.check("Coupons (in the plan) is a plain tick box", (await stateOf(feat("Coupons"))) === "included");
+    {
+      const yes = d.page.getByTestId("plan-included"), no = d.page.getByTestId("plan-not-included");
+      const yesText = await yes.innerText(), noText = await no.innerText();
+      const nYes = await yes.locator("[data-feature]").count(), nNo = await no.locator("[data-feature]").count();
+      d.check("under the plan box, a list says what Starter INCLUDES (Takeaway, Dine-in, Coupons …) and one what it does NOT (Marketing, Delivery, Own domain name …)", /Coupons/.test(yesText) && /Takeaway/.test(yesText) && /Marketing/.test(noText) && /Delivery/.test(noText) && /Own domain name/.test(noText), `included: ${yesText.replace(/\s+/g, " ").slice(0, 90)} | not: ${noText.replace(/\s+/g, " ").slice(0, 90)}`);
+      d.check("…a feature is in one list only", !/Marketing/.test(yesText) && !/Coupons/.test(noText));
+      d.check("…each list's title counts its items ('Included in Starter (n)', 'Not included (m)')", new RegExp(`Included in Starter \\(${nYes}\\)`).test(await d.page.getByTestId("plan-included-title").innerText()) && new RegExp(`Not included \\(${nNo}\\)`).test(await d.page.getByTestId("plan-not-included-title").innerText()), `${nYes} / ${nNo}`);
+    }
     for (const f of ["Marketing", "Analytics & reports", "Own favicon", "Coin wallet", "Printing", "WhatsApp chat"]) {
       d.check(`${f} is locked — 'Not in the Starter plan'`, (await stateOf(feat(f))) === "locked" && /Not in the Starter plan/.test(await feat(f).innerText()));
     }
@@ -458,6 +466,7 @@ export async function run(d, h) {
     await d.goto(`${BENCH.admin}/platform/onboarding/new`, 800);
     await ui.pick(d, "Plan", "Bench Custom");
     d.check("it shows the limits to set for this client (outlets, people) and says what 'custom' means", (await d.page.getByLabel("Outlets for this client", { exact: false }).count()) === 1 && /Custom plan: the client gets exactly the limits above/.test(await d.page.locator("[data-plan-summary]").innerText()));
+    d.check("…and the plan box says a Custom plan includes nothing by itself (no included / not-included lists)", /includes nothing by itself/.test(await d.page.getByTestId("plan-includes").innerText()) && (await d.page.getByTestId("plan-included").count()) === 0);
     d.check("no choice is locked: Marketing and Delivery can be ticked, with no 'Not in the … plan' notes", (await stateOf(feat("Marketing"))) === "included" && (await stateOf(mode(0, "delivery"))) === "included" && (await d.page.getByText(/Not in the Bench Custom plan/).count()) === 0);
     await box(d.page, "Marketing").first().check();
     await ui.fill(d, "Total outlets", "3");

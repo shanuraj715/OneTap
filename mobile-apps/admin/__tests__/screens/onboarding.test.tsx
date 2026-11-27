@@ -79,7 +79,8 @@ describe("the requirement form", () => {
     await fireEvent.press(screen.getByTestId("form-plan"));
     await fireEvent.press(await screen.findByTestId("form-plan-option-starter"));
     await fireEvent(screen.getByTestId("feature-analytics"), "valueChange", true);
-    expect(screen.getByText("Not in the Starter plan")).toBeOnTheScreen();
+    expect(screen.getAllByText("✕ Not in the Starter plan").length).toBeGreaterThan(0); // (every feature the plan lacks says so now, ticked or not)
+    expect(screen.getByTestId("allow-feature:analytics")).toBeOnTheScreen(); // …and the one that was ticked offers Allow anyway
     await fireEvent(screen.getByTestId("allow-feature:analytics"), "valueChange", true);
     await fireEvent.press(screen.getByTestId("form-save"));
     await waitFor(() => expect(server.to("POST", "/api/platform/onboarding")).toHaveLength(1));
@@ -89,6 +90,46 @@ describe("the requirement form", () => {
     await fireEvent.press(screen.getByTestId("form-save"));
     await waitFor(() => expect(server.to("PUT", "/api/platform/onboarding/f1")).toHaveLength(1));
     expect(server.to("PUT", "/api/platform/onboarding/f1")[0]!.body.data.forced).toEqual([]);
+  });
+
+  it("choosing a plan shows what it includes and what it doesn't — limits, then every feature as included or not", async () => {
+    await open("new");
+    expect(screen.queryByTestId("plan-summary")).toBeNull(); // nothing before a plan is chosen
+    await fireEvent.press(screen.getByTestId("form-plan"));
+    await fireEvent.press(await screen.findByTestId("form-plan-option-starter"));
+    const sum = await screen.findByTestId("plan-summary");
+    expect(screen.getByTestId("plan-limits")).toHaveTextContent(/1 outlet · 3 people · 5 tables/);
+    expect(screen.getByTestId("plan-included-title")).toHaveTextContent("Included in Starter (2)");
+    const yes = within(screen.getByTestId("plan-included"));
+    expect(yes.getByText("Takeaway")).toBeOnTheScreen();
+    expect(yes.getByText("Dine-in (table QR)")).toBeOnTheScreen();
+    expect(screen.getByTestId("plan-not-included-title")).toHaveTextContent(/Not included \(16\)/);
+    const no = within(screen.getByTestId("plan-not-included"));
+    for (const label of ["Delivery", "Coupons", "Kitchen display (KDS)", "Marketing", "Own domain name"]) expect(no.getByText(label)).toBeOnTheScreen();
+    expect(within(sum).queryByText("Coupons", { exact: true })).not.toBeNull();
+    expect(yes.queryByText("Delivery")).toBeNull(); // a feature is in one list only
+  });
+
+  it("every feature row says whether the chosen plan has it (before anything is ticked)", async () => {
+    await open("new");
+    expect(screen.queryByText(/Included in the Starter plan/)).toBeNull();
+    await fireEvent.press(screen.getByTestId("form-plan"));
+    await fireEvent.press(await screen.findByTestId("form-plan-option-starter"));
+    expect(await screen.findAllByText("✓ Included in the Starter plan")).toHaveLength(2); // takeaway, dine-in (the outlet's ordering types)
+    expect(screen.getAllByText("✕ Not in the Starter plan").length).toBeGreaterThan(10);
+  });
+
+  it("a plan with every feature says so, with nothing in 'not included'; a Custom plan says it includes nothing by itself", async () => {
+    await open("new");
+    await fireEvent.press(screen.getByTestId("form-plan"));
+    await fireEvent.press(await screen.findByTestId("form-plan-option-pro"));
+    expect(await screen.findByTestId("plan-not-included-none")).toHaveTextContent("Every feature is included.");
+    expect(screen.queryByTestId("plan-not-included")).toBeNull();
+    await fireEvent.press(screen.getByTestId("form-plan"));
+    await fireEvent.press(await screen.findByTestId("form-plan-option-custom"));
+    expect(await screen.findByTestId("plan-summary")).toHaveTextContent(/includes nothing by itself/);
+    expect(screen.queryByTestId("plan-included")).toBeNull();
+    expect(screen.queryByText(/Not in the Custom plan/)).toBeNull(); // on a Custom plan everything is chosen by hand: no 'not in the plan'
   });
 
   it("more outlets than the plan allows shows the reason and an Allow anyway switch", async () => {

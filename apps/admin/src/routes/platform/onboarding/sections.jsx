@@ -82,7 +82,47 @@ export function PlanSection({ data, P, ctx }) {
           {allow.custom ? "Custom plan: the client gets exactly the limits above and the features ticked below." : `Up to ${Number.isFinite(allow.maxOutlets) ? allow.maxOutlets : "unlimited"} outlet${allow.maxOutlets === 1 ? "" : "s"}, ${Number.isFinite(allow.maxTables) ? allow.maxTables : "unlimited"} tables and ${Number.isFinite(allow.maxUsers) ? allow.maxUsers : "unlimited"} ${allow.maxUsers === 1 ? "person" : "people"}.`}
         </p>
       ) : null}
+      {chosen && allow ? <PlanIncludes planName={chosen.name} allow={allow} /> : null}
     </Card>
+  );
+}
+
+/**
+ * What the chosen plan includes and what it doesn't, as two plain lists (the app shows the same): so there is no need to read the Features list
+ * below to find out whether, say, Delivery or Kitchen display is part of it. A Custom plan includes nothing by itself.
+ */
+function PlanIncludes({ planName, allow }) {
+  const all = [...ORDER_MODES.map((m) => ({ key: m.feature, label: m.label })), ...CHECKLIST_FEATURES.map((f) => ({ key: f.key, label: f.label }))];
+  if (allow.custom) {
+    return (
+      <div data-testid="plan-includes" style={{ ...subtle, marginTop: 10 }}>
+        <strong>{planName}</strong> includes nothing by itself: the limits above and the features you tick below are exactly what this client gets.
+      </div>
+    );
+  }
+  const yes = all.filter((f) => planHasFeature(allow, f.key));
+  const no = all.filter((f) => !planHasFeature(allow, f.key));
+  const chip = (f, on) => (
+    <span key={f.key} data-feature={f.key} style={{ display: "inline-flex", gap: 5, alignItems: "center", padding: "3px 9px", borderRadius: 999, fontSize: 12.5, border: "1px solid var(--color-border)", color: on ? "var(--tone-success, #17703f)" : "var(--color-muted, #6b6b6b)", textDecoration: on ? "none" : "line-through", opacity: on ? 1 : 0.85 }}>
+      <span aria-hidden style={{ textDecoration: "none", display: "inline-block" }}>{on ? "✓" : "✕"}</span> {f.label}
+    </span>
+  );
+  return (
+    <div data-testid="plan-includes" style={{ marginTop: 12, display: "grid", gap: 10 }}>
+      <div>
+        <div style={{ fontWeight: 650, marginBottom: 6 }} data-testid="plan-included-title">Included in {planName} ({yes.length})</div>
+        <div data-testid="plan-included" style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>{yes.length ? yes.map((f) => chip(f, true)) : <span style={subtle}>Nothing beyond the basics.</span>}</div>
+      </div>
+      {no.length ? (
+        <div>
+          <div style={{ fontWeight: 650, marginBottom: 6 }} data-testid="plan-not-included-title">Not included ({no.length})</div>
+          <div data-testid="plan-not-included" style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>{no.map((f) => chip(f, false))}</div>
+          <p style={{ ...subtle, margin: "6px 0 0" }}>You can still add these for this client: tick the feature below and use “Add for this client”.</p>
+        </div>
+      ) : (
+        <p style={subtle} data-testid="plan-not-included-none">Every feature is included.</p>
+      )}
+    </div>
   );
 }
 
