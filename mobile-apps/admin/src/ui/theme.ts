@@ -24,7 +24,7 @@ export interface Colors {
 
 export const darkColors: Colors = {
   bgTop: "#0A0F24", bgBottom: "#161C3C", blobA: "#FF9008", blobB: "#5B6CFF", blobC: "#FF4D8D",
-  glass: "rgba(255,255,255,0.08)", glassStrong: "rgba(255,255,255,0.15)", border: "rgba(255,255,255,0.16)",
+  glass: "rgba(255,255,255,0.10)", glassStrong: "rgba(255,255,255,0.18)", border: "rgba(255,255,255,0.24)",
   field: "rgba(0,0,0,0.30)", fieldBorder: "rgba(255,255,255,0.42)",
   solid: "#161C3C",
   text: "#F4F6FF", muted: "#AAB2D8",

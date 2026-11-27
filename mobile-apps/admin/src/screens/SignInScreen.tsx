@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { ScrollView, Switch, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ApiError } from "@/api/client";
 import { API_HOST, APP_NAME, APP_TAGLINE, APP_VERSION } from "@/lib/config";
 import { useApi, useRuntime, useSession } from "@/runtime";
-import { AppIcon, Button, Glass, Icon, Input, Reveal, Text, useResponsive, useTheme } from "@/ui";
+import { AppIcon, Button, Glass, Icon, Input, Reveal, Text, useResponsive, useTheme, AppSwitch } from "@/ui";
 
 const problems = (email: string, password: string) => ({
   email: !email.trim() ? "Enter your email." : !/^\S+@\S+\.\S+$/.test(email.trim()) ? "That doesn't look like an email address." : undefined,
@@ -90,7 +90,7 @@ export function SignInScreen() {
                     <Text variant="label">Keep me signed in</Text>
                     <Text variant="caption" tone="muted">Only on a phone nobody else uses.</Text>
                   </View>
-                  <Switch value={keep} onValueChange={setKeep} testID="signin-keep" accessibilityLabel="Keep me signed in" trackColor={{ false: c.border, true: c.primary }} thumbColor="#FFFFFF" />
+                  <AppSwitch value={keep} onValueChange={setKeep} testID="signin-keep" accessibilityLabel="Keep me signed in" />
                 </View>
                 <Button title={wait > 0 ? `Try again in ${wait >= 60 ? `${Math.ceil(wait / 60)} min` : `${wait} s`}` : "Sign in"} icon={wait > 0 ? "history" : "chevron"} size="lg" fullWidth loading={busy} disabled={wait > 0} onPress={submit} testID="signin-submit" />
               </View>

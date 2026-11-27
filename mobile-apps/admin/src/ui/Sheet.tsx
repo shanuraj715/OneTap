@@ -57,13 +57,13 @@ export function Input({ value, onChangeText, placeholder, secure, keyboardType, 
   value: string; onChangeText: (t: string) => void; placeholder?: string; secure?: boolean; keyboardType?: "default" | "email-address" | "numeric" | "phone-pad"; autoCapitalize?: "none" | "sentences" | "words";
   multiline?: boolean; testID?: string; editable?: boolean; onSubmitEditing?: () => void; returnKeyType?: "next" | "go" | "done"; leftIcon?: Parameters<typeof Icon>[0]["name"]; maxLength?: number;
 }) {
-  const { c } = useTheme();
+  const { c, dark } = useTheme();
   const [focus, setFocus] = useState(false);
   const [shown, setShown] = useState(false);
   return (
     <View style={{ flexDirection: "row", alignItems: multiline ? "flex-start" : "center", gap: 10, paddingHorizontal: 14, minHeight: 50, borderRadius: radius.md, backgroundColor: c.field, borderWidth: 1.5, borderColor: focus ? c.primary : c.fieldBorder, opacity: editable ? 1 : 0.6 }}>
       {leftIcon ? <Icon name={leftIcon} size={18} color={c.muted} /> : null}
-      <TextInput testID={testID} value={value} onChangeText={onChangeText} placeholder={placeholder} placeholderTextColor={c.muted} secureTextEntry={secure && !shown} keyboardType={keyboardType} autoCapitalize={autoCapitalize} autoCorrect={false}
+      <TextInput testID={testID} value={value} onChangeText={onChangeText} placeholder={placeholder} placeholderTextColor={c.muted} secureTextEntry={secure && !shown} keyboardType={keyboardType} autoCapitalize={autoCapitalize} autoCorrect={false} keyboardAppearance={dark ? "dark" : "light"} selectionColor={c.primary}
         multiline={multiline} editable={editable} maxLength={maxLength} onSubmitEditing={onSubmitEditing} returnKeyType={returnKeyType} onFocus={() => setFocus(true)} onBlur={() => setFocus(false)}
         style={{ flex: 1, color: c.text, fontSize: 16, paddingVertical: multiline ? 12 : 10, minHeight: multiline ? 90 : undefined, textAlignVertical: multiline ? "top" : "center" }} />
       {secure ? <Pressable onPress={() => setShown((s) => !s)} hitSlop={10} accessibilityRole="button" accessibilityLabel={shown ? "Hide the password" : "Show the password"}><Icon name={shown ? "eyeOff" : "eye"} size={18} color={c.muted} /></Pressable> : null}

@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { Switch, View } from "react-native";
+import { View } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { useApi } from "@/runtime";
 import type { Member, Role } from "@/api/endpoints";
 import { useAction } from "@/data/useAction";
 import { dateTime } from "@/lib/format";
 import { makePassword, strongEnough } from "@/lib/password";
-import { Button, ConfirmSheet, Empty, ErrorState, Field, Glass, Grid, Input, LoadingCards, Pill, Row, Screen, Section, Segmented, Select, Sheet, Text, useTheme } from "@/ui";
+import { Button, ConfirmSheet, Empty, ErrorState, Field, Glass, Grid, Input, LoadingCards, Pill, Row, Screen, Section, Segmented, Select, Sheet, Text, AppSwitch } from "@/ui";
 
 const ACTIONS: Record<string, string> = { "role.create": "made the role", "role.update": "changed the role", "role.delete": "deleted the role", "member.create": "added", "member.update": "changed", "member.password": "set a new password for", "member.delete": "removed" };
 
@@ -84,7 +84,6 @@ export function Team() {
 
 function RoleSheet({ role, groups, features, onClose }: { role: Role | null; groups: string[]; features: { key: string; group: string; label: string; hint: string }[]; onClose: () => void }) {
   const api = useApi();
-  const { c } = useTheme();
   const [name, setName] = useState(role?.name ?? "");
   const [description, setDescription] = useState(role?.description ?? "");
   const [on, setOn] = useState<string[]>(role?.features ?? []);
@@ -100,7 +99,7 @@ function RoleSheet({ role, groups, features, onClose }: { role: Role | null; gro
           {features.filter((f) => f.group === g).map((f) => (
             <View key={f.key} style={{ flexDirection: "row", alignItems: "center", gap: 12, paddingVertical: 6 }}>
               <View style={{ flex: 1 }}><Text variant="subheading">{f.label}</Text><Text variant="caption" tone="muted">{f.hint}</Text></View>
-              <Switch value={on.includes(f.key)} onValueChange={(v) => setOn((cur) => (v ? [...new Set([...cur, f.key])] : cur.filter((k) => k !== f.key)))} accessibilityLabel={f.label} testID={`feature-${f.key}`} trackColor={{ false: c.border, true: c.primary }} thumbColor="#FFFFFF" />
+              <AppSwitch value={on.includes(f.key)} onValueChange={(v) => setOn((cur) => (v ? [...new Set([...cur, f.key])] : cur.filter((k) => k !== f.key)))} accessibilityLabel={f.label} testID={`feature-${f.key}`} />
             </View>
           ))}
         </View>

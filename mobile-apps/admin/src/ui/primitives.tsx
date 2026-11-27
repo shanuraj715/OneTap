@@ -1,5 +1,5 @@
 import { createRef, useEffect, useMemo, useRef, useState, useSyncExternalStore, type ComponentRef, type ReactNode } from "react";
-import { ActivityIndicator, Animated, Easing, Pressable, StyleSheet, Text as RNText, View, type PressableProps, type StyleProp, type TextProps, type TextStyle, type ViewStyle } from "react-native";
+import { ActivityIndicator, Animated, Easing, Pressable, StyleSheet, Switch, Text as RNText, View, type PressableProps, type StyleProp, type TextProps, type TextStyle, type ViewStyle } from "react-native";
 import { BlurTargetView, BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Lucide from "lucide-react-native";
@@ -210,4 +210,14 @@ export function CountUp({ value, format, style, variant = "title" }: { value: nu
   }, [value, reduced]);
   const text = useMemo(() => format(Math.round(reduced ? value : shown)), [reduced, value, shown, format]);
   return <Text variant={variant} style={style} accessibilityLabel={format(value)}>{text}</Text>;
+}
+
+/**
+ * An on/off switch that reads in light AND dark: the "on" track is the app's colour, the "off" track is a visible grey (iOS draws its own off-track
+ * behind a see-through one, which vanishes on a dark night), and the thumb is always light.
+ */
+export function AppSwitch({ value, onValueChange, disabled, accessibilityLabel, testID }: { value: boolean; onValueChange?: (v: boolean) => void; disabled?: boolean; accessibilityLabel?: string; testID?: string }) {
+  const { c, dark } = useTheme();
+  const off = dark ? "rgba(255,255,255,0.28)" : "rgba(22,26,51,0.28)";
+  return <Switch value={value} onValueChange={onValueChange} disabled={disabled} trackColor={{ true: c.primary, false: off }} ios_backgroundColor={off} thumbColor="#FFFFFF" accessibilityLabel={accessibilityLabel} testID={testID} />;
 }

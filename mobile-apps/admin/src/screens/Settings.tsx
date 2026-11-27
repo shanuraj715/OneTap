@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Switch, View } from "react-native";
+import { View } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { useApi } from "@/runtime";
 import { useAction } from "@/data/useAction";
-import { Button, ErrorState, Field, Glass, Input, LoadingCards, Screen, Section, Text, useTheme } from "@/ui";
+import { Button, ErrorState, Field, Glass, Input, LoadingCards, Screen, Section, Text, AppSwitch } from "@/ui";
 
 /** Platform-wide settings: how long a store keeps working after it passes its limits, and the live-updates switch. */
 export function Settings() {
@@ -19,7 +19,6 @@ export function Settings() {
 
 function SettingsForm({ initial }: { initial: { graceDays: number; realtimeWebsocket: boolean; subdomainBase: string } }) {
   const api = useApi();
-  const { c } = useTheme();
   const [days, setDays] = useState(String(initial.graceDays));
   const [live, setLive] = useState(initial.realtimeWebsocket);
   const n = Number(days);
@@ -41,7 +40,7 @@ function SettingsForm({ initial }: { initial: { graceDays: number; realtimeWebso
             <Text variant="subheading">Live connection for dashboards and apps</Text>
             <Text variant="caption" tone="muted">On: changes reach the screens by themselves. Off: they ask every few seconds instead.</Text>
           </View>
-          <Switch value={live} onValueChange={setLive} trackColor={{ true: c.primary, false: c.glassStrong }} accessibilityLabel="Live connection" testID="setting-live" />
+          <AppSwitch value={live} onValueChange={setLive} accessibilityLabel="Live connection" testID="setting-live" />
         </View></Glass>
       </Section>
       <Section title="Addresses">

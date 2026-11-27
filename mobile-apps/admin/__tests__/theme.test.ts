@@ -66,3 +66,28 @@ describe.each(MODES)("the %s input boxes stand out from the panel they sit on", 
     expect(contrast(c.muted, fill)).toBeGreaterThanOrEqual(4.5);
   });
 });
+
+describe("the app follows the phone's light / dark setting, live", () => {
+  it("the config asks for automatic (Expo's default is light: the app would ignore dark mode)", () => {
+    let cfg: Record<string, any> = {};
+    jest.isolateModules(() => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      cfg = (require("../app.config").default as (c: ConfigContext) => Record<string, any>)({ config: {} } as ConfigContext);
+    });
+    expect(cfg.userInterfaceStyle).toBe("automatic");
+    expect(cfg.ios?.userInterfaceStyle ?? "automatic").toBe("automatic");
+    expect(cfg.android?.userInterfaceStyle ?? "automatic").toBe("automatic");
+  });
+  it("expo-system-ui is installed (on Android the setting does nothing without it)", () => {
+    const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "package.json"), "utf8")) as { dependencies: Record<string, string> };
+    expect(pkg.dependencies["expo-system-ui"]).toBeDefined();
+  });
+});
+
+describe("in dark, a panel can be told apart from the night behind it", () => {
+  it("the panel's fill differs from the background, and its edge is clearly drawn", () => {
+    const c = darkColors, ground = c.bgBottom;
+    expect(contrast(over(c.glass, ground), ground)).toBeGreaterThanOrEqual(1.1);
+    expect(contrast(over(c.border, over(c.glass, ground)), over(c.glass, ground))).toBeGreaterThanOrEqual(1.35);
+  });
+});

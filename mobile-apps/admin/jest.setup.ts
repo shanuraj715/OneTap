@@ -38,3 +38,5 @@ jest.mock("expo-router", () => ({
 
 // secure random bytes (the phone has a native module; Node has its own)
 jest.mock("expo-crypto", () => ({ getRandomBytes: (n: number) => Uint8Array.from(jest.requireActual<typeof import("node:crypto")>("node:crypto").randomBytes(n)) }));
+
+jest.mock("expo-system-ui", () => ({ setBackgroundColorAsync: jest.fn().mockResolvedValue(true), getBackgroundColorAsync: jest.fn().mockResolvedValue(null) }));

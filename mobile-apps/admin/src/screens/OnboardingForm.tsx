@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Switch, View } from "react-native";
+import { View } from "react-native";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { useApi } from "@/runtime";
@@ -7,18 +7,17 @@ import type { OnboardingData, OnboardingOutlet } from "@/api/endpoints";
 import { useAction, messageOf } from "@/data/useAction";
 import { makePassword, strongEnough } from "@/lib/password";
 import { BUSINESS_TYPES, FEATURE_CHOICES, MENU_SOURCES, ORDER_MODE_CHOICES, beyondPlan, blankForm, isHHMM, newOutlet, offeredPlans, planHas, pointFrom, pruneForced, slugify } from "@/lib/onboarding";
-import { Button, ConfirmSheet, DateField, ErrorState, Field, Glass, Input, LoadingCards, Pill, Screen, Section, Select, Sheet, Text, toasts, useTheme } from "@/ui";
+import { Button, ConfirmSheet, DateField, ErrorState, Field, Glass, Input, LoadingCards, Pill, Screen, Section, Select, Sheet, Text, toasts, AppSwitch } from "@/ui";
 
 /* ------------------------------------------------------------------------------------------------ small pieces */
 function Toggle({ label, hint, value, onChange, disabled, testID }: { label: string; hint?: string; value: boolean; onChange: (v: boolean) => void; disabled?: boolean; testID?: string }) {
-  const { c } = useTheme();
   return (
     <View style={{ flexDirection: "row", alignItems: "center", gap: 12, opacity: disabled ? 0.55 : 1 }}>
       <View style={{ flex: 1 }}>
         <Text variant="subheading">{label}</Text>
         {hint ? <Text variant="caption" tone="muted">{hint}</Text> : null}
       </View>
-      <Switch value={value} onValueChange={onChange} disabled={disabled} trackColor={{ true: c.primary, false: c.glassStrong }} accessibilityLabel={label} testID={testID} />
+      <AppSwitch value={value} onValueChange={onChange} disabled={disabled} accessibilityLabel={label} testID={testID} />
     </View>
   );
 }

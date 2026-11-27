@@ -7,6 +7,7 @@ import { useStore } from "zustand";
 import { wireQueryClient } from "@/data/setup";
 import { APP_NAME, APP_TAGLINE } from "@/lib/config";
 import { RuntimeProvider, sharedRuntime } from "@/runtime";
+import * as SystemUI from "expo-system-ui";
 import { AppIcon, Background, ErrorState, Spinner, Text, ToastHost, useTheme } from "@/ui";
 
 const runtime = sharedRuntime();
@@ -35,7 +36,10 @@ function Splash() {
 
 export default function RootLayout() {
   const status = useStore(runtime.session, (s) => s.status);
-  const { dark } = useTheme();
+  const { dark, c } = useTheme();
+  // the very bottom layer of the app (what shows when iOS bounces past the end of a list, while Android resizes, behind the keyboard) takes the theme's colour,
+  // instead of the white of the default light config
+  useEffect(() => { SystemUI.setBackgroundColorAsync(c.bgBottom).catch(() => undefined); }, [c.bgBottom]);
   // the app has just opened: connect to the phone's state (background / online) and look for a kept sign-in
   useEffect(() => {
     const unwire = wireQueryClient();

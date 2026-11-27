@@ -9,7 +9,7 @@ import { toasts } from "./toast-store";
 
 /** One screen: the glass background, a big title, and a scrolling column of cards (centred and 2–3 wide on a tablet). Pull down to refresh. */
 export function Screen({ title, subtitle, back, right, onRefresh, refreshing = false, children, testID, scroll = true }: { title: string; subtitle?: string; back?: () => void; right?: ReactNode; onRefresh?: () => void; refreshing?: boolean; children: ReactNode; testID?: string; scroll?: boolean }) {
-  const { c } = useTheme();
+  const { c, dark } = useTheme();
   const insets = useSafeAreaInsets();
   const { contentWidth } = useResponsive();
   const head = (
@@ -26,6 +26,7 @@ export function Screen({ title, subtitle, back, right, onRefresh, refreshing = f
     <View style={{ flex: 1 }} testID={testID}>
       {scroll ? (
         <ScrollView
+          indicatorStyle={dark ? "white" : "black"}
           contentContainerStyle={{ paddingTop: insets.top + 8, paddingBottom: 120, paddingHorizontal: 16, gap: 16, alignItems: "center" }}
           refreshControl={onRefresh ? <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={c.primary} colors={[c.primary]} progressBackgroundColor={c.solid} /> : undefined}
           keyboardShouldPersistTaps="handled"
