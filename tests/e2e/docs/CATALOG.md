@@ -1,6 +1,6 @@
 # Rasoi Pulse end-to-end tests — catalog
 
-**129 tests** · 122 passing · 2 failing/error · 5 not run yet
+**129 tests** · 123 passing · 2 failing/error · 4 not run yet
 
 | Test | Area | Result | Checks | Last run |
 |---|---|---|---|---|
@@ -22,7 +22,7 @@
 | [t104-app-refresh-interval-api](t104-app-refresh-interval-api.md) — Apps → the refresh interval is one number per app (default 8 s), set by the platform admin, and announced to the app in every answer | app | ⚪ not run yet | — | — |
 | [t105-app-refresh-interval-ui](t105-app-refresh-interval-ui.md) — Console → App Management → Refresh interval: set how often OMA, KDA and RDA ask for new data (default 8 s, per app, 3–600), and the apps are told with their next request | app | ✅ PASSED | 35/35 | 2026-11-27 16:35 |
 | [t106-api-speed-test](t106-api-speed-test.md) — API speed test (apps/api/src/scripts/speed-test.js): time inside the API, time waiting for the database, query plans, load, and before/after comparison — read-only | api | ⚪ not run yet | — | — |
-| [t107-app-screenshots](t107-app-screenshots.md) — Website → /apps/oma, /apps/kda, /apps/rda: real tablet screenshots in an Android tablet frame, as a tabbed gallery that works by mouse, keyboard and without script | website | ⚪ not run yet | — | — |
+| [t107-app-screenshots](t107-app-screenshots.md) — Website → /apps/oma, /apps/kda, /apps/rda: real tablet screenshots in an Android tablet frame, as a tabbed gallery that works by mouse, keyboard and without script | website | ✅ PASSED | 179/179 | 2026-11-28 01:48 |
 | [t108-plan-features](t108-plan-features.md) — Plans → Business includes every feature (also future ones), Starter gains pre-orders and ratings, features that need another are flagged, and update-plans.js brings existing plans up to date safely | platform | ✅ PASSED | 51/51 | 2026-11-27 21:02 |
 | [t109-table-limit-api](t109-table-limit-api.md) — Plans limit tables, in steps of 5 (Starter 5, Business 20, Custom by hand): only 5, 10, 15 … are accepted, a store can't add a table past its limit, and the price is per block of 5 | platform | ✅ PASSED | 63/63 | 2026-11-27 21:03 |
 | [t11-outlet-delete](t11-outlet-delete.md) — Delete an outlet from the dashboard — protection for outlets with orders, then the deleted outlet on the subdomain | domains | ✅ PASSED | 13/13 | 2026-11-21 13:19 |

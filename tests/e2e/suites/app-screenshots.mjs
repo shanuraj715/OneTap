@@ -120,7 +120,8 @@ try {
       return {
         pad: parseFloat(cs.paddingTop), padSides: [cs.paddingLeft, cs.paddingRight, cs.paddingBottom].map(parseFloat), radius: parseFloat(cs.borderTopLeftRadius), screenRadius: parseFloat(sc.borderTopLeftRadius), imgInside: !!scr.querySelector("img"),
         camX: Math.abs(cam.left + cam.width / 2 - (r.left + r.width / 2)), camY: cam.top + cam.height / 2 - r.top, camW: cam.width, btns, sheenEvents: sheen.pointerEvents, sheenGradient: /linear-gradient/.test(sheen.backgroundImage),
-        shadows: cs.boxShadow.split(/\),\s*(?=(?:rgb|inset|\d))/).length, bodyGradient: /linear-gradient/.test(cs.backgroundImage), screenInset: Math.round(sr.left - r.left), w: r.width, h: r.height,
+        // Chrome writes each layer as "<colour> <lengths>", so split on the commas that sit OUTSIDE brackets
+        shadows: cs.boxShadow.split(/,\s*(?![^()]*\))/).length, bodyGradient: /linear-gradient/.test(cs.backgroundImage), screenInset: Math.round(sr.left - r.left), w: r.width, h: r.height,
       };
     });
     ok(fr.pad >= 9 && fr.pad <= 22.5 && fr.padSides.every((p) => Math.abs(p - fr.pad) < 0.5), `/apps/${app}: the bezel is an even ${fr.pad.toFixed(0)} px all round`, JSON.stringify(fr.padSides));
@@ -132,7 +133,8 @@ try {
     ok(fr.shadows >= 5 && fr.bodyGradient, `/apps/${app}: the body is a metal-rimmed gradient with a soft shadow`, `${fr.shadows} shadow layers`);
     // real pixels: the bezel is dark
     const shot = await sec.locator(".tablet").first().screenshot();
-    const strip = await sharp(shot).extract({ left: 4, top: Math.round(fr.h * 0.3), width: Math.max(2, Math.round(fr.pad) - 8), height: Math.round(fr.h * 0.3) }).stats();
+    // (sharp's stats() ignores .extract(), so cut the strip out first and measure only that)
+    const strip = await sharp(await sharp(shot).extract({ left: 4, top: Math.round(fr.h * 0.3), width: Math.max(2, Math.round(fr.pad) - 8), height: Math.round(fr.h * 0.3) }).toBuffer()).stats();
     ok(strip.channels.every((c) => c.mean < 60), `/apps/${app}: the bezel really is dark on the page`, strip.channels.map((c) => c.mean.toFixed(0)).join("/"));
     const cap0 = await sec.locator(".shots-panel").first().locator("figcaption").innerText();
     ok(cap0.includes(list[0].title) && cap0.includes(list[0].caption.slice(0, 30)), `/apps/${app}: the caption under it is the first screenshot's`);
@@ -141,7 +143,10 @@ try {
     await tabs.nth(1).click();
     const vis1 = await visible();
     ok(vis1[1] && vis1.filter(Boolean).length === 1, `/apps/${app}: clicking the second tab shows the second picture only`, JSON.stringify(vis1));
-    const active = await tabs.evaluate((els) => els.map((e) => getComputedStyle(e).backgroundColor));
+    // the tabs fade between colours: read them once every running animation/transition has finished, not half way through
+    // (only the ones that end: the page's moving backdrop repeats for ever, and the wait is capped anyway)
+    await page.evaluate(() => Promise.race([Promise.all(document.getAnimations().filter((a) => a.effect?.getComputedTiming().iterations !== Infinity).map((a) => a.finished.catch(() => undefined))), new Promise((r) => setTimeout(r, 1500))]));
+    const active = await tabs.evaluateAll((els) => els.map((e) => getComputedStyle(e).backgroundColor));
     const brand = await page.evaluate(() => getComputedStyle(document.querySelector(".app-themed")).getPropertyValue("--brand").trim());
     ok(active[1] !== active[0] && active[2] !== active[1], `/apps/${app}: the chosen tab is lit and the others are not`, active.join(" · "));
     // the lit tab wears the app's own colour
@@ -188,7 +193,7 @@ try {
   const lum = (c) => { const [r, g, b] = c.match(/\d+/g).map(Number); return (0.299 * r + 0.587 * g + 0.114 * b); };
   ok(lum(dc.h2) > 150 && lum(dc.bg) < 60 && lum(dc.tab) > 100, "in dark mode the heading and the tab labels are light on the dark page", JSON.stringify(dc));
   const darkShot = await dp.locator("#screens .tablet").first().screenshot();
-  const dBezel = await sharp(darkShot).extract({ left: 4, top: 120, width: 8, height: 120 }).stats();
+  const dBezel = await sharp(await sharp(darkShot).extract({ left: 4, top: 120, width: 8, height: 120 }).toBuffer()).stats();
   ok(dBezel.channels.every((c) => c.mean < 70), "in dark mode the tablet's bezel is still a dark frame, visible against the dark page", dBezel.channels.map((c) => c.mean.toFixed(0)).join("/"));
   await dark.close();
 

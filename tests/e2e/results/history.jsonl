@@ -1499,3 +1499,7 @@
 {"id":"t120-app-live-api","status":"pass","pass":48,"fail":0,"mode":"headless","at":"2026-11-27T16:36:28.432Z","durationMs":23838}
 {"id":"t121-platform-roles-api","status":"pass","pass":61,"fail":0,"mode":"headless","at":"2026-11-27T16:36:36.986Z","durationMs":8523}
 {"id":"t98-rider-app-api","status":"pass","pass":105,"fail":0,"mode":"headless","at":"2026-11-27T16:36:44.520Z","durationMs":7513}
+{"id":"t107-app-screenshots","status":"fail","pass":113,"fail":2,"mode":"headless","at":"2026-11-27T20:08:38.298Z","durationMs":20722}
+{"id":"t107-app-screenshots","status":"fail","pass":176,"fail":3,"mode":"headless","at":"2026-11-27T20:10:42.065Z","durationMs":6572}
+{"id":"t107-app-screenshots","status":"error","pass":115,"fail":0,"mode":"headless","at":"2026-11-27T20:18:15.875Z","durationMs":410241,"error":"app-screenshots.mjs exited with code 1. }  Node.js v24.3.0"}
+{"id":"t107-app-screenshots","status":"pass","pass":179,"fail":0,"mode":"headless","at":"2026-11-27T20:18:30.942Z","durationMs":10410}

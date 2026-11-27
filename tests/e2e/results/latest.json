@@ -42368,5 +42368,1118 @@
     ],
     "findings": [],
     "problems": []
+  },
+  "t107-app-screenshots": {
+    "id": "t107-app-screenshots",
+    "title": "Website → /apps/oma, /apps/kda, /apps/rda: real tablet screenshots in an Android tablet frame, as a tabbed gallery that works by mouse, keyboard and without script",
+    "status": "pass",
+    "pass": 179,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-27T20:18:30.942Z",
+    "durationMs": 10410,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The list of screenshots and the pictures",
+        "checks": [
+          {
+            "label": "there are screenshots for all three apps",
+            "ok": true,
+            "detail": "oma,kda,rda",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA: at least three screenshots",
+            "ok": true,
+            "detail": "3",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA: each has its own name",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "oma-tables.webp is in public/app-screens",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "oma-tables.webp is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "oma-tables.webp: the list says 1600×1000 and the picture is 1600×1000",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "oma-tables.webp: a wide tablet picture (at least 1,400 px, 16:10)",
+            "ok": true,
+            "detail": "1600×1000 = 1.60",
+            "kind": "expect"
+          },
+          {
+            "label": "oma-tables.webp: small enough for a web page (under 400 KB)",
+            "ok": true,
+            "detail": "68 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "oma-tables.webp: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "42/39/29",
+            "kind": "expect"
+          },
+          {
+            "label": "oma-tables.webp: has a title, a caption and a description for screen readers",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "oma-take-order.webp is in public/app-screens",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "oma-take-order.webp is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "oma-take-order.webp: the list says 1600×1000 and the picture is 1600×1000",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "oma-take-order.webp: a wide tablet picture (at least 1,400 px, 16:10)",
+            "ok": true,
+            "detail": "1600×1000 = 1.60",
+            "kind": "expect"
+          },
+          {
+            "label": "oma-take-order.webp: small enough for a web page (under 400 KB)",
+            "ok": true,
+            "detail": "80 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "oma-take-order.webp: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "47/47/38",
+            "kind": "expect"
+          },
+          {
+            "label": "oma-take-order.webp: has a title, a caption and a description for screen readers",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "oma-orders.webp is in public/app-screens",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "oma-orders.webp is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "oma-orders.webp: the list says 1600×1000 and the picture is 1600×1000",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "oma-orders.webp: a wide tablet picture (at least 1,400 px, 16:10)",
+            "ok": true,
+            "detail": "1600×1000 = 1.60",
+            "kind": "expect"
+          },
+          {
+            "label": "oma-orders.webp: small enough for a web page (under 400 KB)",
+            "ok": true,
+            "detail": "58 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "oma-orders.webp: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "28/26/24",
+            "kind": "expect"
+          },
+          {
+            "label": "oma-orders.webp: has a title, a caption and a description for screen readers",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA: at least three screenshots",
+            "ok": true,
+            "detail": "4",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA: each has its own name",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "kda-board.webp is in public/app-screens",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "kda-board.webp is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "kda-board.webp: the list says 1600×1000 and the picture is 1600×1000",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "kda-board.webp: a wide tablet picture (at least 1,400 px, 16:10)",
+            "ok": true,
+            "detail": "1600×1000 = 1.60",
+            "kind": "expect"
+          },
+          {
+            "label": "kda-board.webp: small enough for a web page (under 400 KB)",
+            "ok": true,
+            "detail": "75 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "kda-board.webp: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "62/42/47",
+            "kind": "expect"
+          },
+          {
+            "label": "kda-board.webp: has a title, a caption and a description for screen readers",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "kda-prep.webp is in public/app-screens",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "kda-prep.webp is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "kda-prep.webp: the list says 1600×1000 and the picture is 1600×1000",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "kda-prep.webp: a wide tablet picture (at least 1,400 px, 16:10)",
+            "ok": true,
+            "detail": "1600×1000 = 1.60",
+            "kind": "expect"
+          },
+          {
+            "label": "kda-prep.webp: small enough for a web page (under 400 KB)",
+            "ok": true,
+            "detail": "35 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "kda-prep.webp: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "23/21/21",
+            "kind": "expect"
+          },
+          {
+            "label": "kda-prep.webp: has a title, a caption and a description for screen readers",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "kda-dishes.webp is in public/app-screens",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "kda-dishes.webp is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "kda-dishes.webp: the list says 1600×1000 and the picture is 1600×1000",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "kda-dishes.webp: a wide tablet picture (at least 1,400 px, 16:10)",
+            "ok": true,
+            "detail": "1600×1000 = 1.60",
+            "kind": "expect"
+          },
+          {
+            "label": "kda-dishes.webp: small enough for a web page (under 400 KB)",
+            "ok": true,
+            "detail": "40 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "kda-dishes.webp: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "29/22/24",
+            "kind": "expect"
+          },
+          {
+            "label": "kda-dishes.webp: has a title, a caption and a description for screen readers",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "kda-today.webp is in public/app-screens",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "kda-today.webp is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "kda-today.webp: the list says 1600×1000 and the picture is 1600×1000",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "kda-today.webp: a wide tablet picture (at least 1,400 px, 16:10)",
+            "ok": true,
+            "detail": "1600×1000 = 1.60",
+            "kind": "expect"
+          },
+          {
+            "label": "kda-today.webp: small enough for a web page (under 400 KB)",
+            "ok": true,
+            "detail": "28 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "kda-today.webp: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "20/19/19",
+            "kind": "expect"
+          },
+          {
+            "label": "kda-today.webp: has a title, a caption and a description for screen readers",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA: at least three screenshots",
+            "ok": true,
+            "detail": "3",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA: each has its own name",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "rda-deliveries.webp is in public/app-screens",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "rda-deliveries.webp is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "rda-deliveries.webp: the list says 1600×1000 and the picture is 1600×1000",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "rda-deliveries.webp: a wide tablet picture (at least 1,400 px, 16:10)",
+            "ok": true,
+            "detail": "1600×1000 = 1.60",
+            "kind": "expect"
+          },
+          {
+            "label": "rda-deliveries.webp: small enough for a web page (under 400 KB)",
+            "ok": true,
+            "detail": "44 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "rda-deliveries.webp: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "43/50/25",
+            "kind": "expect"
+          },
+          {
+            "label": "rda-deliveries.webp: has a title, a caption and a description for screen readers",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "rda-pickup.webp is in public/app-screens",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "rda-pickup.webp is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "rda-pickup.webp: the list says 1600×1000 and the picture is 1600×1000",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "rda-pickup.webp: a wide tablet picture (at least 1,400 px, 16:10)",
+            "ok": true,
+            "detail": "1600×1000 = 1.60",
+            "kind": "expect"
+          },
+          {
+            "label": "rda-pickup.webp: small enough for a web page (under 400 KB)",
+            "ok": true,
+            "detail": "40 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "rda-pickup.webp: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "40/49/25",
+            "kind": "expect"
+          },
+          {
+            "label": "rda-pickup.webp: has a title, a caption and a description for screen readers",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "rda-code.webp is in public/app-screens",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "rda-code.webp is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "rda-code.webp: the list says 1600×1000 and the picture is 1600×1000",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "rda-code.webp: a wide tablet picture (at least 1,400 px, 16:10)",
+            "ok": true,
+            "detail": "1600×1000 = 1.60",
+            "kind": "expect"
+          },
+          {
+            "label": "rda-code.webp: small enough for a web page (under 400 KB)",
+            "ok": true,
+            "detail": "39 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "rda-code.webp: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "45/47/43",
+            "kind": "expect"
+          },
+          {
+            "label": "rda-code.webp: has a title, a caption and a description for screen readers",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no picture sits in the folder without being listed (so nothing old is left behind)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "The tooling that takes them",
+        "checks": [
+          {
+            "label": "adb.mjs is valid JavaScript",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "build.mjs is valid JavaScript",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "capture.mjs is valid JavaScript",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "scenarios.mjs is valid JavaScript",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "serve.mjs is valid JavaScript",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "builds go to screenshots/.build, never into an app's build-output folder (where real releases are)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no signing key is handed to these builds, whatever the shell has set (they use Android's shared debug key)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the builds are pointed at the throwaway server on localhost, not the live one",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "nothing in the tooling points at the live API",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the throwaway server listens on this machine only (127.0.0.1)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "its database is in memory, and it never reads a .env (so the real database address is never seen)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the phone reaches the server through adb reverse, which is removed again afterwards",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the emulator's screen size and clean status bar are put back when it is done",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the debug-signed builds and the huge raw pictures are never committed (.gitignore)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA: the scenarios and the list agree on which screens, in which order",
+            "ok": true,
+            "detail": "tables,take-order,orders",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA: the scenarios and the list agree on which screens, in which order",
+            "ok": true,
+            "detail": "board,prep,dishes,today",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA: the scenarios and the list agree on which screens, in which order",
+            "ok": true,
+            "detail": "deliveries,pickup,code",
+            "kind": "expect"
+          },
+          {
+            "label": "the restaurant in the pictures is fictional (Saffron Table), not a real customer",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "only made-up phone numbers are used",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "The gallery on each app's page",
+        "checks": [
+          {
+            "label": "/apps/oma: has the 'See it' section",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/oma: it is headed 'OMA on a tablet'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/oma: it sits between the top of the page and the install steps",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/oma: one tab per screenshot, named as listed",
+            "ok": true,
+            "detail": "Every table at a glance | Take the order at the table | Every order in one list",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/oma: the first picture is showing, and only that one",
+            "ok": true,
+            "detail": "[true,false,false]",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/oma: the first picture loaded at full size",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/oma: the picture has a description and its size (so the page doesn't jump)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/oma: the picture sits in a rounded tablet frame",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/oma: the bezel is an even 22 px all round",
+            "ok": true,
+            "detail": "[22,22,22]",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/oma: the body and the glass have rounded corners, the glass less than the body",
+            "ok": true,
+            "detail": "42 / 18",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/oma: the picture sits inside the glass, one bezel in from the edge",
+            "ok": true,
+            "detail": "22 vs 22",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/oma: a front camera in the middle of the top bezel",
+            "ok": true,
+            "detail": "x off 0.0, y 11.0, 7.9 px",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/oma: power and volume buttons stand on the top edge",
+            "ok": true,
+            "detail": "[{\"above\":true,\"touches\":true,\"inside\":true},{\"above\":true,\"touches\":true,\"inside\":true}]",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/oma: the glass has a faint sheen that never blocks a tap or click",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/oma: the body is a metal-rimmed gradient with a soft shadow",
+            "ok": true,
+            "detail": "6 shadow layers",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/oma: the bezel really is dark on the page",
+            "ok": true,
+            "detail": "32/33/37",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/oma: the caption under it is the first screenshot's",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/oma: clicking the second tab shows the second picture only",
+            "ok": true,
+            "detail": "[false,true,false]",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/oma: the chosen tab is lit and the others are not",
+            "ok": true,
+            "detail": "rgb(255, 255, 255) · color(srgb 0.211765 0.256941 0.604235) · rgb(255, 255, 255)",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/oma: …in the app's own colour",
+            "ok": true,
+            "detail": "color(srgb 0.211765 0.256941 0.604235) vs color(srgb 0.211765 0.256941 0.604235)",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/oma: the second picture loaded too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/oma: the arrow key moves to the next picture",
+            "ok": true,
+            "detail": "[false,false,true]",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/oma: …and back",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/oma: the tab you are on with the keyboard shows a focus ring",
+            "ok": true,
+            "detail": "solid",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/kda: has the 'See it' section",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/kda: it is headed 'KDA on a tablet'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/kda: it sits between the top of the page and the install steps",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/kda: one tab per screenshot, named as listed",
+            "ok": true,
+            "detail": "The kitchen board | Prep list | Sold out in one tap | Today at a glance",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/kda: the first picture is showing, and only that one",
+            "ok": true,
+            "detail": "[true,false,false,false]",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/kda: the first picture loaded at full size",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/kda: the picture has a description and its size (so the page doesn't jump)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/kda: the picture sits in a rounded tablet frame",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/kda: the bezel is an even 22 px all round",
+            "ok": true,
+            "detail": "[22,22,22]",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/kda: the body and the glass have rounded corners, the glass less than the body",
+            "ok": true,
+            "detail": "42 / 18",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/kda: the picture sits inside the glass, one bezel in from the edge",
+            "ok": true,
+            "detail": "22 vs 22",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/kda: a front camera in the middle of the top bezel",
+            "ok": true,
+            "detail": "x off 0.0, y 10.9, 7.9 px",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/kda: power and volume buttons stand on the top edge",
+            "ok": true,
+            "detail": "[{\"above\":true,\"touches\":true,\"inside\":true},{\"above\":true,\"touches\":true,\"inside\":true}]",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/kda: the glass has a faint sheen that never blocks a tap or click",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/kda: the body is a metal-rimmed gradient with a soft shadow",
+            "ok": true,
+            "detail": "6 shadow layers",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/kda: the bezel really is dark on the page",
+            "ok": true,
+            "detail": "32/33/37",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/kda: the caption under it is the first screenshot's",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/kda: clicking the second tab shows the second picture only",
+            "ok": true,
+            "detail": "[false,true,false,false]",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/kda: the chosen tab is lit and the others are not",
+            "ok": true,
+            "detail": "rgb(255, 255, 255) · color(srgb 0.0508235 0.465882 0.389647) · rgb(255, 255, 255) · rgb(255, 255, 255)",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/kda: …in the app's own colour",
+            "ok": true,
+            "detail": "color(srgb 0.0508235 0.465882 0.389647) vs color(srgb 0.0508235 0.465882 0.389647)",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/kda: the second picture loaded too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/kda: the arrow key moves to the next picture",
+            "ok": true,
+            "detail": "[false,false,true,false]",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/kda: …and back",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/kda: the tab you are on with the keyboard shows a focus ring",
+            "ok": true,
+            "detail": "solid",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/rda: has the 'See it' section",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/rda: it is headed 'RDA on a tablet'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/rda: it sits between the top of the page and the install steps",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/rda: one tab per screenshot, named as listed",
+            "ok": true,
+            "detail": "Your deliveries, one by one | Pick up when it is ready | Hand over with the customer's code",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/rda: the first picture is showing, and only that one",
+            "ok": true,
+            "detail": "[true,false,false]",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/rda: the first picture loaded at full size",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/rda: the picture has a description and its size (so the page doesn't jump)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/rda: the picture sits in a rounded tablet frame",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/rda: the bezel is an even 22 px all round",
+            "ok": true,
+            "detail": "[22,22,22]",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/rda: the body and the glass have rounded corners, the glass less than the body",
+            "ok": true,
+            "detail": "42 / 18",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/rda: the picture sits inside the glass, one bezel in from the edge",
+            "ok": true,
+            "detail": "22 vs 22",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/rda: a front camera in the middle of the top bezel",
+            "ok": true,
+            "detail": "x off 0.0, y 10.9, 7.9 px",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/rda: power and volume buttons stand on the top edge",
+            "ok": true,
+            "detail": "[{\"above\":true,\"touches\":true,\"inside\":true},{\"above\":true,\"touches\":true,\"inside\":true}]",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/rda: the glass has a faint sheen that never blocks a tap or click",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/rda: the body is a metal-rimmed gradient with a soft shadow",
+            "ok": true,
+            "detail": "6 shadow layers",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/rda: the bezel really is dark on the page",
+            "ok": true,
+            "detail": "32/33/37",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/rda: the caption under it is the first screenshot's",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/rda: clicking the second tab shows the second picture only",
+            "ok": true,
+            "detail": "[false,true,false]",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/rda: the chosen tab is lit and the others are not",
+            "ok": true,
+            "detail": "rgb(255, 255, 255) · color(srgb 0.392471 0.259765 0.694588) · rgb(255, 255, 255)",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/rda: …in the app's own colour",
+            "ok": true,
+            "detail": "color(srgb 0.392471 0.259765 0.694588) vs color(srgb 0.392471 0.259765 0.694588)",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/rda: the second picture loaded too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/rda: the arrow key moves to the next picture",
+            "ok": true,
+            "detail": "[false,false,true]",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/rda: …and back",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps/rda: the tab you are on with the keyboard shows a focus ring",
+            "ok": true,
+            "detail": "solid",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Works without script, on a phone, in the dark, and with reduced motion",
+        "checks": [
+          {
+            "label": "with JavaScript switched off the tabs still switch the picture",
+            "ok": true,
+            "detail": "[false,false,true]",
+            "kind": "expect"
+          },
+          {
+            "label": "oma at 390 px: nothing sticks out sideways, the picture fits (348px), the tabs fit",
+            "ok": true,
+            "detail": "{\"over\":0,\"frame\":348,\"tabsRight\":296}",
+            "kind": "expect"
+          },
+          {
+            "label": "kda at 390 px: nothing sticks out sideways, the picture fits (346px), the tabs fit",
+            "ok": true,
+            "detail": "{\"over\":0,\"frame\":346,\"tabsRight\":346}",
+            "kind": "expect"
+          },
+          {
+            "label": "rda at 390 px: nothing sticks out sideways, the picture fits (347px), the tabs fit",
+            "ok": true,
+            "detail": "{\"over\":0,\"frame\":347,\"tabsRight\":327}",
+            "kind": "expect"
+          },
+          {
+            "label": "in dark mode the heading and the tab labels are light on the dark page",
+            "ok": true,
+            "detail": "{\"tab\":\"rgb(217, 211, 203)\",\"tabBg\":\"rgb(27, 25, 23)\",\"h2\":\"rgb(243, 239, 233)\",\"bg\":\"rgb(18, 17, 15)\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "in dark mode the tablet's bezel is still a dark frame, visible against the dark page",
+            "ok": true,
+            "detail": "43/44/49",
+            "kind": "expect"
+          },
+          {
+            "label": "with reduced motion the picture does not slide in",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "every picture on the pages was served (no 404)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the apps index still shows its three cards, without a gallery",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
   }
 }
