@@ -3,10 +3,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FEEDBACK_TAGS, formatINR, formatWhen, GATEWAY_LABELS, statusLabelFor } from "@rasoipulse/config-schema";
-import { fx } from "@rasoipulse/ui";
+import { FEEDBACK_TAGS, formatDuration, formatINR, formatRange, formatWhen, GATEWAY_LABELS, statusLabelFor } from "@rasoipulse/config-schema";
+import { fx, PaginationJoined } from "@rasoipulse/ui";
 import { Banknote, Bike, CalendarDays, CheckCircle2, ChevronDown, Clock, Coins, CreditCard, LogOut, Phone, Receipt, RotateCcw, ShoppingBag, Star, Trash2, XCircle } from "lucide-react";
-import { api, apiDelete } from "@/lib/clientApi";
+import { api, apiDelete, payBookingAdvance } from "@/lib/clientApi";
 import { useCustomer } from "@/lib/useCustomer";
 import { CustomerGate } from "./CustomerGate";
 import { startNavProgress } from "./NavProgress";
@@ -66,14 +66,26 @@ export function paymentInfo(order) {
 const when = (iso) =>
   new Date(iso).toLocaleString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "numeric", minute: "2-digit" });
 
+/** Orders on one page of the history, unless the address says otherwise (`?pageSize=10`, 1 to 30). */
+export const ORDERS_PER_PAGE = 5;
+const pageSizeFromAddress = () => {
+  if (typeof window === "undefined") return ORDERS_PER_PAGE;
+  const n = Number(new URLSearchParams(window.location.search).get("pageSize"));
+  return Number.isInteger(n) && n >= 1 && n <= 30 ? n : ORDERS_PER_PAGE;
+};
+
 export function AccountView({ outletId, menuHref, outletSlug, reservationsEnabled = false }) {
   const router = useRouter();
   const { customer, loading, refresh, logout } = useCustomer();
   const [orders, setOrders] = useState(null);
   const [coins, setCoins] = useState({ enabled: false, balance: 0, valuePaise: 0 });
-  const [nextBefore, setNextBefore] = useState(null);
+  // the history is shown a page at a time (numbered: 1 2 3 …): which page, and how many there are
+  const [page, setPage] = useState(1);
+  const [pages, setPages] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [turning, setTurning] = useState(false);
+  const [pageSize] = useState(pageSizeFromAddress);
   const [error, setError] = useState(null);
-  const [more, setMore] = useState(false);
   const [open, setOpen] = useState(() => new Set());
   // the order the customer is being asked about ("Remove this order from your account?"), and one being removed
   const [asking, setAsking] = useState(null);
@@ -85,6 +97,7 @@ export function AccountView({ outletId, menuHref, outletSlug, reservationsEnable
   const [againError, setAgainError] = useState(null);
   const [feedbackCfg, setFeedbackCfg] = useState({ enabled: false, googleReviewUrl: "", googleMinStars: 4 });
   const loadedFor = useRef(null);
+  const headingRef = useRef(null);
 
   /**
    * "Order again": the API rebuilds the old order against today's menu; the dishes go into that outlet's cart (added
@@ -113,26 +126,18 @@ export function AccountView({ outletId, menuHref, outletSlug, reservationsEnable
     }
   };
 
+  /** Fetch one page of the history (`quiet`: a refresh in the background — no error shown, no jump). */
   const load = useCallback(
-    async ({ reset = true, quiet = false } = {}) => {
+    async ({ at = 1, quiet = false } = {}) => {
       try {
-        const q = new URLSearchParams({ outletId, limit: "15" });
-        if (!reset && nextBefore) q.set("before", new Date(nextBefore).toISOString());
+        const q = new URLSearchParams({ outletId, limit: String(pageSize), page: String(at) });
         const r = await api(`/api/customer/orders?${q}`);
         setCoins(r.coins);
         if (r.feedback) setFeedbackCfg(r.feedback);
-        if (quiet) {
-          // a refresh while looking: update the newest orders in place, keep any older ones already loaded
-          setOrders((prev) => {
-            if (!prev) return r.orders;
-            const oldest = r.orders.length ? new Date(r.orders.at(-1).placedAt).getTime() : 0;
-            return [...r.orders, ...prev.filter((p) => new Date(p.placedAt).getTime() < oldest)];
-          });
-          setNextBefore((cur) => cur ?? r.nextBefore);
-        } else {
-          setNextBefore(r.nextBefore);
-          setOrders((prev) => (reset || !prev ? r.orders : [...prev, ...r.orders]));
-        }
+        setOrders(r.orders);
+        setPage(r.page ?? at);
+        setPages(r.pages ?? 1);
+        setTotal(r.total ?? r.orders.length);
         setError(null);
       } catch (e) {
         // a session that ended while the page was open: back to the sign-in card
@@ -140,25 +145,35 @@ export function AccountView({ outletId, menuHref, outletSlug, reservationsEnable
         else if (!quiet) setError(e.message);
       }
     },
-    [outletId, nextBefore, refresh],
+    [outletId, refresh, pageSize],
   );
+
+  /** Go to a page of the history: load it, then bring the top of the list back into view. */
+  const goTo = async (n) => {
+    setTurning(true);
+    setOpen(new Set());
+    setAsking(null);
+    await load({ at: n });
+    setTurning(false);
+    headingRef.current?.scrollIntoView?.({ behavior: "smooth", block: "start" });
+  };
 
   // load the first page once we know who is here
   useEffect(() => {
     if (!customer || loadedFor.current === customer.id) return;
     loadedFor.current = customer.id;
-    void load({ reset: true });
+    void load({ at: 1 });
   }, [customer, load]);
 
-  // while any order is still being prepared, keep it fresh (only the first page — what is current)
+  // while any order on this page is still being prepared, keep the page fresh (the same page the customer is looking at)
   const anyActive = useMemo(() => (orders ?? []).some((o) => ACTIVE.includes(o.status)), [orders]);
   useEffect(() => {
     if (!anyActive) return undefined;
     const t = setInterval(() => {
-      if (document.visibilityState === "visible") void load({ reset: true, quiet: true });
+      if (document.visibilityState === "visible") void load({ at: page, quiet: true });
     }, REFRESH_MS);
     return () => clearInterval(t);
-  }, [anyActive, load]);
+  }, [anyActive, load, page]);
 
   // Take one order off the customer's own list. Only their list: the restaurant keeps its record of it.
   const remove = async (id) => {
@@ -167,10 +182,8 @@ export function AccountView({ outletId, menuHref, outletSlug, reservationsEnable
     try {
       await apiDelete(`/api/customer/orders/${id}?outletId=${encodeURIComponent(outletId)}`);
       setAsking(null);
-      const left = (orders ?? []).filter((o) => o.id !== id);
-      setOrders(left);
-      // the page may now be empty while older orders exist: bring the next ones up
-      if (left.length === 0 && nextBefore) void load({ reset: true });
+      // the same page again: older orders move up to fill it (and a page that is now past the end shows the last one)
+      await load({ at: page });
     } catch (e) {
       setRemoveError(e.message);
     } finally {
@@ -250,12 +263,14 @@ export function AccountView({ outletId, menuHref, outletSlug, reservationsEnable
 
       {reservationsEnabled ? <MyBookings outletId={outletId} bookHref={outletSlug ? `/${outletSlug}/book` : null} /> : null}
 
-      <h2 style={h2}>Your orders</h2>
+      <h2 style={h2} ref={headingRef}>
+        Your orders
+      </h2>
 
       {error ? (
         <div style={errorBox} role="alert">
           {error}{" "}
-          <button type="button" style={linkBtn} onClick={() => load({ reset: true })}>
+          <button type="button" style={linkBtn} onClick={() => load({ at: page })}>
             Try again
           </button>
         </div>
@@ -421,21 +436,12 @@ export function AccountView({ outletId, menuHref, outletSlug, reservationsEnable
         })}
       </div>
 
-      {nextBefore ? (
-        <div style={{ textAlign: "center", marginTop: 16 }}>
-          <button
-            type="button"
-            className="ot-press"
-            style={ghostBtn}
-            disabled={more}
-            onClick={async () => {
-              setMore(true);
-              await load({ reset: false });
-              setMore(false);
-            }}
-          >
-            {more ? "Loading…" : "Show older orders"}
-          </button>
+      {pages > 1 ? (
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8, marginTop: 18 }} data-testid="orders-pagination" aria-busy={turning}>
+          <PaginationJoined page={page} pages={pages} onChange={goTo} label="Order history pages" />
+          <span style={muted}>
+            Page {page} of {pages} · {total} orders
+          </span>
         </div>
       ) : null}
     </section>
@@ -657,7 +663,8 @@ function MyBookings({ outletId, bookHref }) {
       .catch(() => setList([]));
   }, [outletId]);
   const cancel = async (b) => {
-    if (!window.confirm(`Cancel your booking ${b.code} for ${formatWhen(b.at)}?`)) return;
+    const refund = b.payment?.status === "paid" && b.pricing?.prepayPaise ? ` Your advance of ${formatINR(b.pricing.prepayPaise)} will be refunded.` : "";
+    if (!window.confirm(`Cancel your booking ${b.code} for ${formatRange(b.at, b.endsAt)}?${refund}`)) return;
     setBusy(b.id);
     setError(null);
     try {
@@ -669,8 +676,22 @@ function MyBookings({ outletId, bookHref }) {
       setBusy(null);
     }
   };
+  // a booking that is waiting for its advance can still be paid, for a few minutes
+  const payNow = async (b) => {
+    setBusy(b.id);
+    setError(null);
+    try {
+      await payBookingAdvance(outletId, b.id);
+      const r = await api(`/api/reservations/mine?outletId=${encodeURIComponent(outletId)}`);
+      setList(r.reservations ?? []);
+    } catch (e) {
+      setError(e.message === "Payment was cancelled" ? "The payment wasn't completed." : e.message);
+    } finally {
+      setBusy(null);
+    }
+  };
   if (!list) return null;
-  const upcoming = list.filter((b) => new Date(b.at).getTime() > Date.now() - 3 * 3_600_000);
+  const upcoming = list.filter((b) => new Date(b.endsAt ?? b.at).getTime() > Date.now() - 3 * 3_600_000);
   return (
     <>
       <h2 style={{ ...h2, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
@@ -690,16 +711,36 @@ function MyBookings({ outletId, bookHref }) {
             <article key={b.id} className="ot-fx-card" style={fx("card", { ...card, padding: "12px 14px" })} data-booking={b.code} data-status={b.status}>
               <div style={rowBetween}>
                 <div>
-                  <div style={{ fontWeight: 800 }}>{formatWhen(b.at)}</div>
+                  <div style={{ fontWeight: 800 }}>{b.endsAt ? formatRange(b.at, b.endsAt) : formatWhen(b.at)}</div>
                   <div style={muted}>
                     Table for {b.partySize} · {b.outlet?.name} · {b.code}
                     {b.tableNumber ? ` · Table ${b.tableNumber}` : ""}
+                    {b.minutes ? ` · ${formatDuration(b.minutes)}` : ""}
+                    {b.event ? ` · ${b.event}` : ""}
                   </div>
+                  {b.pricing?.amountPaise ? (
+                    <div style={muted} data-testid="booking-money">
+                      {b.payment?.status === "paid"
+                        ? `${formatINR(b.pricing.prepayPaise)} paid in advance · ${formatINR(b.pricing.remainingPaise)} at the restaurant`
+                        : b.payment?.status === "refund_due"
+                          ? `Your advance of ${formatINR(b.pricing.prepayPaise)} will be refunded`
+                          : b.payment?.status === "refunded"
+                            ? `Your advance of ${formatINR(b.pricing.prepayPaise)} was refunded`
+                            : b.payment?.status === "pending"
+                              ? `Advance of ${formatINR(b.pricing.prepayPaise)} not paid yet`
+                              : `Estimated ${formatINR(b.pricing.amountPaise)} at the restaurant`}
+                    </div>
+                  ) : null}
                 </div>
-                <Pill tone={BOOKING_TONE[b.status]} small>
-                  {b.statusLabel}
+                <Pill tone={b.canPay ? "warning" : BOOKING_TONE[b.status]} small>
+                  {b.canPay ? "Awaiting payment" : b.statusLabel}
                 </Pill>
               </div>
+              {b.canPay ? (
+                <button type="button" className="ot-press" style={{ ...primaryLink, marginTop: 8, border: "none", cursor: "pointer", padding: "9px 16px", fontSize: 13.5 }} onClick={() => payNow(b)} disabled={busy === b.id} data-testid="booking-pay">
+                  {busy === b.id ? "Opening payment…" : `Pay ${formatINR(b.pricing.prepayPaise)} to finish`}
+                </button>
+              ) : null}
               {b.canCancel ? (
                 <button type="button" style={{ ...linkBtn, color: "var(--tone-danger)" }} onClick={() => cancel(b)} disabled={busy === b.id} data-testid="booking-cancel">
                   {busy === b.id ? "Cancelling…" : "Cancel booking"}

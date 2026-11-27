@@ -9,6 +9,7 @@ export { AppLink, LinkProvider } from "./link";
 export { PageBlocks } from "./PageBlocks";
 export { ProgressSteps } from "./variants/progress";
 export { DropdownSoft } from "./variants/dropdowns";
+export { PaginationJoined, pageWindow } from "./variants/pagination";
 
                                              
                                              
@@ -16,6 +17,9 @@ export { DropdownSoft } from "./variants/dropdowns";
 export * from "./variants/types";
 
 export { DatePicker, DatePickerInput, formatDate, parseDate } from "./DatePicker";
+export { TimePicker, TimePickerInput, formatTimeLabel, timeOptions } from "./TimePicker";
+export { SearchSelect } from "./SearchSelect";
+export { useAnchoredPopover } from "./popover";
 export { StatCard } from "./StatCard";
 export { AnalyticsChart } from "./AnalyticsChart";
 
@@ -43,6 +47,7 @@ export {
   paginationVariants,
   progressVariants,
   datePickerVariants,
+  timePickerVariants,
   statCardVariants,
   analyticsChartVariants,
   getAnnouncementVariant,

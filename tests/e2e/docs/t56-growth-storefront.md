@@ -1,6 +1,6 @@
 # T56 — Storefront: only N left, combos and dish hours on the menu, suggestions, a pre-order for later, rating an order, order again and booking a table
 
-**Area:** storefront · **Last result:** ✅ PASSED (22 passed, 0 failed · 2026-11-21 15:12 · headless · 8.7 s)
+**Area:** storefront · **Last result:** ✅ PASSED (22 passed, 0 failed · 2026-11-27 12:07 · headless · 8.3 s)
 
 **Run it alone:** `node run.mjs --only t56` (add `--visible` to watch it)
 
@@ -42,7 +42,7 @@ _Nothing failed._
 
 - a counted dish running low says 'Only 3 left' — _ONLY 3 LEFT_
 - a combo says Combo and what it saves (₹60 + ₹60 separately, ₹100 as a combo) — _Momo Meal COMBO · SAVE ₹20 ₹100_
-- a breakfast dish outside its hours shows when it is served — and can't be opened — _Poha Available 5:12 PM – 6:12 PM_
+- a breakfast dish outside its hours shows when it is served — and can't be opened — _Poha Available 2:06 PM – 3:06 PM_
 
 **Step 2 — The dish pop-up stops at the stock**
 
@@ -79,6 +79,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-27 12:07 | pass | 22 | 0 | headless | 8.3 s |
+| 2026-11-27 10:54 | pass | 22 | 0 | headless | 8.1 s |
 | 2026-11-21 15:12 | pass | 22 | 0 | headless | 8.7 s |
 | 2026-11-21 14:26 | pass | 22 | 0 | headless | 8.3 s |
 | 2026-11-21 13:14 | pass | 22 | 0 | headless | 8.8 s |

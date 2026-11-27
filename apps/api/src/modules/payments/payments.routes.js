@@ -1,17 +1,19 @@
 import { Router,              } from "express";
 import { z } from "zod";
 import { gatewaySchema } from "@rasoipulse/config-schema";
-import { OrderModel } from "@rasoipulse/db";
+import { OrderModel, ReservationModel } from "@rasoipulse/db";
 import { outletBrand } from "../outlets/outlet-cache.js";
 import { requireOutletContext, requireUser } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import { currentCustomer } from "../customer/customer.routes.js";
 import {
   clearCredentials,
+  createBookingIntent,
   createIntent,
   handleWebhook,
   listGatewayConfig,
   listPaymentsForOrder,
+  paymentSubject,
   saveCredentials,
   verifyPayment,
 } from "./payments.service.js";
@@ -37,6 +39,19 @@ async function requireOwnOrder(req         , ctx               , orderId        
     "customer.customerId": String(customer._id),
   });
   if (!owns) throw new HttpError(403, "That isn't your order");
+}
+
+/** The diner may only pay the advance of their own table booking. */
+async function requireOwnBooking(req         , ctx               , reservationId        ) {
+  const customer = await currentCustomer(req);
+  if (!customer) throw new HttpError(401, "Sign in to pay for this booking");
+  const owns = await ReservationModel.exists({
+    _id: reservationId,
+    brandId: ctx.brandId,
+    outletId: ctx.outletId,
+    "customer.customerId": String(customer._id),
+  });
+  if (!owns) throw new HttpError(403, "That isn't your booking");
 }
 
 /* ------------------------------------------------------------ admin config */
@@ -65,11 +80,19 @@ paymentsRouter.delete("/config/:gateway", limiter("secrets"), async (req, res) =
 
 /* ------------------------------------------------------------------ checkout */
 
-const intentBody = z.object({ outletId: z.string().min(1), orderId: z.string().min(1) });
+// pay for an order, or the advance of a table booking — one or the other
+const intentBody = z
+  .object({ outletId: z.string().min(1), orderId: z.string().min(1).optional(), reservationId: z.string().min(1).optional() })
+  .refine((b) => Boolean(b.orderId) !== Boolean(b.reservationId), { message: "Say what is being paid for: an order or a booking." });
 
 paymentsRouter.post("/intent", limiter("payment"), async (req, res) => {
   const body = intentBody.parse(req.body);
   const ctx = await publicContext(body.outletId);
+  if (body.reservationId) {
+    await requireOwnBooking(req, ctx, body.reservationId);
+    res.json(await createBookingIntent(ctx, body.reservationId));
+    return;
+  }
   await requireOwnOrder(req, ctx, body.orderId);
   res.json(await createIntent(ctx, body.orderId));
 });
@@ -83,9 +106,12 @@ const verifyBody = z.object({
 paymentsRouter.post("/verify", limiter("payment"), async (req, res) => {
   const body = verifyBody.parse(req.body);
   const ctx = await publicContext(body.outletId);
+  // whose payment is it? Only its owner may confirm it — checked BEFORE anything is verified or settled
+  const what = await paymentSubject(ctx, body.paymentId);
+  if (what.subject === "reservation") await requireOwnBooking(req, ctx, what.id);
+  else await requireOwnOrder(req, ctx, what.id);
   const { orderId } = await verifyPayment(ctx, body.paymentId, body.payload);
-  await requireOwnOrder(req, ctx, orderId);
-  res.json({ status: "paid", orderId });
+  res.json({ status: "paid", orderId, subject: what.subject });
 });
 
 /* ------------------------------------------------------------------ webhooks */

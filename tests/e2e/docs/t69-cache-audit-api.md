@@ -1,6 +1,6 @@
 # T69 — Cache audit — what is remembered is dropped the moment it changes; orders, tables and bookings are always read live
 
-**Area:** platform · **Last result:** ✅ PASSED (55 passed, 0 failed · 2026-11-27 10:02 · headless · 7.4 s)
+**Area:** platform · **Last result:** ✅ PASSED (55 passed, 0 failed · 2026-11-27 12:08 · headless · 6.4 s)
 
 **Run it alone:** `node run.mjs --only t69` (add `--visible` to watch it)
 
@@ -106,18 +106,20 @@ _Nothing failed._
 
 - sign-in entries are never listed (they are about people) — _cfg,menu,outlet,outletaccess_
 - the new kinds (settings, access check, offers) are listed with words, not codes — _cfg,menu,outlet,outletaccess_
-- Store by store: Acme has remembered items — _{"id":"6b0907c2d514a195bc3ad477","name":"Acme","entries":4,"bytes":6805}_
+- Store by store: Acme has remembered items — _{"id":"6b09256448929c61391bb3c3","name":"Acme","entries":4,"bytes":6928}_
 - an item can be opened and read
 - a sign-in item can never be opened
 - clearing ONE store's cache removes its items
 - …and Acme's row shrinks (or goes) in the list
-- other stores keep what they had when one store is cleared — _{"id":"6b0907c2d514a195bc3ad486","name":"Beta","entries":2,"bytes":149}_
+- other stores keep what they had when one store is cleared — _{"id":"6b09256448929c61391bb3d3","name":"Beta","entries":2,"bytes":149}_
 - after clearing, the store's team is not signed out and everything still works
 
 ## History (latest 10 runs)
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-27 12:08 | pass | 55 | 0 | headless | 6.4 s |
+| 2026-11-27 10:54 | pass | 55 | 0 | headless | 6.8 s |
 | 2026-11-27 10:02 | pass | 55 | 0 | headless | 7.4 s |
 | 2026-11-27 09:59 | fail | 48 | 1 | headless | 7.0 s |
 | 2026-11-21 12:59 | pass | 55 | 0 | headless | 6.3 s |

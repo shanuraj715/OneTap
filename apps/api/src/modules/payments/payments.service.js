@@ -1,12 +1,14 @@
 import {
   GATEWAY_FIELDS,
   GATEWAY_LABELS,
+  PAYMENT_HOLD_MINUTES,
                
 } from "@rasoipulse/config-schema";
 import {
   OrderModel,
   PaymentCredentialModel,
   PaymentModel,
+  ReservationModel,
   tenantFilter,
   WebhookEventModel,
                      
@@ -109,13 +111,12 @@ async function outletConfigFor(ctx               ) {
   return effectiveOutletConfig(ctx);
 }
 
-/** Create (or reuse) a payment intent for an order that still owes money. */
-export async function createIntent(ctx               , orderId        ) {
-  const order = await OrderModel.findOne(tenantFilter(ctx, { _id: orderId }));
-  if (!order) throw new HttpError(404, "Order not found");
-  if (order.payment.status === "paid") throw new HttpError(409, "This order is already paid");
-
-  const gateway = order.payment.gateway;
+/**
+ * Open a payment with a gateway: checks the gateway is online, switched on for the outlet and fully set up, then asks it for an intent.
+ * A failure from the gateway's own API is not a Rasoi Pulse bug — the real reason (bad keys, account not activated, amount limits) is
+ * surfaced as a 502 so the customer and the restaurant can see what to fix, not "Internal error".
+ */
+async function openIntent(ctx               , gateway         , { amount, receipt, notes, what })                                                                    {
   const provider = providerFor(gateway);
   if (!provider?.isOnline) throw new HttpError(409, `${gateway} isn't an online gateway`);
 
@@ -131,26 +132,32 @@ export async function createIntent(ctx               , orderId        ) {
   const missing = provider.requiredFields.filter((f) => !creds[f]);
   if (missing.length) throw new HttpError(409, `${gateway} is not fully configured (missing ${missing.join(", ")})`);
 
-  // A failure from the gateway's own API is not a Rasoi Pulse bug — surface the
-  // real reason (bad keys, account not activated, amount limits) as a 502 so
-  // the customer and the restaurant can see what to fix, not "Internal error".
-  let intent;
   try {
-    intent = await provider.createIntent(creds, {
-      amount: order.totals.grandTotal,
-      currency: "INR",
-      receipt: order.orderNumber,
-      notes: { orderId: String(order._id), outletId: ctx.outletId ?? "" },
-    });
+    return await provider.createIntent(creds, { amount, currency: "INR", receipt, notes });
   } catch (e) {
     const detail = (e         ).message || "unknown error";
-    logger.warn({ err: e, gateway, orderId: String(order._id) }, "payment intent creation failed at the gateway");
+    logger.warn({ err: e, gateway, what }, "payment intent creation failed at the gateway");
     throw new HttpError(
       502,
       `${GATEWAY_LABELS[gateway] ?? gateway} could not start this payment: ${detail}. ` +
         `Check the ${gateway} keys in Admin → Payments.`,
     );
   }
+}
+
+/** Create (or reuse) a payment intent for an order that still owes money. */
+export async function createIntent(ctx               , orderId        ) {
+  const order = await OrderModel.findOne(tenantFilter(ctx, { _id: orderId }));
+  if (!order) throw new HttpError(404, "Order not found");
+  if (order.payment.status === "paid") throw new HttpError(409, "This order is already paid");
+
+  const gateway = order.payment.gateway;
+  const intent = await openIntent(ctx, gateway, {
+    amount: order.totals.grandTotal,
+    receipt: order.orderNumber,
+    notes: { orderId: String(order._id), outletId: ctx.outletId ?? "" },
+    what: `order ${String(order._id)}`,
+  });
 
   const payment = await PaymentModel.create({
     brandId: ctx.brandId,
@@ -168,6 +175,78 @@ export async function createIntent(ctx               , orderId        ) {
   await order.save();
 
   return { paymentId: String(payment._id), gateway, ...intent };
+}
+
+/* ------------------------------------------------------------ table bookings */
+
+/**
+ * The online gateway an outlet takes a table booking's advance with, or null when it has none it can use right now (nothing online switched on,
+ * or its keys aren't filled in). The real gateway is preferred over the test one.
+ */
+export async function bookingGatewayFor(ctx               ) {
+  const config = await outletConfigFor(ctx);
+  const online = config.payments.enabled.filter((g) => providerFor(g)?.isOnline && (g !== "mock" || env.ALLOW_MOCK_GATEWAY));
+  const ordered = [...online.filter((g) => g !== "mock"), ...online.filter((g) => g === "mock")];
+  for (const gateway of ordered) {
+    const provider = providerFor(gateway);
+    const creds = await credentialsFor(ctx, gateway).catch(() => ({}));
+    if (provider.requiredFields.every((f) => creds[f])) return gateway;
+  }
+  return null;
+}
+
+/** Start the payment of a table booking's advance (half of its amount). Only for a booking that is still waiting for it, inside its hold. */
+export async function createBookingIntent(ctx               , reservationId        ) {
+  const booking = await ReservationModel.findOne(tenantFilter(ctx, { _id: reservationId }));
+  if (!booking) throw new HttpError(404, "Booking not found");
+  if (booking.payment?.status === "paid") throw new HttpError(409, "The advance for this booking is already paid");
+  const expired = new Date(booking.createdAt).getTime() < Date.now() - PAYMENT_HOLD_MINUTES * 60_000;
+  if (booking.payment?.status !== "pending" || booking.status !== "requested" || expired) {
+    throw new HttpError(409, "This booking request has expired — please book again.");
+  }
+  const gateway = await bookingGatewayFor(ctx);
+  if (!gateway) throw new HttpError(409, "Online payment isn't available right now.");
+  const amount = booking.pricing?.prepayPaise ?? 0;
+  if (amount <= 0) throw new HttpError(409, "There's no advance to pay for this booking.");
+
+  const intent = await openIntent(ctx, gateway, {
+    amount,
+    receipt: booking.code,
+    notes: { reservationId: String(booking._id), outletId: ctx.outletId ?? "" },
+    what: `booking ${booking.code}`,
+  });
+  const payment = await PaymentModel.create({
+    brandId: ctx.brandId,
+    outletId: ctx.outletId,
+    subject: "reservation",
+    orderId: String(booking._id),
+    gateway,
+    status: "pending",
+    amount,
+    currency: "INR",
+    gatewayOrderId: intent.gatewayOrderId,
+    events: [{ at: new Date(), source: "server", type: "intent.created" }],
+  });
+  return { paymentId: String(payment._id), gateway, ...intent };
+}
+
+/** A payment that was verified or confirmed by the gateway: settle whatever it was for. */
+async function settleSubject(payment, ctx               , status                                ) {
+  if (payment.subject === "reservation") {
+    if (status === "paid") {
+      const { settleReservationPayment } = await import("../reservations/reservations.service.js");
+      await settleReservationPayment(ctx, payment.orderId, payment.gatewayPaymentId ?? "");
+    }
+    return; // a failed advance leaves the booking waiting; it is let go when its hold runs out
+  }
+  await settleOrder(payment.orderId, ctx, status);
+}
+
+/** Who may pay for this payment: it must belong to the signed-in customer's own order or booking. Returns what it is for. */
+export async function paymentSubject(ctx               , paymentId        ) {
+  const payment = await PaymentModel.findOne(tenantFilter(ctx, { _id: paymentId })).lean();
+  if (!payment) throw new HttpError(404, "Payment not found");
+  return { subject: payment.subject ?? "order", id: payment.orderId };
 }
 
 /** Verify what the gateway's client SDK handed back, then settle the order. */
@@ -206,9 +285,9 @@ export async function verifyPayment(
   payment.status = "paid";
   payment.gatewayPaymentId = result.gatewayPaymentId;
   await payment.save();
-  await settleOrder(payment.orderId, ctx, "paid");
+  await settleSubject(payment, ctx, "paid");
 
-  return { status: "paid"         , orderId: payment.orderId };
+  return { status: "paid"         , orderId: payment.orderId, subject: payment.subject ?? "order" };
 }
 
 async function settleOrder(orderId        , ctx               , status                                ) {
@@ -255,7 +334,8 @@ export async function handleWebhook(gateway         , rawBody        , headers  
   if (event.status && payment.status !== event.status) {
     payment.status = event.status;
     if (event.gatewayPaymentId) payment.gatewayPaymentId = event.gatewayPaymentId;
-    await settleOrder(payment.orderId, ctx, event.status);
+    await payment.save();
+    await settleSubject(payment, ctx, event.status);
   }
   await payment.save();
 

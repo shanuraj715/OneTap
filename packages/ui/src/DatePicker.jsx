@@ -546,6 +546,18 @@ export function DatePickerInput({
   label,
   disabled = false,
   variant = "ring",
+  minDate,
+  maxDate,
+  /** fill the width of the parent instead of sitting at its own width */
+  fullWidth = false,
+  id,
+  ariaLabel,
+  testId,
+  /** (Date) → text shown in the box; the default is "28 Nov 2026" */
+  formatValue,
+  /** let a store's style effects (glass, clay …) reach the box: a class and extra styles for it */
+  triggerClassName,
+  triggerStyle,
 }) {
   const [open, setOpen] = useState(false);
   const [pos, setPos] = useState(null); // where the calendar sits, in screen coordinates (null until it has been measured)
@@ -611,11 +623,12 @@ export function DatePickerInput({
   const displayString = useMemo(() => {
     const d = parseDate(value);
     if (!d) return "";
+    if (formatValue) return formatValue(d);
     return `${d.getDate()} ${MONTH_NAMES[d.getMonth()].slice(0, 3)} ${d.getFullYear()}`;
-  }, [value]);
+  }, [value, formatValue]);
 
   return (
-    <div ref={containerRef} style={{ position: "relative", display: "inline-block" }}>
+    <div ref={containerRef} style={{ position: "relative", display: fullWidth ? "block" : "inline-block", width: fullWidth ? "100%" : undefined }}>
       {label ? (
         <label
           style={{
@@ -632,7 +645,24 @@ export function DatePickerInput({
 
       <div
         ref={boxRef}
+        id={id}
+        role="button"
+        tabIndex={disabled ? -1 : 0}
+        aria-haspopup="dialog"
+        aria-expanded={open}
+        aria-disabled={disabled || undefined}
+        aria-label={ariaLabel}
+        data-testid={testId}
+        data-value={value ? String(value) : ""}
+        className={triggerClassName}
         onClick={() => !disabled && setOpen((o) => !o)}
+        onKeyDown={(e) => {
+          if (disabled) return;
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setOpen((o) => !o);
+          }
+        }}
         style={{
           display: "flex",
           alignItems: "center",
@@ -644,9 +674,10 @@ export function DatePickerInput({
           color: displayString ? "var(--color-text)" : "var(--color-text-muted, #94a3b8)",
           fontSize: 14,
           cursor: disabled ? "not-allowed" : "pointer",
-          minWidth: 190,
+          minWidth: fullWidth ? 0 : 190,
           boxSizing: "border-box",
           transition: "border-color 0.15s ease",
+          ...triggerStyle,
         }}
       >
         <svg
@@ -690,6 +721,8 @@ export function DatePickerInput({
                 value={value}
                 themeColor={themeColor}
                 variant={variant}
+                minDate={minDate}
+                maxDate={maxDate}
                 onOk={(str) => {
                   if (onChange) onChange(str);
                   setOpen(false);

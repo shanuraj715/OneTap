@@ -11,6 +11,7 @@ import { startMarketingWorker } from "./modules/marketing/worker.js";
 import { startWhatsAppWorker } from "./modules/whatsapp/worker.js";
 import { startCartReminderWorker } from "./modules/carts/carts.service.js";
 import { startStockSweeper } from "./modules/menu/stock.service.js";
+import { startBookingSweeper } from "./modules/reservations/reservations.service.js";
 import { startMissedOrderSweeper } from "./modules/orders/orders.service.js";
 import { markInterruptedMoves } from "./modules/storage/storage-migrate.js";
 import { markInterruptedOptimizations } from "./modules/storage/storage-optimize.js";
@@ -49,6 +50,8 @@ function main()       {
   startCartReminderWorker();
   // gives back the counted stock of online orders nobody paid for (safe in every process)
   startStockSweeper();
+  // lets go of table bookings whose advance was never paid (safe in every process)
+  startBookingSweeper();
   startMissedOrderSweeper();
   void markInterruptedMoves().catch(() => undefined); // a move that was running when the last process stopped can't still be running
   void markInterruptedOptimizations().catch(() => undefined); // …and neither can an optimize run

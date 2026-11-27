@@ -214,6 +214,17 @@ export async function recordRedemption(input
   }
 }
 
+/**
+ * Give a redemption back: a booking whose advance was never paid, or that the guest gave up on, must not use up the coupon. Does nothing when there
+ * was no redemption (or it was already given back).
+ */
+export async function releaseRedemption(input                                                 ) {
+  const { ctx, orderId } = input;
+  const row = await CouponRedemptionModel.findOneAndDelete(tenantFilter(ctx, { orderId }));
+  if (!row) return;
+  await CouponModel.updateOne(tenantFilter(ctx, { _id: row.couponId }), { $inc: { redemptionCount: -1 } });
+}
+
 /** Coupons a customer could plausibly use, for the "available offers" list. */
 export async function publicCoupons(ctx               )                    {
   if (!(await entitled(ctx.brandId, "coupons"))) return [];

@@ -1,6 +1,6 @@
 # T96 — Icons: the website has the Rasoi Pulse icon (navy), the admin panel a different one (red), and the storefront shows the shop owner's own icon (the Rasoi Pulse one until they upload theirs)
 
-**Area:** branding · **Last result:** ✅ PASSED (20 passed, 0 failed · 2026-11-26 21:43 · headless · 3.3 s)
+**Area:** branding · **Last result:** ✅ PASSED (20 passed, 0 failed · 2026-11-27 11:07 · headless · 2.0 s)
 
 **Run it alone:** `node run.mjs --only t96` (add `--visible` to watch it)
 
@@ -66,6 +66,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-27 11:07 | pass | 20 | 0 | headless | 2.0 s |
 | 2026-11-26 21:43 | pass | 20 | 0 | headless | 3.3 s |
 | 2026-11-26 21:43 | fail | 19 | 1 | headless | 3.5 s |
 | 2026-11-26 21:42 | fail | 18 | 2 | headless | 24.1 s |

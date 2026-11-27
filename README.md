@@ -227,6 +227,7 @@ tries lock the order for the rider (a manager can still complete it from the das
 
 ### Marketing website (apps/website): header, footer, homepage
 
+- **About Us / Contact Us are footer-only, whatever the console calls them** (`about`, `about-us`, `contact-us`, or a menu label "About Us"): never in the header or the phone menu, always in the footer's Company column; "Talk to us" goes to the contact page. **The phone menu closes** after a link, a press outside or Escape (`MobileMenu.jsx`, a native `<details>` that still opens without JavaScript). Test: t117.
 - **Header** = the Product dropdown, **Pricing**, **Apps** (a fixed link to `/apps`, not a console page), **FAQ**, and the Talk to us button. **About** and **Contact** live in the **footer** only (`FOOTER_ONLY` in `src/components/Chrome.jsx`); the footer's Product column also links to Apps.
 - **Homepage apps note** (`AppsShowcase.jsx`, placed right after the product tabs by `PageView.jsx`): a few words and a small animated picture of an order travelling from the waiter's app to the kitchen's to the rider's. It deliberately has **no app cards and no downloads** — those are on `/apps`. It is drawn from the same app list as `/apps` and is left out when the list can't be reached.
 - **Look**: the homepage hero has a quiet moving backdrop that fades out at the bottom (never a hard edge); Features and "moments" cards are tinted per card, light up under the pointer (`Spotlight.jsx`), and their icons have little hover tricks. Motion is CSS only; scroll-reveal runs only where the browser supports scroll-linked animations, and **everything stops under "reduce motion"**.
@@ -301,6 +302,58 @@ Login activity.
 
 A plan is **limits** (people, outlets, **tables**) plus **features** (what the store can switch on), and a Custom plan has nothing of its own: each store's
 limits and features are set by hand on its page. The shared rules live in `packages/config-schema/src/plan.js` and `plan-presets.js`.
+### Table bookings: a stay, a price, a 50% advance
+
+The storefront's **Book a table** page (`/<outlet>/book`, `BookingView.jsx`) and the API behind it (`reservations.*`, rules in `packages/config-schema/src/reservations.js`).
+
+- **The form** (open to everyone — **no sign-in is asked for until the form is complete**; the last button reads *Continue* and only then shows "One last step — sign in" with every answer
+  kept): how many people · the **day** (`DatePickerInput` = DP03 popover input, filled calendar DP02, days limited to today … *days ahead*) · **from / to** (`TimePickerInput`; start times
+  come from the API with full ones greyed out, finish times from `availability?start=` with each one's price and whether the table is free that long) · the **occasion**
+  (`SearchSelect`, searchable; `BOOKING_EVENTS` + *Other* which opens a box for the name) · the **WhatsApp number** (10 digits; the sign-in number if left out) · an optional note.
+  A notice says every request is approved by hand and the answer comes on WhatsApp (or "confirmed as soon as it is paid" when the outlet auto-confirms).
+- **The stay** is chosen by the guest: from the outlet's *Shortest stay* to its *Longest stay* (Settings → Pre-orders & bookings; 1 h – 4 h by default), in steps of the booking time step, never past
+  closing. A booking made without a finish (phone bookings, older clients) takes the *Usual stay* (90 min). A seat is free while the **busiest moment** of the stay fits the capacity (`peakGuests`) —
+  bookings that follow each other don't add up.
+- **The price:** *Booking price per person per hour* (Settings; paise in the config, rupees in the box; **0 = no charge, so nothing is paid in advance**) × guests × hours, to the whole rupee.
+  The page shows total time and the estimate as the guest chooses. The guest pays **50%** (`PREPAY_PERCENT`) online now and the rest at the restaurant.
+- **The advance** goes through the payment gateway (`payments.service.js`: `bookingGatewayFor` — the real gateway, else the test one; `createBookingIntent`; the `Payment` record has `subject: "reservation"`
+  and `orderId` holds the booking's id; verify/webhook settle it through `settleReservationPayment`). Only the guest's own booking can be paid or confirmed (checked **before** anything is settled).
+  If the outlet has a price but **no usable online gateway**, no advance is taken: the whole amount is paid at the restaurant.
+- **While unpaid** a booking holds its seats for 15 minutes (`PAYMENT_HOLD_MINUTES`) and is **invisible to the team** (not in the day list, not in the "to confirm" badge); the guest sees it on the
+  account page with *Pay … to finish*. After that it is let go (`sweepUnpaidBookings`, every 5 minutes and lazily when read; payment state `expired`, never shown to the team as "cancelled").
+  Paid → the team sees it as *Waiting to be confirmed* and the guest is told on WhatsApp (their WhatsApp number, else the sign-in number) that it was received. A person approves it by hand.
+- **Refunds:** declining or cancelling a **paid** booking, or the guest cancelling it, marks the advance **refund due** (shown on the Bookings page with a *Mark refunded* button; the guest is told it
+  will be refunded). **Refunds are not sent through Razorpay by the app — the restaurant sends the money back from its gateway dashboard and then marks it.** A no-show keeps the advance.
+  Money that arrives after the hold ran out is marked for a refund, not lost.
+- **Food and drinks are extra:** the page (and the guest's messages) say the guest pays the *booking amount plus whatever they eat and drink*; only 50% of the **booking amount** is paid online.
+- **Coupons on bookings:** a coupon works on a booking only when **Table booking** is ticked in its *Order types* (none ticked = food orders only; "buy X get Y" never applies to a table).
+  The guest types a code or presses one of the restaurant's offers (`/api/coupons/public` lists them; the box on the page asks `POST /api/reservations/coupon` which works the price out itself);
+  the 50% advance is half of what is **left** after the coupon; a coupon covering everything means nothing to pay online. The use is counted when the booking is made and **given back**
+  if the advance is never paid or the guest gives up. The team sees the coupon, what it took off and the original price. The plan feature *Coupons* is needed.
+- **The team's Bookings page** (`Reservations.jsx`): **every upcoming booking in one list, soonest first, grouped by day** — nobody changes a date to find them. Tabs *Upcoming* (default, today on),
+  *Earlier* (before today, newest first) and *All*; the date is only a **filter** (our `DatePickerInput`; *Show all upcoming* undoes it). `GET /api/reservations?scope=upcoming|earlier|all` or `?day=`
+  (cut at 300 with a `more` flag). **Status button** on every booking: the status can be set **by hand** to any other (a no-show marked by mistake isn't stuck) — `PATCH` with `manual: true`;
+  the history records "Changed by hand from …"; a booking brought back keeps its advance (refund due → paid; one already refunded stays refunded).
+- **Telling the guest** when a booking is approved, declined or cancelled: a window opens with a **reason** (decline/cancel), the **message already written and editable**, and the way it will
+  be sent — **automatically**: the store's **linked WhatsApp** number (plan feature *WhatsApp chat*, account online) → **WhatsApp Business** (Settings → *WhatsApp Business template for booking
+  updates*: an approved template with one `{{1}}` placeholder; line breaks are turned into spaces) → **SMS** → nothing (the guest still sees the status on their account page).
+  `GET /api/reservations/:id/message?status=` previews the words and the route; `notify: { send, message }` on the `PATCH` sends (omitted = the usual message, `{ send: false }` = none).
+- **Use our components:** dates on the dashboard use `DatePickerInput` (never a browser `<input type="date">`) — the Bookings filter, *New booking* and the coupon's valid period (with `TimePickerInput`).
+  Native `type="time"` boxes still exist in Settings (opening hours), Cart reminders, dish availability windows and the platform onboarding form.
+- **Tests:** t113 (rules + API), t114 (the page, with the coupon box), t115 (dashboard: settings, the list and its filter, status by hand, the message window, refunds, coupons),
+  t118 (the team's side + coupons, API), t54 (older booking API), t55, t56.
+
+### Order history pages (PAG03)
+
+The storefront Account page shows **5 orders a page** with the joined pagination (`PaginationJoined`, PAG03, now a real control: buttons, `aria-current`, `1 … 4 5 6 … 20` for many pages). The API takes
+`GET /api/customer/orders?page=N&limit=5` and answers `page`, `pageSize`, `total`, `pages` (a page past the end gives the last one); without `page` it still pages by date (`before`). The address can set the page
+size (`?pageSize=10`, 1–30). Removing the last order on a page drops back to the previous page. Test: t116.
+
+### UI library: time picker, searchable dropdown
+
+`packages/ui` has `TimePicker` / `TimePickerInput` (TP01, TP02 in the catalogue; options can be switched off), `SearchSelect` (DRP08) and `useAnchoredPopover` (the shared popover placement); `DatePickerInput`
+now takes `minDate`, `maxDate`, `fullWidth`, `formatValue` and lets a store's style effects reach its box. See Settings → Components catalogue (Pickers & Inputs).
+
 
 - **Tables are sold in fives** — 5, 10, 15 … never 12 or 19 (`TABLE_STEP`; the schema refuses anything else, and the box rounds what is typed **up**: 12 → 15).
   The limit counts the **whole store** (every outlet together; a table switched off still counts). It is enforced when a table is created

@@ -25,6 +25,7 @@ import * as popovers from "./variants/popovers";
 import * as progress from "./variants/progress";
 import * as toasts from "./variants/toasts";
 import { DatePicker, DatePickerInput } from "./DatePicker";
+import { SearchableDemo, TimePickerDemo } from "./demos";
 import { StatCard } from "./StatCard";
 import { AnalyticsChart } from "./AnalyticsChart";
 
@@ -331,6 +332,11 @@ export const carouselVariants = [
   v("carousel.kenburns", "CRS13", "Slow zoom", "Crossfade while the picture drifts closer", carousels.CarouselKenBurns),
 ];
 
+export const timePickerVariants = [
+  v("timepicker.input", "TP01", "Popover input", "A time box that opens a panel of times on press", () => <TimePickerDemo />),
+  v("timepicker.inline", "TP02", "Inline list", "The panel of times, always open, grouped by part of the day", () => <TimePickerDemo inline />),
+];
+
 export const dropdownVariants = [
   v("dropdown.menu", "DRP01", "Menu", "Standard bordered trigger", dropdowns.DropdownMenu),
   v("dropdown.pill", "DRP02", "Pill", "Rounded trigger", dropdowns.DropdownPill),
@@ -339,6 +345,7 @@ export const dropdownVariants = [
   v("dropdown.flat", "DRP05", "Flat", "Square, no shadow", dropdowns.DropdownFlat),
   v("dropdown.soft", "DRP06", "Soft", "Tinted trigger", dropdowns.DropdownSoft),
   v("dropdown.select", "DRP07", "Select", "Wide, form-select style", dropdowns.DropdownSelect),
+  v("dropdown.search", "DRP08", "Searchable", "A search box above the list — for long lists", (props) => <SearchableDemo {...props} />),
 ];
 
 export const listGroupVariants = [
@@ -664,6 +671,17 @@ export const VARIANT_SLOTS                = [
     variants: datePickerVariants,
     preview: ({ Component: C }) => (
       <div style={{ display: "flex", gap: 24, flexWrap: "wrap", alignItems: "flex-start" }}>
+        <C />
+      </div>
+    ),
+  },
+  {
+    key: "timePickerVariant",
+    label: "Time Pickers",
+    description: "Pick a time of day — one box that opens a list of times, or the list on its own; times can be switched off (a table that is taken)",
+    variants: timePickerVariants,
+    preview: ({ Component: C }) => (
+      <div style={{ display: "flex", gap: 24, flexWrap: "wrap", alignItems: "flex-start", paddingBottom: 12 }}>
         <C />
       </div>
     ),

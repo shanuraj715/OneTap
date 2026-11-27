@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { RESERVATION_STATUSES } from "@rasoipulse/config-schema";
+import { RESERVATION_PAYMENT_STATUSES, RESERVATION_STATUSES } from "@rasoipulse/config-schema";
 import { tenantScope } from "../tenant-scope.js";
 
 const { Schema, model, models } = mongoose;
@@ -47,6 +47,29 @@ const reservationSchema = new Schema(
       customerId: { type: String, default: null, index: true },
       name: { type: String, default: "" },
       phone: { type: String, default: "" },
+      /** where the restaurant updates the guest (10 digits); empty = use `phone` */
+      whatsapp: { type: String, default: "" },
+    },
+    /** what the booking is for — "Birthday", or whatever the guest typed after choosing "Other" */
+    event: { type: String, default: "" },
+    /** what it costs, fixed when it was booked: rate per person per hour, minutes, the amount, the half paid online and the half paid at the restaurant (all paise) */
+    pricing: {
+      ratePaise: { type: Number, default: 0 },
+      minutes: { type: Number, default: 0 },
+      /** the price of the stay before a coupon, the coupon used and what it took off; `amountPaise` is what is left to pay */
+      grossPaise: { type: Number, default: 0 },
+      discountPaise: { type: Number, default: 0 },
+      couponCode: { type: String, default: "" },
+      amountPaise: { type: Number, default: 0 },
+      prepayPaise: { type: Number, default: 0 },
+      remainingPaise: { type: Number, default: 0 },
+    },
+    /** the advance: none (nothing to pay), pending (waiting for the guest to pay — the seats are held a few minutes), paid, refund_due (it was paid and the booking won't happen) or refunded */
+    payment: {
+      status: { type: String, enum: RESERVATION_PAYMENT_STATUSES, default: "none" },
+      paymentId: { type: String, default: "" },
+      paidAt: { type: Date, default: null },
+      refundedAt: { type: Date, default: null },
     },
     /** what the guest asked for ("birthday, window seat") */
     note: { type: String, default: "" },
@@ -67,6 +90,8 @@ const reservationSchema = new Schema(
 reservationSchema.plugin(tenantScope);
 reservationSchema.index({ brandId: 1, outletId: 1, at: 1 });
 reservationSchema.index({ brandId: 1, outletId: 1, code: 1 }, { unique: true });
+// the sweep that lets go of bookings whose advance was never paid
+reservationSchema.index({ "payment.status": 1, createdAt: 1 });
 
 export const ReservationModel = models.Reservation ?? model("Reservation", reservationSchema);
 

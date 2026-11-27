@@ -174,8 +174,16 @@ try {
   const form = page.getByTestId("new-booking-form");
   await form.waitFor();
   const tomorrow = new Date(Date.now() + 86_400_000 + 330 * 60_000).toISOString().slice(0, 10);
-  await form.getByLabel("Booking day").fill(tomorrow);
-  await sleep(800);
+  // the day is chosen with our date picker (the box opens on this month; press the day, then OK)
+  await form.getByTestId("new-booking-day").click();
+  const cal = page.locator(".rasoipulse-datepicker");
+  await cal.waitFor({ timeout: 5000 });
+  const nowIst = new Date(Date.now() + 330 * 60_000).toISOString().slice(0, 7);
+  if (tomorrow.slice(0, 7) !== nowIst) await page.getByRole("button", { name: "Next month" }).click();
+  await cal.locator("button:not([disabled])", { hasText: new RegExp(`^${Number(tomorrow.slice(8))}$`) }).first().click();
+  await page.getByRole("button", { name: "OK", exact: true }).click();
+  ok((await form.getByTestId("new-booking-day").getAttribute("data-value")) === tomorrow, "the booking's day is chosen on our date picker (no browser date box)");
+  await page.waitForFunction(() => document.querySelector('select[aria-label="Booking time"]')?.options.length > 4, null, { timeout: 10000 });
   const times = await form.getByLabel("Booking time").locator("option").allInnerTexts();
   await form.getByLabel("Booking time").selectOption({ index: Math.min(4, times.length - 1) });
   await form.getByLabel("Guest name").fill("Phone Guest");

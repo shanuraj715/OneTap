@@ -83,9 +83,8 @@ function loadScript(src) {
   });
 }
 
-/** Runs the chosen gateway's checkout for an already-created order. */
-export async function payOnline(outletId, orderId, gateway) {
-  const intent = await api("/api/payments/intent", { outletId, orderId });
+/** Runs a gateway's checkout for a payment that was just opened (`intent` is what /api/payments/intent answered). */
+async function runCheckout(outletId, intent, gateway, title) {
   const cp = intent.clientParams;
 
   if (gateway === "mock") {
@@ -104,7 +103,7 @@ export async function payOnline(outletId, orderId, gateway) {
     await new Promise((resolve, reject) => {
       const rzp = new window.Razorpay({
         ...cp,
-        name: "Order payment",
+        name: title,
         handler: (res) => {
           api("/api/payments/verify", { outletId, paymentId: intent.paymentId, payload: res })
             .then(() => resolve())
@@ -118,6 +117,18 @@ export async function payOnline(outletId, orderId, gateway) {
   }
 
   throw new Error(`${gateway} checkout isn't wired up yet`);
+}
+
+/** Runs the chosen gateway's checkout for an already-created order. */
+export async function payOnline(outletId, orderId, gateway) {
+  const intent = await api("/api/payments/intent", { outletId, orderId });
+  await runCheckout(outletId, intent, gateway, "Order payment");
+}
+
+/** Pays the advance of a table booking (the gateway is the one the outlet takes bookings' advances with — the server says which). */
+export async function payBookingAdvance(outletId, reservationId) {
+  const intent = await api("/api/payments/intent", { outletId, reservationId });
+  await runCheckout(outletId, intent, intent.gateway, "Table booking advance");
 }
 
 /** Same as `api`, but for PUT — saving a signed-in customer's cart. */

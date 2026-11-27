@@ -1,6 +1,6 @@
 # T55 — Dashboard: pre-orders & bookings settings, riders, out for delivery, stock / combo / hours in the menu, buy-X-get-Y coupons, bookings, ratings and cart reminders
 
-**Area:** dashboard · **Last result:** ✅ PASSED (26 passed, 0 failed · 2026-11-21 05:02 · headless · 5.6 s)
+**Area:** dashboard · **Last result:** ✅ PASSED (27 passed, 0 failed · 2026-11-27 12:06 · headless · 4.4 s)
 
 **Run it alone:** `node run.mjs --only t55` (add `--visible` to watch it)
 
@@ -41,7 +41,7 @@ Runs suites/growth-dashboard-ui.mjs in Chrome as the owner of the bench store (A
 
 _Nothing failed._
 
-### ✅ Passed (26)
+### ✅ Passed (27)
 
 **Step 1 — The sidebar has Bookings and Ratings**
 
@@ -66,12 +66,12 @@ _Nothing failed._
 
 - a Ready delivery order's next step is 'Out for delivery'
 - it asks who is taking it — Ramesh is on the list
-- the row now says Out for delivery — with Ramesh — _#0006 05:02 AM UI Tester Del 1 ₹90 Out for delivery with Ramesh 0m Delivered_
+- the row now says Out for delivery — with Ramesh — _#0001 12:06 PM UI Tester Del 1 ₹90 Out for delivery with Ramesh 0m Delivered_
 - …and its next step is 'Delivered'
 
 **Step 6 — Orders → a pre-order shows its pickup time**
 
-- a pre-order is tagged with its pickup time under its number — _11:45 AM today_
+- a pre-order is tagged with its pickup time under its number — _1:15 PM today_
 
 **Step 7 — Menu → stock on a dish, a combo, hours on a category**
 
@@ -79,7 +79,7 @@ _Nothing failed._
 - after saving, the dish row says '3 left'
 - …and the menu counts 3
 - choosing the dishes shows what they cost separately
-- a combo is created from the dish form — _{"items":[{"itemId":"6b00d6cf63f068be118b24a0","variantId":null,"quantity":1}]}_
+- a combo is created from the dish form — _{"items":[{"itemId":"6b092434397d243396ad7c28","variantId":null,"quantity":1}]}_
 - a category's Edit window has Hours
 
 **Step 8 — Coupons → buy 1 get 1 free**
@@ -89,8 +89,9 @@ _Nothing failed._
 
 **Step 9 — Bookings → a booking taken over the phone**
 
+- the booking's day is chosen on our date picker (no browser date box)
 - the booking shows on its day, confirmed (taken by the team)
-- the day's counts show at the top — _1 booking_
+- the day's counts show at the top — _2 bookings_
 
 **Step 10 — Ratings and Cart reminders pages**
 
@@ -103,6 +104,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-27 12:06 | pass | 27 | 0 | headless | 4.4 s |
+| 2026-11-27 10:54 | pass | 26 | 0 | headless | 4.8 s |
 | 2026-11-21 05:02 | pass | 26 | 0 | headless | 5.6 s |
 | 2026-11-21 04:24 | pass | 26 | 0 | headless | 5.0 s |
 | 2026-11-21 03:38 | pass | 26 | 0 | headless | 5.2 s |

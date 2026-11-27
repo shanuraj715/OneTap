@@ -1,6 +1,6 @@
 # T44 — Website header — the Product dropdown is wide, fits the window, and its hovered item is a soft rounded tile with a brand-filled icon (not a grey pill), in light and dark
 
-**Area:** website · **Last result:** ✅ PASSED (53 passed, 0 failed · 2026-11-21 04:57 · headless · 10.1 s)
+**Area:** website · **Last result:** ✅ PASSED (56 passed, 0 failed · 2026-11-27 10:52 · headless · 9.3 s)
 
 **Run it alone:** `node run.mjs --only t44` (add `--visible` to watch it)
 
@@ -15,8 +15,9 @@ Runs suites/website-product-menu.mjs: it renders the REAL website header compone
 2. dark theme
 3. the panel is wide enough, and fits every desktop window
 4. the pointer can travel from Product down into the panel without it closing
-5. the header links themselves are unchanged
-6. a phone: the Product list inside the Menu is unaffected
+5. the header keeps to Product, Pricing, Apps, FAQ (About and Contact moved to the footer)
+6. the header links themselves are unchanged
+7. a phone: the Product list inside the Menu is unaffected
 
 ## What to expect (these must happen)
 
@@ -39,7 +40,7 @@ Runs suites/website-product-menu.mjs: it renders the REAL website header compone
 
 _Nothing failed._
 
-### ✅ Passed (53)
+### ✅ Passed (56)
 
 **Set-up — Setup**
 
@@ -104,12 +105,18 @@ _Nothing failed._
 - moving across the panel to the last item keeps it open
 - moving away closes it
 
-**Step 5 — the header links themselves are unchanged**
+**Step 5 — the header keeps to Product, Pricing, Apps, FAQ (About and Contact moved to the footer)**
 
-- Pricing / FAQ / About / Contact keep their pill shape and type — _{"borderTopLeftRadius":"999px","fontSize":"15px","fontWeight":"500","paddingLeft":"12px"}_
+- the header's links are Pricing, Apps, FAQ (after the Product dropdown) — no About, no Contact — _Pricing \| Apps \| FAQ_
+- …with the Product dropdown first
+- …and the Talk to us button is still there
+
+**Step 6 — the header links themselves are unchanged**
+
+- Pricing / Apps / FAQ keep their pill shape and type — _{"borderTopLeftRadius":"999px","fontSize":"15px","fontWeight":"500","paddingLeft":"12px"}_
 - a hovered header link still gets its own light grey pill — _color(srgb 0.101961 0.0941176 0.0823529 / 0.06)_
 
-**Step 6 — a phone: the Product list inside the Menu is unaffected**
+**Step 7 — a phone: the Product list inside the Menu is unaffected**
 
 - the phone menu's Product rows still look as before — _{"display":"flex","borderTopLeftRadius":"10px"}_
 - …and highlight with the paper colour
@@ -119,6 +126,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-27 10:52 | pass | 56 | 0 | headless | 9.3 s |
 | 2026-11-21 04:57 | pass | 53 | 0 | headless | 10.1 s |
 | 2026-11-20 06:04 | pass | 53 | 0 | headless | 9.3 s |
 | 2026-11-20 05:01 | pass | 53 | 0 | headless | 9.2 s |

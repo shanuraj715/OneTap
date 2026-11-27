@@ -924,7 +924,12 @@ export const setRiderPin = (o, id, pin) => req(`/api/riders/${id}/pin`, { method
 export const getRiderPin = (o, id) => req(`/api/riders/${id}/pin`, { outletId: o._id });
 export const clearRiderPin = (o, id) => req(`/api/riders/${id}/pin`, { method: "DELETE", outletId: o._id });
 
-export const listReservations = (o, day) => req(`/api/reservations?day=${encodeURIComponent(day ?? "")}`, { outletId: o._id });
+/** The bookings list: `day` ("YYYY-MM-DD") for one day, otherwise `scope` — "upcoming" (today onwards, soonest first), "earlier" or "all". */
+export const listReservations = (o, { scope = "upcoming", day = "" } = {}) =>
+  req(`/api/reservations?${day ? `day=${encodeURIComponent(day)}` : `scope=${encodeURIComponent(scope)}`}`, { outletId: o._id });
+/** The message a guest would get for this answer (approved / declined / cancelled), and how it would be sent. */
+export const reservationMessage = (o, id, status, reason = "") =>
+  req(`/api/reservations/${id}/message?status=${encodeURIComponent(status)}${reason ? `&reason=${encodeURIComponent(reason)}` : ""}`, { outletId: o._id });
 export const reservationSummary = (o) => req("/api/reservations/summary", { outletId: o._id });
 export const reservationAvailability = (o, day, party) =>
   req(`/api/reservations/availability?outletId=${encodeURIComponent(o._id)}&day=${encodeURIComponent(day ?? "")}&party=${party ?? 2}`);

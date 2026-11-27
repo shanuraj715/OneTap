@@ -130,7 +130,11 @@ export function evaluateCoupon(coupon        , ctx               )              
     return deny("This coupon is for first orders only.");
   }
 
-  if (coupon.channels.length && ctx.channel && !coupon.channels.includes(ctx.channel)) {
+  // a table booking takes a coupon only when the coupon was made for bookings ("Table booking" ticked); a food order never takes a booking-only coupon
+  if (ctx.channel === "booking") {
+    if (!coupon.channels.includes("booking")) return deny("This coupon can't be used on a table booking.");
+    if (coupon.discountType === "bogo") return deny("This offer is for dishes — it can't be used on a table booking.");
+  } else if (coupon.channels.length && ctx.channel && !coupon.channels.includes(ctx.channel)) {
     return deny("This coupon can't be used for this kind of order.");
   }
 

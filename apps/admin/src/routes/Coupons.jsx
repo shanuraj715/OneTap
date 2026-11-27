@@ -10,6 +10,7 @@ import {
                    
                     
 } from "@rasoipulse/config-schema";
+import { DatePickerInput, TimePickerInput, timeOptions } from "@rasoipulse/ui";
 import { Plus, Tag, Trash2, X } from "lucide-react";
 import * as api from "../lib/api";
                                          
@@ -22,7 +23,10 @@ const CHANNEL_LABEL                         = {
   takeaway: "Takeaway",
   "dine-in": "Dine-in",
   delivery: "Delivery",
+  booking: "Table booking",
 };
+/** What a coupon can be limited to: the three ways to order, and table bookings (which must be ticked on purpose — "none ticked" means food orders only). */
+const COUPON_CHANNELS = [...ORDER_CHANNELS, "booking"];
 
 export function Coupons() {
   const { outlet } = useOutlet();
@@ -199,15 +203,44 @@ const BLANK              = {
   maxFreeUnits: 0,
 };
 
-/** ISO string ⇄ the value a <input type="datetime-local"> wants. */
-const toLocalInput = (iso        )         => {
-  if (!iso) return "";
+/** An ISO moment ⇄ the day ("YYYY-MM-DD") and time ("HH:MM") the date and time pickers work with, on this device's clock. */
+const splitMoment = (iso        ) => {
+  if (!iso) return { day: "", time: "" };
   const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return "";
+  if (Number.isNaN(d.getTime())) return { day: "", time: "" };
   const pad = (n        ) => String(n).padStart(2, "0");
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  return { day: `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`, time: `${pad(d.getHours())}:${pad(d.getMinutes())}` };
 };
-const fromLocalInput = (v        )         => (v ? new Date(v).toISOString() : "");
+const joinMoment = (day        , time        ) => (day ? new Date(`${day}T${time || "00:00"}`).toISOString() : "");
+const prettyDay = (d      ) => d.toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
+
+/**
+ * One end of a coupon's valid period: a date (our date picker) and a time (our time picker). Leaving the date empty means "no bound" on that side.
+ * A time that isn't on the half hour (an older coupon, say) is still shown, as an extra choice.
+ */
+function MomentField({ label, value, onChange, defaultTime, testId }                                                                          ) {
+  const { day, time } = splitMoment(value);
+  const options = useMemo(() => {
+    const list = [...timeOptions({ step: 30, min: "00:00", max: "23:30" }), { value: "23:59", label: "11:59 PM" }];
+    if (time && !list.some((o) => o.value === time)) list.push({ value: time, label: new Date(`2000-01-01T${time}`).toLocaleTimeString("en-IN", { hour: "numeric", minute: "2-digit" }) });
+    return list.sort((a, b) => a.value.localeCompare(b.value));
+  }, [time]);
+  return (
+    <div style={{ display: "flex", gap: 8, alignItems: "flex-end", flexWrap: "wrap" }}>
+      <Field label={label} as="div" style={{ marginBottom: 0, width: 190 }}>
+        <DatePickerInput variant="filled" fullWidth value={day} placeholder="No limit" ariaLabel={`${label} date`} testId={`${testId}-date`} formatValue={prettyDay} triggerStyle={{ minHeight: 35, padding: "7px 12px" }} onChange={(str) => str && onChange(joinMoment(str, time || defaultTime))} />
+      </Field>
+      <div style={{ width: 130 }}>
+        <TimePickerInput value={time || defaultTime} options={options} disabled={!day} ariaLabel={`${label} time`} testId={`${testId}-time`} placeholder="Time" triggerStyle={{ minHeight: 35, padding: "7px 12px" }} onChange={(v) => onChange(joinMoment(day, v))} />
+      </div>
+      {day ? (
+        <Button variant="outline" onClick={() => onChange("")} aria-label={`Clear ${label.toLowerCase()}`} data-testid={`${testId}-clear`} style={{ marginBottom: 1 }}>
+          Clear
+        </Button>
+      ) : null}
+    </div>
+  );
+}
 
 function CouponEditor({ outlet, coupon, onClose }                                                                ) {
   const qc = useQueryClient();
@@ -363,20 +396,8 @@ function CouponEditor({ outlet, coupon, onClose }                               
             <InfoHint title="Valid period" text="Leave either side blank for no bound. Times are in this device's timezone." />
           </legend>
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-            <Field label="From" style={narrow}>
-              <TextInput
-                type="datetime-local"
-                value={toLocalInput(form.validFrom ?? "")}
-                onChange={(e) => set({ validFrom: fromLocalInput(e.target.value) })}
-              />
-            </Field>
-            <Field label="Until" style={narrow}>
-              <TextInput
-                type="datetime-local"
-                value={toLocalInput(form.validUntil ?? "")}
-                onChange={(e) => set({ validUntil: fromLocalInput(e.target.value) })}
-              />
-            </Field>
+            <MomentField label="From" value={form.validFrom ?? ""} onChange={(v) => set({ validFrom: v })} defaultTime="00:00" testId="coupon-from" />
+            <MomentField label="Until" value={form.validUntil ?? ""} onChange={(v) => set({ validUntil: v })} defaultTime="23:59" testId="coupon-until" />
           </div>
         </fieldset>
 
@@ -411,10 +432,10 @@ function CouponEditor({ outlet, coupon, onClose }                               
         <fieldset style={fieldset}>
           <legend style={legend}>
             Order types
-            <InfoHint title="Order types" text="Leave all unticked and the coupon works on any order. Tick some to restrict it — for example a delivery-only code." />
+            <InfoHint title="Order types" text="Leave all unticked and the coupon works on any food order (takeaway, dine-in, delivery). Tick some to restrict it — for example a delivery-only code. Tick “Table booking” to let it take money off a table booking as well; with only “Table booking” ticked, it works on bookings and nothing else." />
           </legend>
           <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
-            {ORDER_CHANNELS.map((ch) => (
+            {COUPON_CHANNELS.map((ch) => (
               <Checkbox
                 key={ch}
                 checked={(form.channels ?? []).includes(ch)}

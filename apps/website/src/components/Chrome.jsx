@@ -1,11 +1,13 @@
 import Link from "next/link";
-import { ChevronDown, Menu } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { pathFor } from "@/lib/site";
 import { Icon } from "./Icon";
+import { MobileMenu } from "./MobileMenu";
 
 /**
  * The header and footer every page shares. Server-rendered; the mobile menu
- * is a native <details>, so it works with no JavaScript at all.
+ * is a native <details>, so it works with no JavaScript at all (MobileMenu only
+ * adds closing it after a link is pressed).
  */
 
 function Brand({ settings }) {
@@ -22,8 +24,12 @@ function Brand({ settings }) {
   );
 }
 
-/** Pages that live in the FOOTER only: the header keeps to what a visitor is choosing between (Product, Pricing, Apps, FAQ). */
-const FOOTER_ONLY = new Set(["about", "contact"]);
+/**
+ * Pages that live in the FOOTER only: the header keeps to what a visitor is choosing between (Product, Pricing, Apps, FAQ). The About and Contact
+ * pages are recognised however the console named them — "about", "about-us", "Contact Us" — by their address, title or menu label.
+ */
+const FOOTER_ONLY_NAME = /^(about|contact)([- ]?us)?$/i;
+const isFooterOnly = (p) => [p.slug, p.title, p.nav?.label].some((v) => FOOTER_ONLY_NAME.test(String(v ?? "").trim()));
 
 /**
  * The header's links: the pages the console flags for the menu (minus the footer-only ones), in the console's order, with the Apps page — which is
@@ -31,7 +37,7 @@ const FOOTER_ONLY = new Set(["about", "contact"]);
  */
 function headerLinks(pages) {
   const list = pages
-    .filter((p) => p.nav?.show && p.slug !== "home" && !FOOTER_ONLY.has(p.slug))
+    .filter((p) => p.nav?.show && p.slug !== "home" && !isFooterOnly(p))
     .sort((a, b) => (a.nav.order ?? 50) - (b.nav.order ?? 50))
     .map((p) => ({ key: p.slug, href: pathFor(p.slug), label: p.nav.label || p.title }));
   const apps = { key: "apps", href: "/apps", label: "Apps" };
@@ -71,8 +77,9 @@ function ProductMenu({ items }) {
 
 export function SiteHeader({ settings, pages, product = [] }) {
   const nav = headerLinks(pages);
-  const contact = pages.some((p) => p.slug === "contact");
-  const ctaHref = contact ? "/contact" : settings.contact.phone ? `tel:${settings.contact.phone.replace(/\s/g, "")}` : "/";
+  // the contact page, however the console named it ("contact", "contact-us", or a menu label "Contact Us")
+  const contact = pages.find((p) => [p.slug, p.title, p.nav?.label].some((v) => /^contact([- ]?us)?$/i.test(String(v ?? "").trim())));
+  const ctaHref = contact ? pathFor(contact.slug) : settings.contact.phone ? `tel:${settings.contact.phone.replace(/\s/g, "")}` : "/";
   return (
     <>
       <a className="skip" href="#main">
@@ -97,28 +104,23 @@ export function SiteHeader({ settings, pages, product = [] }) {
           <Link className="btn btn-brand btn-sm header-cta" href={ctaHref}>
             Talk to us
           </Link>
-          <details className="menu">
-            <summary aria-label="Menu">
-              <Menu size={18} aria-hidden="true" /> Menu
-            </summary>
-            <div className="menu-panel">
-              {product.length ? <span className="menu-label">Product</span> : null}
-              {product.map((it) => (
-                <Link key={it.href} href={it.href} className="menu-sub">
-                  <Icon name={it.icon} size={16} /> {it.label}
-                </Link>
-              ))}
-              {product.length ? <span className="menu-label">More</span> : null}
-              {nav.map((l) => (
-                <Link key={l.key} href={l.href}>
-                  {l.label}
-                </Link>
-              ))}
-              <Link className="btn btn-brand" href={ctaHref}>
-                Talk to us
+          <MobileMenu>
+            {product.length ? <span className="menu-label">Product</span> : null}
+            {product.map((it) => (
+              <Link key={it.href} href={it.href} className="menu-sub">
+                <Icon name={it.icon} size={16} /> {it.label}
               </Link>
-            </div>
-          </details>
+            ))}
+            {product.length ? <span className="menu-label">More</span> : null}
+            {nav.map((l) => (
+              <Link key={l.key} href={l.href}>
+                {l.label}
+              </Link>
+            ))}
+            <Link className="btn btn-brand" href={ctaHref}>
+              Talk to us
+            </Link>
+          </MobileMenu>
         </div>
       </header>
     </>
@@ -155,7 +157,8 @@ export function SiteFooter({ settings, pages }) {
             ) : null}
           </div>
           {GROUPS.map(([key, label]) => {
-            const list = pages.filter((p) => p.footerGroup === key || (key === "company" && FOOTER_ONLY.has(p.slug) && !p.footerGroup && p.nav?.show));
+            // About and Contact always sit in Company (unless the console put them in another column), whether or not they are in the menu
+            const list = pages.filter((p) => p.footerGroup === key || (key === "company" && isFooterOnly(p) && !p.footerGroup));
             if (!list.length && key !== "product") return null;
             return (
               <div key={key} className="foot-col">

@@ -154,13 +154,22 @@ try {
   ok(await link.isVisible().catch(() => false) || (await link.getAttribute("href").catch(() => "")) === "/main/book", "the header has 'Book a table'");
   await page.goto(`${SF}/main/book`, { waitUntil: "load" });
   await page.getByTestId("booking").waitFor({ timeout: 15000 });
-  await page.getByRole("button", { name: "Tomorrow" }).click();
-  await page.getByTestId("booking-slot").first().waitFor();
-  await page.getByTestId("booking-slot").nth(4).click();
+  // the day (a date picker), the times (from / to), the occasion (a searchable list) and the WhatsApp number — the guest is already signed in here
+  const tomorrowKey = new Date(Date.now() + 86_400_000 + 330 * 60_000).toISOString().slice(0, 10);
+  await page.getByTestId("booking-day").click();
+  await page.locator(".rasoipulse-datepicker").waitFor();
+  const dayNumber = String(Number(tomorrowKey.slice(8)));
+  if (new Date(Date.now() + 330 * 60_000).toISOString().slice(5, 7) !== tomorrowKey.slice(5, 7)) await page.getByRole("button", { name: "Next month" }).click();
+  await page.locator(".rasoipulse-datepicker button:not([disabled])", { hasText: new RegExp(`^${dayNumber}$`) }).first().click();
+  await page.getByRole("button", { name: "OK", exact: true }).click();
+  await page.getByTestId("booking-start").click();
+  await page.getByTestId("booking-start-panel").locator("[data-time]:not([disabled])").nth(4).click();
+  await page.getByTestId("booking-event").click();
+  await page.locator('[data-option="Birthday"]').click();
   await page.getByLabel("Anything we should know? (optional)").fill("Window seat please");
   await page.getByTestId("booking-submit").click();
   await page.getByTestId("booking-done").waitFor({ timeout: 15000 });
-  ok(/Booking request sent/.test(await body()) && /table for 2/.test(await body()), "the booking is sent — the restaurant will confirm it", (await body()).slice(0, 200));
+  ok(/Booking request received/.test(await body()) && /table for 2/.test(await body()), "the booking is sent — the restaurant will confirm it", (await body()).slice(0, 200));
   await page.goto(`${SF}/main/account`, { waitUntil: "load" });
   await page.getByTestId("account-bookings").waitFor({ timeout: 15000 });
   ok(/Waiting to be confirmed/.test(await page.getByTestId("account-bookings").innerText()), "the account page lists it, waiting to be confirmed");

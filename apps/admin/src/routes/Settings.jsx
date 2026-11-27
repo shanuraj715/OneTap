@@ -761,8 +761,14 @@ export function Settings() {
                           {[15, 30, 60].map((m) => <option key={m} value={m}>{m} minutes</option>)}
                         </Select>
                       </Field>
-                      <Field label="A table is held for (minutes)" info="How long one booking keeps its seats." style={narrow}>
+                      <Field label="Usual stay (minutes)" info="The finish time starts at this length after the start time. A booking made without a finish time (by phone, say) holds its table this long." style={narrow}>
                         <TextInput type="number" min={30} max={300} value={draft.reservations.durationMinutes} onChange={(e) => setArea("reservations", { durationMinutes: Math.max(30, Number(e.target.value) || 90) })} aria-label="Table held minutes" />
+                      </Field>
+                      <Field label="Shortest stay (minutes)" info="Guests choose their own finish time, between the shortest and the longest stay, in steps of the booking time step." style={narrow}>
+                        <TextInput type="number" min={30} max={300} value={draft.reservations.minDurationMinutes} onChange={(e) => setArea("reservations", { minDurationMinutes: Math.max(30, Number(e.target.value) || 60) })} aria-label="Shortest stay minutes" />
+                      </Field>
+                      <Field label="Longest stay (minutes)" info="Longer than this? The guest is asked to call you." style={narrow}>
+                        <TextInput type="number" min={60} max={720} value={draft.reservations.maxDurationMinutes} onChange={(e) => setArea("reservations", { maxDurationMinutes: Math.max(60, Number(e.target.value) || 240) })} aria-label="Longest stay minutes" />
                       </Field>
                       <Field label="Guests seated at one time" info="0 = add up the seats of your tables (Tables page). With no tables and 0, there is no limit." style={narrow}>
                         <TextInput type="number" min={0} max={2000} value={draft.reservations.maxGuestsPerSlot} onChange={(e) => setArea("reservations", { maxGuestsPerSlot: Math.max(0, Number(e.target.value) || 0) })} aria-label="Guests at one time" />
@@ -790,6 +796,15 @@ export function Settings() {
                         <TextInput type="number" min={0} max={2880} value={draft.reservations.cancelUntilMinutes} onChange={(e) => setArea("reservations", { cancelUntilMinutes: Math.max(0, Number(e.target.value) || 0) })} aria-label="Cancel until minutes" />
                       </Field>
                     </Row>
+                    <Row>
+                      <Field
+                        label="Booking price per person per hour (₹)"
+                        info="What a table costs. The guest sees the estimated price for their stay, pays HALF of it online when they book (if you take online payments — see Payments) and the rest at the restaurant. 0 = no charge, so nothing is paid in advance. If you decline a booking whose advance was paid, the advance is marked to be refunded."
+                        style={narrow}
+                      >
+                        <TextInput type="number" min={0} max={10000} value={draft.reservations.pricePerPersonHour / 100} onChange={(e) => setArea("reservations", { pricePerPersonHour: Math.max(0, Math.round((Number(e.target.value) || 0) * 100)) })} aria-label="Booking price per person per hour" />
+                      </Field>
+                    </Row>
                     <Checkbox
                       checked={draft.reservations.autoConfirm}
                       onChange={(v) => setArea("reservations", { autoConfirm: v })}
@@ -799,6 +814,18 @@ export function Settings() {
                     <Field label="Note for guests (optional)" info="Shown on the booking page, e.g. “We hold your table for 15 minutes.”" style={{ maxWidth: 560 }}>
                       <TextInput value={draft.reservations.guestNote} maxLength={300} onChange={(e) => setArea("reservations", { guestNote: e.target.value })} aria-label="Note for guests" />
                     </Field>
+                    <Row>
+                      <Field
+                        label="WhatsApp Business template for booking updates (optional)"
+                        info="When you approve, decline or cancel a booking, the guest is told automatically: first on your linked WhatsApp number, else on WhatsApp Business (this template), else by SMS. WhatsApp Business only lets a business start a chat with a template Meta has approved — make one with a single placeholder {{1}} (the whole message goes there) and type its name here. Leave it empty to use SMS when no WhatsApp number is linked."
+                        style={{ maxWidth: 560, flex: "1 1 360px" }}
+                      >
+                        <TextInput value={draft.reservations.whatsappTemplate?.name ?? ""} maxLength={120} placeholder="e.g. booking_update" onChange={(e) => setArea("reservations", { whatsappTemplate: { ...(draft.reservations.whatsappTemplate ?? {}), name: e.target.value.trim() } })} aria-label="Booking update template name" />
+                      </Field>
+                      <Field label="Template language" style={narrow}>
+                        <TextInput value={draft.reservations.whatsappTemplate?.languageCode ?? "en"} maxLength={10} onChange={(e) => setArea("reservations", { whatsappTemplate: { ...(draft.reservations.whatsappTemplate ?? {}), languageCode: e.target.value.trim() || "en" } })} aria-label="Booking update template language" />
+                      </Field>
+                    </Row>
                   </>
                 ) : null}
               </div>

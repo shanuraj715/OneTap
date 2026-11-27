@@ -29,6 +29,8 @@ export const PaymentCredentialModel =
 /** One payment attempt against one order. The audit trail for money. */
 const paymentSchema = new Schema(
   {
+    /** what the payment is for: an order, or the advance of a table booking (`orderId` then holds the booking's id) */
+    subject: { type: String, enum: ["order", "reservation"], default: "order" },
     orderId: { type: String, required: true, index: true },
     gateway: { type: String, enum: GATEWAYS, required: true },
     status: { type: String, enum: PAYMENT_STATUSES, default: "pending", index: true },

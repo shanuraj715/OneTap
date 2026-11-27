@@ -147,7 +147,8 @@ customerRouter.get("/orders", limiter("customer-orders"), async (req, res) => {
   const [config, plan] = await Promise.all([effectiveOutletConfig({ brandId: outlet.brandId, outletId: String(outlet._id) }), storePlan(outlet.brandId)]);
   // ratings: the plan includes them AND this outlet asks for them (effectiveOutletConfig already applies the plan)
   const feedback = config.feedback ?? { enabled: false, googleReviewUrl: "", googleMinStars: 4 };
-  const history = await customerOrderHistory({ brandId: outlet.brandId, customerId: String(customer._id), before, limit: Number(req.query.limit) || 15, feedbackEnabled: Boolean(feedback.enabled) });
+  const pageNumber = typeof req.query.page === "string" && /^\d{1,6}$/.test(req.query.page) ? Number(req.query.page) : undefined;
+  const history = await customerOrderHistory({ brandId: outlet.brandId, customerId: String(customer._id), before, limit: Number(req.query.limit) || 15, page: pageNumber, feedbackEnabled: Boolean(feedback.enabled) });
   const enabled = plan.entitlements.features.includes("wallet") && Boolean(config.wallet?.enabled);
   const balance = customer.walletBalance ?? 0;
   res.json({

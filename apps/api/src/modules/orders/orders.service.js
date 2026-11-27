@@ -943,12 +943,25 @@ function shapeCustomerOrder(o, { byId, ratingOf, now, feedbackEnabled }) {
  * storefront's Account page shows: status, how it is paid and whether it has been, the items and the money.
  * `before` is the placed-at time of the last order already shown (paging); `limit` is capped at 30.
  */
-export async function customerOrderHistory({ brandId, customerId, before, limit = 15, feedbackEnabled = false }) {
+export async function customerOrderHistory({ brandId, customerId, before, limit = 15, page: pageNumber, feedbackEnabled = false }) {
   const take = Math.min(Math.max(Math.floor(limit) || 15, 1), 30);
   // (orders the customer removed from their own account are left out — the store still has them)
   const filter = { "customer.customerId": String(customerId), customerHiddenAt: null };
-  if (before) filter.createdAt = { $lt: before };
-  const rows = await OrderModel.find(brandFilter({ brandId }, filter)).select("+deliveryCode").sort({ createdAt: -1, _id: -1 }).limit(take + 1).lean();
+  // Numbered pages (`page` 1, 2, 3 …, `limit` orders on each): the page, how many orders there are in all and how many pages that makes.
+  // Without `page` it pages by date as before (`before` → the next older ones).
+  const numbered = Number.isFinite(pageNumber) && pageNumber >= 1;
+  let total = null;
+  let at = 1;
+  let rows;
+  if (numbered) {
+    total = await OrderModel.countDocuments(brandFilter({ brandId }, filter));
+    const pages = Math.max(1, Math.ceil(total / take));
+    at = Math.min(Math.floor(pageNumber), pages); // a page past the end (orders were removed meanwhile) shows the last one
+    rows = await OrderModel.find(brandFilter({ brandId }, filter)).select("+deliveryCode").sort({ createdAt: -1, _id: -1 }).skip((at - 1) * take).limit(take).lean();
+  } else {
+    if (before) filter.createdAt = { $lt: before };
+    rows = await OrderModel.find(brandFilter({ brandId }, filter)).select("+deliveryCode").sort({ createdAt: -1, _id: -1 }).limit(take + 1).lean();
+  }
   const page = rows.slice(0, take);
 
   const outletIds = [...new Set(page.map((o) => o.outletId))];
@@ -962,7 +975,8 @@ export async function customerOrderHistory({ brandId, customerId, before, limit 
 
   return {
     orders: page.map((o) => shapeCustomerOrder(o, { byId, ratingOf, now, feedbackEnabled })),
-    nextBefore: rows.length > take ? page.at(-1).createdAt : null,
+    nextBefore: numbered ? null : rows.length > take ? page.at(-1).createdAt : null,
+    ...(numbered ? { page: at, pageSize: take, total, pages: Math.max(1, Math.ceil(total / take)) } : {}),
   };
 }
 

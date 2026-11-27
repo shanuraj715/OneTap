@@ -1,6 +1,6 @@
 # T73 — 'Order again' says clearly which dishes couldn't be added, with space below
 
-**Area:** storefront · **Last result:** ✅ PASSED (9 passed, 0 failed · 2026-11-21 15:05 · headless · 1.3 s)
+**Area:** storefront · **Last result:** ✅ PASSED (9 passed, 0 failed · 2026-11-27 10:54 · headless · 1.8 s)
 
 **Run it alone:** `node run.mjs --only t73` (add `--visible` to watch it)
 
@@ -44,6 +44,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-27 10:54 | pass | 9 | 0 | headless | 1.8 s |
 | 2026-11-21 15:05 | pass | 9 | 0 | headless | 1.3 s |
 
 ---

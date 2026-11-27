@@ -35,7 +35,7 @@ const PRESET_THEMES = [
 
 const CATEGORIES = [
   { id: "all", label: "All Components", icon: Boxes },
-  { id: "pickers", label: "Pickers & Inputs", icon: Calendar, slots: ["datePickerVariant", "buttonVariant", "chipVariant", "dropdownVariant"] },
+  { id: "pickers", label: "Pickers & Inputs", icon: Calendar, slots: ["datePickerVariant", "timePickerVariant", "buttonVariant", "chipVariant", "dropdownVariant"] },
   { id: "analytics", label: "Analytics & Data", icon: Layers, slots: ["statCardVariant", "analyticsChartVariant", "progressVariant", "listGroupVariant"] },
   { id: "storefront", label: "Storefront & Cards", icon: UtensilsCrossed, slots: ["itemCardVariant", "contentCardVariant", "carouselVariant", "popupCarouselVariant", "announcementVariant", "headerVariant", "footerVariant"] },
   { id: "feedback", label: "Feedback & Status", icon: Sparkles, slots: ["badgeVariant", "alertVariant", "toastVariant"] },

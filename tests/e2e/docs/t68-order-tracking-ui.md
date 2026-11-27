@@ -1,6 +1,6 @@
 # T68 — Following an order on the storefront — a page that moves by itself, links from Order placed and Account, cancelled, someone else's link, a phone
 
-**Area:** storefront · **Last result:** ✅ PASSED (23 passed, 0 failed · 2026-11-21 15:12 · headless · 23.2 s)
+**Area:** storefront · **Last result:** ✅ PASSED (23 passed, 0 failed · 2026-11-27 10:54 · headless · 22.1 s)
 
 **Run it alone:** `node run.mjs --only t68` (add `--visible` to watch it)
 
@@ -46,7 +46,7 @@ _Nothing failed._
 - 'Check now' looks straight away: Preparing
 - Ready — by itself again
 - a takeaway order says it can be collected — _Ready — you can collect it now._
-- 'What happened' lists each step with its time — _Order placed 3:12 pm Accepted 3:12 pm Preparing 3:12 pm Ready 3:12 pm_
+- 'What happened' lists each step with its time — _Order placed 10:54 am Accepted 10:54 am Preparing 10:54 am Ready 10:54 am_
 - the items and total are on the page
 - Completed
 - …and it stops refreshing once the order is finished
@@ -61,7 +61,7 @@ _Nothing failed._
 - an order still going has 'Follow this order →' on the Account page
 - …which opens that order's page
 - the 'Order placed' screen has a 'Follow your order' button
-- …that goes to this order's own page — _/main/order/6b0167943fc0914059bd7ff1_
+- …that goes to this order's own page — _/main/order/6b09140ee70bea3872f3fdd7_
 - …and it opens
 
 **Step 4 — Not your order**
@@ -78,6 +78,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-27 10:54 | pass | 23 | 0 | headless | 22.1 s |
 | 2026-11-21 15:12 | pass | 23 | 0 | headless | 23.2 s |
 | 2026-11-21 14:27 | pass | 23 | 0 | headless | 21.7 s |
 | 2026-11-21 13:05 | pass | 23 | 0 | headless | 27.3 s |

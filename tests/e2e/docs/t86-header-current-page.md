@@ -1,6 +1,6 @@
 # T86 — The header menu highlights the page you're on in every header style (laptop menu and phone slide-in menu), on by default, and the owner can switch it off
 
-**Area:** storefront · **Last result:** ✅ PASSED (81 passed, 0 failed · 2026-11-26 12:36 · headless · 47.9 s)
+**Area:** storefront · **Last result:** ✅ PASSED (81 passed, 0 failed · 2026-11-27 11:06 · headless · 44.2 s)
 
 **Run it alone:** `node run.mjs --only t86` (add `--visible` to watch it)
 
@@ -186,6 +186,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-27 11:06 | pass | 81 | 0 | headless | 44.2 s |
 | 2026-11-26 12:36 | pass | 81 | 0 | headless | 47.9 s |
 
 ---

@@ -27,8 +27,8 @@ export const useRiderPin = (outlet, riderId, enabled = true) =>
 export const useClearRiderPin = (o) => useOutletMutation(o, (out, id) => api.clearRiderPin(out, id), ["riders"]);
 export const useAssignRider = (o) => useOutletMutation(o, (out, a) => api.assignRider(out, a.id, a.body), ["orders", "order-print-status"]);
 
-export function useReservations(outlet, day, enabled = true) {
-  return useQuery({ queryKey: ["reservations", outlet?._id, day], queryFn: () => api.listReservations(outlet, day), enabled: Boolean(outlet) && enabled, refetchInterval: 30_000 });
+export function useReservations(outlet, filter, enabled = true) {
+  return useQuery({ queryKey: ["reservations", outlet?._id, filter?.day || filter?.scope || "upcoming"], queryFn: () => api.listReservations(outlet, filter), enabled: Boolean(outlet) && enabled, refetchInterval: 30_000 });
 }
 
 /** Bookings waiting to be confirmed — the sidebar badge (polled; the bookings page itself refreshes on every change). */

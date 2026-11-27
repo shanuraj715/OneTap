@@ -9299,12 +9299,12 @@
     "id": "t28-rate-limits-api",
     "title": "Request limits — every protected API stops at its limit with a clear 429, per account sign-in guard, live connections, and nothing that changes data is left unprotected",
     "status": "pass",
-    "pass": 133,
+    "pass": 127,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T16:40:13.047Z",
-    "durationMs": 8632,
+    "at": "2026-11-27T06:38:15.967Z",
+    "durationMs": 9044,
     "steps": [
       {
         "n": 1,
@@ -9398,12 +9398,6 @@
             "label": "site-lead: the answer carries Retry-After and a readable message",
             "ok": true,
             "detail": "600s · You've sent a few enquiries just now. Please wait 10 minutes before sending another.",
-            "kind": "expect"
-          },
-          {
-            "label": "webhook: the first 24 requests are let through",
-            "ok": true,
-            "detail": "400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400,400",
             "kind": "expect"
           },
           {
@@ -9569,12 +9563,6 @@
             "kind": "expect"
           },
           {
-            "label": "otp-send-store: the store's remaining 28 codes, asked for from 28 different addresses, are all sent",
-            "ok": true,
-            "detail": "200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,",
-            "kind": "expect"
-          },
-          {
             "label": "otp-send-store: the next one — from a brand-new address — is refused: the store's own ceiling",
             "ok": true,
             "detail": "429 Too many codes have been requested for this store. Please try again in 60 minutes.",
@@ -9614,12 +9602,6 @@
             "label": "team-write (changes): the answer carries Retry-After and a readable message",
             "ok": true,
             "detail": "60s · You're making changes too fast. Please wait 60 seconds.",
-            "kind": "expect"
-          },
-          {
-            "label": "team-write: reading is not counted — 40 reads in a row are fine",
-            "ok": true,
-            "detail": "",
             "kind": "expect"
           },
           {
@@ -9857,12 +9839,6 @@
             "kind": "expect"
           },
           {
-            "label": "api (a signed-in user): the first 150 requests are let through",
-            "ok": true,
-            "detail": "200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200,200",
-            "kind": "expect"
-          },
-          {
             "label": "api (a signed-in user): request 151 is refused with 429 and the policy's name",
             "ok": true,
             "detail": "429 api",
@@ -9977,12 +9953,6 @@
         "title": "one account, guessed from many addresses",
         "checks": [
           {
-            "label": "the 10th wrong password, from a new address each time, pauses the account",
-            "ok": true,
-            "detail": "401,401,401,401,401,401,401,401,401,429",
-            "kind": "expect"
-          },
-          {
             "label": "…and even the RIGHT password is refused from a brand-new address while it is paused",
             "ok": true,
             "detail": "429 Too many failed attempts for this account. Try again in 60 seconds.",
@@ -10010,12 +9980,6 @@
             "label": "the console's Security page sees the account (masked as o•••@acme.test), never the whole email",
             "ok": true,
             "detail": "o•••@acme.test",
-            "kind": "expect"
-          },
-          {
-            "label": "when the pause is over the right password works again",
-            "ok": true,
-            "detail": "200",
             "kind": "expect"
           },
           {
@@ -10075,7 +10039,7 @@
           {
             "label": "the inventory sees the whole API",
             "ok": true,
-            "detail": "339 routes, 196 change data",
+            "detail": "355 routes, 206 change data",
             "kind": "expect"
           },
           {
@@ -10176,8 +10140,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-24T21:36:25.608Z",
-    "durationMs": 5950,
+    "at": "2026-11-27T05:21:17.061Z",
+    "durationMs": 6566,
     "steps": [
       {
         "n": 1,
@@ -10246,7 +10210,7 @@
           {
             "label": "paging: the first page of two says there are more",
             "ok": true,
-            "detail": "2 2026-11-24T21:06:25.353Z",
+            "detail": "2 2026-11-27T04:51:16.232Z",
             "kind": "expect"
           },
           {
@@ -10623,8 +10587,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T08:56:49.756Z",
-    "durationMs": 45467,
+    "at": "2026-11-27T05:22:09.451Z",
+    "durationMs": 45788,
     "steps": [
       {
         "n": 1,
@@ -10729,7 +10693,7 @@
           {
             "label": "'View details' lists the items and the bill",
             "ok": true,
-            "detail": "2 × Veg Steamed Momos (5 pcs) ₹120 Items ₹120 Taxes ₹5.71 Total ₹120 Placed 21 Nov 2026, 2:26 pm",
+            "detail": "2 × Veg Steamed Momos (5 pcs) ₹120 Items ₹120 Taxes ₹5.71 Total ₹120 Placed 27 Nov 2026, 10:51 am",
             "kind": "expect"
           }
         ]
@@ -10741,7 +10705,7 @@
           {
             "label": "(the order is on the dashboard)",
             "ok": true,
-            "detail": "6b015cac997696ac4c7bb98b",
+            "detail": "6b09135be70bea3872f3f660",
             "kind": "expect"
           },
           {
@@ -15173,12 +15137,12 @@
     "id": "t44-website-product-menu",
     "title": "Website header — the Product dropdown is wide, fits the window, and its hovered item is a soft rounded tile with a brand-filled icon (not a grey pill), in light and dark",
     "status": "pass",
-    "pass": 53,
+    "pass": 56,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T23:27:50.456Z",
-    "durationMs": 10080,
+    "at": "2026-11-27T05:22:18.789Z",
+    "durationMs": 9311,
     "steps": [
       {
         "n": 0,
@@ -15500,10 +15464,34 @@
       },
       {
         "n": 5,
+        "title": "the header keeps to Product, Pricing, Apps, FAQ (About and Contact moved to the footer)",
+        "checks": [
+          {
+            "label": "the header's links are Pricing, Apps, FAQ (after the Product dropdown) — no About, no Contact",
+            "ok": true,
+            "detail": "Pricing | Apps | FAQ",
+            "kind": "expect"
+          },
+          {
+            "label": "…with the Product dropdown first",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the Talk to us button is still there",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
         "title": "the header links themselves are unchanged",
         "checks": [
           {
-            "label": "Pricing / FAQ / About / Contact keep their pill shape and type",
+            "label": "Pricing / Apps / FAQ keep their pill shape and type",
             "ok": true,
             "detail": "{\"borderTopLeftRadius\":\"999px\",\"fontSize\":\"15px\",\"fontWeight\":\"500\",\"paddingLeft\":\"12px\"}",
             "kind": "expect"
@@ -15517,7 +15505,7 @@
         ]
       },
       {
-        "n": 6,
+        "n": 7,
         "title": "a phone: the Product list inside the Menu is unaffected",
         "checks": [
           {
@@ -16092,8 +16080,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T07:15:03.895Z",
-    "durationMs": 113573,
+    "at": "2026-11-27T05:23:44.286Z",
+    "durationMs": 85467,
     "steps": [
       {
         "n": 1,
@@ -18318,8 +18306,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T07:38:59.206Z",
-    "durationMs": 6060,
+    "at": "2026-11-27T06:38:23.257Z",
+    "durationMs": 7266,
     "steps": [
       {
         "n": 1,
@@ -18478,7 +18466,7 @@
           {
             "label": "outside its hours a dish shows when it IS available instead of a price",
             "ok": true,
-            "detail": "Available 3:08 PM – 4:08 PM",
+            "detail": "Available 2:08 PM – 3:08 PM",
             "kind": "expect"
           },
           {
@@ -18490,7 +18478,7 @@
           {
             "label": "a customer can't order it now",
             "ok": true,
-            "detail": "409 {\"error\":\"Poha is only available 3:08 PM – 4:08 PM\"}",
+            "detail": "409 {\"error\":\"Poha is only available 2:08 PM – 3:08 PM\"}",
             "kind": "expect"
           },
           {
@@ -18532,7 +18520,7 @@
           {
             "label": "now the outlet offers pickup times, grouped by day",
             "ok": true,
-            "detail": "Today:41 Tomorrow:95",
+            "detail": "Today:45 Tomorrow:95",
             "kind": "expect"
           },
           {
@@ -18550,7 +18538,7 @@
           {
             "label": "a customer places a takeaway for a later time",
             "ok": true,
-            "detail": "201 2026-11-21T09:00:00.000Z",
+            "detail": "201 2026-11-27T08:00:00.000Z",
             "kind": "expect"
           },
           {
@@ -18580,7 +18568,7 @@
           {
             "label": "breakfast can be pre-ordered for a time when breakfast is served (hours are checked at the pickup time)",
             "ok": true,
-            "detail": "201 {\"order\":{\"id\":\"6b014a9094256176cbfb5713\",\"orderNumber\":\"0007\",\"channel\":\"takeaway\",\"placedBy\":\"cust",
+            "detail": "201 {\"order\":{\"id\":\"6b09255ce4132b2bcd5e8243\",\"orderNumber\":\"0007\",\"channel\":\"takeaway\",\"placedBy\":\"cust",
             "kind": "expect"
           },
           {
@@ -18754,7 +18742,7 @@
           {
             "label": "the storefront can show what it saves (₹130 separately, ₹110 as a combo → saves ₹20)",
             "ok": true,
-            "detail": "{\"parts\":[{\"itemId\":\"6b014a9094256176cbfb561d\",\"name\":\"Veg Momos\",\"variantLabel\":null,\"quantity\":1,\"missing\":false},{\"itemId\":\"6b014a9094256176cbfb561f\",\"name\":\"Masala Chai\",\"variantLabel\":null,\"quantity\":1,\"missing\":false}],\"separately\":13000,\"saves\":2000}",
+            "detail": "{\"parts\":[{\"itemId\":\"6b09255ce4132b2bcd5e8146\",\"name\":\"Veg Momos\",\"variantLabel\":null,\"quantity\":1,\"missing\":false},{\"itemId\":\"6b09255ce4132b2bcd5e8148\",\"name\":\"Masala Chai\",\"variantLabel\":null,\"quantity\":1,\"missing\":false}],\"separately\":13000,\"saves\":2000}",
             "kind": "expect"
           },
           {
@@ -18778,7 +18766,7 @@
           {
             "label": "an ordered combo carries what it is made of",
             "ok": true,
-            "detail": "[{\"itemId\":\"6b014a9094256176cbfb561d\",\"name\":\"Veg Momos\",\"variantLabel\":null,\"quantity\":1},{\"itemId\":\"6b014a9094256176cbfb561f\",\"name\":\"Masala Chai\",\"variantLabel\":null,\"quantity\":1}]",
+            "detail": "[{\"itemId\":\"6b09255ce4132b2bcd5e8146\",\"name\":\"Veg Momos\",\"variantLabel\":null,\"quantity\":1},{\"itemId\":\"6b09255ce4132b2bcd5e8148\",\"name\":\"Masala Chai\",\"variantLabel\":null,\"quantity\":1}]",
             "kind": "expect"
           },
           {
@@ -18802,7 +18790,7 @@
           {
             "label": "a pre-order's kitchen ticket starts with PRE-ORDER and the full pickup time",
             "ok": true,
-            "detail": "PRE-ORDER |            Pickup 2:30 PM, Sat 21 Nov | ------------------------------------------------ |                  KITCHEN ORDER",
+            "detail": "PRE-ORDER |            Pickup 1:30 PM, Fri 27 Nov | ------------------------------------------------ |                  KITCHEN ORDER",
             "kind": "expect"
           }
         ]
@@ -18814,7 +18802,7 @@
           {
             "label": "a 'buy 1 get 1 free' coupon on the Food category is created",
             "ok": true,
-            "detail": "201 {\"coupon\":{\"id\":\"6b014a9294256176cbfb5815\",\"code\":\"B1G1MOMO\",\"description\":\"\",\"discountType\":\"bogo\",\"value\":1,\"maxDiscou",
+            "detail": "201 {\"coupon\":{\"id\":\"6b09255ee4132b2bcd5e8336\",\"code\":\"B1G1MOMO\",\"description\":\"\",\"discountType\":\"bogo\",\"value\":1,\"maxDiscou",
             "kind": "expect"
           },
           {
@@ -18879,8 +18867,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T07:32:47.962Z",
-    "durationMs": 5259,
+    "at": "2026-11-27T06:36:48.301Z",
+    "durationMs": 5946,
     "steps": [
       {
         "n": 1,
@@ -18895,13 +18883,13 @@
           {
             "label": "now: today plus 7 days to choose from",
             "ok": true,
-            "detail": "8 2026-11-22",
+            "detail": "8 2026-11-28",
             "kind": "expect"
           },
           {
             "label": "tomorrow 7 PM is free for 4 (10 seats)",
             "ok": true,
-            "detail": "{\"at\":\"2026-11-22T13:30:00.000Z\",\"label\":\"7:00 PM\",\"available\":true,\"seatsLeft\":10}",
+            "detail": "{\"at\":\"2026-11-28T13:30:00.000Z\",\"label\":\"7:00 PM\",\"available\":true,\"seatsLeft\":10}",
             "kind": "expect"
           },
           {
@@ -18937,7 +18925,7 @@
           {
             "label": "8 more at the same time don't fit (6 seats left)",
             "ok": true,
-            "detail": "409 {\"error\":\"Only 6 seats are left at that time — choose another time.\",\"details\":{\"code\":\"slot_unavail",
+            "detail": "409 {\"error\":\"Only 6 seats are left at that time — choose another time or a shorter stay.\",\"details\":{\"c",
             "kind": "expect"
           },
           {
@@ -19225,7 +19213,7 @@
           {
             "label": "the momos come back as they were: Full, 2 of them, with cheese and the kitchen note",
             "ok": true,
-            "detail": "{\"itemId\":\"6b01491ed6065da5d8205ab8\",\"variantId\":\"8f35c10c-ad90-4e7d-9888-abc9108eadbc\",\"modifierOptionIds\":[\"278e55fe-92a7-4aaa-8a52-55d46810501b\"],\"quantity\":2,\"note\":\"extra chutney\"}",
+            "detail": "{\"itemId\":\"6b0924feb1edeb56b3ccd952\",\"variantId\":\"27935c6d-9bc5-4890-bd71-5f4d8930f78e\",\"modifierOptionIds\":[\"5f94bb91-fdd4-4333-adfb-7e5ba9e1b9f7\"],\"quantity\":2,\"note\":\"extra chutney\"}",
             "kind": "expect"
           },
           {
@@ -19267,13 +19255,13 @@
           {
             "label": "the owner picks what goes with momos (the dish itself and unknown dishes are dropped)",
             "ok": true,
-            "detail": "[\"6b01491ed6065da5d8205aba\",\"6b01491ed6065da5d8205ac1\",\"6b01491ed6065da5d8205abc\"]",
+            "detail": "[\"6b0924feb1edeb56b3ccd954\",\"6b0924feb1edeb56b3ccd95b\",\"6b0924feb1edeb56b3ccd956\"]",
             "kind": "expect"
           },
           {
             "label": "with momos in the cart: chai and lassi are suggested (the curry needs a spice choice, so it can't be one tap)",
             "ok": true,
-            "detail": "[\"6b01491ed6065da5d8205aba\",\"6b01491ed6065da5d8205abc\"]",
+            "detail": "[\"6b0924feb1edeb56b3ccd954\",\"6b0924feb1edeb56b3ccd956\"]",
             "kind": "expect"
           },
           {
@@ -19297,7 +19285,7 @@
           {
             "label": "with no picks, what others often ordered with it is suggested (roll → cola, ordered together 3 times)",
             "ok": true,
-            "detail": "[{\"itemId\":\"6b01491ed6065da5d8205abe\",\"variantId\":null}]",
+            "detail": "[{\"itemId\":\"6b0924feb1edeb56b3ccd959\",\"variantId\":null}]",
             "kind": "expect"
           },
           {
@@ -19375,7 +19363,7 @@
           {
             "label": "it says what she left, what it's worth, the store, and links straight to her cart",
             "ok": true,
-            "detail": "Hi Asha, 2× Veg Momos, 1× Masala Chai (₹170) is waiting at Acme: http://localhost:3070/main/order?cart=6b01491e9727e4dacb74ac31",
+            "detail": "Hi Asha, 2× Veg Momos, 1× Masala Chai (₹170) is waiting at Acme: http://localhost:3070/main/order?cart=6b0924ff465de71e360130fd",
             "kind": "expect"
           },
           {
@@ -19393,7 +19381,7 @@
           {
             "label": "the link's cart can be opened on another phone — dishes only, nothing personal",
             "ok": true,
-            "detail": "{\"lines\":[{\"itemId\":\"6b01491ed6065da5d8205ab8\",\"variantId\":\"78b32548-bf7e-47a4-9356-ec2d84f7488e\",\"modifierOptionIds\":[]",
+            "detail": "{\"lines\":[{\"itemId\":\"6b0924feb1edeb56b3ccd952\",\"variantId\":\"ca9762fc-794c-43d7-886f-3d08a51aecd4\",\"modifierOptionIds\":[]",
             "kind": "expect"
           },
           {
@@ -19466,12 +19454,12 @@
     "id": "t55-growth-dashboard",
     "title": "Dashboard: pre-orders & bookings settings, riders, out for delivery, stock / combo / hours in the menu, buy-X-get-Y coupons, bookings, ratings and cart reminders",
     "status": "pass",
-    "pass": 26,
+    "pass": 27,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-20T23:32:35.126Z",
-    "durationMs": 5646,
+    "at": "2026-11-27T06:36:52.722Z",
+    "durationMs": 4404,
     "steps": [
       {
         "n": 1,
@@ -19528,7 +19516,7 @@
           {
             "label": "a rider is added from the Delivery riders tab",
             "ok": true,
-            "detail": "[{\"id\":\"6b00d88f63f068be118b4043\",\"name\":\"Ramesh\",\"phone\":\"98765 43210\",\"isActive\":true,\"createdAt\":\"2026-11-20T23:32:31.374Z\"}]",
+            "detail": "[{\"id\":\"6b092501397d243396ad86f5\",\"name\":\"Ramesh\",\"phone\":\"98765 43210\",\"isActive\":true,\"createdAt\":\"2026-11-27T06:36:49.713Z\",\"appLogin\":false,\"pinSetAt\":null,\"lastLoginAt\":null}]",
             "kind": "expect"
           },
           {
@@ -19558,7 +19546,7 @@
           {
             "label": "the row now says Out for delivery — with Ramesh",
             "ok": true,
-            "detail": "#0006 05:02 AM UI Tester Del 1 ₹90 Out for delivery with Ramesh 0m Delivered",
+            "detail": "#0001 12:06 PM UI Tester Del 1 ₹90 Out for delivery with Ramesh 0m Delivered",
             "kind": "expect"
           },
           {
@@ -19576,7 +19564,7 @@
           {
             "label": "a pre-order is tagged with its pickup time under its number",
             "ok": true,
-            "detail": "11:45 AM today",
+            "detail": "1:15 PM today",
             "kind": "expect"
           }
         ]
@@ -19612,7 +19600,7 @@
           {
             "label": "a combo is created from the dish form",
             "ok": true,
-            "detail": "{\"items\":[{\"itemId\":\"6b00d6cf63f068be118b24a0\",\"variantId\":null,\"quantity\":1}]}",
+            "detail": "{\"items\":[{\"itemId\":\"6b092434397d243396ad7c28\",\"variantId\":null,\"quantity\":1}]}",
             "kind": "expect"
           },
           {
@@ -19646,6 +19634,12 @@
         "title": "Bookings → a booking taken over the phone",
         "checks": [
           {
+            "label": "the booking's day is chosen on our date picker (no browser date box)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
             "label": "the booking shows on its day, confirmed (taken by the team)",
             "ok": true,
             "detail": "",
@@ -19654,7 +19648,7 @@
           {
             "label": "the day's counts show at the top",
             "ok": true,
-            "detail": "1 booking",
+            "detail": "2 bookings",
             "kind": "expect"
           }
         ]
@@ -19701,8 +19695,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T09:42:12.629Z",
-    "durationMs": 8703,
+    "at": "2026-11-27T06:37:01.038Z",
+    "durationMs": 8300,
     "steps": [
       {
         "n": 1,
@@ -19723,7 +19717,7 @@
           {
             "label": "a breakfast dish outside its hours shows when it is served — and can't be opened",
             "ok": true,
-            "detail": "Poha Available 5:12 PM – 6:12 PM",
+            "detail": "Poha Available 2:06 PM – 3:06 PM",
             "kind": "expect"
           }
         ]
@@ -19783,7 +19777,7 @@
           {
             "label": "the confirmation says it is a pre-order and when to pick it up",
             "ok": true,
-            "detail": "Order confirmed Order #0001 placed It will be ready for you at your pickup time. Order type Takeaway · pre-order Pickup 3:45 PM today Total ₹200 Payment Cash / pay at counter Follow your order Back to menu All my orders",
+            "detail": "Order confirmed Order #0003 placed It will be ready for you at your pickup time. Order type Takeaway · pre-order Pickup 12:45 PM today Total ₹200 Payment Cash / pay at counter Follow your order Back to menu All my orders",
             "kind": "expect"
           },
           {
@@ -19843,7 +19837,7 @@
           {
             "label": "the booking is sent — the restaurant will confirm it",
             "ok": true,
-            "detail": "Free delivery on orders above ₹499Order now Acme Momos Menu My orders Order at table Book a table About us Contact & hours Booking request sent 1:00 PM tomorrow · table for 2 · B-0001 The restaurant w",
+            "detail": "Free delivery on orders above ₹499Order now Acme Momos Menu My orders Order at table Book a table About us Contact & hours Booking request received 1:00 PM – 2:30 PM tomorrow · table for 2 · B-0017 Bi",
             "kind": "expect"
           },
           {
@@ -19855,7 +19849,7 @@
           {
             "label": "the restaurant sees it with the guest's note",
             "ok": true,
-            "detail": "{\"id\":\"6b0167743fc0914059bd7c71\",\"code\":\"B-0001\",\"status\":\"requested\",\"statusLabel\":\"Waiting to be confirmed\",\"at\":\"2026-11-22T07:30:00.000Z\",\"endsAt\":\"2026-11-",
+            "detail": "{\"id\":\"6b09250c397d243396ad8891\",\"code\":\"B-0017\",\"status\":\"requested\",\"statusLabel\":\"Waiting to be confirmed\",\"at\":\"2026-11-28T07:30:00.000Z\",\"endsAt\":\"2026-11-",
             "kind": "expect"
           },
           {
@@ -22461,8 +22455,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T04:32:03.639Z",
-    "durationMs": 7393,
+    "at": "2026-11-27T06:38:29.674Z",
+    "durationMs": 6395,
     "steps": [
       {
         "n": 1,
@@ -22795,7 +22789,7 @@
           {
             "label": "Store by store: Acme has remembered items",
             "ok": true,
-            "detail": "{\"id\":\"6b0907c2d514a195bc3ad477\",\"name\":\"Acme\",\"entries\":4,\"bytes\":6805}",
+            "detail": "{\"id\":\"6b09256448929c61391bb3c3\",\"name\":\"Acme\",\"entries\":4,\"bytes\":6928}",
             "kind": "expect"
           },
           {
@@ -22813,7 +22807,7 @@
           {
             "label": "clearing ONE store's cache removes its items",
             "ok": true,
-            "detail": "{\"scope\":\"store\",\"store\":{\"id\":\"6b0907c2d514a195bc3ad477\",\"name\":\"Acme\"},\"removed\":4,\"at\":\"2026-11-27T04:32:03.144Z\"}",
+            "detail": "{\"scope\":\"store\",\"store\":{\"id\":\"6b09256448929c61391bb3c3\",\"name\":\"Acme\"},\"removed\":4,\"at\":\"2026-11-27T06:38:29.134Z\"}",
             "kind": "expect"
           },
           {
@@ -22825,7 +22819,7 @@
           {
             "label": "other stores keep what they had when one store is cleared",
             "ok": true,
-            "detail": "{\"id\":\"6b0907c2d514a195bc3ad486\",\"name\":\"Beta\",\"entries\":2,\"bytes\":149}",
+            "detail": "{\"id\":\"6b09256448929c61391bb3d3\",\"name\":\"Beta\",\"entries\":2,\"bytes\":149}",
             "kind": "expect"
           },
           {
@@ -22848,8 +22842,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T09:42:46.701Z",
-    "durationMs": 23171,
+    "at": "2026-11-27T05:24:31.736Z",
+    "durationMs": 22056,
     "steps": [
       {
         "n": 1,
@@ -22906,7 +22900,7 @@
           {
             "label": "'What happened' lists each step with its time",
             "ok": true,
-            "detail": "Order placed 3:12 pm Accepted 3:12 pm Preparing 3:12 pm Ready 3:12 pm",
+            "detail": "Order placed 10:54 am Accepted 10:54 am Preparing 10:54 am Ready 10:54 am",
             "kind": "expect"
           },
           {
@@ -22972,7 +22966,7 @@
           {
             "label": "…that goes to this order's own page",
             "ok": true,
-            "detail": "/main/order/6b0167943fc0914059bd7ff1",
+            "detail": "/main/order/6b09140ee70bea3872f3fdd7",
             "kind": "expect"
           },
           {
@@ -23124,8 +23118,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-24T21:36:32.008Z",
-    "durationMs": 4053,
+    "at": "2026-11-27T05:24:42.973Z",
+    "durationMs": 4421,
     "steps": [
       {
         "n": 1,
@@ -23370,8 +23364,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T09:35:50.321Z",
-    "durationMs": 1280,
+    "at": "2026-11-27T05:24:44.809Z",
+    "durationMs": 1820,
     "steps": [
       {
         "n": 0,
@@ -24897,8 +24891,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T07:08:43.531Z",
-    "durationMs": 2601,
+    "at": "2026-11-27T05:24:46.180Z",
+    "durationMs": 1354,
     "steps": [
       {
         "n": 1,
@@ -28328,15 +28322,63 @@
     "id": "t83-theme-contrast",
     "title": "Style effects (Glass, Neumorphism, Clay, Aurora, Cyberpunk, Dark Premium) in light and dark: no text or icon on the storefront loses contrast compared with 'None'",
     "status": "pass",
-    "pass": 14,
+    "pass": 44,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T06:29:27.672Z",
-    "durationMs": 199554,
+    "at": "2026-11-27T05:35:55.888Z",
+    "durationMs": 669693,
     "steps": [
       {
         "n": 1,
+        "title": "magenta brand colour, laptop (1280px), light",
+        "checks": [
+          {
+            "label": "magenta laptop light: every page state could be scanned",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "magenta: Glassmorphism, laptop light: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "magenta: Neumorphism, laptop light: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "magenta: Claymorphism, laptop light: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "magenta: Aurora, laptop light: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "magenta: Cyberpunk, laptop light: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "magenta: Dark Premium, laptop light: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
         "title": "magenta brand colour, laptop (1280px), dark",
         "checks": [
           {
@@ -28346,7 +28388,25 @@
             "kind": "expect"
           },
           {
+            "label": "magenta: Glassmorphism, laptop dark: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
             "label": "magenta: Neumorphism, laptop dark: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "magenta: Claymorphism, laptop dark: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "magenta: Aurora, laptop dark: nothing loses contrast compared with None",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -28366,7 +28426,55 @@
         ]
       },
       {
-        "n": 2,
+        "n": 3,
+        "title": "magenta brand colour, phone (390px), light",
+        "checks": [
+          {
+            "label": "magenta phone light: every page state could be scanned",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "magenta: Glassmorphism, phone light: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "magenta: Neumorphism, phone light: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "magenta: Claymorphism, phone light: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "magenta: Aurora, phone light: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "magenta: Cyberpunk, phone light: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "magenta: Dark Premium, phone light: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
         "title": "magenta brand colour, phone (390px), dark",
         "checks": [
           {
@@ -28376,7 +28484,25 @@
             "kind": "expect"
           },
           {
+            "label": "magenta: Glassmorphism, phone dark: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
             "label": "magenta: Neumorphism, phone dark: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "magenta: Claymorphism, phone dark: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "magenta: Aurora, phone dark: nothing loses contrast compared with None",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -28396,7 +28522,55 @@
         ]
       },
       {
-        "n": 3,
+        "n": 5,
+        "title": "yellow brand colour, laptop (1280px), light",
+        "checks": [
+          {
+            "label": "yellow laptop light: every page state could be scanned",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "yellow: Glassmorphism, laptop light: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "yellow: Neumorphism, laptop light: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "yellow: Claymorphism, laptop light: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "yellow: Aurora, laptop light: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "yellow: Cyberpunk, laptop light: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "yellow: Dark Premium, laptop light: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
         "title": "yellow brand colour, laptop (1280px), dark",
         "checks": [
           {
@@ -28406,7 +28580,25 @@
             "kind": "expect"
           },
           {
+            "label": "yellow: Glassmorphism, laptop dark: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
             "label": "yellow: Neumorphism, laptop dark: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "yellow: Claymorphism, laptop dark: nothing loses contrast compared with None",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "yellow: Aurora, laptop dark: nothing loses contrast compared with None",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -29331,8 +29523,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T07:06:34.739Z",
-    "durationMs": 47923,
+    "at": "2026-11-27T05:36:40.118Z",
+    "durationMs": 44201,
     "steps": [
       {
         "n": 1,
@@ -32457,8 +32649,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T16:38:32.759Z",
-    "durationMs": 1625,
+    "at": "2026-11-27T05:36:59.018Z",
+    "durationMs": 18879,
     "steps": [
       {
         "n": 1,
@@ -32521,7 +32713,7 @@
           {
             "label": "…and points at the API's download address",
             "ok": true,
-            "detail": "http://localhost:3097/api/app-updates/download/6b0860886ae95f5d245f79e0",
+            "detail": "http://localhost:3097/api/app-updates/download/6b0916f8e70bea3872f40763",
             "kind": "expect"
           },
           {
@@ -32599,7 +32791,7 @@
           {
             "label": "'Check the file' shows the file's SHA-256",
             "ok": true,
-            "detail": "5404e4767c89…",
+            "detail": "f4c16f94c5dc…",
             "kind": "expect"
           }
         ]
@@ -32736,8 +32928,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T16:13:31.438Z",
-    "durationMs": 3312,
+    "at": "2026-11-27T05:37:01.024Z",
+    "durationMs": 1972,
     "steps": [
       {
         "n": 1,
@@ -35207,8 +35399,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T04:29:18.766Z",
-    "durationMs": 5948,
+    "at": "2026-11-27T05:37:08.260Z",
+    "durationMs": 7218,
     "steps": [
       {
         "n": 1,
@@ -35391,7 +35583,7 @@
           {
             "label": "the right PIN signs in (the number may be typed with +91 and spaces), and says who and where",
             "ok": true,
-            "detail": "{\"id\":\"6b09071ca2b60167b53f2a46\",\"name\":\"Ramesh\",\"phone\":\"98765 43210\",\"outletId\":\"6b09071ca2b60167b53f2a06\",\"outletName\":\"Main\",\"storeName\":\"acme\"}",
+            "detail": "{\"id\":\"6b09170112d32ef796e5916a\",\"name\":\"Ramesh\",\"phone\":\"98765 43210\",\"outletId\":\"6b09170112d32ef796e59133\",\"outletName\":\"Main\",\"storeName\":\"acme\"}",
             "kind": "expect"
           },
           {
@@ -35691,13 +35883,13 @@
           {
             "label": "a delivery order is placed (from a pin on the map)",
             "ok": true,
-            "detail": "201 {\"order\":{\"id\":\"6b09071da2b60167b53f2bb5\",\"orderNumber\":\"0001\",\"channel\":\"delivery\",\"placedBy\":\"staff\",\"staffName\":\"Owner\",\"status\":\"placed\",\"lines\":[{\"itemId\":\"6b09071ca2b60167b53f2b18\",\"name\":\"Masal",
+            "detail": "201 {\"order\":{\"id\":\"6b09170212d32ef796e592dd\",\"orderNumber\":\"0001\",\"channel\":\"delivery\",\"placedBy\":\"staff\",\"staffName\":\"Owner\",\"status\":\"placed\",\"lines\":[{\"itemId\":\"6b09170212d32ef796e5923f\",\"name\":\"Masal",
             "kind": "expect"
           },
           {
             "label": "it has a 4-digit delivery code",
             "ok": true,
-            "detail": "4070",
+            "detail": "1554",
             "kind": "expect"
           },
           {
@@ -35912,6 +36104,3372 @@
           },
           {
             "label": "…and then even the right PIN waits",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t101-customer-address-api": {
+    "id": "t101-customer-address-api",
+    "title": "Customer: the pin and address of a delivery order are saved per outlet and read back next time; the sign-in lasts 180 days and every visit extends it",
+    "status": "pass",
+    "pass": 39,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-27T05:20:16.425Z",
+    "durationMs": 6596,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Nothing saved yet",
+        "checks": [
+          {
+            "label": "a customer who never ordered delivery has no saved place",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "someone not signed in gets 'nothing saved' (no error: the picker just starts at the restaurant)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no outlet named is a 400",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Ordering delivery saves the place, for THAT outlet",
+        "checks": [
+          {
+            "label": "a delivery order is placed from a pin on the map",
+            "ok": true,
+            "detail": "201 {\"order\":{\"id\":\"6b09130e6e62248e574ae226\",\"orderNumber\":\"0001\",\"channel\":\"delivery\",\"placedBy\":\"customer\",\"staffName\":null,\"status\":\"placed\",\"lines\":[{\"itemId\":",
+            "kind": "expect"
+          },
+          {
+            "label": "the customer who placed it is told the 4-digit delivery code right away (for the 'order placed' screen)",
+            "ok": true,
+            "detail": "1208",
+            "kind": "expect"
+          },
+          {
+            "label": "the pin AND the whole address (text and landmark) are saved for the Noida outlet",
+            "ok": true,
+            "detail": "{\"lat\":28.55,\"lng\":77.4,\"text\":\"B-14, Sector 18, Noida\",\"landmark\":\"Opposite the metro\",\"updatedAt\":\"2026-11-27T05:20:14.545Z\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "the Delhi outlet has nothing saved yet (each outlet has its own)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "another customer's saved place is not visible to Ravi",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "A second outlet keeps its own place",
+        "checks": [
+          {
+            "label": "the same customer orders delivery from the Delhi outlet",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Delhi has its own saved place",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and Noida's is untouched: two places for two outlets",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "two rows in the database for this customer",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "The next order from the same outlet replaces it",
+        "checks": [
+          {
+            "label": "ordering again with another pin updates Noida's saved place",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "still one row per outlet (used twice at Noida)",
+            "ok": true,
+            "detail": "timesUsed 2",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "What is NOT saved",
+        "checks": [
+          {
+            "label": "(staff place a phoned-in delivery order)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the dashboard's answer for an order does not carry the delivery code",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(a customer places a takeaway order: no delivery code)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(a delivery order outside the area is refused)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "none of those saved anything: no customer on a staff order, no delivery on a takeaway, no order on a refused pin",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Saving and clearing by hand",
+        "checks": [
+          {
+            "label": "a customer can save a place directly",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "and it is read back",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an impossible latitude is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and an impossible longitude",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "saving needs a sign-in",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'forget my saved place' removes it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and only Ravi's (Asha's is still there)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "Only the customer's own, only their own store",
+        "checks": [
+          {
+            "label": "a customer of ANOTHER store can't read this store's outlet (403)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…nor save to it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…nor clear it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Asha's place is unharmed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "The sign-in lasts, and every visit extends it",
+        "checks": [
+          {
+            "label": "a new sign-in lasts 180 days",
+            "ok": true,
+            "detail": "180.0 days",
+            "kind": "expect"
+          },
+          {
+            "label": "the cookie carries the same end date",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a visit right after signing in changes nothing (no new cookie, no write)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a visit with 100 days left pushes it out to 180 days again",
+            "ok": true,
+            "detail": "180.0 days",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the cookie is re-issued with the new end date (still HttpOnly, SameSite=Lax)",
+            "ok": true,
+            "detail": "rasoipulse_customer=H_WsyKr6GnCN-Y31Cy-Yho9Ocv4Y_mmmKit5DvmK1zI; Path=/; Expires=Wed, 26 May 2027 05:20:15 GMT; HttpOnly; SameSite=Lax",
+            "kind": "expect"
+          },
+          {
+            "label": "…carrying the SAME token (nothing else changes)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a sign-in whose end date has passed is NOT revived by a visit",
+            "ok": true,
+            "detail": "{\"customer\":null}",
+            "kind": "expect"
+          },
+          {
+            "label": "signing out still ends the sign-in at once",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and removes it from the database",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t103-website-home-apps-motion": {
+    "id": "t103-website-home-apps-motion",
+    "title": "Website → header keeps to Product / Pricing / Apps / FAQ (About + Contact in the footer); homepage has a short animated 'We have apps too' note (no cards); hero backdrop fades out; livelier Features and moments; motion that stops under reduce-motion; no text selection or text cursor",
+    "status": "pass",
+    "pass": 61,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-27T05:20:26.269Z",
+    "durationMs": 9685,
+    "steps": [
+      {
+        "n": 0,
+        "title": "Setup",
+        "checks": [
+          {
+            "label": "the suite's five website pages were created",
+            "ok": true,
+            "detail": "5/5",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 1,
+        "title": "Header: Product, Pricing, Apps, FAQ and Talk to us — About and Contact are in the footer",
+        "checks": [
+          {
+            "label": "the header's links are Pricing, Apps, FAQ (in that order)",
+            "ok": true,
+            "detail": "Pricing | Apps | FAQ",
+            "kind": "expect"
+          },
+          {
+            "label": "…after the Product dropdown",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Apps goes to /apps",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the Talk to us button is still there",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no About and no Contact in the header",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the footer has About and Contact",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and Apps",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the phone menu lists Apps, Pricing and FAQ",
+            "ok": true,
+            "detail": "QR | Kitchen | Pricing | Apps | FAQ | Talk to us",
+            "kind": "expect"
+          },
+          {
+            "label": "…and no About or Contact",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "The homepage's apps note: a few words and an animated picture — no cards, no downloads",
+        "checks": [
+          {
+            "label": "the homepage has an apps section",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it says 'We have apps too'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…in a few words, not a long description",
+            "ok": true,
+            "detail": "290 characters",
+            "kind": "expect"
+          },
+          {
+            "label": "it sits right after the product tabs, before the stats band",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no app cards on the homepage",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no download buttons on the homepage",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "one link to the apps page: 'See the apps'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the picture shows the three apps in order of an order's journey",
+            "ok": true,
+            "detail": "Take the order | Cook it | Deliver it",
+            "kind": "expect"
+          },
+          {
+            "label": "each with its own icon",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the picture has a text description for screen readers",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "…and it moves",
+        "checks": [
+          {
+            "label": "the order ticket slides along the line",
+            "ok": true,
+            "detail": "0px → 62px",
+            "kind": "expect"
+          },
+          {
+            "label": "the dashed line marches, each app bobs and lights up when the ticket arrives",
+            "ok": true,
+            "detail": "{\"ticket\":\"apps-ticket\",\"line\":\"apps-march\",\"ring\":\"apps-node-ping\",\"bob\":\"apps-bob\"}",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "The hero's coloured backdrop fades out — it must not end in a line",
+        "checks": [
+          {
+            "label": "1360px: the backdrop is held inside the hero (not spilling over the next section)",
+            "ok": true,
+            "detail": "{\"pos\":\"relative\",\"topGap\":0,\"bottomGap\":0,\"mask\":\"linear-gradient(rgb(0, 0, 0), rgb(0, 0, \",\"bottom\":714.546875}",
+            "kind": "expect"
+          },
+          {
+            "label": "1360px: it fades out towards the bottom (a mask, not a hard edge)",
+            "ok": true,
+            "detail": "linear-gradient(rgb(0, 0, 0), rgb(0, 0,",
+            "kind": "expect"
+          },
+          {
+            "label": "1360px: the colour has faded to the page colour right at the hero's bottom edge",
+            "ok": true,
+            "detail": "245,244,240 vs page 245,244,240",
+            "kind": "expect"
+          },
+          {
+            "label": "390px: the backdrop is held inside the hero (not spilling over the next section)",
+            "ok": true,
+            "detail": "{\"pos\":\"relative\",\"topGap\":0,\"bottomGap\":0,\"mask\":\"linear-gradient(rgb(0, 0, 0), rgb(0, 0, \",\"bottom\":1054.6875}",
+            "kind": "expect"
+          },
+          {
+            "label": "390px: it fades out towards the bottom (a mask, not a hard edge)",
+            "ok": true,
+            "detail": "linear-gradient(rgb(0, 0, 0), rgb(0, 0,",
+            "kind": "expect"
+          },
+          {
+            "label": "390px: the colour has faded to the page colour right at the hero's bottom edge",
+            "ok": true,
+            "detail": "245,244,240 vs page 245,244,240",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "The stats band has no thin outline",
+        "checks": [
+          {
+            "label": "the dark 'Built for the rush' band has no border line",
+            "ok": true,
+            "detail": "{\"top\":\"0px\",\"left\":\"0px\"}",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Features: coloured icon tiles, a faint big icon in each card, a light that follows the pointer",
+        "checks": [
+          {
+            "label": "every feature card has its icon, and a faint big copy of it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the icon tile is 56 px",
+            "ok": true,
+            "detail": "{\"w\":56,\"h\":56}",
+            "kind": "expect"
+          },
+          {
+            "label": "neighbouring cards take different colours",
+            "ok": true,
+            "detail": "#C8372D #12a58a #8b5cf6 #e08a00",
+            "kind": "expect"
+          },
+          {
+            "label": "a soft drifting colour sits behind the features and the moments",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and fades out top and bottom, so it never ends in a line",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "hovering records where the pointer is inside the card",
+            "ok": true,
+            "detail": "124px, 158px",
+            "kind": "expect"
+          },
+          {
+            "label": "the card's edge and wash light up under the pointer",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the card lifts",
+            "ok": true,
+            "detail": "matrix(1, 0, 0, 1, 0, -4)",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "'The moments…': cards with a small WHEN label, a tinted round icon and a live dot",
+        "checks": [
+          {
+            "label": "all moments are shown",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the three that start with 'When' get the small label",
+            "ok": true,
+            "detail": "3",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the rest of the sentence starts with a capital",
+            "ok": true,
+            "detail": "When The queue is out the door",
+            "kind": "expect"
+          },
+          {
+            "label": "a title without 'When' is shown exactly as written",
+            "ok": true,
+            "detail": "Waiters who never sleep",
+            "kind": "expect"
+          },
+          {
+            "label": "each icon carries a small pulsing dot",
+            "ok": true,
+            "detail": "rp-beat",
+            "kind": "expect"
+          },
+          {
+            "label": "two columns on a wide screen",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "Scroll-reveal: blocks rise into place as they come into view, and nothing stays hidden",
+        "checks": [
+          {
+            "label": "a card far down the page starts faded and is fully visible once scrolled into view",
+            "ok": true,
+            "detail": "0.00 → 1",
+            "kind": "expect"
+          },
+          {
+            "label": "what is on screen at load is never left invisible",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the hero's emphasised word gets a highlighter line that draws itself in",
+            "ok": true,
+            "detail": "{\"img\":\"linear-gradient(rgb(200, 55, 4\",\"anim\":\"rp-underline\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "feature icons breathe gently",
+            "ok": true,
+            "detail": "rp-bob",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 9,
+        "title": "'Reduce motion': everything stands still and is fully visible",
+        "checks": [
+          {
+            "label": "no animation runs anywhere on the page",
+            "ok": true,
+            "detail": "{\"ticket\":{\"name\":\"none\",\"left\":\"25%\",\"opacity\":\"1\"},\"line\":\"none\",\"icon\":\"none\",\"ghosts\":\"none\",\"reveal\":\"none\",\"lastFeature\":1,\"lastMoment\":1,\"apps\":1,\"em\":\"none\",\"glow\":\"none\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "the cards and the apps picture are fully visible without scrolling",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the order ticket rests visibly between the first two apps",
+            "ok": true,
+            "detail": "25%",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 10,
+        "title": "Text can't be selected and the pointer is never the text I-beam",
+        "checks": [
+          {
+            "label": "body text, headings, paragraphs and cards are user-select: none",
+            "ok": true,
+            "detail": "{\"sel\":\"none\",\"cursor\":\"default\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "over text the pointer is the ordinary arrow",
+            "ok": true,
+            "detail": "{\"sel\":\"none\",\"cursor\":\"default\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "over links and buttons it is the hand",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a triple-click, a drag across the heading and Select All select nothing",
+            "ok": true,
+            "detail": "[\"\",\"\",\"\"]",
+            "kind": "expect"
+          },
+          {
+            "label": "typing fields still allow selecting what you typed",
+            "ok": true,
+            "detail": "{\"picked\":\"hello world\",\"userSelect\":\"text\",\"cursor\":\"text\"}",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 11,
+        "title": "The apps page still shows its cards (the homepage note shares nothing with them but the icons)",
+        "checks": [
+          {
+            "label": "/apps still has one card per app",
+            "ok": true,
+            "detail": "3",
+            "kind": "expect"
+          },
+          {
+            "label": "each card still links to its own page",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an app page's file checksum can still be selected and copied",
+            "ok": true,
+            "detail": "{\"sel\":\"text\",\"cursor\":\"text\"}",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 12,
+        "title": "A phone: nothing sticks out sideways",
+        "checks": [
+          {
+            "label": "the homepage fits a 390 px screen",
+            "ok": true,
+            "detail": "0px over; span.stamp:459",
+            "kind": "expect"
+          },
+          {
+            "label": "…including the animated apps picture",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t113-booking-advance-api": {
+    "id": "t113-booking-advance-api",
+    "title": "Table bookings: a start and an end time, a price, a 50% advance paid online, refunds and the WhatsApp number — the rules and the API",
+    "status": "pass",
+    "pass": 94,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-27T06:36:21.340Z",
+    "durationMs": 6908,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The rules (the shared package)",
+        "checks": [
+          {
+            "label": "the new settings and their starting values: stay 1 hr to 4 hrs, usual 90 min, price set by the outlet",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a booking costs nothing until the outlet sets a price (so no outlet is suddenly charging)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "durations: shortest 60, longest 240, usual 90, in 30-minute steps",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "odd settings are rounded to whole steps (45 → 60, 200 → 180, 100 → 120 with 60-minute steps)",
+            "ok": true,
+            "detail": "{\"step\":60,\"min\":60,\"max\":180,\"usual\":120}",
+            "kind": "expect"
+          },
+          {
+            "label": "4 guests for 2½ hours at ₹500 each an hour = ₹5,000: ₹2,500 now, ₹2,500 at the restaurant",
+            "ok": true,
+            "detail": "{\"ratePaise\":50000,\"minutes\":150,\"grossPaise\":500000,\"discountPaise\":0,\"amountPaise\":500000,\"prepayPaise\":250000,\"remainingPaise\":250000}",
+            "kind": "expect"
+          },
+          {
+            "label": "the amount and its halves are whole rupees and always add up (₹2,250 → ₹1,125 + ₹1,125)",
+            "ok": true,
+            "detail": "{\"ratePaise\":50000,\"minutes\":90,\"grossPaise\":225000,\"discountPaise\":0,\"amountPaise\":225000,\"prepayPaise\":112500,\"remainingPaise\":112500}",
+            "kind": "expect"
+          },
+          {
+            "label": "an odd amount (₹333) still splits into two whole-rupee parts",
+            "ok": true,
+            "detail": "{\"ratePaise\":33300,\"minutes\":60,\"grossPaise\":33300,\"discountPaise\":0,\"amountPaise\":33300,\"prepayPaise\":16700,\"remainingPaise\":16600}",
+            "kind": "expect"
+          },
+          {
+            "label": "rate 0: nothing to pay",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the advance is 50%",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a WhatsApp number: any way of writing a 10-digit Indian mobile is understood; short, long or not-a-mobile ones are refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "durations are said in words (45 min, 1 hr, 2 hrs 30 min)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a booking's time is said as a range (7:00 PM – 9:30 PM)",
+            "ok": true,
+            "detail": "7:00 PM – 9:30 PM tomorrow",
+            "kind": "expect"
+          },
+          {
+            "label": "the event list has the usual occasions; 'Other' is separate (the page adds it at the end)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "two bookings of 6 that follow each other are never more than 6 at once (the old way counted 12)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…but one that overlaps them both makes 9",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "from 9:30 PM the finish times stop at closing (10:30 PM, 11:00 PM… never later)",
+            "ok": true,
+            "detail": "10:30 PM,11:00 PM",
+            "kind": "expect"
+          },
+          {
+            "label": "each finish time carries its price (1 hour for 2 guests at ₹500 each = ₹1,000: ₹500 now, ₹500 there)",
+            "ok": true,
+            "detail": "{\"at\":\"2026-11-28T17:00:00.000Z\",\"label\":\"10:30 PM\",\"minutes\":60,\"available\":true,\"ratePaise\":50000,\"grossPaise\":100000,\"discountPaise\":0,\"a",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "A store, its settings, three guests",
+        "checks": [
+          {
+            "label": "the outlet takes bookings: ₹500 per person per hour, 1 to 4 hour stays, 10 seats, the test gateway on",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "the new settings are saved",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "What the booking page is told",
+        "checks": [
+          {
+            "label": "the price, 50%, and that an advance can be paid online (the test gateway) come with the times",
+            "ok": true,
+            "detail": "{\"ratePaise\":50000,\"prepayPercent\":50,\"prepayAvailable\":true,\"gateway\":\"mock\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "…and how long a stay can be",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "with no start chosen there are start times and no finish times",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "choosing 7 PM gives the finish times 8:00 PM … 11:00 PM (1 to 4 hours)",
+            "ok": true,
+            "detail": "8:00 PM,8:30 PM,9:00 PM,9:30 PM,10:00 PM,10:30 PM,11:00 PM",
+            "kind": "expect"
+          },
+          {
+            "label": "7 to 9 PM for 2 guests: ₹2,000, pay ₹1,000 now and ₹1,000 there",
+            "ok": true,
+            "detail": "{\"at\":\"2026-11-28T15:30:00.000Z\",\"label\":\"9:00 PM\",\"minutes\":120,\"available\":true,\"ratePaise\":50000,\"grossPaise\":200000,\"discountPaise\":0,\"a",
+            "kind": "expect"
+          },
+          {
+            "label": "for 4 guests the same stay is ₹4,000 (the price follows the party)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a start the restaurant doesn't offer (10:30 PM is after the last start) has no finish times",
+            "ok": true,
+            "detail": "0",
+            "kind": "expect"
+          },
+          {
+            "label": "the last start (10 PM) has one finish time: closing, 11 PM",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a start that isn't a time is ignored, not an error",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Booking: the rules a guest meets",
+        "checks": [
+          {
+            "label": "booking needs the guest to be signed in",
+            "ok": true,
+            "detail": "401",
+            "kind": "expect"
+          },
+          {
+            "label": "a finish time before the start is refused, in words",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "30 minutes is shorter than the shortest stay: 'at least 1 hr'",
+            "ok": true,
+            "detail": "{\"error\":\"Bookings are at least 1 hr long — choose a later finish time.\",\"details\":{\"code\":\"slot_unavailable\"}}",
+            "kind": "expect"
+          },
+          {
+            "label": "4½ hours is longer than the longest stay: 'at most 4 hrs'",
+            "ok": true,
+            "detail": "{\"error\":\"Bookings can be at most 4 hrs long online — choose an earlier finish time, or call the restaurant.\",\"details\":",
+            "kind": "expect"
+          },
+          {
+            "label": "a finish time that is not on the half hour is refused",
+            "ok": true,
+            "detail": "{\"error\":\"Choose a finish time on the 30-minute mark.\",\"details\":{\"code\":\"slot_unavailable\"}}",
+            "kind": "expect"
+          },
+          {
+            "label": "a booking that runs past closing is refused: 'after closing'",
+            "ok": true,
+            "detail": "{\"error\":\"That finish time is after closing — choose an earlier one.\",\"details\":{\"code\":\"slot_unavailable\"}}",
+            "kind": "expect"
+          },
+          {
+            "label": "a WhatsApp number that isn't 10 digits is refused: 'Enter a 10-digit WhatsApp number'",
+            "ok": true,
+            "detail": "{\"error\":\"Enter a 10-digit WhatsApp number — we'll send the update there.\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "an event name longer than 60 characters is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a party over the online limit is refused",
+            "ok": true,
+            "detail": "409",
+            "kind": "expect"
+          },
+          {
+            "label": "none of the refused requests left a booking behind",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "A booking that costs money waits for its advance",
+        "checks": [
+          {
+            "label": "Asha books 7 to 9 PM for 2: it is created and waits for the advance",
+            "ok": true,
+            "detail": "201 requested/pending",
+            "kind": "expect"
+          },
+          {
+            "label": "₹2,000 for 2 hours: ₹1,000 now, ₹1,000 at the restaurant",
+            "ok": true,
+            "detail": "{\"grossPaise\":200000,\"discountPaise\":0,\"couponCode\":\"\",\"amountPaise\":200000,\"prepayPaise\":100000,\"remainingPaise\":100000}",
+            "kind": "expect"
+          },
+          {
+            "label": "the occasion is kept",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the WhatsApp number is stored cleaned up (9876543210), apart from the number she signed in with",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the team doesn't see it yet, and the 'to confirm' badge doesn't count it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "and nobody is messaged yet",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Asha sees it on her account with a 'pay now' (canPay)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "5b. Its seats are held — for a few minutes",
+        "checks": [
+          {
+            "label": "while the advance is awaited, its 2 seats count: only 2 of 4 are left at 7 PM",
+            "ok": true,
+            "detail": "{\"at\":\"2026-11-28T13:30:00.000Z\",\"label\":\"7:00 PM\",\"available\":false,\"seatsLeft\":2}",
+            "kind": "expect"
+          },
+          {
+            "label": "after 15 minutes without payment the hold is over: the seats are free again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and it no longer shows on her account",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "paying for it now says it has expired ('please book again')",
+            "ok": true,
+            "detail": "{\"error\":\"This booking request has expired — please book again.\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "the sweep lets go of it (cancelled, 'expired': 'The advance wasn't paid in time')",
+            "ok": true,
+            "detail": "1 cancelled/expired",
+            "kind": "expect"
+          },
+          {
+            "label": "…and running the sweep again does nothing more",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "Paying the advance (the test gateway)",
+        "checks": [
+          {
+            "label": "starting the payment needs a signed-in guest",
+            "ok": true,
+            "detail": "401",
+            "kind": "expect"
+          },
+          {
+            "label": "another guest can't pay for Asha's booking (403)",
+            "ok": true,
+            "detail": "403",
+            "kind": "expect"
+          },
+          {
+            "label": "an intent for an order AND a booking at once is refused (400)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and one for neither is refused too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "her own: the gateway is asked for ₹1,000 — the advance, not the whole amount",
+            "ok": true,
+            "detail": "200 100000",
+            "kind": "expect"
+          },
+          {
+            "label": "the payment record says it is for a booking: ₹1,000, pending",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "another guest can't confirm it either — and it is NOT settled by the attempt (the owner is checked before anything is verified)",
+            "ok": true,
+            "detail": "403",
+            "kind": "expect"
+          },
+          {
+            "label": "a payment with a wrong signature is refused and the booking stays unpaid",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "her real payment is accepted",
+            "ok": true,
+            "detail": "200 {\"status\":\"paid\",\"orderId\":\"6b0924e380e91b417e5dc41d\",\"subject\":\"reservation\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "the booking is now paid and waits for the restaurant (still 'requested': a person approves it)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "now the team sees it: ₹1,000 paid, the event and the WhatsApp number",
+            "ok": true,
+            "detail": "{\"id\":\"6b0924e380e91b417e5dc41d\",\"code\":\"B-0002\",\"status\":\"requested\",\"statusLabel\":\"Waiting to be confirmed\",\"at\":\"2026-11-28T13:30:00.000Z\",\"endsAt\":\"2026-11-28T15:30:00.000Z\",\"minutes\":120,\"partySi",
+            "kind": "expect"
+          },
+          {
+            "label": "the 'to confirm' badge counts it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Asha is told on the WHATSAPP number she gave (…43210), not the one she signed in with",
+            "ok": true,
+            "detail": "9876543210",
+            "kind": "expect"
+          },
+          {
+            "label": "the message says it was received, what for, that ₹1,000 is paid and that the restaurant will confirm on WhatsApp",
+            "ok": true,
+            "detail": "Hi Asha, we've received your table request B-0002 at Main for 7:00 PM – 9:00 PM tomorrow (2 guests, Anniversary). Your advance of ₹1,000 is paid. We check every request ourselves and will confirm it here on WhatsApp shor",
+            "kind": "expect"
+          },
+          {
+            "label": "confirming it a second time changes nothing and sends no second message",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "on her account: paid, nothing more to pay online, ₹1,000 left for the restaurant",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "The restaurant decides — and refunds",
+        "checks": [
+          {
+            "label": "'refunded' is refused while no refund is due",
+            "ok": true,
+            "detail": "409",
+            "kind": "expect"
+          },
+          {
+            "label": "declining a paid booking marks its advance as DUE for a refund",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the guest is told, on WhatsApp, that the advance will be refunded",
+            "ok": true,
+            "detail": "Hi Asha, sorry — Main can't take your booking B-0002 for 7:00 PM – 9:00 PM tomorrow. We're closed for a private event. Your advance of ₹1,000 will be refunded. Please choose another time.",
+            "kind": "expect"
+          },
+          {
+            "label": "once the money is sent back, 'mark refunded' closes it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the booking's history shows the payment and the refund",
+            "ok": true,
+            "detail": "Waiting for the advance payment | Advance of ₹1,000 paid | We're closed for a private event | Advance of ₹1,000 refunded",
+            "kind": "expect"
+          },
+          {
+            "label": "…and it can't be marked twice",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 9,
+        "title": "7b. A guest cancels",
+        "checks": [
+          {
+            "label": "cancelling a booking whose advance was never paid just drops it (nothing to refund)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and neither it nor the one that expired ever shows up to the team as a cancelled booking",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "cancelling a PAID booking puts the advance on the refund list",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the team sees the refund that is due",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 10,
+        "title": "7c. Confirming, and a no-show keeps the advance",
+        "checks": [
+          {
+            "label": "the team confirms Meera's paid booking",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the message says it is confirmed, that ₹1,000 was paid, ₹1,000 is payable at the restaurant — and that food and drinks are paid for separately",
+            "ok": true,
+            "detail": "Hi Meera, your table for 2 at Main is confirmed for 6:00 PM – 8:00 PM tomorrow. Booking B-0005. You paid ₹1,000 in advance; the remaining ₹1,000 is paid at the restaurant. Your food and drinks are paid for separately, at the restaurant. See you soon!",
+            "kind": "expect"
+          },
+          {
+            "label": "a no-show keeps the advance (nothing to refund)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 11,
+        "title": "A guest signed in with one number, updates on another; the usual length; no charge",
+        "checks": [
+          {
+            "label": "with no price, a booking without a finish time takes the usual 90 minutes and needs no payment",
+            "ok": true,
+            "detail": "201 90",
+            "kind": "expect"
+          },
+          {
+            "label": "…and goes straight to the team",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no WhatsApp number given: only the sign-in number is on it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…so the update goes to the number she signed in with",
+            "ok": true,
+            "detail": "9811700001",
+            "kind": "expect"
+          },
+          {
+            "label": "a free booking with a finish time works too (90 minutes)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 12,
+        "title": "8b. A price but no way to pay online: nothing is taken in advance",
+        "checks": [
+          {
+            "label": "with only cash on, the page is told no advance can be taken",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the booking is taken without an advance: the whole ₹2,000 is paid at the restaurant",
+            "ok": true,
+            "detail": "{\"grossPaise\":200000,\"discountPaise\":0,\"couponCode\":\"\",\"amountPaise\":200000,\"prepayPaise\":0,\"remainingPaise\":200000}",
+            "kind": "expect"
+          },
+          {
+            "label": "and it goes straight to the team",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 13,
+        "title": "The outlet confirms by itself",
+        "checks": [
+          {
+            "label": "it waits for the advance first (not confirmed before it is paid)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "paid → confirmed straight away",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the confirmation goes to the guest",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 14,
+        "title": "An advance that arrives after the booking was let go",
+        "checks": [
+          {
+            "label": "money that arrives after the hold ran out is not lost: the booking stays cancelled and the advance is marked due for a refund",
+            "ok": true,
+            "detail": "200 cancelled/refund_due",
+            "kind": "expect"
+          },
+          {
+            "label": "and it is not put in front of the team as a live request",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 15,
+        "title": "Orders are untouched",
+        "checks": [
+          {
+            "label": "an intent for an order that isn't hers still goes through the order rules",
+            "ok": true,
+            "detail": "403",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t114-booking-form-ui": {
+    "id": "t114-booking-form-ui",
+    "title": "Book a table page: open to everyone, a date picker, from/to time pickers, a searchable event list with Other, the WhatsApp number, the price — and sign-in only AFTER the form is filled",
+    "status": "pass",
+    "pass": 65,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-27T06:39:10.379Z",
+    "durationMs": 17356,
+    "steps": [
+      {
+        "n": 1,
+        "title": "A. The form is open to everyone — nothing asks for a sign-in first",
+        "checks": [
+          {
+            "label": "a notice at the top says every request is approved by hand and the update comes on WhatsApp",
+            "ok": true,
+            "detail": "We approve every booking request ourselves. You'll get the update on WhatsApp — so we'll ask for your WhatsApp number below.",
+            "kind": "expect"
+          },
+          {
+            "label": "a notice says 50% of the booking amount is paid online, the rest at the restaurant, and food and drinks are extra (booking amount + what you eat and drink)",
+            "ok": true,
+            "detail": "50% of the booking amount is paid online when you book; the rest is paid at the restaurant. Your food and drinks are extra — you pay the booking amount plus whatever you eat and drink.",
+            "kind": "expect"
+          },
+          {
+            "label": "NO sign-in card or prompt is shown up front (the guest isn't sent away before they've seen what they're booking)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…only a quiet line says the sign-in comes as the last step and nothing typed is lost",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the day, the time pickers, the event and the WhatsApp number are all there to fill in",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the 'To' time waits until a start time is chosen",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the booking box says what it is waiting for",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the last button reads 'Continue' (not 'Sign in')",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "pressing it with the form empty points out what is missing (start time, event, WhatsApp number)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and still doesn't ask for a sign-in: the form isn't complete",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "B. The day: a date picker (popover input, filled calendar)",
+        "checks": [
+          {
+            "label": "the box shows today's date to begin with",
+            "ok": true,
+            "detail": "Fri, 27 Nov, 2026",
+            "kind": "expect"
+          },
+          {
+            "label": "pressing the box opens the calendar",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "days before today are greyed out (can't be chosen)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the chosen day is a solid filled circle (the 'filled' calendar), not just a ring",
+            "ok": true,
+            "detail": "rgb(198, 54, 47)",
+            "kind": "expect"
+          },
+          {
+            "label": "choosing tomorrow and pressing OK sets the day and closes the calendar",
+            "ok": true,
+            "detail": "2026-11-28",
+            "kind": "expect"
+          },
+          {
+            "label": "a day beyond how far ahead the restaurant takes bookings (7 days) can't be chosen",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "C. The time: from — to, the stay and the price",
+        "checks": [
+          {
+            "label": "the start times run from opening to the last booking (11:00 AM … 10:00 PM, every 30 minutes)",
+            "ok": true,
+            "detail": "23: 11:00 AM … 10:00 PM",
+            "kind": "expect"
+          },
+          {
+            "label": "times the table can't take 2 more are shown but greyed out (8 PM is full: 19 of 20 seats are taken then)",
+            "ok": true,
+            "detail": "8:00 true, 7:00 false",
+            "kind": "expect"
+          },
+          {
+            "label": "a greyed-out time can't be chosen",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "6:00 PM is chosen and the 'To' time opens up",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the finish time starts at the usual stay: 7:30 PM · 1 hr 30 min",
+            "ok": true,
+            "detail": "7:30 PM · 1 hr 30 min",
+            "kind": "expect"
+          },
+          {
+            "label": "the box shows the total time: 1 hr 30 min",
+            "ok": true,
+            "detail": "1 hr 30 min",
+            "kind": "expect"
+          },
+          {
+            "label": "2 guests × ₹400 an hour × 1½ hours = ₹1,200: pay ₹600 now and ₹600 at the restaurant",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the box shows how the price was worked out",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the finish times run from 1 hour to 4 hours after the start, each with its length",
+            "ok": true,
+            "detail": "7:00 PM · 1 hr | 7:30 PM · 1 hr 30 min | 8:00 PM · 2 hrs | 8:30 PM · 2 hrs 30 min | 9:00 PM · 3 hrs | 9:30 PM · 3 hrs 30 min | 10:00 PM · 4 hrs",
+            "kind": "expect"
+          },
+          {
+            "label": "a finish time that would run into the 8 PM booking is greyed out (8:30 PM), one that stops just before it is not (8:00 PM)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a later finish (8:00 PM): total 2 hrs, ₹1,600, ₹800 now",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "3 guests: ₹2,400, ₹1,200 now — the price follows the party",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "back to 2 guests: ₹1,600 again, and the times chosen are kept",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "C2. A coupon for the booking",
+        "checks": [
+          {
+            "label": "a 'Have a coupon?' box is on the page",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the restaurant's table-booking offer is listed as a chip, the food-only coupon is not",
+            "ok": true,
+            "detail": "TBL533615",
+            "kind": "expect"
+          },
+          {
+            "label": "a food-only coupon is refused with a clear message and the price stays ₹1,600",
+            "ok": true,
+            "detail": "This coupon can't be used on a table booking.",
+            "kind": "expect"
+          },
+          {
+            "label": "an unknown code is refused with a message too",
+            "ok": true,
+            "detail": "That coupon code isn't recognised.",
+            "kind": "expect"
+          },
+          {
+            "label": "pressing the offer applies it: 'you save ₹200'",
+            "ok": true,
+            "detail": "TBL533615 — you save ₹200",
+            "kind": "expect"
+          },
+          {
+            "label": "the box shows ₹1,600, the coupon − ₹200, and the booking amount after it: ₹1,400",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the 50% advance follows the lower amount: ₹700 now, ₹700 + food & drinks at the restaurant",
+            "ok": true,
+            "detail": "₹700 / ₹700 + your food & drinks",
+            "kind": "expect"
+          },
+          {
+            "label": "3 guests: the coupon is worked out again (₹2,400 − ₹200 = ₹2,200, ₹1,100 now)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "removing the coupon gives the full price back (₹1,600, ₹800 now)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the coupon is applied again and kept for the booking (₹700 now)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "D. The occasion: a searchable list, and 'Other'",
+        "checks": [
+          {
+            "label": "opening the list puts the cursor in the search box",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the list has the usual occasions, with 'Other' as the last one",
+            "ok": true,
+            "detail": "16: …Casual dining (no special event), Other",
+            "kind": "expect"
+          },
+          {
+            "label": "typing 'birth' narrows it to Birthday",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a search with no match says so",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "typing 'anni' and pressing Enter chooses Anniversary (keyboard works)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no extra box while a listed event is chosen",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "choosing 'Other' shows a box to type the event's name",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "pressing Continue with that box empty asks for the name",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "E. The WhatsApp number — and only then, the sign-in",
+        "checks": [
+          {
+            "label": "a short WhatsApp number is refused ('10-digit') and still no sign-in is asked for",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a number typed with dashes is accepted (only digits are kept)",
+            "ok": true,
+            "detail": "9876543210",
+            "kind": "expect"
+          },
+          {
+            "label": "NOW the sign-in step appears — 'One last step' — because the form is complete",
+            "ok": true,
+            "detail": "One last step — sign in Your mobile number lets the restaurant reach you about this booking. We'll text you a code. Ever",
+            "kind": "expect"
+          },
+          {
+            "label": "everything is still there while signing in: times, WhatsApp, the event name, the summary",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "after signing in the button offers the advance after the coupon: 'Pay ₹700 & request booking'",
+            "ok": true,
+            "detail": "Pay ₹700 & request booking",
+            "kind": "expect"
+          },
+          {
+            "label": "the sign-in card is gone and the WhatsApp number typed earlier is kept (not replaced by the sign-in number)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "F. Pay the advance (the test gateway) and the confirmation page",
+        "checks": [
+          {
+            "label": "the page says the request was received, with the time range and the party",
+            "ok": true,
+            "detail": "Booking request received 6:00 PM – 8:00 PM tomorrow · table for 2 · B-0037 Reunion dinner Coupon TBL533615 saved you ₹200. You paid ₹700 in advance ·",
+            "kind": "expect"
+          },
+          {
+            "label": "…that ₹700 was paid and ₹700 is paid at the restaurant",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the coupon line: 'saved you ₹200'",
+            "ok": true,
+            "detail": "Coupon TBL533615 saved you ₹200.",
+            "kind": "expect"
+          },
+          {
+            "label": "…the event, and that the update comes on WhatsApp at the number given",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the restaurant sees it: waiting for approval, ₹700 paid after the ₹200 coupon, the WhatsApp number, 2 hours, the note",
+            "ok": true,
+            "detail": "{\"id\":\"6b09258d397d243396ad9165\",\"code\":\"B-0037\",\"status\":\"requested\",\"statusLabel\":\"Waiting to be confirmed\",\"at\":\"2026-11-28T12:30:00.000Z\",\"endsAt\":\"2026-11-28T14:30:00.000Z\",\"minutes\":120,\"partySize\":2,\"event\":\"Reuni",
+            "kind": "expect"
+          },
+          {
+            "label": "the account page lists it: range, length, event, '₹700 paid in advance', waiting to be confirmed",
+            "ok": true,
+            "detail": "6:00 PM – 8:00 PM tomorrow Table for 2 · Acme Momos — Connaught Place · B-0037 · 2 hrs · Reunion dinner ₹700 paid in advance · ₹700 at the restaurant Waiting to be confirmed Cancel booking",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "G. On a phone",
+        "checks": [
+          {
+            "label": "the page doesn't scroll sideways on a phone",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the time list fits inside the phone screen",
+            "ok": true,
+            "detail": "{\"x\":31,\"y\":491.625,\"width\":300,\"height\":301.5625}",
+            "kind": "expect"
+          },
+          {
+            "label": "…and so does the calendar",
+            "ok": true,
+            "detail": "{\"x\":31,\"y\":221.546875,\"width\":320,\"height\":392.796875}",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the event list",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "still no sideways scroll with a list open",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t115-booking-dashboard-ui": {
+    "id": "t115-booking-dashboard-ui",
+    "title": "Dashboard bookings: every upcoming booking in one list (the date is only a filter, chosen with our date picker), a status changed by hand, the approve / decline / cancel message window, refunds, and a coupon type with our date and time pickers",
+    "status": "pass",
+    "pass": 61,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-27T06:37:32.952Z",
+    "durationMs": 11251,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Settings: the stay, the price, the WhatsApp Business template",
+        "checks": [
+          {
+            "label": "the booking settings have Usual stay, Shortest stay and Longest stay",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and 'Booking price per person per hour (₹)'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the WhatsApp Business template for booking updates",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the price starts at 0 (no charge, so nothing is paid in advance)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "saved: ₹400 per person per hour (40000 paise), stays of 1 to 3 hours, the template name",
+            "ok": true,
+            "detail": "{\"p\":40000,\"t\":{\"name\":\"booking_update\",\"languageCode\":\"en\"}}",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Bookings: every upcoming booking, soonest first — no date to change",
+        "checks": [
+          {
+            "label": "the page opens on 'Upcoming' — no date to pick first",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the five new bookings are all listed, soonest first (tomorrow 1 PM, tomorrow 7 PM, in 2 days, in 3 days, in 6 days)",
+            "ok": true,
+            "detail": "B-0027,B-0028,B-0029,B-0026,B-0025",
+            "kind": "expect"
+          },
+          {
+            "label": "they are grouped under one heading per day, the days in order",
+            "ok": true,
+            "detail": "2026-11-28,2026-11-29,2026-11-30,2026-12-01,2026-12-02,2026-12-03",
+            "kind": "expect"
+          },
+          {
+            "label": "…the nearest says 'Tomorrow'",
+            "ok": true,
+            "detail": "TOMORROW · SAT 28 NOV | SUN 29 NOV | MON 30 NOV",
+            "kind": "expect"
+          },
+          {
+            "label": "the counts cover the whole list, as the server counts it",
+            "ok": true,
+            "detail": "7 bookings 14 guests 2 to confirm / {\"bookings\":7,\"guests\":14,\"requested\":2,\"waitingAhead\":2}",
+            "kind": "expect"
+          },
+          {
+            "label": "there is NO browser date or time box on the page — only our own date picker",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "The date is only a filter, chosen with our date picker",
+        "checks": [
+          {
+            "label": "the box reads 'Filter by date'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "choosing a day shows just that day's bookings",
+            "ok": true,
+            "detail": "B-0002,B-0010,B-0019,B-0026",
+            "kind": "expect"
+          },
+          {
+            "label": "…and a note says it is filtered",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…with a 'Show all upcoming' button",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it goes back to the full list",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a day with nothing booked says so",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Earlier' has its own list — none of tomorrow's bookings are in it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'All' shows everything",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "A booking taken over the phone: the day is chosen with our date picker too",
+        "checks": [
+          {
+            "label": "the New booking window has no browser date box either",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the day is set from the calendar",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the booking is made (confirmed) and shows in the list, without looking its date up",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Changing the status by hand: a mistaken No-show is not stuck",
+        "checks": [
+          {
+            "label": "Soon Sam is marked No-show",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "after that the usual buttons are gone — but there is a 'Status' button",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "its menu offers every other status (all but No-show)",
+            "ok": true,
+            "detail": "Waiting to be confirmed | Confirmed | Seated | Completed | Declined | Cancelled",
+            "kind": "expect"
+          },
+          {
+            "label": "choosing Confirmed opens the 'Approve this booking' window (the guest may be told)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the booking is back to Confirmed — nothing is stuck",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "its history says it was changed by hand",
+            "ok": true,
+            "detail": "|  | Changed by hand from no-show",
+            "kind": "expect"
+          },
+          {
+            "label": "a change that skips a step says it is a manual change",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and it is done (Completed, straight from Confirmed)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Approving: tell the guest, in words that can be edited, sent automatically",
+        "checks": [
+          {
+            "label": "a booking shows its start, end, length, occasion and the WhatsApp number",
+            "ok": true,
+            "detail": "7:00 PM to 9:00 PM · 2 hrs B-0028 Dash Guest · 2 people 9644211411 · booked online Anniversary WhatsApp +91 9876512345 ₹1,600 · ₹800 paid in advance, ₹800 at the restaurant Waiting to be confirmed App",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the money: ₹1,600, ₹800 paid in advance, ₹800 at the restaurant",
+            "ok": true,
+            "detail": "7:00 PM to 9:00 PM · 2 hrs B-0028 Dash Guest · 2 people 9644211411 · booked online Anniversary WhatsApp +91 9876512345 ₹1,600 · ₹800 paid in advance, ₹800 at the restaurant Waiting to be confirmed Approve Decline Status",
+            "kind": "expect"
+          },
+          {
+            "label": "the window says how it will go",
+            "ok": true,
+            "detail": "linked: Sent automatically through your linked WhatsApp number to +91 9876512345.",
+            "kind": "expect"
+          },
+          {
+            "label": "…automatically, and to the WhatsApp number the guest gave",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the message is already written: confirmed, ₹800 paid, ₹800 at the restaurant, food and drinks paid for separately",
+            "ok": true,
+            "detail": "Hi Dash, your table for 2 at Acme Momos — Connaught Place is confirmed for 7:00 PM – 9:00 PM tomorrow. Booking B-0028. You paid ₹800 in advance; the remaining ₹800 is paid at the restaurant. Your food and drinks are paid for separately, at the restaurant. See",
+            "kind": "expect"
+          },
+          {
+            "label": "approving needs no reason",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Tell … on WhatsApp' is ticked",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Approve & send message: the booking is confirmed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the guest's WhatsApp message went out as the team wrote it, to the number they gave",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "Declining: a reason, the refund, and no message if you don't want one",
+        "checks": [
+          {
+            "label": "the decline window asks for a reason",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and says the paid advance (₹800) will be marked for a refund",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the message follows the reason and mentions the refund of the advance",
+            "ok": true,
+            "detail": "Hi Dash, sorry — Acme Momos — Connaught Place can't take your booking B-0029 for 6:00 PM – 8:00 PM, Sun 29 Nov. We are fully booked that evening. Your advance of ₹800 will be refunded. Please choose a",
+            "kind": "expect"
+          },
+          {
+            "label": "un-ticking 'Tell …' switches the message off and the button reads 'Decline without a message'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "declined, and its advance is due for a refund",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no message was sent",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the Bookings page shows 'Refund ₹800 due' and a 'Mark refunded' button",
+            "ok": true,
+            "detail": "6:00 PM to 8:00 PM · 2 hrs B-0029 Dash Guest · 2 people 9644211411 · booked online Business meeting WhatsApp +91 9876512345 ₹1,600 · advance ₹800 Refund ₹800 due Declined Mark refunded Status",
+            "kind": "expect"
+          },
+          {
+            "label": "'Mark refunded' closes it ('Advance refunded')",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "Cancelling",
+        "checks": [
+          {
+            "label": "cancelling opens its own window",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Back' changes nothing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 9,
+        "title": "A booking made with a coupon shows what it saved",
+        "checks": [
+          {
+            "label": "the row shows the amount after the coupon (₹1,500 after the code, −₹100) and the advance (₹750 paid, ₹750 at the restaurant)",
+            "ok": true,
+            "detail": "2:00 PM to 4:00 PM · 2 hrs B-0031 Dash Guest · 2 people 9644211411 · booked online Friends' get-together WhatsApp +91 9876512345 ₹1,500 after TBX442114 (−₹100) · ₹750 paid in advance, ₹750 at the restaurant Waiting to be confirmed Approve Decline Status",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 10,
+        "title": "Coupons: a Table booking type, and our date and time pickers",
+        "checks": [
+          {
+            "label": "the coupon form has no browser date, time or date-time box",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Order types' has a 'Table booking' tick",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'From' is chosen on our calendar and its time box opens",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Until' starts at the end of the day (11:59 PM)",
+            "ok": true,
+            "detail": "11:59 PM",
+            "kind": "expect"
+          },
+          {
+            "label": "each side has a Clear button",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the coupon is saved for table bookings with its start and end from the pickers",
+            "ok": true,
+            "detail": "{\"ch\":[\"booking\"],\"f\":\"2026-11-28T03:30:00.000Z\",\"u\":\"2026-12-02T18:29:00.000Z\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "…the days are the ones chosen on the calendars",
+            "ok": true,
+            "detail": "2026-11-28T03:30:00.000Z → 2026-12-02T18:29:00.000Z",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 11,
+        "title": "The component catalogue lists the new pickers",
+        "checks": [
+          {
+            "label": "'Time Pickers' (TP01 popover input, TP02 inline list) is in the catalogue",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the searchable dropdown (DRP08)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…beside the date pickers (DP02 filled, DP03 popover input) the booking page uses",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t116-account-pagination-ui": {
+    "id": "t116-account-pagination-ui",
+    "title": "Order history: five orders a page with the joined pagination (PAG03), numbered pages, newest first, '…' for many pages, removing orders on the last page",
+    "status": "pass",
+    "pass": 32,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-27T06:38:01.199Z",
+    "durationMs": 5383,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The API: numbered pages",
+        "checks": [
+          {
+            "label": "page 1 of 12 orders, 5 a page: 5 orders, 3 pages in all",
+            "ok": true,
+            "detail": "5 p1/3 total 12",
+            "kind": "expect"
+          },
+          {
+            "label": "…newest first",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "page 3 has the last 2 (the oldest)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a page past the end shows the last page (not an empty one)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "page 0 or nonsense falls back to the date-based paging (the old way still works)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "page=abc is ignored",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a huge page size is capped (30)",
+            "ok": true,
+            "detail": "30",
+            "kind": "expect"
+          },
+          {
+            "label": "without `page` it still pages by date (nextBefore)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "each customer sees only their own orders (3 for the other one)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "The page: five orders and PAG03",
+        "checks": [
+          {
+            "label": "the Account page shows 5 orders to begin with, newest first",
+            "ok": true,
+            "detail": "0015,0014,0013,0012,0011",
+            "kind": "expect"
+          },
+          {
+            "label": "a page-number control sits under the list",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it shows 1 2 3 (3 pages for 12 orders)",
+            "ok": true,
+            "detail": "1 2 3",
+            "kind": "expect"
+          },
+          {
+            "label": "page 1 is marked as the current one",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it is the joined control (PAG03): numbers in one bordered strip",
+            "ok": true,
+            "detail": "{\"display\":\"flex\",\"radius\":\"8px\",\"border\":\"1px\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "a line says 'Page 1 of 3 · 12 orders'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the old 'Show older orders' button is gone",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "pressing 2 shows the next 5 orders and marks 2 as current",
+            "ok": true,
+            "detail": "0010,0009,0008,0007,0006",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the line says 'Page 2 of 3'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "page 3 shows the last 2 orders",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the current page is marked for screen readers (aria-current)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "turning a page brings the top of the list back into view",
+            "ok": true,
+            "detail": "heading at y=0",
+            "kind": "expect"
+          },
+          {
+            "label": "and back to page 1",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Few orders: no pager",
+        "checks": [
+          {
+            "label": "with 3 orders (one page) there are no page numbers at all",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Many pages: …",
+        "checks": [
+          {
+            "label": "the page size can be set in the address (?pageSize=1): one order a page, 12 pages",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "on page 1 the control reads 1 2 3 4 … 12 (not 12 buttons in a row)",
+            "ok": true,
+            "detail": "1 2 3 4 … 12",
+            "kind": "expect"
+          },
+          {
+            "label": "in the middle: 1 … 3 4 5 … 12",
+            "ok": true,
+            "detail": "1 … 3 4 5 … 12",
+            "kind": "expect"
+          },
+          {
+            "label": "on the last page: 1 … 9 10 11 12",
+            "ok": true,
+            "detail": "1 … 9 10 11 12",
+            "kind": "expect"
+          },
+          {
+            "label": "a page size outside 1 to 30 in the address is ignored (5 a page)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "On a phone",
+        "checks": [
+          {
+            "label": "the page control fits a phone screen and nothing scrolls sideways",
+            "ok": true,
+            "detail": "{\"x\":92,\"y\":753.515625,\"width\":206,\"height\":36}",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Removing orders on the last page",
+        "checks": [
+          {
+            "label": "removing one order on page 3 leaves 1 there and the count says 11 orders",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "removing the last order there drops back to the new last page (2 of 2) — never an empty page",
+            "ok": true,
+            "detail": "0010,0009,0008,0007,0006",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t117-website-menu-ui": {
+    "id": "t117-website-menu-ui",
+    "title": "Rasoi Pulse website: About Us / Contact Us live in the footer, not the header menu; the phone menu closes after a link is pressed",
+    "status": "pass",
+    "pass": 36,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-27T06:38:06.898Z",
+    "durationMs": 5683,
+    "steps": [
+      {
+        "n": 1,
+        "title": "About Us / Contact Us are in the footer, not in the header menu",
+        "checks": [
+          {
+            "label": "the us pages were created",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "[us] the header menu has Pricing but no About / Contact",
+            "ok": true,
+            "detail": "Pricing | Apps | FAQ",
+            "kind": "expect"
+          },
+          {
+            "label": "[us] …nothing about About or Contact anywhere in the header's menu",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "[us] the footer has both (About Us, Contact Us)",
+            "ok": true,
+            "detail": "Rasoi Pulse | Apps | About Us | Contact Us",
+            "kind": "expect"
+          },
+          {
+            "label": "[us] …under 'Company'",
+            "ok": true,
+            "detail": "About Us | Contact Us",
+            "kind": "expect"
+          },
+          {
+            "label": "[us] the 'Talk to us' button still goes to the contact page",
+            "ok": true,
+            "detail": "/contact-us",
+            "kind": "expect"
+          },
+          {
+            "label": "[us] the phone menu has no About / Contact either",
+            "ok": true,
+            "detail": "Pricing | Apps | FAQ | Talk to us",
+            "kind": "expect"
+          },
+          {
+            "label": "the plain pages were created",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "[plain] the header menu has Pricing but no About / Contact",
+            "ok": true,
+            "detail": "Pricing | Apps",
+            "kind": "expect"
+          },
+          {
+            "label": "[plain] …nothing about About or Contact anywhere in the header's menu",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "[plain] the footer has both (About, Contact)",
+            "ok": true,
+            "detail": "Rasoi Pulse | Apps | About | Contact",
+            "kind": "expect"
+          },
+          {
+            "label": "[plain] …under 'Company'",
+            "ok": true,
+            "detail": "About | Contact",
+            "kind": "expect"
+          },
+          {
+            "label": "[plain] the 'Talk to us' button still goes to the contact page",
+            "ok": true,
+            "detail": "/contact",
+            "kind": "expect"
+          },
+          {
+            "label": "[plain] the phone menu has no About / Contact either",
+            "ok": true,
+            "detail": "Pricing | Apps | Talk to us",
+            "kind": "expect"
+          },
+          {
+            "label": "the label pages were created",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "[label] the header menu has Pricing but no About / Contact",
+            "ok": true,
+            "detail": "Pricing | Apps",
+            "kind": "expect"
+          },
+          {
+            "label": "[label] …nothing about About or Contact anywhere in the header's menu",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "[label] the footer has both (About Us, Contact Us)",
+            "ok": true,
+            "detail": "Rasoi Pulse | Apps | About Us | Contact Us",
+            "kind": "expect"
+          },
+          {
+            "label": "[label] …under 'Company'",
+            "ok": true,
+            "detail": "About Us | Contact Us",
+            "kind": "expect"
+          },
+          {
+            "label": "[label] the 'Talk to us' button still goes to the contact page",
+            "ok": true,
+            "detail": "/get-in-touch",
+            "kind": "expect"
+          },
+          {
+            "label": "[label] the phone menu has no About / Contact either",
+            "ok": true,
+            "detail": "Pricing | Apps | Talk to us",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "The phone menu closes after a link is pressed",
+        "checks": [
+          {
+            "label": "the pages are back",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the menu starts closed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "pressing 'Menu' opens it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "pressing 'Pricing' goes to the page AND closes the menu (it used to stay open)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…the panel is gone from the screen",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the same for FAQ",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and Apps",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the 'Talk to us' button in the menu",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a link to the page that is already open closes the menu too (nothing navigates, so only the click can close it)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "pressing outside the menu closes it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Escape closes it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "pressing 'Menu' again closes it (as before)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "going back with the browser's button also leaves the menu closed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Without JavaScript the menu still opens",
+        "checks": [
+          {
+            "label": "a native <details>: opens with no script (closing after a link needs script)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t118-booking-manage-api": {
+    "id": "t118-booking-manage-api",
+    "title": "Table bookings (the team's side): every upcoming booking in one list, a status changed by hand, an approve/decline/cancel message sent automatically, and coupons for bookings — the API",
+    "status": "pass",
+    "pass": 80,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-27T06:36:42.339Z",
+    "durationMs": 9372,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The bookings list: everything upcoming, soonest first — the date is only a filter",
+        "checks": [
+          {
+            "label": "with no date asked for, the list is the upcoming bookings — all four, across days",
+            "ok": true,
+            "detail": "upcoming 4",
+            "kind": "expect"
+          },
+          {
+            "label": "…soonest first (tomorrow 3 PM, 8 PM, then day 5, then day 9)",
+            "ok": true,
+            "detail": "Soon Sam,Tomorrow Tara,Later Lata,Far Farid",
+            "kind": "expect"
+          },
+          {
+            "label": "…with its counts",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "scope=upcoming is the same",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'earlier' has only the booking before today",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'all' has all five, in date order (the old one first, then the upcoming)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a date filters to that day alone",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a day with nothing booked is empty",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an unknown scope falls back to upcoming",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no query at all: the upcoming list (it used to be 'today only')",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the kitchen still can't see bookings",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a booking waiting for its advance isn't listed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and shows up, waiting to be confirmed, once paid",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Changing a status by hand",
+        "checks": [
+          {
+            "label": "Sam is marked a no-show",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the usual steps do NOT let it go back (409) — the problem the team hit",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "changed by hand, it can: back to confirmed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the booking's history says it was changed by hand, and from what",
+            "ok": true,
+            "detail": "confirmed: | no_show: | confirmed:Changed by hand from no-show",
+            "kind": "expect"
+          },
+          {
+            "label": "it can be moved to every status in turn (waiting, seated, completed, declined, cancelled, no-show, confirmed)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the kitchen can't change a status, by hand or otherwise (403)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a status that doesn't exist is refused (400)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "cancelling a paid booking by hand puts its advance on the refund list",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "bringing it back by hand takes it off that list again (the advance stays with the booking)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "if the advance was already sent back, bringing the booking back leaves it 'refunded' (the restaurant has to ask for it again)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "The message when a booking is approved, declined or cancelled",
+        "checks": [
+          {
+            "label": "the approval message is ready: confirmed, ₹1,000 paid, 'food and drinks are paid for separately', to the WhatsApp number given",
+            "ok": true,
+            "detail": "Hi Asha, your table for 2 at Main is confirmed for 6:00 PM – 8:00 PM, Tue 1 Dec. Booking B-0007. You paid ₹1,000 in advance; the remaining ₹1,000 is paid at the restaurant. Your food and drinks are pa",
+            "kind": "expect"
+          },
+          {
+            "label": "no way to send yet: nothing linked, no Business, no SMS → channel is none",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the decline message carries the reason and says the advance will be refunded (the booking is still 'paid' here: the words are written as if it were already declined)",
+            "ok": true,
+            "detail": "Hi Asha, sorry — Main can't take your booking B-0007 for 6:00 PM – 8:00 PM, Tue 1 Dec. We're full that night. Your advance of ₹1,000 will be refunded. Please choose another time.",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the cancellation message too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "only approved / declined / cancelled have a message (400 for others)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the kitchen can't read it (403)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a booking that isn't there is a 404",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "3b. How it is sent — automatically: linked WhatsApp, else WhatsApp Business, else SMS",
+        "checks": [
+          {
+            "label": "with no way to send, the booking is still answered and nothing goes out",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "with an SMS gateway set up, the booking would go by SMS",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "WhatsApp Business credentials alone aren't enough (it needs an approved template) — still SMS",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "with a template named in Settings, it would go through WhatsApp Business (preferred over SMS)",
+            "ok": true,
+            "detail": "{\"text\":\"Hi Asha, your table for 2 at Main is confirmed for 6:00 PM – 8:00 PM, Tue 1 Dec. Booking B-0007. You paid ₹1,00",
+            "kind": "expect"
+          },
+          {
+            "label": "approving with a message posts to WhatsApp Business",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…as the template 'booking_update', to 91 + the WhatsApp number, with the phone number id and token",
+            "ok": true,
+            "detail": "/v20.0/PN1/messages 919876500002",
+            "kind": "expect"
+          },
+          {
+            "label": "…the team's (edited) words are the template's placeholder, with line breaks turned into spaces (Meta doesn't allow them)",
+            "ok": true,
+            "detail": "Hi Ravi, your table is confirmed — see you!",
+            "kind": "expect"
+          },
+          {
+            "label": "",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "with a WhatsApp number linked, that is used first",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "declining with a message queues it on the linked WhatsApp number — exactly the words the team wrote",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…to the WhatsApp number the guest gave",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "3c. The team's choice: no message, the usual message, or their own",
+        "checks": [
+          {
+            "label": "'don't send' changes the status and sends nothing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "with no choice made (an older client), the usual message still goes out — as before",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Coupons on table bookings",
+        "checks": [
+          {
+            "label": "a coupon with no order type ticked is made (it works on food orders)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a coupon for table bookings is made (channel 'booking')",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and one for takeaway AND bookings",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and one with a minimum amount",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…a flat ₹300 one",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…a 100% one",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and a buy-one-get-one (which can't apply to a table)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the public offers list says which coupons are for bookings (the storefront filters on it)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "signed out, TABLE20 on 7–9 PM for 2 (₹2,000): −₹400 = ₹1,600; ₹800 now, ₹800 there",
+            "ok": true,
+            "detail": "{\"ok\":true,\"code\":\"TABLE20\",\"reason\":\"\",\"grossPaise\":200000,\"discountPaise\":40000,\"amountPaise\":160000,\"prepayPaise\":80000,\"remainingPaise\":80000}",
+            "kind": "expect"
+          },
+          {
+            "label": "the code can be typed in any case",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a coupon made for food orders doesn't work on a booking, and says so — the price stays ₹2,000",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an unknown code is 'not recognised'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a buy-one-get-one is for dishes, not a table",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a minimum amount is respected (₹9,000)",
+            "ok": true,
+            "detail": "Add ₹7000 more to use this coupon (minimum order ₹9000).",
+            "kind": "expect"
+          },
+          {
+            "label": "a flat ₹300 coupon: ₹1,700, ₹850 now",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a 100% coupon leaves nothing to pay",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a stay shorter than the shortest is refused (400)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the same booking-only coupon is refused for a food order (it isn't ticked for takeaway)",
+            "ok": true,
+            "detail": "200 {\"ok\":false,\"reason\":\"This coupon can't be used for this kind of order.\",\"totals\":{\"subtotal\":20000,\"discount\":0,\"deliveryFee\":0,\"coinsRedee",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "4b. Booking with a coupon",
+        "checks": [
+          {
+            "label": "Cat books with TABLE20: ₹2,000 − ₹400 = ₹1,600; the advance is 50% of what is LEFT (₹800)",
+            "ok": true,
+            "detail": "{\"grossPaise\":200000,\"discountPaise\":40000,\"couponCode\":\"TABLE20\",\"amountPaise\":160000,\"prepayPaise\":80000,\"remainingPaise\":80000}",
+            "kind": "expect"
+          },
+          {
+            "label": "the gateway is asked for ₹800 (not ₹1,000)",
+            "ok": true,
+            "detail": "80000",
+            "kind": "expect"
+          },
+          {
+            "label": "the coupon's use is counted from the moment the booking is made",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a second booking with the same one-use coupon is refused in words ('You've already used this coupon') — never quietly booked at full price",
+            "ok": true,
+            "detail": "{\"error\":\"You've already used this coupon.\",\"details\":{\"code\":\"coupon_invalid\"}}",
+            "kind": "expect"
+          },
+          {
+            "label": "…and Cat's coupon box says the same when she is signed in",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…while Dev can still use it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a booking with a coupon that isn't for bookings is refused, in words",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and nothing was created",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a coupon made for takeaway AND bookings works on a booking (10%: ₹1,800)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "4c. A coupon that covers it all; a coupon given back",
+        "checks": [
+          {
+            "label": "a 100% coupon: nothing to pay, so the booking goes straight to the team",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and is in their list at once",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "FLAT300 is used (1) by a booking waiting for its advance",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the advance was never paid: the booking is let go AND the coupon is given back (0 uses)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a guest who gives up before paying gives the coupon back too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a paid booking keeps its coupon (and the redemption)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the team sees the coupon, what it took off and the original price",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and so does the guest",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 9,
+        "title": "4d. Coupons need the plan feature; a price of 0 has nothing to take off",
+        "checks": [
+          {
+            "label": "with no booking charge a coupon says there's nothing to take off",
             "ok": true,
             "detail": "",
             "kind": "expect"
