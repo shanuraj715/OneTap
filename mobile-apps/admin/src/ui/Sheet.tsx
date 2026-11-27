@@ -61,7 +61,7 @@ export function Input({ value, onChangeText, placeholder, secure, keyboardType, 
   const [focus, setFocus] = useState(false);
   const [shown, setShown] = useState(false);
   return (
-    <View style={{ flexDirection: "row", alignItems: multiline ? "flex-start" : "center", gap: 10, paddingHorizontal: 14, minHeight: 50, borderRadius: radius.md, backgroundColor: c.glass, borderWidth: 1.5, borderColor: focus ? c.primary : c.border, opacity: editable ? 1 : 0.6 }}>
+    <View style={{ flexDirection: "row", alignItems: multiline ? "flex-start" : "center", gap: 10, paddingHorizontal: 14, minHeight: 50, borderRadius: radius.md, backgroundColor: c.field, borderWidth: 1.5, borderColor: focus ? c.primary : c.fieldBorder, opacity: editable ? 1 : 0.6 }}>
       {leftIcon ? <Icon name={leftIcon} size={18} color={c.muted} /> : null}
       <TextInput testID={testID} value={value} onChangeText={onChangeText} placeholder={placeholder} placeholderTextColor={c.muted} secureTextEntry={secure && !shown} keyboardType={keyboardType} autoCapitalize={autoCapitalize} autoCorrect={false}
         multiline={multiline} editable={editable} maxLength={maxLength} onSubmitEditing={onSubmitEditing} returnKeyType={returnKeyType} onFocus={() => setFocus(true)} onBlur={() => setFocus(false)}
@@ -83,7 +83,7 @@ export function Select<T extends string = string>({ label, value, options, onCha
   const shown = useMemo(() => (q.trim() ? options.filter((o) => `${o.label} ${o.hint ?? ""}`.toLowerCase().includes(q.trim().toLowerCase())) : options), [options, q]);
   const body = (
     <Pressable testID={testID} disabled={disabled} onPress={() => { setQ(""); setOpen(true); }} onPressIn={press.onPressIn} onPressOut={press.onPressOut} accessibilityRole="button" accessibilityLabel={`${label ?? "Choice"}: ${chosen?.label ?? placeholder}`}>
-      <Animated.View style={[press.style, { flexDirection: "row", alignItems: "center", gap: 10, paddingHorizontal: 14, minHeight: 50, borderRadius: radius.md, backgroundColor: c.glass, borderWidth: 1.5, borderColor: c.border, opacity: disabled ? 0.6 : 1 }]}>
+      <Animated.View style={[press.style, { flexDirection: "row", alignItems: "center", gap: 10, paddingHorizontal: 14, minHeight: 50, borderRadius: radius.md, backgroundColor: c.field, borderWidth: 1.5, borderColor: c.fieldBorder, opacity: disabled ? 0.6 : 1 }]}>
         <Text style={{ flex: 1 }} tone={chosen ? "normal" : "muted"} numberOfLines={1}>{chosen?.label ?? placeholder}</Text>
         <Icon name="down" size={18} color={c.muted} />
       </Animated.View>
@@ -124,7 +124,7 @@ export function DateField({ label, value, onChange, min, max, placeholder = "Cho
   const today = todayKey();
   const body = (
     <Pressable testID={testID} onPress={() => { const p = parseDay(value) ?? parseDay(today)!; setView({ y: p.y, m: p.m }); setOpen(true); }} onPressIn={press.onPressIn} onPressOut={press.onPressOut} accessibilityRole="button" accessibilityLabel={`${label ?? "Date"}: ${value ? prettyDay(value) : placeholder}`}>
-      <Animated.View style={[press.style, { flexDirection: "row", alignItems: "center", gap: 10, paddingHorizontal: 14, minHeight: 50, borderRadius: radius.md, backgroundColor: c.glass, borderWidth: 1.5, borderColor: c.border }]}>
+      <Animated.View style={[press.style, { flexDirection: "row", alignItems: "center", gap: 10, paddingHorizontal: 14, minHeight: 50, borderRadius: radius.md, backgroundColor: c.field, borderWidth: 1.5, borderColor: c.fieldBorder }]}>
         <Icon name="calendar" size={18} color={c.primaryText} />
         <Text style={{ flex: 1 }} tone={value ? "normal" : "muted"}>{value ? prettyDay(value) : placeholder}</Text>
       </Animated.View>

@@ -10,6 +10,8 @@ export interface Colors {
   bgTop: string; bgBottom: string; blobA: string; blobB: string; blobC: string;
   /** frosted panels: the fill, a stronger fill (selected / pressed), the hairline border */
   glass: string; glassStrong: string; border: string;
+  /** an input box: a tinted fill and a border that stands out from the panel it sits on (3:1), so a field never melts into the card */
+  field: string; fieldBorder: string;
   /** a solid colour for places that must be readable whatever is behind (sheets, the tab bar's fallback) */
   solid: string;
   text: string; muted: string;
@@ -23,6 +25,7 @@ export interface Colors {
 export const darkColors: Colors = {
   bgTop: "#0A0F24", bgBottom: "#161C3C", blobA: "#FF9008", blobB: "#5B6CFF", blobC: "#FF4D8D",
   glass: "rgba(255,255,255,0.08)", glassStrong: "rgba(255,255,255,0.15)", border: "rgba(255,255,255,0.16)",
+  field: "rgba(0,0,0,0.30)", fieldBorder: "rgba(255,255,255,0.42)",
   solid: "#161C3C",
   text: "#F4F6FF", muted: "#AAB2D8",
   primary: "#B45F00", onPrimary: "#FFFFFF", primaryText: "#FFB547",
@@ -33,6 +36,7 @@ export const darkColors: Colors = {
 export const lightColors: Colors = {
   bgTop: "#EDF0FF", bgBottom: "#FFF2E2", blobA: "#FFC27A", blobB: "#A9B4FF", blobC: "#FFB3CF",
   glass: "rgba(255,255,255,0.62)", glassStrong: "rgba(255,255,255,0.85)", border: "rgba(255,255,255,0.95)",
+  field: "rgba(22,26,51,0.06)", fieldBorder: "rgba(22,26,51,0.50)",
   solid: "#FFFFFF",
   text: "#161A33", muted: "#555D7C",
   primary: "#B45F00", onPrimary: "#FFFFFF", primaryText: "#9A5000",

@@ -47,7 +47,7 @@ export function TabBar({ items, current, onPick }: { items: NavItem[]; current: 
             const on = it.id === current;
             return (
               <Pressable key={it.id} onPress={() => onPick(it.id)} accessibilityRole="tab" accessibilityState={{ selected: on }} accessibilityLabel={it.label} testID={`tab-${it.id}`} style={{ flex: 1 }}>
-                <View style={{ alignItems: "center", gap: 2, paddingVertical: 8, borderRadius: radius.lg, backgroundColor: on ? c.glassStrong : "transparent" }}>
+                <View style={{ alignItems: "center", gap: 2, paddingVertical: 8, borderRadius: radius.lg, overflow: "hidden", backgroundColor: on ? c.glassStrong : "transparent", borderWidth: on ? 1 : 0, borderColor: c.border }}>
                   <Icon name={it.icon} size={21} color={on ? c.primaryText : c.muted} />
                   <Text variant="caption" style={{ color: on ? c.text : c.muted, fontSize: 10.5 }} numberOfLines={1}>{it.label}</Text>
                 </View>
