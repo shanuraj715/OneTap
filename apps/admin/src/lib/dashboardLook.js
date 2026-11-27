@@ -1,0 +1,47 @@
+import {
+  AlertTriangle,
+  BarChart3,
+  BellOff,
+  CalendarCheck,
+  Coins,
+  CreditCard,
+  Flame,
+  IndianRupee,
+  ListChecks,
+  PackageX,
+  PieChart,
+  Receipt,
+  ReceiptText,
+  ShoppingBag,
+  Star,
+  Tag,
+  TrendingUp,
+  Truck,
+  UserPlus,
+} from "lucide-react";
+
+/** Each dashboard widget's icon and its colour: the colour says what kind of number it is (money, volume, waiting, trouble), never how big it is. */
+export const WIDGET_LOOK = {
+  "revenue-today": { icon: IndianRupee, tone: "var(--tone-success)" },
+  "orders-today": { icon: ShoppingBag, tone: "var(--tone-info)" },
+  "avg-order-value-today": { icon: Receipt, tone: "var(--color-primary)" },
+  "active-queue": { icon: ListChecks, tone: "var(--tone-info)" },
+  "missed-orders": { icon: AlertTriangle, tone: "var(--tone-danger)" },
+  "new-customers-today": { icon: UserPlus, tone: "var(--tone-success)" },
+  "coins-issued-today": { icon: Coins, tone: "var(--tone-warning)" },
+  "coupons-redeemed-today": { icon: Tag, tone: "var(--color-primary)" },
+  "payment-pending": { icon: CreditCard, tone: "var(--tone-warning)" },
+  "notification-failures-today": { icon: BellOff, tone: "var(--tone-warning)" },
+  "deliveries-active": { icon: Truck, tone: "var(--tone-info)" },
+  "bookings-today": { icon: CalendarCheck, tone: "var(--color-primary)" },
+  "customer-rating": { icon: Star, tone: "var(--tone-warning)" },
+  "revenue-trend": { icon: TrendingUp, tone: "var(--tone-success)" },
+  "orders-by-channel": { icon: PieChart, tone: "var(--tone-info)" },
+  "orders-by-status": { icon: PieChart, tone: "var(--color-primary)" },
+  "orders-by-hour": { icon: BarChart3, tone: "var(--tone-info)" },
+  "top-items": { icon: Flame, tone: "var(--color-primary)" },
+  "recent-orders": { icon: ReceiptText, tone: "var(--tone-info)" },
+  "low-stock": { icon: PackageX, tone: "var(--tone-warning)" },
+};
+
+export const FALLBACK_LOOK = { icon: BarChart3, tone: "var(--color-primary)" };

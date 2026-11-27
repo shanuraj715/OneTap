@@ -67,6 +67,11 @@ function effectiveRole(user         , membership                   )            
   return user.isSuperAdmin ? "super_admin" : (membership?.role ?? null);
 }
 
+/** The role this person acts as inside a store: their membership's role, or super admin. Null when they have none there. */
+export function roleInBrand(user         , brandId        )              {
+  return effectiveRole(user, membershipFor(user, brandId));
+}
+
 /**
  * The tenant context for a write. The outlet id comes from the client, but the
  * brand and the right to touch it come from the SESSION — a forged header buys
