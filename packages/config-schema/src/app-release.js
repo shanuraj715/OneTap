@@ -10,11 +10,18 @@ import { z } from "zod";
  * console and the tests.
  */
 
-/** The apps: one entry each. The id is what the app sends, the page address is /apps/<slug>. To add an app: add it here. */
+/**
+ * The apps: one entry each. The id is what the app sends, the page address is /apps/<slug>. To add an app: add it here.
+ *   listed              the app's default on the website: true = in the public list of apps; false = private (not listed; its page still opens
+ *                       for anyone with the link, so a team can download it). The platform admin can flip any app in App Management.
+ *   usesRefreshInterval the app asks the server for new data by the console's "Refresh interval" number (the staff apps); the others refresh on their own.
+ */
 export const APP_CATALOG = {
   oma: {
     id: "oma",
     slug: "oma",
+    listed: true,
+    usesRefreshInterval: true,
     code: "OMA",
     name: "Rasoi Pulse OMA",
     tagline: "Order Management App",
@@ -24,6 +31,8 @@ export const APP_CATALOG = {
   kda: {
     id: "kda",
     slug: "kda",
+    listed: true,
+    usesRefreshInterval: true,
     code: "KDA",
     name: "Rasoi Pulse KDA",
     tagline: "Kitchen Display App",
@@ -33,20 +42,50 @@ export const APP_CATALOG = {
   rda: {
     id: "rda",
     slug: "rda",
+    listed: true,
+    usesRefreshInterval: true,
     code: "RDA",
     name: "Rasoi Pulse RDA",
     tagline: "Rider Delivery App",
     audience: "For delivery riders",
     description: "See the deliveries handed to you, get directions in your own maps app, call or message the customer, and mark each order delivered, from an Android phone.",
   },
+  admin: {
+    id: "admin",
+    slug: "admin",
+    listed: false,
+    usesRefreshInterval: false,
+    code: "ADM",
+    name: "Rasoi Pulse Admin",
+    tagline: "Platform Team App",
+    audience: "For the Rasoi Pulse team",
+    description: "Manage the Rasoi Pulse platform from an Android phone or tablet: the dashboard, stores, plans, onboarding, leads, the server and security.",
+  },
+  business: {
+    id: "business",
+    slug: "business",
+    listed: false,
+    usesRefreshInterval: false,
+    code: "BIZ",
+    name: "Rasoi Pulse Business",
+    tagline: "Business Insights App",
+    audience: "For restaurant owners",
+    description: "See your sales by day, week, month and year, compare them, find your best-selling dishes, track expenses, stock, bookings and staff, and download Excel and PDF reports, from an Android phone or tablet.",
+  },
 };
 export const APP_IDS = Object.keys(APP_CATALOG);
 export const OMA_APP = "oma";
 export const KDA_APP = "kda";
 export const RDA_APP = "rda";
+export const BUSINESS_APP = "business";
 export const DEFAULT_APP = OMA_APP;
 /** Apps only some roles may sign in to: the server turns everyone else away at sign-in (OMA has no such rule, as before). */
-export const APP_REQUIRED_PERMISSION = { kda: "kitchen:app" };
+export const APP_REQUIRED_PERMISSION = { kda: "kitchen:app", business: "analytics:read" };
+/** Said to a person who signs in to an app that is not for their role: who the app IS for. */
+export const APP_ACCESS_NOTE = {
+  kda: "the kitchen team (kitchen staff, kitchen managers and owners)",
+  business: "store owners and the people they share reports with (managers and accountants)",
+};
 export const isAppId = (v) => typeof v === "string" && Object.prototype.hasOwnProperty.call(APP_CATALOG, v);
 /** The public address of an app's page on the website: `/apps/oma`. */
 export const appPagePath = (app) => `/apps/${APP_CATALOG[app]?.slug ?? app}`;

@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { APP_CATALOG, APP_IDS, APP_REFRESH, MAX_APK_MB, formatBytes, parseAppVersion } from "@rasoipulse/config-schema";
-import { Archive, Check, Copy, Download, ExternalLink, Eye, EyeOff, Pencil, RefreshCw, Rocket, ShieldAlert, Smartphone, Trash2, Upload } from "lucide-react";
+import { Archive, Check, Copy, Download, ExternalLink, Eye, EyeOff, Globe, Lock, Pencil, RefreshCw, Rocket, ShieldAlert, Smartphone, Trash2, Upload } from "lucide-react";
 import * as api from "../../lib/api";
 import { uploadApk, versionFromFileName } from "../../lib/uploadApk";
 import { useAppReleases, useAppSettings, usePlatformMutation } from "../../lib/usePlatform";
@@ -66,7 +66,8 @@ export function AppReleases() {
       ) : (
         <>
           <Summary data={data} />
-          <RefreshInterval app={app} meta={meta} />
+          <AppVisibility app={app} meta={meta} />
+          {meta.usesRefreshInterval !== false ? <RefreshInterval app={app} meta={meta} /> : null}
           <Card>
             {releases.length === 0 ? (
               <Empty icon={<Smartphone size={34} />} title="No version uploaded yet">
@@ -86,6 +87,62 @@ export function AppReleases() {
       {creating ? <NewVersion data={data} app={app} meta={meta} onClose={() => setCreating(false)} /> : null}
       {editing ? <EditNotes release={editing} onClose={() => setEditing(null)} /> : null}
     </>
+  );
+}
+
+/**
+ * Public or private. A PUBLIC app is in the list of apps on the website (the /apps page and the home page); a PRIVATE one is not listed anywhere,
+ * but its own page still opens for anyone who has the link, so a team can download it (search engines are told to skip it). Every app has the
+ * button; the Admin and Business apps start private.
+ */
+function AppVisibility({ app, meta }) {
+  const q = useAppSettings();
+  const setting = q.data?.settings.find((s) => s.app === app);
+  const [copied, setCopied] = useState(false);
+  const set = usePlatformMutation((isPublic) => api.setAppVisibility(app, isPublic));
+  if (!setting) return null;
+  const isPublic = setting.public;
+  const toggle = () => {
+    if (!isPublic && !window.confirm(`Make ${meta.name} public? It will appear in the list of apps on the website, where anyone can see it and download it.`)) return;
+    set.mutate(!isPublic);
+  };
+  const copy = async () => {
+    try { await navigator.clipboard.writeText(setting.pageUrl); setCopied(true); setTimeout(() => setCopied(false), 1800); } catch { /* the link is also shown to copy by hand */ }
+  };
+  return (
+    <div style={{ marginBottom: 14 }}>
+      <Card>
+        <div data-testid="app-visibility" style={{ display: "flex", flexWrap: "wrap", gap: "14px 28px", alignItems: "center", justifyContent: "space-between" }}>
+          <div style={{ minWidth: 0, flex: "1 1 320px" }}>
+            <div style={label}>
+              {isPublic ? <Globe size={12} aria-hidden="true" style={{ verticalAlign: "-1px", marginRight: 5 }} /> : <Lock size={12} aria-hidden="true" style={{ verticalAlign: "-1px", marginRight: 5 }} />}
+              Visibility
+            </div>
+            <div style={{ fontSize: 14.5, display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }} data-testid="app-visibility-now">
+              <Pill tone={isPublic ? "ok" : "neutral"}>{isPublic ? "Public" : "Private"}</Pill>
+              <span>{isPublic ? `${meta.name} is in the list of apps on the website.` : `${meta.name} is not in the list of apps on the website.`}</span>
+            </div>
+            <p style={{ ...muted, margin: "6px 0 0", fontSize: 13, lineHeight: 1.5 }}>
+              {isPublic
+                ? "Anyone who visits the website can see this app and download it."
+                : "It is not listed anywhere, and search engines are told to skip it. Only people who have its link can open the page and download it — share the link with your team:"}
+            </p>
+            {!isPublic ? (
+              <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", marginTop: 6 }}>
+                <code data-testid="app-visibility-link" style={{ fontSize: 12.5, overflowWrap: "anywhere" }}>{setting.pageUrl}</code>
+                <Button variant="outline" onClick={copy} data-testid="app-visibility-copy" style={{ display: "inline-flex", gap: 6, alignItems: "center" }}>
+                  <Copy size={13} aria-hidden="true" /> {copied ? "Copied" : "Copy link"}
+                </Button>
+              </div>
+            ) : null}
+          </div>
+          <Button variant={isPublic ? "outline" : undefined} onClick={toggle} disabled={set.isPending} data-testid="app-visibility-toggle">
+            {set.isPending ? "Saving…" : isPublic ? "Make private" : "Make public"}
+          </Button>
+        </div>
+        {set.error ? <Toast kind="error">{set.error.message}</Toast> : null}
+      </Card>
+    </div>
   );
 }
 

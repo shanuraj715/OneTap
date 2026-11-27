@@ -972,6 +972,8 @@ export const completeAppUpload = (uploadId, body) => req(`/api/platform/app-rele
 /** How often each app asks the server for new data, in seconds (one number per app). */
 export const listAppSettings = () => req("/api/platform/app-releases/settings");
 export const saveAppSettings = (app, refreshSeconds) => req(`/api/platform/app-releases/settings/${encodeURIComponent(app)}`, json("PUT", { refreshSeconds }));
+/** Public (listed on the website) or private (not listed; its page still opens for anyone with the link). */
+export const setAppVisibility = (app, isPublic) => req(`/api/platform/app-releases/visibility/${app}`, json("PUT", { public: isPublic }));
 export const updateAppRelease = (id, body) => req(`/api/platform/app-releases/${id}`, json("PATCH", body));
 export const deleteAppRelease = (id) => req(`/api/platform/app-releases/${id}`, { method: "DELETE" });
 

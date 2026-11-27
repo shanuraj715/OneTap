@@ -40,13 +40,15 @@ appReleaseSchema.plugin(writeEvents, { model: "AppRelease", ignore: ["downloads"
 export const AppReleaseModel = models.AppRelease ?? model("AppRelease", appReleaseSchema);
 
 /**
- * Settings of one app (not of one release), set by the platform admin: today how often the app asks the server for new data. One document per
+ * Settings of one app (not of one release), set by the platform admin: how often the app asks the server for new data, and whether it is listed publicly on the website. One document per
  * app; an app with no document uses the default (APP_REFRESH.default). Platform-level, not tenant-scoped.
  */
 const appSettingSchema = new Schema(
   {
     app: { type: String, required: true, unique: true },
     refreshSeconds: { type: Number, required: true },
+    /** shown in the website's public list of apps? null = the app's own default (`listed` in the catalog); true = public; false = private */
+    isPublic: { type: Boolean, default: null },
     updatedBy: { type: String, default: null },
   },
   { timestamps: true },

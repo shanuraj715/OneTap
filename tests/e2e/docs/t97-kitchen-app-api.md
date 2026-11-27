@@ -1,6 +1,6 @@
 # T97 — Kitchen app (KDA) API: only the kitchen team may sign in; a dish can be marked sold out / unavailable / available from the kitchen (with a stock number for managers); nothing the other apps or the dashboard do has changed
 
-**Area:** kitchen · **Last result:** ✅ PASSED (34 passed, 0 failed · 2026-11-26 22:05 · headless · 4.6 s)
+**Area:** kitchen · **Last result:** ✅ PASSED (34 passed, 0 failed · 2026-11-28 03:10 · headless · 6.0 s)
 
 **Run it alone:** `node run.mjs --only t97` (add `--visible` to watch it)
 
@@ -93,6 +93,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-28 03:10 | pass | 34 | 0 | headless | 6.0 s |
 | 2026-11-26 22:05 | pass | 34 | 0 | headless | 4.6 s |
 | 2026-11-26 22:05 | fail | 33 | 1 | headless | 4.9 s |
 

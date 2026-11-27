@@ -18,8 +18,8 @@ await t.run(async () => {
   for (const app of ["oma", "kda", "rda"]) ok((await asApp(app)) === "8", `${app}: the answer says 8 seconds`, String(await asApp(app)));
   const list0 = await call("GET", S, { cookie: s.su });
   ok(list0.status === 200 && list0.json.limits?.default === 8 && list0.json.limits?.min === 3 && list0.json.limits?.max === 600, "the console is told the limits (default 8, from 3 to 600)", JSON.stringify(list0.json.limits));
-  ok(list0.json.settings?.length === 3 && list0.json.settings.every((x) => x.refreshSeconds === 8 && x.isDefault === true), "and lists the three apps, all at the default", JSON.stringify(list0.json.settings?.map((x) => [x.app, x.refreshSeconds, x.isDefault])));
-  ok(JSON.stringify(list0.json.settings?.map((x) => x.code)) === JSON.stringify(["OMA", "KDA", "RDA"]), "with their codes (OMA, KDA, RDA)");
+  ok(list0.json.settings?.length === 5 && list0.json.settings.every((x) => x.refreshSeconds === 8 && x.isDefault === true), "and lists every app (the three staff apps, the Admin app and the Business app), all at the default", JSON.stringify(list0.json.settings?.map((x) => [x.app, x.refreshSeconds, x.isDefault])));
+  ok(JSON.stringify(list0.json.settings?.map((x) => x.code)) === JSON.stringify(["OMA", "KDA", "RDA", "ADM", "BIZ"]), "with their codes (OMA, KDA, RDA, ADM, BIZ)");
 
   say("2. Only the platform admin can see or change it");
   for (const [who, cookie] of [["a store owner", s.owner], ["a waiter", waiter], ["nobody signed in", undefined]]) {
@@ -40,7 +40,7 @@ await t.run(async () => {
   await call("PUT", `${S}/oma`, { cookie: s.su, body: { refreshSeconds: 600 } });
   ok((await asApp("kda")) === "5" && (await asApp("oma")) === "600" && (await asApp("rda")) === "15", "the kitchen app at 5, the order app at 600 (the largest allowed), the delivery app at 15");
   const list1 = await call("GET", S, { cookie: s.su });
-  ok(JSON.stringify(list1.json.settings.map((x) => [x.app, x.refreshSeconds, x.isDefault])) === JSON.stringify([["oma", 600, false], ["kda", 5, false], ["rda", 15, false]]), "the console's list shows each app's own number", JSON.stringify(list1.json.settings.map((x) => [x.app, x.refreshSeconds])));
+  ok(JSON.stringify(list1.json.settings.map((x) => [x.app, x.refreshSeconds, x.isDefault])) === JSON.stringify([["oma", 600, false], ["kda", 5, false], ["rda", 15, false], ["admin", 8, true], ["business", 8, true]]), "the console's list shows each app's own number (the apps nobody changed stay at the default)", JSON.stringify(list1.json.settings.map((x) => [x.app, x.refreshSeconds])));
 
   say("4. A change is seen at once, and again by a fresh read of the database");
   await call("PUT", `${S}/rda`, { cookie: s.su, body: { refreshSeconds: 30 } });

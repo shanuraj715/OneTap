@@ -103,15 +103,25 @@ export async function assertAppCurrent(req) {
 /** For the website's app page: the newest release and the history. Public. */
 export async function publicReleases({ app = DEFAULT_APP, limit = 20 } = {}) {
   const releases = await publishedOf(app);
-  return { latest: releases[0] ? publicShape(releases[0]) : null, releases: releases.slice(0, limit).map(publicShape), pageUrl: pageUrl(app), app: APP_CATALOG[app] };
+  return { latest: releases[0] ? publicShape(releases[0]) : null, releases: releases.slice(0, limit).map(publicShape), pageUrl: pageUrl(app), app: { ...APP_CATALOG[app], listed: await isListed(app) } };
 }
 
-/** Every app with its newest published version — for the website's /apps page. Public. */
+/** Is this app in the website's public list? The console's choice if it made one, else the app's own default (`listed` in the catalog). */
+export async function isListed(app) {
+  const row = await AppSettingModel.findOne({ app }).select("isPublic").lean();
+  return typeof row?.isPublic === "boolean" ? row.isPublic : APP_CATALOG[app]?.listed !== false;
+}
+
+/**
+ * Every PUBLIC app with its newest published version — for the website's /apps page. A private app (the Admin app, say) is not in this list at
+ * all; its own page (/apps/<slug>) still opens for anyone who has the link, so a team can download it. Public.
+ */
 export async function publicApps() {
   const apps = [];
   for (const id of APP_IDS) {
+    if (!(await isListed(id))) continue;
     const [latest] = await publishedOf(id);
-    apps.push({ ...APP_CATALOG[id], page: appPagePath(id), latest: latest ? publicShape(latest) : null });
+    apps.push({ ...APP_CATALOG[id], listed: true, page: appPagePath(id), latest: latest ? publicShape(latest) : null });
   }
   return { apps };
 }
@@ -367,18 +377,34 @@ export async function listAppSettings() {
   const map = await loadRefreshSeconds();
   const rows = await AppSettingModel.find().lean();
   const stamp = Object.fromEntries(rows.map((r) => [r.app, r.updatedAt]));
+  const chosen = Object.fromEntries(rows.map((r) => [r.app, r.isPublic]));
   return {
     limits: { ...APP_REFRESH },
     settings: APP_IDS.map((id) => ({
       app: id,
       code: APP_CATALOG[id].code,
       name: APP_CATALOG[id].name,
+      // public = in the website's list of apps; `publicByDefault` is what the app is when the console has not chosen
+      public: typeof chosen[id] === "boolean" ? chosen[id] : APP_CATALOG[id].listed !== false,
+      publicByDefault: APP_CATALOG[id].listed !== false,
+      usesRefreshInterval: APP_CATALOG[id].usesRefreshInterval !== false,
+      pageUrl: pageUrl(id),
       refreshSeconds: map[id] ?? APP_REFRESH.default,
       // "the default" is about the number, not about whether it was ever saved: an admin who typed 8 is on the default too
       isDefault: (map[id] ?? APP_REFRESH.default) === APP_REFRESH.default,
       updatedAt: stamp[id] ?? null,
     })),
   };
+}
+
+/** Make an app public (listed on the website) or private (not listed; its page still opens for anyone with the link). */
+export async function setAppVisibility(app, isPublic, user) {
+  if (!isAppId(app)) throw new HttpError(404, "That app doesn't exist.");
+  if (typeof isPublic !== "boolean") throw new HttpError(400, "Say whether the app is public (true) or private (false).");
+  // an app with no settings yet gets the default refresh number along with the choice (it is a required field)
+  await AppSettingModel.findOneAndUpdate({ app }, { $set: { isPublic, updatedBy: String(user?._id ?? "") }, $setOnInsert: { refreshSeconds: APP_REFRESH.default } }, { upsert: true, new: true });
+  notifyWebsite(); // the website's list and home page change at once, not in five minutes
+  return { setting: (await listAppSettings()).settings.find((x) => x.app === app) };
 }
 
 export async function saveAppSettings(app, input, user) {

@@ -71,6 +71,11 @@ appReleasesAdminRouter.put("/settings/:app", async (req, res) => {
   res.json(await svc.saveAppSettings(req.params.app, req.body ?? {}, requireUser(req)));
 });
 
+/** Public or private: is the app in the website's list of apps? (A private app's page still opens for anyone with the link.) */
+appReleasesAdminRouter.put("/visibility/:app", async (req, res) => {
+  res.json(await svc.setAppVisibility(req.params.app, req.body?.public, requireUser(req)));
+});
+
 appReleasesAdminRouter.get("/", async (req, res) => {
   res.json(await svc.listReleases(appQuery.parse(req.query).app));
 });

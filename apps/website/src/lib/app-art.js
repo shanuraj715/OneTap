@@ -7,6 +7,7 @@ const ART = {
   oma: { icon: "/app-icons/oma.svg", accent: "#4b5bd6" }, // the navy app → indigo
   kda: { icon: "/app-icons/kda.svg", accent: "#12a58a" }, // the teal app
   rda: { icon: "/app-icons/rda.svg", accent: "#8b5cf6" }, // the plum app → violet
+  admin: { icon: "/app-icons/admin.svg", accent: "#d9822b" }, // the platform team's app → amber (private unless made public in the console)
 };
 const FALLBACK = { icon: "/app-icons/rasoi-pulse.svg", accent: "var(--brand)" };
 

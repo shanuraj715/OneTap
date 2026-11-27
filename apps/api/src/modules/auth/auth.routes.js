@@ -4,7 +4,7 @@ import { isProd } from "../../env.js";
 import { bearerToken, requireUser, SESSION_COOKIE } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import { usesPolicy } from "../../middleware/rate-limit.js";
-import { ADMIN_APP_ID, APP_CATALOG, APP_REQUIRED_PERMISSION } from "@rasoipulse/config-schema";
+import { ADMIN_APP_ID, APP_ACCESS_NOTE, APP_CATALOG, APP_REQUIRED_PERMISSION } from "@rasoipulse/config-schema";
 import { appOfRequest, assertAppCurrent } from "../app-releases/app-releases.service.js";
 import { accountBlockedError, assertAccountNotBlocked, assertNotBlocked, blockInfo, clearAccountFailures, failed, floodLimiter, recordAccountFailure } from "../security/login-guard.js";
 import { describeSessionUser, login, logout } from "./auth.service.js";
@@ -77,6 +77,8 @@ authRouter.post("/app-login", loginFlood, usesPolicy("login-account"), async (re
   // the Rasoi Pulse Admin app is for the platform team only: it has no store, no release channel on the website and no update gate here,
   // and a person without a platform role (a restaurant's owner, say) is turned away and the session that was just opened ends
   if (String(req.header("x-app-id") ?? "").toLowerCase() === ADMIN_APP_ID) {
+    // a forced update (App Management → Rasoi Pulse Admin) turns an old build away here too, once the app sends its build number
+    await assertAppCurrent(req);
     const result = await signIn(req);
     if (!result.user.platform?.access) {
       await logout(result.token).catch(() => undefined);
@@ -92,7 +94,7 @@ authRouter.post("/app-login", loginFlood, usesPolicy("login-account"), async (re
   const needed = APP_REQUIRED_PERMISSION[app];
   if (needed && !result.user.permissions?.includes(needed)) {
     await logout(result.token).catch(() => undefined);
-    throw new HttpError(403, `${APP_CATALOG[app].name} is for the kitchen team (kitchen staff, kitchen managers and owners). This account can't use it.`, { code: "app_not_allowed", app });
+    throw new HttpError(403, `${APP_CATALOG[app].name} is for ${APP_ACCESS_NOTE[app] ?? "other roles"}. This account can't use it.`, { code: "app_not_allowed", app });
   }
   res.json({ token: result.token, expiresAt: result.expiresAt, user: result.user });
 });

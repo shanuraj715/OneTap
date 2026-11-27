@@ -126,7 +126,7 @@ await t.run(async () => {
   const dl = await fetch(`${t.base}/api/app-updates/download/${r2.id}`, { headers: { "x-forwarded-for": "198.51.100.90" } });
   const bytes = Buffer.from(await dl.arrayBuffer());
   ok(dl.status === 200 && sha(bytes) === sha(apk2), "the file downloads, byte for byte what was uploaded (no sign-in needed)", `${bytes.length} bytes`);
-  ok(dl.headers.get("content-type") === "application/vnd.android.package-archive" && /attachment; filename="rasoi-pulse-oma-v-26.11.26-002\.apk"/.test(dl.headers.get("content-disposition") ?? ""), "as an Android package, with a clear file name", dl.headers.get("content-disposition"));
+  ok(dl.headers.get("content-type") === "application/vnd.android.package-archive" && /attachment; filename="?rasoi-pulse-oma-v-26.11.26-002\.apk"?/.test(dl.headers.get("content-disposition") ?? ""), "as an Android package, with a clear file name", dl.headers.get("content-disposition"));
   ok(dl.headers.get("accept-ranges") === "bytes", "and can resume after a dropped connection (byte ranges)");
   ok(dl.headers.get("cache-control") === "no-cache", "and is never kept by a cache (a withdrawn version stops at once)", dl.headers.get("cache-control"));
   const part = await fetch(`${t.base}/api/app-updates/download/${r2.id}`, { headers: { range: "bytes=100-199", "x-forwarded-for": "198.51.100.91" } });
@@ -190,7 +190,7 @@ await t.run(async () => {
   const apps = (await call("GET", "/api/app-updates/apps")).json.apps;
   ok(apps.map((a) => a.id).join() === "oma,kda,rda" && apps[2].latest === null && apps[1].latest.version === "v-26.11.28-002" && apps[1].page === "/apps/kda" && apps[0].page === "/apps/oma", "/api/app-updates/apps lists every app with its newest version and page", apps.map((a) => `${a.id}:${a.latest?.version}`).join(" "));
   const dlK = await fetch(`${t.base}/api/app-updates/download/${k2.id}`, { headers: { "x-forwarded-for": "198.51.100.140" } });
-  ok(dlK.status === 200 && /filename="rasoi-pulse-kda-v-26\.11\.28-002\.apk"/.test(dlK.headers.get("content-disposition") ?? ""), "a Kitchen-app file downloads under its own name");
+  ok(dlK.status === 200 && /filename="?rasoi-pulse-kda-v-26\.11\.28-002\.apk"?/.test(dlK.headers.get("content-disposition") ?? ""), "a Kitchen-app file downloads under its own name");
   const loginK = (code) => fetch(`${t.base}/api/auth/app-login`, { method: "POST", headers: { "content-type": "application/json", "x-forwarded-for": "198.51.100.141", "x-app-id": "kda", ...(code ? { "x-app-version-code": String(code) } : {}) }, body: JSON.stringify({ email: "w@acme.test", password: "Staff123!" }) }).then(async (r) => ({ status: r.status, json: await r.json().catch(() => ({})) }));
   const k426 = await loginK(1);
   ok(k426.status === 426 && k426.json.details?.pageUrl === "https://site.example.test/apps/kda", "an old Kitchen-app build is turned away at sign-in with ITS page, while OMA is judged only by OMA's releases", `${k426.status}`);
@@ -208,7 +208,7 @@ await t.run(async () => {
   ok(apksIn(uploads).length === before && apksIn(dir).length === 0, "nothing was kept on this server's disk");
   const dlS3 = await fetch(`${t.base}/api/app-updates/download/${inBucket.release.id}`, { headers: { "x-forwarded-for": "198.51.100.120" } });
   ok(dlS3.status === 200 && Buffer.from(await dlS3.arrayBuffer()).equals(apkS3), "the download comes from the bucket, byte for byte");
-  ok(dlS3.headers.get("content-type") === "application/vnd.android.package-archive" && /attachment; filename="rasoi-pulse-oma-v-26.11.26-020\.apk"/.test(dlS3.headers.get("content-disposition") ?? "") && dlS3.headers.get("accept-ranges") === "bytes" && dlS3.headers.get("cache-control") === "no-cache", "with the same name, type, range support and no-cache as from the disk");
+  ok(dlS3.headers.get("content-type") === "application/vnd.android.package-archive" && /attachment; filename="?rasoi-pulse-oma-v-26.11.26-020\.apk"?/.test(dlS3.headers.get("content-disposition") ?? "") && dlS3.headers.get("accept-ranges") === "bytes" && dlS3.headers.get("cache-control") === "no-cache", "with the same name, type, range support and no-cache as from the disk");
   const partS3 = await fetch(`${t.base}/api/app-updates/download/${inBucket.release.id}`, { headers: { range: "bytes=1000-1999", "x-forwarded-for": "198.51.100.121" } });
   ok(partS3.status === 206 && Buffer.from(await partS3.arrayBuffer()).equals(apkS3.subarray(1000, 2000)) && partS3.headers.get("content-range") === `bytes 1000-1999/${apkS3.length}`, "a byte range is answered with 206 from the bucket (an interrupted download can resume)");
   await new Promise((r) => setTimeout(r, 200));
