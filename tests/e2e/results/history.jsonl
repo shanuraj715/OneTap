@@ -1503,3 +1503,29 @@
 {"id":"t107-app-screenshots","status":"fail","pass":176,"fail":3,"mode":"headless","at":"2026-11-27T20:10:42.065Z","durationMs":6572}
 {"id":"t107-app-screenshots","status":"error","pass":115,"fail":0,"mode":"headless","at":"2026-11-27T20:18:15.875Z","durationMs":410241,"error":"app-screenshots.mjs exited with code 1. }  Node.js v24.3.0"}
 {"id":"t107-app-screenshots","status":"pass","pass":179,"fail":0,"mode":"headless","at":"2026-11-27T20:18:30.942Z","durationMs":10410}
+{"id":"t129-subscriptions-api","status":"pass","pass":80,"fail":0,"mode":"headless","at":"2026-11-27T20:24:23.987Z","durationMs":7370}
+{"id":"t129-subscriptions-api","status":"fail","pass":69,"fail":11,"mode":"headless","at":"2026-11-27T20:24:42.545Z","durationMs":6300}
+{"id":"t129-subscriptions-api","status":"fail","pass":78,"fail":2,"mode":"headless","at":"2026-11-27T20:24:50.207Z","durationMs":6364}
+{"id":"t129-subscriptions-api","status":"fail","pass":78,"fail":2,"mode":"headless","at":"2026-11-27T20:24:57.816Z","durationMs":6466}
+{"id":"t129-subscriptions-api","status":"fail","pass":79,"fail":1,"mode":"headless","at":"2026-11-27T20:25:05.638Z","durationMs":6678}
+{"id":"t129-subscriptions-api","status":"pass","pass":80,"fail":0,"mode":"headless","at":"2026-11-27T20:25:13.417Z","durationMs":6458}
+{"id":"t121-platform-roles-api","status":"pass","pass":61,"fail":0,"mode":"headless","at":"2026-11-27T20:25:29.660Z","durationMs":8646}
+{"id":"t122-platform-team-ui","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-27T20:25:37.788Z","durationMs":8102}
+{"id":"t28-rate-limits-api","status":"pass","pass":133,"fail":0,"mode":"headless","at":"2026-11-27T20:25:48.848Z","durationMs":11030}
+{"id":"t130-subscriptions-ui","status":"fail","pass":20,"fail":3,"mode":"headless","at":"2026-11-27T20:30:58.035Z","durationMs":11021}
+{"id":"t130-subscriptions-ui","status":"fail","pass":20,"fail":3,"mode":"headless","at":"2026-11-27T20:31:30.575Z","durationMs":11334}
+{"id":"t130-subscriptions-ui","status":"fail","pass":12,"fail":6,"mode":"headless","at":"2026-11-27T20:32:26.251Z","durationMs":10311}
+{"id":"t130-subscriptions-ui","status":"error","pass":26,"fail":0,"mode":"headless","at":"2026-11-27T20:33:14.123Z","durationMs":10975,"error":"subscriptions-ui.mjs exited with code 1. }  Node.js v24.3.0"}
+{"id":"t130-subscriptions-ui","status":"fail","pass":53,"fail":2,"mode":"headless","at":"2026-11-27T20:35:05.560Z","durationMs":5440}
+{"id":"t130-subscriptions-ui","status":"fail","pass":53,"fail":2,"mode":"headless","at":"2026-11-27T20:35:15.687Z","durationMs":3847}
+{"id":"t130-subscriptions-ui","status":"pass","pass":55,"fail":0,"mode":"headless","at":"2026-11-27T20:35:26.170Z","durationMs":4228}
+{"id":"t130-subscriptions-ui","status":"pass","pass":60,"fail":0,"mode":"headless","at":"2026-11-27T20:36:26.974Z","durationMs":4238}
+{"id":"t110-plan-table-limit-ui","status":"pass","pass":48,"fail":0,"mode":"headless","at":"2026-11-27T20:45:39.662Z","durationMs":11434}
+{"id":"t122-platform-team-ui","status":"pass","pass":28,"fail":0,"mode":"headless","at":"2026-11-27T20:45:48.763Z","durationMs":9058}
+{"id":"t124-store-owners-ui","status":"pass","pass":14,"fail":0,"mode":"headless","at":"2026-11-27T20:45:51.496Z","durationMs":2703}
+{"id":"t126-plan-memory-ui","status":"pass","pass":17,"fail":0,"mode":"headless","at":"2026-11-27T20:45:53.992Z","durationMs":2468}
+{"id":"t70-cache-console-ui","status":"fail","pass":33,"fail":1,"mode":"headless","at":"2026-11-27T20:45:57.893Z","durationMs":3881}
+{"id":"t70-cache-console-ui","status":"fail","pass":33,"fail":1,"mode":"headless","at":"2026-11-27T20:46:29.696Z","durationMs":7619}
+{"id":"t70-cache-console-ui","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-27T20:47:22.115Z","durationMs":4138}
+{"id":"t70-cache-console-ui","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-27T20:47:33.547Z","durationMs":3694}
+{"id":"t70-cache-console-ui","status":"fail","pass":33,"fail":1,"mode":"headless","at":"2026-11-27T20:47:44.508Z","durationMs":3577}

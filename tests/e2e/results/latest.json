@@ -9345,8 +9345,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T16:36:00.807Z",
-    "durationMs": 14337,
+    "at": "2026-11-27T20:25:48.848Z",
+    "durationMs": 11030,
     "steps": [
       {
         "n": 1,
@@ -10117,7 +10117,7 @@
           {
             "label": "the inventory sees the whole API",
             "ok": true,
-            "detail": "366 routes, 214 change data",
+            "detail": "370 routes, 216 change data",
             "kind": "expect"
           },
           {
@@ -23182,13 +23182,13 @@
   "t70-cache-console-ui": {
     "id": "t70-cache-console-ui",
     "title": "Cache page — Admin Panel Cache and Store Cache (stores → a store → its outlets), and every Expire says what it will drop first",
-    "status": "pass",
-    "pass": 34,
-    "fail": 0,
+    "status": "fail",
+    "pass": 33,
+    "fail": 1,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T15:15:42.793Z",
-    "durationMs": 3417,
+    "at": "2026-11-27T20:47:44.508Z",
+    "durationMs": 3577,
     "steps": [
       {
         "n": 1,
@@ -23358,7 +23358,7 @@
           },
           {
             "label": "confirming clears Acme Momos",
-            "ok": true,
+            "ok": false,
             "detail": "",
             "kind": "expect"
           },
@@ -34713,8 +34713,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T15:37:24.294Z",
-    "durationMs": 9675,
+    "at": "2026-11-27T20:45:39.662Z",
+    "durationMs": 11434,
     "steps": [
       {
         "n": 0,
@@ -40601,8 +40601,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T16:36:36.986Z",
-    "durationMs": 8523,
+    "at": "2026-11-27T20:25:29.660Z",
+    "durationMs": 8646,
     "steps": [
       {
         "n": 1,
@@ -40701,7 +40701,7 @@
           {
             "label": "the session says: a team member, role Sales, the one feature Onboarding (not even 'Plans' in the sidebar), no store, no store permissions",
             "ok": true,
-            "detail": "{\"access\":true,\"features\":[\"onboarding:manage\"],\"role\":{\"id\":\"6b09b1907a24d4f26c69094d\",\"name\":\"Sales\"}}",
+            "detail": "{\"access\":true,\"features\":[\"onboarding:manage\"],\"role\":{\"id\":\"6b09e735e726ef8580c37c17\",\"name\":\"Sales\"}}",
             "kind": "expect"
           },
           {
@@ -40717,7 +40717,7 @@
             "kind": "expect"
           },
           {
-            "label": "Sam can NOT do any of 33 other things in the platform console: every one answers 403",
+            "label": "Sam can NOT do any of 37 other things in the platform console: every one answers 403",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -41005,7 +41005,7 @@
         "title": "Every route of the platform API has been decided on",
         "checks": [
           {
-            "label": "all 97 routes of /api/platform have a rule in the table",
+            "label": "all 101 routes of /api/platform have a rule in the table",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -41042,8 +41042,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T11:29:31.464Z",
-    "durationMs": 9142,
+    "at": "2026-11-27T20:45:48.763Z",
+    "durationMs": 9058,
     "steps": [
       {
         "n": 1,
@@ -41094,7 +41094,7 @@
           {
             "label": "the role is in the list, holding Onboarding only",
             "ok": true,
-            "detail": "Sales 963262 Onboarding 0",
+            "detail": "Sales 340452 Onboarding 0",
             "kind": "expect"
           },
           {
@@ -41462,8 +41462,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T15:18:07.983Z",
-    "durationMs": 2988,
+    "at": "2026-11-27T20:45:51.496Z",
+    "durationMs": 2703,
     "steps": [
       {
         "n": 1,
@@ -41792,8 +41792,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T15:37:32.295Z",
-    "durationMs": 2417,
+    "at": "2026-11-27T20:45:53.992Z",
+    "durationMs": 2468,
     "steps": [
       {
         "n": 0,
@@ -41832,13 +41832,13 @@
           {
             "label": "the note says the new plan starts clean",
             "ok": true,
-            "detail": "Memory Plan 50651 starts clean. What Beta Bites has set up on Memory Custom 50651 (limits — 12 people, 7 outlets, 40 tables; unlocked — marketing.) is kept, and",
+            "detail": "Memory Plan 52204 starts clean. What Beta Bites has set up on Memory Custom 52204 (limits — 12 people, 7 outlets, 40 tables; unlocked — marketing.) is kept, and",
             "kind": "expect"
           },
           {
             "label": "…and what the store has on its Custom plan (7 outlets, 12 people, marketing) is kept and comes back",
             "ok": true,
-            "detail": "Memory Plan 50651 starts clean. What Beta Bites has set up on Memory Custom 50651 (limits — 12 people, 7 outlets, 40 tables; unlocked — marketing.) is kept, and comes back if it ever returns to Memory Custom 50651.",
+            "detail": "Memory Plan 52204 starts clean. What Beta Bites has set up on Memory Custom 52204 (limits — 12 people, 7 outlets, 40 tables; unlocked — marketing.) is kept, and comes back if it ever returns to Memory Custom 52204.",
             "kind": "expect"
           },
           {
@@ -41850,7 +41850,7 @@
           {
             "label": "Save says it moved, started clean and kept the old settings",
             "ok": true,
-            "detail": "Moved to Memory Plan 50651. It starts clean. What it had on Memory Custom 50651 is kept, and comes back if it returns.",
+            "detail": "Moved to Memory Plan 52204. It starts clean. What it had on Memory Custom 52204 is kept, and comes back if it returns.",
             "kind": "expect"
           },
           {
@@ -41868,13 +41868,13 @@
           {
             "label": "the note says the store had this plan before",
             "ok": true,
-            "detail": "Beta Bites had Memory Custom 50651 before (until Nov 27, 2026). What it had set up then is applied again: limits — 12 pe",
+            "detail": "Beta Bites had Memory Custom 52204 before (until Nov 28, 2026). What it had set up then is applied again: limits — 12 pe",
             "kind": "expect"
           },
           {
             "label": "…lists what it had (7 outlets, 12 people, marketing) and says Save keeps it",
             "ok": true,
-            "detail": "Beta Bites had Memory Custom 50651 before (until Nov 27, 2026). What it had set up then is applied again: limits — 12 people, 7 outlets, 40 tables; unlocked — marketing. Save to keep it, or change it below.",
+            "detail": "Beta Bites had Memory Custom 52204 before (until Nov 28, 2026). What it had set up then is applied again: limits — 12 people, 7 outlets, 40 tables; unlocked — marketing. Save to keep it, or change it below.",
             "kind": "expect"
           },
           {
@@ -41898,7 +41898,7 @@
           {
             "label": "Save says the old settings are back",
             "ok": true,
-            "detail": "Moved to Memory Custom 50651. What Beta Bites had set up there before is back: limits — 12 people, 7 outlets, 40 tables; unlocked — marketing.",
+            "detail": "Moved to Memory Custom 52204. What Beta Bites had set up there before is back: limits — 12 people, 7 outlets, 40 tables; unlocked — marketing.",
             "kind": "expect"
           },
           {
@@ -43472,6 +43472,990 @@
           },
           {
             "label": "no errors in the browser",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t129-subscriptions-api": {
+    "id": "t129-subscriptions-api",
+    "title": "Rasoi Pulse's own business: payments stores made for their subscription are written down; the dashboard numbers (total sales, new sales, re-subscribed, who ran out) and the day / week / month charts are worked out from them",
+    "status": "pass",
+    "pass": 80,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-27T20:25:13.417Z",
+    "durationMs": 6458,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The form's rules: a payment has to be sensible",
+        "checks": [
+          {
+            "label": "an amount of 0 is refused",
+            "ok": true,
+            "detail": "400 The amount must be more than 0",
+            "kind": "expect"
+          },
+          {
+            "label": "a negative amount is refused",
+            "ok": true,
+            "detail": "400 The amount must be more than 0",
+            "kind": "expect"
+          },
+          {
+            "label": "an amount that is not a number is refused",
+            "ok": true,
+            "detail": "400 Enter the amount in rupees",
+            "kind": "expect"
+          },
+          {
+            "label": "more than two decimals (a fraction of a paisa) is refused",
+            "ok": true,
+            "detail": "400 Use at most two decimals (paise)",
+            "kind": "expect"
+          },
+          {
+            "label": "an absurd amount is refused",
+            "ok": true,
+            "detail": "400 That amount looks too big — check the number",
+            "kind": "expect"
+          },
+          {
+            "label": "a payment dated in the future is refused (use the day the money arrived)",
+            "ok": true,
+            "detail": "400 The payment date can't be in the future — use the day the money arrived",
+            "kind": "expect"
+          },
+          {
+            "label": "a day that does not exist is refused",
+            "ok": true,
+            "detail": "400 That is not a real date",
+            "kind": "expect"
+          },
+          {
+            "label": "a date that is not a date is refused",
+            "ok": true,
+            "detail": "400 Pick the day the money arrived",
+            "kind": "expect"
+          },
+          {
+            "label": "0 months is refused",
+            "ok": true,
+            "detail": "400 At least 1 month",
+            "kind": "expect"
+          },
+          {
+            "label": "more than 60 months is refused",
+            "ok": true,
+            "detail": "400 At most 60 months",
+            "kind": "expect"
+          },
+          {
+            "label": "half a month is refused",
+            "ok": true,
+            "detail": "400 Months must be a whole number",
+            "kind": "expect"
+          },
+          {
+            "label": "a plan that does not exist is refused",
+            "ok": true,
+            "detail": "400 That plan doesn't exist",
+            "kind": "expect"
+          },
+          {
+            "label": "a very long note is refused",
+            "ok": true,
+            "detail": "400 Keep the note under 200 characters",
+            "kind": "expect"
+          },
+          {
+            "label": "an empty form is refused, with what to fix",
+            "ok": true,
+            "detail": "400 Enter the amount in rupees",
+            "kind": "expect"
+          },
+          {
+            "label": "a store that does not exist: 404",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a store id that is not an id: 404",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "nothing was written by all those refused attempts",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Writing payments down: the first is the new sale, later ones are re-subscriptions",
+        "checks": [
+          {
+            "label": "A's first payment is written, and it is the NEW sale",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it keeps the plan (the store's current one), the store's name, who wrote it and the note",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it says when it was paid and the last day it covers (about a month later)",
+            "ok": true,
+            "detail": "2026-09-19 → 2026-10-18",
+            "kind": "expect"
+          },
+          {
+            "label": "the same payment again (same store, day, amount — a double click) is refused (409)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the list is newest first: renewal, renewal, new",
+            "ok": true,
+            "detail": "renewal,renewal,new",
+            "kind": "expect"
+          },
+          {
+            "label": "an EARLY renewal carries on from where the last one ends — it does not waste the days still left",
+            "ok": true,
+            "detail": "2026-12-18 vs the day after 2026-12-17",
+            "kind": "expect"
+          },
+          {
+            "label": "A is paid up until about 50 days from now",
+            "ok": true,
+            "detail": "2027-01-17",
+            "kind": "expect"
+          },
+          {
+            "label": "the total A has paid is added up exactly",
+            "ok": true,
+            "detail": "7497",
+            "kind": "expect"
+          },
+          {
+            "label": "the form offers the plan's price to start from (monthly 2,499; yearly with the 20% off = 23,990)",
+            "ok": true,
+            "detail": "{\"planId\":\"6b09e727cdea6bdffebad3b4\",\"planName\":\"Pro\",\"monthly\":2499,\"yearly\":23990}",
+            "kind": "expect"
+          },
+          {
+            "label": "a plan can be chosen for the payment (Basic), whatever the store is on now",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "D paid again today after running out: a re-subscription that starts today",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "amounts in paise add up exactly (0.07 + 1,999.99 = 2,000.06, no floating-point drift)",
+            "ok": true,
+            "detail": "2000.06",
+            "kind": "expect"
+          },
+          {
+            "label": "a wrongly written payment is taken off the list",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a wrongly written payment is taken off the list",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the store is 'never paid' again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "New or re-subscription is worked out from the DATES — late or deleted entries don't confuse it",
+        "checks": [
+          {
+            "label": "B's payment written LATER but dated EARLIER becomes the new sale; the one before it turns into a re-subscription",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "delete it again: the remaining payment is the new sale once more",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a payment can't be deleted through another store's address (404)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a payment id that is not an id: 404",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "The business numbers (the dashboard)",
+        "checks": [
+          {
+            "label": "the business numbers are served",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "TOTAL SALES = everything stores have paid (11,996.49) over 7 payments from 4 shops",
+            "ok": true,
+            "detail": "{\"sales\":11996.49,\"payments\":7,\"shops\":4,\"averagePerShop\":2999.12}",
+            "kind": "expect"
+          },
+          {
+            "label": "NEW SALES = shops that bought for the first time: 4 shops, 5,998.49",
+            "ok": true,
+            "detail": "{\"shops\":4,\"amount\":5998.49}",
+            "kind": "expect"
+          },
+          {
+            "label": "RE-SUBSCRIBED = later payments: 3 payments from 2 shops, 5,998",
+            "ok": true,
+            "detail": "{\"payments\":3,\"shops\":2,\"amount\":5998}",
+            "kind": "expect"
+          },
+          {
+            "label": "average per shop",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "this month so far counts only payments dated this month, split into new and re-subscribed",
+            "ok": true,
+            "detail": "{\"label\":\"Nov 2026\",\"sales\":6997.5,\"newShops\":1,\"newAmount\":999.5,\"renewals\":3,\"renewalAmount\":5998,\"samePeriodLastMonth\":0,\"changePct\":null}",
+            "kind": "expect"
+          },
+          {
+            "label": "who is paid up (acme, beta, delta), who ran out (echo), who has no payment written down (gamma), who runs out within 14 days (beta)",
+            "ok": true,
+            "detail": "{\"active\":3,\"expired\":1,\"expiringSoon\":1,\"neverPaid\":1}",
+            "kind": "expect"
+          },
+          {
+            "label": "…and names them, so they can be followed up",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "by plan: Pro has 3 paying shops and 11,496.49 taken; Basic 500",
+            "ok": true,
+            "detail": "[{\"name\":\"Pro\",\"activeShops\":3,\"amount\":11496.49},{\"name\":\"Basic\",\"activeShops\":0,\"amount\":500}]",
+            "kind": "expect"
+          },
+          {
+            "label": "the latest payments, newest first, with the shop's name and new / re-subscription",
+            "ok": true,
+            "detail": "7 delta",
+            "kind": "expect"
+          },
+          {
+            "label": "it is the PRODUCT's business only: nothing about any store's orders or sales",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the existing dashboard numbers (the stores' own sales) are untouched",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "The charts: day, week and month, each against the period before, worked out again independently",
+        "checks": [
+          {
+            "label": "day: 30 points in each line, and the same number in the period before",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "day: this period 6997.5 and the one before 0 match the payments",
+            "ok": true,
+            "detail": "expected 6997.5 / 0",
+            "kind": "expect"
+          },
+          {
+            "label": "day: the points add up to the totals",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "day: in every point, new + re-subscribed = the whole",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "day: the change against the period before is worked out (null%)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "week: 12 points in each line, and the same number in the period before",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "week: this period 9496.5 and the one before 2499.99 match the payments",
+            "ok": true,
+            "detail": "expected 9496.5 / 2499.99",
+            "kind": "expect"
+          },
+          {
+            "label": "week: the points add up to the totals",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "week: in every point, new + re-subscribed = the whole",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "week: the change against the period before is worked out (279.9%)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "month: 12 points in each line, and the same number in the period before",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "month: this period 11996.49 and the one before 0 match the payments",
+            "ok": true,
+            "detail": "expected 11996.49 / 0",
+            "kind": "expect"
+          },
+          {
+            "label": "month: the points add up to the totals",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "month: in every point, new + re-subscribed = the whole",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "month: the change against the period before is worked out (null%)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the last day on the day chart is today: 1,000 and it is a re-subscription",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…labelled with today's date",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "every point on the week chart starts on a Monday",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "every point on the month chart is a month, the last one this month",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Who may see and write what",
+        "checks": [
+          {
+            "label": "dashboard access: sees the business numbers, but not a store's payment list",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "store-read access: sees a store's payment list, but not the business numbers",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "neither of them can WRITE a payment (403)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…or delete one (403)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "store-manage access can write one, and it says who did",
+            "ok": true,
+            "detail": "Mia Manager",
+            "kind": "expect"
+          },
+          {
+            "label": "…and delete one",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a restaurant owner can't see any of it (403)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "not signed in: 401",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "A deleted store's money stays in the sales figures",
+        "checks": [
+          {
+            "label": "the store 'echo' (which paid 500 once) is deleted",
+            "ok": true,
+            "detail": "200 {\"store\":{\"id\":\"6b09e727cdea6bdffebad397\",\"name\":\"echo\"},\"removed\":{\"Outlet\":1,\"AnalyticsProfile\":0,",
+            "kind": "expect"
+          },
+          {
+            "label": "…its payment is still in the database (deleting a store must not erase Rasoi Pulse's sales history)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the totals did not change: total sales 11,996.49, 4 shops bought",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the payment is still listed, with the shop's name as it was, marked as a deleted store",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…but a deleted store is no longer counted as 'ran out'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t130-subscriptions-ui": {
+    "id": "t130-subscriptions-ui",
+    "title": "Console → a store → Payments (write a payment down: new sale, then re-subscriptions) and the dashboard's 'Rasoi Pulse business': total sales, new sales, re-subscribed, one Day / Week / Month chart",
+    "status": "pass",
+    "pass": 60,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-27T20:36:26.974Z",
+    "durationMs": 4238,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Before any payment: the dashboard says so, plainly",
+        "checks": [
+          {
+            "label": "the section is headed 'Rasoi Pulse business' and says it is what shops pay you, not what they sell",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "total sales ₹0, new sales 0, re-subscribed 0",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an empty-state explains how to start (open a store → Payments → write it down)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the stores' own sales are still on the page, further down, under their own heading",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Who to follow up' lists shops that have no payment written down",
+            "ok": true,
+            "detail": "Acme Momos No payment written down Beta Bites No payment written down Marketing Mart No payment written down",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "A store's Payments tab: nothing yet",
+        "checks": [
+          {
+            "label": "the store says it has no payment written down yet",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the list is empty, with a hint",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the super admin sees the form",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "The form starts from the plan's price and checks itself",
+        "checks": [
+          {
+            "label": "one month: the amount box already holds the plan's monthly price (₹2,499)",
+            "ok": true,
+            "detail": "2499",
+            "kind": "expect"
+          },
+          {
+            "label": "12 months: it holds the yearly price with the plan's 20% off (₹23,990)",
+            "ok": true,
+            "detail": "23990",
+            "kind": "expect"
+          },
+          {
+            "label": "3 months: 3 × the monthly price",
+            "ok": true,
+            "detail": "7497",
+            "kind": "expect"
+          },
+          {
+            "label": "once someone types an amount it is not changed under them, even if the months change",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and a button offers the plan's price for the months now chosen (6 × ₹2,499 = ₹14,994)",
+            "ok": true,
+            "detail": "Use the plan's price (₹14,994)",
+            "kind": "expect"
+          },
+          {
+            "label": "pressing it puts the plan's price back, and the button goes away",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "typing exactly the plan's price needs no button",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no amount: the button is off and the line under the form says what to fix",
+            "ok": true,
+            "detail": "Type the amount that was paid, in rupees.",
+            "kind": "expect"
+          },
+          {
+            "label": "0 months: the button is off and says months must be 1 to 60",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a good form says this will count as the NEW SALE (the store's first payment)",
+            "ok": true,
+            "detail": "This will count as the NEW SALE for this store (its first payment).",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "The first payment is written down: it is the new sale",
+        "checks": [
+          {
+            "label": "one row: ₹2,499, 'New sale', 1 month, the note and who wrote it",
+            "ok": true,
+            "detail": "₹2,499 on Nov 28, 2026 New sale Pay Plan 83566 · 1 month · covers Nov 28, 2026 to Dec 27, 2026 · written by Platform Admin · “Bank transfer ref 4471” Delete",
+            "kind": "expect"
+          },
+          {
+            "label": "the store now says 'Paid until …' with the days left and the total",
+            "ok": true,
+            "detail": "Paid until Dec 27, 2026 · 30 days left 1 payment · ₹2,499 in all",
+            "kind": "expect"
+          },
+          {
+            "label": "it was written for today by default",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "A second payment: a re-subscription (written with the calendar, for an earlier day it would be the new sale)",
+        "checks": [
+          {
+            "label": "the line under the form now says this will count as a RE-SUBSCRIPTION",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "newest first: the new one is 'Re-subscribed' (₹2,499.50 — paise are shown), the first stays 'New sale'",
+            "ok": true,
+            "detail": "₹2,499.5 on Nov 28, 2026 Re-subscribed Pay Plan 83566 · 1 mo | ₹2,499 on Nov 28, 2026 New sale Pay Plan",
+            "kind": "expect"
+          },
+          {
+            "label": "the total adds up (₹4,998.50)",
+            "ok": true,
+            "detail": "2 payments · ₹4,998.5 in all",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Picking an earlier day with our calendar: the older payment becomes the new sale",
+        "checks": [
+          {
+            "label": "dated before the first payment, the line says it would become the NEW SALE",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the ₹2,000 payment (oldest) is the one 'New sale'; the other two turned into 'Re-subscribed'",
+            "ok": true,
+            "detail": "₹2,499.5 on Nov 28, 2026 Re-su | ₹2,499 on Nov 28, 2026 Re-subs | ₹2,000 on Oct 15, 2026 New sal",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "A refused form says why; a wrong payment is deleted",
+        "checks": [
+          {
+            "label": "writing the same payment twice is refused with a sentence, and nothing is added",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "after deleting it, the first ₹2,499 payment is the 'New sale' again",
+            "ok": true,
+            "detail": "₹2,499.5 on Nov 28, 2026 Re-su | ₹2,499 on Nov 28, 2026 New sal",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "A second store pays once",
+        "checks": [
+          {
+            "label": "store B's first payment is a 'New sale' too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 9,
+        "title": "8b. A third shop paid long ago (written through the API): 400, 120 and 45 days back — so Day, Week and Month hold different numbers",
+        "checks": [
+          {
+            "label": "the ₹200 payment from 400 days ago is written down",
+            "ok": true,
+            "detail": "201",
+            "kind": "expect"
+          },
+          {
+            "label": "the ₹300 payment from 120 days ago is written down",
+            "ok": true,
+            "detail": "201",
+            "kind": "expect"
+          },
+          {
+            "label": "the ₹500 payment from 45 days ago is written down",
+            "ok": true,
+            "detail": "201",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 10,
+        "title": "The dashboard: total sales, new sales, re-subscribed",
+        "checks": [
+          {
+            "label": "(the API agrees: 6,997.50 in all; 3 shops bought; 3 re-subscriptions from 2 shops)",
+            "ok": true,
+            "detail": "[6997.5,3,3,2]",
+            "kind": "expect"
+          },
+          {
+            "label": "TOTAL SALES shows ₹6,997.50",
+            "ok": true,
+            "detail": "₹6,997.5",
+            "kind": "expect"
+          },
+          {
+            "label": "NEW SALES shows 3 shops (₹3,698)",
+            "ok": true,
+            "detail": "3",
+            "kind": "expect"
+          },
+          {
+            "label": "RE-SUBSCRIBED shows 3 payments (₹3,299.50) from 2 shops",
+            "ok": true,
+            "detail": "3",
+            "kind": "expect"
+          },
+          {
+            "label": "2 shops are paid up now and 1 ran out (the one that paid 45 days ago for a month)",
+            "ok": true,
+            "detail": "2 / 1",
+            "kind": "expect"
+          },
+          {
+            "label": "'Who to follow up' names the shop that ran out",
+            "ok": true,
+            "detail": "Marketing Mart Ran out Nov 13, 2026",
+            "kind": "expect"
+          },
+          {
+            "label": "'Latest payments' lists the shops with 'New sale' / 'Re-subscribed'",
+            "ok": true,
+            "detail": "Beta Bites Nov 28, 2026 · Pay Plan 83566 · 1 month ₹999 New sale Acme Momos Nov 28, 2026 · Pay Plan 83566 · 1 month ₹2,499.5 Re-subscribed A",
+            "kind": "expect"
+          },
+          {
+            "label": "'By plan' shows the plan with 2 shops paid up and the money taken",
+            "ok": true,
+            "detail": "Pay Plan 83566 2 shops paid up ₹6,997.5",
+            "kind": "expect"
+          },
+          {
+            "label": "the business section holds nothing about the stores' orders",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 11,
+        "title": "ONE chart that switches between Day, Week and Month",
+        "checks": [
+          {
+            "label": "it opens on Month",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the three charts hold DIFFERENT numbers (so the switch can be seen to work): day 5,997.50 vs 500 before; week 6,497.50 vs 300; month 6,797.50 vs 200",
+            "ok": true,
+            "detail": "{\"day\":5997.5,\"week\":6497.5,\"month\":6797.5}",
+            "kind": "expect"
+          },
+          {
+            "label": "day: the chart shows this period ₹5997.5 against ₹500 before (same as the API)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "day: the legend names both lines with their totals",
+            "ok": true,
+            "detail": "Last 30 days: ₹5,997.5 The 30 days before: ₹500",
+            "kind": "expect"
+          },
+          {
+            "label": "day: only that button is pressed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "day: the chart is drawn",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "week: the chart shows this period ₹6497.5 against ₹300 before (same as the API)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "week: the legend names both lines with their totals",
+            "ok": true,
+            "detail": "Last 12 weeks: ₹6,497.5 The 12 weeks before: ₹300",
+            "kind": "expect"
+          },
+          {
+            "label": "week: only that button is pressed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "week: the chart is drawn",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "month: the chart shows this period ₹6797.5 against ₹200 before (same as the API)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "month: the legend names both lines with their totals",
+            "ok": true,
+            "detail": "Last 12 months: ₹6,797.5 The 12 months before: ₹200",
+            "kind": "expect"
+          },
+          {
+            "label": "month: only that button is pressed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "month: the chart is drawn",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the table twin of the chart carries the same numbers, with the new / re-subscribed split",
+            "ok": true,
+            "detail": "Sales by day Last 30 days against the 30 days before. In the last 30 days: 2 new, 1 re-subscribed. Day Week Month Chart Sales by day: this p",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 12,
+        "title": "A team member who can only READ stores",
+        "checks": [
+          {
+            "label": "the reader sees the store's payments",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…but there is no form and no Delete button",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and a sentence says why",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser console",
             "ok": true,
             "detail": "",
             "kind": "expect"

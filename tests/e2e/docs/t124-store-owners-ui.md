@@ -1,6 +1,6 @@
 # T124 — Console → a store → Owners tab: the Add-an-owner fields line up (same top edge, button level), stack on a narrow window; an owner's actions stay together
 
-**Area:** platform · **Last result:** ✅ PASSED (14 passed, 0 failed · 2026-11-27 20:48 · headless · 3.0 s)
+**Area:** platform · **Last result:** ✅ PASSED (14 passed, 0 failed · 2026-11-28 02:15 · headless · 2.7 s)
 
 **Run it alone:** `node run.mjs --only t124` (add `--visible` to watch it)
 
@@ -61,6 +61,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-28 02:15 | pass | 14 | 0 | headless | 2.7 s |
 | 2026-11-27 20:48 | pass | 14 | 0 | headless | 3.0 s |
 | 2026-11-27 20:47 | fail | 13 | 1 | headless | 2.4 s |
 | 2026-11-27 20:47 | fail | 13 | 1 | headless | 2.4 s |

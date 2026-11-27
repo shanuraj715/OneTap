@@ -1,6 +1,6 @@
 # T110 — Plans: a wide New plan pop-up that needs no scrolling, a tables limit in steps of 5 (plan, store, onboarding form), and the owner's Tables page when the plan's tables are all used
 
-**Area:** platform · **Last result:** ✅ PASSED (48 passed, 0 failed · 2026-11-27 21:07 · headless · 9.7 s)
+**Area:** platform · **Last result:** ✅ PASSED (48 passed, 0 failed · 2026-11-28 02:15 · headless · 11.4 s)
 
 **Run it alone:** `node run.mjs --only t110` (add `--visible` to watch it)
 
@@ -124,6 +124,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-28 02:15 | pass | 48 | 0 | headless | 11.4 s |
 | 2026-11-27 21:07 | pass | 48 | 0 | headless | 9.7 s |
 | 2026-11-27 21:03 | pass | 48 | 0 | headless | 13.3 s |
 | 2026-11-27 16:42 | pass | 48 | 0 | headless | 9.3 s |

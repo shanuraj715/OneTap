@@ -1,6 +1,6 @@
 # T126 — Console → a store → Plan & limits: a new plan 'starts clean' and keeps the old settings; a plan it had before brings its limits back (shown before saving); Save says what happened
 
-**Area:** platform · **Last result:** ✅ PASSED (17 passed, 0 failed · 2026-11-27 21:07 · headless · 2.4 s)
+**Area:** platform · **Last result:** ✅ PASSED (17 passed, 0 failed · 2026-11-28 02:15 · headless · 2.5 s)
 
 **Run it alone:** `node run.mjs --only t126` (add `--visible` to watch it)
 
@@ -72,6 +72,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-28 02:15 | pass | 17 | 0 | headless | 2.5 s |
 | 2026-11-27 21:07 | pass | 17 | 0 | headless | 2.4 s |
 | 2026-11-27 21:06 | pass | 16 | 0 | headless | 2.6 s |
 | 2026-11-27 21:06 | pass | 16 | 0 | headless | 2.2 s |
