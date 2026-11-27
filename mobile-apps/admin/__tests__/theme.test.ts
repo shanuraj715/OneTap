@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import type { ConfigContext } from "expo/config";
-import { darkColors, lightColors, type Colors } from "@/ui/theme";
+import { darkColors, lightColors, navigationTheme, type Colors } from "@/ui/theme";
 
 const lum = (hex: string) => {
   const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255).map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
@@ -89,5 +89,23 @@ describe("in dark, a panel can be told apart from the night behind it", () => {
     const c = darkColors, ground = c.bgBottom;
     expect(contrast(over(c.glass, ground), ground)).toBeGreaterThanOrEqual(1.1);
     expect(contrast(over(c.border, over(c.glass, ground)), over(c.glass, ground))).toBeGreaterThanOrEqual(1.35);
+  });
+});
+
+describe("the navigator paints nothing over the app's own background (the grey that hid dark mode on iOS)", () => {
+  // React Navigation's own light theme: a grey screen background that, on iOS, covers the gradient behind the app
+  const base = { dark: false, colors: { primary: "#007AFF", background: "rgb(242, 242, 242)", card: "rgb(255, 255, 255)", text: "rgb(28, 28, 30)", border: "rgb(216, 216, 216)", notification: "rgb(255, 59, 48)" }, fonts: { regular: { fontFamily: "System", fontWeight: "400" } } };
+  it.each(MODES)("in %s every colour that can fill the screen is fully transparent, and the text follows the app's theme", (_name, c) => {
+    const t = navigationTheme(base, c, c === darkColors);
+    for (const k of ["background", "card", "border"] as const) expect(t.colors[k]).toBe("rgba(0,0,0,0)");
+    expect(t.colors.text).toBe(c.text);
+    expect(t.colors.primary).toBe(c.primary);
+    expect(t.dark).toBe(c === darkColors);
+    expect(t.fonts).toBe(base.fonts); // everything else of the base theme is kept
+  });
+  it("the root layout wraps the stack in that theme", () => {
+    const src = fs.readFileSync(path.join(__dirname, "..", "src", "app", "_layout.tsx"), "utf8");
+    expect(src).toMatch(/<ThemeProvider value=\{navTheme\}>[\s\S]*<Stack /);
+    expect(src).toContain("navigationTheme(dark ? DarkTheme : DefaultTheme");
   });
 });

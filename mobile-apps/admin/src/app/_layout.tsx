@@ -1,6 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { View } from "react-native";
-import { Stack } from "expo-router";
+import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useStore } from "zustand";
@@ -8,7 +8,7 @@ import { wireQueryClient } from "@/data/setup";
 import { APP_NAME, APP_TAGLINE } from "@/lib/config";
 import { RuntimeProvider, sharedRuntime } from "@/runtime";
 import * as SystemUI from "expo-system-ui";
-import { AppIcon, Background, ErrorState, Spinner, Text, ToastHost, useTheme } from "@/ui";
+import { AppIcon, Background, ErrorState, Spinner, Text, ToastHost, navigationTheme, useTheme } from "@/ui";
 
 const runtime = sharedRuntime();
 
@@ -37,6 +37,7 @@ function Splash() {
 export default function RootLayout() {
   const status = useStore(runtime.session, (s) => s.status);
   const { dark, c } = useTheme();
+  const navTheme = useMemo(() => navigationTheme(dark ? DarkTheme : DefaultTheme, c, dark), [dark, c]);
   // the very bottom layer of the app (what shows when iOS bounces past the end of a list, while Android resizes, behind the keyboard) takes the theme's colour,
   // instead of the white of the default light config
   useEffect(() => { SystemUI.setBackgroundColorAsync(c.bgBottom).catch(() => undefined); }, [c.bgBottom]);
@@ -52,11 +53,13 @@ export default function RootLayout() {
         <StatusBar style={dark ? "light" : "dark"} />
         <View style={{ flex: 1 }}>
           <Background />
-          <Stack screenOptions={{ headerShown: false, animation: "fade", contentStyle: { backgroundColor: "transparent" } }}>
-            {/* nothing past the sign-in is reachable until a team member has signed in */}
-            <Stack.Protected guard={status === "signed-in"}><Stack.Screen name="(app)" /></Stack.Protected>
-            <Stack.Protected guard={status !== "signed-in"}><Stack.Screen name="sign-in" /></Stack.Protected>
-          </Stack>
+          <ThemeProvider value={navTheme}>
+            <Stack screenOptions={{ headerShown: false, animation: "fade", contentStyle: { backgroundColor: "transparent" } }}>
+              {/* nothing past the sign-in is reachable until a team member has signed in */}
+              <Stack.Protected guard={status === "signed-in"}><Stack.Screen name="(app)" /></Stack.Protected>
+              <Stack.Protected guard={status !== "signed-in"}><Stack.Screen name="sign-in" /></Stack.Protected>
+            </Stack>
+          </ThemeProvider>
         </View>
         <ToastHost />
         {status === "starting" ? <Splash /> : null}

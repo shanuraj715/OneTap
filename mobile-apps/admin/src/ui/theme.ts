@@ -83,3 +83,14 @@ export function contrast(a: string, b: string): number {
   const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x);
   return (hi! + 0.05) / (lo! + 0.05);
 }
+
+/**
+ * The theme the NAVIGATOR paints with. By default it paints rgb(242,242,242) behind every screen — on iOS that grey covers the app's own background
+ * (the gradient and blobs) in light AND dark, so dark's pale text lands on light grey and vanishes. Every colour that can fill the screen is fully
+ * transparent here, so what the person sees is the app's own Background; text and accent follow the app's theme. `base` is React Navigation's
+ * DefaultTheme or DarkTheme (passed in so this stays plain and testable).
+ */
+export const CLEAR = "rgba(0,0,0,0)";
+export function navigationTheme<T extends { dark: boolean; colors: object }>(base: T, c: Colors, dark: boolean): T {
+  return { ...base, dark, colors: { ...base.colors, background: CLEAR, card: CLEAR, border: CLEAR, text: c.text, primary: c.primary, notification: c.primary } } as T;
+}
