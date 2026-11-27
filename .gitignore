@@ -32,3 +32,7 @@ coverage/
 .onetap-preview-*.png
 .rasoipulse-preview-*.png
 tests/e2e/audit/db-calls.json
+
+# Firebase / Google service-account keys - secrets, never commit (the server copy lives in /etc/rasoi-pulse/)
+*-firebase-adminsdk-*.json
+firebase-service-account*.json
