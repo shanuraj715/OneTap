@@ -334,7 +334,7 @@ book a table, rate an order and order it again from their Account page. Each ord
 
 ### Platform console (apps/admin: the super admin, and team members by role)
 
-Stores (plan, limits, features, owners, people, outlets, domains and Rasoi Pulse address, store name, disable or delete) ·
+Stores (plan, limits, features, owners, people, outlets, domains and Rasoi Pulse address, store name, **subscription payments**, disable or delete) ·
 Plans and the price list · Client **onboarding form** (record a client's requirements, export to PDF, publish as a
 store) · Marketing website pages and settings · Leads · Cache (lifetimes, expire, viewer) · Server monitor ·
 Security (sign-in blocks) · Storage (where pictures live — try any storage without switching it on, see what is stored per store and outlet, and move the files between this server's disk and Cloudflare R2 / S3 with the stored picture addresses following) · AI pictures (Gemini keys) · Settings (grace period…) ·
@@ -363,6 +363,18 @@ roles and people: **Console → Team & roles** (People · Roles · Activity).
   so it has no page on the website.
 - **Tests:** t121 (API: roles, people, 33+ denied requests, role changes at once, the app's token, the log, every route decided) and t122 (the console: make a role and a person, what Sam sees, view-only Sue).
 
+### Rasoi Pulse's own sales: what the shops pay for the product
+
+The top of the dashboard — **"Rasoi Pulse business"**, in the web console and the Admin app — shows what the **shops pay Rasoi Pulse**, not what the shops sell to their own customers (that stays further down, under **"Across every store"**):
+**Total sales** of the product, **New sales** (shops that bought for the first time), **Re-subscribed** (a shop paying again), **Paid up now**, **Ran out (not renewed)**, shops that run out within 14 days, **one chart** that switches between
+**Day** (last 30 days), **Week** (last 12 weeks) and **Month** (last 12 months) — each against the period before it, with the new / re-subscribed split — the latest payments, **who to follow up** (ran out, or no payment written down yet) and the money by plan.
+
+- **There is no billing in the app** — a shop pays outside it (bank, UPI, cash) — so the team **writes each payment down**: console → Stores → a store → **Payments**, or the Admin app → a store → **Subscription payments**. A payment is the day the money arrived (today or earlier), the plan, how many **months** it covers (a yearly payment is 12), the amount in rupees and an optional note. The amount **starts from the plan's price** (months × the monthly price; 12 months = the yearly price with the plan's discount) and a typed amount is never changed under the person (a button offers the plan's price again). Until the first payments are written, every number is 0; for shops that paid before, write the old payments with their real (past) day.
+- **New sale or re-subscription is worked out when it is read, not stored:** a shop's first payment (by the day it was paid) is the new sale, every later one a re-subscription — so a payment written late with an earlier date, or one deleted, puts the others right by itself. Each payment buys `months` and an **early renewal carries on from where the last one ends** (no days are lost), which gives "paid until", "ran out" and "runs out within 14 days". The same shop, day and amount twice is refused (a double click); a future date, a zero amount, 0 or more than 60 months are refused with a sentence. Money is kept in whole paise so sums never drift.
+- **A deleted store's payments stay in the sales history** (shown with the shop's name as it was, marked "deleted store"). That is why the model (`SubscriptionPaymentModel`, `packages/db/src/models/subscription.js`) names the shop `storeId`, **not `brandId`**: deleting a store wipes every collection whose `brandId` is required.
+- **API** (`apps/api/src/modules/platform/subscriptions.service.js`): `GET /api/platform/business` (needs `dashboard:read`), `GET /api/platform/stores/:id/payments` (`stores:read`), `POST …/payments` and `DELETE …/payments/:paymentId` (`stores:manage`; writing a payment uses the normal team-write limit so a history can be typed in, deleting one the strict `destructive` limit). The numbers hold nothing about any store's orders.
+- **Tests:** t129 (API: the form's rules, new vs re-subscription, the days a payment covers, every total and chart worked out independently, who may read and write, a deleted store keeps its payments; mutation-checked), t130 (console in Chrome: write, delete, the dashboard numbers, the Day / Week / Month switch with different numbers per range, a read-only role), and the Admin app's jest tests (`business.test.tsx`, `store-payments.test.tsx`, `payments-lib.test.ts`).
+
 ### Admin app (Rasoi Pulse Admin)
 
 `mobile-apps/admin` — the platform console in a phone or tablet, for the owner and the team roles. Nothing in it is decided locally: every screen calls `/api/platform/*` and the API's access table
@@ -375,7 +387,7 @@ roles and people: **Console → Team & roles** (People · Roles · Activity).
 - **Reduced motion:** the drifting background, shimmer placeholders, row reveals, counting numbers and chart drawing all stop when the phone's "remove animations" is on (`useReducedMotion`).
 - **Interactive:** charts draw themselves and can be touched and dragged to read a day; the date picker and dropdowns are our own sheets (never the phone's native boxes); phones get a floating tab bar
   (3 areas + More), tablets (wider than 700) a side rail with every area.
-- **What it has:** Dashboard, Stores (+ a store's page), Onboarding (list + the requirement form: plan first, outlets with a map point, "allow anyway" beyond the plan, the server's ready-check, Publish as
+- **What it has:** Dashboard (**Rasoi Pulse business** first — total sales, new sales, re-subscribed, one Day / Week / Month chart; then the stores' own sales), Stores (+ a store's page with its **Subscription payments**), Onboarding (list + the requirement form: plan first, outlets with a map point, "allow anyway" beyond the plan, the server's ready-check, Publish as
   store with a made-for-you owner password shown once), Plans (read only), Leads, Server, Security, Cache, Settings, Team & roles. **Web console only:** the website editor, Storage, AI keys, the plan editor, App Management,
   the form's PDF / print and its look-and-feel (kept untouched when the app saves).
 - **Sign-in:** `x-app-id: admin`; not in the apps catalog, so no update gate and no page on the website — install the APK yourself (the same company signing key as the other apps).
