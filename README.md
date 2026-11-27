@@ -251,6 +251,7 @@ node src/scripts/speed-test.js --url http://127.0.0.1:3092   # test the LIVE API
 - **Endpoints:** the public ones always; the dashboard/app ones (tables, orders, kitchen, dashboard stats …) when `SPEED_EMAIL` / `SPEED_PASSWORD` are set (a super admin works for any outlet; `--outlet <id>` picks one, the default is the outlet with the newest order). For each: the first request (cold), typical, slow 95%, worst, answer size.
 - **Safe on production:** every request is a GET, except one sign-in and sign-out; it creates no indexes or collections; the private copy has the rate limits switched off (only for itself). It needs about as much memory as one more API process. Load tests are small (at most 20 at a time, 60 s) — still, run them at a quiet hour.
 - **Tests:** t106.
+- **Why answers take 200 ms+ and what to do about it:** [`docs/api-optimization-report.md`](docs/api-optimization-report.md) — measured with `tests/e2e/audit/api-timing.mjs` (a private API with a pretend distance to the database: `--rtt 0|20|40`): the time is waiting for database trips, worst right after the remembered "who you are / which store / what plan" answers expire.
 
 
 ## How it fits together
@@ -295,6 +296,57 @@ Plans and the price list · Client **onboarding form** (record a client's requir
 store) · Marketing website pages and settings · Leads · Cache (lifetimes, expire, viewer) · Server monitor ·
 Security (sign-in blocks) · Storage (where pictures live — try any storage without switching it on, see what is stored per store and outlet, and move the files between this server's disk and Cloudflare R2 / S3 with the stored picture addresses following) · AI pictures (Gemini keys) · Settings (grace period…) ·
 Login activity.
+
+### Plans: features, the table limit, and the plan editor
+
+A plan is **limits** (people, outlets, **tables**) plus **features** (what the store can switch on), and a Custom plan has nothing of its own: each store's
+limits and features are set by hand on its page. The shared rules live in `packages/config-schema/src/plan.js` and `plan-presets.js`.
+
+- **Tables are sold in fives** — 5, 10, 15 … never 12 or 19 (`TABLE_STEP`; the schema refuses anything else, and the box rounds what is typed **up**: 12 → 15).
+  The limit counts the **whole store** (every outlet together; a table switched off still counts). It is enforced when a table is created
+  (`createTable`: 409 with `details.code: "table_limit"`, a **fresh** count, and a check after saving so tables added in the same instant can't slip past the
+  limit); the platform's own super admin may go past it. A store that already has **more** tables than its limit keeps all of them and just can't add more — it is
+  *not* put into the over-limit grace period (tables can't be "blocked" like outlets and people). **Plans and stores from before the limit have none (unlimited)**,
+  so nothing is cut off until someone sets it. A store put on a Custom plan gets a limit that holds its tables (rounded up to 5, at least 5).
+  Where it shows: plan editor (Limits row), a store's **Plan & limits** page (From plan / Custom number / Unlimited) and its header pill, the stores list, the
+  owner's **Tables** page ("5 of 5 tables used", a warning, Add table switched off), the website's plan cards and comparison table.
+- **Price:** the price list has *Every 5 extra tables (₹)* (starts at ₹100); the onboarding estimate charges whole blocks of 5 beyond the plan (12 tables = 15),
+  and "Do the prices add up?" counts tables too. The onboarding form has a **Tables** box (steps of 5) — more than the plan allows raises a plan-fit issue with
+  "add for this client", which publishes the store with the bigger limit.
+- **Presets:** Starter = 1 outlet, 5 people, **5 tables**, six features; Business = every feature (`allFeatures`, so features added later reach it), 3 outlets,
+  20 people, **20 tables**. `node src/scripts/update-plans.js` (dry run) / `--apply` (in `apps/api`) brings **existing** plans up to date — features and the
+  table limit — and never changes a table limit someone already set. *Run the dry run on the real database first; nothing is applied automatically.*
+- **Feature dependencies** (`FEATURE_REQUIRES`): Delivery needs Online payments, Pre-orders need Takeaway, Cart reminders and Marketing need WhatsApp & SMS
+  alerts — the plan editor warns, it doesn't forbid.
+- **The plan editor** is a wide pop-up (1,360 px) with the limits on one row and Features / Looks / On the website in three columns, so a normal screen shows the
+  whole plan without scrolling (a short screen still scrolls). Tests: t108 (features, presets, scripts), t109 (tables, API), t110 (plan editor and table limit UI).
+
+### Dashboard: who sees what
+
+Every widget in `DASHBOARD_WIDGET_CATALOG` (packages/config-schema/src/dashboard.js) says what it **needs**: a permission (revenue needs Reports =
+`analytics:read`, coupons `coupon:read`, bookings `reservation:read` …) and sometimes a plan feature (deliveries need Delivery, bookings need Table reservations,
+the rating card needs Ratings). `visibleWidgetsFor(settings, role, features)` is the one rule for what a person sees: the widget is **on**, their role is
+**ticked**, the role **may read** its numbers, and the **plan** includes it (the platform's super admin sees every widget that is on). A stale tick on a role that may
+not read the numbers shows nothing. The API enforces the same rule: `GET /api/dashboard/stats` works out the visible widgets for the caller and **computes and sends
+only those** (a cook calling it directly gets no revenue, and the database isn't asked for what nobody will see).
+
+- **"Today" is the Indian day** (IST, midnight to midnight) wherever the server clock is set; the trend chart, the hour chart and "yesterday" use the same day.
+- **New widgets:** *Out for delivery* (on the way now, ready and waiting for a rider), *Table bookings today* (still to come, waiting for a yes), *Customer rating*
+  (average of the last 30 days).
+- **Look:** a greeting and "Updated hh:mm" with Refresh; a *needs attention* strip (orders past their time limit, unpaid online orders, deliveries waiting for a
+  rider, bookings waiting for a yes, messages that failed) whose chips go to the page that fixes them, or one calm "all clear" line; cards with a coloured icon
+  chip, revenue shown against yesterday with a small trend line, charts drawn at their real width (grid, marked last point, read-out on hover).
+- **Settings → Configure dashboard** is one grid: a row per widget, a column per role, an On switch, arrows to reorder, a padlock (with the reason in its tooltip)
+  where a role can't be given a widget or the plan lacks it, all / none per column, and **Recommended** to start over (nothing is saved until Save). On a phone the rows
+  are stacked. Tests: t111 (rules + what each role is sent, API), t112 (screens), t66 (phone layout).
+
+### Delivery riders: the ⋮ menu and "Show PIN"; the outlet picker
+
+A rider's actions are one **⋮ menu**. A manager can **Show PIN**: the PIN is stored hashed (as before) *and* as an AES-256-GCM copy (`Rider.pinEnc`, key derived from
+`ENCRYPTION_KEY` with the fixed salt in `lib/crypto.js` — **never change that salt**); `GET /api/riders/:id/pin` is manager-only, `no-store`, rate-limited
+(`rider-pin-view`, 30 per 10 minutes) and logged; riders whose PIN was set before this have no copy ("Set a new PIN"). Tests: t98 (API), t100 (UI).
+Choosing a team member's outlets uses `MultiSelect` (packages: `apps/admin/src/ui.jsx`) — a dropdown with search, an *All outlets* row, Select all / Clear / Done,
+the same height as the other fields. Test: t92.
 
 ## Configuration
 
@@ -370,6 +422,7 @@ front of a process manager such as pm2. Things to get right:
 
 - [`deploy/wildcard-subdomains.md`](deploy/wildcard-subdomains.md) — store addresses on a subdomain: local use and the three one-time production steps
 - [`deploy/login-protection.md`](deploy/login-protection.md) — sign-in brute-force protection and how to tune it
+- [`docs/api-optimization-report.md`](docs/api-optimization-report.md) — why some answers take 200 ms or more, the measurements, and the order to fix them in
 - [`docs/api-rate-limiting.md`](docs/api-rate-limiting.md) — which API requests are limited, how hard, and why
 - [`docs/free-maps.md`](docs/free-maps.md) — the free map (Leaflet + OpenStreetMap), what it costs, and how to serve your own tiles; [`mobile-apps/README.md`](mobile-apps/README.md) — how the mobile apps are organised; [`mobile-apps/oma/README.md`](mobile-apps/oma/README.md) — run, build, version and test the staff order app; [`mobile-apps/kda/README.md`](mobile-apps/kda/README.md) — the same for the kitchen display app; [`mobile-apps/rda/README.md`](mobile-apps/rda/README.md) — the rider delivery app
 - [`tests/e2e/README.md`](tests/e2e/README.md) — the test library and how to add a test
