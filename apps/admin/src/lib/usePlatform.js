@@ -12,6 +12,11 @@ export const useStores = () => useQuery({ queryKey: ["platform", "stores"], quer
 export const useStore = (id) => useQuery({ queryKey: ["platform", "store", id], queryFn: () => api.getStore(id), enabled: Boolean(id) });
 export const usePlatformSettings = (enabled = true) => useQuery({ queryKey: ["platform", "settings"], queryFn: api.getPlatformSettings, enabled });
 
+/** Rasoi Pulse's own business numbers (what stores pay for their subscription). Any platform write refreshes them (the "platform" key). */
+export const useBusiness = () => useQuery({ queryKey: ["platform", "business"], queryFn: api.getBusiness, staleTime: 30_000, placeholderData: keepPreviousData });
+/** One store's subscription payments. */
+export const useStorePayments = (id) => useQuery({ queryKey: ["platform", "store-payments", id], queryFn: () => api.getStorePayments(id), enabled: Boolean(id) });
+
 /** The dashboard. While it reloads the previous numbers stay on screen (dimmed), so the page never jumps. */
 export const useDashboard = () =>
   useQuery({ queryKey: ["platform", "dashboard"], queryFn: () => api.getDashboard(false), staleTime: 60_000, placeholderData: keepPreviousData });

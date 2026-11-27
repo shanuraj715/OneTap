@@ -798,6 +798,13 @@ export const addStoreOwner = (id, body) => req(`/api/platform/stores/${id}/owner
 export const updateStoreOwner = (id, userId, body) => req(`/api/platform/stores/${id}/owners/${userId}`, json("PATCH", body));
 export const removeStoreOwner = (id, userId) => req(`/api/platform/stores/${id}/owners/${userId}`, json("DELETE"));
 
+/** Rasoi Pulse's own business: what the stores pay for their subscription (total, new sales, re-subscribed, charts). */
+export const getBusiness = () => req("/api/platform/business");
+/** A store's subscription payments, where it stands, and the plan's price to start the form from. */
+export const getStorePayments = (id) => req(`/api/platform/stores/${id}/payments`);
+export const recordStorePayment = (id, body) => req(`/api/platform/stores/${id}/payments`, json("POST", body));
+export const deleteStorePayment = (id, paymentId) => req(`/api/platform/stores/${id}/payments/${paymentId}`, json("DELETE"));
+
 /* ---------------------------------------------------- Rasoi Pulse website (platform) */
 
 export const getSiteSettings = () => req("/api/platform/site/settings");

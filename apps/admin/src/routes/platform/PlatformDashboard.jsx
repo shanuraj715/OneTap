@@ -7,6 +7,7 @@ import { useAuth } from "../../lib/useAuth";
 import { useDashboard } from "../../lib/usePlatform";
 import { Button, Card, Empty, PageHeader } from "../../ui";
 import { LoginActivity } from "./LoginActivity";
+import { BusinessSection } from "./PlatformBusiness";
 import { CacheStrip } from "./CachePanels";
 import { ServerStrip } from "./ServerParts";
 import { ChangeBars, ColumnChart, Figure, Hero, LineChart, Legend, Meter, RankedBars, SegmentedBar, StatTile } from "./viz/charts";
@@ -41,7 +42,10 @@ export function PlatformDashboard() {
   const qc = useQueryClient();
   const refresh = useMutation({
     mutationFn: () => api.getDashboard(true),
-    onSuccess: (fresh) => qc.setQueryData(["platform", "dashboard"], fresh),
+    onSuccess: (fresh) => {
+      qc.setQueryData(["platform", "dashboard"], fresh);
+      void qc.invalidateQueries({ queryKey: ["platform", "business"] });
+    },
   });
   const d = q.data;
   const busy = (q.isFetching && Boolean(d)) || refresh.isPending;
@@ -82,7 +86,14 @@ export function PlatformDashboard() {
     <>
       {header}
       <div className="dash viz">
-        {/* ----------------------------------------------------------- headline numbers */}
+        {/* ------------------------------------------ Rasoi Pulse's own business: what the shops pay for the product */}
+        <BusinessSection />
+
+        {/* ----------------------------------------------------------- headline numbers: what the shops sell */}
+        <div style={{ marginTop: 10 }}>
+          <h2 style={{ margin: 0, fontSize: 17 }}>Across every store</h2>
+          <p style={{ ...muted, margin: "2px 0 0" }}>What the shops sell to their own customers, through Rasoi Pulse.</p>
+        </div>
         <div className="dash-top">
           <Hero
             label="Sales this month"

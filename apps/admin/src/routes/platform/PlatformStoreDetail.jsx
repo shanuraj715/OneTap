@@ -9,6 +9,7 @@ import { useMedia } from "../../lib/useMedia";
 import { usePlans, usePlatformMutation, useStore } from "../../lib/usePlatform";
 import { Button, Card, Field, Note, PageHeader, Pill, Select, Tabs, TextInput, Toast } from "../../ui";
 import { StoreCacheCard } from "./CachePanels";
+import { PaymentsTab } from "./StorePayments";
 import { StoreActionsMenu, StoreDialogs } from "./StoreActions";
 import { browserCanOpen, describeHttpError, DisabledPill, fmtDate, muted, planLabel, row, SERVER_CHECK_FAILED, StatusPill, usageText } from "./shared";
 
@@ -17,6 +18,7 @@ const TABS = [
   { id: "features", label: "Features" },
   { id: "owners", label: "Owners" },
   { id: "outlets", label: "Outlets" },
+  { id: "payments", label: "Payments" },
   { id: "domains", label: "Domains" },
   { id: "people", label: "People" },
   { id: "appearance", label: "Appearance" },
@@ -172,6 +174,7 @@ export function PlatformStoreDetail() {
       {tab === "features" ? <FeaturesTab draft={draft} setDraft={setDraft} selectedPlan={selectedPlan} /> : null}
       {tab === "owners" ? <OwnersTab store={store} /> : null}
       {tab === "outlets" ? <OutletsTab store={store} /> : null}
+      {tab === "payments" ? <PaymentsTab store={store} /> : null}
       {tab === "domains" ? <DomainsTab key={JSON.stringify(store.domains) + store.canUseOwnDomain} store={store} /> : null}
       {tab === "people" ? <PeopleTab store={store} /> : null}
       {tab === "appearance" ? <AppearanceTab open={open} /> : null}
