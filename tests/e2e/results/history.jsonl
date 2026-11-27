@@ -1393,3 +1393,4 @@
 {"id":"t69-cache-audit-api","status":"pass","pass":55,"fail":0,"mode":"headless","at":"2026-11-27T06:38:29.674Z","durationMs":6395}
 {"id":"t114-booking-form-ui","status":"pass","pass":65,"fail":0,"mode":"headless","at":"2026-11-27T06:38:52.171Z","durationMs":17377}
 {"id":"t114-booking-form-ui","status":"pass","pass":65,"fail":0,"mode":"headless","at":"2026-11-27T06:39:10.379Z","durationMs":17356}
+{"id":"t119-log-redaction-api","status":"pass","pass":17,"fail":0,"mode":"headless","at":"2026-11-27T10:33:35.379Z","durationMs":5104}

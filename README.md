@@ -442,6 +442,11 @@ never live in code or env files in production.
 
 `tests/e2e` is a saved, repeatable test library that drives Chrome through the real screens. It runs against a
 **throwaway bench** — its own in-memory database, two fake stores and its own builds on ports 3097 / 3171 / 3170 — so
+**Logs never hold a secret.** The API's request log (`apps/api/src/logger.js`) replaces the session cookie, an app's `Authorization`
+Bearer token, the website/print-agent/site secret headers, a sign-in's `Set-Cookie` and any `password` / `token` field with `[hidden]`
+before a line is written (`HIDDEN_IN_LOGS` is the list — add a header there when a new secret header is introduced). Test: t119.
+Logs written before 2026-11-27 contain the visitors' session cookies — treat them as exposed (delete them; sessions expire by themselves).
+
 it never touches real data or your dev servers.
 
 ```bash

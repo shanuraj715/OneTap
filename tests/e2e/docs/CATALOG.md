@@ -1,6 +1,6 @@
 # Rasoi Pulse end-to-end tests — catalog
 
-**119 tests** · 111 passing · 2 failing/error · 6 not run yet
+**120 tests** · 112 passing · 2 failing/error · 6 not run yet
 
 | Test | Area | Result | Checks | Last run |
 |---|---|---|---|---|
@@ -35,6 +35,7 @@
 | [t116-account-pagination-ui](t116-account-pagination-ui.md) — Order history: five orders a page with the joined pagination (PAG03), numbered pages, newest first, '…' for many pages, removing orders on the last page | orders | ✅ PASSED | 32/32 | 2026-11-27 12:08 |
 | [t117-website-menu-ui](t117-website-menu-ui.md) — Rasoi Pulse website: About Us / Contact Us live in the footer, not the header menu; the phone menu closes after a link is pressed | website | ✅ PASSED | 36/36 | 2026-11-27 12:08 |
 | [t118-booking-manage-api](t118-booking-manage-api.md) — Table bookings (the team's side): every upcoming booking in one list, a status changed by hand, an approve/decline/cancel message sent automatically, and coupons for bookings — the API | bookings | ✅ PASSED | 80/80 | 2026-11-27 12:06 |
+| [t119-log-redaction-api](t119-log-redaction-api.md) — The API's request log never contains a secret (session cookie, Bearer token, secret headers, Set-Cookie) | security | ✅ PASSED | 17/17 | 2026-11-27 16:03 |
 | [t12-store-delete](t12-store-delete.md) — Delete the store — typed-name confirmation, then the subdomain, the owner and the other stores | domains | ✅ PASSED | 19/19 | 2026-11-21 13:19 |
 | [t13-marketing](t13-marketing.md) — Marketing — channels, audience filters (last visit, items, age, gender, order type, area), imports, lists, sending and the sidebar | marketing | ✅ PASSED | 70/70 | 2026-11-21 13:07 |
 | [t14-marketing-plan](t14-marketing-plan.md) — Marketing is a plan feature — Basic doesn't have it, Pro does, and it can be unlocked or locked for one store | plans | ✅ PASSED | 16/16 | 2026-11-27 10:11 |

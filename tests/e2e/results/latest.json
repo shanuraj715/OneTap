@@ -39479,5 +39479,146 @@
     ],
     "findings": [],
     "problems": []
+  },
+  "t119-log-redaction-api": {
+    "id": "t119-log-redaction-api",
+    "title": "The API's request log never contains a secret (session cookie, Bearer token, secret headers, Set-Cookie)",
+    "status": "pass",
+    "pass": 17,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-27T10:33:35.379Z",
+    "durationMs": 5104,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The real API, in production mode",
+        "checks": [
+          {
+            "label": "the API started in production mode (plain JSON log lines)",
+            "ok": true,
+            "detail": "READY",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Requests that carry secrets",
+        "checks": [
+          {
+            "label": "the four requests were answered by the API",
+            "ok": true,
+            "detail": "200 200 200 200",
+            "kind": "expect"
+          },
+          {
+            "label": "a sign-in with a wrong password is refused (401) and logged like any request",
+            "ok": true,
+            "detail": "401",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "What the log says",
+        "checks": [
+          {
+            "label": "the API wrote its request lines",
+            "ok": true,
+            "detail": "5 JSON lines",
+            "kind": "expect"
+          },
+          {
+            "label": "the cookie value is nowhere in the log",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the bearer value is nowhere in the log",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the revalidate value is nowhere in the log",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the agent value is nowhere in the log",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the site value is nowhere in the log",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the password value is nowhere in the log",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the places where a secret was are marked '[hidden]'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the harmless parts are still logged (method, address, the browser name, the answer's status)",
+            "ok": true,
+            "detail": "{\"id\":1,\"method\":\"GET\",\"url\":\"/health\",\"query\":{},\"params\":{},\"headers\":{\"host\":\"127.0.0.1:3129\",\"connection\":\"keep-alive\",\"cookie\":\"[hidden]\",\"user-agent\":\"Log",
+            "kind": "expect"
+          },
+          {
+            "label": "the cookie header is exactly '[hidden]'",
+            "ok": true,
+            "detail": "[hidden]",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "The sign-in's Set-Cookie answer (the same logger set-up, written to a stream we can read)",
+        "checks": [
+          {
+            "label": "the answer to a sign-in is logged",
+            "ok": true,
+            "detail": "{\"level\":30,\"time\":1795775614835,\"pid\":13619,\"hostname\":\"Shanus-MacBook-Pro-2.local\",\"req\":{\"id\":1,\"method\":\"POST\",\"url\"",
+            "kind": "expect"
+          },
+          {
+            "label": "neither the cookie sent nor the cookie set by the answer is in the line",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "both show '[hidden]'",
+            "ok": true,
+            "detail": "{\"set\":\"[hidden]\",\"cookie\":\"[hidden]\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "the password typed is not in the line (bodies are never logged)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
   }
 }
