@@ -10,3 +10,4 @@ export * from "./AppIcon";
 export { initials as initialsOf } from "../lib/format";
 export * from "./Nav";
 export * from "./Refresh";
+export * from "./LockScreen";

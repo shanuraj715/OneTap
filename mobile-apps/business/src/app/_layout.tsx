@@ -1,14 +1,15 @@
 import { useEffect, useMemo } from "react";
-import { View } from "react-native";
+import { AppState, View } from "react-native";
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useStore } from "zustand";
+import { createAwayTracker, useAppLock } from "@/data/appLock";
 import { wireQueryClient } from "@/data/setup";
 import { APP_NAME, APP_TAGLINE } from "@/lib/config";
 import { RuntimeProvider, sharedRuntime } from "@/runtime";
 import * as SystemUI from "expo-system-ui";
-import { AppIcon, Background, ErrorState, Spinner, Text, ToastHost, navigationTheme, useTheme } from "@/ui";
+import { AppIcon, Background, ErrorState, LockScreen, Spinner, Text, ToastHost, navigationTheme, useTheme } from "@/ui";
 
 const runtime = sharedRuntime();
 
@@ -36,6 +37,7 @@ function Splash() {
 
 export default function RootLayout() {
   const status = useStore(runtime.session, (s) => s.status);
+  const lockOn = useAppLock((s) => s.enabled && s.locked);
   const { dark, c } = useTheme();
   const navTheme = useMemo(() => navigationTheme(dark ? DarkTheme : DefaultTheme, c, dark), [dark, c]);
   // the very bottom layer of the app (what shows when iOS bounces past the end of a list, while Android resizes, behind the keyboard) takes the theme's colour,
@@ -46,6 +48,13 @@ export default function RootLayout() {
     const unwire = wireQueryClient();
     void runtime.session.getState().start();
     return unwire;
+  }, []);
+  // the app lock: read the switch from the phone, and ask again when the app comes back after being away for a while
+  useEffect(() => {
+    void useAppLock.getState().hydrate();
+    const away = createAwayTracker();
+    const sub = AppState.addEventListener("change", (next) => { if (away(next)) useAppLock.getState().lock(); });
+    return () => sub.remove();
   }, []);
   return (
     <SafeAreaProvider>
@@ -62,6 +71,7 @@ export default function RootLayout() {
           </ThemeProvider>
         </View>
         <ToastHost />
+        {status === "signed-in" && lockOn ? <LockScreen /> : null}
         {status === "starting" ? <Splash /> : null}
       </RuntimeProvider>
     </SafeAreaProvider>
