@@ -1,0 +1,3 @@
+# screenshot builds (debug-signed, point at the throwaway server) and raw captures: never committed
+.build/
+raw/

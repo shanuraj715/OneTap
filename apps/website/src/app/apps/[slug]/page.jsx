@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { APP_CATALOG, APP_IDS, formatBytes } from "@rasoipulse/config-schema";
 import { Download, ShieldCheck, Smartphone } from "lucide-react";
+import { AppScreens } from "@/components/AppScreens";
 import { AppsBackdrop } from "@/components/AppsBackdrop";
 import { appArt } from "@/lib/app-art";
 import { getAppReleases, getSettings, siteUrl } from "@/lib/site";
@@ -132,6 +133,8 @@ export default async function AppPage({ params }) {
           ) : null}
         </div>
       </section>
+
+      <AppScreens app={app} />
 
       <section className="section band" id="install">
         <div className="wrap">

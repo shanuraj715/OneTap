@@ -913,3 +913,65 @@ p { margin: 0; text-wrap: pretty; }
   @keyframes rp-ride { 0% { translate: -6px 0; opacity: 0.2; } 60% { translate: 3px 0; opacity: 1; } 100% { translate: 0 0; } }
   .feature:hover .feature-icon .lucide-ticket-percent { animation: rp-wiggle 0.7s ease-in-out; }
 }
+
+
+/* ----------------------------------------------------------------- app pages: "See it" (tablet screenshots)
+ * One big picture in a tablet frame, a row of tabs under the heading. The tabs are radio buttons and labels, switched by CSS only, so it
+ * works without script and with the keyboard (arrow keys move between tabs). The page wears the app's colour (--brand comes from --app). */
+.app-screens { position: relative; isolation: isolate; overflow-x: clip; }
+.app-screens::before { content: ""; position: absolute; z-index: -1; left: 50%; top: 38%; width: min(1100px, 130vw); aspect-ratio: 2; translate: -50% -10%; border-radius: 50%; background: radial-gradient(closest-side, color-mix(in srgb, var(--app, var(--brand)) 22%, transparent), transparent); filter: blur(30px); pointer-events: none; }
+.app-screens .section-head h2 em { font-style: normal; color: var(--brand); }
+.shots { position: relative; display: grid; justify-items: center; gap: 28px; }
+.shots-radio { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.shots-tabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.shots-tab { cursor: pointer; padding: 10px 18px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface); color: var(--ink-2); font-weight: 600; font-size: 15px; line-height: 1.2; transition: background-color 160ms, color 160ms, border-color 160ms, transform 160ms; }
+.shots-tab:hover { border-color: color-mix(in srgb, var(--brand) 50%, var(--line)); color: var(--ink); }
+.shots-stage { width: min(100%, 1060px); }
+.shots-panel { display: none; margin: 0; }
+/* the Android tablet: a metal rim, an even dark bezel, a front camera, the power and volume buttons on the top edge (it is held sideways), rounded
+ * glass with a soft reflection. Sizes follow --bezel, so the whole device scales with the page. The picture is the bare screen. */
+.tablet { --bezel: clamp(9px, 1.9vw, 22px); position: relative; padding: var(--bezel); border-radius: calc(var(--bezel) * 1.9); background: linear-gradient(158deg, #3b3c42 0%, #1a1b1e 34%, #0b0b0d 100%);
+  box-shadow: 0 0 0 1.5px #5b5c64, 0 0 0 calc(1.5px + 1.5px) #0a0a0c, 0 52px 90px -44px color-mix(in srgb, var(--app, var(--brand)) 85%, #000), 0 26px 44px -26px rgb(0 0 0 / 0.55), inset 0 0 0 1px rgb(255 255 255 / 0.09), inset 0 calc(var(--bezel) * 0.12) 0 rgb(255 255 255 / 0.05); }
+.tablet-screen { position: relative; overflow: hidden; border-radius: calc(var(--bezel) * 0.8); background: #000; box-shadow: 0 0 0 calc(var(--bezel) * 0.1) #020203; }
+.tablet-screen img { display: block; width: 100%; height: auto; }
+/* the glass: a faint diagonal sheen across the screen (it never takes a click) */
+.tablet-screen::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(116deg, rgb(255 255 255 / 0.13) 0%, rgb(255 255 255 / 0) 30%, rgb(255 255 255 / 0) 68%, rgb(255 255 255 / 0.05) 100%); }
+/* the front camera, in the middle of the top bezel, with a little sensor beside it */
+.tablet-cam { position: absolute; left: 50%; top: calc(var(--bezel) * 0.5); width: calc(var(--bezel) * 0.36); aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; background: radial-gradient(circle at 34% 32%, #4a5b86 0%, #12141c 46%, #050507 100%); box-shadow: 0 0 0 calc(var(--bezel) * 0.07) #1b1c21, 0 0 0 calc(var(--bezel) * 0.1) #08080a; }
+.tablet-cam::after { content: ""; position: absolute; left: calc(var(--bezel) * 0.78); top: 50%; width: calc(var(--bezel) * 0.14); aspect-ratio: 1; translate: 0 -50%; border-radius: 50%; background: #1d1e24; }
+/* power and volume keys stand a little proud of the top edge */
+.tablet-btn { position: absolute; top: -3px; height: 3px; border-radius: 2px 2px 0 0; background: linear-gradient(180deg, #6a6b73, #34353b); box-shadow: 0 -1px 0 rgb(255 255 255 / 0.08); }
+.tablet-btn-power { right: 14%; width: 5.5%; }
+.tablet-btn-vol { right: 23%; width: 9%; }
+.shots-panel figcaption { display: grid; gap: 4px; justify-items: center; text-align: center; max-width: 640px; margin: 22px auto 0; }
+.shots-panel figcaption b { font-family: var(--font-display), system-ui, sans-serif; font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
+.shots-panel figcaption span { color: var(--muted); font-size: 16px; }
+
+/* which tab is chosen: the Nth radio shows the Nth picture and lights the Nth tab (up to 6 pictures) */
+.shots-radio:nth-of-type(1):checked ~ .shots-stage .shots-panel:nth-child(1),
+.shots-radio:nth-of-type(2):checked ~ .shots-stage .shots-panel:nth-child(2),
+.shots-radio:nth-of-type(3):checked ~ .shots-stage .shots-panel:nth-child(3),
+.shots-radio:nth-of-type(4):checked ~ .shots-stage .shots-panel:nth-child(4),
+.shots-radio:nth-of-type(5):checked ~ .shots-stage .shots-panel:nth-child(5),
+.shots-radio:nth-of-type(6):checked ~ .shots-stage .shots-panel:nth-child(6) { display: block; }
+.shots-radio:nth-of-type(1):checked ~ .shots-tabs .shots-tab:nth-child(1),
+.shots-radio:nth-of-type(2):checked ~ .shots-tabs .shots-tab:nth-child(2),
+.shots-radio:nth-of-type(3):checked ~ .shots-tabs .shots-tab:nth-child(3),
+.shots-radio:nth-of-type(4):checked ~ .shots-tabs .shots-tab:nth-child(4),
+.shots-radio:nth-of-type(5):checked ~ .shots-tabs .shots-tab:nth-child(5),
+.shots-radio:nth-of-type(6):checked ~ .shots-tabs .shots-tab:nth-child(6) { background: var(--brand); border-color: var(--brand); color: var(--brand-ink); }
+.shots-radio:nth-of-type(1):focus-visible ~ .shots-tabs .shots-tab:nth-child(1),
+.shots-radio:nth-of-type(2):focus-visible ~ .shots-tabs .shots-tab:nth-child(2),
+.shots-radio:nth-of-type(3):focus-visible ~ .shots-tabs .shots-tab:nth-child(3),
+.shots-radio:nth-of-type(4):focus-visible ~ .shots-tabs .shots-tab:nth-child(4),
+.shots-radio:nth-of-type(5):focus-visible ~ .shots-tabs .shots-tab:nth-child(5),
+.shots-radio:nth-of-type(6):focus-visible ~ .shots-tabs .shots-tab:nth-child(6) { outline: 2px solid var(--brand); outline-offset: 3px; }
+@media (prefers-reduced-motion: no-preference) {
+  .shots-panel { animation: shots-in 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) backwards; }
+  @keyframes shots-in { from { opacity: 0; translate: 0 14px; scale: 0.985; } }
+  .shots-tab:active { transform: scale(0.96); }
+}
+@media (max-width: 560px) {
+  .shots-tabs { gap: 6px; }
+  .shots-tab { padding: 8px 14px; font-size: 14px; }
+}

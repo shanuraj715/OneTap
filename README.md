@@ -272,6 +272,10 @@ tries lock the order for the rider (a manager can still complete it from the das
 - **Text can't be selected and the pointer is never the text I-beam** (arrow over text, hand over links and buttons). Typing fields and an app's file checksum stay selectable on purpose.
 - **Tests:** t44 (header and Product dropdown), t95 (`/apps` pages), t103 (the above, including a pixel check that the hero colour has faded by its bottom edge, and reduce-motion).
 
+### App screenshots on the website
+
+The tablet screenshots on `/apps/oma`, `/apps/kda` and `/apps/rda` are taken **from the real apps** on an Android emulator by `mobile-apps/screenshots/capture.mjs`, against a throwaway copy of the API with a made-up restaurant (nothing real, no live server, no release key). Retake them after the apps' screens change: `node mobile-apps/screenshots/capture.mjs --build`, then commit `apps/website/public/app-screens/` and `apps/website/src/lib/app-shots.json`. How it works, how to change a screen or the data: `mobile-apps/screenshots/README.md`. The page shows them as a tabbed gallery in a tablet frame (`AppScreens.jsx`, CSS-only tabs, works without script). Test: t107.
+
 ### Measuring API speed (run it on the server)
 
 `apps/api/src/scripts/speed-test.js` (`npm run speed` in `apps/api`) measures how fast the API answers, where the time goes, and how fast the database is. Run it **on the server**, so the network between a phone and the server isn't part of the numbers:
