@@ -45,7 +45,10 @@ import { renderHtml, renderText,                                                
 
 /** The cloud API key never leaves the server. */
 export function shapePrinter(p            )                                                                    {
-  const { cloudApiKey, ...connection } = p.connection ?? ({}                            );
+  // `p` can be a Mongoose document: its `connection` is then a sub-document, and spreading one copies its internals (`$__parent`,
+  // `_doc` … — the whole printer, with the key as it is stored) into the answer. Work on a plain copy.
+  const plain = p.connection && typeof p.connection.toObject === "function" ? p.connection.toObject() : p.connection;
+  const { cloudApiKey, ...connection } = plain ?? ({}                            );
   return {
     id: String(p._id),
     name: p.name,
