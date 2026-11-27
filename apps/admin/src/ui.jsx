@@ -2,7 +2,7 @@ import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from
                                                                  
 import { createPortal } from "react-dom";
 import { Button as BaseButton,                  } from "@rasoipulse/ui";
-import { Check, ChevronDown, Info, X } from "lucide-react";
+import { Check, ChevronDown, Info, Search, X } from "lucide-react";
 
 /**
  * The admin panel's own `Button` — every screen here is a dense operator
@@ -268,6 +268,7 @@ export function Field({
   info,
   children,
   style,
+  as,
 }   
                 
                                      
@@ -277,15 +278,16 @@ export function Field({
                       
                         
  ) {
+  const Tag = as === "div" ? "div" : "label"; // a field that holds a popup or several buttons must not be a <label>: a click on its text would press the first control
   return (
-    <label style={{ ...field, ...style }}>
+    <Tag style={{ ...field, ...style }}>
       <span style={fieldLabel}>
         {label}
         {info ? <InfoHint text={info} title={label} /> : null}
       </span>
       {children}
       {hint ? <span style={fieldHint}>{hint}</span> : null}
-    </label>
+    </Tag>
   );
 }
 
@@ -715,6 +717,7 @@ export function Menu                  ({
             key={o.value}
             type="button"
             role="menuitem"
+            data-testid={o.testId}
             disabled={o.disabled}
             onClick={() => {
               onSelect(o.value);
@@ -827,6 +830,158 @@ export function MultiFilter                  ({
     </span>
   );
 }
+
+/**
+ * A dropdown to pick SEVERAL things from a list, with a search box — for lists that are too long (or too important) for a row of checkboxes:
+ * which outlets a person works in, which roles see a widget. The closed box says what is picked (chips, or "All outlets"); the open panel has
+ * the search, an optional "All …" row, one checkbox per option and a small footer (how many are picked, Select all / Clear, Done).
+ *
+ *   options   [{ value, label, hint? }]            value / onChange   the picked values
+ *   all / onAllChange / allLabel                   an optional "everything, including what is added later" switch (while it is on, the single options are shown ticked and locked)
+ *
+ * Keyboard: Escape closes; in the search box Enter toggles the first match and ArrowDown moves to the list; a closed box opens with Enter / Space / ArrowDown.
+ */
+export function MultiSelect({ options, value, onChange, all, onAllChange, allLabel = "All", placeholder = "Choose…", searchPlaceholder = "Search…", noun = "item", testId, ariaLabel, invalid = false, disabled = false, width = 320 }) {
+  const [open, setOpen] = useState(false);
+  const [q, setQ] = useState("");
+  const triggerRef = useRef(null);
+  const panelRef = useRef(null);
+  const searchRef = useRef(null);
+  const anchor = useAnchor(open, triggerRef, width, "left");
+  const hasAll = typeof onAllChange === "function";
+  const picked = options.filter((o) => value.includes(o.value));
+  const needle = q.trim().toLowerCase();
+  const shown = needle ? options.filter((o) => `${o.label} ${o.hint ?? ""}`.toLowerCase().includes(needle)) : options;
+  const summary = all ? allLabel : picked.length ? picked.map((o) => o.label).join(", ") : placeholder;
+
+  useEffect(() => {
+    if (!open) { setQ(""); return; }
+    const onDown = (e) => {
+      const t = e.target;
+      if (!triggerRef.current?.contains(t) && !panelRef.current?.contains(t)) setOpen(false);
+    };
+    const onKey = (e) => { if (e.key === "Escape") { setOpen(false); triggerRef.current?.querySelector("button")?.focus(); } };
+    document.addEventListener("pointerdown", onDown, true);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onDown, true);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+  // the search box takes the cursor as soon as the panel is on screen
+  useEffect(() => { if (open && anchor) searchRef.current?.focus(); }, [open, anchor === null]);
+
+  const toggle = (v) => onChange(value.includes(v) ? value.filter((x) => x !== v) : [...value, v]);
+  const allShownPicked = shown.length > 0 && shown.every((o) => value.includes(o.value));
+  const id = testId ? `${testId}` : undefined;
+
+  return (
+    <span ref={triggerRef} style={{ display: "block", width: "100%" }} data-testid={id}>
+      <button
+        type="button"
+        disabled={disabled}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-label={ariaLabel ? `${ariaLabel}: ${summary}` : undefined}
+        data-testid={id ? `${id}-trigger` : undefined}
+        onClick={() => setOpen((o) => !o)}
+        onKeyDown={(e) => { if (e.key === "ArrowDown" && !open) { e.preventDefault(); setOpen(true); } }}
+        className="ot-press"
+        style={{
+          // the same height as the select it sits beside in a form (32 px): a taller one looks like a different kind of control
+          font: "inherit", fontSize: 14, width: "100%", boxSizing: "border-box", minHeight: 32, display: "flex", alignItems: "center", gap: 8, textAlign: "left", cursor: disabled ? "not-allowed" : "pointer",
+          padding: "1px 10px", borderRadius: 8, background: "var(--color-bg)", color: "var(--color-text)", opacity: disabled ? 0.55 : 1,
+          border: `1px solid ${invalid ? "var(--tone-danger)" : open ? "var(--color-primary)" : "var(--color-border)"}`,
+        }}
+      >
+        <span style={{ flex: 1, minWidth: 0, display: "flex", flexWrap: "wrap", gap: 5 }}>
+          {all ? (
+            <span style={chip}>{allLabel}</span>
+          ) : picked.length ? (
+            <>
+              {picked.slice(0, 3).map((o) => <span key={o.value} style={chip}>{o.label}</span>)}
+              {picked.length > 3 ? <span style={{ ...chip, background: "transparent", border: "1px dashed var(--color-border)" }}>+{picked.length - 3} more</span> : null}
+            </>
+          ) : (
+            <span style={{ color: "var(--color-text-muted)" }}>{placeholder}</span>
+          )}
+        </span>
+        <ChevronDown size={15} style={{ opacity: 0.6, flexShrink: 0, transform: open ? "rotate(180deg)" : undefined, transition: "transform 120ms" }} />
+      </button>
+
+      {open && anchor
+        ? createPortal(
+            <div
+              ref={panelRef}
+              className="ot-anim-drop"
+              data-testid={id ? `${id}-panel` : undefined}
+              style={{ ...menuPanel, position: "fixed", top: anchor.placement === "below" ? anchor.top : undefined, bottom: anchor.placement === "above" ? window.innerHeight - anchor.top : undefined, left: anchor.left, width, maxHeight: Math.min(anchor.maxHeight, 420), padding: 0 }}
+            >
+              <div style={{ padding: 8, borderBottom: "1px solid var(--color-border)" }}>
+                <div style={{ position: "relative" }}>
+                  <Search size={14} aria-hidden="true" style={{ position: "absolute", left: 9, top: "50%", transform: "translateY(-50%)", opacity: 0.55, pointerEvents: "none" }} />
+                  <input
+                    ref={searchRef}
+                    type="search"
+                    value={q}
+                    onChange={(e) => setQ(e.target.value)}
+                    placeholder={searchPlaceholder}
+                    aria-label={searchPlaceholder}
+                    data-testid={id ? `${id}-search` : undefined}
+                    autoComplete="off"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") { e.preventDefault(); if (shown[0] && !all) toggle(shown[0].value); }
+                      if (e.key === "ArrowDown") { e.preventDefault(); panelRef.current?.querySelector('input[type="checkbox"]:not(:disabled)')?.focus(); }
+                    }}
+                    style={{ font: "inherit", fontSize: 13.5, width: "100%", padding: "7px 10px 7px 29px", borderRadius: 8, border: "1px solid var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)" }}
+                  />
+                </div>
+              </div>
+              <div role="group" aria-label={ariaLabel ?? "Options"} style={{ overflowY: "auto", padding: 5, flex: 1, minHeight: 0 }}>
+                {hasAll && !needle ? (
+                  <label style={{ ...menuItem, cursor: "pointer", alignItems: "center", fontWeight: 650, borderBottom: "1px solid var(--color-border)", borderRadius: 0, marginBottom: 4, paddingBottom: 10 }}>
+                    <input type="checkbox" checked={Boolean(all)} onChange={(e) => onAllChange(e.target.checked)} style={{ accentColor: "var(--color-primary)", width: 15, height: 15, flexShrink: 0 }} />
+                    <span style={{ fontSize: 13.5 }}>{allLabel}</span>
+                    <span style={{ fontSize: 11.5, color: "var(--color-text-muted)", fontWeight: 500, marginLeft: "auto" }}>and any added later</span>
+                  </label>
+                ) : null}
+                {shown.length === 0 ? (
+                  <div role="status" style={{ padding: "14px 10px", fontSize: 13, color: "var(--color-text-muted)" }}>No {noun} matches “{q.trim()}”.</div>
+                ) : (
+                  shown.map((o) => (
+                    <label key={o.value} style={{ ...menuItem, cursor: all ? "default" : "pointer", alignItems: "center", opacity: all ? 0.6 : 1 }}>
+                      <input
+                        type="checkbox"
+                        checked={all || value.includes(o.value)}
+                        disabled={Boolean(all)}
+                        onChange={() => toggle(o.value)}
+                        style={{ accentColor: "var(--color-primary)", width: 15, height: 15, flexShrink: 0 }}
+                      />
+                      <span style={{ fontSize: 13.5, fontWeight: 500, flex: 1, minWidth: 0 }}>{o.label}</span>
+                      {o.hint ? <span style={{ fontSize: 11.5, color: "var(--color-text-muted)" }}>{o.hint}</span> : null}
+                    </label>
+                  ))
+                )}
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "8px 10px", borderTop: "1px solid var(--color-border)", fontSize: 12, color: "var(--color-text-muted)" }}>
+                <span data-testid={id ? `${id}-count` : undefined} style={{ flex: 1 }}>{all ? allLabel : `${picked.length} of ${options.length} selected`}</span>
+                {!all && shown.length > 0 && !hasAll ? (
+                  <button type="button" onClick={() => onChange(allShownPicked ? value.filter((v) => !shown.some((o) => o.value === v)) : [...new Set([...value, ...shown.map((o) => o.value)])])} style={footLink}>
+                    {allShownPicked ? (needle ? "Unselect shown" : "Unselect all") : needle ? "Select shown" : "Select all"}
+                  </button>
+                ) : null}
+                {!all && value.length ? <button type="button" onClick={() => onChange([])} style={footLink}>Clear</button> : null}
+                <Button type="button" onClick={() => { setOpen(false); triggerRef.current?.querySelector("button")?.focus(); }} data-testid={id ? `${id}-done` : undefined}>Done</Button>
+              </div>
+            </div>,
+            document.body,
+          )
+        : null}
+    </span>
+  );
+}
+const chip = { fontSize: 12.5, fontWeight: 600, padding: "0 8px", borderRadius: 999, background: "color-mix(in srgb, var(--color-primary) 12%, var(--color-bg))", color: "var(--color-primary)", border: "1px solid color-mix(in srgb, var(--color-primary) 30%, transparent)", lineHeight: "20px" };
+const footLink = { font: "inherit", fontSize: 12.5, fontWeight: 600, background: "none", border: 0, padding: "4px 6px", color: "var(--color-primary)", cursor: "pointer" };
 
 /* ------------------------------------------------------------------- table */
 

@@ -21,6 +21,9 @@ export const useCreateRider = (o) => useOutletMutation(o, (out, body) => api.cre
 export const useUpdateRider = (o) => useOutletMutation(o, (out, a) => api.updateRider(out, a.id, a.body), ["riders"]);
 export const useDeleteRider = (o) => useOutletMutation(o, (out, id) => api.deleteRider(out, id), ["riders"]);
 export const useSetRiderPin = (o) => useOutletMutation(o, (out, a) => api.setRiderPin(out, a.id, a.pin), ["riders"]);
+/** The PIN is a secret: it is asked for when the dialog opens and forgotten the moment it closes (gcTime 0, no retries, never refetched in the background). */
+export const useRiderPin = (outlet, riderId, enabled = true) =>
+  useQuery({ queryKey: ["rider-pin", outlet?._id, riderId], queryFn: () => api.getRiderPin(outlet, riderId), enabled: Boolean(outlet && riderId) && enabled, gcTime: 0, staleTime: 0, retry: false, refetchOnWindowFocus: false });
 export const useClearRiderPin = (o) => useOutletMutation(o, (out, id) => api.clearRiderPin(out, id), ["riders"]);
 export const useAssignRider = (o) => useOutletMutation(o, (out, a) => api.assignRider(out, a.id, a.body), ["orders", "order-print-status"]);
 

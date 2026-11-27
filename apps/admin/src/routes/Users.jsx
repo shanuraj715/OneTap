@@ -4,7 +4,7 @@ import { ROLE_DESCRIPTIONS, ROLE_LABELS, ROLES,           } from "@rasoipulse/co
 import { useAuth, useCreateUser, useDeleteUser, useUpdateUser, useUsers } from "../lib/useAuth";
 import { useOutlet, useOutlets } from "../lib/useOutlet";
 import { useStorePlan } from "../lib/useStorePlan";
-import { Button, Card, Checkbox, Field, Modal, PageHeader, TextInput, Toast } from "../ui";
+import { Button, Card, Field, Modal, MultiSelect, PageHeader, TextInput, Toast } from "../ui";
 import { SettingsNav } from "../components/SubNav";
 
 const ALL_ASSIGNABLE = ROLES.filter((r) => r !== "super_admin");
@@ -189,20 +189,17 @@ export function Users() {
                 </select>
               </Field>
               {choosesOutlets ? (
-                <Field label="Outlets" hint="Where this person works" info="They see — and can use — only the outlets you tick: not their tables, orders or customers of any other outlet. Tick 'All outlets' for someone who works across the whole store (it includes outlets you add later).">
-                  <div style={{ display: "grid", gap: 6 }} role="group" aria-label="Outlets this person can work in" data-testid="new-user-outlets">
-                    <Checkbox label="All outlets" checked={form.allOutlets} onChange={(v) => setForm({ ...form, allOutlets: v })} />
-                    {storeOutlets.map((o) => (
-                      <Checkbox
-                        key={o._id}
-                        label={o.name}
-                        checked={form.allOutlets || form.outletIds.includes(o._id)}
-                        disabled={form.allOutlets}
-                        onChange={(v) => setForm({ ...form, outletIds: v ? [...form.outletIds, o._id] : form.outletIds.filter((x) => x !== o._id) })}
-                      />
-                    ))}
-                    {missingOutlets ? <span style={{ fontSize: 12, color: "var(--tone-danger)" }} role="alert">Pick at least one outlet, or tick All outlets.</span> : null}
-                  </div>
+                <Field as="div" label="Outlets" hint="Where this person works" info="They see — and can use — only the outlets you pick: not their tables, orders or customers of any other outlet. Pick 'All outlets' for someone who works across the whole store (it includes outlets you add later).">
+                  <OutletPicker
+                    testId="new-user-outlets"
+                    outlets={storeOutlets}
+                    all={form.allOutlets}
+                    ids={form.outletIds}
+                    onAll={(v) => setForm({ ...form, allOutlets: v })}
+                    onIds={(ids) => setForm({ ...form, outletIds: ids })}
+                    invalid={missingOutlets}
+                  />
+                  {missingOutlets ? <span style={{ fontSize: 12, color: "var(--tone-danger)" }} role="alert">Pick at least one outlet, or choose All outlets.</span> : null}
                 </Field>
               ) : null}
             </div>
@@ -235,6 +232,26 @@ export function Users() {
   );
 }
 
+/** The one outlet picker (adding a person, changing a person): a dropdown with search, and an "All outlets" row that also covers outlets added later. */
+function OutletPicker({ testId, outlets, all, ids, onAll, onIds, invalid }) {
+  return (
+    <MultiSelect
+      testId={testId}
+      ariaLabel="Outlets this person can work in"
+      options={outlets.map((o) => ({ value: o._id, label: o.name, hint: o.slug && o.slug !== o.name.toLowerCase() ? o.slug : undefined }))}
+      value={ids}
+      onChange={onIds}
+      all={all}
+      onAllChange={onAll}
+      allLabel="All outlets"
+      placeholder="Choose outlets"
+      searchPlaceholder="Search outlets"
+      noun="outlet"
+      invalid={invalid}
+    />
+  );
+}
+
 /** Change which outlets one person can work in. "All outlets" = no limit (and covers outlets added later). */
 function OutletsDialog({ person, outlets, busy, onSave, onCancel }) {
   const [all, setAll] = useState(!person.outletIds?.length);
@@ -247,13 +264,8 @@ function OutletsDialog({ person, outlets, busy, onSave, onCancel }) {
         <p style={{ margin: "0 0 12px", fontSize: 13, color: "var(--color-text-muted)", lineHeight: 1.5 }}>
           They see and can use only the outlets ticked here. A change takes effect straight away — they don&apos;t need to sign in again.
         </p>
-        <div style={{ display: "grid", gap: 8 }} role="group" aria-label="Outlets">
-          <Checkbox label="All outlets" checked={all} onChange={setAll} />
-          {outlets.map((o) => (
-            <Checkbox key={o._id} label={o.name} checked={all || ids.includes(o._id)} disabled={all} onChange={(v) => setIds(v ? [...ids, o._id] : ids.filter((x) => x !== o._id))} />
-          ))}
-        </div>
-        {none ? <p style={{ margin: "10px 0 0", fontSize: 12.5, color: "var(--tone-danger)" }} role="alert">Pick at least one outlet, or tick All outlets.</p> : null}
+        <OutletPicker testId="edit-user-outlets" outlets={outlets} all={all} ids={ids} onAll={setAll} onIds={setIds} invalid={none} />
+        {none ? <p style={{ margin: "10px 0 0", fontSize: 12.5, color: "var(--tone-danger)" }} role="alert">Pick at least one outlet, or choose All outlets.</p> : null}
       </div>
       <footer style={{ display: "flex", gap: 9, justifyContent: "flex-end", padding: "14px 20px" }}>
         <Button variant="outline" type="button" onClick={onCancel} disabled={busy}>Cancel</Button>

@@ -134,6 +134,13 @@ export const POLICIES = {
     why: "QR scans and table lookups are open to anyone with a link; this stops table ids or tokens being guessed at speed. A dining room's Wi-Fi scanning at once still fits.",
     message: "Too many requests. Please wait {wait} and try again.",
   },
+  "rider-pin-view": {
+    windowMs: 10 * MINUTE,
+    limit: 30,
+    key: "user",
+    why: "A manager looking up a rider's PIN to tell it to them again: a few a day. Each look reads a stored secret, so a high rate means a script or a stolen session.",
+    message: "You've looked at PINs a lot in a short while. Please wait {wait}.",
+  },
   "customer-account": {
     windowMs: 10 * MINUTE,
     limit: 30,

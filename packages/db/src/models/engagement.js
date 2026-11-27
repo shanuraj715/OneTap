@@ -16,6 +16,10 @@ const riderSchema = new Schema(
     // `loginPhone` = the last 10 digits of the phone, the name the rider signs in with (only set while the app login is on);
     // `pinVersion` goes up whenever the PIN is set again or the login is switched off, which ends every sign-in made before.
     pinHash: { type: String, default: "", select: false },
+    // The same PIN, locked with the server's key (AES-256-GCM, like the payment secrets), so the manager who set it can look it up again and
+    // tell it to the rider once more. It is the only way a PIN can be shown later; a PIN set before this field existed has none ("" = can't be
+    // shown: set a new PIN). Never returned by any list, only by the manager's own "Show PIN" call.
+    pinEnc: { type: String, default: "", select: false },
     loginPhone: { type: String, default: "", index: true },
     pinVersion: { type: Number, default: 0 },
     pinSetAt: { type: Date, default: null },

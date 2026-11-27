@@ -36,6 +36,34 @@ await t.run(async () => {
   const cookCookie = await t.cookieLogin("cook@acme.test", "Staff123!");
   ok(staffNoRight < 300 && (await call("PUT", `/api/riders/${ramesh.id}/pin`, { cookie: cookCookie, headers: HA, body: { pin: "1111" } })).status === 403, "a person without 'manage riders' can't set a PIN");
 
+  say("1b. Show PIN — the manager can look the PIN up again");
+  const sp = await own("GET", `/api/riders/${ramesh.id}/pin`);
+  ok(sp.status === 200 && sp.json.pin === "4821" && sp.json.appLogin === true && sp.json.reason === null, "the manager who set a PIN can look it up again", JSON.stringify(sp.json));
+  ok(sp.headers.get("cache-control") === "no-store", "the answer says 'no-store', so no browser or proxy keeps a copy");
+  const lockedRow = await raw("riders").findOne({ name: "Ramesh" });
+  ok(/^v1\.[\w-]+\.[\w-]+\.[\w-]+$/.test(lockedRow.pinEnc) && !lockedRow.pinEnc.includes("4821") && lockedRow.pinEnc !== (await raw("riders").findOne({ name: "Suresh" })).pinEnc, "it is stored locked with the server's key (an AES envelope), not as digits, and differently for each rider");
+  ok((await own("GET", "/api/riders")).json.riders.every((x) => !("pinEnc" in x) && !("pin" in x)), "the rider list never carries the PIN or its locked copy");
+  ok(!JSON.stringify((await login("9876543210", "4821")).json).includes("pinEnc") && !JSON.stringify(r.json).includes("pinEnc"), "neither does the rider's sign-in answer nor the answer to setting a PIN");
+  const noLoginPin = await own("GET", `/api/riders/${nophone.id}/pin`);
+  ok(noLoginPin.status === 200 && noLoginPin.json.pin === null && noLoginPin.json.reason === "no_login", "a rider with no app login has no PIN to show", JSON.stringify(noLoginPin.json));
+  ok((await call("GET", `/api/riders/${ramesh.id}/pin`, { headers: HA })).status === 401, "nobody signed in: refused (401)");
+  ok((await call("GET", `/api/riders/${ramesh.id}/pin`, { cookie: cookCookie, headers: HA })).status === 403, "a person without 'manage riders' (the kitchen) can't look a PIN up (403)");
+  const G = await t.makeStore({ slug: "gamma", ownerEmail: "o@gamma.test" }); // another store, WITH Delivery in its plan
+  const crossStore = await call("GET", `/api/riders/${ramesh.id}/pin`, { cookie: G.owner, headers: { "x-rasoipulse-outlet": G.outlet } });
+  ok(crossStore.status === 404, "another store's owner (whose plan has Delivery) can't read it: 404, as if the rider didn't exist", `${crossStore.status} ${JSON.stringify(crossStore.json).slice(0, 120)}`);
+  const noDelivery = await call("GET", `/api/riders/${ramesh.id}/pin`, { cookie: await t.cookieLogin("o@beta.test", "Owner123!"), headers: { "x-rasoipulse-outlet": B.outlet } });
+  ok(noDelivery.status === 403 && /Delivery/.test(noDelivery.json.error ?? ""), "a store whose plan has no Delivery is turned away (403)");
+  ok((await own("GET", `/api/riders/not-an-id/pin`)).status === 404, "an id that isn't an id is a 404");
+  // a PIN set before the locked copy existed
+  await raw("riders").updateOne({ name: "Suresh" }, { $unset: { pinEnc: "" } });
+  const before = await own("GET", `/api/riders/${suresh.id}/pin`);
+  ok(before.status === 200 && before.json.pin === null && before.json.reason === "set_before" && before.json.appLogin === true, "a PIN set before PINs could be shown says so, and shows nothing", JSON.stringify(before.json));
+  await own("PUT", `/api/riders/${suresh.id}/pin`, { pin: "9090" });
+  ok((await own("GET", `/api/riders/${suresh.id}/pin`)).json.pin === "9090", "…and setting it again makes it show from then on");
+  await raw("riders").updateOne({ name: "Suresh" }, { $set: { pinEnc: "v1.broken.broken.broken" } });
+  ok((await own("GET", `/api/riders/${suresh.id}/pin`)).json.reason === "unreadable", "a damaged stored copy is reported as unreadable, not as a crash or a wrong PIN");
+  await own("PUT", `/api/riders/${suresh.id}/pin`, { pin: "9090" });
+
   say("2. Signing in");
   let bad = await login("9876543210", "0000");
   ok(bad.status === 401 && /Incorrect phone number or PIN/.test(bad.json.error) && bad.json.details?.attemptsLeft >= 0, "a wrong PIN: 401, with how many tries are left", JSON.stringify(bad.json));
@@ -174,6 +202,7 @@ await t.run(async () => {
   ok((await rider("GET", "/me", wasToken)).status === 200, "(the rider is signed in)");
   r = await own("PUT", `/api/riders/${ramesh.id}/pin`, { pin: "7777" });
   ok(r.status === 200, "the manager sets a new PIN");
+  ok((await own("GET", `/api/riders/${ramesh.id}/pin`)).json.pin === "7777", "after a reset, Show PIN shows the NEW PIN");
   ok((await rider("GET", "/me", wasToken)).status === 401, "every earlier sign-in ends at once");
   ok((await login("9876543210", "4821")).status === 401 && (await login("9876543210", "7777")).status === 200, "the old PIN stops working, the new one works");
   const t2 = (await login("9876543210", "7777")).json.token;
@@ -185,6 +214,8 @@ await t.run(async () => {
   ok((await rider("GET", "/me", t2)).status === 200, "switched back on, the same sign-in works again");
   r = await own("DELETE", `/api/riders/${ramesh.id}/pin`);
   ok(r.status === 200 && r.json.rider.appLogin === false, "the manager switches the app login off");
+  const offPin = await own("GET", `/api/riders/${ramesh.id}/pin`);
+  ok(offPin.json.pin === null && offPin.json.reason === "no_login" && (await raw("riders").findOne({ name: "Ramesh" })).pinEnc === "", "switching the login off also deletes the locked copy: nothing is left to show", JSON.stringify(offPin.json));
   ok((await rider("GET", "/me", t2)).status === 401 && (await login("9876543210", "7777")).status === 401, "the rider is signed out everywhere and can't sign in");
   await own("PUT", `/api/riders/${ramesh.id}/pin`, { pin: "5555" });
   ok((await rider("GET", "/me", t2)).status === 401, "turning it on again does not revive an old sign-in");

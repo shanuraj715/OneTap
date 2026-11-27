@@ -50,6 +50,7 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | `public-compute` | visitor's address | 90 per min | Price quotes, delivery checks and capacity lookups are open to visitors and each runs several database reads — they must stay fast for real customers, not be a way to load the database. | `GET /api/customer/cart/:id`<br>`POST /api/delivery/check`<br>`POST /api/menu/suggestions`<br>`GET /api/orders/capacity`<br>`GET /api/orders/pickup-slots`<br>`POST /api/orders/quote`<br>`GET /api/reservations/availability` |
 | `coupon-guess` | visitor's address | 20 per 5 min | Coupon codes are short; without a limit a script can try thousands to find a valid one. | `POST /api/coupons/apply` |
 | `table-scan` | visitor's address | 60 per min | QR scans and table lookups are open to anyone with a link; this stops table ids or tokens being guessed at speed. A dining room's Wi-Fi scanning at once still fits. | `POST /api/tables/claim`<br>`GET /api/tables/public`<br>`GET /api/tables/scan/:tableId`<br>`POST /api/tables/scan/:tableId/session`<br>`GET /api/tables/sessions/:id/tab` |
+| `rider-pin-view` | signed-in user (else address) | 30 per 10 min | A manager looking up a rider's PIN to tell it to them again: a few a day. Each look reads a stored secret, so a high rate means a script or a stolen session. | `GET /api/riders/:id/pin` |
 | `customer-account` | user, else customer, else address | 30 per 10 min | A customer saving their profile or signing out: a few a day is normal, so a high rate means a script. | `DELETE /api/customer/address`<br>`PUT /api/customer/address`<br>`POST /api/customer/logout`<br>`DELETE /api/customer/orders/:id`<br>`PATCH /api/customer/profile`<br>`POST /api/reservations/:id/cancel` |
 | `order-tracking` | user, else customer, else address | 40 per min | The tracking page asks where one order is every few seconds while it is open. That is about ten asks a minute for one tab, so this leaves room for a few tabs and is still far too little for a script scraping orders. | `GET /api/customer/orders/:id` |
 | `customer-orders` | user, else customer, else address | 90 per 10 min | A customer's Account page (their order history). It refreshes every 20 seconds or so while an order is being prepared, which is far under this; a higher rate is a script copying history or loading the database. | `GET /api/customer/orders`<br>`POST /api/customer/orders/:id/reorder`<br>`GET /api/reservations/mine` |
@@ -374,6 +375,7 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | DELETE | `/api/riders/:id` | `api`, `team-write` |
 | PATCH | `/api/riders/:id` | `api`, `team-write` |
 | DELETE | `/api/riders/:id/pin` | `api`, `team-write` |
+| GET | `/api/riders/:id/pin` | `api`, `rider-pin-view` |
 | PUT | `/api/riders/:id/pin` | `api`, `team-write` |
 | GET | `/api/site/challenge` | `api`, `site-challenge` |
 | POST | `/api/site/leads` | `api`, `site-lead` |

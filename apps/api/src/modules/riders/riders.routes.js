@@ -1,7 +1,10 @@
 import { Router } from "express";
 import { z } from "zod";
 import { RiderModel, tenantFilter } from "@rasoipulse/db";
-import { requireOutletContext } from "../../middleware/auth.js";
+import { decryptSecret, encryptSecret } from "../../lib/crypto.js";
+import { logger } from "../../logger.js";
+import { limiter } from "../../middleware/rate-limit.js";
+import { requireOutletContext, requireUser } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import { requireFeature } from "../platform/plan.service.js";
 import { PIN_RE, hashPin, loginPhoneOf } from "./rider-auth.js";
@@ -73,7 +76,26 @@ async function assertLoginPhoneFree(loginPhone, exceptId) {
   if (clash) throw new HttpError(409, "That phone number is already used for another rider's app login. Use a different number.");
 }
 
-/** Turn the rider's app login on, or set a new PIN. The PIN is only ever shown to the manager as they type it; it is stored as a hash. */
+/**
+ * Look the rider's PIN up again (the manager's "Show PIN"). It is kept twice: as a hash, which is what signing in checks, and locked with the
+ * server's key, which is what lets this answer. A PIN set before the locked copy existed can't be shown: the answer says so and the manager sets a
+ * new one. Never cached; each look is logged and rate limited.
+ */
+ridersRouter.get("/:id/pin", limiter("rider-pin-view"), async (req, res) => {
+  const ctx = await context(req, "rider:manage");
+  if (!/^[a-f\d]{24}$/i.test(req.params.id)) throw new HttpError(404, "Rider not found");
+  const rider = await RiderModel.findOne(tenantFilter(ctx, { _id: req.params.id })).select("+pinEnc").lean();
+  if (!rider) throw new HttpError(404, "Rider not found");
+  res.set("Cache-Control", "no-store");
+  if (!rider.loginPhone) return res.json({ appLogin: false, pin: null, reason: "no_login" });
+  if (!rider.pinEnc) return res.json({ appLogin: true, pin: null, reason: "set_before" });
+  let pin = null;
+  try { pin = decryptSecret(rider.pinEnc); } catch { return res.json({ appLogin: true, pin: null, reason: "unreadable" }); }
+  logger.info({ riderId: String(rider._id), by: String(requireUser(req)._id) }, "rider PIN looked up");
+  res.json({ appLogin: true, pin, reason: null });
+});
+
+/** Turn the rider's app login on, or set a new PIN. The PIN is stored as a hash (what signing in checks) and locked with the server's key (so the manager can look it up again). */
 ridersRouter.put("/:id/pin", async (req, res) => {
   const ctx = await context(req, "rider:manage");
   const { pin } = z.object({ pin: z.string().regex(PIN_RE, "The PIN is 4 to 6 digits.") }).parse(req.body);
@@ -85,7 +107,7 @@ ridersRouter.put("/:id/pin", async (req, res) => {
   await assertLoginPhoneFree(login, req.params.id);
   const doc = await RiderModel.findOneAndUpdate(
     tenantFilter(ctx, { _id: req.params.id }),
-    { $set: { pinHash: await hashPin(pin), loginPhone: login, pinSetAt: new Date() }, $inc: { pinVersion: 1 } },
+    { $set: { pinHash: await hashPin(pin), pinEnc: encryptSecret(pin), loginPhone: login, pinSetAt: new Date() }, $inc: { pinVersion: 1 } },
     { new: true },
   ).lean();
   res.json({ rider: shape(doc) });
@@ -97,7 +119,7 @@ ridersRouter.delete("/:id/pin", async (req, res) => {
   if (!/^[a-f\d]{24}$/i.test(req.params.id)) throw new HttpError(404, "Rider not found");
   const doc = await RiderModel.findOneAndUpdate(
     tenantFilter(ctx, { _id: req.params.id }),
-    { $set: { pinHash: "", loginPhone: "", pinSetAt: null }, $inc: { pinVersion: 1 } },
+    { $set: { pinHash: "", pinEnc: "", loginPhone: "", pinSetAt: null }, $inc: { pinVersion: 1 } },
     { new: true },
   ).lean();
   if (!doc) throw new HttpError(404, "Rider not found");

@@ -920,6 +920,8 @@ export const updateRider = (o, id, body) => req(`/api/riders/${id}`, { method: "
 export const deleteRider = (o, id) => req(`/api/riders/${id}`, { method: "DELETE", outletId: o._id });
 /** The rider app login: set (or reset) the PIN, or switch the login off. */
 export const setRiderPin = (o, id, pin) => req(`/api/riders/${id}/pin`, { method: "PUT", body: JSON.stringify({ pin }), outletId: o._id });
+/** The rider's PIN, looked up again ({ pin, appLogin, reason }): only for a manager, never cached. */
+export const getRiderPin = (o, id) => req(`/api/riders/${id}/pin`, { outletId: o._id });
 export const clearRiderPin = (o, id) => req(`/api/riders/${id}/pin`, { method: "DELETE", outletId: o._id });
 
 export const listReservations = (o, day) => req(`/api/reservations?day=${encodeURIComponent(day ?? "")}`, { outletId: o._id });

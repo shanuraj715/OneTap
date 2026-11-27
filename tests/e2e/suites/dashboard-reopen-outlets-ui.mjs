@@ -117,6 +117,7 @@ try {
   await freeAll();
   ok(others.length >= 1, "the bench store has more than one outlet", outlets.map((o) => o.name).join(", "));
   const otherName = others[0].name;
+  const allNames = outlets.map((o) => o.name); // every outlet of this store: the picker lists them all
   await page.goto(AD + "/users", { waitUntil: "load" });
   const form = page.locator("form").filter({ hasText: "Add user" });
   await form.waitFor({ timeout: 15000 });
@@ -127,9 +128,69 @@ try {
   await form.locator("select").selectOption("staff");
   ok(await page.getByTestId("new-user-outlets").isVisible(), "the form asks which outlets (the store has several)");
   ok(await form.getByRole("button", { name: "Add user" }).isDisabled(), "Add user is off until an outlet is chosen");
-  ok(await page.getByText(/Pick at least one outlet, or tick All outlets/).first().isVisible(), "and says why");
-  await page.getByTestId("new-user-outlets").getByLabel(main.name, { exact: true }).check();
-  ok(await form.getByRole("button", { name: "Add user" }).isEnabled(), "choosing one outlet turns it on");
+  ok(await page.getByText(/Pick at least one outlet, or choose All outlets/).first().isVisible(), "and says why");
+
+  say("4b. The outlet picker: a dropdown with search");
+  const PK = "new-user-outlets";
+  const trig = page.getByTestId(`${PK}-trigger`), panel = page.getByTestId(`${PK}-panel`), search = page.getByTestId(`${PK}-search`);
+  const boxOf = (name) => panel.getByRole("checkbox", { name: new RegExp(`^${name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`) });
+  const hs = await page.evaluate(() => {
+    const h = (e) => Math.round(e.getBoundingClientRect().height * 10) / 10;
+    const f = [...document.querySelectorAll("form")].find((x) => /Add user/.test(x.innerText));
+    return { select: h(f.querySelector("select")), input: h(f.querySelector("input")), trigger: h(f.querySelector('[data-testid="new-user-outlets-trigger"]')) };
+  });
+  ok(Math.abs(hs.trigger - hs.select) <= 1.5 && hs.trigger <= hs.input, "the closed outlet box is the same height as the Role select beside it, and no taller than the text boxes", JSON.stringify(hs));
+  ok(/Choose outlets/.test(await trig.innerText()) && (await trig.getAttribute("aria-expanded")) === "false", "closed, the box says 'Choose outlets' (nothing is picked yet)");
+  ok((await page.getByTestId(PK).locator('input[type="checkbox"]').count()) === 0, "…and there is no list of checkboxes sitting in the form any more");
+  await trig.click();
+  await panel.waitFor();
+  ok((await trig.getAttribute("aria-expanded")) === "true" && await search.evaluate((e) => e === document.activeElement), "clicking opens the panel and puts the cursor in the search box");
+  ok((await panel.getByRole("checkbox").count()) === allNames.length + 1 && await panel.getByRole("checkbox", { name: /^All outlets/ }).isVisible(), "it lists an 'All outlets' row and one row for each outlet of this store", `${await panel.getByRole("checkbox").count()} rows for ${allNames.length} outlets`);
+  ok(/0 of \d+ selected/.test(await page.getByTestId(`${PK}-count`).innerText()), "the footer counts what is picked: 0 of N");
+  // search
+  const probe = otherName.slice(0, Math.min(3, otherName.length));
+  await search.fill(probe.toUpperCase());
+  const shownNames = await panel.locator("label").allInnerTexts();
+  ok(shownNames.length >= 1 && shownNames.every((t) => t.toLowerCase().includes(probe.toLowerCase())), `typing "${probe.toUpperCase()}" keeps only outlets that match, whatever the capital letters`, shownNames.join(" | "));
+  ok(!(await panel.getByRole("checkbox", { name: /^All outlets/ }).count()), "…and hides the 'All outlets' row while searching");
+  await search.fill("zzz-nothing-called-this");
+  ok(/No outlet matches/.test(await panel.innerText()) && (await panel.getByRole("checkbox").count()) === 0, "a search with no match says 'No outlet matches …'");
+  await search.fill(otherName);
+  await search.press("Enter");
+  ok(await boxOf(otherName).first().isChecked(), "Enter in the search box ticks the first match", otherName);
+  await search.fill("");
+  ok((await panel.getByRole("checkbox").count()) === allNames.length + 1, "clearing the search brings every outlet back");
+  ok(/1 of \d+ selected/.test(await page.getByTestId(`${PK}-count`).innerText()), "the footer now says 1 selected");
+  await panel.getByRole("button", { name: "Clear" }).click();
+  ok(!(await boxOf(otherName).first().isChecked()) && /0 of/.test(await page.getByTestId(`${PK}-count`).innerText()), "Clear unticks everything");
+  // "All outlets"
+  await panel.getByRole("checkbox", { name: /^All outlets/ }).check();
+  ok((await boxOf(main.name).first().isChecked()) && await boxOf(main.name).first().isDisabled(), "'All outlets' shows every outlet ticked and locked");
+  ok(/All outlets/.test(await trig.innerText()) && !(await page.getByText(/Pick at least one outlet/).count()), "the closed box shows an 'All outlets' chip and the warning is gone");
+  await panel.getByRole("checkbox", { name: /^All outlets/ }).uncheck();
+  // keyboard: arrow down from the search box moves into the list; Escape closes and gives the focus back
+  await search.focus();
+  await page.keyboard.press("ArrowDown");
+  ok(await page.evaluate(() => document.activeElement?.type === "checkbox"), "ArrowDown in the search box moves to the first checkbox");
+  await page.keyboard.press("Escape");
+  await panel.waitFor({ state: "hidden" });
+  ok(await trig.evaluate((e) => e === document.activeElement), "Escape closes the panel and the box has the focus again");
+  // pick two, see chips, click outside closes
+  await trig.click();
+  await boxOf(main.name).first().check();
+  await boxOf(otherName).first().check();
+  await page.mouse.click(5, 5);
+  await panel.waitFor({ state: "hidden" });
+  const chips = await trig.innerText();
+  ok(Math.abs((await trig.evaluate((e) => e.getBoundingClientRect().height)) - hs.select) <= 1.5, "with two outlets picked (chips) the box is still the same height as the other fields");
+    ok(chips.includes(main.name) && chips.includes(otherName), "two picked: the closed box shows both names as chips; a click outside closes the panel", chips.replace(/\s+/g, " "));
+  ok(await form.getByRole("button", { name: "Add user" }).isEnabled(), "and Add user is on");
+  await trig.click();
+  await boxOf(otherName).first().uncheck();
+  await page.getByTestId(`${PK}-done`).click();
+  await panel.waitFor({ state: "hidden" });
+  ok(!(await trig.innerText()).includes(otherName) && (await trig.innerText()).includes(main.name), "unticking one and pressing Done leaves just the other");
+  ok(await form.getByRole("button", { name: "Add user" }).isEnabled(), "choosing one outlet turns Add user on");
   await form.getByRole("button", { name: "Add user" }).click();
   const line = page.getByTestId(`outlets-of-${email}`);
   await line.waitFor({ timeout: 15000 });
@@ -157,10 +218,17 @@ try {
   await page.getByTestId(`outlets-of-${email}`).getByRole("button", { name: "Change outlets" }).click();
   const od = page.getByTestId("outlets-dialog");
   await od.waitFor({ timeout: 10000 });
-  await od.getByLabel("All outlets").check();
+  await od.getByTestId("edit-user-outlets-trigger").click();
+  const editPanel = page.getByTestId("edit-user-outlets-panel");
+  await editPanel.waitFor();
+  ok(await editPanel.getByRole("checkbox", { name: new RegExp(`^${main.name}`) }).first().isChecked(), "the dialog's picker opens with the person's current outlet already ticked");
+  await editPanel.getByRole("checkbox", { name: /^All outlets/ }).check();
+  await page.getByTestId("edit-user-outlets-done").click();
   await page.getByRole("button", { name: /^Save$/ }).click();
   await od.waitFor({ state: "detached", timeout: 10000 });
-  ok((await page.getByTestId(`outlets-of-${email}`).innerText()).startsWith("All outlets"), "after ticking All outlets the row says All outlets");
+  // (the list is refreshed a moment after the dialog closes: wait for the row instead of reading it at once)
+  const allRow = await page.getByTestId(`outlets-of-${email}`).filter({ hasText: /^All outlets/ }).waitFor({ timeout: 6000 }).then(() => true, () => false);
+  ok(allRow, "after choosing All outlets the row says All outlets", await page.getByTestId(`outlets-of-${email}`).innerText());
   const theirs2 = (await (await fetch(`${API}/api/outlets`, { headers: { cookie: staffCookie } })).json()).outlets;
   ok(theirs2.length === outlets.length, "and they see every outlet now — without signing in again", `${theirs2.length}`);
   await staffCtx.close();
