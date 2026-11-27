@@ -1475,3 +1475,17 @@
 {"id":"t124-store-owners-ui","status":"pass","pass":14,"fail":0,"mode":"headless","at":"2026-11-27T15:18:07.983Z","durationMs":2988}
 {"id":"t21-onboarding","status":"pass","pass":124,"fail":0,"mode":"headless","at":"2026-11-27T15:21:48.658Z","durationMs":54566}
 {"id":"t21-onboarding","status":"pass","pass":128,"fail":0,"mode":"headless","at":"2026-11-27T15:27:16.770Z","durationMs":55991}
+{"id":"t125-plan-memory-api","status":"pass","pass":24,"fail":0,"mode":"headless","at":"2026-11-27T15:30:28.647Z","durationMs":5530}
+{"id":"t02-whatsapp-api","status":"pass","pass":131,"fail":0,"mode":"headless","at":"2026-11-27T15:32:49.964Z","durationMs":15873}
+{"id":"t108-plan-features","status":"pass","pass":51,"fail":0,"mode":"headless","at":"2026-11-27T15:32:58.371Z","durationMs":8362}
+{"id":"t109-table-limit-api","status":"pass","pass":63,"fail":0,"mode":"headless","at":"2026-11-27T15:33:04.586Z","durationMs":6187}
+{"id":"t111-dashboard-roles-api","status":"pass","pass":46,"fail":0,"mode":"headless","at":"2026-11-27T15:33:10.161Z","durationMs":5550}
+{"id":"t121-platform-roles-api","status":"pass","pass":61,"fail":0,"mode":"headless","at":"2026-11-27T15:33:18.191Z","durationMs":8010}
+{"id":"t110-plan-table-limit-ui","status":"pass","pass":48,"fail":0,"mode":"headless","at":"2026-11-27T15:33:42.715Z","durationMs":13337}
+{"id":"t126-plan-memory-ui","status":"fail","pass":15,"fail":1,"mode":"headless","at":"2026-11-27T15:35:25.845Z","durationMs":2452}
+{"id":"t125-plan-memory-api","status":"pass","pass":26,"fail":0,"mode":"headless","at":"2026-11-27T15:35:58.590Z","durationMs":5901}
+{"id":"t126-plan-memory-ui","status":"pass","pass":16,"fail":0,"mode":"headless","at":"2026-11-27T15:36:09.538Z","durationMs":2152}
+{"id":"t126-plan-memory-ui","status":"pass","pass":16,"fail":0,"mode":"headless","at":"2026-11-27T15:36:30.334Z","durationMs":2637}
+{"id":"t110-plan-table-limit-ui","status":"pass","pass":48,"fail":0,"mode":"headless","at":"2026-11-27T15:37:24.294Z","durationMs":9675}
+{"id":"t125-plan-memory-api","status":"pass","pass":26,"fail":0,"mode":"headless","at":"2026-11-27T15:37:29.850Z","durationMs":5528}
+{"id":"t126-plan-memory-ui","status":"pass","pass":17,"fail":0,"mode":"headless","at":"2026-11-27T15:37:32.295Z","durationMs":2417}

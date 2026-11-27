@@ -1,6 +1,6 @@
 # T110 — Plans: a wide New plan pop-up that needs no scrolling, a tables limit in steps of 5 (plan, store, onboarding form), and the owner's Tables page when the plan's tables are all used
 
-**Area:** platform · **Last result:** 💥 ERROR (44 passed, 0 failed · 2026-11-27 09:54 · headless · 38.1 s)
+**Area:** platform · **Last result:** ✅ PASSED (48 passed, 0 failed · 2026-11-27 21:07 · headless · 9.7 s)
 
 **Run it alone:** `node run.mjs --only t110` (add `--visible` to watch it)
 
@@ -19,6 +19,7 @@ Chrome against the bench, as the platform super admin and as the Beta store's ow
 6. B. Console → the store → Plan & limits
 7. C. The owner's Tables page when the plan's tables are all used
 8. D. Onboarding form: tables
+9. E. Price list
 
 ## What to expect (these must happen)
 
@@ -35,13 +36,11 @@ Chrome against the bench, as the platform super admin and as the Beta store's ow
 
 ## Result of the last run
 
-**The test stopped early:** `plan-table-limit-ui.mjs exited with code 1. }  Node.js v24.3.0`
-
 ### ❌ Failed (0)
 
 _Nothing failed._
 
-### ✅ Passed (44)
+### ✅ Passed (48)
 
 **Set-up — Setup**
 
@@ -113,11 +112,20 @@ _Nothing failed._
 - typing 12 gives 15, and the note says 15 will be allowed
 - stepping back down to 0 removes the warning
 - 25 tables on a plan with no table limit (Pro here): no warning
+- on the Custom plan there is a 'Tables for this client' box, starting at 5 (the smallest size)
+
+**Step 9 — E. Price list**
+
+- the price list has 'Every 5 extra tables (₹)', starting at 100
+- …beside the outlet and person prices
+- no errors or warnings in the browser
 
 ## History (latest 10 runs)
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-27 21:07 | pass | 48 | 0 | headless | 9.7 s |
+| 2026-11-27 21:03 | pass | 48 | 0 | headless | 13.3 s |
 | 2026-11-27 16:42 | pass | 48 | 0 | headless | 9.3 s |
 | 2026-11-27 09:54 | error | 44 | 0 | headless | 38.1 s |
 

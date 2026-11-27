@@ -1,12 +1,12 @@
 # Rasoi Pulse end-to-end tests — catalog
 
-**125 tests** · 118 passing · 2 failing/error · 5 not run yet
+**127 tests** · 121 passing · 1 failing/error · 5 not run yet
 
 | Test | Area | Result | Checks | Last run |
 |---|---|---|---|---|
 | [t00-bench-smoke](t00-bench-smoke.md) — Bench smoke test — API, dashboard and storefronts are alive with the fake stores | bench | ✅ PASSED | 11/11 | 2026-11-21 04:28 |
 | [t01-takeaway-order](t01-takeaway-order.md) — Takeaway order of at least ₹999 — customer places it, staff take it all the way to Completed | orders | ✅ PASSED | 45/45 | 2026-11-21 04:29 |
-| [t02-whatsapp-api](t02-whatsapp-api.md) — WhatsApp chat — API rules and the careful-pace sending worker | whatsapp | ✅ PASSED | 132/132 | 2026-11-27 16:47 |
+| [t02-whatsapp-api](t02-whatsapp-api.md) — WhatsApp chat — API rules and the careful-pace sending worker | whatsapp | ✅ PASSED | 131/131 | 2026-11-27 21:02 |
 | [t03-whatsapp-dashboard](t03-whatsapp-dashboard.md) — WhatsApp in the dashboard — chat window, numbers, broadcast, access and phone layout | whatsapp | ✅ PASSED | 44/44 | 2026-11-21 13:26 |
 | [t04-whatsapp-manage](t04-whatsapp-manage.md) — WhatsApp management — colours, chat stats and sharing out, clean-up by date, delete a message | whatsapp | ✅ PASSED | 20/20 | 2026-11-21 04:30 |
 | [t05-whatsapp-chat-filters](t05-whatsapp-chat-filters.md) — WhatsApp chat list — 'via' chips and filters (All, Unread, Needs reply, New, No offers, by number) | whatsapp | ✅ PASSED | 12/12 | 2026-11-21 04:30 |
@@ -23,11 +23,11 @@
 | [t105-app-refresh-interval-ui](t105-app-refresh-interval-ui.md) — Console → App Management → Refresh interval: set how often OMA, KDA and RDA ask for new data (default 8 s, per app, 3–600), and the apps are told with their next request | app | ✅ PASSED | 35/35 | 2026-11-27 16:35 |
 | [t106-api-speed-test](t106-api-speed-test.md) — API speed test (apps/api/src/scripts/speed-test.js): time inside the API, time waiting for the database, query plans, load, and before/after comparison — read-only | api | ⚪ not run yet | — | — |
 | [t107-app-screenshots](t107-app-screenshots.md) — Website → /apps/oma, /apps/kda, /apps/rda: real tablet screenshots in an Android tablet frame, as a tabbed gallery that works by mouse, keyboard and without script | website | ⚪ not run yet | — | — |
-| [t108-plan-features](t108-plan-features.md) — Plans → Business includes every feature (also future ones), Starter gains pre-orders and ratings, features that need another are flagged, and update-plans.js brings existing plans up to date safely | platform | ✅ PASSED | 51/51 | 2026-11-27 09:53 |
-| [t109-table-limit-api](t109-table-limit-api.md) — Plans limit tables, in steps of 5 (Starter 5, Business 20, Custom by hand): only 5, 10, 15 … are accepted, a store can't add a table past its limit, and the price is per block of 5 | platform | ✅ PASSED | 63/63 | 2026-11-27 10:00 |
+| [t108-plan-features](t108-plan-features.md) — Plans → Business includes every feature (also future ones), Starter gains pre-orders and ratings, features that need another are flagged, and update-plans.js brings existing plans up to date safely | platform | ✅ PASSED | 51/51 | 2026-11-27 21:02 |
+| [t109-table-limit-api](t109-table-limit-api.md) — Plans limit tables, in steps of 5 (Starter 5, Business 20, Custom by hand): only 5, 10, 15 … are accepted, a store can't add a table past its limit, and the price is per block of 5 | platform | ✅ PASSED | 63/63 | 2026-11-27 21:03 |
 | [t11-outlet-delete](t11-outlet-delete.md) — Delete an outlet from the dashboard — protection for outlets with orders, then the deleted outlet on the subdomain | domains | ✅ PASSED | 13/13 | 2026-11-21 13:19 |
-| [t110-plan-table-limit-ui](t110-plan-table-limit-ui.md) — Plans: a wide New plan pop-up that needs no scrolling, a tables limit in steps of 5 (plan, store, onboarding form), and the owner's Tables page when the plan's tables are all used | platform | 💥 ERROR | 44/44 | 2026-11-27 09:54 |
-| [t111-dashboard-roles-api](t111-dashboard-roles-api.md) — Dashboard: every widget needs a permission (some a plan feature), a person is only SENT the numbers they may see, plus deliveries / bookings / rating widgets and India's day boundary | dashboard | ✅ PASSED | 46/46 | 2026-11-27 09:54 |
+| [t110-plan-table-limit-ui](t110-plan-table-limit-ui.md) — Plans: a wide New plan pop-up that needs no scrolling, a tables limit in steps of 5 (plan, store, onboarding form), and the owner's Tables page when the plan's tables are all used | platform | ✅ PASSED | 48/48 | 2026-11-27 21:07 |
+| [t111-dashboard-roles-api](t111-dashboard-roles-api.md) — Dashboard: every widget needs a permission (some a plan feature), a person is only SENT the numbers they may see, plus deliveries / bookings / rating widgets and India's day boundary | dashboard | ✅ PASSED | 46/46 | 2026-11-27 21:03 |
 | [t112-dashboard-ui](t112-dashboard-ui.md) — Dashboard: a cleaner, more modern look with a needs-attention strip, three new widgets, each role and plan sees only its own, and a clear Configure-dashboard grid | dashboard | ✅ PASSED | 48/48 | 2026-11-27 09:54 |
 | [t113-booking-advance-api](t113-booking-advance-api.md) — Table bookings: a start and an end time, a price, a 50% advance paid online, refunds and the WhatsApp number — the rules and the API | bookings | ✅ PASSED | 94/94 | 2026-11-27 16:57 |
 | [t114-booking-form-ui](t114-booking-form-ui.md) — Book a table page: open to everyone, a date picker, from/to time pickers, a searchable event list with Other, the WhatsApp number, the price — and sign-in only AFTER the form is filled | bookings | ✅ PASSED | 65/65 | 2026-11-27 16:58 |
@@ -38,10 +38,12 @@
 | [t119-log-redaction-api](t119-log-redaction-api.md) — The API's request log never contains a secret (session cookie, Bearer token, secret headers, Set-Cookie) | security | ✅ PASSED | 17/17 | 2026-11-27 16:58 |
 | [t12-store-delete](t12-store-delete.md) — Delete the store — typed-name confirmation, then the subdomain, the owner and the other stores | domains | ✅ PASSED | 19/19 | 2026-11-21 13:19 |
 | [t120-app-live-api](t120-app-live-api.md) — Staff apps (OMA, KDA, RDA): the live connection — who may listen, what they are told, who is let go (server side) | apps | ✅ PASSED | 48/48 | 2026-11-27 16:59 |
-| [t121-platform-roles-api](t121-platform-roles-api.md) — Rasoi Pulse team roles: only the super admin makes roles and people; a team member can do exactly what their role holds, in every part of the platform API | platform | ✅ PASSED | 61/61 | 2026-11-27 16:59 |
+| [t121-platform-roles-api](t121-platform-roles-api.md) — Rasoi Pulse team roles: only the super admin makes roles and people; a team member can do exactly what their role holds, in every part of the platform API | platform | ✅ PASSED | 61/61 | 2026-11-27 21:03 |
 | [t122-platform-team-ui](t122-platform-team-ui.md) — Console → Team & roles: make a role and a person, and what that person sees (only what the role allows); the sidebar says App Management | platform | ✅ PASSED | 28/28 | 2026-11-27 16:59 |
 | [t123-cache-lifetime-ui](t123-cache-lifetime-ui.md) — Console → Platform settings → Cache lifetime: one input in seconds with the time in words (900 → 15 minutes); no preset buttons | platform | ✅ PASSED | 25/25 | 2026-11-27 20:45 |
 | [t124-store-owners-ui](t124-store-owners-ui.md) — Console → a store → Owners tab: the Add-an-owner fields line up (same top edge, button level), stack on a narrow window; an owner's actions stay together | platform | ✅ PASSED | 14/14 | 2026-11-27 20:48 |
+| [t125-plan-memory-api](t125-plan-memory-api.md) — A store's settings are kept per plan: leaving a plan saves them, coming back restores them (Custom → Pro → Custom), a plan it never had starts clean | platform | ✅ PASSED | 26/26 | 2026-11-27 21:07 |
+| [t126-plan-memory-ui](t126-plan-memory-ui.md) — Console → a store → Plan & limits: a new plan 'starts clean' and keeps the old settings; a plan it had before brings its limits back (shown before saving); Save says what happened | platform | ✅ PASSED | 17/17 | 2026-11-27 21:07 |
 | [t13-marketing](t13-marketing.md) — Marketing — channels, audience filters (last visit, items, age, gender, order type, area), imports, lists, sending and the sidebar | marketing | ✅ PASSED | 70/70 | 2026-11-21 13:07 |
 | [t14-marketing-plan](t14-marketing-plan.md) — Marketing is a plan feature — Basic doesn't have it, Pro does, and it can be unlocked or locked for one store | plans | ✅ PASSED | 16/16 | 2026-11-27 10:11 |
 | [t15-login-protection](t15-login-protection.md) — Sign-in protection — wrong guesses block the network, blocks grow longer, a blocked network sees no login form, the platform can unblock | security | ✅ PASSED | 28/28 | 2026-11-21 13:10 |

@@ -1,6 +1,6 @@
 # T109 — Plans limit tables, in steps of 5 (Starter 5, Business 20, Custom by hand): only 5, 10, 15 … are accepted, a store can't add a table past its limit, and the price is per block of 5
 
-**Area:** platform · **Last result:** ✅ PASSED (63 passed, 0 failed · 2026-11-27 10:00 · headless · 5.2 s)
+**Area:** platform · **Last result:** ✅ PASSED (63 passed, 0 failed · 2026-11-27 21:03 · headless · 6.2 s)
 
 **Run it alone:** `node run.mjs --only t109` (add `--visible` to watch it)
 
@@ -97,7 +97,7 @@ _Nothing failed._
 **Step 6 — The Custom plan**
 
 - a store with 8 tables put on Custom gets a limit that holds them, in fives (8 → 10) — _10_
-- …so it has room for two more and then stops — even when three are added at the very same moment — _201,201,409_
+- …so it has room for two more and then stops — even when three are added at the very same moment — _201,409,201_
 - …and exactly 10 tables exist afterwards (the one that didn't fit was taken back out)
 - a store with no tables put on Custom starts at 5 (the smallest size) — _5_
 - …and the number set by hand is kept (15)
@@ -131,6 +131,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-27 21:03 | pass | 63 | 0 | headless | 6.2 s |
 | 2026-11-27 16:42 | pass | 63 | 0 | headless | 7.7 s |
 | 2026-11-27 10:00 | pass | 63 | 0 | headless | 5.2 s |
 | 2026-11-27 09:53 | pass | 61 | 0 | headless | 5.1 s |

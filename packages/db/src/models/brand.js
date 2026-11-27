@@ -18,6 +18,11 @@ const brandSchema = new Schema(
     /** per-store changes on top of the plan (see planOverridesSchema in config-schema) */
     overrides: { type: Schema.Types.Mixed, default: () => ({}) },
     /**
+     * What this store had set up on each plan it has LEFT, kept per plan: { [planId]: { overrides, planName, leftAt } }. Going back to a plan it had
+     * before restores those settings (a Custom plan's hand-set limits and unlocks, say) instead of starting from nothing.
+     */
+    planHistory: { type: Schema.Types.Mixed, default: () => ({}) },
+    /**
      * The look shared by every outlet: theme, typography, effect, layout
      * (component styles). Null until migrated — outlets then fall back to
      * their own stored values, exactly as before.

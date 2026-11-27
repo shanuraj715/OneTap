@@ -163,6 +163,9 @@ export function PlatformStoreDetail() {
         </div>
       ) : null}
       {save.error ? <Toast kind="error">{save.error.message}</Toast> : null}
+      {save.isSuccess && !save.isPending && !dirty && (tab === "plan" || tab === "features") ? (
+        <div data-testid="plan-saved-note"><Toast kind="ok">{planChangeText(save.data?.planChange, allPlans, store.name)}</Toast></div>
+      ) : null}
 
       <fieldset disabled={!mayManage} style={viewOnlyReset}>
       {tab === "plan" ? <PlanTab store={store} draft={draft} setDraft={setDraft} plans={allPlans} selectedPlan={selectedPlan} /> : null}
@@ -218,6 +221,29 @@ function StoreNameCard({ store }) {
 
 /* ---------------------------------------------------------------- plan tab */
 
+/** What a saved set of per-store settings holds, in a sentence: "limits — 7 outlets, 20 people; unlocked — marketing, delivery." */
+function describeSaved(saved) {
+  const L = saved?.limits ?? {};
+  const names = { maxUsers: "people", maxOutlets: "outlets", maxTables: "tables" };
+  const parts = Object.entries(L).filter(([k, v]) => v !== undefined && v !== null && names[k]).map(([k, v]) => `${v} ${names[k]}`);
+  const out = [];
+  if (parts.length) out.push(`limits — ${parts.join(", ")}`);
+  if (saved?.unlocked?.length) out.push(`unlocked — ${saved.unlocked.join(", ")}`);
+  if (saved?.locked?.length) out.push(`locked — ${saved.locked.join(", ")}`);
+  return out.length ? `${out.join("; ")}.` : "nothing beyond the plan itself.";
+}
+
+/** What the server did when the plan changed, in a sentence for the toast after Save. */
+function planChangeText(change, plans, storeName) {
+  if (!change) return "Saved.";
+  const name = (id) => plans.find((p) => p.id === id)?.name ?? "the plan";
+  const parts = [`Moved to ${change.to ? name(change.to) : "no plan"}.`];
+  if (change.restored) parts.push(`What ${storeName} had set up there before is back: ${describeSaved(change.restoredFrom?.saved)}`);
+  else if (change.clearedOnNewPlan) parts.push("It starts clean.");
+  if (change.savedPrevious) parts.push(`What it had on ${change.from ? name(change.from) : "its old plan"} is kept, and comes back if it returns.`);
+  return parts.join(" ");
+}
+
 function PlanTab({ store, draft, setDraft, plans, selectedPlan }) {
   const base = selectedPlan?.limits ?? { maxUsers: null, multiOutlet: true, maxOutlets: null, maxTables: null };
   const setLimit = (key, value) => setDraft({ ...draft, limits: { ...draft.limits, [key]: value } });
@@ -227,10 +253,19 @@ function PlanTab({ store, draft, setDraft, plans, selectedPlan }) {
   };
   const choosable = plans.filter((p) => !p.archived || p.id === draft.planId);
   const custom = Boolean(selectedPlan?.custom);
+  // is the plan picked (but not saved yet) one the store has had? and if it has not, is what the store has now about to be put away?
+  const switching = Boolean(draft.planId) !== Boolean(store.plan?.id) || (draft.planId || "") !== (store.plan?.id ?? "");
+  const draftHistory = switching && draft.planId ? (store.planHistory ?? []).find((h) => h.planId === draft.planId) : null;
+  const nowSaved = (() => { const l = store.overrides?.limits ?? {}; const f = store.overrides?.entitlements?.features ?? {}; const has = Object.keys(l).length || (f.unlock ?? []).length || (f.lock ?? []).length; return has ? { limits: l, unlocked: f.unlock ?? [], locked: f.lock ?? [] } : null; })();
+  const leavingNote = switching && !draftHistory && store.plan?.id && nowSaved ? nowSaved : null;
 
   const choosePlan = (planId) => {
     const next = plans.find((p) => p.id === planId) ?? null;
-    if (next?.custom && !custom) {
+    // A plan this store has had before: what it had set up there comes back (the server keeps it per plan).
+    const saved = planId && planId !== store.plan?.id ? (store.planHistory ?? []).find((h) => h.planId === planId) : null;
+    if (saved) {
+      setDraft({ planId, limits: { ...saved.overrides.limits }, entitlements: { ...emptyAdjust(), ...saved.overrides.entitlements } });
+    } else if (next?.custom && !custom) {
       // Onto a custom plan: start from what the store has today — its current
       // limits, and everything it can use now unlocked — then trim from there.
       const keep = (list) => ({ unlock: list.filter((k) => k !== "none"), lock: [] });
@@ -267,11 +302,24 @@ function PlanTab({ store, draft, setDraft, plans, selectedPlan }) {
             ))}
           </Select>
         </Field>
+        {draftHistory ? (
+          <div style={{ marginTop: 12 }} data-testid="plan-restored-note">
+            <Note>
+              <strong>{store.name} had {draftHistory.planName || "this plan"} before</strong> (until {fmtDate(draftHistory.leftAt)}). What it had set up then is applied again: {describeSaved(draftHistory.saved)} Save to keep it, or change it below.
+            </Note>
+          </div>
+        ) : leavingNote ? (
+          <div style={{ marginTop: 12 }} data-testid="plan-starts-clean-note">
+            <Note>
+              {custom ? null : <strong>{selectedPlan ? selectedPlan.name : "This plan"} starts clean. </strong>}What {store.name} has set up on {store.plan?.name ?? "its current plan"} ({describeSaved(leavingNote)}) is kept, and comes back if it ever returns to {store.plan?.name ?? "that plan"}.
+            </Note>
+          </div>
+        ) : null}
         {custom ? (
           <div style={{ marginTop: 12 }}>
             <Note>
               Custom plan: nothing comes from the plan. This store gets exactly the limits below and what you unlock on the <strong>Features</strong> tab.
-              {selectedPlan.id !== store.plan?.id ? " To start with, it keeps what it has today — trim it before saving." : ""}
+              {selectedPlan.id !== store.plan?.id && !draftHistory ? " To start with, it keeps what it has today — trim it before saving." : ""}
             </Note>
           </div>
         ) : null}

@@ -496,12 +496,12 @@
     "id": "t02-whatsapp-api",
     "title": "WhatsApp chat — API rules and the careful-pace sending worker",
     "status": "pass",
-    "pass": 132,
+    "pass": 131,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T11:17:35.667Z",
-    "durationMs": 15119,
+    "at": "2026-11-27T15:32:49.964Z",
+    "durationMs": 15873,
     "steps": [
       {
         "n": 1,
@@ -708,7 +708,7 @@
           {
             "label": "an attachment uploads",
             "ok": true,
-            "detail": "http://localhost:3098/uploads/6b0966c4b74838098594",
+            "detail": "http://localhost:3098/uploads/6b09a296d1add6b1e45d",
             "kind": "expect"
           },
           {
@@ -750,7 +750,7 @@
           {
             "label": "the next first contact must wait 2–4 minutes",
             "ok": true,
-            "detail": "185 s",
+            "detail": "137 s",
             "kind": "expect"
           },
           {
@@ -774,7 +774,7 @@
           {
             "label": "15 first contacts a day per number: the rest wait for tomorrow",
             "ok": true,
-            "detail": "2026-11-28T03:31:32.914Z",
+            "detail": "2026-11-28T03:34:47.351Z",
             "kind": "expect"
           },
           {
@@ -900,13 +900,13 @@
           {
             "label": "preview: 3 people (duplicates merged), 1 opted out",
             "ok": true,
-            "detail": "{\"recipients\":3,\"optedOut\":1,\"running\":0,\"firstContact\":3,\"numbersOnline\":[{\"id\":\"6b0966c5b748380985948c0d\",\"label\":\"Counter phone\"},{\"id\":\"6b0966c5b748380985948c11\",\"label\":\"Delivery phone\"}],\"estimatedDays\":1}",
+            "detail": "{\"recipients\":3,\"optedOut\":1,\"running\":0,\"firstContact\":3,\"numbersOnline\":[{\"id\":\"6b09a297d1add6b1e45d9088\",\"label\":\"Counter phone\"},{\"id\":\"6b09a297d1add6b1e45d908d\",\"label\":\"Delivery phone\"}],\"estimatedDays\":1}",
             "kind": "expect"
           },
           {
             "label": "a broadcast queues one message per person",
             "ok": true,
-            "detail": "{\"id\":\"6b0966ceb748380985948d4e\",\"text\":\"Diwali: 20% off this weekend!\\n\\nReply STOP to stop offers.\",\"media\":null,\"createdAt\":\"2026-11-27T11:17:34.803Z\",\"status\":\"sending\",\"total\":3,\"skipped\":1,\"waiting\":3,\"sent\":0,\"read\":0,\"failed\":0}",
+            "detail": "{\"id\":\"6b09a2a0d1add6b1e45d91be\",\"text\":\"Diwali: 20% off this weekend!\\n\\nReply STOP to stop offers.\",\"media\":null,\"createdAt\":\"2026-11-27T15:32:48.977Z\",\"status\":\"sending\",\"total\":3,\"skipped\":1,\"waiting\":3,\"sent\":0,\"read\":0,\"failed\":0}",
             "kind": "expect"
           },
           {
@@ -1291,12 +1291,6 @@
             "label": "a store that has WhatsApp chat is left alone",
             "ok": true,
             "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "the platform locks WhatsApp chat for one store",
-            "ok": true,
-            "detail": "200",
             "kind": "expect"
           },
           {
@@ -33921,8 +33915,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T04:23:45.036Z",
-    "durationMs": 7054,
+    "at": "2026-11-27T15:32:58.371Z",
+    "durationMs": 8362,
     "steps": [
       {
         "n": 1,
@@ -34278,8 +34272,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T04:30:58.986Z",
-    "durationMs": 5229,
+    "at": "2026-11-27T15:33:04.586Z",
+    "durationMs": 6187,
     "steps": [
       {
         "n": 1,
@@ -34558,7 +34552,7 @@
           {
             "label": "…so it has room for two more and then stops — even when three are added at the very same moment",
             "ok": true,
-            "detail": "201,201,409",
+            "detail": "201,409,201",
             "kind": "expect"
           },
           {
@@ -34714,13 +34708,13 @@
   "t110-plan-table-limit-ui": {
     "id": "t110-plan-table-limit-ui",
     "title": "Plans: a wide New plan pop-up that needs no scrolling, a tables limit in steps of 5 (plan, store, onboarding form), and the owner's Tables page when the plan's tables are all used",
-    "status": "error",
-    "pass": 44,
+    "status": "pass",
+    "pass": 48,
     "fail": 0,
-    "error": "plan-table-limit-ui.mjs exited with code 1. }  Node.js v24.3.0",
+    "error": "",
     "mode": "headless",
-    "at": "2026-11-27T04:24:28.269Z",
-    "durationMs": 38111,
+    "at": "2026-11-27T15:37:24.294Z",
+    "durationMs": 9675,
     "steps": [
       {
         "n": 0,
@@ -35037,6 +35031,36 @@
             "ok": true,
             "detail": "",
             "kind": "expect"
+          },
+          {
+            "label": "on the Custom plan there is a 'Tables for this client' box, starting at 5 (the smallest size)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 9,
+        "title": "E. Price list",
+        "checks": [
+          {
+            "label": "the price list has 'Every 5 extra tables (₹)', starting at 100",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…beside the outlet and person prices",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors or warnings in the browser",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
           }
         ]
       }
@@ -35052,8 +35076,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T04:24:32.912Z",
-    "durationMs": 4622,
+    "at": "2026-11-27T15:33:10.161Z",
+    "durationMs": 5550,
     "steps": [
       {
         "n": 1,
@@ -40577,8 +40601,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T11:29:22.184Z",
-    "durationMs": 8621,
+    "at": "2026-11-27T15:33:18.191Z",
+    "durationMs": 8010,
     "steps": [
       {
         "n": 1,
@@ -40677,7 +40701,7 @@
           {
             "label": "the session says: a team member, role Sales, the one feature Onboarding (not even 'Plans' in the sidebar), no store, no store permissions",
             "ok": true,
-            "detail": "{\"access\":true,\"features\":[\"onboarding:manage\"],\"role\":{\"id\":\"6b09698dff23c777520c809d\",\"name\":\"Sales\"}}",
+            "detail": "{\"access\":true,\"features\":[\"onboarding:manage\"],\"role\":{\"id\":\"6b09a2b9ee59855f3452b62a\",\"name\":\"Sales\"}}",
             "kind": "expect"
           },
           {
@@ -41531,6 +41555,366 @@
           },
           {
             "label": "Cancel closes it again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t125-plan-memory-api": {
+    "id": "t125-plan-memory-api",
+    "title": "A store's settings are kept per plan: leaving a plan saves them, coming back restores them (Custom → Pro → Custom), a plan it never had starts clean",
+    "status": "pass",
+    "pass": 26,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-27T15:37:29.850Z",
+    "durationMs": 5528,
+    "steps": [
+      {
+        "n": 1,
+        "title": "A Custom plan with hand-set limits and unlocked features",
+        "checks": [
+          {
+            "label": "the store is put on the Custom plan with its own limits and features",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and holds them",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the answer says what changed (planChange)",
+            "ok": true,
+            "detail": "{\"from\":null,\"to\":\"6b09a3b8f64a026e18893c4e\",\"savedPrevious\":false,\"restored\":false,\"restoredFrom\":null,\"clearedOnNewPla",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "It moves to Pro: the Custom settings are put away, Pro starts clean",
+        "checks": [
+          {
+            "label": "moved to Pro",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "planChange says: the Custom settings were saved, Pro started clean, nothing restored",
+            "ok": true,
+            "detail": "{\"from\":\"6b09a3b8f64a026e18893c4e\",\"to\":\"6b09a3b8f64a026e18893c49\",\"savedPrevious\":true,\"restored\":false,\"restoredFrom\":null,\"clearedOnNewPlan\":true}",
+            "kind": "expect"
+          },
+          {
+            "label": "Pro's own limits apply (3 outlets, 10 people) — the 7 outlets of Custom did NOT carry over",
+            "ok": true,
+            "detail": "3/10",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the features unlocked on Custom are not on Pro",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the store's page lists Custom among the plans it has left, with what it had (7 outlets, marketing …)",
+            "ok": true,
+            "detail": "{\"limits\":{\"maxUsers\":12,\"multiOutlet\":true,\"maxOutlets\":7,\"maxTables\":40},\"unlocked\":[\"marketing\",\"delivery\"],\"locked\":[],\"empty\":false}",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Months later: back to Custom — the old settings come back by themselves",
+        "checks": [
+          {
+            "label": "planChange says the Custom settings were restored",
+            "ok": true,
+            "detail": "{\"limits\":{\"maxUsers\":12,\"multiOutlet\":true,\"maxOutlets\":7,\"maxTables\":40},\"unlocked\":[\"marketing\",\"delivery\"],\"locked\":[],\"empty\":false}",
+            "kind": "expect"
+          },
+          {
+            "label": "the old limits are back (7 outlets, 12 people, 40 tables)",
+            "ok": true,
+            "detail": "{\"maxUsers\":12,\"multiOutlet\":true,\"maxOutlets\":7,\"maxTables\":40}",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the old features (marketing, delivery)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the stored settings are exactly what they were before it left",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Another plan it never had starts clean, and the first one is still remembered",
+        "checks": [
+          {
+            "label": "Basic (never had) starts clean: its own 1 outlet",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…Custom and Pro are both remembered now",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "going back to Pro restores Pro's saved settings — there were none, so nothing is claimed as restored",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Settings sent with the change always win",
+        "checks": [
+          {
+            "label": "overrides given in the same request replace what was saved (the admin chose them)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and it is those that are saved when it leaves again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "5b. The console sends the settings itself (already filled in from the saved ones): still counts as restored",
+        "checks": [
+          {
+            "label": "same settings sent explicitly → planChange.restored is true (what the store ends up with decides)",
+            "ok": true,
+            "detail": "true",
+            "kind": "expect"
+          },
+          {
+            "label": "settings changed on the way (30 people instead) → NOT claimed as restored; the admin's choice is kept",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "Things that are not a plan change",
+        "checks": [
+          {
+            "label": "changing only the settings on the same plan is not a plan change (planChange is null)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'No plan' (unlimited) is a plan too: leaving Pro saves its settings",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…Pro's settings (15 people) are kept",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and come back when it returns to Pro",
+            "ok": true,
+            "detail": "15",
+            "kind": "expect"
+          },
+          {
+            "label": "an unknown plan is refused (400)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a store owner can't change plans (403)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the store's page carries the history (plan, when it left, what it had, the raw settings)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t126-plan-memory-ui": {
+    "id": "t126-plan-memory-ui",
+    "title": "Console → a store → Plan & limits: a new plan 'starts clean' and keeps the old settings; a plan it had before brings its limits back (shown before saving); Save says what happened",
+    "status": "pass",
+    "pass": 17,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-27T15:37:32.295Z",
+    "durationMs": 2417,
+    "steps": [
+      {
+        "n": 0,
+        "title": "Setup",
+        "checks": [
+          {
+            "label": "set-up: the store is on a Custom plan with 7 outlets, 12 people and marketing",
+            "ok": true,
+            "detail": "HTTP 200",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 1,
+        "title": "The plan it is on: nothing said",
+        "checks": [
+          {
+            "label": "the Plan box shows the Custom plan",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no note about remembered settings yet",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "A plan it never had: starts clean, and what it has now is kept",
+        "checks": [
+          {
+            "label": "the note says the new plan starts clean",
+            "ok": true,
+            "detail": "Memory Plan 50651 starts clean. What Beta Bites has set up on Memory Custom 50651 (limits — 12 people, 7 outlets, 40 tables; unlocked — marketing.) is kept, and",
+            "kind": "expect"
+          },
+          {
+            "label": "…and what the store has on its Custom plan (7 outlets, 12 people, marketing) is kept and comes back",
+            "ok": true,
+            "detail": "Memory Plan 50651 starts clean. What Beta Bites has set up on Memory Custom 50651 (limits — 12 people, 7 outlets, 40 tables; unlocked — marketing.) is kept, and comes back if it ever returns to Memory Custom 50651.",
+            "kind": "expect"
+          },
+          {
+            "label": "the 'had it before' note is NOT shown",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Save says it moved, started clean and kept the old settings",
+            "ok": true,
+            "detail": "Moved to Memory Plan 50651. It starts clean. What it had on Memory Custom 50651 is kept, and comes back if it returns.",
+            "kind": "expect"
+          },
+          {
+            "label": "the store is on the new plan with ITS limits (2 outlets, 4 people) — the 7 did not carry over",
+            "ok": true,
+            "detail": "2/4",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Back to a plan it had: the old settings come back, shown before saving",
+        "checks": [
+          {
+            "label": "the note says the store had this plan before",
+            "ok": true,
+            "detail": "Beta Bites had Memory Custom 50651 before (until Nov 27, 2026). What it had set up then is applied again: limits — 12 pe",
+            "kind": "expect"
+          },
+          {
+            "label": "…lists what it had (7 outlets, 12 people, marketing) and says Save keeps it",
+            "ok": true,
+            "detail": "Beta Bites had Memory Custom 50651 before (until Nov 27, 2026). What it had set up then is applied again: limits — 12 people, 7 outlets, 40 tables; unlocked — marketing. Save to keep it, or change it below.",
+            "kind": "expect"
+          },
+          {
+            "label": "the 'starts clean' note is NOT shown",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the Custom-plan note does NOT say it 'keeps what it has today' (the old settings are what comes back)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the limit boxes already hold 7, 12 and 40 (before saving)",
+            "ok": true,
+            "detail": "12, 7, 40",
+            "kind": "expect"
+          },
+          {
+            "label": "Save says the old settings are back",
+            "ok": true,
+            "detail": "Moved to Memory Custom 50651. What Beta Bites had set up there before is back: limits — 12 people, 7 outlets, 40 tables; unlocked — marketing.",
+            "kind": "expect"
+          },
+          {
+            "label": "the store really has them again (7 outlets, 12 people, 40 tables, marketing)",
+            "ok": true,
+            "detail": "{\"maxUsers\":12,\"multiOutlet\":true,\"maxOutlets\":7,\"maxTables\":40}",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "The plan it is already on: nothing said",
+        "checks": [
+          {
+            "label": "picking the plan it is on (after looking at another) shows no note",
             "ok": true,
             "detail": "",
             "kind": "expect"

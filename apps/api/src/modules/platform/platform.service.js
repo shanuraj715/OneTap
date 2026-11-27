@@ -188,6 +188,8 @@ export async function getStore(id) {
   return {
     ...summary,
     overrides: planOverridesSchema.parse(brand.overrides ?? {}),
+    /** the plans it has left, with what it had set up on each: going back to one restores that */
+    planHistory: planHistoryList(brand),
     limits: plan.limits,
     entitlements: plan.entitlements,
     outlets: outlets.map((o) => ({
@@ -246,29 +248,89 @@ async function fillCustomLimits(brand) {
   brand.markModified("overrides");
 }
 
-/** Assign a plan (or `null` for unlimited) and set this store's overrides on top of it. */
+/** In words, what a saved set of per-store settings holds: the limits set by hand and the features unlocked or locked. */
+export function summarizeOverrides(overrides) {
+  const o = planOverridesSchema.safeParse(overrides ?? {});
+  if (!o.success) return { limits: {}, unlocked: [], locked: [], empty: true };
+  const limits = Object.fromEntries(Object.entries(o.data.limits).filter(([, v]) => v !== undefined));
+  const unlocked = o.data.entitlements.features.unlock ?? [];
+  const locked = o.data.entitlements.features.lock ?? [];
+  return { limits, unlocked, locked, empty: !Object.keys(limits).length && !unlocked.length && !locked.length };
+}
+
+const historyOf = (brand) => (brand.planHistory && typeof brand.planHistory === "object" ? brand.planHistory : {});
+
+/** The plans this store has left, newest first, with what it had set up on each (so the console can say what going back would restore). */
+export const planHistoryList = (brand) =>
+  Object.entries(historyOf(brand))
+    .map(([planId, h]) => ({ planId, planName: h.planName ?? "", leftAt: h.leftAt ?? null, saved: summarizeOverrides(h.overrides), overrides: planOverridesSchema.catch({ limits: {}, entitlements: {} }).parse(h.overrides ?? {}) }))
+    .sort((a, b) => new Date(b.leftAt ?? 0) - new Date(a.leftAt ?? 0));
+
+/**
+ * Assign a plan (or `null` for unlimited) and set this store's overrides on top of it.
+ *
+ * Each plan keeps its own settings for a store. When the store LEAVES a plan, what it had set up there (limits set by hand, features unlocked or
+ * locked) is saved under that plan; when it comes BACK to a plan it had before, those settings are restored; a plan it never had starts clean.
+ * Overrides sent with the same request always win (the admin chose them). Returns `{ store, planChange }`; `planChange` says what happened.
+ */
 export async function setStorePlan(id, { planId, overrides }) {
   const brand = await BrandModel.findById(id);
   if (!brand) throw new HttpError(404, "Store not found");
+  let planChange = null;
 
-  if (planId !== undefined) {
-    if (planId !== null && planId !== brand.planId) {
+  if (planId !== undefined && planId !== (brand.planId ?? null)) {
+    if (planId !== null) {
       const plan = await PlanModel.findById(planId).lean();
       if (!plan) throw new HttpError(400, "That plan doesn't exist");
       if (plan.archived) throw new HttpError(400, "That plan is archived and can't be assigned");
     }
+    const from = brand.planId ?? null;
+    const history = { ...historyOf(brand) };
+    if (from) {
+      const left = await PlanModel.findById(from).select("name").lean();
+      history[from] = { overrides: brand.overrides ?? {}, planName: left?.name ?? history[from]?.planName ?? "", leftAt: new Date() };
+    }
+    const back = planId ? history[planId] : null;
+    const had = summarizeOverrides(brand.overrides);
+    brand.planId = planId;
+    if (overrides === undefined) brand.overrides = back ? back.overrides : {};
+    brand.planHistory = history;
+    brand.markModified("planHistory");
+    planChange = {
+      from,
+      to: planId,
+      savedPrevious: Boolean(from) && !had.empty, // what it had on the plan it left is kept
+      restored: false, // (decided below, once the settings that will be kept are known)
+      restoredFrom: back ? { planName: back.planName ?? "", leftAt: back.leftAt ?? null, saved: summarizeOverrides(back.overrides) } : null,
+      clearedOnNewPlan: false,
+      _had: had, // (dropped below)
+      _back: back ?? null,
+    };
+  } else if (planId !== undefined) {
     brand.planId = planId;
   }
   if (overrides !== undefined) {
     brand.overrides = planOverridesSchema.parse(overrides);
     brand.markModified("overrides");
   }
+  if (brand.isModified("overrides") || planChange) brand.markModified("overrides");
+  if (planChange) {
+    // What counts as "restored" is what the store ends up with, not how it got there: the console sends the settings it already filled in from
+    // the saved ones, the app sends only the plan. Either way, if the store now has exactly what it had on that plan, they are back.
+    const now = summarizeOverrides(brand.overrides);
+    const saved = planChange._back ? summarizeOverrides(planChange._back.overrides) : null;
+    const same = (a, b) => JSON.stringify([Object.entries(a.limits).sort(), [...a.unlocked].sort(), [...a.locked].sort()]) === JSON.stringify([Object.entries(b.limits).sort(), [...b.unlocked].sort(), [...b.locked].sort()]);
+    planChange.restored = Boolean(saved) && !saved.empty && same(now, saved);
+    planChange.clearedOnNewPlan = !planChange._back && now.empty && !planChange._had.empty; // its earlier settings do not carry over to a plan it never had
+    delete planChange._had;
+    delete planChange._back;
+  }
   await fillCustomLimits(brand);
   await brand.save();
   invalidateStorePlan(id);
   // lost WhatsApp chat (new plan, or a lock on this store)? its linked numbers are unlinked right now
   await enforceWhatsAppPlan(id).catch((e) => logger.error({ err: e, brandId: id }, "could not unlink WhatsApp numbers after a plan change"));
-  return getStore(id);
+  return { store: await getStore(id), planChange };
 }
 
 /**

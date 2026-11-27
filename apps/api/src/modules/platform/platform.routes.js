@@ -345,7 +345,7 @@ const planBody = z.object({
 });
 
 platformRouter.patch("/stores/:id/plan", async (req, res) => {
-  res.json({ store: await platform.setStorePlan(req.params.id, planBody.parse(req.body)) });
+  res.json(await platform.setStorePlan(req.params.id, planBody.parse(req.body))); // { store, planChange }
 });
 
 const domainsBody = z.object({
