@@ -1408,3 +1408,10 @@
 {"id":"t66-ops-batch","status":"pass","pass":47,"fail":0,"mode":"headless","at":"2026-11-27T10:46:09.823Z","durationMs":111499}
 {"id":"t69-cache-audit-api","status":"pass","pass":55,"fail":0,"mode":"headless","at":"2026-11-27T10:46:17.651Z","durationMs":7759}
 {"id":"t98-rider-app-api","status":"pass","pass":105,"fail":0,"mode":"headless","at":"2026-11-27T10:46:24.163Z","durationMs":6490}
+{"id":"t105-app-refresh-interval-ui","status":"fail","pass":34,"fail":1,"mode":"headless","at":"2026-11-27T11:03:24.917Z","durationMs":7873}
+{"id":"t94-app-releases-ui","status":"pass","pass":54,"fail":0,"mode":"headless","at":"2026-11-27T11:03:48.520Z","durationMs":23556}
+{"id":"t105-app-refresh-interval-ui","status":"fail","pass":34,"fail":1,"mode":"headless","at":"2026-11-27T11:03:58.515Z","durationMs":4408}
+{"id":"t105-app-refresh-interval-ui","status":"pass","pass":35,"fail":0,"mode":"headless","at":"2026-11-27T11:04:14.924Z","durationMs":5242}
+{"id":"t105-app-refresh-interval-ui","status":"pass","pass":35,"fail":0,"mode":"headless","at":"2026-11-27T11:04:52.499Z","durationMs":6213}
+{"id":"t105-app-refresh-interval-ui","status":"pass","pass":35,"fail":0,"mode":"headless","at":"2026-11-27T11:04:57.376Z","durationMs":3973}
+{"id":"t105-app-refresh-interval-ui","status":"pass","pass":35,"fail":0,"mode":"headless","at":"2026-11-27T11:05:02.408Z","durationMs":4278}

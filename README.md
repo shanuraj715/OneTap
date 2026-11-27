@@ -101,11 +101,11 @@ Rules for the apps (decided with the owner):
 - **One README for the whole project** — this file. App folders have a short README of their own for how to run and
   build that app; anything about the product as a whole goes here.
 
-### App updates: uploading a version, optional vs. required
+### App Management (was "App updates"): uploading a version, optional vs. required
 
 The apps are not on the Play Store. New versions are uploaded in the platform console and downloaded from the website. **Every app has its own releases, its own build numbers and its own download page**; the one list of apps is `APP_CATALOG` in `packages/config-schema/src/app-release.js` (today `oma`, `kda` and `rda`), and the console, the website and the checks all follow it:
 
-- **Console → App updates** (`/platform/app-updates`, platform admin only): one **tab per app** (OMA · KDA · RDA), each with its own list; *New version* picks the `.apk`, fills the
+- **Console → App Management** (`/platform/app-management`; the old `/platform/app-updates` redirects; platform admin only): one **tab per app** (OMA · KDA · RDA), each with its own list; *New version* picks the `.apk`, fills the
   version from its file name (`…-v-26.11.27-003.apk`), takes release notes, and sends the file up in 4 MB pieces with a
   progress bar (so no larger request limit is needed in nginx/Cloudflare, and a dropped connection retries by itself).
   Each version is a **draft**, **published** or **withdrawn**; **Required** makes it compulsory. Uploads are checked: it must
@@ -178,7 +178,7 @@ something changed. **The server's side** (`apps/api/src/realtime/hub.js` + `app-
 ### How often the apps ask for new data (refresh interval, per app)
 
 - **Since the live connection (above) this number is the FALLBACK:** an app that has a live connection never asks on a timer; the interval applies only while there is no live connection (an old server, the platform switched live updates off, the server refused); otherwise it is how often the lists ask.
-- **One number per app**, in seconds, **default 8**, allowed **3 to 600**. The platform admin sets it in the console: **App updates → the app's tab → Refresh interval**. The delivery app (RDA) set to 15 asks the server for new deliveries every 15 seconds; OMA and KDA have their own numbers.
+- **One number per app**, in seconds, **default 8**, allowed **3 to 600**. The platform admin sets it in the console: **App Management → the app's tab → Refresh interval**. The delivery app (RDA) set to 15 asks the server for new deliveries every 15 seconds; OMA and KDA have their own numbers.
 - **How the app learns it:** every request an app makes carries `x-app-id`, and the API (`middleware/app-refresh.js`) adds `x-refresh-seconds: <n>` to **every answer** to it (errors too). The app keeps the last number it saw (`src/data/refresh.ts`; bad or out-of-range values are ignored) and uses it for its next refresh, so a change reaches a phone with its very next request — no new version to install. Until the first answer, an app uses 8. The server keeps the numbers in memory for 15 seconds (cleared at once on save).
 - **What it covers** (`refreshPlan` in each app's `src/lib/config.ts`): OMA — the table board and the orders list; KDA — the kitchen board; RDA — the list of deliveries. Slower background lists keep their own pace but never refresh faster than the setting (KDA dishes 15 s and today's numbers 30 s, OMA "can't be ordered" 60 s).
 - **Old builds:** an app version made before this setting keeps its old fixed pace (OMA 8/10 s, KDA 5/15/30 s, RDA 10 s) until it is updated; it simply ignores the header.

@@ -3,7 +3,7 @@ import { runSuite } from "../bench/suite.mjs";
 
 export const meta = {
   id: "t93-app-releases-api",
-  title: "App updates: the platform admin uploads an APK in pieces and publishes it (optionally forcing an update); phones ask 'is there a newer version?'; old builds are turned away at sign-in when an update is forced",
+  title: "App Management: the platform admin uploads an APK in pieces and publishes it (optionally forcing an update); phones ask 'is there a newer version?'; old builds are turned away at sign-in when an update is forced",
   area: "app",
   browser: false,
   fresh: false,

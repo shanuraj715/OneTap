@@ -32286,23 +32286,23 @@
   },
   "t94-app-releases-ui": {
     "id": "t94-app-releases-ui",
-    "title": "Console → App updates: choose an .apk, see the upload progress, publish it, make an update required, edit the notes, withdraw and delete",
+    "title": "Console → App Management: choose an .apk, see the upload progress, publish it, make an update required, edit the notes, withdraw and delete",
     "status": "pass",
     "pass": 54,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-26T16:35:55.808Z",
-    "durationMs": 15658,
+    "at": "2026-11-27T11:03:48.520Z",
+    "durationMs": 23556,
     "steps": [
       {
         "n": 1,
         "title": "The page, with nothing uploaded yet",
         "checks": [
           {
-            "label": "the sidebar has an 'App updates' item that opens the page",
+            "label": "the sidebar has an 'App Management' item that opens the page",
             "ok": true,
-            "detail": "http://localhost:3171/platform/app-updates",
+            "detail": "http://localhost:3171/platform/app-management",
             "kind": "expect"
           },
           {
@@ -32404,7 +32404,7 @@
           {
             "label": "the percentage climbs while it sends",
             "ok": true,
-            "detail": "0% → 19%",
+            "detail": "0% → 18%",
             "kind": "expect"
           },
           {
@@ -32434,7 +32434,7 @@
           {
             "label": "the version is listed: Published, its size, 0 downloads and its notes",
             "ok": true,
-            "detail": "v-26.11.26-001 Published 9.0 MB · 0 downloads · published Nov 26, 2026 First version: sign in, take orders at the tables. Withdraw Required Notes APK File",
+            "detail": "v-26.11.26-001 Published 9.0 MB · 0 downloads · published Nov 27, 2026 First version: sign in, take orders at the tables. Withdraw Required Notes APK File",
             "kind": "expect"
           },
           {
@@ -40000,6 +40000,279 @@
             "label": "the server counts exactly the apps still connected",
             "ok": true,
             "detail": "2 counted, 2 open",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t105-app-refresh-interval-ui": {
+    "id": "t105-app-refresh-interval-ui",
+    "title": "Console → App Management → Refresh interval: set how often OMA, KDA and RDA ask for new data (default 8 s, per app, 3–600), and the apps are told with their next request",
+    "status": "pass",
+    "pass": 35,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-27T11:05:02.408Z",
+    "durationMs": 4278,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Every app starts at 8 seconds",
+        "checks": [
+          {
+            "label": "the order app's card says 8 seconds, the default",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the box holds 8",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Save is off while nothing has changed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "and there is no 'Use the default' button while it already is the default",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the card says what the order app's refresh covers",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the delivery app's card says it covers new delivery requests",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "and starts at 8 seconds as well",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the kitchen app's card is about the kitchen board",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "The delivery app set to 15: it is saved and the server announces 15 to that app only",
+        "checks": [
+          {
+            "label": "typing a new number turns Save on",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "and offers 'Use the default (8)'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a note says RDA now asks every 15 seconds",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the card now reads 15 seconds",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "and no longer says it is the default",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Save goes off again (nothing left to save)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a phone running the delivery app is now told 15",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the order app and the kitchen app are still told 8",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "It is remembered, per app",
+        "checks": [
+          {
+            "label": "after a reload the first tab (OMA) still shows 8",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the delivery app's tab shows 15",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Wrong numbers are stopped before they are sent, with a message",
+        "checks": [
+          {
+            "label": "2 is refused in the box (outside 3 to 600) and Save stays off",
+            "ok": true,
+            "detail": "At least 3 seconds: asking more often only loads the server.",
+            "kind": "expect"
+          },
+          {
+            "label": "601 is refused in the box (outside 3 to 600) and Save stays off",
+            "ok": true,
+            "detail": "At most 600 seconds.",
+            "kind": "expect"
+          },
+          {
+            "label": "7.5 is refused in the box (not a whole number) and Save stays off",
+            "ok": true,
+            "detail": "Enter a whole number of seconds, from 3 to 600.",
+            "kind": "expect"
+          },
+          {
+            "label": "an empty box turns Save off without a scary message",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "none of those reached the server",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "and the server refuses them too (400) without changing anything",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "The edges are allowed: 3 and 600",
+        "checks": [
+          {
+            "label": "3 seconds (the smallest) is accepted",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "600 seconds (the largest) is accepted",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Enter saves, and 'Use the default' brings back 8",
+        "checks": [
+          {
+            "label": "pressing Enter in the box saves it (20)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Use the default (8)' puts 8 in the box",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…but nothing is saved until Save is pressed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Save then sets it back to 8",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "and the card says it is the default again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "Each app keeps its own number",
+        "checks": [
+          {
+            "label": "OMA 12, RDA 25, KDA 8: three separate numbers",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "A phone-sized screen",
+        "checks": [
+          {
+            "label": "nothing sticks out sideways on a 390 px screen",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the box and Save are both reachable",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser",
+            "ok": true,
+            "detail": "",
             "kind": "expect"
           }
         ]

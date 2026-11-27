@@ -1,4 +1,4 @@
-// The console's "App updates" page, driven in Chrome against the bench: upload the staff app's APK (a real file picked in the
+// The console's "App Management" page, driven in Chrome against the bench: upload the staff app's APK (a real file picked in the
 // browser, sent in 4 MB pieces with a progress bar), publish it, make an update required, edit the notes, withdraw, delete.
 // What the phones are told is checked through the same public endpoint the app uses.
 import { chromium } from "playwright";
@@ -41,9 +41,9 @@ try {
   await page.waitForSelector("text=Stores");
 
   say("1. The page, with nothing uploaded yet");
-  await page.getByRole("link", { name: "App updates" }).first().click();
-  await page.getByRole("heading", { name: "App updates" }).waitFor({ timeout: 15000 });
-  ok(page.url().endsWith("/platform/app-updates"), "the sidebar has an 'App updates' item that opens the page", page.url());
+  await page.getByRole("link", { name: "App Management" }).first().click();
+  await page.getByRole("heading", { name: "App Management" }).waitFor({ timeout: 15000 });
+  ok(page.url().endsWith("/platform/app-management"), "the sidebar has an 'App Management' item that opens the page", page.url());
   await page.getByText("No version uploaded yet").waitFor();
   const summary = page.getByTestId("app-summary");
   ok(/Nothing yet/.test(await summary.innerText()), "it says no version is being offered to phones");

@@ -1,6 +1,6 @@
 # Rasoi Pulse end-to-end tests — catalog
 
-**121 tests** · 113 passing · 2 failing/error · 6 not run yet
+**121 tests** · 114 passing · 2 failing/error · 5 not run yet
 
 | Test | Area | Result | Checks | Last run |
 |---|---|---|---|---|
@@ -20,7 +20,7 @@
 | [t102-login-persist](t102-login-persist.md) — Storefront: a customer who signed in stays signed in for 180 days, through reloads, new tabs and a server that can't answer for a moment (restart, deploy, rate limit, dropped connection) — without being sent back to the login form | storefront | ⚪ not run yet | — | — |
 | [t103-website-home-apps-motion](t103-website-home-apps-motion.md) — Website → header keeps to Product / Pricing / Apps / FAQ (About + Contact in the footer); homepage has a short animated 'We have apps too' note (no cards); hero backdrop fades out; livelier Features and moments; motion that stops under reduce-motion; no text selection or text cursor | website | ✅ PASSED | 61/61 | 2026-11-27 10:50 |
 | [t104-app-refresh-interval-api](t104-app-refresh-interval-api.md) — Apps → the refresh interval is one number per app (default 8 s), set by the platform admin, and announced to the app in every answer | app | ⚪ not run yet | — | — |
-| [t105-app-refresh-interval-ui](t105-app-refresh-interval-ui.md) — Console → App updates → Refresh interval: set how often OMA, KDA and RDA ask for new data (default 8 s, per app, 3–600), and the apps are told with their next request | app | ⚪ not run yet | — | — |
+| [t105-app-refresh-interval-ui](t105-app-refresh-interval-ui.md) — Console → App Management → Refresh interval: set how often OMA, KDA and RDA ask for new data (default 8 s, per app, 3–600), and the apps are told with their next request | app | ✅ PASSED | 35/35 | 2026-11-27 16:35 |
 | [t106-api-speed-test](t106-api-speed-test.md) — API speed test (apps/api/src/scripts/speed-test.js): time inside the API, time waiting for the database, query plans, load, and before/after comparison — read-only | api | ⚪ not run yet | — | — |
 | [t107-app-screenshots](t107-app-screenshots.md) — Website → /apps/oma, /apps/kda, /apps/rda: real tablet screenshots in an Android tablet frame, as a tabbed gallery that works by mouse, keyboard and without script | website | ⚪ not run yet | — | — |
 | [t108-plan-features](t108-plan-features.md) — Plans → Business includes every feature (also future ones), Starter gains pre-orders and ratings, features that need another are flagged, and update-plans.js brings existing plans up to date safely | platform | ✅ PASSED | 51/51 | 2026-11-27 09:53 |
@@ -118,8 +118,8 @@
 | [t90-staff-outlet-access-api](t90-staff-outlet-access-api.md) — Team members mapped to outlets: they see (and can work in) only those outlets; nothing mapped = every outlet; the owner can change it later | security | ✅ PASSED | 33/33 | 2026-11-26 22:10 |
 | [t91-staff-order-customer-view-api](t91-staff-order-customer-view-api.md) — An order a waiter took for a customer's number shows in that customer's 'My orders' and tracking page when they sign in on the storefront with the same number | orders | ✅ PASSED | 18/18 | 2026-11-26 17:45 |
 | [t92-dashboard-reopen-outlets-ui](t92-dashboard-reopen-outlets-ui.md) — Dashboard: an order put back from Completed seats its table again (or asks which free table); Users & roles gives team members outlets | orders | ✅ PASSED | 52/52 | 2026-11-27 10:02 |
-| [t93-app-releases-api](t93-app-releases-api.md) — App updates: the platform admin uploads an APK in pieces and publishes it (optionally forcing an update); phones ask 'is there a newer version?'; old builds are turned away at sign-in when an update is forced | app | ✅ PASSED | 98/98 | 2026-11-26 22:04 |
-| [t94-app-releases-ui](t94-app-releases-ui.md) — Console → App updates: choose an .apk, see the upload progress, publish it, make an update required, edit the notes, withdraw and delete | app | ✅ PASSED | 54/54 | 2026-11-26 22:05 |
+| [t93-app-releases-api](t93-app-releases-api.md) — App Management: the platform admin uploads an APK in pieces and publishes it (optionally forcing an update); phones ask 'is there a newer version?'; old builds are turned away at sign-in when an update is forced | app | ✅ PASSED | 98/98 | 2026-11-26 22:04 |
+| [t94-app-releases-ui](t94-app-releases-ui.md) — Console → App Management: choose an .apk, see the upload progress, publish it, make an update required, edit the notes, withdraw and delete | app | ✅ PASSED | 54/54 | 2026-11-27 16:33 |
 | [t95-app-releases-website-ui](t95-app-releases-website-ui.md) — Website → /app: the staff app's download page shows the latest published version, its notes and every version, and follows publish / withdraw / required in seconds | app | ✅ PASSED | 37/37 | 2026-11-27 11:06 |
 | [t96-icons-map-ui](t96-icons-map-ui.md) — Icons: the website has the Rasoi Pulse icon (navy), the admin panel a different one (red), and the storefront shows the shop owner's own icon (the Rasoi Pulse one until they upload theirs) | branding | ✅ PASSED | 20/20 | 2026-11-27 11:07 |
 | [t97-kitchen-app-api](t97-kitchen-app-api.md) — Kitchen app (KDA) API: only the kitchen team may sign in; a dish can be marked sold out / unavailable / available from the kitchen (with a stock number for managers); nothing the other apps or the dashboard do has changed | kitchen | ✅ PASSED | 34/34 | 2026-11-26 22:05 |

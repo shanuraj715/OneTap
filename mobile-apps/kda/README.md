@@ -73,7 +73,7 @@ One backup of that folder covers both apps. A lost key means every phone must un
 
 `v-YY.MM.DD-NNN` (year, month, day, build), in `app-version.json`: the first version is **`v-26.11.27-001`** (all three apps were reset to this initial version on 2026-11-27, before the first release). It changes **only when
 the owner asks for an upgrade** (`npm run version:bump -- --confirm`). The build number counts this app's own builds, and is
-the Android `versionCode`. To publish a build: console → **App updates** → the **KDA** tab → *New version*.
+the Android `versionCode`. To publish a build: console → **App Management** → the **KDA** tab → *New version*.
 
 ## Updates
 

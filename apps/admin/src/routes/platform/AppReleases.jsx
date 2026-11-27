@@ -30,7 +30,7 @@ export function AppReleases() {
   return (
     <>
       <PageHeader
-        title="App updates"
+        title="App Management"
         icon={<Smartphone size={23} />}
         subtitle="One page for every Rasoi Pulse app. Choose the app, upload a new version, decide whether staff can skip it or must install it first, and share its download page."
         action={
@@ -156,7 +156,7 @@ function RefreshForm({ app, meta, setting }) {
       </div>
       {problem ? <Toast kind="error"><span data-testid="refresh-problem">{problem}</span></Toast> : null}
       {save.error ? <Toast kind="error"><span data-testid="refresh-error">{save.error.message}</span></Toast> : null}
-      {save.isSuccess && !save.isPending ? <Toast kind="ok"><span data-testid="refresh-saved">Saved. {meta.code} now asks every {setting.refreshSeconds} seconds.</span></Toast> : null}
+      {save.isSuccess && !save.isPending ? <Toast kind="ok"><span data-testid="refresh-saved">Saved. {meta.code} now asks every {save.variables ?? setting.refreshSeconds} seconds.</span></Toast> : null}
     </Card>
     </div>
   );

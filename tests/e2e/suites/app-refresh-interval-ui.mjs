@@ -1,4 +1,4 @@
-// The console's "Refresh interval" card on App updates: how often each mobile app (OMA, KDA, RDA) asks the server for new data. Driven in Chrome
+// The console's "Refresh interval" card on App Management: how often each mobile app (OMA, KDA, RDA) asks the server for new data. Driven in Chrome
 // against the bench; what the apps are told is read back through the same header the apps read (`x-refresh-seconds` on any answer to a request
 // that carries x-app-id). Default 8 seconds, one number per app.
 import { chromium } from "playwright";
@@ -30,8 +30,8 @@ try {
   await page.fill('input[type="email"]', "super@sandbox.test"); await page.fill('input[type="password"]', "Super123!");
   await page.getByRole("button", { name: /sign in|log in/i }).first().click();
   await page.waitForSelector("text=Stores");
-  await page.getByRole("link", { name: "App updates" }).first().click();
-  await page.getByRole("heading", { name: "App updates" }).waitFor({ timeout: 15000 });
+  await page.getByRole("link", { name: "App Management" }).first().click();
+  await page.getByRole("heading", { name: "App Management" }).waitFor({ timeout: 15000 });
   const card = page.getByTestId("app-refresh");
   const field = page.getByTestId("refresh-seconds");
   const save = page.getByTestId("refresh-save");
@@ -69,7 +69,7 @@ try {
 
   say("3. It is remembered, per app");
   await page.reload({ waitUntil: "load" });
-  await page.getByRole("heading", { name: "App updates" }).waitFor({ timeout: 15000 });
+  await page.getByRole("heading", { name: "App Management" }).waitFor({ timeout: 15000 });
   await card.waitFor();
   ok((await field.inputValue()) === "8", "after a reload the first tab (OMA) still shows 8");
   await tab("rda").click();

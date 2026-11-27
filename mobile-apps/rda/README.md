@@ -70,7 +70,7 @@ The Rasoi Pulse apps share **one** key, in `~/.rasoi-pulse/signing/oma/` — see
 ## Version management
 
 `v-YY.MM.DD-NNN`, in `app-version.json`: the first version is **`v-26.11.27-001`**. It changes **only when the owner asks for an upgrade**
-(`npm run version:bump -- --confirm`). To publish a build: console → **App updates** → the **RDA** tab → *New version*; the website page is `/apps/rda`.
+(`npm run version:bump -- --confirm`). To publish a build: console → **App Management** → the **RDA** tab → *New version*; the website page is `/apps/rda`.
 
 ## Tests
 

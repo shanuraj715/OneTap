@@ -1,12 +1,12 @@
-# T94 — Console → App updates: choose an .apk, see the upload progress, publish it, make an update required, edit the notes, withdraw and delete
+# T94 — Console → App Management: choose an .apk, see the upload progress, publish it, make an update required, edit the notes, withdraw and delete
 
-**Area:** app · **Last result:** ✅ PASSED (54 passed, 0 failed · 2026-11-26 22:05 · headless · 15.7 s)
+**Area:** app · **Last result:** ✅ PASSED (54 passed, 0 failed · 2026-11-27 16:33 · headless · 23.6 s)
 
 **Run it alone:** `node run.mjs --only t94` (add `--visible` to watch it)
 
 ## What this test does
 
-Runs suites/app-releases-ui.mjs in Chrome against the bench (the platform admin). The sidebar's 'App updates' opens an empty page that says no version is offered, updates are optional, and shows the download page's address. 'New version': Upload is off until a file and a version are given; a non-.apk and a file over the limit are refused at once, the version box is filled from the file name, a wrong format or a taken build number is explained and blocks the button, 'Update required' (with Publish now) warns that older phones will be blocked. On a slowed connection a progress bar counts up and 'Cancel upload' stops it and creates nothing; a whole 9 MB upload (3 pieces) ends with 'is live' and the version listed Published with its size, 0 downloads and notes; the server holds the file with its real size and SHA-256 and the website's list has it. A second version uploaded as a draft is invisible to phones, Publish offers it (optional), 'Required' makes it compulsory (the summary says everything older is stopped; an old build is refused at sign-in) and unticking undoes it. Notes can be edited and reach phones; Withdraw hides it and switches off its APK link; Publish again brings it back; the APK link downloads the exact file and the counter moves; 'File' shows the SHA-256; Delete asks first and removes the file. On a phone-sized screen nothing sticks out sideways.
+Runs suites/app-releases-ui.mjs in Chrome against the bench (the platform admin). The sidebar's 'App Management' opens an empty page that says no version is offered, updates are optional, and shows the download page's address. 'New version': Upload is off until a file and a version are given; a non-.apk and a file over the limit are refused at once, the version box is filled from the file name, a wrong format or a taken build number is explained and blocks the button, 'Update required' (with Publish now) warns that older phones will be blocked. On a slowed connection a progress bar counts up and 'Cancel upload' stops it and creates nothing; a whole 9 MB upload (3 pieces) ends with 'is live' and the version listed Published with its size, 0 downloads and notes; the server holds the file with its real size and SHA-256 and the website's list has it. A second version uploaded as a draft is invisible to phones, Publish offers it (optional), 'Required' makes it compulsory (the summary says everything older is stopped; an old build is refused at sign-in) and unticking undoes it. Notes can be edited and reach phones; Withdraw hides it and switches off its APK link; Publish again brings it back; the APK link downloads the exact file and the counter moves; 'File' shows the SHA-256; Delete asks first and removes the file. On a phone-sized screen nothing sticks out sideways.
 
 ## Steps
 
@@ -42,7 +42,7 @@ _Nothing failed._
 
 **Step 1 — The page, with nothing uploaded yet**
 
-- the sidebar has an 'App updates' item that opens the page — _http://localhost:3171/platform/app-updates_
+- the sidebar has an 'App Management' item that opens the page — _http://localhost:3171/platform/app-management_
 - it says no version is being offered to phones
 - and that updates are optional right now
 - it shows the download page staff are sent to — _localhost:3173/app_
@@ -63,7 +63,7 @@ _Nothing failed._
 
 - a progress bar says how much has been sent — _Sending 0 B of 9.0 MB 0%_
 - 'Cancel upload' is offered while it is going
-- the percentage climbs while it sends — _0% → 19%_
+- the percentage climbs while it sends — _0% → 18%_
 - cancelling creates nothing
 - and the form is ready to try again
 
@@ -125,6 +125,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-27 16:33 | pass | 54 | 0 | headless | 23.6 s |
 | 2026-11-26 22:05 | pass | 54 | 0 | headless | 15.7 s |
 | 2026-11-26 20:09 | pass | 45 | 0 | headless | 14.8 s |
 | 2026-11-26 19:26 | pass | 45 | 0 | headless | 14.4 s |

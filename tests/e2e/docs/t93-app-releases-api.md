@@ -1,4 +1,4 @@
-# T93 — App updates: the platform admin uploads an APK in pieces and publishes it (optionally forcing an update); phones ask 'is there a newer version?'; old builds are turned away at sign-in when an update is forced
+# T93 — App Management: the platform admin uploads an APK in pieces and publishes it (optionally forcing an update); phones ask 'is there a newer version?'; old builds are turned away at sign-in when an update is forced
 
 **Area:** app · **Last result:** ✅ PASSED (98 passed, 0 failed · 2026-11-26 22:04 · headless · 4.7 s)
 

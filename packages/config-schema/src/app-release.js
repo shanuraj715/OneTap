@@ -53,7 +53,7 @@ export const appPagePath = (app) => `/apps/${APP_CATALOG[app]?.slug ?? app}`;
 
 /**
  * How often an app asks the server for new data (a new order, a new delivery), in seconds. ONE number per app, set by the platform admin in the
- * console (App updates → the app's tab → Refresh interval) and told to the app in the `x-refresh-seconds` header of every answer, so a change
+ * console (App Management → the app's tab → Refresh interval) and told to the app in the `x-refresh-seconds` header of every answer, so a change
  * reaches a phone with its very next request. The apps keep these same numbers (`REFRESH_DEFAULT_SECONDS` …) in their own config, and their tests
  * fail if the two drift apart.
  */
