@@ -17,6 +17,36 @@ export interface Dashboard {
   stores: { total: number; byPlan: { name: string; count: number }[]; status: { ok: number; grace: number; overLimit: number }; disabled: number; activeLast30Days: number; setup: { withMenu: number; withTables: number; withPayments: number } };
   leads?: { new: number };
 }
+/** Rasoi Pulse's OWN sales: what the shops pay for the product (GET /api/platform/business). Money is in rupees. Nothing here is a store's orders. */
+export type BusinessUnit = "day" | "week" | "month";
+export interface BusinessSeries {
+  unit: BusinessUnit; labels: string[]; dates: string[]; previousLabels: string[];
+  current: number[]; previous: number[]; newAmount: number[]; renewalAmount: number[];
+  total: number; previousTotal: number; changePct: number | null; newCount: number; renewalCount: number;
+}
+export interface PaymentRow {
+  id: string; storeId: string; storeName: string; planId: string | null; planName: string; amount: number; months: number;
+  paidOn: string; kind: "new" | "renewal"; coversFrom: string; coversTo: string; note: string; recordedBy: string; createdAt: string;
+}
+export interface Business {
+  generatedAt: string; today: { label: string };
+  totals: { sales: number; payments: number; shops: number; averagePerShop: number };
+  newSales: { shops: number; amount: number };
+  renewals: { payments: number; shops: number; amount: number };
+  month: { label: string; sales: number; newShops: number; newAmount: number; renewals: number; renewalAmount: number; samePeriodLastMonth: number; changePct: number | null };
+  standing: { active: number; expired: number; expiringSoon: number; neverPaid: number; neverPaidStores: { id: string; name: string }[]; expiredStores: { id: string; name: string; paidUntil: string }[] };
+  series: Record<BusinessUnit, BusinessSeries>;
+  byPlan: { name: string; activeShops: number; amount: number }[];
+  recent: (PaymentRow & { storeDeleted: boolean })[];
+}
+/** One store's payments (GET /api/platform/stores/:id/payments): newest first, where it stands, and a price to start the form from. */
+export interface StorePayments {
+  storeId: string; storeName: string; payments: PaymentRow[];
+  standing: { state: "active" | "expired" | "never"; paidUntil: string | null; daysLeft: number | null };
+  total: number;
+  suggest: { planId: string | null; planName: string; monthly: number; yearly: number };
+}
+export interface PaymentInput { amount: number; paidOn: string; months: number; planId?: string; note?: string }
 export interface StoreRow {
   id: string; name: string; slug: string; ownerEmail: string; createdAt: string;
   plan: { id: string; name: string } | null;
@@ -34,7 +64,7 @@ export interface StoreDetail extends StoreRow {
   limits: { maxUsers: number | null; maxOutlets: number | null; maxTables: number | null };
   entitlements: { features: string[] };
 }
-export interface Plan { id: string; name: string; description: string; custom: boolean; limits: { maxUsers: number | null; maxOutlets: number | null; maxTables: number | null }; entitlements: { allFeatures: boolean; features: string[] }; archived: boolean; storeCount: number; marketing?: { monthly: number; price: string } }
+export interface Plan { id: string; name: string; description: string; custom: boolean; limits: { maxUsers: number | null; maxOutlets: number | null; maxTables: number | null }; entitlements: { allFeatures: boolean; features: string[] }; archived: boolean; storeCount: number; marketing?: { monthly: number; yearlyDiscount?: number; price: string } }
 export interface Role { id: string; name: string; description: string; features: string[]; effective: string[]; members: number }
 export interface Member { id: string; name: string; email: string; isActive: boolean; roleId: string; roleName: string; lastLoginAt: string | null }
 export interface AuditEntry { id: string; at: string; actor: string; action: string; target: string; detail: string }
@@ -106,6 +136,11 @@ export function createApi(client: ApiClient) {
     guard: () => r<{ blocked: boolean; retryAfterSec?: number }>("/api/auth/guard", { auth: false }),
 
     dashboard: (fresh = false) => r<Dashboard>(`/api/platform/dashboard${fresh ? "?fresh=1" : ""}`),
+
+    business: () => r<Business>("/api/platform/business"),
+    storePayments: (id: string) => r<StorePayments>(`/api/platform/stores/${id}/payments`),
+    recordPayment: (id: string, body: PaymentInput) => r<StorePayments & { payment: PaymentRow }>(`/api/platform/stores/${id}/payments`, json("POST", body)),
+    deletePayment: (id: string, paymentId: string) => r<StorePayments>(`/api/platform/stores/${id}/payments/${paymentId}`, json("DELETE")),
 
     stores: () => r<{ stores: StoreRow[] }>("/api/platform/stores"),
     store: (id: string) => r<{ store: StoreDetail }>(`/api/platform/stores/${id}`),

@@ -10,6 +10,10 @@ export function rupeesShort(paise: number | null | undefined): string {
   if (a >= 1_000) return `${s}₹${(a / 1_000).toFixed(a >= 10_000 ? 0 : 1)} K`;
   return `${s}₹${a}`;
 }
+/** A plain rupee amount (NOT paise): ₹2,499 · ₹999.50 — whole rupees without decimals, paise shown only when there are any. */
+export const money = (rupee: number | null | undefined) => `₹${(rupee ?? 0).toLocaleString("en-IN", { maximumFractionDigits: 2 })}`;
+/** The same, short, for a chart's axis: ₹2.5 K. */
+export const moneyShort = (rupee: number | null | undefined) => rupeesShort(Math.round((rupee ?? 0) * 100));
 export const count = (n: number | null | undefined) => (n ?? 0).toLocaleString("en-IN");
 /** +6.1% / −3% / "–" when there is nothing to compare. */
 export const changePct = (p: number | null | undefined) => (p === null || p === undefined ? "–" : `${p > 0 ? "+" : p < 0 ? "−" : ""}${Math.abs(p)}%`);

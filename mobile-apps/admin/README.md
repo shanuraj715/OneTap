@@ -13,8 +13,8 @@ Each person sees **only the areas their role holds** (the owner sees all); the s
 
 | Area | What it does |
 | --- | --- |
-| **Dashboard** | Sales this month against last month (an interactive chart: touch and drag to read a day), totals, month-by-month, top stores, where orders come from |
-| **Stores** | Every client: search, filter, plan, standing. Open one to rename it, change its plan, switch it off or on, block an outlet or a person, delete it (each only if the role may) |
+| **Dashboard** | **Rasoi Pulse business** first: what the shops pay you — total sales, new sales, re-subscribed, who ran out, one chart that switches Day / Week / Month against the period before. Below it, under "Across every store": sales this month against last month (touch and drag to read a day), totals, month-by-month, top stores, where orders come from |
+| **Stores** | Every client: search, filter, plan, standing. Open one to rename it, change its plan, switch it off or on, block an outlet or a person, delete it, and see / write down its **subscription payments** (each only if the role may) |
 | **Onboarding** | Requirement forms for new clients: plan first, outlets, features (with "allow anyway" beyond the plan), save as a draft, the server's "ready?" check, **Publish as store** |
 | **Plans** | What each plan includes: limits, price, features, how many stores use it (read only) |
 | **Leads** | Website enquiries: call, WhatsApp, email, mark contacted / won / lost, notes |

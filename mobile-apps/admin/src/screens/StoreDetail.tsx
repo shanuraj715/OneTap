@@ -8,6 +8,7 @@ import { canDo } from "@/lib/access";
 import { dateTime, day } from "@/lib/format";
 import { Button, ConfirmSheet, Empty, ErrorState, Field, Glass, Grid, Input, LoadingCards, Meter, Pill, Row, Screen, Section, Select, Sheet, Text } from "@/ui";
 import { standing } from "./Stores";
+import { PaymentsSection } from "./StorePayments";
 
 type Dialog = null | "rename" | "plan" | "off" | "on" | "delete";
 
@@ -71,6 +72,10 @@ export function StoreDetail({ id }: { id: string }) {
                 ))}
               </View>
             </Glass>
+          </Section>
+
+          <Section title="Subscription payments" hint="What this store has paid Rasoi Pulse">
+            <PaymentsSection id={id} mayManage={mayManage} />
           </Section>
 
           <Section title={`Outlets (${s.outlets.length})`}>

@@ -1,14 +1,16 @@
 import { View } from "react-native";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { useApi, useMe } from "@/runtime";
 import { canDo } from "@/lib/access";
 import { changePct, count, rupees, rupeesShort } from "@/lib/format";
+import { BusinessSection } from "./Business";
 import { BarChart, CountUp, Donut, Glass, Grid, LineChart, LoadingCards, Meter, Pill, RankedBars, Screen, Section, Stat, Text, ErrorState, Reveal, useTheme } from "@/ui";
 
 /** The platform's numbers: sales, stores, setup progress — figures that count up, charts that draw themselves and answer to a touch. */
 export function Dashboard() {
   const api = useApi();
+  const qc = useQueryClient();
   const me = useMe();
   const { c } = useTheme();
   const q = useQuery({ queryKey: ["dashboard"], queryFn: () => api.dashboard(false), staleTime: 60_000 });
@@ -17,9 +19,11 @@ export function Dashboard() {
   const mayOpenStores = canDo(me, "stores:read");
 
   return (
-    <Screen title="Dashboard" subtitle={d ? `${d.today.label} · every store together` : "Loading the numbers…"} onRefresh={() => { void api.dashboard(true).then(() => q.refetch()); }} refreshing={q.isFetching && !q.isLoading} testID="screen-dashboard">
+    <Screen title="Dashboard" subtitle={d ? `${d.today.label} · every store together` : "Loading the numbers…"} onRefresh={() => { void qc.invalidateQueries({ queryKey: ["business"] }); void api.dashboard(true).then(() => q.refetch()); }} refreshing={q.isFetching && !q.isLoading} testID="screen-dashboard">
+      <BusinessSection />
       {q.isLoading ? <LoadingCards n={4} /> : q.isError ? <ErrorState error={q.error} onRetry={() => void q.refetch()} /> : d ? (
         <>
+          <Section title="Across every store" hint="What the shops sell to their own customers, through Rasoi Pulse">
           <Reveal>
             <Glass blur strong radiusSize={28} padding={20}>
               <Text variant="overline" tone="muted">{d.sales.month.label} · sales through your stores</Text>
@@ -36,6 +40,7 @@ export function Dashboard() {
               </View>
             </Glass>
           </Reveal>
+          </Section>
 
           <Grid min={150}>
             <Stat index={1} icon="stores" label="Stores" value={<CountUp value={d.totals.stores} format={count} />} sub={<Text variant="caption" tone="muted">{d.stores.activeLast30Days} ordered in 30 days</Text>} onPress={mayOpenStores ? () => router.push("/stores") : undefined} />
