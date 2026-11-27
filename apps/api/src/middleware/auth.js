@@ -40,6 +40,18 @@ export function requireUser(req         )          {
   return req.user;
 }
 
+/**
+ * A platform route for a person who may hold `features` (any one of them): the super admin always, a team member whose role holds one of
+ * them (see config-schema/platform-access.js). A store's own staff never get in — they have no platform features at all.
+ */
+export function requirePlatform(req         , ...features          )          {
+  const user = requireUser(req);
+  if (user.isSuperAdmin) return user;
+  const have = user.platform?.features ?? [];
+  if (!features.length || !features.some((f) => have.includes(f))) throw new HttpError(403, "Your role can't do this.");
+  return user;
+}
+
 /** Platform-only routes — the super admin who runs Rasoi Pulse, not a store's owner. */
 export function requireSuperAdmin(req         )          {
   const user = requireUser(req);

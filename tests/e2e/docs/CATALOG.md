@@ -1,12 +1,12 @@
 # Rasoi Pulse end-to-end tests — catalog
 
-**121 tests** · 114 passing · 2 failing/error · 5 not run yet
+**123 tests** · 116 passing · 2 failing/error · 5 not run yet
 
 | Test | Area | Result | Checks | Last run |
 |---|---|---|---|---|
 | [t00-bench-smoke](t00-bench-smoke.md) — Bench smoke test — API, dashboard and storefronts are alive with the fake stores | bench | ✅ PASSED | 11/11 | 2026-11-21 04:28 |
 | [t01-takeaway-order](t01-takeaway-order.md) — Takeaway order of at least ₹999 — customer places it, staff take it all the way to Completed | orders | ✅ PASSED | 45/45 | 2026-11-21 04:29 |
-| [t02-whatsapp-api](t02-whatsapp-api.md) — WhatsApp chat — API rules and the careful-pace sending worker | whatsapp | ✅ PASSED | 132/132 | 2026-11-21 13:07 |
+| [t02-whatsapp-api](t02-whatsapp-api.md) — WhatsApp chat — API rules and the careful-pace sending worker | whatsapp | ✅ PASSED | 132/132 | 2026-11-27 16:47 |
 | [t03-whatsapp-dashboard](t03-whatsapp-dashboard.md) — WhatsApp in the dashboard — chat window, numbers, broadcast, access and phone layout | whatsapp | ✅ PASSED | 44/44 | 2026-11-21 13:26 |
 | [t04-whatsapp-manage](t04-whatsapp-manage.md) — WhatsApp management — colours, chat stats and sharing out, clean-up by date, delete a message | whatsapp | ✅ PASSED | 20/20 | 2026-11-21 04:30 |
 | [t05-whatsapp-chat-filters](t05-whatsapp-chat-filters.md) — WhatsApp chat list — 'via' chips and filters (All, Unread, Needs reply, New, No offers, by number) | whatsapp | ✅ PASSED | 12/12 | 2026-11-21 04:30 |
@@ -38,6 +38,8 @@
 | [t119-log-redaction-api](t119-log-redaction-api.md) — The API's request log never contains a secret (session cookie, Bearer token, secret headers, Set-Cookie) | security | ✅ PASSED | 17/17 | 2026-11-27 16:03 |
 | [t12-store-delete](t12-store-delete.md) — Delete the store — typed-name confirmation, then the subdomain, the owner and the other stores | domains | ✅ PASSED | 19/19 | 2026-11-21 13:19 |
 | [t120-app-live-api](t120-app-live-api.md) — Staff apps (OMA, KDA, RDA): the live connection — who may listen, what they are told, who is let go (server side) | apps | ✅ PASSED | 48/48 | 2026-11-27 16:11 |
+| [t121-platform-roles-api](t121-platform-roles-api.md) — Rasoi Pulse team roles: only the super admin makes roles and people; a team member can do exactly what their role holds, in every part of the platform API | platform | ✅ PASSED | 61/61 | 2026-11-27 16:52 |
+| [t122-platform-team-ui](t122-platform-team-ui.md) — Console → Team & roles: make a role and a person, and what that person sees (only what the role allows); the sidebar says App Management | platform | ✅ PASSED | 28/28 | 2026-11-27 16:52 |
 | [t13-marketing](t13-marketing.md) — Marketing — channels, audience filters (last visit, items, age, gender, order type, area), imports, lists, sending and the sidebar | marketing | ✅ PASSED | 70/70 | 2026-11-21 13:07 |
 | [t14-marketing-plan](t14-marketing-plan.md) — Marketing is a plan feature — Basic doesn't have it, Pro does, and it can be unlocked or locked for one store | plans | ✅ PASSED | 16/16 | 2026-11-27 10:11 |
 | [t15-login-protection](t15-login-protection.md) — Sign-in protection — wrong guesses block the network, blocks grow longer, a blocked network sees no login form, the platform can unblock | security | ✅ PASSED | 28/28 | 2026-11-21 13:10 |

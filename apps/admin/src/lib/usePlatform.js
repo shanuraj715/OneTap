@@ -1,12 +1,16 @@
 import { keepPreviousData, useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as api from "./api";
 
-/** Data for the platform console (super admin only). */
+/** Data for the platform console (the super admin, and the team members whose role allows each page). */
 export const useSecurityBlocks = () => useQuery({ queryKey: ["platform", "security"], queryFn: api.getSecurityBlocks, refetchInterval: 5000 });
-export const usePlans = () => useQuery({ queryKey: ["platform", "plans"], queryFn: api.listPlans });
+/** Roles, team members and the activity log — the super admin only. */
+export const useRoles = () => useQuery({ queryKey: ["platform", "roles"], queryFn: api.listRoles });
+export const useTeam = () => useQuery({ queryKey: ["platform", "team"], queryFn: api.listTeam });
+export const useTeamActivity = (limit = 50) => useQuery({ queryKey: ["platform", "team-activity", limit], queryFn: () => api.listTeamActivity(limit) });
+export const usePlans = (enabled = true) => useQuery({ queryKey: ["platform", "plans"], queryFn: api.listPlans, enabled });
 export const useStores = () => useQuery({ queryKey: ["platform", "stores"], queryFn: api.listStores });
 export const useStore = (id) => useQuery({ queryKey: ["platform", "store", id], queryFn: () => api.getStore(id), enabled: Boolean(id) });
-export const usePlatformSettings = () => useQuery({ queryKey: ["platform", "settings"], queryFn: api.getPlatformSettings });
+export const usePlatformSettings = (enabled = true) => useQuery({ queryKey: ["platform", "settings"], queryFn: api.getPlatformSettings, enabled });
 
 /** The dashboard. While it reloads the previous numbers stay on screen (dimmed), so the page never jumps. */
 export const useDashboard = () =>

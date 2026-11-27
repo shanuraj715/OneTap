@@ -9,7 +9,7 @@ import { publishForm } from "./onboarding.publish.js";
 import { checkForm, deleteForm, getForm, getPricing, listForms, planOf, savePricing, saveForm } from "./onboarding.service.js";
 import { limiter } from "../../middleware/rate-limit.js";
 
-/** The client onboarding forms. Mounted inside the platform console's router, so it is super-admin only. */
+/** The client onboarding forms. Mounted inside the platform console's router: the super admin and any team role that holds "Onboarding" (see platform-access.js). */
 export const onboardingRouter = Router();
 
 onboardingRouter.get("/", async (req, res) => {

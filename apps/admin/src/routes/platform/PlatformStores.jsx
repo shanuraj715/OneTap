@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "../../lib/nav";
 import { Plus, Store } from "lucide-react";
 import * as api from "../../lib/api";
+import { useAuth } from "../../lib/useAuth";
 import { usePlans, usePlatformMutation, usePlatformSettings, useStores } from "../../lib/usePlatform";
 import { Button, Card, Field, Note, PageHeader, Select, TextInput, Toast } from "../../ui";
 import { DisabledPill, muted, planLabel, row, StatusPill, usageText } from "./shared";
@@ -31,7 +32,9 @@ const EMPTY = {
 /** Every client store on the platform, and where a new one is onboarded. */
 export function PlatformStores() {
   const stores = useStores();
-  const plans = usePlans();
+  const { canPlatform } = useAuth();
+  const mayManage = canPlatform("stores:manage"); // creating a store; a view-only role sees the list
+  const plans = usePlans(mayManage);
   const create = usePlatformMutation(api.createBrand);
   const [adding, setAdding] = useState(false);
   const [form, setForm] = useState(EMPTY);
@@ -44,7 +47,7 @@ export function PlatformStores() {
   const selectedPlan = activePlans.find((p) => p.id === form.planId);
   const customPlan = Boolean(selectedPlan?.custom);
   // a store's Rasoi Pulse address (acme.<base>) comes with every plan; an own domain only with plans that include it
-  const base = usePlatformSettings().data?.settings.subdomainBase ?? "";
+  const base = usePlatformSettings(canPlatform("settings:manage") || mayManage).data?.settings.subdomainBase ?? "";
   const ownAllowed = !selectedPlan || selectedPlan.entitlements.features.includes("customDomain");
   const [subTouched, setSubTouched] = useState(false);
   const subdomain = subTouched ? form.subdomain : base ? slugify(form.brandName) : "";
@@ -90,9 +93,11 @@ export function PlatformStores() {
         icon={<Store size={23} />}
         subtitle="Your clients — their plan, limits, owners and outlets."
         action={
-          <Button onClick={() => setAdding((a) => !a)} style={{ display: "inline-flex", gap: 6, alignItems: "center" }}>
-            <Plus size={14} /> Create store
-          </Button>
+          mayManage ? (
+            <Button onClick={() => setAdding((a) => !a)} style={{ display: "inline-flex", gap: 6, alignItems: "center" }}>
+              <Plus size={14} /> Create store
+            </Button>
+          ) : null
         }
       />
 

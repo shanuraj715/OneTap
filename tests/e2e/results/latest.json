@@ -500,8 +500,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-21T07:37:29.529Z",
-    "durationMs": 11982,
+    "at": "2026-11-27T11:17:35.667Z",
+    "durationMs": 15119,
     "steps": [
       {
         "n": 1,
@@ -708,7 +708,7 @@
           {
             "label": "an attachment uploads",
             "ok": true,
-            "detail": "http://localhost:3098/uploads/6b014a30f24efca9a781",
+            "detail": "http://localhost:3098/uploads/6b0966c4b74838098594",
             "kind": "expect"
           },
           {
@@ -750,7 +750,7 @@
           {
             "label": "the next first contact must wait 2–4 minutes",
             "ok": true,
-            "detail": "141 s",
+            "detail": "185 s",
             "kind": "expect"
           },
           {
@@ -774,7 +774,7 @@
           {
             "label": "15 first contacts a day per number: the rest wait for tomorrow",
             "ok": true,
-            "detail": "2026-11-22T03:39:27.306Z",
+            "detail": "2026-11-28T03:31:32.914Z",
             "kind": "expect"
           },
           {
@@ -900,13 +900,13 @@
           {
             "label": "preview: 3 people (duplicates merged), 1 opted out",
             "ok": true,
-            "detail": "{\"recipients\":3,\"optedOut\":1,\"running\":0,\"firstContact\":3,\"numbersOnline\":[{\"id\":\"6b014a31f24efca9a7811013\",\"label\":\"Counter phone\"},{\"id\":\"6b014a31f24efca9a7811017\",\"label\":\"Delivery phone\"}],\"estimatedDays\":1}",
+            "detail": "{\"recipients\":3,\"optedOut\":1,\"running\":0,\"firstContact\":3,\"numbersOnline\":[{\"id\":\"6b0966c5b748380985948c0d\",\"label\":\"Counter phone\"},{\"id\":\"6b0966c5b748380985948c11\",\"label\":\"Delivery phone\"}],\"estimatedDays\":1}",
             "kind": "expect"
           },
           {
             "label": "a broadcast queues one message per person",
             "ok": true,
-            "detail": "{\"id\":\"6b014a38f24efca9a7811149\",\"text\":\"Diwali: 20% off this weekend!\\n\\nReply STOP to stop offers.\",\"media\":null,\"createdAt\":\"2026-11-21T07:37:28.983Z\",\"status\":\"sending\",\"total\":3,\"skipped\":1,\"waiting\":3,\"sent\":0,\"read\":0,\"failed\":0}",
+            "detail": "{\"id\":\"6b0966ceb748380985948d4e\",\"text\":\"Diwali: 20% off this weekend!\\n\\nReply STOP to stop offers.\",\"media\":null,\"createdAt\":\"2026-11-27T11:17:34.803Z\",\"status\":\"sending\",\"total\":3,\"skipped\":1,\"waiting\":3,\"sent\":0,\"read\":0,\"failed\":0}",
             "kind": "expect"
           },
           {
@@ -40265,6 +40265,678 @@
           },
           {
             "label": "the box and Save are both reachable",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t121-platform-roles-api": {
+    "id": "t121-platform-roles-api",
+    "title": "Rasoi Pulse team roles: only the super admin makes roles and people; a team member can do exactly what their role holds, in every part of the platform API",
+    "status": "pass",
+    "pass": 61,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-27T11:22:32.347Z",
+    "durationMs": 10489,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Roles: only the super admin makes them",
+        "checks": [
+          {
+            "label": "the super admin sees the list of features a role can hold, and no roles yet",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a role is made with its features, each ticked feature once",
+            "ok": true,
+            "detail": "[\"onboarding:manage\"]",
+            "kind": "expect"
+          },
+          {
+            "label": "…and says what the people holding it can really do, and how many hold it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a second role with the same name (any capitals) is refused (409)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a one-letter name, or a feature that doesn't exist, is refused (400)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a role can hold every feature (and still isn't the super admin)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Team members: the password, the email, the role",
+        "checks": [
+          {
+            "label": "a password needs 10 characters, letters AND a number (these accounts can change every store)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a bad email, or a role that doesn't exist, is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an email already used by a restaurant's owner is refused (409)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the member is made; the answer never holds the password or its hash",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "stored: not a super admin, no store at all, the role, and only a hash of the password",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the team list has only team members (not the super admin, not restaurant staff)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "What a team member sees and may do — the Sales role holds only Onboarding",
+        "checks": [
+          {
+            "label": "Sam signs in to the console with the email and password",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the session says: a team member, role Sales, the one feature Onboarding (not even 'Plans' in the sidebar), no store, no store permissions",
+            "ok": true,
+            "detail": "{\"access\":true,\"features\":[\"onboarding:manage\"],\"role\":{\"id\":\"6b0967f2582ea510df6cf2e5\",\"name\":\"Sales\"}}",
+            "kind": "expect"
+          },
+          {
+            "label": "Sam CAN: the onboarding forms, the price list, the plan list (for the form to offer a plan) and the address check",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and can start a new onboarding form",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Sam can NOT do any of 33 other things in the platform console: every one answers 403",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…nor the store list, creating a store, the website pages or its enquiries (403)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "nobody signed in: 401",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Sam can't change any restaurant's menu or read its orders either (no store: 403)",
+            "ok": true,
+            "detail": "menu 403, orders 403",
+            "kind": "expect"
+          },
+          {
+            "label": "…and sees no outlets",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "A role's change reaches its people at once, with no new sign-in",
+        "checks": [
+          {
+            "label": "before: Sam can't see the website enquiries",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the super admin adds 'Website enquiries' to the role (and it knows one person holds it)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Sam's very next request is allowed (leads), without signing in again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and /me lists the new features",
+            "ok": true,
+            "detail": "[\"onboarding:manage\",\"leads:manage\"]",
+            "kind": "expect"
+          },
+          {
+            "label": "taking it away shuts it again at once, onboarding stays",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(the onboarding form may READ the plan list, never change a plan)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Another role: Support — stores (view), then (change), then (delete)",
+        "checks": [
+          {
+            "label": "Sue can see the dashboard, the store list and one store, and the server",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…but not onboarding, plans, or any change to a store",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'/api/brands': the list yes, creating a store no",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'change stores' brings 'view stores' along",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and she can rename, switch off and on a store",
+            "ok": true,
+            "detail": "rename 200, off 200, on 200",
+            "kind": "expect"
+          },
+          {
+            "label": "…but deleting a store or an outlet is a feature of its own: refused (403)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'delete' brings 'view' along but not 'change'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "The app: the same rules, with the Bearer token",
+        "checks": [
+          {
+            "label": "Sam signs in to the Admin app (and no 'update required' wall: the Admin app is not in the update channel)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "with the token: onboarding yes, stores no — as in the web console",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a restaurant's owner is turned away from the Admin app (403)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the session opened for that check ended (nothing left behind)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the super admin signs in with everything",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "roles: the super admin's token yes, Sam's no",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "A restaurant's own staff can't get in",
+        "checks": [
+          {
+            "label": "an owner gets 403 on the platform API, even to look at the plans",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an owner's session says: no platform access",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "Managing a person",
+        "checks": [
+          {
+            "label": "extra fields like isSuperAdmin or a store are ignored: a team member can't be made bigger through this",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the super admin and a restaurant's owner can't be reached through the team routes (404)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "moving Sam to another role changes what he can do at once",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a role somebody holds can't be deleted (409)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…an empty one can",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "switching Sam off signs him out at once (401), and he can't sign in again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "switched on again, he can sign in with the same password",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a new password ends every old sign-in at once; the old password stops working",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a weak password, or an empty change, is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 9,
+        "title": "The activity log",
+        "checks": [
+          {
+            "label": "the log has roles made, changed and deleted, and people made, changed and given new passwords",
+            "ok": true,
+            "detail": "member.password,member.update,role.delete,role.create,role.update,member.create",
+            "kind": "expect"
+          },
+          {
+            "label": "…and never a password",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…it says who did it and what changed (added: leads:manage)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a team member can't read it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the sign-in log lists Sam's sign-ins as a platform team member",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "deleting a person removes the account and every sign-in",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 10,
+        "title": "Every route of the platform API has been decided on",
+        "checks": [
+          {
+            "label": "all 97 routes of /api/platform have a rule in the table",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a route nobody wrote a rule for is closed to everybody but the super admin",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "roles, team and the log are super-admin-only in the table too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the website's own platform routes (12) are guarded by their own feature check (tested above: pages/settings → website, leads → leads)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t122-platform-team-ui": {
+    "id": "t122-platform-team-ui",
+    "title": "Console → Team & roles: make a role and a person, and what that person sees (only what the role allows); the sidebar says App Management",
+    "status": "pass",
+    "pass": 28,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-27T11:22:41.423Z",
+    "durationMs": 8875,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The super admin's sidebar",
+        "checks": [
+          {
+            "label": "the sidebar says 'App Management' (it used to say 'App updates')",
+            "ok": true,
+            "detail": "Dashboard | Stores | Onboarding | Plans | Server | Security | Cache | Storage | AI pictures | App Management | Settings | Team & roles | Website | Leads",
+            "kind": "expect"
+          },
+          {
+            "label": "…and has 'Team & roles'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it opens /platform/team",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "A role: Sales, with only Onboarding",
+        "checks": [
+          {
+            "label": "the role window lists every feature, grouped, each with a line saying what it lets a person do",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…Team & roles is not one of them (it stays the super admin's alone)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'Make the role' waits for a name",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the role is in the list, holding Onboarding only",
+            "ok": true,
+            "detail": "Sales 553390 Onboarding 0",
+            "kind": "expect"
+          },
+          {
+            "label": "saved with exactly that one feature",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "A person with that role",
+        "checks": [
+          {
+            "label": "a strong password is made for them (10+ characters, letters and a number)",
+            "ok": true,
+            "detail": "••••••••••••••",
+            "kind": "expect"
+          },
+          {
+            "label": "it is shown once so it can be told to them",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Sam is in the list: Active, role Sales",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Sam signs in (another browser)",
+        "checks": [
+          {
+            "label": "Sam's sidebar has ONE item: Onboarding",
+            "ok": true,
+            "detail": "Onboarding",
+            "kind": "expect"
+          },
+          {
+            "label": "/platform takes him straight to it (no dashboard for his role)",
+            "ok": true,
+            "detail": "http://localhost:3171/platform/onboarding",
+            "kind": "expect"
+          },
+          {
+            "label": "the page asked the server for nothing he may not have (no 403 on the way)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "every other page says 'Your role doesn't include this page' (stores, plans, team, security, app management, website)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "and the server agrees: stores 403, roles 403, onboarding 200",
+            "ok": true,
+            "detail": "403,403,200",
+            "kind": "expect"
+          },
+          {
+            "label": "he can start a new onboarding form",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Changing the role changes what he sees",
+        "checks": [
+          {
+            "label": "after the next page load his sidebar has Onboarding and Leads",
+            "ok": true,
+            "detail": "Onboarding | Leads",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the Leads page opens for him",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "A person is switched off",
+        "checks": [
+          {
+            "label": "his next page load shows the sign-in form: he is signed out at once",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "A role that can only LOOK at stores",
+        "checks": [
+          {
+            "label": "Sue's sidebar has one item: Stores",
+            "ok": true,
+            "detail": "Stores",
+            "kind": "expect"
+          },
+          {
+            "label": "the Stores page has no 'Create store' button",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…no 'Open dashboard', no ⋮ menu for disable / delete",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "every field and button below is switched off (a disabled group)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the server refuses a change, a switch-off and a delete from her (403)",
+            "ok": true,
+            "detail": "403,403,403",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "The activity log",
+        "checks": [
+          {
+            "label": "the Activity tab says who made the roles and the people, and who changed what",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and never a password",
             "ok": true,
             "detail": "",
             "kind": "expect"

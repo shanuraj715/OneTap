@@ -325,7 +325,7 @@ abandoned-cart reminders) · Outlets · Payments · Notifications and message se
 On the storefront customers also see "only N left" and combo savings on the cards, pick a pickup time for a takeaway,
 book a table, rate an order and order it again from their Account page. Each order has its own page (`/<outlet>/order/<id>`) that follows it live — accepted, preparing, ready, out for delivery — and says so when the restaurant is running late.
 
-### Platform console (apps/admin, super admin only)
+### Platform console (apps/admin: the super admin, and team members by role)
 
 Stores (plan, limits, features, owners, people, outlets, domains and Rasoi Pulse address, store name, disable or delete) ·
 Plans and the price list · Client **onboarding form** (record a client's requirements, export to PDF, publish as a
@@ -333,7 +333,28 @@ store) · Marketing website pages and settings · Leads · Cache (lifetimes, exp
 Security (sign-in blocks) · Storage (where pictures live — try any storage without switching it on, see what is stored per store and outlet, and move the files between this server's disk and Cloudflare R2 / S3 with the stored picture addresses following) · AI pictures (Gemini keys) · Settings (grace period…) ·
 Login activity.
 
-### Plans: features, the table limit, and the plan editor
+### Platform team and roles (who may do what in the console and the Admin app)
+
+The super admin (the owner's account, `isSuperAdmin`) does everything. **Everyone else who works for Rasoi Pulse is a team member with ONE role**, and only the super admin makes
+roles and people: **Console → Team & roles** (People · Roles · Activity).
+
+- **Features, not pages:** a role is a list of features (`PLATFORM_FEATURES` in `packages/config-schema/src/platform-access.js`): Dashboard · Stores — view / create and change / delete ·
+  Onboarding · Website enquiries (leads) · Plans — view / create and change · Website · App Management · Server · Security · Cache · Storage · AI pictures · Platform settings.
+  "Change stores" and "delete stores" bring "view stores" along. **Team & roles is never part of a role.** A Sales role that holds only Onboarding sees ONE item in the sidebar (and in the app):
+  Onboarding — the onboarding form can read the plan list and check an address, nothing else of Plans or Stores opens.
+- **The API decides, the screens follow:** `apps/api/src/modules/platform/platform-access.js` is ONE table of (method, path) → features. Every `/api/platform/*` request goes through it
+  (`platformGate`); a person gets in with ANY listed feature; **a route with no row is closed to everyone but the super admin**, and test t121 fails if a route has no row. The website routes
+  (`/api/platform/site`) and `/api/brands` ask `requirePlatform(req, "<feature>")` directly. A change to a role, a person switched off or a new password takes effect on the **next request** (the
+  sign-in cache drops when a role or user is written) and ends every sign-in of that person.
+- **Team members have no store:** `User.platformRoleId`, `memberships: []`. Restaurant owners and staff get 403 on the whole platform API; a team member gets 403 on every restaurant route
+  (`requireOutletContext` needs a membership). Passwords: 10+ characters with letters and a number (these accounts can change every store), hashed like every other; the super admin sets or resets
+  them and tells the person (shown once).
+- **Every change is logged** (`PlatformAudit`: who, what, what was added or removed — never a password; kept a year) and shown on the Activity tab; sign-ins of team members appear in the sign-in log as "platform team".
+- **Console:** the sidebar and routes show only the areas a person holds (`PLATFORM_AREAS`; the same list drives the app); a page they can't open says "Your role doesn't include this page"; a view-only
+  role sees a store with every control switched off. **The page that used to be "App updates" is now "App Management"** (`/platform/app-management`; the old address redirects).
+- **The Admin app** signs in with `x-app-id: admin` on `/api/auth/app-login` — for the super admin and team members only (a restaurant's owner gets 403), no update gate, and it is NOT in the apps catalog,
+  so it has no page on the website.
+- **Tests:** t121 (API: roles, people, 33+ denied requests, role changes at once, the app's token, the log, every route decided) and t122 (the console: make a role and a person, what Sam sees, view-only Sue).
 
 A plan is **limits** (people, outlets, **tables**) plus **features** (what the store can switch on), and a Custom plan has nothing of its own: each store's
 limits and features are set by hand on its page. The shared rules live in `packages/config-schema/src/plan.js` and `plan-presets.js`.

@@ -2,7 +2,7 @@ import { clearAllBlocks, clearBlock, GUARD_SETTINGS, guardOn, listBlocks } from 
 import { Router } from "express";
 import { z } from "zod";
 import { imageProcessingSchema, storageProviderSchema } from "@rasoipulse/config-schema";
-import { requireBrandContext, requireSuperAdmin } from "../../middleware/auth.js";
+import { requireBrandContext, requireUser } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import { checkLabel, hostStatus, probeBase, subdomainInfo } from "../outlets/subdomains.js";
 import * as storage from "../storage/storage.service.js";
@@ -17,6 +17,8 @@ import { listLoginLogs, LOGIN_FILTERS } from "./login-logs.service.js";
 import { onboardingRouter } from "../onboarding/onboarding.routes.js";
 import { appReleasesAdminRouter } from "../app-releases/app-releases.routes.js";
 import { sysmonRouter } from "../sysmon/sysmon.routes.js";
+import { platformGate } from "./platform-access.js";
+import { teamRouter } from "./team.routes.js";
 import * as storeDelete from "./store-delete.service.js";
 import { storePlan } from "./plan.service.js";
 import * as platform from "./platform.service.js";
@@ -25,10 +27,11 @@ import { limiter } from "../../middleware/rate-limit.js";
 /** The platform console — Rasoi Pulse's own super admin, managing client stores. */
 export const platformRouter = Router();
 
-platformRouter.use((req, _res, next) => {
-  requireSuperAdmin(req);
-  next();
-});
+// who may use WHICH route is decided in one table (platform-access.js): a team member only gets what their role holds, and a route nobody wrote a rule for is closed
+platformRouter.use(platformGate);
+
+// roles, team members and the activity log (super admin only)
+platformRouter.use(teamRouter);
 
 platformRouter.get("/overview", async (_req, res) => {
   res.json(await platform.overview());
@@ -117,13 +120,13 @@ const storageBody = z.object({
 platformRouter.put("/storage", limiter("secrets"), async (req, res) => {
   const body = storageBody.parse(req.body);
   if (!body.provider && !body.processing) throw new HttpError(400, "Nothing to save");
-  await storage.saveStorageConfig(body, String(requireSuperAdmin(req)._id));
+  await storage.saveStorageConfig(body, String(requireUser(req)._id));
   res.json(await storageView());
 });
 
 /** Back to this server's disk (compression settings are kept). */
 platformRouter.delete("/storage", limiter("secrets"), async (req, res) => {
-  await storage.resetStorageConfig(String(requireSuperAdmin(req)._id));
+  await storage.resetStorageConfig(String(requireUser(req)._id));
   res.json(await storageView());
 });
 
@@ -166,7 +169,7 @@ platformRouter.post("/storage/move/preview", limiter("secrets"), async (req, res
   res.json({ preview: await storageMove.previewMove(moveBody.parse(req.body)) });
 });
 platformRouter.post("/storage/move", limiter("secrets"), async (req, res) => {
-  res.status(202).json({ move: await storageMove.startMove(moveBody.parse(req.body), String(requireSuperAdmin(req)._id)) });
+  res.status(202).json({ move: await storageMove.startMove(moveBody.parse(req.body), String(requireUser(req)._id)) });
 });
 platformRouter.post("/storage/move/:id/cancel", async (req, res) => {
   res.json(await storageMove.cancelMove(req.params.id));
@@ -189,7 +192,7 @@ platformRouter.post("/storage/optimize/scan", limiter("storage-heavy"), async (_
   res.json({ scan: await storageOptimize.scanForOptimizing() });
 });
 platformRouter.post("/storage/optimize", limiter("storage-heavy"), async (req, res) => {
-  res.status(202).json({ job: await storageOptimize.startOptimize(optimizeBody.parse(req.body), String(requireSuperAdmin(req)._id)) });
+  res.status(202).json({ job: await storageOptimize.startOptimize(optimizeBody.parse(req.body), String(requireUser(req)._id)) });
 });
 platformRouter.post("/storage/optimize/:id/cancel", async (req, res) => {
   res.json(await storageOptimize.cancelOptimize(req.params.id));
@@ -203,38 +206,38 @@ platformRouter.post("/storage/optimize/:id/cancel", async (req, res) => {
  * sent back — only a masked hint is.
  */
 platformRouter.get("/ai", async (req, res) => {
-  requireSuperAdmin(req);
+  requireUser(req);
   res.json(await ai.getAiSettings());
 });
 
 platformRouter.put("/ai", limiter("secrets"), async (req, res) => {
   const body = z.object({ model: z.string().min(1).max(80) }).parse(req.body);
-  res.json(await ai.saveAiModel(body.model, String(requireSuperAdmin(req)._id)));
+  res.json(await ai.saveAiModel(body.model, String(requireUser(req)._id)));
 });
 
 platformRouter.post("/ai/keys", limiter("secrets"), async (req, res) => {
   const body = z.object({ label: z.string().max(60).optional(), apiKey: z.string().min(1).max(300) }).parse(req.body);
-  res.status(201).json(await ai.addAiKey(body, String(requireSuperAdmin(req)._id)));
+  res.status(201).json(await ai.addAiKey(body, String(requireUser(req)._id)));
 });
 
 platformRouter.patch("/ai/keys/:id", limiter("secrets"), async (req, res) => {
   const body = z.object({ label: z.string().max(60).optional(), enabled: z.boolean().optional() }).parse(req.body);
-  res.json(await ai.updateAiKey(req.params.id, body, String(requireSuperAdmin(req)._id)));
+  res.json(await ai.updateAiKey(req.params.id, body, String(requireUser(req)._id)));
 });
 
 platformRouter.delete("/ai/keys/:id", limiter("secrets"), async (req, res) => {
-  res.json(await ai.removeAiKey(req.params.id, String(requireSuperAdmin(req)._id)));
+  res.json(await ai.removeAiKey(req.params.id, String(requireUser(req)._id)));
 });
 
 /** Free: asks Google for a model list with this one key — no picture is made. */
 platformRouter.post("/ai/keys/:id/test", limiter("secrets"), async (req, res) => {
-  requireSuperAdmin(req);
+  requireUser(req);
   res.json(await ai.testAiKey(req.params.id));
 });
 
 /** Use one store's own (older) storage settings as the platform's. The secret stays encrypted. */
 platformRouter.post("/storage/adopt/:brandId", limiter("secrets"), async (req, res) => {
-  await storage.adoptStoreStorage(req.params.brandId, String(requireSuperAdmin(req)._id));
+  await storage.adoptStoreStorage(req.params.brandId, String(requireUser(req)._id));
   res.json(await storageView());
 });
 
@@ -299,7 +302,7 @@ platformRouter.get("/stores/:id/deletion-summary", async (req, res) => {
 /** Delete a store and everything it owns. The body must carry the store's exact name. */
 platformRouter.delete("/stores/:id", limiter("destructive"), async (req, res) => {
   const body = z.object({ confirmName: z.string() }).parse(req.body ?? {});
-  const user = requireSuperAdmin(req);
+  const user = requireUser(req);
   res.json(await storeDelete.deleteStore(req.params.id, { confirmName: body.confirmName, by: user.email }));
 });
 
@@ -315,7 +318,7 @@ platformRouter.get("/stores/:id/disable-summary", async (req, res) => {
  */
 platformRouter.post("/stores/:id/disable", limiter("destructive"), async (req, res) => {
   const { message } = z.object({ message: z.string().max(500, "Keep the message under 500 characters").optional() }).parse(req.body ?? {});
-  const user = requireSuperAdmin(req);
+  const user = requireUser(req);
   res.json({ store: await platform.setStoreDisabled(req.params.id, true, { message, byUserId: String(user._id) }) });
 });
 

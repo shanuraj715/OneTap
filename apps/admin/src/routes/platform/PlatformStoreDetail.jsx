@@ -4,6 +4,7 @@ import { Link, storeUrl, useNavigate, useParams } from "../../lib/nav";
 import { CARD_TEMPLATE_FAMILIES, EFFECT_IDS, EFFECT_PRESETS, FEATURES, roundUpTables, TABLE_STEP } from "@rasoipulse/config-schema";
 import { ArrowLeft, Ban, Check, ExternalLink, Globe, RefreshCw, Save, Store, Trash2, X } from "lucide-react";
 import * as api from "../../lib/api";
+import { useAuth } from "../../lib/useAuth";
 import { useMedia } from "../../lib/useMedia";
 import { usePlans, usePlatformMutation, useStore } from "../../lib/usePlatform";
 import { Button, Card, Field, Note, PageHeader, Pill, Select, Tabs, TextInput, Toast } from "../../ui";
@@ -25,6 +26,9 @@ const TABS = [
 const EFFECT_ITEMS = EFFECT_IDS.filter((id) => id !== "none").map((id) => ({ key: id, label: EFFECT_PRESETS[id].label }));
 const QR_ITEMS = CARD_TEMPLATE_FAMILIES.map((f) => ({ key: f.id, label: f.label, description: f.hint }));
 
+/** a <fieldset> with none of its own look: it only carries `disabled` */
+const viewOnlyReset = { border: 0, padding: 0, margin: 0, minWidth: 0 };
+
 const emptyAdjust = () => ({ features: { unlock: [], lock: [] }, effects: { unlock: [], lock: [] }, qrCardFamilies: { unlock: [], lock: [] } });
 
 /** One client store: its plan and overrides, what's unlocked, owners, outlets, people, and appearance. */
@@ -32,6 +36,11 @@ export function PlatformStoreDetail() {
   const narrow = useMedia("(max-width: 560px)");
   const { id } = useParams();
   const navigate = useNavigate();
+  // what this person's role allows: the super admin everything; a team member only what the role holds (the API refuses the rest as well)
+  const { user, canPlatform } = useAuth();
+  const mayManage = canPlatform("stores:manage");
+  const mayDelete = canPlatform("stores:delete");
+  const isSuper = Boolean(user?.isSuperAdmin);
   const q = useStore(id);
   const plans = usePlans();
   const store = q.data?.store;
@@ -89,11 +98,16 @@ export function PlatformStoreDetail() {
                 <ArrowLeft size={14} /> {narrow ? "Stores" : "All stores"}
               </Button>
             </Link>
-            <Button onClick={() => open("/")} style={{ display: "inline-flex", gap: 6, alignItems: "center", whiteSpace: "nowrap" }}>
-              <ExternalLink size={14} /> {narrow ? "Open dashboard" : "Open store dashboard"}
-            </Button>
+            {/* opening a store's dashboard as its owner is the super admin's alone */}
+            {isSuper ? (
+              <Button onClick={() => open("/")} style={{ display: "inline-flex", gap: 6, alignItems: "center", whiteSpace: "nowrap" }}>
+                <ExternalLink size={14} /> {narrow ? "Open dashboard" : "Open store dashboard"}
+              </Button>
+            ) : null}
             {/* disable / enable / delete — the dashboard and details are already one click away on this page */}
-            <StoreActionsMenu store={store} exclude={["open", "details"]} onChoose={(kind) => setDialog({ kind, store })} />
+            {mayManage || mayDelete ? (
+              <StoreActionsMenu store={store} exclude={["open", "details", ...(mayManage ? [] : ["disable", "enable", "message"]), ...(mayDelete ? [] : ["delete"])]} onChoose={(kind) => setDialog({ kind, store })} />
+            ) : null}
           </span>
         }
       />
@@ -107,12 +121,14 @@ export function PlatformStoreDetail() {
               {store.disabled.message ? <>The team sees: “{store.disabled.message}”</> : "The team sees a standard notice — you haven't left a message."}
             </div>
           </div>
-          <span style={{ display: "flex", gap: 8, flexWrap: "wrap", flexShrink: 0 }}>
-            <Button variant="outline" onClick={() => setDialog({ kind: "message", store })}>
-              Change message
-            </Button>
-            <Button onClick={() => setDialog({ kind: "enable", store })}>Enable store</Button>
-          </span>
+          {mayManage ? (
+            <span style={{ display: "flex", gap: 8, flexWrap: "wrap", flexShrink: 0 }}>
+              <Button variant="outline" onClick={() => setDialog({ kind: "message", store })}>
+                Change message
+              </Button>
+              <Button onClick={() => setDialog({ kind: "enable", store })}>Enable store</Button>
+            </span>
+          ) : null}
         </div>
       ) : null}
 
@@ -129,7 +145,12 @@ export function PlatformStoreDetail() {
         ) : null}
       </div>
 
-      <StoreNameCard key={store.id} store={store} />
+      {!mayManage ? <Note>You can look at this store, not change it — your role doesn&apos;t include changing stores.</Note> : null}
+
+      {/* a view-only person gets every field and button switched off (a disabled fieldset does that for everything inside); the API says no as well */}
+      <fieldset disabled={!mayManage} style={viewOnlyReset}>
+        <StoreNameCard key={store.id} store={store} />
+      </fieldset>
 
       <Tabs value={tab} onChange={setTab} tabs={TABS} />
 
@@ -143,6 +164,7 @@ export function PlatformStoreDetail() {
       ) : null}
       {save.error ? <Toast kind="error">{save.error.message}</Toast> : null}
 
+      <fieldset disabled={!mayManage} style={viewOnlyReset}>
       {tab === "plan" ? <PlanTab store={store} draft={draft} setDraft={setDraft} plans={allPlans} selectedPlan={selectedPlan} /> : null}
       {tab === "features" ? <FeaturesTab draft={draft} setDraft={setDraft} selectedPlan={selectedPlan} /> : null}
       {tab === "owners" ? <OwnersTab store={store} /> : null}
@@ -151,6 +173,7 @@ export function PlatformStoreDetail() {
       {tab === "people" ? <PeopleTab store={store} /> : null}
       {tab === "appearance" ? <AppearanceTab open={open} /> : null}
       {tab === "cache" ? <StoreCacheCard store={store} /> : null}
+      </fieldset>
 
       <StoreDialogs dialog={dialog} setDialog={setDialog} />
     </>

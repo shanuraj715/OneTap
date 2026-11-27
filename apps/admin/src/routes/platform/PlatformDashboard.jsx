@@ -3,6 +3,7 @@ import { Link } from "../../lib/nav";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AlertTriangle, Building2, Inbox, LayoutDashboard, RefreshCw, ReceiptText, Store, UserRound, Users } from "lucide-react";
 import * as api from "../../lib/api";
+import { useAuth } from "../../lib/useAuth";
 import { useDashboard } from "../../lib/usePlatform";
 import { Button, Card, Empty, PageHeader } from "../../ui";
 import { LoginActivity } from "./LoginActivity";
@@ -34,6 +35,8 @@ const running = (values) => {
  * are, what the subscriptions add up to, and who has been signing in.
  */
 export function PlatformDashboard() {
+  // the strips below belong to other areas (Server, Cache, Security): a role that holds only the Dashboard doesn't get them (the API refuses their data)
+  const { canPlatform } = useAuth();
   const q = useDashboard();
   const qc = useQueryClient();
   const refresh = useMutation({
@@ -114,8 +117,8 @@ export function PlatformDashboard() {
           </div>
         </div>
 
-        <ServerStrip />
-        <CacheStrip />
+        {canPlatform("server:read") ? <ServerStrip /> : null}
+        {canPlatform("cache:manage") ? <CacheStrip /> : null}
 
         <div className="dash-counts">
           <StatTile
@@ -313,8 +316,12 @@ export function PlatformDashboard() {
         </div>
 
         {/* ------------------------------------------------------------------ sign-ins */}
-        <h2 className="dash-h">Security</h2>
-        <LoginActivity />
+        {canPlatform("security:manage") ? (
+          <>
+            <h2 className="dash-h">Security</h2>
+            <LoginActivity />
+          </>
+        ) : null}
       </div>
     </>
   );

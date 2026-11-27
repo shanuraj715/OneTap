@@ -761,6 +761,16 @@ export const disableStore = (id, message) => req(`/api/platform/stores/${id}/dis
 export const enableStore = (id) => req(`/api/platform/stores/${id}/enable`, json("POST"));
 export const getDeletionSummary = (id) => req(`/api/platform/stores/${id}/deletion-summary`);
 export const deleteStore = (id, confirmName) => req(`/api/platform/stores/${id}`, json("DELETE", { confirmName }));
+/* the Rasoi Pulse team: roles, members and the activity log (super admin only) */
+export const listRoles = () => req("/api/platform/roles");
+export const createRole = (body) => req("/api/platform/roles", json("POST", body));
+export const updateRole = (id, body) => req(`/api/platform/roles/${id}`, json("PATCH", body));
+export const deleteRole = (id) => req(`/api/platform/roles/${id}`, json("DELETE"));
+export const listTeam = () => req("/api/platform/team");
+export const createTeamMember = (body) => req("/api/platform/team", json("POST", body));
+export const updateTeamMember = (id, body) => req(`/api/platform/team/${id}`, json("PATCH", body));
+export const deleteTeamMember = (id) => req(`/api/platform/team/${id}`, json("DELETE"));
+export const listTeamActivity = (limit = 50) => req(`/api/platform/audit?limit=${limit}`);
 export const listPlans = () => req("/api/platform/plans");
 export const createPlan = (body) => req("/api/platform/plans", json("POST", body));
 export const updatePlan = (id, body) => req(`/api/platform/plans/${id}`, json("PATCH", body));

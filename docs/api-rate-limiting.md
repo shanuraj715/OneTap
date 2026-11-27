@@ -65,8 +65,8 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | `app-update-check` | visitor's address | 120 per min | Every phone running the staff app asks once when it starts whether a newer version exists. A restaurant's whole Wi-Fi shares one address and the staff all open the app at the same time, so the budget is generous — it only stops a script hammering the question. | `GET /api/app-updates/apps`<br>`GET /api/app-updates/check`<br>`GET /api/app-updates/releases` |
 | `app-download` | visitor's address | 40 per 10 min | Downloading the app's APK (tens of MB). 40 downloads per 10 minutes per address leaves room for a whole team installing at once behind one Wi-Fi, and stops someone using the download as a bandwidth drain. | `GET /api/app-updates/download/:id` |
 | `release-upload` | signed-in user (else address) | 200 per 10 min | Uploading a new app version: a 100 MB file goes up in 4 MB pieces, one request each (a 300 MB file is 75). 200 pieces in 10 minutes is room for a couple of uploads plus retries, and it is kept under the dashboard's own 240-changes-a-minute cap so a stuck page or a script is stopped by this one. Only the platform's super admin can upload. | `POST /api/platform/app-releases/uploads`<br>`PUT /api/platform/app-releases/uploads/:id/chunks/:index`<br>`POST /api/platform/app-releases/uploads/:id/complete` |
-| `team-write` | signed-in user (else address) | 240 per min | Every change a team member makes to the dashboard (menu, outlets, orders, tables, pages, settings…). 240 a minute is four a second — more than any person — so a stolen session can't mass-delete or mass-edit in a blink. | 182 routes (see the full list below) |
-| `account-write` | signed-in user (else address) | 30 per 10 min | Creating team members, changing roles and resetting passwords. Takeover of accounts is the worst thing that can happen to a store, so it is slow on purpose. | `POST /api/platform/stores/:id/owners`<br>`DELETE /api/platform/stores/:id/owners/:userId`<br>`PATCH /api/platform/stores/:id/owners/:userId`<br>`DELETE /api/platform/stores/:id/people/:userId`<br>`POST /api/platform/stores/:id/people/:userId/block`<br>`POST /api/platform/stores/:id/people/:userId/unblock`<br>`POST /api/users`<br>`DELETE /api/users/:id`<br>`PATCH /api/users/:id` |
+| `team-write` | signed-in user (else address) | 240 per min | Every change a team member makes to the dashboard (menu, outlets, orders, tables, pages, settings…). 240 a minute is four a second — more than any person — so a stolen session can't mass-delete or mass-edit in a blink. | 188 routes (see the full list below) |
+| `account-write` | signed-in user (else address) | 30 per 10 min | Creating team members, changing roles and resetting passwords. Takeover of accounts is the worst thing that can happen to a store, so it is slow on purpose. | 15 routes (see the full list below) |
 | `ai-images` | signed-in user (else address) | 15 per 10 min | Making dish pictures with Gemini. Every picture is a paid call to Google, one request can make up to four, and only the platform's super admin can start one — this is a brake on a stuck button or a script, not on normal use. | `POST /api/menu/items/:id/generate-images` |
 | `storage-heavy` | signed-in user (else address) | 60 per 10 min | Scanning the storage for pictures that are too big, and starting an optimize run. A scan reads every stored file's name and every collection of the database, and a run compresses pictures (a few at a time) — only the platform's super admin can start either, so this is a brake on a stuck button or a script, not on normal use. | `POST /api/platform/storage/optimize`<br>`POST /api/platform/storage/optimize/scan` |
 | `secrets` | signed-in user (else address) | 30 per 10 min | Saving or revealing payment-gateway keys, SMS / WhatsApp connections, storage credentials and printer-agent tokens. They are rarely touched; a flood means something is wrong. | 18 routes (see the full list below) |
@@ -241,6 +241,7 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | POST | `/api/platform/app-releases/uploads` | `api`, `team-write`, `release-upload` |
 | PUT | `/api/platform/app-releases/uploads/:id/chunks/:index` | `api`, `team-write`, `release-upload` |
 | POST | `/api/platform/app-releases/uploads/:id/complete` | `api`, `team-write`, `release-upload` |
+| GET | `/api/platform/audit` | `api` |
 | GET | `/api/platform/cache` | `api` |
 | GET | `/api/platform/cache/entries` | `api` |
 | GET | `/api/platform/cache/entry` | `api` |
@@ -263,6 +264,10 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | GET | `/api/platform/plans` | `api` |
 | POST | `/api/platform/plans` | `api`, `team-write` |
 | PATCH | `/api/platform/plans/:id` | `api`, `team-write` |
+| GET | `/api/platform/roles` | `api` |
+| POST | `/api/platform/roles` | `api`, `team-write`, `account-write` |
+| DELETE | `/api/platform/roles/:id` | `api`, `team-write`, `account-write` |
+| PATCH | `/api/platform/roles/:id` | `api`, `team-write`, `account-write` |
 | DELETE | `/api/platform/security/blocks` | `api`, `team-write` |
 | GET | `/api/platform/security/blocks` | `api` |
 | DELETE | `/api/platform/security/blocks/:id` | `api`, `team-write` |
@@ -327,6 +332,10 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | GET | `/api/platform/stores/:id/subdomain/status` | `api`, `outbound-fetch` |
 | GET | `/api/platform/subdomains/check` | `api` |
 | GET | `/api/platform/subdomains/probe` | `api`, `outbound-fetch` |
+| GET | `/api/platform/team` | `api` |
+| POST | `/api/platform/team` | `api`, `team-write`, `account-write` |
+| DELETE | `/api/platform/team/:id` | `api`, `team-write`, `account-write` |
+| PATCH | `/api/platform/team/:id` | `api`, `team-write`, `account-write` |
 | POST | `/api/preview` | `api`, `team-write`, `preview` |
 | GET | `/api/preview/:id` | `api` |
 | GET | `/api/printing/agent/jobs` | `api`, `print-agent` |

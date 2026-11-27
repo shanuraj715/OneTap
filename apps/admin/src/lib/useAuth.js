@@ -27,6 +27,10 @@ export function useAuth() {
     isLoading: query.isLoading,
     error: query.error                ,
     can: (p            ) => Boolean(user?.permissions.includes(p)),
+    /** whether this person may use the PLATFORM console at all (the super admin, or a team member with a role) */
+    isPlatformStaff: Boolean(user?.isSuperAdmin || user?.platform?.access),
+    /** may this person do `feature` in the platform console? (the super admin may do everything) */
+    canPlatform: (feature) => Boolean(user?.isSuperAdmin || user?.platform?.features?.includes(feature)),
   };
 }
 

@@ -4,7 +4,7 @@ import { Navigate, NavLink, Route, Routes, storeFromPath, storeSlug, useLocation
 import { Navigate as RawNavigate, useLocation as useRouterLocation } from "react-router-dom";
 import { AwesomeLoader } from "./components/AwesomeLoader";
 import { TopProgressBar } from "./components/TopProgressBar";
-import { ROLE_LABELS } from "@rasoipulse/config-schema";
+import { PLATFORM_AREAS, ROLE_LABELS, platformAreasFor } from "@rasoipulse/config-schema";
 import {
   AlertTriangle,
   ArrowLeft,
@@ -128,6 +128,7 @@ import { PlatformSecurity } from "./routes/platform/PlatformSecurity";
 import { PlatformServer } from "./routes/platform/PlatformServer";
 import { PlatformPlans } from "./routes/platform/PlatformPlans";
 import { PlatformSettings } from "./routes/platform/PlatformSettings";
+import { PlatformTeam } from "./routes/platform/PlatformTeam";
 import { PlatformStoreDetail } from "./routes/platform/PlatformStoreDetail";
 import { PlatformStores } from "./routes/platform/PlatformStores";
 import { PlatformLeads } from "./routes/platform/PlatformLeads";
@@ -199,6 +200,7 @@ const ROUTE_META = {
   "/platform/storage": { title: "Storage", icon: HardDrive },
   "/platform/ai": { title: "AI pictures", icon: Sparkles },
   "/platform/app-management": { title: "App Management", icon: Smartphone },
+  "/platform/team": { title: "Team & roles", icon: UsersIcon },
   "/platform/settings": { title: "Platform settings", icon: SettingsIcon },
   "/platform/website": { title: "Website", icon: Globe },
   "/platform/website/settings": { title: "Website settings", icon: Globe },
@@ -253,24 +255,25 @@ const PLATFORM_NAV_GROUPS = [
   {
     group: "Platform",
     items: [
-      { to: "/platform", label: "Dashboard", icon: <LayoutDashboard size={ICON} />, end: true },
-      { to: "/platform/stores", label: "Stores", icon: <Store size={ICON} /> },
-      { to: "/platform/onboarding", label: "Onboarding", icon: <ClipboardList size={ICON} /> },
-      { to: "/platform/plans", label: "Plans", icon: <Layers size={ICON} /> },
-      { to: "/platform/server", label: "Server", icon: <ServerIcon size={ICON} /> },
-      { to: "/platform/security", label: "Security", icon: <ShieldCheck size={ICON} /> },
-      { to: "/platform/cache", label: "Cache", icon: <Database size={ICON} /> },
-      { to: "/platform/storage", label: "Storage", icon: <HardDrive size={ICON} /> },
-      { to: "/platform/ai", label: "AI pictures", icon: <Sparkles size={ICON} /> },
-      { to: "/platform/app-management", label: "App Management", icon: <Smartphone size={ICON} /> },
-      { to: "/platform/settings", label: "Settings", icon: <SettingsIcon size={ICON} /> },
+      { area: "dashboard", to: "/platform", label: "Dashboard", icon: <LayoutDashboard size={ICON} />, end: true },
+      { area: "stores", to: "/platform/stores", label: "Stores", icon: <Store size={ICON} /> },
+      { area: "onboarding", to: "/platform/onboarding", label: "Onboarding", icon: <ClipboardList size={ICON} /> },
+      { area: "plans", to: "/platform/plans", label: "Plans", icon: <Layers size={ICON} /> },
+      { area: "server", to: "/platform/server", label: "Server", icon: <ServerIcon size={ICON} /> },
+      { area: "security", to: "/platform/security", label: "Security", icon: <ShieldCheck size={ICON} /> },
+      { area: "cache", to: "/platform/cache", label: "Cache", icon: <Database size={ICON} /> },
+      { area: "storage", to: "/platform/storage", label: "Storage", icon: <HardDrive size={ICON} /> },
+      { area: "ai", to: "/platform/ai", label: "AI pictures", icon: <Sparkles size={ICON} /> },
+      { area: "app-management", to: "/platform/app-management", label: "App Management", icon: <Smartphone size={ICON} /> },
+      { area: "settings", to: "/platform/settings", label: "Settings", icon: <SettingsIcon size={ICON} /> },
+      { area: "team", to: "/platform/team", label: "Team & roles", icon: <UsersIcon size={ICON} /> },
     ],
   },
   {
     group: "Website",
     items: [
-      { to: "/platform/website", label: "Website", icon: <Globe size={ICON} /> },
-      { to: "/platform/leads", label: "Leads", icon: <Inbox size={ICON} />, badgeKey: "newLeads" },
+      { area: "website", to: "/platform/website", label: "Website", icon: <Globe size={ICON} /> },
+      { area: "leads", to: "/platform/leads", label: "Leads", icon: <Inbox size={ICON} />, badgeKey: "newLeads" },
     ],
   },
 ];
@@ -350,7 +353,10 @@ function Shell({ can }                                     ) {
   const { openStoreId } = useOpenStore();
   // The platform super admin works in their own console unless the address is a store's:
   // /store/<store-name>/<store-id>/… is that store's dashboard, anything else is the console.
-  const platformMode = Boolean(user?.isSuperAdmin) && !openStoreId;
+  // A member of the Rasoi Pulse team (a role made by the super admin) is ALWAYS in the console: they have no store to open.
+  const platformMode = user?.isSuperAdmin ? !openStoreId : Boolean(user?.platform?.access);
+  // which areas of the console this person may open (the super admin: all; a team member: what their role holds)
+  const platformAreas = new Set(platformAreasFor(user?.platform?.features, user?.isSuperAdmin).map((a) => a.id));
   const openedStore = useStore(user?.isSuperAdmin && !platformMode ? openStoreId : null).data?.store;
   // the name in the address follows the store's current name (the id is what counts)
   const rawLocation = useRouterLocation();
@@ -406,7 +412,7 @@ function Shell({ can }                                     ) {
   }, [canTakeOrders, navigate]);
 
   // the platform console's "Leads" shows how many enquiries nobody has called yet
-  const newLeads = useLeads("new", platformMode).data?.counts?.new ?? 0;
+  const newLeads = useLeads("new", platformMode && platformAreas.has("leads")).data?.counts?.new ?? 0;
   // WhatsApp: the signed-in person's chat access, and how many chats have unread messages
   const waMe = useWaMe();
   const waLevel = platformMode ? "none" : (waMe.data?.level ?? "none");
@@ -417,7 +423,10 @@ function Shell({ can }                                     ) {
   const groups = (platformMode ? PLATFORM_NAV_GROUPS : NAV_GROUPS)
     .map((g) => ({
       ...g,
-      items: g.items.map((n) => resolveNavItem(n, can, platformMode ? () => true : storePlan.hasFeature, waLevel)).filter(Boolean),
+      items: g.items
+        .filter((n) => !platformMode || !n.area || platformAreas.has(n.area)) // the console: only the areas this person's role holds
+        .map((n) => resolveNavItem(n, can, platformMode ? () => true : storePlan.hasFeature, waLevel))
+        .filter(Boolean),
     }))
     .filter((g) => g.items.length);
 
@@ -630,26 +639,27 @@ function Shell({ can }                                     ) {
           ) : null}
           {platformMode ? (
             <Routes>
-              <Route path="/platform" element={<PlatformDashboard />} />
-              <Route path="/platform/stores" element={<PlatformStores />} />
-              <Route path="/platform/stores/:id" element={<PlatformStoreDetail />} />
-              <Route path="/platform/onboarding" element={<OnboardingList />} />
-              <Route path="/platform/onboarding/pricing" element={<PricingPage />} />
-              <Route path="/platform/onboarding/:id" element={<OnboardingForm />} />
-              <Route path="/platform/plans" element={<PlatformPlans />} />
-              <Route path="/platform/server" element={<PlatformServer />} />
-              <Route path="/platform/security" element={<PlatformSecurity />} />
-              <Route path="/platform/cache" element={<PlatformCache />} />
-              <Route path="/platform/storage" element={<PlatformStorage />} />
-              <Route path="/platform/ai" element={<PlatformAi />} />
-              <Route path="/platform/app-management" element={<AppReleases />} />
+              <Route path="/platform" element={<PlatformHome areas={platformAreas} />} />
+              <Route path="/platform/stores" element={<Area id="stores" areas={platformAreas}><PlatformStores /></Area>} />
+              <Route path="/platform/stores/:id" element={<Area id="stores" areas={platformAreas}><PlatformStoreDetail /></Area>} />
+              <Route path="/platform/onboarding" element={<Area id="onboarding" areas={platformAreas}><OnboardingList /></Area>} />
+              <Route path="/platform/onboarding/pricing" element={<Area id="onboarding" areas={platformAreas}><PricingPage /></Area>} />
+              <Route path="/platform/onboarding/:id" element={<Area id="onboarding" areas={platformAreas}><OnboardingForm /></Area>} />
+              <Route path="/platform/plans" element={<Area id="plans" areas={platformAreas}><PlatformPlans /></Area>} />
+              <Route path="/platform/server" element={<Area id="server" areas={platformAreas}><PlatformServer /></Area>} />
+              <Route path="/platform/security" element={<Area id="security" areas={platformAreas}><PlatformSecurity /></Area>} />
+              <Route path="/platform/cache" element={<Area id="cache" areas={platformAreas}><PlatformCache /></Area>} />
+              <Route path="/platform/storage" element={<Area id="storage" areas={platformAreas}><PlatformStorage /></Area>} />
+              <Route path="/platform/ai" element={<Area id="ai" areas={platformAreas}><PlatformAi /></Area>} />
+              <Route path="/platform/app-management" element={<Area id="app-management" areas={platformAreas}><AppReleases /></Area>} />
               {/* the page was called "App updates" until 2026-11-27: old bookmarks still work */}
               <Route path="/platform/app-updates" element={<RawNavigate to="/platform/app-management" replace />} />
-              <Route path="/platform/settings" element={<PlatformSettings />} />
-              <Route path="/platform/website" element={<WebsitePages />} />
-              <Route path="/platform/website/settings" element={<WebsiteSettings />} />
-              <Route path="/platform/website/pages/:id" element={<PageEditor />} />
-              <Route path="/platform/leads" element={<PlatformLeads />} />
+              <Route path="/platform/settings" element={<Area id="settings" areas={platformAreas}><PlatformSettings /></Area>} />
+              <Route path="/platform/website" element={<Area id="website" areas={platformAreas}><WebsitePages /></Area>} />
+              <Route path="/platform/website/settings" element={<Area id="website" areas={platformAreas}><WebsiteSettings /></Area>} />
+              <Route path="/platform/website/pages/:id" element={<Area id="website" areas={platformAreas}><PageEditor /></Area>} />
+              <Route path="/platform/leads" element={<Area id="leads" areas={platformAreas}><PlatformLeads /></Area>} />
+              <Route path="/platform/team" element={<Area id="team" areas={platformAreas}><PlatformTeam /></Area>} />
               <Route path="*" element={<OldStoreAddress />} />
             </Routes>
           ) : (
@@ -731,6 +741,24 @@ function StoreRoutes() {
  * An address from before a store had its own (/menu, /orders… opened by the super admin): back into the store they
  * last had open, if any — otherwise the platform console.
  */
+/** A page of the console, only for people whose role holds that area (the API refuses the page's data anyway — this is what they see instead). */
+function Area({ id, areas, children }) {
+  if (areas.has(id)) return children;
+  return (
+    <div style={{ padding: "48px 16px", textAlign: "center", maxWidth: 480, margin: "0 auto" }} data-testid="no-access">
+      <h2 style={{ fontFamily: "var(--font-heading)", margin: "0 0 8px" }}>Your role doesn&apos;t include this page</h2>
+      <p style={{ margin: 0, color: "var(--color-text-muted)", lineHeight: 1.55 }}>Ask the Rasoi Pulse owner if you need it.</p>
+    </div>
+  );
+}
+
+/** /platform: the dashboard for those who may see it, otherwise the first page their role holds. */
+function PlatformHome({ areas }) {
+  if (areas.has("dashboard")) return <PlatformDashboard />;
+  const first = PLATFORM_AREAS.find((a) => areas.has(a.id));
+  return first ? <Navigate to={first.path} replace /> : <Area id="none" areas={areas} />;
+}
+
 function OldStoreAddress() {
   const { pathname, search } = useRouterLocation();
   const { lastOpenStoreId } = useOpenStore();

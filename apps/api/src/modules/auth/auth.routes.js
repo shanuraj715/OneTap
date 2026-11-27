@@ -4,7 +4,7 @@ import { isProd } from "../../env.js";
 import { bearerToken, requireUser, SESSION_COOKIE } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import { usesPolicy } from "../../middleware/rate-limit.js";
-import { APP_CATALOG, APP_REQUIRED_PERMISSION } from "@rasoipulse/config-schema";
+import { ADMIN_APP_ID, APP_CATALOG, APP_REQUIRED_PERMISSION } from "@rasoipulse/config-schema";
 import { appOfRequest, assertAppCurrent } from "../app-releases/app-releases.service.js";
 import { accountBlockedError, assertAccountNotBlocked, assertNotBlocked, blockInfo, clearAccountFailures, failed, floodLimiter, recordAccountFailure } from "../security/login-guard.js";
 import { describeSessionUser, login, logout } from "./auth.service.js";
@@ -74,6 +74,16 @@ authRouter.post("/login", loginFlood, usesPolicy("login-account"), async (req, r
  * `Authorization: Bearer <token>` afterwards); nothing is set as a cookie. The app keeps it in the phone's secure storage.
  */
 authRouter.post("/app-login", loginFlood, usesPolicy("login-account"), async (req, res) => {
+  // the Rasoi Pulse Admin app is for the platform team only: it has no store, no release channel on the website and no update gate here,
+  // and a person without a platform role (a restaurant's owner, say) is turned away and the session that was just opened ends
+  if (String(req.header("x-app-id") ?? "").toLowerCase() === ADMIN_APP_ID) {
+    const result = await signIn(req);
+    if (!result.user.platform?.access) {
+      await logout(result.token).catch(() => undefined);
+      throw new HttpError(403, "Rasoi Pulse Admin is for the Rasoi Pulse team. This account can't use it.", { code: "app_not_allowed", app: ADMIN_APP_ID });
+    }
+    return res.json({ token: result.token, expiresAt: result.expiresAt, user: result.user });
+  }
   // an app build that is too old (and a forced update is out) is turned away BEFORE any password is checked
   await assertAppCurrent(req);
   const app = appOfRequest(req);

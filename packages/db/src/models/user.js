@@ -15,6 +15,12 @@ const userSchema = new Schema(
     name: { type: String, required: true, trim: true },
     passwordHash: { type: String, required: true },
     isSuperAdmin: { type: Boolean, default: false },
+    /**
+     * A member of the Rasoi Pulse team (not a restaurant's staff): the id of their PlatformRole. Such an account has no store (`memberships`
+     * stays empty) and no way into any store's dashboard; what it may do in the platform console is exactly what the role lists.
+     * Only the super admin sets it (api/modules/platform/team.service.js).
+     */
+    platformRoleId: { type: String, default: null, index: true },
     memberships: {
       type: [
         new Schema(

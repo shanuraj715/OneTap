@@ -1,13 +1,13 @@
 import { Router } from "express";
 import { z } from "zod";
-import { requireSuperAdmin } from "../../middleware/auth.js";
+import { requirePlatform } from "../../middleware/auth.js";
 import { createBrand, listBrands } from "./brands.service.js";
 import { limiter } from "../../middleware/rate-limit.js";
 
 export const brandsRouter = Router();
 
 brandsRouter.get("/", async (req, res) => {
-  requireSuperAdmin(req);
+  requirePlatform(req, "stores:read");
   res.json({ brands: await listBrands() });
 });
 
@@ -28,7 +28,7 @@ const createBrandBody = z.object({
 }).refine((b) => b.hostnames.length > 0 || b.subdomain?.trim(), { message: "Give the store a Rasoi Pulse address or an own domain", path: ["subdomain"] });
 
 brandsRouter.post("/", limiter("destructive"), async (req, res) => {
-  requireSuperAdmin(req);
+  requirePlatform(req, "stores:manage");
   const body = createBrandBody.parse(req.body);
   const result = await createBrand(body);
   res.status(201).json(result);

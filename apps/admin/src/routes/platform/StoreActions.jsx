@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { storeUrl, useNavigate } from "../../lib/nav";
 import { Ban, EllipsisVertical, ExternalLink, Power, Store, Trash2, TriangleAlert } from "lucide-react";
 import * as api from "../../lib/api";
+import { useAuth } from "../../lib/useAuth";
 import { useMedia } from "../../lib/useMedia";
 import { usePlatformMutation } from "../../lib/usePlatform";
 import { Button, Menu, Modal, Toast } from "../../ui";
@@ -31,6 +32,11 @@ export function StoreActionsMenu({ store, onChoose, exclude = [] }) {
   // a bigger target on a phone, where it's tapped rather than clicked
   const narrow = useMedia("(max-width: 767px)");
 
+  // what this person's role allows: opening a store's dashboard as its owner is the super admin's alone; switching a store off or on needs
+  // "Stores — create and change", deleting it "Stores — delete" (the API refuses all of it as well)
+  const { user, canPlatform } = useAuth();
+  const allowed = { open: Boolean(user?.isSuperAdmin), details: true, disable: canPlatform("stores:manage"), enable: canPlatform("stores:manage"), delete: canPlatform("stores:delete") };
+
   const options = [
     { value: "open", label: "Open store dashboard", description: "See it the way its team does", icon: <ExternalLink size={14} /> },
     { value: "details", label: "View details", description: "Plan, owners, outlets, domains", icon: <Store size={14} /> },
@@ -38,7 +44,7 @@ export function StoreActionsMenu({ store, onChoose, exclude = [] }) {
       ? { value: "enable", label: "Enable store", description: "Let customers order and the team sign in again", icon: <Power size={14} /> }
       : { value: "disable", label: "Disable store", description: "Pause it, for example for a late payment. Nothing is deleted.", icon: <Ban size={14} /> },
     { value: "delete", label: "Delete store", description: "Remove it and everything in it, for good", icon: <Trash2 size={14} />, danger: true },
-  ].filter((o) => !exclude.includes(o.value));
+  ].filter((o) => !exclude.includes(o.value) && allowed[o.value] !== false);
 
   const choose = (value) => {
     if (value === "open") {

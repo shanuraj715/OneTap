@@ -1,10 +1,12 @@
 import { createHash, randomBytes } from "node:crypto";
 import {
+  PLATFORM_FEATURE_KEYS,
+  expandPlatformFeatures,
   permissionsForRole,
             
                    
 } from "@rasoipulse/config-schema";
-import { SessionModel, UserModel,              } from "@rasoipulse/db";
+import { PlatformRoleModel, SessionModel, UserModel,              } from "@rasoipulse/db";
 import { HttpError } from "../../middleware/error.js";
 import { cache } from "../cache/cache.js";
 import { platformConfig } from "../cache/platform-config.js";
@@ -66,6 +68,17 @@ export async function logout(token                    )                {
   await SessionModel.deleteOne({ tokenHash: hashToken(token) });
 }
 
+/**
+ * What a person may do in the PLATFORM console: the super admin everything, a team member what their role lists (with what each feature
+ * brings along), anybody else nothing. → { features: [...], role: { id, name } | null }. A role that was deleted leaves its people with nothing.
+ */
+export async function platformAccessOf(user) {
+  if (user.isSuperAdmin) return { features: [...PLATFORM_FEATURE_KEYS], role: null };
+  if (!user.platformRoleId) return { features: [], role: null };
+  const role = await PlatformRoleModel.findById(user.platformRoleId).lean().catch(() => null);
+  return role ? { features: expandPlatformFeatures(role.features), role: { id: String(role._id), name: role.name } } : { features: [], role: null };
+}
+
 /** How long a remembered sign-in may be reused at most — a change to the person or the sign-in drops it sooner. */
 const AUTH_MS = 30_000;
 
@@ -85,7 +98,8 @@ export async function userFromToken(token                    )                  
       if (!session) return null;
       const user = await UserModel.findOne({ _id: session.userId }).select("-passwordHash").lean();
       if (!user || !user.isActive) return null;
-      return { expiresAt: new Date(session.expiresAt).getTime(), user };
+      // what the platform console allows this person is worked out here too, so every request can check it without another read
+      return { expiresAt: new Date(session.expiresAt).getTime(), user: { ...user, platform: await platformAccessOf(user) } };
     },
     { cacheNull: false, maxAgeMs: AUTH_MS, tags: ["ns:auth"] },
   );
@@ -107,6 +121,8 @@ export function toSessionUser(user         )              {
     /** set when the platform has paused this person's access to their store */
     blockedAt: membership?.blockedAt ?? null,
     permissions: role ? permissionsForRole(role) : [],
+    /** the platform console: whether this person may open it at all, which features they hold, and their team role (null for the super admin and for store staff) */
+    platform: { access: Boolean(user.platform?.features?.length), features: user.platform?.features ?? [], role: user.platform?.role ?? null },
   };
 }
 
@@ -117,6 +133,7 @@ export function toSessionUser(user         )              {
  * super admin is never affected.
  */
 export async function describeSessionUser(user) {
+  user = user.platform ? user : Object.assign(user, { platform: await platformAccessOf(user) }); // (a sign-in hands over the stored person, not the remembered one)
   // whether dashboards get live updates over a WebSocket or ask for their orders on a timer (a platform switch)
   const realtime = { websocket: (await platformConfig()).realtimeWebsocket !== false };
   const session = { ...toSessionUser(user), realtime };

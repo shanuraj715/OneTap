@@ -1,7 +1,7 @@
 import { raw, Router } from "express";
 import { z } from "zod";
 import { IMAGE_RULES, LEAD_STATUSES } from "@rasoipulse/config-schema";
-import { requireSuperAdmin, requireUser } from "../../middleware/auth.js";
+import { requirePlatform, requireUser } from "../../middleware/auth.js";
 import { HttpError } from "../../middleware/error.js";
 import { clientIp, issueChallenge } from "./guard.js";
 import * as site from "./site.service.js";
@@ -65,8 +65,9 @@ siteRouter.post("/leads", limiter("site-lead"), async (req, res) => {
 
 /** The platform super admin managing the website and its enquiries. */
 export const platformSiteRouter = Router();
+// the website's pages, menu and settings need the "Website" feature; its enquiries (leads) the "Leads" feature
 platformSiteRouter.use((req, _res, next) => {
-  requireSuperAdmin(req);
+  requirePlatform(req, /^\/leads(\/|$)/.test(req.path) ? "leads:manage" : "website:manage");
   next();
 });
 

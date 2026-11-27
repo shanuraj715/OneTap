@@ -34,7 +34,8 @@ export function expireForWrite(event) {
       break;
     case "User":
     case "Session":
-      // who is signed in (and what they may do) — any change to a person or a sign-in drops every remembered sign-in
+    case "PlatformRole":
+      // who is signed in (and what they may do) — any change to a person, a sign-in or a platform role drops every remembered sign-in
       cache.expireTag("ns:auth");
       break;
     case "Customer":

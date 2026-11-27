@@ -7,6 +7,7 @@ export { PlanModel, PlatformSettingsModel } from "./models/plan.js";
 export { LeadModel, SitePageModel, SiteSettingsModel } from "./models/site.js";
 export { AppReleaseModel, AppSettingModel } from "./models/app-release.js";
 export { UserModel, SessionModel } from "./models/user.js";
+export { PlatformRoleModel, PlatformAuditModel } from "./models/platform-role.js";
 export { AnalyticsProfileModel } from "./models/analytics.js";
 export { OnboardingModel, PricingModel } from "./models/onboarding.js";
 export { LoginLogModel } from "./models/audit.js";
