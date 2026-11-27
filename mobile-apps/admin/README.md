@@ -45,6 +45,8 @@ cd mobile-apps/admin
 npm run phone                       # the code server, pointed at the test server on this Mac, with a QR code
 ```
 
+**Restart it after changing `app.config.ts` or adding a package.** Expo reads the config only when the code server starts, and Expo Go keeps what it was told: a change that "does nothing" on the phone (the light/dark setting did exactly this) is usually a code server that is still running from before. Press Ctrl+C, start `npm run phone` again, and on Android swipe the project away in Expo Go before opening it again. JS changes need none of this (they reload by themselves).
+
 `npm run phone:usb` is the same through a USB cable; `npm run phone:live` talks to the live server. Sign in with a platform account
 (the bench's super admin, or a team member made in Console → Team & roles). A restaurant owner's account is turned away with a sentence.
 
