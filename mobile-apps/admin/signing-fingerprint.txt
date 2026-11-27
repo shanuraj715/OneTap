@@ -1,0 +1,3 @@
+# The public fingerprint (SHA-256) of the key every Rasoi Pulse app release (OMA, KDA, RDA and Admin) must be signed with. Safe to commit.
+# Checked on every release build and by "npm run signing:verify". If this ever has to change, every phone must uninstall the app first.
+sha256: 06:63:26:8E:8A:CF:67:9C:B1:58:70:A8:6A:39:89:14:29:86:D4:59:92:5D:6B:3D:B7:DE:AD:0D:C4:B0:08:3C

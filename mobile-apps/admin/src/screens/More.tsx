@@ -1,0 +1,39 @@
+import { View } from "react-native";
+import { router } from "expo-router";
+import { APP_AREAS, areasFor } from "@/lib/access";
+import { API_HOST, APP_NAME, APP_VERSION } from "@/lib/config";
+import { useMe, useRuntime } from "@/runtime";
+import { Button, Glass, Row, Screen, Section, Text, initialsOf, type IconName, useTheme } from "@/ui";
+
+/** The person's own account, and every area of the app that doesn't fit the tab bar. */
+export function More() {
+  const me = useMe();
+  const { session } = useRuntime();
+  const { c } = useTheme();
+  const areas = areasFor(me).filter((a) => APP_AREAS.has(a.id));
+  return (
+    <Screen title="Account" testID="screen-more">
+      <Glass blur strong>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 14 }}>
+          <View style={{ width: 52, height: 52, borderRadius: 26, alignItems: "center", justifyContent: "center", backgroundColor: c.primary }}><Text variant="heading" style={{ color: c.onPrimary }}>{initialsOf(me?.name ?? "")}</Text></View>
+          <View style={{ flex: 1 }}>
+            <Text variant="heading" numberOfLines={1}>{me?.name}</Text>
+            <Text variant="caption" tone="muted" numberOfLines={1}>{me?.email}</Text>
+            <Text variant="caption" tone="primary">{me?.isSuperAdmin ? "Owner (everything)" : me?.platform.role?.name ?? "Team member"}</Text>
+          </View>
+        </View>
+      </Glass>
+      <Section title="Areas">
+        <View style={{ gap: 10 }}>{areas.map((a, i) => <Row key={a.id} index={i} icon={a.id as IconName} title={a.label} onPress={() => router.navigate(`/${a.id}` as never)} testID={`more-${a.id}`} />)}</View>
+      </Section>
+      <Section title="This phone">
+        <Glass>
+          <View style={{ gap: 12 }}>
+            <Text variant="caption" tone="muted">{APP_NAME} · {APP_VERSION} · {API_HOST}</Text>
+            <Button title="Sign out" icon="logout" variant="glass" onPress={() => void session.getState().signOut()} testID="signout" />
+          </View>
+        </Glass>
+      </Section>
+    </Screen>
+  );
+}
