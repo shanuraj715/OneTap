@@ -21,6 +21,8 @@ const APPS = {
   rda: { code: "RDA", label: "Rasoi Pulse RDA", tile: "#764ed1" }, // violet: the rider app
   // the Admin app is for the Rasoi Pulse team only (never on the website). Its colour is amber-brown: exactly the light theme's `primary` in mobile-apps/admin/src/ui/theme.ts
   admin: { code: "ADM", label: "Rasoi Pulse Admin", tile: "#b45f00" },
+  // the Business app is for restaurant owners (private on the website until it is made public). Its colour is rose: exactly the light theme's `primary` in mobile-apps/business/src/ui/theme.ts
+  business: { code: "BIZ", label: "Rasoi Pulse Business", tile: "#c2185b" },
 };
 
 /* ---------------------------------------------------------------- colours (from the two original images) */
@@ -50,6 +52,9 @@ const GLYPHS = {
   K: [92, (c, w) => stroke("M18 12V88M80 12L20 56M38 44L82 88", c, w)],
   D: [100, (c, w) => stroke("M16 12V88H42C70 88 88 72 88 50C88 28 70 12 42 12H16Z", c, w)],
   R: [92, (c, w) => stroke("M18 88V12H48C68 12 80 24 80 38C80 52 68 64 48 64H18M50 64L82 88", c, w)],
+  B: [92, (c, w) => stroke("M18 12V88H48C68 88 80 76 80 64C80 52 70 46 56 46H18M18 46H50C66 46 76 40 76 29C76 18 66 12 48 12H18", c, w)],
+  I: [36, (c, w) => stroke("M18 12V88", c, w)],
+  Z: [94, (c, w) => stroke("M14 12H78L14 88H80", c, w)],
 };
 const word = (code, c) => {
   const total = [...code].reduce((n, ch) => n + GLYPHS[ch][0], 0) + 14 * (code.length - 1);
@@ -105,7 +110,7 @@ const out = (...p) => join(HERE, ...p);
 const png = (svg, size) => sharp(Buffer.from(svg), { density: Math.max(72, (72 * size) / 512) }).resize(size, size).png({ compressionLevel: 9 }).toBuffer();
 const files = [];
 const write = (path, data) => { mkdirSync(dirname(out(path)), { recursive: true }); writeFileSync(out(path), data); files.push(path); };
-for (const d of ["favicon", "logo", "oma-app-icon", "kda-app-icon", "rda-app-icon", "admin-app-icon", "source"]) rmSync(out(d), { recursive: true, force: true });
+for (const d of ["favicon", "logo", "oma-app-icon", "kda-app-icon", "rda-app-icon", "admin-app-icon", "business-app-icon", "source"]) rmSync(out(d), { recursive: true, force: true });
 const IMAGES = "/private/tmp/claude-501/-Users-shanu-raj-Raj-Gazab-Momos/04b5269f-6be5-4e77-a7b8-73a9c95b0058/images";
 mkdirSync(out("source"), { recursive: true });
 copyFileSync(`${IMAGES}/42.png`, out("source/rasoi-pulse-original-dark.png"));
