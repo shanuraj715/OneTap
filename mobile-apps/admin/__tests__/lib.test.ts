@@ -117,3 +117,15 @@ describe("the look", () => {
     expect(responsive(900, 1200).columns(340)).toBe(2);
   });
 });
+
+import { duration } from "@/lib/format";
+describe("duration (seconds in words, the same as the web console)", () => {
+  it.each([[0, "off"], [1, "1 second"], [30, "30 seconds"], [60, "1 minute"], [90, "1 minute 30 seconds"], [900, "15 minutes"], [3600, "1 hour"], [5400, "1 hour 30 minutes"], [7200, "2 hours"], [86400, "24 hours"], [3661, "1 hour 1 minute 1 second"]])("%s s is %s", (n, words) => expect(duration(n)).toBe(words));
+  it("rounds a fraction and answers '—' for what is not a time", () => {
+    expect(duration(59.6)).toBe("1 minute");
+    expect(duration(Number.NaN)).toBe("—");
+    expect(duration(-5)).toBe("—");
+    expect(duration(null)).toBe("—");
+    expect(duration(undefined)).toBe("—");
+  });
+});

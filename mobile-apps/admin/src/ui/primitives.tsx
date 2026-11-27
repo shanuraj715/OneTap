@@ -1,5 +1,5 @@
-import { createRef, useEffect, useMemo, useRef, useState, useSyncExternalStore, type ComponentRef, type ReactNode } from "react";
-import { ActivityIndicator, Animated, Easing, Pressable, StyleSheet, Switch, Text as RNText, View, type PressableProps, type StyleProp, type TextProps, type TextStyle, type ViewStyle } from "react-native";
+import { createContext, createRef, useContext, useEffect, useMemo, useRef, useState, useSyncExternalStore, type ComponentRef, type ReactNode } from "react";
+import { ActivityIndicator, Animated, Easing, Platform, Pressable, StyleSheet, Switch, Text as RNText, View, type PressableProps, type StyleProp, type TextProps, type TextStyle, type ViewStyle } from "react-native";
 import { BlurTargetView, BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
 import * as Lucide from "lucide-react-native";
@@ -103,18 +103,31 @@ export function Background({ target = true }: { /** false for a cover that must 
   );
 }
 
-/** A real blur of the scenery behind, filling its parent (put it first inside a clipped, rounded panel). Draws nothing until there is a scenery to blur. */
+/**
+ * Where a blur must NOT be drawn: inside a pop-up sheet. A sheet lives in its own window on a solid fill, so there is no scenery behind its panels —
+ * a blur there would show a smudge of the app's background through the sheet. (The Sheet turns it off for everything inside it.)
+ */
+export const FrostContext = createContext(true);
+
+/** Android 12+ blurs on the graphics chip (RenderEffect) — cheap enough for every panel on screen; older Androids use the slower software blur. */
+const ANDROID_BLUR = Platform.OS === "android" && Number(Platform.Version) >= 31 ? "dimezisBlurViewSdk31Plus" : "dimezisBlurView";
+
+/**
+ * A real blur of what is behind, filling its parent (put it first inside a clipped, rounded panel). Android blurs the app's scenery (the one
+ * Background); iOS blurs whatever really is behind it. Draws nothing until there is a scenery to blur.
+ */
 export function Frost({ intensity = 50 }: { intensity?: number }) {
   const { dark } = useTheme();
+  const allowed = useContext(FrostContext);
   const ready = useSyncExternalStore(subscribeScene, sceneReady, sceneReady);
-  if (!ready) return null;
-  return <BlurView blurTarget={scene.ref} intensity={intensity} tint={dark ? "dark" : "light"} blurMethod="dimezisBlurView" style={StyleSheet.absoluteFill} />;
+  if (!ready || !allowed) return null;
+  return <BlurView testID="frost" blurTarget={scene.ref} intensity={intensity} tint={dark ? "dark" : "light"} blurMethod={ANDROID_BLUR} style={StyleSheet.absoluteFill} />;
 }
 
 /* ------------------------------------------------------------------------------------------------ glass */
-export interface GlassProps { children?: ReactNode; style?: StyleProp<ViewStyle>; /** real blur of what is behind (header, tab bar, hero cards — not every row of a long list) */ blur?: boolean; strong?: boolean; padding?: number; onPress?: () => void; testID?: string; accessibilityLabel?: string; radiusSize?: number }
-/** A frosted panel: translucent fill, a hairline border, a soft shadow, and (optionally) the real blur of whatever is behind it. */
-export function Glass({ children, style, blur = false, strong = false, padding = 16, onPress, testID, accessibilityLabel, radiusSize = radius.lg }: GlassProps) {
+export interface GlassProps { children?: ReactNode; style?: StyleProp<ViewStyle>; /** the real blur of what is behind it — ON for every panel (pass `false` only for a panel that must stay plain) */ blur?: boolean; strong?: boolean; padding?: number; onPress?: () => void; testID?: string; accessibilityLabel?: string; radiusSize?: number }
+/** A frosted panel: translucent fill, a hairline border, a soft shadow, and the real blur of whatever is behind it. */
+export function Glass({ children, style, blur = true, strong = false, padding = 16, onPress, testID, accessibilityLabel, radiusSize = radius.lg }: GlassProps) {
   const { c, dark } = useTheme();
   const press = usePressScale(0.985);
   const body = (
@@ -138,14 +151,15 @@ export function Glass({ children, style, blur = false, strong = false, padding =
 /* ------------------------------------------------------------------------------------------------ buttons and pills */
 export interface ButtonProps extends Omit<PressableProps, "style" | "children"> { title: string; icon?: IconName; variant?: "primary" | "glass" | "danger" | "ghost"; size?: "md" | "lg" | "sm"; loading?: boolean; fullWidth?: boolean; style?: StyleProp<ViewStyle> }
 export function Button({ title, icon, variant = "primary", size = "md", loading = false, fullWidth = false, disabled, style, onPress, ...rest }: ButtonProps) {
-  const { c } = useTheme();
+  const { c, dark } = useTheme();
   const press = usePressScale(0.96);
   const off = Boolean(disabled || loading);
   const look = { primary: { bg: c.primary, fg: c.onPrimary, bd: "transparent" }, danger: { bg: c.danger, fg: "#FFFFFF", bd: "transparent" }, glass: { bg: c.glassStrong, fg: c.text, bd: c.border }, ghost: { bg: "transparent", fg: c.primaryText, bd: "transparent" } }[variant];
   const pad = { sm: [8, 14], md: [12, 18], lg: [15, 22] }[size] as [number, number];
   return (
     <Pressable {...rest} onPress={off ? undefined : onPress} onPressIn={press.onPressIn} onPressOut={press.onPressOut} disabled={off} accessibilityRole="button" accessibilityState={{ disabled: off, busy: loading }} accessibilityLabel={rest.accessibilityLabel ?? title} style={fullWidth ? { alignSelf: "stretch" } : { alignSelf: "flex-start" }}>
-      <Animated.View style={[press.style, { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, paddingVertical: pad[0], paddingHorizontal: pad[1], borderRadius: radius.pill, backgroundColor: look.bg, borderWidth: look.bd === "transparent" ? 0 : 1, borderColor: look.bd, opacity: off ? 0.5 : 1 }, style]}>
+      <Animated.View style={[press.style, { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8, paddingVertical: pad[0], paddingHorizontal: pad[1], borderRadius: radius.pill, overflow: "hidden", backgroundColor: look.bg, borderWidth: look.bd === "transparent" ? 0 : 1, borderColor: look.bd, opacity: off ? 0.5 : 1 }, style]}>
+        {variant === "glass" ? <Frost intensity={dark ? 38 : 55} /> : null}
         {loading ? <ActivityIndicator size="small" color={look.fg} /> : icon ? <Icon name={icon} size={size === "sm" ? 15 : 18} color={look.fg} /> : null}
         <RNText style={{ color: look.fg, fontWeight: "700", fontSize: size === "sm" ? 13 : 15 }}>{title}</RNText>
       </Animated.View>

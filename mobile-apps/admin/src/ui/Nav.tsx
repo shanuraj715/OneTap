@@ -1,8 +1,28 @@
+import { useEffect, useState } from "react";
 import { Animated, Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AppIcon } from "./AppIcon";
+import { useReducedMotion } from "./motion";
 import { Frost, Icon, Text, type IconName, usePressScale } from "./primitives";
 import { radius, useTheme } from "./theme";
+
+/**
+ * What marks the open screen's menu item: a solid pill in the app's colour (the same look as a selected chip), with the icon and the label in white.
+ * It grows in when the item becomes the active one (a new screen opened); with reduced motion it simply appears.
+ */
+function ActivePill({ size }: { size: number }) {
+  const { c } = useTheme();
+  const reduced = useReducedMotion();
+  const [t] = useState(() => new Animated.Value(0));
+  useEffect(() => {
+    if (reduced) { t.setValue(1); return; }
+    Animated.spring(t, { toValue: 1, useNativeDriver: true, speed: 16, bounciness: 7 }).start();
+  }, [t, reduced]);
+  return (
+    <Animated.View testID="nav-active-pill" pointerEvents="none"
+      style={[StyleSheet.absoluteFill, { borderRadius: size, backgroundColor: c.primary, shadowColor: c.primary, shadowOpacity: 0.4, shadowRadius: 8, shadowOffset: { width: 0, height: 3 }, opacity: t, transform: [{ scale: t.interpolate({ inputRange: [0, 1], outputRange: [0.72, 1] }) }] }]} />
+  );
+}
 
 export interface NavItem { id: string; label: string; icon: IconName }
 
@@ -26,9 +46,10 @@ function RailButton({ item, on, onPress }: { item: NavItem; on: boolean; onPress
   const press = usePressScale(0.92);
   return (
     <Pressable onPress={onPress} onPressIn={press.onPressIn} onPressOut={press.onPressOut} accessibilityRole="tab" accessibilityState={{ selected: on }} accessibilityLabel={item.label} testID={`nav-${item.id}`}>
-      <Animated.View style={[press.style, { width: 74, alignItems: "center", gap: 3, paddingVertical: 9, borderRadius: radius.md, backgroundColor: on ? c.glassStrong : "transparent", borderWidth: on ? 1 : 0, borderColor: c.border }]}>
-        <Icon name={item.icon} size={21} color={on ? c.primaryText : c.muted} />
-        <Text variant="caption" style={{ color: on ? c.text : c.muted, fontSize: 10.5 }} numberOfLines={1}>{item.label}</Text>
+      <Animated.View style={[press.style, { width: 74, alignItems: "center", gap: 3, paddingVertical: 9, borderRadius: radius.md }]}>
+        {on ? <ActivePill size={radius.md} /> : null}
+        <Icon name={item.icon} size={21} color={on ? c.onPrimary : c.muted} strokeWidth={on ? 2.4 : 2} />
+        <Text variant="caption" style={{ color: on ? c.onPrimary : c.muted, fontSize: 10.5, fontWeight: on ? "800" : "500" }} numberOfLines={1}>{item.label}</Text>
       </Animated.View>
     </Pressable>
   );
@@ -47,9 +68,10 @@ export function TabBar({ items, current, onPick }: { items: NavItem[]; current: 
             const on = it.id === current;
             return (
               <Pressable key={it.id} onPress={() => onPick(it.id)} accessibilityRole="tab" accessibilityState={{ selected: on }} accessibilityLabel={it.label} testID={`tab-${it.id}`} style={{ flex: 1 }}>
-                <View style={{ alignItems: "center", gap: 2, paddingVertical: 8, borderRadius: radius.lg, overflow: "hidden", backgroundColor: on ? c.glassStrong : "transparent", borderWidth: on ? 1 : 0, borderColor: c.border }}>
-                  <Icon name={it.icon} size={21} color={on ? c.primaryText : c.muted} />
-                  <Text variant="caption" style={{ color: on ? c.text : c.muted, fontSize: 10.5 }} numberOfLines={1}>{it.label}</Text>
+                <View style={{ alignItems: "center", gap: 2, paddingVertical: 8, borderRadius: radius.lg }}>
+                  {on ? <ActivePill size={radius.lg} /> : null}
+                  <Icon name={it.icon} size={21} color={on ? c.onPrimary : c.muted} strokeWidth={on ? 2.4 : 2} />
+                  <Text variant="caption" style={{ color: on ? c.onPrimary : c.muted, fontSize: 10.5, fontWeight: on ? "800" : "500" }} numberOfLines={1}>{it.label}</Text>
                 </View>
               </Pressable>
             );

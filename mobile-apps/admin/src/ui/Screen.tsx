@@ -1,8 +1,9 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { Animated, Pressable, RefreshControl, ScrollView, View } from "react-native";
+import { Animated, Pressable, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useStore } from "zustand";
-import { Button, Glass, Icon, Reveal, Skeleton, Text, type IconName, type Tone, Pill } from "./primitives";
+import { Button, Frost, Glass, Icon, Reveal, Skeleton, Text, type IconName, type Tone, Pill } from "./primitives";
+import { RefreshIndicator, usePullToRefresh } from "./Refresh";
 import { Input } from "./Sheet";
 import { radius, useResponsive, useTheme } from "./theme";
 import { toasts } from "./toast-store";
@@ -12,6 +13,7 @@ export function Screen({ title, subtitle, back, right, onRefresh, refreshing = f
   const { c, dark } = useTheme();
   const insets = useSafeAreaInsets();
   const { contentWidth } = useResponsive();
+  const { scrollProps, pull } = usePullToRefresh(onRefresh, refreshing);
   const head = (
     <View style={{ flexDirection: "row", alignItems: "center", gap: 12, paddingTop: 8, paddingBottom: 4 }}>
       {back ? <Pressable onPress={back} accessibilityRole="button" accessibilityLabel="Back" hitSlop={10} style={{ width: 40, height: 40, borderRadius: 20, alignItems: "center", justifyContent: "center", backgroundColor: c.glassStrong }} testID="back"><Icon name="left" size={22} /></Pressable> : null}
@@ -26,9 +28,10 @@ export function Screen({ title, subtitle, back, right, onRefresh, refreshing = f
     <View style={{ flex: 1 }} testID={testID}>
       {scroll ? (
         <ScrollView
+          testID="screen-scroll"
           indicatorStyle={dark ? "white" : "black"}
           contentContainerStyle={{ paddingTop: insets.top + 8, paddingBottom: 120, paddingHorizontal: 16, gap: 16, alignItems: "center" }}
-          refreshControl={onRefresh ? <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={c.primary} colors={[c.primary]} progressBackgroundColor={c.solid} /> : undefined}
+          {...scrollProps}
           keyboardShouldPersistTaps="handled"
         >
           <View style={{ width: "100%", maxWidth: contentWidth, gap: 16 }}>{head}{children}</View>
@@ -36,6 +39,7 @@ export function Screen({ title, subtitle, back, right, onRefresh, refreshing = f
       ) : (
         <View style={{ flex: 1, paddingTop: insets.top + 8, paddingHorizontal: 16, alignItems: "center" }}><View style={{ width: "100%", maxWidth: contentWidth, flex: 1, gap: 16 }}>{head}{children}</View></View>
       )}
+      {onRefresh && scroll ? <RefreshIndicator refreshing={refreshing} pull={pull} /> : null}
     </View>
   );
 }
@@ -112,14 +116,15 @@ export function SearchField({ value, onChange, placeholder = "Search", testID }:
 
 /** A row of choices of which one is on (All · Draft · Published): a pill that slides to the chosen one. */
 export function Segmented<T extends string>({ value, options, onChange, testID }: { value: T; options: { value: T; label: string; count?: number }[]; onChange: (v: T) => void; testID?: string }) {
-  const { c } = useTheme();
+  const { c, dark } = useTheme();
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8, paddingVertical: 2 }} testID={testID}>
       {options.map((o) => {
         const on = o.value === value;
         return (
           <Pressable key={o.value} onPress={() => onChange(o.value)} accessibilityRole="tab" accessibilityState={{ selected: on }} accessibilityLabel={o.label} testID={testID ? `${testID}-${o.value}` : undefined}
-            style={{ flexDirection: "row", alignItems: "center", gap: 6, paddingVertical: 9, paddingHorizontal: 16, borderRadius: radius.pill, backgroundColor: on ? c.primary : c.glass, borderWidth: 1, borderColor: on ? c.primary : c.border }}>
+            style={{ flexDirection: "row", alignItems: "center", gap: 6, paddingVertical: 9, paddingHorizontal: 16, borderRadius: radius.pill, overflow: "hidden", backgroundColor: on ? c.primary : c.glass, borderWidth: 1, borderColor: on ? c.primary : c.border }}>
+            {on ? null : <Frost intensity={dark ? 38 : 55} />}
             <Text variant="label" style={{ color: on ? c.onPrimary : c.text }}>{o.label}</Text>
             {typeof o.count === "number" ? <Text variant="caption" style={{ color: on ? c.onPrimary : c.muted, opacity: 0.85 }}>{o.count}</Text> : null}
           </Pressable>

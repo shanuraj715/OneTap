@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Animated, Easing, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from "react-native";
-import { Button, Icon, Text, usePressScale } from "./primitives";
+import { Button, FrostContext, Icon, Text, usePressScale } from "./primitives";
 import { MONTHS, WEEKDAYS, inRange, monthGrid, parseDay, prettyDay, shiftMonth, todayKey } from "./calendar";
 import { radius, useResponsive, useTheme } from "./theme";
 
@@ -19,6 +19,7 @@ export function Sheet({ visible, onClose, title, children, footer, testID }: { v
   if (!mounted) return null;
   return (
     <Modal transparent visible animationType="none" onRequestClose={onClose} statusBarTranslucent>
+      <FrostContext.Provider value={false}>
       <Animated.View style={[StyleSheet.absoluteFill, { backgroundColor: c.overlay, opacity: t }]}>
         <Pressable style={StyleSheet.absoluteFill} onPress={onClose} accessibilityLabel="Close" accessibilityRole="button" />
       </Animated.View>
@@ -37,6 +38,7 @@ export function Sheet({ visible, onClose, title, children, footer, testID }: { v
           </View>
         </Animated.View>
       </KeyboardAvoidingView>
+    </FrostContext.Provider>
     </Modal>
   );
 }

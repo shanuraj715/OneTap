@@ -1,6 +1,7 @@
 import { View } from "react-native";
-import { Slot, router, useSegments } from "expo-router";
+import { Slot, router, usePathname } from "expo-router";
 import { areasFor, APP_AREAS } from "@/lib/access";
+import { areaOfPath, litTab } from "@/lib/nav";
 import { useMe } from "@/runtime";
 import { Rail, TabBar, useResponsive, type IconName } from "@/ui";
 
@@ -8,14 +9,13 @@ import { Rail, TabBar, useResponsive, type IconName } from "@/ui";
 export default function AppLayout() {
   const me = useMe();
   const { tablet } = useResponsive();
-  const segments = useSegments() as string[];
-  const current = segments[1] ?? "";
+  const current = areaOfPath(usePathname());
   const areas = areasFor(me).filter((a) => APP_AREAS.has(a.id));
   const items = areas.map((a) => ({ id: a.id, label: a.label.replace("App Management", "Apps").replace("Team & roles", "Team"), icon: a.id as IconName }));
   const go = (id: string) => router.navigate(id === "more" ? "/more" : `/${id}`);
   const phoneItems = items.length > 4 ? [...items.slice(0, 3), { id: "more", label: "More", icon: "more" as IconName }] : [...items, { id: "more", label: "Account", icon: "user" as IconName }];
-  // detail screens (a store …) keep the area they belong to lit
-  const lit = phoneItems.some((i) => i.id === current) ? current : items.slice(3).some((i) => i.id === current) ? "more" : current;
+  // detail screens (a store …) keep the area they belong to lit; an area that lives under "More" lights "More"
+  const lit = litTab(phoneItems.map((i) => i.id), items.slice(3).map((i) => i.id), current);
   return (
     <View style={{ flex: 1, flexDirection: "row" }}>
       {tablet ? <Rail items={[...items, { id: "more", label: "Account", icon: "user" }]} current={current} onPick={go} /> : null}

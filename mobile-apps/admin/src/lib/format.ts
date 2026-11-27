@@ -33,3 +33,16 @@ export function uptime(sec: number | null | undefined): string {
 export const perSecond = (n: number | null | undefined) => `${bytes(n)}/s`;
 /** "12 s", "3 min", "2 h": a length of time in seconds. */
 export const seconds = (n: number) => (n < 90 ? `${Math.round(n)} s` : n < 5400 ? `${Math.round(n / 60)} min` : `${Math.round(n / 3600)} h`);
+/**
+ * A length of time in words, from seconds: "30 seconds", "15 minutes", "1 hour", "1 hour 30 minutes", "1 minute 30 seconds"; 0 is "off".
+ * (The same words the web console uses for the cache lifetime.) A fraction is rounded; something that isn't a number is "—".
+ */
+export function duration(secondsValue: number | null | undefined): string {
+  if (secondsValue === null || secondsValue === undefined) return "—"; // no value is not "off"
+  const total = Math.round(Number(secondsValue));
+  if (!Number.isFinite(total) || total < 0) return "—";
+  if (total === 0) return "off";
+  const h = Math.floor(total / 3600), m = Math.floor((total % 3600) / 60), s = total % 60;
+  const part = (n: number, one: string, many: string) => (n ? `${n} ${n === 1 ? one : many}` : "");
+  return [part(h, "hour", "hours"), part(m, "minute", "minutes"), part(s, "second", "seconds")].filter(Boolean).join(" ");
+}

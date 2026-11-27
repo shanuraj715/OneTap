@@ -80,7 +80,21 @@ export interface Lead {
   id: string; name: string; phone: string; email: string; businessName: string; city: string; outlets: string; plan: string; message: string; sourcePage: string;
   utm: { source?: string; medium?: string; campaign?: string }; status: LeadStatus; notes: { text: string; by: string; at: string }[]; createdAt: string; updatedAt: string;
 }
-export interface CacheOverview { cache: { ttlSeconds: number; enabled: boolean; lastExpiredAt: string | null; stats: { entries: number; bytes: number; hits: number; misses: number; hitRate: number | null; since: string }; stores: { id: string; name: string; entries: number; bytes: number; lastExpiredAt: string | null }[] } }
+export interface CacheEntry {
+  key: string; kind: string; label: string; subject: string; store: { id: string; name: string } | null; outlet: { id: string; name: string } | null;
+  bytes: number; ageSeconds: number; expiresInSeconds: number; notFound: boolean;
+}
+/** Everything the API remembers right now, one row each (GET /api/platform/cache/entries), with the totals and the setting. */
+export interface CacheEntries {
+  ttlSeconds: number; enabled: boolean; lastExpiredAt: string | null;
+  stats: { hits: number; misses: number; hitRate: number | null };
+  totals: { entries: number; bytes: number };
+  kinds: { kind: string; label: string; what: string; entries: number; bytes: number }[];
+  stores: { id: string; name: string; entries: number; bytes: number }[];
+  entries: CacheEntry[];
+}
+/** What to expire: everything, the admin panel's own items, one store, or one outlet of a store. */
+export type ExpireScope = { scope: "all" } | { scope: "admin" } | { scope: "store"; storeId: string } | { scope: "outlet"; storeId: string; outletId: string };
 
 export function createApi(client: ApiClient) {
   const r = client.request;
@@ -110,8 +124,8 @@ export function createApi(client: ApiClient) {
     unblockAll: () => r<unknown>("/api/platform/security/blocks", json("DELETE")),
 
     server: () => r<ServerNow>("/api/platform/server"),
-    cache: () => r<CacheOverview>("/api/platform/cache"),
-    expireCache: (storeId?: string) => r<unknown>("/api/platform/cache/expire", json("POST", storeId ? { scope: "store", storeId } : { scope: "all" })),
+    cacheEntries: () => r<CacheEntries>("/api/platform/cache/entries"),
+    expireCache: (what: ExpireScope) => r<{ result: { removed: number } }>("/api/platform/cache/expire", json("POST", what)),
     setCacheTtl: (ttlSeconds: number) => r<unknown>("/api/platform/cache/settings", json("PUT", { ttlSeconds })),
     settings: () => r<{ settings: { graceDays: number; realtimeWebsocket: boolean; subdomainBase: string } }>("/api/platform/settings"),
     saveSettings: (body: { graceDays?: number; realtimeWebsocket?: boolean }) => r<unknown>("/api/platform/settings", json("PUT", body)),
