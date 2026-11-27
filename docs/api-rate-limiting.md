@@ -58,14 +58,14 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | `customer-feedback` | user, else customer, else address | 20 per 10 min | Rating an order: a customer rates a handful of orders at most; this stops a script filling the store's ratings. | `POST /api/customer/orders/:id/feedback` |
 | `reservation-request` | user, else customer, else address | 10 per hour | Booking a table holds seats for everybody else: a few requests an hour is plenty for a real guest, and a script must not be able to fill a restaurant's evening with fake bookings. | `POST /api/reservations` |
 | `order-place` | user, else customer, else address | 12 per 10 min for a customer · 150 per 10 min for staff at the till | A customer placing orders: a dozen in ten minutes is generous, more is a script flooding the kitchen. Staff at the till (who send the outlet header) get a much bigger budget. | `POST /api/orders` |
-| `rider-action` | visitor's address | 90 per min per address | A rider tapping Picked up / Delivered (and the code box) in the rider app. A few a minute is normal; this stops a script from trying delivery codes or flooding an outlet's orders. (Wrong codes are also counted per order: five and it locks.) | `POST /api/rider/deliveries/:id/delivered`<br>`POST /api/rider/deliveries/:id/pickup`<br>`POST /api/rider/logout` |
+| `rider-action` | visitor's address | 90 per min per address | A rider tapping Picked up / Delivered (and the code box) in the rider app. A few a minute is normal; this stops a script from trying delivery codes or flooding an outlet's orders. (Wrong codes are also counted per order: five and it locks.) | `POST /api/rider/deliveries/:id/delivered`<br>`POST /api/rider/deliveries/:id/pickup`<br>`POST /api/rider/logout`<br>`DELETE /api/rider/push-token`<br>`PUT /api/rider/push-token` |
 | `payment` | user, else customer, else address | 40 per 10 min | Starting and confirming a payment calls the payment gateway; this stops a script burning the store's gateway quota. | `POST /api/payments/intent`<br>`POST /api/payments/verify` |
 | `webhook` | visitor's address | 240 per min | Payment gateways call this with a signature we check — but a flood of forged calls would still cost a signature check and a database read each. A gateway's servers speak for every merchant it has, so the ceiling is generous (4 a second per address) — raise RATE_LIMIT_SCALE if the platform grows to many busy stores. | `POST /api/payments/webhook/:gateway` |
 | `print-agent` | visitor's address | 300 per min | The little program at a restaurant's printer asks for jobs every second or two with its own token. 300 a minute leaves room for several printers; it stops a leaked token being used to hammer the queue. | `GET /api/printing/agent/jobs`<br>`POST /api/printing/agent/jobs/:id/result` |
 | `app-update-check` | visitor's address | 120 per min | Every phone running the staff app asks once when it starts whether a newer version exists. A restaurant's whole Wi-Fi shares one address and the staff all open the app at the same time, so the budget is generous — it only stops a script hammering the question. | `GET /api/app-updates/apps`<br>`GET /api/app-updates/check`<br>`GET /api/app-updates/releases` |
 | `app-download` | visitor's address | 40 per 10 min | Downloading the app's APK (tens of MB). 40 downloads per 10 minutes per address leaves room for a whole team installing at once behind one Wi-Fi, and stops someone using the download as a bandwidth drain. | `GET /api/app-updates/download/:id` |
 | `release-upload` | signed-in user (else address) | 200 per 10 min | Uploading a new app version: a 100 MB file goes up in 4 MB pieces, one request each (a 300 MB file is 75). 200 pieces in 10 minutes is room for a couple of uploads plus retries, and it is kept under the dashboard's own 240-changes-a-minute cap so a stuck page or a script is stopped by this one. Only the platform's super admin can upload. | `POST /api/platform/app-releases/uploads`<br>`PUT /api/platform/app-releases/uploads/:id/chunks/:index`<br>`POST /api/platform/app-releases/uploads/:id/complete` |
-| `team-write` | signed-in user (else address) | 240 per min | Every change a team member makes to the dashboard (menu, outlets, orders, tables, pages, settings…). 240 a minute is four a second — more than any person — so a stolen session can't mass-delete or mass-edit in a blink. | 188 routes (see the full list below) |
+| `team-write` | signed-in user (else address) | 240 per min | Every change a team member makes to the dashboard (menu, outlets, orders, tables, pages, settings…). 240 a minute is four a second — more than any person — so a stolen session can't mass-delete or mass-edit in a blink. | 190 routes (see the full list below) |
 | `account-write` | signed-in user (else address) | 30 per 10 min | Creating team members, changing roles and resetting passwords. Takeover of accounts is the worst thing that can happen to a store, so it is slow on purpose. | 15 routes (see the full list below) |
 | `ai-images` | signed-in user (else address) | 15 per 10 min | Making dish pictures with Gemini. Every picture is a paid call to Google, one request can make up to four, and only the platform's super admin can start one — this is a brake on a stuck button or a script, not on normal use. | `POST /api/menu/items/:id/generate-images` |
 | `storage-heavy` | signed-in user (else address) | 60 per 10 min | Scanning the storage for pictures that are too big, and starting an optimize run. A scan reads every stored file's name and every collection of the database, and a run compresses pictures (a few at a time) — only the platform's super admin can start either, so this is a brake on a stuck button or a script, not on normal use. | `POST /api/platform/storage/optimize`<br>`POST /api/platform/storage/optimize/scan` |
@@ -80,7 +80,7 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | `chat-send` | signed-in user (else address) | 120 per min | Sending and retrying chat messages from the store's own WhatsApp number. (The WhatsApp worker also paces what actually goes out.) | `POST /api/whatsapp/chats`<br>`POST /api/whatsapp/chats/:id/messages`<br>`POST /api/whatsapp/chats/:id/messages/:messageId/retry` |
 | `wa-link` | signed-in user (else address) | 30 per 10 min | Linking, relinking and unlinking WhatsApp numbers. Repeated linking attempts are what get a number logged out or banned. | `POST /api/whatsapp/accounts`<br>`DELETE /api/whatsapp/accounts/:id`<br>`POST /api/whatsapp/accounts/:id/relink`<br>`POST /api/whatsapp/accounts/:id/unlink` |
 | `hardware` | signed-in user (else address) | 60 per min | Test prints, reprints and retries physically drive a printer in the restaurant. | `POST /api/printing/jobs/:id/reprint`<br>`POST /api/printing/jobs/:id/retry`<br>`POST /api/printing/orders/:orderId/print`<br>`POST /api/printing/printers/:id/test` |
-| `destructive` | signed-in user (else address) | 20 per 10 min | Deleting an order, a chat, an outlet or a store (or switching a store off); publishing a client onboarding as a live store; creating stores. A stolen super-admin session can't wipe the platform at machine speed. | `POST /api/brands`<br>`POST /api/menu/categories/bulk-delete`<br>`POST /api/menu/items/bulk-delete`<br>`DELETE /api/orders/:id`<br>`DELETE /api/outlets/:id`<br>`POST /api/platform/onboarding/:id/publish`<br>`DELETE /api/platform/stores/:id`<br>`POST /api/platform/stores/:id/disable`<br>`POST /api/platform/stores/:id/enable`<br>`DELETE /api/platform/stores/:id/outlets/:outletId`<br>`DELETE /api/whatsapp/chats/:id`<br>`POST /api/whatsapp/chats/:id/clear` |
+| `destructive` | signed-in user (else address) | 20 per 10 min | Deleting an order, a chat, an outlet or a store (or switching a store off); publishing a client onboarding as a live store; creating stores; deleting a store's subscription payment from the sales list. A stolen super-admin session can't wipe the platform at machine speed. | 13 routes (see the full list below) |
 | `ws-connect` | visitor's address | 30 per min | Live-order and live-preview WebSocket connections: each one is a held-open socket. 30 new connections a minute per address (a few browser tabs reconnecting) is plenty. | the live-order connection `/realtime` and the live-preview connection `/preview` (WebSocket upgrades — not routes, so not in the route list) |
 
 ### Every route
@@ -242,6 +242,7 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | PUT | `/api/platform/app-releases/uploads/:id/chunks/:index` | `api`, `team-write`, `release-upload` |
 | POST | `/api/platform/app-releases/uploads/:id/complete` | `api`, `team-write`, `release-upload` |
 | GET | `/api/platform/audit` | `api` |
+| GET | `/api/platform/business` | `api` |
 | GET | `/api/platform/cache` | `api` |
 | GET | `/api/platform/cache/entries` | `api` |
 | GET | `/api/platform/cache/entry` | `api` |
@@ -323,6 +324,9 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | POST | `/api/platform/stores/:id/owners` | `api`, `team-write`, `account-write` |
 | DELETE | `/api/platform/stores/:id/owners/:userId` | `api`, `team-write`, `account-write` |
 | PATCH | `/api/platform/stores/:id/owners/:userId` | `api`, `team-write`, `account-write` |
+| GET | `/api/platform/stores/:id/payments` | `api` |
+| POST | `/api/platform/stores/:id/payments` | `api`, `team-write` |
+| DELETE | `/api/platform/stores/:id/payments/:paymentId` | `api`, `team-write`, `destructive` |
 | DELETE | `/api/platform/stores/:id/people/:userId` | `api`, `team-write`, `account-write` |
 | POST | `/api/platform/stores/:id/people/:userId/block` | `api`, `team-write`, `account-write` |
 | POST | `/api/platform/stores/:id/people/:userId/unblock` | `api`, `team-write`, `account-write` |
@@ -381,6 +385,8 @@ Signing in to the dashboard works the same way: `login-flood` (a burst from one 
 | POST | `/api/rider/login` | `api`, `login-flood`, `login-account` |
 | POST | `/api/rider/logout` | `api`, `rider-action` |
 | GET | `/api/rider/me` | `api` |
+| DELETE | `/api/rider/push-token` | `api`, `rider-action` |
+| PUT | `/api/rider/push-token` | `api`, `rider-action` |
 | GET | `/api/riders` | `api` |
 | POST | `/api/riders` | `api`, `team-write` |
 | DELETE | `/api/riders/:id` | `api`, `team-write` |

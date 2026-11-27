@@ -13,6 +13,7 @@ import * as ai from "../ai/ai.service.js";
 import * as cacheAdmin from "./cache.service.js";
 import * as cacheInspect from "./cache-inspect.service.js";
 import { dashboard } from "./dashboard.service.js";
+import * as subscriptions from "./subscriptions.service.js";
 import { listLoginLogs, LOGIN_FILTERS } from "./login-logs.service.js";
 import { onboardingRouter } from "../onboarding/onboarding.routes.js";
 import { appReleasesAdminRouter } from "../app-releases/app-releases.routes.js";
@@ -40,6 +41,51 @@ platformRouter.get("/overview", async (_req, res) => {
 /** The dashboard's numbers and charts. `?fresh=1` recomputes instead of using the cached copy. */
 platformRouter.get("/dashboard", async (req, res) => {
   res.json(await dashboard({ fresh: req.query.fresh === "1" }));
+});
+
+/**
+ * Rasoi Pulse's OWN business (not the stores' orders): what the stores pay for their subscription — total taken, new sales,
+ * re-subscriptions, who has run out, and a chart by day / week / month against the period before. Worked out from the payments the
+ * team has written down (a store pays outside the app).
+ */
+platformRouter.get("/business", async (_req, res) => {
+  res.json(await subscriptions.businessAnalytics());
+});
+
+const OBJECT_ID_RE = /^[a-f\d]{24}$/i;
+const paymentBody = z.object({
+  amount: z.coerce
+    .number({ message: "Enter the amount in rupees" })
+    .positive("The amount must be more than 0")
+    .max(10_000_000, "That amount looks too big — check the number")
+    .refine((n) => Math.abs(n * 100 - Math.round(n * 100)) < 1e-6, "Use at most two decimals (paise)"),
+  paidOn: z
+    .string({ message: "Pick the day the money arrived" })
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Pick the day the money arrived")
+    .refine((s) => {
+      const [y, m, d] = s.split("-").map(Number);
+      const t = new Date(Date.UTC(y, m - 1, d));
+      return t.getUTCFullYear() === y && t.getUTCMonth() === m - 1 && t.getUTCDate() === d;
+    }, "That is not a real date"),
+  months: z.coerce.number({ message: "Say how many months this payment covers" }).int("Months must be a whole number").min(1, "At least 1 month").max(60, "At most 60 months"),
+  planId: z.string().regex(OBJECT_ID_RE, "Pick a plan from the list").nullish(),
+  note: z.string().trim().max(200, "Keep the note under 200 characters").optional(),
+});
+
+/** A store's subscription payments (newest first), where it stands (paid until / expired / never paid) and a price to start the form from. */
+platformRouter.get("/stores/:id/payments", async (req, res) => {
+  res.json(await subscriptions.listStorePayments(req.params.id));
+});
+
+/** Write down a payment the store made (outside the app). The first one is the "new sale", later ones are re-subscriptions. */
+platformRouter.post("/stores/:id/payments", async (req, res) => {
+  const input = paymentBody.parse(req.body ?? {});
+  res.status(201).json(await subscriptions.recordPayment(req.params.id, { ...input, planId: input.planId ?? undefined }, requireUser(req)));
+});
+
+/** Take a payment off the list (written by mistake). The store and its other payments are untouched. */
+platformRouter.delete("/stores/:id/payments/:paymentId", limiter("destructive"), async (req, res) => {
+  res.json(await subscriptions.deletePayment(req.params.id, req.params.paymentId));
 });
 
 /** Who signed in to the dashboards, and who tried and failed. ?filter=all|success|failed|platform|stores&cursor=<id>&limit=25 */

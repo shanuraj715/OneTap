@@ -53,7 +53,8 @@ await t.run(async () => {
   r = await as(samCookie, "POST", "/api/platform/onboarding", { data: { storeName: "Sam's first client" } });
   ok(r.status === 201 && r.json.form.id, "…and can start a new onboarding form");
   const denied = [
-    ["GET", "/overview"], ["GET", "/dashboard"], ["GET", "/login-logs"], ["GET", "/stores"], ["GET", `/stores/${A.brand}`], ["GET", `/stores/${A.brand}/cache`],
+    ["GET", "/overview"], ["GET", "/dashboard"], ["GET", "/business"], ["GET", `/stores/${A.brand}/payments`], ["POST", `/stores/${A.brand}/payments`, { amount: 1, paidOn: "2026-01-01", months: 1 }],
+    ["DELETE", `/stores/${A.brand}/payments/000000000000000000000000`], ["GET", "/login-logs"], ["GET", "/stores"], ["GET", `/stores/${A.brand}`], ["GET", `/stores/${A.brand}/cache`],
     ["GET", `/stores/${A.brand}/deletion-summary`], ["POST", `/stores/${A.brand}/disable`, {}], ["POST", `/stores/${A.brand}/enable`], ["PATCH", `/stores/${A.brand}`, { name: "Hijacked" }],
     ["PATCH", `/stores/${A.brand}/plan`, { planId: null }], ["DELETE", `/stores/${A.brand}`], ["DELETE", `/stores/${A.brand}/outlets/${A.outlet}`], ["POST", `/stores/${A.brand}/owners`, {}],
     ["POST", "/plans", { name: "Free for all" }], ["PATCH", "/plans/anything", {}], ["GET", "/settings"], ["PUT", "/settings", { graceDays: 365 }],

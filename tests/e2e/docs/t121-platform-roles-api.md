@@ -1,6 +1,6 @@
 # T121 — Rasoi Pulse team roles: only the super admin makes roles and people; a team member can do exactly what their role holds, in every part of the platform API
 
-**Area:** platform · **Last result:** ✅ PASSED (61 passed, 0 failed · 2026-11-27 22:06 · headless · 8.5 s)
+**Area:** platform · **Last result:** ✅ PASSED (61 passed, 0 failed · 2026-11-28 01:55 · headless · 8.6 s)
 
 **Run it alone:** `node run.mjs --only t121` (add `--visible` to watch it)
 
@@ -66,7 +66,7 @@ _Nothing failed._
 - the session says: a team member, role Sales, the one feature Onboarding (not even 'Plans' in the sidebar), no store, no store permissions
 - Sam CAN: the onboarding forms, the price list, the plan list (for the form to offer a plan) and the address check
 - …and can start a new onboarding form
-- Sam can NOT do any of 33 other things in the platform console: every one answers 403
+- Sam can NOT do any of 37 other things in the platform console: every one answers 403
 - …nor the store list, creating a store, the website pages or its enquiries (403)
 - nobody signed in: 401
 - Sam can't change any restaurant's menu or read its orders either (no store: 403) — _menu 403, orders 403_
@@ -128,7 +128,7 @@ _Nothing failed._
 
 **Step 10 — Every route of the platform API has been decided on**
 
-- all 97 routes of /api/platform have a rule in the table
+- all 101 routes of /api/platform have a rule in the table
 - a route nobody wrote a rule for is closed to everybody but the super admin
 - roles, team and the log are super-admin-only in the table too
 - the website's own platform routes (12) are guarded by their own feature check (tested above: pages/settings → website, leads → leads)
@@ -137,6 +137,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-28 01:55 | pass | 61 | 0 | headless | 8.6 s |
 | 2026-11-27 22:06 | pass | 61 | 0 | headless | 8.5 s |
 | 2026-11-27 21:03 | pass | 61 | 0 | headless | 8.0 s |
 | 2026-11-27 16:59 | pass | 61 | 0 | headless | 8.6 s |

@@ -12,7 +12,7 @@ import { requirePlatform, requireSuperAdmin, requireUser } from "../../middlewar
  */
 export const PLATFORM_RULES = [
   // the dashboard's numbers; who signed in (emails, addresses of store staff too) is a security matter
-  ["GET", /^\/(overview|dashboard)$/, ["dashboard:read"]],
+  ["GET", /^\/(overview|dashboard|business)$/, ["dashboard:read"]],
   ["GET", /^\/login-logs$/, ["security:manage"]],
 
   // plans
@@ -22,6 +22,8 @@ export const PLATFORM_RULES = [
 
   // stores (the most specific rows first)
   ["GET", /^\/stores\/[^/]+\/cache$/, ["cache:manage"]],
+  // what a store paid Rasoi Pulse (writing or deleting one falls under the store rows below: stores:manage)
+  ["GET", /^\/stores\/[^/]+\/payments$/, ["stores:read"]],
   ["GET", /^\/stores$/, ["stores:read"]],
   ["GET", /^\/stores\/[^/]+$/, ["stores:read"]],
   ["GET", /^\/stores\/[^/]+\/deletion-summary$/, ["stores:delete"]],

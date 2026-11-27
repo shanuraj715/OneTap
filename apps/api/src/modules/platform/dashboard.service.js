@@ -315,3 +315,6 @@ export async function dashboard({ fresh = false } = {}) {
   if (fresh) cache.expireKey("dash:platform");
   return cache.wrap("dash:platform", build, { tags: ["ns:dash"] });
 }
+
+/** The India-calendar helpers above, shared with the subscriptions numbers (modules/platform/subscriptions.service.js). */
+export { addMonths, daysIn, DAY_MS, istParts, istStart, MONTH_NAMES, monthKey, pct, TZ };
