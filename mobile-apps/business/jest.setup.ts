@@ -46,8 +46,11 @@ jest.mock("expo-file-system", () => {
   const written = new Map<string, Uint8Array | string>();
   class File {
     uri: string;
-    constructor(...parts: unknown[]) { this.uri = `file:///cache/${parts.map((p) => (typeof p === "string" ? p : (p as { name?: string }).name ?? "")).join("/")}`.replace(/\/+$/, ""); }
-    create() {}
+    constructor(...parts: unknown[]) {
+      const first = parts[0];
+      this.uri = typeof first === "string" && first.startsWith("file://") ? first : `file:///${parts.map((p) => (typeof p === "string" ? p : (p as { name?: string }).name ?? "")).join("/")}`.replace(/\/+$/, "");
+    }
+    create(_options?: unknown) {}
     async write(data: Uint8Array | string) { written.set(this.uri, data); }
     get exists() { return written.has(this.uri); }
     delete() { written.delete(this.uri); }

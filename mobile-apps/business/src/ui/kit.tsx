@@ -67,7 +67,7 @@ export function Chips<T extends string>({ value, options, onChange, testID }: { 
  * What every report on the screen is looking at: the PERIOD and the OUTLETS. Two pills under the title; touching one opens the choices.
  * The choice is shared by every screen and kept on the phone.
  */
-export function ScopeBar({ outlets, showOutlets = true }: { outlets: OutletRef[]; showOutlets?: boolean }) {
+export function ScopeBar({ outlets, showOutlets = true, showPeriod = true }: { outlets: OutletRef[]; showOutlets?: boolean; /** false for screens that are about NOW (stock) and have no period */ showPeriod?: boolean }) {
   const scope = useScope();
   const [open, setOpen] = useState<null | "period" | "outlets">(null);
   const range = rangeOfScope(scope);
@@ -75,9 +75,9 @@ export function ScopeBar({ outlets, showOutlets = true }: { outlets: OutletRef[]
   const outletText = !scope.outlets.length ? (outlets.length > 1 ? "All outlets" : outlets[0]?.title ?? "All outlets") : scope.outlets.length === 1 ? outlets.find((o) => o.id === scope.outlets[0])?.title ?? "1 outlet" : `${scope.outlets.length} outlets`;
   return (
     <View style={{ flexDirection: "row", gap: 8, flexWrap: "wrap" }} testID="scope-bar">
-      <Button size="sm" variant="glass" icon="calendar" title={label} onPress={() => setOpen("period")} testID="scope-period" accessibilityLabel={`Period: ${rangeLabel(range)}`} />
+      {showPeriod ? <Button size="sm" variant="glass" icon="calendar" title={label} onPress={() => setOpen("period")} testID="scope-period" accessibilityLabel={`Period: ${rangeLabel(range)}`} /> : null}
       {showOutlets && outlets.length > 1 ? <Button size="sm" variant="glass" icon="outlet" title={outletText} onPress={() => setOpen("outlets")} testID="scope-outlets" /> : null}
-      <Text variant="caption" tone="muted" style={{ alignSelf: "center" }} testID="scope-range">{rangeLabel(range)}</Text>
+      {showPeriod ? <Text variant="caption" tone="muted" style={{ alignSelf: "center" }} testID="scope-range">{rangeLabel(range)}</Text> : null}
       <PeriodSheet visible={open === "period"} onClose={() => setOpen(null)} />
       <OutletSheet visible={open === "outlets"} onClose={() => setOpen(null)} outlets={outlets} />
     </View>
@@ -163,4 +163,11 @@ export function Async<T>({ q, children, lines = 3 }: { q: { isLoading: boolean; 
   if (q.isLoading) return <LoadingCards n={lines} />;
   if (q.isError || q.data === undefined) return <ErrorState error={q.error} onRetry={() => void q.refetch()} />;
   return <>{children(q.data)}</>;
+}
+
+/* ------------------------------------------------------------------------------------------------ one outlet */
+/** For a screen that is about ONE outlet: a row of its names to pick from (nothing at all when the store has a single outlet). */
+export function OutletPick({ outlets, value, onChange, testID = "outlet-pick" }: { outlets: OutletRef[]; value: string; onChange: (id: string) => void; testID?: string }) {
+  if (outlets.length < 2) return null;
+  return <Chips testID={testID} value={value} onChange={onChange} options={outlets.map((o) => ({ value: o.id, label: o.title }))} />;
 }

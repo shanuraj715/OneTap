@@ -102,3 +102,30 @@ export function bucketLabel(key: string, granularity: "day" | "week" | "month"):
   }
   return shortDay(key);
 }
+
+/** "just now", "5 min ago", "3 hours ago", "yesterday", "4 days ago", "2 weeks ago", or the date when it is older — how long since something happened. */
+export function since(iso: string | null | undefined, now: Date = new Date()): string {
+  if (!iso) return "never";
+  const t = new Date(iso).getTime();
+  if (!Number.isFinite(t)) return "never";
+  const mins = Math.floor((now.getTime() - t) / 60_000);
+  if (mins < 1) return "just now";
+  if (mins < 60) return `${mins} min ago`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours} ${hours === 1 ? "hour" : "hours"} ago`;
+  const days = daysBetween(dayKey(t), dayKey(now)) - 1; // (daysBetween counts both ends)
+  if (days <= 1) return "yesterday";
+  if (days < 14) return `${days} days ago`;
+  if (days < 60) return `${Math.floor(days / 7)} weeks ago`;
+  return prettyDay(dayKey(t));
+}
+
+/** "7:30 pm" — the clock time of a moment, in India. */
+export function clock12(iso: string): string {
+  const t = new Date(iso);
+  if (!Number.isFinite(t.getTime())) return "";
+  const parts = new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Kolkata", hour: "numeric", minute: "2-digit", hour12: false }).formatToParts(t);
+  const h = Number(parts.find((x) => x.type === "hour")!.value) % 24;
+  const m = parts.find((x) => x.type === "minute")!.value;
+  return `${h % 12 === 0 ? 12 : h % 12}:${m} ${h < 12 ? "am" : "pm"}`;
+}

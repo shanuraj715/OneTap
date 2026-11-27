@@ -6,7 +6,7 @@ import { createRuntime, RuntimeProvider, type Runtime } from "@/runtime";
 import { ToastHost } from "@/ui";
 
 export interface Call { method: string; path: string; query: string; headers: Record<string, string>; body: any }
-export interface Answer { status?: number; json?: unknown; throws?: Error; delayMs?: number }
+export interface Answer { status?: number; json?: unknown; throws?: Error; delayMs?: number; /** a file: its bytes, and the headers the server sends with it */ bytes?: Uint8Array; headers?: Record<string, string> }
 export type Handler = Answer | ((call: Call, params: Record<string, string>) => Answer);
 
 
@@ -39,7 +39,9 @@ export function fakeServer(routes: Record<string, Handler> = {}) {
     if (answer.throws) throw answer.throws;
     const status = answer.status ?? 200;
     const text = answer.json === undefined ? "" : JSON.stringify(answer.json);
-    return { ok: status >= 200 && status < 300, status, text: async () => text, headers: { get: () => null } } as unknown as Response;
+    const headers = Object.fromEntries(Object.entries(answer.headers ?? {}).map(([k, v]) => [k.toLowerCase(), v]));
+    const bytes = answer.bytes;
+    return { ok: status >= 200 && status < 300, status, text: async () => text, arrayBuffer: async () => (bytes ? bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) : new ArrayBuffer(0)), headers: { get: (k: string) => headers[k.toLowerCase()] ?? null } } as unknown as Response;
   });
   return {
     fetch: impl as unknown as typeof fetch,

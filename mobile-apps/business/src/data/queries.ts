@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import type { Api } from "@/api/endpoints";
 import { scopeQuery, useScope } from "@/data/scope";
@@ -48,3 +48,17 @@ export function useRangeReport<T>(key: string, from: string, to: string, load: (
 
 /** The outlet ids as the address wants them: "a,b" ("" = every outlet). */
 export const useOutletsParam = () => useScope((s) => s.outlets).join(",");
+
+/**
+ * For the screens that belong to ONE outlet (ratings, upcoming bookings, a coupon list, counted stock): the outlet the person is looking at.
+ * It starts as the one outlet chosen in the filter (or the first the person may see) and can be changed on the screen.
+ */
+export function useOutletPick(outlets: { id: string }[]): [string, (id: string) => void] {
+  const chosen = useScope((s) => s.outlets);
+  const home = useScope((s) => s.home);
+  const [picked, setPicked] = useState<string | null>(null);
+  const ids = outlets.map((o) => o.id);
+  const fallback = chosen.length === 1 ? chosen[0]! : home ?? ids[0] ?? "";
+  const id = picked && ids.includes(picked) ? picked : ids.includes(fallback) ? fallback : ids[0] ?? "";
+  return [id, setPicked];
+}

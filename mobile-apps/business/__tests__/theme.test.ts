@@ -18,7 +18,7 @@ const over = (rgba: string, ground: string) => {
 const MODES: [string, Colors][] = [["dark", darkColors], ["light", lightColors]];
 const hex = (c: string) => c.toUpperCase();
 
-describe("the icon and the app share one colour (like OMA indigo, KDA teal, RDA violet)", () => {
+describe("the icon and the app share one colour (like OMA indigo, KDA teal, RDA violet, Admin amber — the Business app is rose)", () => {
   const cfg = () => {
     let out: Record<string, any> = {};
     jest.isolateModules(() => {
@@ -27,20 +27,20 @@ describe("the icon and the app share one colour (like OMA indigo, KDA teal, RDA 
     });
     return out;
   };
-  it("the Android icon's background is exactly the app's primary colour (#B45F00), in light AND dark", () => {
+  it("the Android icon's background is exactly the app's primary colour (#C2185B), in light AND dark", () => {
     const tile = hex(cfg().android.adaptiveIcon.backgroundColor);
-    expect(tile).toBe("#B45F00");
+    expect(tile).toBe("#C2185B");
     expect(tile).toBe(hex(lightColors.primary));
     expect(tile).toBe(hex(darkColors.primary));
   });
-  it("the brand build draws the Admin icon's tile in that same colour", () => {
+  it("the brand build draws the Business icon's tile in that same colour", () => {
     const src = fs.readFileSync(path.join(__dirname, "..", "..", "..", "brand", "rasoi-pulse", "build.mjs"), "utf8");
-    expect(src).toMatch(/admin: \{ code: "ADM", label: "Rasoi Pulse Admin", tile: "#b45f00" \}/i);
+    expect(src).toMatch(/business: \{ code: "BIZ", label: "Rasoi Pulse Business", tile: "#c2185b" \}/i);
   });
   it("the icon file itself is that colour (its top-left pixel is the tile)", () => {
     // the generated PNG's background layer is a flat fill of the tile colour; the SVG next to it says which
-    const svg = fs.readFileSync(path.join(__dirname, "..", "..", "..", "brand", "rasoi-pulse", "admin-app-icon", "android-adaptive", "LAYER-background-no-icon.svg"), "utf8");
-    expect(svg.toLowerCase()).toContain('fill="#b45f00"');
+    const svg = fs.readFileSync(path.join(__dirname, "..", "..", "..", "brand", "rasoi-pulse", "business-app-icon", "android-adaptive", "LAYER-background-no-icon.svg"), "utf8");
+    expect(svg.toLowerCase()).toContain('fill="#c2185b"');
   });
 });
 

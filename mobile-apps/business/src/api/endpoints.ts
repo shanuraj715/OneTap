@@ -97,10 +97,12 @@ export interface Booking {
   customer?: { name: string; phone: string; whatsapp?: string }; event: string; note: string; tableNumber?: string;
   pricing: { amountPaise: number; prepayPaise: number; remainingPaise: number; couponCode?: string }; payment: { status: string };
 }
-export interface Rating { id: string; rating: number; comment: string; createdAt: string; customerName?: string; orderNumber?: string; outletId?: string }
-export interface StoreCoupon { id: string; code: string; description: string; discountType: string; value: number; maxDiscount: number; minOrderValue: number; validUntil: string; maxRedemptions: number; redemptionCount: number; active: boolean }
+export interface Rating { id: string; orderId: string; orderNumber: string; channel: string; rating: number; comment: string; tags: string[]; items: string[]; orderTotal: number; customerName: string; customerPhone: string; createdAt: string; updatedAt: string }
+export interface RatingsPage { summary: { days: number; count: number; average: number; byStars: Record<"1" | "2" | "3" | "4" | "5", number>; withComments: number }; ratings: Rating[]; nextBefore: string | null }
+export interface StoreCoupon { id: string; code: string; description: string; discountType: string; value: number; maxDiscount: number; minOrderValue: number; validFrom?: string | null; validUntil: string | null; maxRedemptions: number; redemptionCount: number; active: boolean }
 export interface UpdateCheck { updateAvailable: boolean; force: boolean; latest: { version: string; notes?: string; fileSize?: number } | null; pageUrl?: string }
 
+const outletHeader = (outletId: string) => ({ "x-rasoipulse-outlet": outletId });
 const q = (params: Record<string, string | number | boolean | undefined | null>) => {
   const u = new URLSearchParams();
   for (const [k, v] of Object.entries(params)) if (v !== undefined && v !== null && v !== "") u.set(k, String(v));
@@ -153,14 +155,15 @@ export function createApi(client: ApiClient) {
     updateStaff: (id: string, body: StaffInput) => r<{ user: StaffMember }>(`/api/users/${id}`, json("PATCH", body)),
     removeStaff: (id: string) => r<void>(`/api/users/${id}`, json("DELETE")),
 
-    /** one outlet's bookings (the header's outlet): "upcoming" from today on, "earlier", or one day */
-    bookings: (scope: "upcoming" | "earlier" | "all", day = "") => r<{ reservations: Booking[]; waiting?: number }>(`/api/reservations${q({ scope, day })}`),
-    ratings: () => r<{ feedback: Rating[]; summary?: { average: number; count: number; distribution?: Record<string, number> } }>("/api/feedback"),
-    storeCoupons: () => r<{ coupons: StoreCoupon[] }>("/api/coupons"),
-    setCouponActive: (id: string, active: boolean) => r<{ coupon: StoreCoupon }>(`/api/coupons/${id}`, json("PATCH", { active })),
-    /** change a dish's counted stock or switch it on / off — the dish belongs to ONE outlet, which must be the header's outlet */
+    /** these four belong to ONE outlet: it is sent in the header (the person picks which on the screen) */
+    bookings: (outletId: string, scope: "upcoming" | "earlier" | "all", day = "") => r<{ reservations: Booking[]; waiting?: number }>(`/api/reservations${q({ scope, day })}`, { headers: outletHeader(outletId) }),
+    ratings: (outletId: string, o: { days: number; stars?: number[]; withComment?: boolean; before?: string | null }) =>
+      r<RatingsPage>(`/api/feedback${q({ days: o.days, stars: o.stars?.join(","), withComment: o.withComment ? "1" : undefined, before: o.before ?? undefined, limit: 30 })}`, { headers: outletHeader(outletId) }),
+    storeCoupons: (outletId: string) => r<{ coupons: StoreCoupon[] }>("/api/coupons", { headers: outletHeader(outletId) }),
+    setCouponActive: (outletId: string, id: string, active: boolean) => r<{ coupon: StoreCoupon }>(`/api/coupons/${id}`, { ...json("PATCH", { active }), headers: outletHeader(outletId) }),
+    /** change a dish's counted stock or switch it on / off — the dish belongs to ONE outlet */
     updateDish: (id: string, outletId: string, body: { stock?: { tracked: boolean; left: number; daily: number | null; lowAt: number } | null; isAvailable?: boolean }) =>
-      r<{ item: { id: string } }>(`/api/menu/items/${id}`, { ...json("PATCH", body), headers: { "x-rasoipulse-outlet": outletId } }),
+      r<{ item: { id: string } }>(`/api/menu/items/${id}`, { ...json("PATCH", body), headers: outletHeader(outletId) }),
   };
 }
 export type Api = ReturnType<typeof createApi>;

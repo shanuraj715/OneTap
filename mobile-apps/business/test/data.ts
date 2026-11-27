@@ -93,6 +93,63 @@ export const cashReport = (over: Record<string, unknown> = {}) => ({
   collected: 5_000_000, pending: { orders: 3, amount: 120_000 }, cancelled: { orders: 1, amount: 40_000 }, ...over,
 });
 
+export const person = (over: Record<string, unknown> = {}) => ({ id: "u9", email: "asha@acme.test", name: "Asha Cashier", isActive: true, lastLoginAt: "2026-11-27T09:00:00Z", role: "staff", outletIds: [], blockedAt: null, permissions: [], ...over });
+/** The owner (the person signed in), a manager at Noida only, a cashier at every outlet, a kitchen person switched off who never signed in, and an accountant. */
+export const staffList = () => [
+  person({ id: "u0", email: "owner@acme.test", name: "Olivia Owner", role: "owner", lastLoginAt: "2026-11-28T09:30:00Z" }),
+  person({ id: "u1", email: "boss@acme.test", name: "Manu Manager", role: "manager", outletIds: ["o1"], lastLoginAt: "2026-11-26T09:00:00Z" }),
+  person({ id: "u2", email: "asha@acme.test", name: "Asha Cashier", role: "staff" }),
+  person({ id: "u3", email: "kabir@acme.test", name: "Kabir Kitchen", role: "kitchen", isActive: false, lastLoginAt: null }),
+  person({ id: "u4", email: "books@acme.test", name: "Anu Accountant", role: "accountant", lastLoginAt: "2026-10-01T09:00:00Z" }),
+];
+
+export const customersReport = (over: Record<string, unknown> = {}) => ({
+  range: { from: "2026-10-30", to: "2026-11-28" }, newVsRepeat: { customers: 80, newCustomers: 30, repeatCustomers: 50 },
+  top: [
+    { id: "c1", name: "Ravi Kumar", phone: "9811111111", orders: 12, spend: 1_800_000, last: "2026-11-27T19:00:00Z" },
+    { id: "c2", name: "Sunita Devi", phone: "9822222222", orders: 8, spend: 900_000, last: "2026-11-20T12:00:00Z" },
+    { id: "c3", name: "", phone: "9833333333", orders: 1, spend: 120_000, last: "2026-11-02T12:00:00Z" },
+  ],
+  ordersPerCustomer: [{ bucket: "1 order", customers: 40 }, { bucket: "2 orders", customers: 25 }, { bucket: "3+ orders", customers: 15 }],
+  lapsed: { days30: 12, days60: 6, days90: 3, ofAll: 200 }, ...over,
+});
+const outletRow = (id: string, name: string, kpiOver: Record<string, number>, cancelled: Record<string, number>, daily: number[], topItems: { name: string; qty: number }[]) => ({ id, name, kpis: kpis(kpiOver), cancelled: { placed: 100, cancelled: 5, lost: 100_000, rate: 0.05, ...cancelled }, daily, topItems, channels: [] });
+export const compareReport = (over: Record<string, unknown> = {}) => ({
+  range: { from: "2026-10-30", to: "2026-11-28" }, days: 3, dayLabels: ["2026-11-26", "2026-11-27", "2026-11-28"],
+  outlets: [
+    outletRow("o1", "Acme Noida", { sales: 3_000_000, orders: 70, aov: 42_857 }, { cancelled: 5, rate: 0.0667 }, [900_000, 1_000_000, 1_100_000], [{ name: "Veg Momos", qty: 250 }, { name: "Chicken Momos", qty: 120 }, { name: "Tea", qty: 90 }, { name: "Cold Coffee", qty: 10 }]),
+    outletRow("o2", "Acme Delhi", { sales: 2_000_000, orders: 50, aov: 40_000 }, { cancelled: 5, rate: 0.1 }, [700_000, 600_000, 700_000], [{ name: "Chicken Momos", qty: 130 }, { name: "Veg Momos", qty: 150 }]),
+  ], ...over,
+});
+
+export const reservationsReport = (over: Record<string, unknown> = {}) => ({
+  enabled: true, range: { from: "2026-10-30", to: "2026-11-28" }, previous: { from: "2026-09-30", to: "2026-10-29" },
+  totals: { bookings: 40, previousBookings: 32, change: 25, guests: 150, avgParty: 3.75, kept: 30, noShows: 4, cancelled: 3, declined: 1, noShowRate: 0.1, cancelRate: 0.075, advanceCollected: 2_000_000, refundDue: 150_000, bookedValue: 6_000_000, fromStaff: 12, fromCustomers: 28, upcomingWeek: 9 },
+  byStatus: [{ id: "completed", count: 30 }, { id: "no_show", count: 4 }, { id: "cancelled", count: 3 }, { id: "confirmed", count: 3 }],
+  series: [{ day: "2026-11-26", bookings: 3 }, { day: "2026-11-27", bookings: 5 }, { day: "2026-11-28", bookings: 4 }],
+  weekdays: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"].map((name, i) => ({ name, bookings: i + 1 })), hours: [{ hour: 19, bookings: 12 }, { hour: 20, bookings: 20 }],
+  busiestWeekday: "Saturday", busiestHour: 20, partySizes: [{ id: "2", label: "2 people", bookings: 18 }, { id: "4", label: "3–4 people", bookings: 15 }], events: [{ event: "Birthday", bookings: 8 }],
+  perOutlet: [{ id: "o1", name: "Acme Noida", bookings: 25 }, { id: "o2", name: "Acme Delhi", bookings: 15 }], ...over,
+});
+export const booking = (over: Record<string, unknown> = {}) => ({ id: "b1", code: "BK1", status: "confirmed", statusLabel: "Confirmed", at: "2026-11-29T14:00:00Z", endsAt: "2026-11-29T15:30:00Z", partySize: 4, customer: { name: "Rohit Sharma", phone: "9844444444" }, event: "Birthday", note: "", tableNumber: "T5", pricing: { amountPaise: 400_000, prepayPaise: 200_000, remainingPaise: 200_000 }, payment: { status: "paid" }, ...over });
+export const couponRow = (over: Record<string, unknown> = {}) => ({ code: "WELCOME10", description: "10% off for new customers", discountType: "percent", value: 10, active: true, redemptionCount: 40, maxRedemptions: 0, validUntil: "2026-12-31", uses: 40, discount: 160_000, sales: 1_600_000, customers: 35, avgOrder: 40_000, avgDiscount: 4_000, shareOfOrders: 0.33, previousUses: 30, change: 33.3, lastUsed: "2026-11-27T18:00:00Z", ...over });
+export const couponsReport = (over: Record<string, unknown> = {}) => ({
+  enabled: true, range: { from: "2026-10-30", to: "2026-11-28" }, previous: { from: "2026-09-30", to: "2026-10-29" },
+  totals: { uses: 55, discount: 220_000, sales: 2_200_000, codes: 2, shareOfOrders: 0.46, avgOrderWithCoupon: 40_000, avgOrderWithoutCoupon: 30_000, previousUses: 40, previousDiscount: 200_000, usesChange: 37.5, discountChange: 10 },
+  coupons: [couponRow(), couponRow({ code: "FLAT50", uses: 15, discount: 75_000, sales: 600_000, customers: 14, active: false, change: -10, lastUsed: null })],
+  unused: [{ code: "OLD20", description: "Winter offer", validUntil: "2026-12-15" }], perOutlet: [{ id: "o1", name: "Acme Noida", uses: 35, discount: 140_000 }, { id: "o2", name: "Acme Delhi", uses: 20, discount: 80_000 }], ...over,
+});
+export const storeCoupon = (over: Record<string, unknown> = {}) => ({ id: "k1", code: "WELCOME10", description: "10% off for new customers", discountType: "percent", value: 10, maxDiscount: 100, minOrderValue: 300, validFrom: null, validUntil: "2026-12-31", maxRedemptions: 100, redemptionCount: 40, active: true, ...over });
+export const invRow = (over: Record<string, unknown> = {}) => ({ id: "d1", name: "Veg Momos", category: "Momos", outletId: "o1", outlet: "Acme Noida", left: 0, daily: 50, lowAt: 5, state: "out", available: true, soldPerDay: 13, daysLeft: null, ...over });
+export const inventoryReport = (over: Record<string, unknown> = {}) => ({
+  totals: { dishes: 40, counted: 12, notCounted: 28, out: 1, low: 1, switchedOff: 1 },
+  items: [invRow(), invRow({ id: "d2", name: "Paneer Tikka", category: "Starters", left: 3, state: "low", daysLeft: 0.6, soldPerDay: 5 }), invRow({ id: "d3", name: "Tea", category: "Drinks", left: 80, state: "ok", daysLeft: 9.8, soldPerDay: 8 })],
+  switchedOff: [{ id: "d9", name: "Winter Soup", outlet: "Acme Noida", reason: "Seasonal" }], ...over,
+});
+export const stockPlan = (over: Record<string, unknown> = {}) => ({ weeks: 4, safetyPct: 15, range: { from: "2026-11-01", to: "2026-11-28" }, tomorrow: { day: "2026-11-29", weekday: "Sunday", items: [{ name: "Veg Momos", suggested: 62, avg: 54, max: 70 }, { name: "Tea", suggested: 30, avg: 26, max: 40 }] }, ...over });
+export const rating = (over: Record<string, unknown> = {}) => ({ id: "r1", orderId: "ord1", orderNumber: "A-102", channel: "dine-in", rating: 5, comment: "Loved the momos!", tags: ["Tasty"], items: ["2× Veg Momos"], orderTotal: 45_000, customerName: "Priya", customerPhone: "9855555555", createdAt: "2026-11-27T19:00:00Z", updatedAt: "2026-11-27T19:00:00Z", ...over });
+export const ratingsPage = (over: Record<string, unknown> = {}) => ({ summary: { days: 30, count: 20, average: 4.3, byStars: { 1: 1, 2: 1, 3: 2, 4: 6, 5: 10 }, withComments: 7 }, ratings: [rating(), rating({ id: "r2", rating: 2, comment: "", customerName: "", orderNumber: "A-99", tags: [], createdAt: "2026-11-26T19:00:00Z" })], nextBefore: null, ...over });
+
 /** A pretend server that knows every report. A test passes the answers it wants different; every call is remembered (`server.calls`). */
 export function reportsServer(routes: Record<string, Handler> = {}) {
   return fakeServer({
@@ -107,6 +164,16 @@ export function reportsServer(routes: Record<string, Handler> = {}) {
     "GET /api/analytics/expenses": { json: expensesReport() },
     "GET /api/analytics/gst": { json: gstReport() },
     "GET /api/analytics/cash": { json: cashReport() },
+    "GET /api/users": { json: { users: staffList() } },
+    "GET /api/analytics/customers": { json: customersReport() },
+    "GET /api/analytics/compare": { json: compareReport() },
+    "GET /api/analytics/reservations": { json: reservationsReport() },
+    "GET /api/analytics/coupons": { json: couponsReport() },
+    "GET /api/analytics/inventory": { json: inventoryReport() },
+    "GET /api/analytics/stock": { json: stockPlan() },
+    "GET /api/reservations": { json: { reservations: [booking(), booking({ id: "b2", at: "2026-11-29T16:00:00Z", status: "requested", statusLabel: "Waiting to be confirmed", partySize: 2, customer: { name: "Meera", phone: "9866666666" }, tableNumber: "", pricing: { amountPaise: 0, prepayPaise: 0, remainingPaise: 0 } }), booking({ id: "b3", at: "2026-11-30T14:00:00Z" })], waiting: 1 } },
+    "GET /api/coupons": { json: { coupons: [storeCoupon(), storeCoupon({ id: "k2", code: "FLAT50", discountType: "flat", value: 50, maxDiscount: 0, active: false })] } },
+    "GET /api/feedback": { json: ratingsPage() },
     ...routes,
   });
 }
