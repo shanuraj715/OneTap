@@ -652,12 +652,20 @@ p { margin: 0; text-wrap: pretty; }
  * A hero with a moving backdrop (drifting colour, a slow dotted grid, rising rings, a heartbeat line that draws itself) and the app icons
  * orbiting the Rasoi Pulse tile; below it, one glowing card per app. Only transform / opacity / stroke are animated, nothing needs script,
  * and with "reduce motion" every animation stops and everything sits still, fully visible. */
-.apps-hero { position: relative; overflow: hidden; isolation: isolate; padding-bottom: 92px; }
+.apps-hero { position: relative; z-index: 1; isolation: isolate; padding-bottom: 92px; }
 .apps-hero-grid { position: relative; z-index: 1; display: grid; gap: 30px; align-items: center; }
 @media (min-width: 900px) { .apps-hero-grid { grid-template-columns: 1.05fr 0.95fr; gap: 40px; } }
 .apps-hero-copy { min-width: 0; }
 
 .apps-bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.apps-fade { position: absolute; inset: 0; pointer-events: none; }
+/* On an app's page and on /apps the colour is NOT faded away: it looks exactly as before inside the hero, and instead of being cut off in a straight line at the
+   hero's bottom edge it carries on for another 260px below it and melts into the page. (The hero only clips sideways now; the backdrop is clipped on its other
+   three sides itself.) The big blob at the bottom keeps its place: its offset is the old one plus those 260px. */
+.apps-hero { overflow-x: clip; overflow-y: visible; }
+.apps-hero .apps-bg { overflow: visible; clip-path: inset(0 0 -260px 0); }
+.apps-hero .apps-fade { bottom: -260px; -webkit-mask-image: linear-gradient(180deg, #000 0, #000 calc(100% - 260px), transparent 100%); mask-image: linear-gradient(180deg, #000 0, #000 calc(100% - 260px), transparent 100%); }
+.apps-hero .apps-blob-c { bottom: 50px; }
 .apps-blob { position: absolute; border-radius: 50%; filter: blur(72px); will-change: transform; }
 .apps-blob-a { width: 460px; height: 460px; left: -130px; top: -150px; background: var(--brand); opacity: 0.3; animation: apps-drift-a 23s ease-in-out infinite alternate; }
 .apps-blob-b { width: 420px; height: 420px; right: -110px; top: 6%; background: #12a58a; opacity: 0.24; animation: apps-drift-b 27s ease-in-out infinite alternate; }
@@ -669,7 +677,7 @@ p { margin: 0; text-wrap: pretty; }
 .apps-dots { position: absolute; inset: -28px; opacity: 0.5; background-image: radial-gradient(color-mix(in srgb, var(--ink) 26%, transparent) 1.2px, transparent 1.5px); background-size: 28px 28px; -webkit-mask-image: radial-gradient(ellipse 72% 82% at 50% 45%, #000 18%, transparent 76%); mask-image: radial-gradient(ellipse 72% 82% at 50% 45%, #000 18%, transparent 76%); animation: apps-dots 16s linear infinite; }
 @keyframes apps-dots { to { transform: translate3d(28px, 28px, 0); } }
 
-.apps-beat { position: absolute; left: 0; right: 0; bottom: 5%; width: 100%; height: 130px; overflow: visible; -webkit-mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent); mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent); }
+.apps-beat { position: absolute; left: 0; right: 0; bottom: calc(5% - 38px); width: 100%; height: 130px; overflow: visible; -webkit-mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent); mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent); }
 .apps-beat path { fill: none; stroke: var(--brand); stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1 1; stroke-dashoffset: 0; }
 .apps-beat-line { stroke-width: 3; animation: apps-draw 6.5s ease-in-out infinite; }
 .apps-beat-glow { stroke-width: 10; stroke-opacity: 0.16; animation: apps-draw-glow 6.5s ease-in-out infinite; }
@@ -719,10 +727,26 @@ p { margin: 0; text-wrap: pretty; }
 @keyframes apps-float { 0%, 100% { transform: translate3d(0, 0, 0) rotate(-2.5deg); } 50% { transform: translate3d(0, -13px, 0) rotate(2.5deg); } }
 
 /* the cards */
-.apps-band { background: linear-gradient(180deg, color-mix(in srgb, var(--brand) 5%, var(--surface)), var(--surface) 240px); }
-.apps-grid { list-style: none; margin: 0; padding: 0; display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); }
-.apps-card { position: relative; overflow: hidden; isolation: isolate; display: flex; flex-direction: column; gap: 10px; padding: 28px; border: 1px solid color-mix(in srgb, var(--app, var(--brand)) 24%, var(--line)); border-radius: 24px; background: linear-gradient(165deg, color-mix(in srgb, var(--app, var(--brand)) 9%, var(--paper)), var(--paper) 58%); transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.35s, border-color 0.35s; animation: apps-fade-up 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) backwards; animation-delay: calc(var(--i, 0) * 130ms + 150ms); }
-.apps-card::before { content: ""; position: absolute; z-index: -1; right: -90px; top: -110px; width: 300px; height: 300px; border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--app, var(--brand)) 40%, transparent), transparent 68%); opacity: 0.55; transition: opacity 0.4s, transform 0.6s; }
+/* One continuous page: no rule between the hero and this section, and no change of colour either — the section has no background of its own, so the hero's
+   glow carries straight on into it (and there is no strip of a different colour at its bottom either). */
+.section.band.apps-band { position: relative; isolation: isolate; overflow: hidden; border-block: 0; background: transparent; }
+.apps-band > .wrap { position: relative; z-index: 1; }
+/* soft gradient circles in the apps' colours, very faint, drifting slowly behind the (a little see-through) cards, and thin ripple rings that swell and fade */
+.apps-orbs { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 200px, #000 calc(100% - 160px), transparent 100%); mask-image: linear-gradient(180deg, transparent 0, #000 200px, #000 calc(100% - 160px), transparent 100%); } /* the circles fade in at the top and out at the bottom of the section: no cut-off edges */
+.apps-orb-bg { position: absolute; left: var(--x); top: var(--y); width: var(--s); height: var(--s); margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2); border-radius: 50%; opacity: 0.5; background: radial-gradient(circle at 38% 34%, color-mix(in srgb, var(--c) 30%, transparent), color-mix(in srgb, var(--c) 9%, transparent) 54%, transparent 72%); will-change: transform; animation: apps-orb-drift var(--t) ease-in-out infinite alternate; animation-delay: var(--d); }
+@keyframes apps-orb-drift { to { transform: translate3d(var(--dx), var(--dy), 0) scale(var(--k)); } }
+.apps-ring-bg { position: absolute; left: var(--x); top: var(--y); width: var(--s); height: var(--s); margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2); border-radius: 50%; border: 1.5px solid color-mix(in srgb, var(--c) 34%, transparent); opacity: 0.35; animation: apps-ring-swell var(--t) ease-in-out infinite; animation-delay: var(--d); }
+@keyframes apps-ring-swell { 0%, 100% { transform: scale(0.82); opacity: 0.08; } 50% { transform: scale(1.12); opacity: 0.4; } }
+/* the cards sit in a row that wraps, and a last card on its own (or any odd one out) is centred instead of left alone: 1 column on a phone, 2 on a tablet, 3 on a
+   desktop — and for exactly four apps 2 × 2 (the page is never wider than 1160 px, so four across would be too narrow) */
+.apps-grid { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 22px; }
+.apps-grid > .apps-card { flex: 0 0 100%; min-width: 0; }
+@media (min-width: 700px) { .apps-grid > .apps-card { flex-basis: calc((100% - 22px) / 2); } }
+@media (min-width: 1040px) { .apps-grid > .apps-card { flex-basis: calc((100% - 44px) / 3); } .apps-grid[data-count="4"] > .apps-card { flex-basis: calc((100% - 22px) / 2); } }
+.apps-card { position: relative; overflow: hidden; isolation: isolate; display: flex; flex-direction: column; gap: 10px; padding: 28px; border: 1px solid color-mix(in srgb, var(--app, var(--brand)) 24%, var(--line)); border-radius: 24px; background: linear-gradient(165deg, color-mix(in srgb, color-mix(in srgb, var(--app, var(--brand)) 9%, var(--paper)) 84%, transparent), color-mix(in srgb, var(--paper) 80%, transparent) 58%); -webkit-backdrop-filter: blur(14px) saturate(1.15); backdrop-filter: blur(14px) saturate(1.15); transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.35s, border-color 0.35s; animation: apps-fade-up 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) backwards; animation-delay: calc(var(--i, 0) * 130ms + 150ms); }
+.apps-card::before { content: ""; position: absolute; z-index: -1; right: -90px; top: -110px; width: 300px; height: 300px; border-radius: 50%; background: radial-gradient(circle, transparent 40%, color-mix(in srgb, var(--app, var(--brand)) 26%, transparent) 40.6%, transparent 41.8%, transparent 54%, color-mix(in srgb, var(--app, var(--brand)) 16%, transparent) 54.6%, transparent 55.8%), radial-gradient(circle, color-mix(in srgb, var(--app, var(--brand)) 40%, transparent), transparent 68%); opacity: 0.55; transition: opacity 0.4s, transform 0.6s; animation: apps-card-breathe 8s ease-in-out infinite; animation-delay: calc(var(--i, 0) * -1.9s); }
+@keyframes apps-card-breathe { 0%, 100% { scale: 1; } 50% { scale: 1.1; } }
+.apps-card .app-version-meta { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; margin: 4px 0 2px; padding: 5px 12px; border-radius: 999px; font-size: 13px; font-variant-numeric: tabular-nums; background: color-mix(in srgb, var(--app, var(--brand)) 9%, transparent); border: 1px solid color-mix(in srgb, var(--app, var(--brand)) 22%, transparent); color: color-mix(in srgb, var(--app, var(--brand)) 55%, var(--ink)); }
 .apps-card::after { content: ""; position: absolute; z-index: 1; inset: 0; pointer-events: none; background: linear-gradient(110deg, transparent 40%, color-mix(in srgb, var(--app, var(--brand)) 16%, transparent) 50%, transparent 60%); transform: translateX(-120%); transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1); }
 .apps-card:hover, .apps-card:focus-within { transform: translateY(-6px); border-color: color-mix(in srgb, var(--app, var(--brand)) 58%, var(--line)); box-shadow: 0 26px 46px -26px color-mix(in srgb, var(--app, var(--brand)) 65%, transparent); }
 .apps-card:hover::before, .apps-card:focus-within::before { opacity: 1; transform: scale(1.25); }
@@ -743,7 +767,8 @@ p { margin: 0; text-wrap: pretty; }
 /* "reduce motion": nothing moves, nothing fades in — the page is simply drawn, complete */
 @media (prefers-reduced-motion: reduce) {
   .apps-hero *, .apps-card, .apps-card *, .apps-chips li { animation: none !important; transition: none !important; }
-  .apps-card::before, .apps-card::after { transition: none !important; }
+  .apps-card::before, .apps-card::after { transition: none !important; animation: none !important; }
+  .apps-orb-bg, .apps-ring-bg { animation: none !important; }
   .apps-card:hover, .apps-card:focus-within { transform: none; }
   .apps-bubble { display: none; }
 }
@@ -770,7 +795,7 @@ p { margin: 0; text-wrap: pretty; }
 .apps-bg-solo .apps-blob-a { opacity: 0.3; }
 .apps-bg-solo .apps-blob-b { opacity: 0.22; }
 .apps-bg-solo .apps-blob-c { opacity: 0.2; }
-.apps-bg-solo .apps-beat { opacity: 0.75; bottom: 0; }
+.apps-bg-solo .apps-beat { opacity: 0.75; bottom: -20px; }
 /* room under the content, so the heartbeat line's tall spike passes beneath it instead of behind a box */
 .app-themed .apps-hero { padding-bottom: 150px; }
 

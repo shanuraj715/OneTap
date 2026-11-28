@@ -1,6 +1,7 @@
 import { Download, ShieldCheck, Smartphone } from "lucide-react";
 import { AppCard } from "@/components/AppCard";
 import { AppsBackdrop } from "@/components/AppsBackdrop";
+import { AppsCardsBackdrop } from "@/components/AppsCardsBackdrop";
 import { appArt, BRAND_TILE, orbitPlace } from "@/lib/app-art";
 import { getApps, getSettings, siteUrl } from "@/lib/site";
 
@@ -77,11 +78,12 @@ export default async function AppsPage() {
         </div>
       </section>
       <section className="section band apps-band">
+        <AppsCardsBackdrop apps={apps} />
         <div className="wrap">
           {apps.length === 0 ? (
             <p className="app-none">The list of apps can&apos;t be reached right now. Please check again in a little while, or ask your manager.</p>
           ) : (
-            <ul className="apps-grid">
+            <ul className="apps-grid" data-count={apps.length}>
               {apps.map((a, i) => (
                 <AppCard key={a.id} app={a} index={i} />
               ))}

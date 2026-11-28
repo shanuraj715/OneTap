@@ -1604,3 +1604,21 @@
 {"id":"t95-app-releases-website-ui","status":"pass","pass":37,"fail":0,"mode":"headless","at":"2026-11-28T08:18:07.815Z","durationMs":1564}
 {"id":"t105-app-refresh-interval-ui","status":"pass","pass":35,"fail":0,"mode":"headless","at":"2026-11-28T08:18:12.967Z","durationMs":4419}
 {"id":"t132-app-visibility-ui","status":"pass","pass":31,"fail":0,"mode":"headless","at":"2026-11-28T08:18:15.456Z","durationMs":1744}
+{"id":"t95-app-releases-website-ui","status":"pass","pass":37,"fail":0,"mode":"headless","at":"2026-11-28T08:31:19.109Z","durationMs":1841}
+{"id":"t103-website-home-apps-motion","status":"pass","pass":61,"fail":0,"mode":"headless","at":"2026-11-28T08:31:29.059Z","durationMs":9189}
+{"id":"t141-app-management-ui","status":"pass","pass":37,"fail":0,"mode":"headless","at":"2026-11-28T08:32:04.123Z","durationMs":34294}
+{"id":"t142-website-hero-glow","status":"pass","pass":15,"fail":0,"mode":"headless","at":"2026-11-28T08:34:56.841Z","durationMs":8311}
+{"id":"t142-website-hero-glow","status":"pass","pass":19,"fail":0,"mode":"headless","at":"2026-11-28T08:37:02.257Z","durationMs":20776}
+{"id":"t142-website-hero-glow","status":"fail","pass":27,"fail":2,"mode":"headless","at":"2026-11-28T08:41:51.762Z","durationMs":7959}
+{"id":"t142-website-hero-glow","status":"error","pass":0,"fail":0,"mode":"headless","at":"2026-11-28T08:42:23.684Z","durationMs":7335,"error":"website-hero-glow.mjs produced no checks (exit 1). }  Node.js v24.3.0"}
+{"id":"t142-website-hero-glow","status":"pass","pass":29,"fail":0,"mode":"headless","at":"2026-11-28T08:42:51.774Z","durationMs":7643}
+{"id":"t142-website-hero-glow","status":"pass","pass":29,"fail":0,"mode":"headless","at":"2026-11-28T08:43:30.344Z","durationMs":7834}
+{"id":"t143-website-apps-cards","status":"fail","pass":18,"fail":2,"mode":"headless","at":"2026-11-28T08:44:25.484Z","durationMs":7037}
+{"id":"t143-website-apps-cards","status":"pass","pass":27,"fail":0,"mode":"headless","at":"2026-11-28T08:44:46.672Z","durationMs":10659}
+{"id":"t95-app-releases-website-ui","status":"pass","pass":37,"fail":0,"mode":"headless","at":"2026-11-28T08:45:32.781Z","durationMs":4019}
+{"id":"t103-website-home-apps-motion","status":"fail","pass":56,"fail":5,"mode":"headless","at":"2026-11-28T08:45:42.293Z","durationMs":8750}
+{"id":"t141-app-management-ui","status":"pass","pass":37,"fail":0,"mode":"headless","at":"2026-11-28T08:46:16.947Z","durationMs":33897}
+{"id":"t142-website-hero-glow","status":"pass","pass":29,"fail":0,"mode":"headless","at":"2026-11-28T08:46:25.248Z","durationMs":7285}
+{"id":"t143-website-apps-cards","status":"pass","pass":27,"fail":0,"mode":"headless","at":"2026-11-28T08:46:36.492Z","durationMs":10252}
+{"id":"t103-website-home-apps-motion","status":"pass","pass":61,"fail":0,"mode":"headless","at":"2026-11-28T08:46:53.793Z","durationMs":8854}
+{"id":"t143-website-apps-cards","status":"pass","pass":27,"fail":0,"mode":"headless","at":"2026-11-28T08:47:05.170Z","durationMs":10490}

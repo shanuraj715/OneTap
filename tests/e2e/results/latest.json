@@ -32973,8 +32973,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T08:18:07.815Z",
-    "durationMs": 1564,
+    "at": "2026-11-28T08:45:32.781Z",
+    "durationMs": 4019,
     "steps": [
       {
         "n": 1,
@@ -33037,7 +33037,7 @@
           {
             "label": "…and points at the API's download address",
             "ok": true,
-            "detail": "http://localhost:3097/api/app-updates/download/6b0a8e3f732495540353c105",
+            "detail": "http://localhost:3097/api/app-updates/download/6b0a94a9732495540353cf4e",
             "kind": "expect"
           },
           {
@@ -33115,7 +33115,7 @@
           {
             "label": "'Check the file' shows the file's SHA-256",
             "ok": true,
-            "detail": "d06b7ab88b7a…",
+            "detail": "c08aea397570…",
             "kind": "expect"
           }
         ]
@@ -36773,8 +36773,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T11:26:55.700Z",
-    "durationMs": 9794,
+    "at": "2026-11-28T08:46:53.793Z",
+    "durationMs": 8854,
     "steps": [
       {
         "n": 0,
@@ -36921,7 +36921,7 @@
           {
             "label": "the order ticket slides along the line",
             "ok": true,
-            "detail": "0px → 65px",
+            "detail": "0px → 62px",
             "kind": "expect"
           },
           {
@@ -47479,8 +47479,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T08:17:48.997Z",
-    "durationMs": 34089,
+    "at": "2026-11-28T08:46:16.947Z",
+    "durationMs": 33897,
     "steps": [
       {
         "n": 1,
@@ -47740,6 +47740,432 @@
           },
           {
             "label": "no errors in the browser console",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t142-website-hero-glow": {
+    "id": "t142-website-hero-glow",
+    "title": "Website → an app's page: the purple (app-coloured) glow at the bottom of the top section is kept and fades out smoothly instead of ending in a straight line; the heartbeat line's corners are softly rounded",
+    "status": "pass",
+    "pass": 29,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-28T08:46:25.248Z",
+    "durationMs": 7285,
+    "steps": [
+      {
+        "n": 1,
+        "title": "an app's page, light",
+        "checks": [
+          {
+            "label": "the colour is still there inside the hero, near its bottom (not faded away)",
+            "ok": true,
+            "detail": "33 away from the page colour",
+            "kind": "expect"
+          },
+          {
+            "label": "the heartbeat sits at the very bottom of an app's top section",
+            "ok": true,
+            "detail": "20px from the edge",
+            "kind": "expect"
+          },
+          {
+            "label": "no straight edge: the rows just above and just below the hero's bottom are the same colour",
+            "ok": true,
+            "detail": "step 0.8",
+            "kind": "expect"
+          },
+          {
+            "label": "the glow has melted into the page colour well below the hero",
+            "ok": true,
+            "detail": "0 away at 255 px below",
+            "kind": "expect"
+          },
+          {
+            "label": "nothing sticks out sideways",
+            "ok": true,
+            "detail": "0px over",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "an app's page, dark",
+        "checks": [
+          {
+            "label": "the colour is still there inside the hero, near its bottom (not faded away)",
+            "ok": true,
+            "detail": "38 away from the page colour",
+            "kind": "expect"
+          },
+          {
+            "label": "the heartbeat sits at the very bottom of an app's top section",
+            "ok": true,
+            "detail": "20px from the edge",
+            "kind": "expect"
+          },
+          {
+            "label": "no straight edge: the rows just above and just below the hero's bottom are the same colour",
+            "ok": true,
+            "detail": "step 0.8",
+            "kind": "expect"
+          },
+          {
+            "label": "the glow has melted into the page colour well below the hero",
+            "ok": true,
+            "detail": "0 away at 255 px below",
+            "kind": "expect"
+          },
+          {
+            "label": "nothing sticks out sideways",
+            "ok": true,
+            "detail": "0px over",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "the apps page, light",
+        "checks": [
+          {
+            "label": "the colour is still there inside the hero, near its bottom (not faded away)",
+            "ok": true,
+            "detail": "33 away from the page colour",
+            "kind": "expect"
+          },
+          {
+            "label": "no rule above or below the cards section",
+            "ok": true,
+            "detail": "0px / 0px",
+            "kind": "expect"
+          },
+          {
+            "label": "the cards section has no background of its own (the hero's colour carries straight on into it)",
+            "ok": true,
+            "detail": "rgba(0, 0, 0, 0) none",
+            "kind": "expect"
+          },
+          {
+            "label": "no step in colour where the hero ends and the cards begin",
+            "ok": true,
+            "detail": "step 0.5",
+            "kind": "expect"
+          },
+          {
+            "label": "the heartbeat sits low in the hero, just above its bottom edge (not up among the buttons)",
+            "ok": true,
+            "detail": "10px from the edge",
+            "kind": "expect"
+          },
+          {
+            "label": "nothing sticks out sideways",
+            "ok": true,
+            "detail": "0px over",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "the apps page, dark",
+        "checks": [
+          {
+            "label": "the colour is still there inside the hero, near its bottom (not faded away)",
+            "ok": true,
+            "detail": "49 away from the page colour",
+            "kind": "expect"
+          },
+          {
+            "label": "no rule above or below the cards section",
+            "ok": true,
+            "detail": "0px / 0px",
+            "kind": "expect"
+          },
+          {
+            "label": "the cards section has no background of its own (the hero's colour carries straight on into it)",
+            "ok": true,
+            "detail": "rgba(0, 0, 0, 0) none",
+            "kind": "expect"
+          },
+          {
+            "label": "no step in colour where the hero ends and the cards begin",
+            "ok": true,
+            "detail": "step 0.8",
+            "kind": "expect"
+          },
+          {
+            "label": "the heartbeat sits low in the hero, just above its bottom edge (not up among the buttons)",
+            "ok": true,
+            "detail": "10px from the edge",
+            "kind": "expect"
+          },
+          {
+            "label": "nothing sticks out sideways",
+            "ok": true,
+            "detail": "0px over",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "The heartbeat line has softly rounded corners",
+        "checks": [
+          {
+            "label": "the heartbeat is drawn twice (line and soft glow) along the same path",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "every corner of it is a small curve, not a sharp point",
+            "ok": true,
+            "detail": "6 curves",
+            "kind": "expect"
+          },
+          {
+            "label": "the joins and ends of the stroke are round too",
+            "ok": true,
+            "detail": "round/round round/round",
+            "kind": "expect"
+          },
+          {
+            "label": "the curves still bend towards the original peak and dip points (the shape is the same, only softer)",
+            "ok": true,
+            "detail": "92,42,140,12,132,92",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "A phone",
+        "checks": [
+          {
+            "label": "/apps/oma fits a 390 px screen",
+            "ok": true,
+            "detail": "0px over",
+            "kind": "expect"
+          },
+          {
+            "label": "/apps fits a 390 px screen",
+            "ok": true,
+            "detail": "0px over",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t143-website-apps-cards": {
+    "id": "t143-website-apps-cards",
+    "title": "Website → /apps cards section: very faint gradient circles in the apps' colours drift behind the cards, the cards are see-through glass with a version pill, and an odd card is centred instead of left alone",
+    "status": "pass",
+    "pass": 27,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-28T08:47:05.170Z",
+    "durationMs": 10490,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The circles behind the cards",
+        "checks": [
+          {
+            "label": "the circles are decoration (hidden from screen readers) inside the cards section",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "there are big gradient circles and thin ripple rings",
+            "ok": true,
+            "detail": "6 circles, 4 rings",
+            "kind": "expect"
+          },
+          {
+            "label": "every circle is very faint",
+            "ok": true,
+            "detail": "0.5,0.5,0.5,0.5,0.5,0.5",
+            "kind": "expect"
+          },
+          {
+            "label": "the circles wear the apps' own colours (indigo, teal, violet, rose…), not one colour",
+            "ok": true,
+            "detail": "#4b5bd6 #12a58a #8b5cf6 #d6336c",
+            "kind": "expect"
+          },
+          {
+            "label": "each circle drifts slowly (a lap of 20 seconds or more)",
+            "ok": true,
+            "detail": "27s,31s,35s,29s,24s,33s",
+            "kind": "expect"
+          },
+          {
+            "label": "the rings slowly swell and fade",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "they really move: most circles are somewhere else 2.5 seconds later",
+            "ok": true,
+            "detail": "6 of 6 moved",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "The cards: see-through glass, a version pill",
+        "checks": [
+          {
+            "label": "a card is a little see-through: it blurs what is behind it, so the circles glow through",
+            "ok": true,
+            "detail": "blur(14px) saturate(1.15)",
+            "kind": "expect"
+          },
+          {
+            "label": "the version (or 'No version published yet') is a small rounded pill in the app's colour",
+            "ok": true,
+            "detail": "{\"display\":\"flex\",\"radius\":999,\"border\":\"1px\",\"pad\":\"12px\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "the rings in a card's corner slowly breathe",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "The layout: the odd card is centred, never left alone",
+        "checks": [
+          {
+            "label": "1400px, four apps: two rows of two",
+            "ok": true,
+            "detail": "2+2",
+            "kind": "expect"
+          },
+          {
+            "label": "1400px: every card is the same width",
+            "ok": true,
+            "detail": "537",
+            "kind": "expect"
+          },
+          {
+            "label": "1400px: the cards in a row are the same height",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "1100px, four apps: two rows of two",
+            "ok": true,
+            "detail": "2+2",
+            "kind": "expect"
+          },
+          {
+            "label": "1100px: every card is the same width",
+            "ok": true,
+            "detail": "507",
+            "kind": "expect"
+          },
+          {
+            "label": "1100px: the cards in a row are the same height",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a phone: one card per row, using the width",
+            "ok": true,
+            "detail": "350,350,350,350",
+            "kind": "expect"
+          },
+          {
+            "label": "…and nothing sticks out sideways",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(a fifth app, added in the console, is public)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "five apps: three, then two",
+            "ok": true,
+            "detail": "3+2",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the two on the last row are centred under the three",
+            "ok": true,
+            "detail": "left gap 186, right gap 186",
+            "kind": "expect"
+          },
+          {
+            "label": "…all the same width",
+            "ok": true,
+            "detail": "351",
+            "kind": "expect"
+          },
+          {
+            "label": "the added app's card has its generated icon",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "three apps: three across, one row",
+            "ok": true,
+            "detail": "3 cards",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "'Reduce motion': everything stands still",
+        "checks": [
+          {
+            "label": "no circle, ring or card ring moves",
+            "ok": true,
+            "detail": "{\"orbs\":true,\"card\":\"none\",\"visible\":true}",
+            "kind": "expect"
+          },
+          {
+            "label": "…and every card is fully visible",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser",
             "ok": true,
             "detail": "",
             "kind": "expect"
