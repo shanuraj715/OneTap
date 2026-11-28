@@ -612,6 +612,7 @@ front of a process manager such as pm2. Things to get right:
 - [`deploy/wildcard-subdomains.md`](deploy/wildcard-subdomains.md) — store addresses on a subdomain: local use and the three one-time production steps
 - [`deploy/login-protection.md`](deploy/login-protection.md) — sign-in brute-force protection and how to tune it
 - [`docs/api-optimization-report.md`](docs/api-optimization-report.md) — why some answers take 200 ms or more, the measurements, and the order to fix them in
+- [`docs/api-performance-report-2026-11-28.md`](docs/api-performance-report-2026-11-28.md) — the console Server page's slow calls, order queries that read the whole history, the sign-in cache wipe; non-breaking fixes in order (report only, nothing built yet); evidence from `tests/e2e/audit/api-scan.mjs`
 - [`docs/api-rate-limiting.md`](docs/api-rate-limiting.md) — which API requests are limited, how hard, and why
 - [`docs/free-maps.md`](docs/free-maps.md) — the free map (Leaflet + OpenStreetMap), what it costs, and how to serve your own tiles; [`mobile-apps/README.md`](mobile-apps/README.md) — how the mobile apps are organised; [`mobile-apps/oma/README.md`](mobile-apps/oma/README.md) — run, build, version and test the staff order app; [`mobile-apps/kda/README.md`](mobile-apps/kda/README.md) — the same for the kitchen display app; [`mobile-apps/rda/README.md`](mobile-apps/rda/README.md) — the rider delivery app
 - [`tests/e2e/README.md`](tests/e2e/README.md) — the test library and how to add a test
