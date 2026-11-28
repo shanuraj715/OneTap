@@ -6,6 +6,7 @@ import { uploadApk, versionFromFileName } from "../../lib/uploadApk";
 import { useAppReleases, useAppSettings, usePlatformMutation } from "../../lib/usePlatform";
 import { Button, Card, Checkbox, Empty, Field, Modal, Note, PageHeader, Pill, TextInput, Toast } from "../../ui";
 import { appIconUrl } from "../../lib/appIcons";
+import { AppScreenshots } from "./AppScreenshots";
 import { fmtDate, muted } from "./shared";
 
 const STATUS = {
@@ -101,6 +102,9 @@ export function AppReleases() {
               </div>
             )}
           </Card>
+          <div style={{ marginTop: 14 }}>
+            <AppScreenshots app={app} meta={meta} />
+          </div>
         </>
       )}
 

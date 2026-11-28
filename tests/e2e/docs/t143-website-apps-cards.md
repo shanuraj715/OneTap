@@ -1,6 +1,6 @@
 # T143 — Website → /apps cards section: very faint gradient circles in the apps' colours drift behind the cards, the cards are see-through glass with a version pill, and an odd card is centred instead of left alone
 
-**Area:** website · **Last result:** ✅ PASSED (27 passed, 0 failed · 2026-11-28 14:17 · headless · 10.5 s)
+**Area:** website · **Last result:** ✅ PASSED (27 passed, 0 failed · 2026-11-28 15:40 · headless · 10.2 s)
 
 **Run it alone:** `node run.mjs --only t143` (add `--visible` to watch it)
 
@@ -78,6 +78,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-28 15:40 | pass | 27 | 0 | headless | 10.2 s |
 | 2026-11-28 14:17 | pass | 27 | 0 | headless | 10.5 s |
 | 2026-11-28 14:16 | pass | 27 | 0 | headless | 10.3 s |
 | 2026-11-28 14:14 | pass | 27 | 0 | headless | 10.7 s |

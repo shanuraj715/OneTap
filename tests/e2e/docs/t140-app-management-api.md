@@ -1,6 +1,6 @@
 # T140 — App Management: the platform admin adds an app (a name is enough), edits its words, makes it public or private, uploads its versions and removes it; built-in apps can't be removed; nothing is hard-coded in the console
 
-**Area:** app · **Last result:** ✅ PASSED (69 passed, 0 failed · 2026-11-28 14:24 · headless · 4.1 s)
+**Area:** app · **Last result:** ✅ PASSED (70 passed, 0 failed · 2026-11-28 15:39 · headless · 4.3 s)
 
 **Run it alone:** `node run.mjs --only t140` (add `--visible` to watch it)
 
@@ -41,7 +41,7 @@ Runs suites/app-management-api.mjs on a private API with an in-memory database (
 
 _Nothing failed._
 
-### ✅ Passed (69)
+### ✅ Passed (70)
 
 **Step 1 — The built-in apps are rows in the database, in a fixed order**
 
@@ -129,6 +129,7 @@ _Nothing failed._
 
 **Step 10 — Removing an app**
 
+- an app that still has versions can't be removed (nothing is lost by accident)
 - a built-in app can't be removed — it can be made private instead
 - an app that doesn't exist: 404
 - after its versions are deleted the app can be removed
@@ -149,6 +150,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-28 15:39 | pass | 70 | 0 | headless | 4.3 s |
+| 2026-11-28 15:28 | pass | 70 | 0 | headless | 4.9 s |
 | 2026-11-28 14:24 | pass | 69 | 0 | headless | 4.1 s |
 | 2026-11-28 13:34 | fail | 69 | 1 | headless | 4.0 s |
 | 2026-11-28 13:34 | pass | 69 | 0 | headless | 4.2 s |

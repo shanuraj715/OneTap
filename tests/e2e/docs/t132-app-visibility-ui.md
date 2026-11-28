@@ -1,6 +1,6 @@
 # T132 — App Management → every app has a Public / Private button; the Admin app has its own tab and starts private (not in the website's list, its page still opens by its link)
 
-**Area:** platform · **Last result:** ✅ PASSED (31 passed, 0 failed · 2026-11-28 14:24 · headless · 2.1 s)
+**Area:** platform · **Last result:** ✅ PASSED (31 passed, 0 failed · 2026-11-28 15:39 · headless · 1.8 s)
 
 **Run it alone:** `node run.mjs --only t132` (add `--visible` to watch it)
 
@@ -86,6 +86,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-28 15:39 | pass | 31 | 0 | headless | 1.8 s |
+| 2026-11-28 15:32 | pass | 31 | 0 | headless | 19.1 s |
 | 2026-11-28 14:24 | pass | 31 | 0 | headless | 2.1 s |
 | 2026-11-28 14:23 | fail | 30 | 1 | headless | 15.9 s |
 | 2026-11-28 13:48 | pass | 31 | 0 | headless | 1.7 s |

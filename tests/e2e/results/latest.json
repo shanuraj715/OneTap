@@ -9345,8 +9345,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T07:50:33.808Z",
-    "durationMs": 8332,
+    "at": "2026-11-28T10:09:54.952Z",
+    "durationMs": 9407,
     "steps": [
       {
         "n": 1,
@@ -10117,7 +10117,7 @@
           {
             "label": "the inventory sees the whole API",
             "ok": true,
-            "detail": "385 routes, 221 change data",
+            "detail": "397 routes, 232 change data",
             "kind": "expect"
           },
           {
@@ -31894,8 +31894,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T08:54:15.722Z",
-    "durationMs": 5280,
+    "at": "2026-11-28T10:10:36.728Z",
+    "durationMs": 4844,
     "steps": [
       {
         "n": 1,
@@ -32041,7 +32041,7 @@
           {
             "label": "the file is in the platform storage (this disk, by default), under app-releases/oma/",
             "ok": true,
-            "detail": "app-releases/oma/v-26.11.26-001-8228c7e74159.apk",
+            "detail": "app-releases/oma/v-26.11.26-001-d59e1490948c.apk",
             "kind": "expect"
           },
           {
@@ -32479,7 +32479,7 @@
           {
             "label": "the finished upload lands in the bucket, under app-releases/oma/",
             "ok": true,
-            "detail": "app-releases/oma/v-26.11.26-020-31ff0435671c.apk",
+            "detail": "app-releases/oma/v-26.11.26-020-7624d57b94fe.apk",
             "kind": "expect"
           },
           {
@@ -32580,8 +32580,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T08:53:11.953Z",
-    "durationMs": 15794,
+    "at": "2026-11-28T10:09:20.280Z",
+    "durationMs": 15523,
     "steps": [
       {
         "n": 1,
@@ -32973,8 +32973,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T08:45:32.781Z",
-    "durationMs": 4019,
+    "at": "2026-11-28T10:09:25.069Z",
+    "durationMs": 3922,
     "steps": [
       {
         "n": 1,
@@ -33037,7 +33037,7 @@
           {
             "label": "…and points at the API's download address",
             "ok": true,
-            "detail": "http://localhost:3097/api/app-updates/download/6b0a94a9732495540353cf4e",
+            "detail": "http://localhost:3097/api/app-updates/download/6b0aa8527ffdeabc9bc46bdc",
             "kind": "expect"
           },
           {
@@ -33115,7 +33115,7 @@
           {
             "label": "'Check the file' shows the file's SHA-256",
             "ok": true,
-            "detail": "c08aea397570…",
+            "detail": "25f9f39a2a2f…",
             "kind": "expect"
           }
         ]
@@ -36773,8 +36773,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T08:46:53.793Z",
-    "durationMs": 8854,
+    "at": "2026-11-28T10:10:03.928Z",
+    "durationMs": 8234,
     "steps": [
       {
         "n": 0,
@@ -40334,8 +40334,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T08:53:17.584Z",
-    "durationMs": 4676,
+    "at": "2026-11-28T10:10:42.222Z",
+    "durationMs": 4647,
     "steps": [
       {
         "n": 1,
@@ -40607,8 +40607,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T20:25:29.660Z",
-    "durationMs": 8646,
+    "at": "2026-11-28T10:10:30.909Z",
+    "durationMs": 7451,
     "steps": [
       {
         "n": 1,
@@ -40707,7 +40707,7 @@
           {
             "label": "the session says: a team member, role Sales, the one feature Onboarding (not even 'Plans' in the sidebar), no store, no store permissions",
             "ok": true,
-            "detail": "{\"access\":true,\"features\":[\"onboarding:manage\"],\"role\":{\"id\":\"6b09e735e726ef8580c37c17\",\"name\":\"Sales\"}}",
+            "detail": "{\"access\":true,\"features\":[\"onboarding:manage\"],\"role\":{\"id\":\"6b0aa893b2a8202d57e746c5\",\"name\":\"Sales\"}}",
             "kind": "expect"
           },
           {
@@ -41011,7 +41011,7 @@
         "title": "Every route of the platform API has been decided on",
         "checks": [
           {
-            "label": "all 101 routes of /api/platform have a rule in the table",
+            "label": "all 114 routes of /api/platform have a rule in the table",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -42377,14 +42377,14 @@
   },
   "t107-app-screenshots": {
     "id": "t107-app-screenshots",
-    "title": "Website → /apps/oma, /apps/kda, /apps/rda: real tablet screenshots in an Android tablet frame, as a tabbed gallery that works by mouse, keyboard and without script",
+    "title": "App screenshots (the pictures that ship with the website): OMA, KDA and RDA on a wide tablet, a tall tablet and a phone, in light and dark — real, the right shape, not blank, small; the tooling that takes them can't touch anything real",
     "status": "pass",
-    "pass": 179,
+    "pass": 555,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T20:18:30.942Z",
-    "durationMs": 10410,
+    "at": "2026-11-28T10:08:19.652Z",
+    "durationMs": 4052,
     "steps": [
       {
         "n": 1,
@@ -42397,459 +42397,3201 @@
             "kind": "expect"
           },
           {
-            "label": "OMA: at least three screenshots",
-            "ok": true,
-            "detail": "3",
-            "kind": "expect"
-          },
-          {
-            "label": "OMA: each has its own name",
+            "label": "the old list (app-shots.json) is gone: the platform's database is the only list now",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "oma-tables.webp is in public/app-screens",
+            "label": "OMA: at least three screenshots, each with its own name",
+            "ok": true,
+            "detail": "5",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA: the list and the scenarios agree on which screens, in which order",
+            "ok": true,
+            "detail": "tables,table,take-order,orders,options",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · tables: its words are the scenario's",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "oma-tables.webp is a real WebP file",
+            "label": "OMA · tables: a title, a caption and a description that doesn't name a device (the website adds it)",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "oma-tables.webp: the list says 1600×1000 and the picture is 1600×1000",
+            "label": "OMA · tables: a picture for every device the scenario runs on",
+            "ok": true,
+            "detail": "tablet-landscape,tablet-portrait,phone",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · tables · tablet-landscape: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-tables.tablet-landscape.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/oma-tables.tablet-landscape.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-tables.tablet-landscape.light: is a real WebP file",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "oma-tables.webp: a wide tablet picture (at least 1,400 px, 16:10)",
-            "ok": true,
-            "detail": "1600×1000 = 1.60",
-            "kind": "expect"
-          },
-          {
-            "label": "oma-tables.webp: small enough for a web page (under 400 KB)",
-            "ok": true,
-            "detail": "68 KB",
-            "kind": "expect"
-          },
-          {
-            "label": "oma-tables.webp: has real content on it (not a blank screen)",
-            "ok": true,
-            "detail": "42/39/29",
-            "kind": "expect"
-          },
-          {
-            "label": "oma-tables.webp: has a title, a caption and a description for screen readers",
+            "label": "OMA-tables.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "oma-take-order.webp is in public/app-screens",
+            "label": "OMA-tables.tablet-landscape.light: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-tables.tablet-landscape.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "66 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-tables.tablet-landscape.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "42/39/30",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-tables.tablet-landscape.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/oma-tables.tablet-landscape.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-tables.tablet-landscape.dark: is a real WebP file",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "oma-take-order.webp is a real WebP file",
+            "label": "OMA-tables.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "oma-take-order.webp: the list says 1600×1000 and the picture is 1600×1000",
+            "label": "OMA-tables.tablet-landscape.dark: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-tables.tablet-landscape.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "64 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-tables.tablet-landscape.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "27/29/37",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · tables · tablet-landscape: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 241, dark 35",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · tables · tablet-portrait: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-tables.tablet-portrait.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/oma-tables.tablet-portrait.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-tables.tablet-portrait.light: is a real WebP file",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "oma-take-order.webp: a wide tablet picture (at least 1,400 px, 16:10)",
-            "ok": true,
-            "detail": "1600×1000 = 1.60",
-            "kind": "expect"
-          },
-          {
-            "label": "oma-take-order.webp: small enough for a web page (under 400 KB)",
-            "ok": true,
-            "detail": "80 KB",
-            "kind": "expect"
-          },
-          {
-            "label": "oma-take-order.webp: has real content on it (not a blank screen)",
-            "ok": true,
-            "detail": "47/47/38",
-            "kind": "expect"
-          },
-          {
-            "label": "oma-take-order.webp: has a title, a caption and a description for screen readers",
+            "label": "OMA-tables.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "oma-orders.webp is in public/app-screens",
+            "label": "OMA-tables.tablet-portrait.light: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-tables.tablet-portrait.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "32 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-tables.tablet-portrait.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "26/23/20",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-tables.tablet-portrait.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/oma-tables.tablet-portrait.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-tables.tablet-portrait.dark: is a real WebP file",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "oma-orders.webp is a real WebP file",
+            "label": "OMA-tables.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "oma-orders.webp: the list says 1600×1000 and the picture is 1600×1000",
+            "label": "OMA-tables.tablet-portrait.dark: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-tables.tablet-portrait.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "31 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-tables.tablet-portrait.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "19/20/23",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · tables · tablet-portrait: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 246, dark 28",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · tables · phone: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-tables.phone.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/oma-tables.phone.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-tables.phone.light: is a real WebP file",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "oma-orders.webp: a wide tablet picture (at least 1,400 px, 16:10)",
-            "ok": true,
-            "detail": "1600×1000 = 1.60",
-            "kind": "expect"
-          },
-          {
-            "label": "oma-orders.webp: small enough for a web page (under 400 KB)",
-            "ok": true,
-            "detail": "58 KB",
-            "kind": "expect"
-          },
-          {
-            "label": "oma-orders.webp: has real content on it (not a blank screen)",
-            "ok": true,
-            "detail": "28/26/24",
-            "kind": "expect"
-          },
-          {
-            "label": "oma-orders.webp: has a title, a caption and a description for screen readers",
+            "label": "OMA-tables.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "KDA: at least three screenshots",
+            "label": "OMA-tables.phone.light: the shape of a phone  screen",
             "ok": true,
-            "detail": "4",
+            "detail": "0.462 vs 0.462",
             "kind": "expect"
           },
           {
-            "label": "KDA: each has its own name",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "kda-board.webp is in public/app-screens",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "kda-board.webp is a real WebP file",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "kda-board.webp: the list says 1600×1000 and the picture is 1600×1000",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "kda-board.webp: a wide tablet picture (at least 1,400 px, 16:10)",
-            "ok": true,
-            "detail": "1600×1000 = 1.60",
-            "kind": "expect"
-          },
-          {
-            "label": "kda-board.webp: small enough for a web page (under 400 KB)",
-            "ok": true,
-            "detail": "75 KB",
-            "kind": "expect"
-          },
-          {
-            "label": "kda-board.webp: has real content on it (not a blank screen)",
-            "ok": true,
-            "detail": "62/42/47",
-            "kind": "expect"
-          },
-          {
-            "label": "kda-board.webp: has a title, a caption and a description for screen readers",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "kda-prep.webp is in public/app-screens",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "kda-prep.webp is a real WebP file",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "kda-prep.webp: the list says 1600×1000 and the picture is 1600×1000",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "kda-prep.webp: a wide tablet picture (at least 1,400 px, 16:10)",
-            "ok": true,
-            "detail": "1600×1000 = 1.60",
-            "kind": "expect"
-          },
-          {
-            "label": "kda-prep.webp: small enough for a web page (under 400 KB)",
-            "ok": true,
-            "detail": "35 KB",
-            "kind": "expect"
-          },
-          {
-            "label": "kda-prep.webp: has real content on it (not a blank screen)",
-            "ok": true,
-            "detail": "23/21/21",
-            "kind": "expect"
-          },
-          {
-            "label": "kda-prep.webp: has a title, a caption and a description for screen readers",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "kda-dishes.webp is in public/app-screens",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "kda-dishes.webp is a real WebP file",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "kda-dishes.webp: the list says 1600×1000 and the picture is 1600×1000",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "kda-dishes.webp: a wide tablet picture (at least 1,400 px, 16:10)",
-            "ok": true,
-            "detail": "1600×1000 = 1.60",
-            "kind": "expect"
-          },
-          {
-            "label": "kda-dishes.webp: small enough for a web page (under 400 KB)",
+            "label": "OMA-tables.phone.light: small enough for a web page (under 260 KB)",
             "ok": true,
             "detail": "40 KB",
             "kind": "expect"
           },
           {
-            "label": "kda-dishes.webp: has real content on it (not a blank screen)",
+            "label": "OMA-tables.phone.light: has real content on it (not a blank screen)",
             "ok": true,
-            "detail": "29/22/24",
+            "detail": "44/40/33",
             "kind": "expect"
           },
           {
-            "label": "kda-dishes.webp: has a title, a caption and a description for screen readers",
+            "label": "OMA-tables.phone.dark: has the expected path",
             "ok": true,
-            "detail": "",
+            "detail": "/app-screens/oma-tables.phone.dark.webp",
             "kind": "expect"
           },
           {
-            "label": "kda-today.webp is in public/app-screens",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "kda-today.webp is a real WebP file",
+            "label": "OMA-tables.phone.dark: is a real WebP file",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "kda-today.webp: the list says 1600×1000 and the picture is 1600×1000",
+            "label": "OMA-tables.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "kda-today.webp: a wide tablet picture (at least 1,400 px, 16:10)",
+            "label": "OMA-tables.phone.dark: the shape of a phone  screen",
             "ok": true,
-            "detail": "1600×1000 = 1.60",
+            "detail": "0.462 vs 0.462",
             "kind": "expect"
           },
           {
-            "label": "kda-today.webp: small enough for a web page (under 400 KB)",
-            "ok": true,
-            "detail": "28 KB",
-            "kind": "expect"
-          },
-          {
-            "label": "kda-today.webp: has real content on it (not a blank screen)",
-            "ok": true,
-            "detail": "20/19/19",
-            "kind": "expect"
-          },
-          {
-            "label": "kda-today.webp: has a title, a caption and a description for screen readers",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "RDA: at least three screenshots",
-            "ok": true,
-            "detail": "3",
-            "kind": "expect"
-          },
-          {
-            "label": "RDA: each has its own name",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "rda-deliveries.webp is in public/app-screens",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "rda-deliveries.webp is a real WebP file",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "rda-deliveries.webp: the list says 1600×1000 and the picture is 1600×1000",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "rda-deliveries.webp: a wide tablet picture (at least 1,400 px, 16:10)",
-            "ok": true,
-            "detail": "1600×1000 = 1.60",
-            "kind": "expect"
-          },
-          {
-            "label": "rda-deliveries.webp: small enough for a web page (under 400 KB)",
-            "ok": true,
-            "detail": "44 KB",
-            "kind": "expect"
-          },
-          {
-            "label": "rda-deliveries.webp: has real content on it (not a blank screen)",
-            "ok": true,
-            "detail": "43/50/25",
-            "kind": "expect"
-          },
-          {
-            "label": "rda-deliveries.webp: has a title, a caption and a description for screen readers",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "rda-pickup.webp is in public/app-screens",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "rda-pickup.webp is a real WebP file",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "rda-pickup.webp: the list says 1600×1000 and the picture is 1600×1000",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "rda-pickup.webp: a wide tablet picture (at least 1,400 px, 16:10)",
-            "ok": true,
-            "detail": "1600×1000 = 1.60",
-            "kind": "expect"
-          },
-          {
-            "label": "rda-pickup.webp: small enough for a web page (under 400 KB)",
-            "ok": true,
-            "detail": "40 KB",
-            "kind": "expect"
-          },
-          {
-            "label": "rda-pickup.webp: has real content on it (not a blank screen)",
-            "ok": true,
-            "detail": "40/49/25",
-            "kind": "expect"
-          },
-          {
-            "label": "rda-pickup.webp: has a title, a caption and a description for screen readers",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "rda-code.webp is in public/app-screens",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "rda-code.webp is a real WebP file",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "rda-code.webp: the list says 1600×1000 and the picture is 1600×1000",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "rda-code.webp: a wide tablet picture (at least 1,400 px, 16:10)",
-            "ok": true,
-            "detail": "1600×1000 = 1.60",
-            "kind": "expect"
-          },
-          {
-            "label": "rda-code.webp: small enough for a web page (under 400 KB)",
+            "label": "OMA-tables.phone.dark: small enough for a web page (under 260 KB)",
             "ok": true,
             "detail": "39 KB",
             "kind": "expect"
           },
           {
-            "label": "rda-code.webp: has real content on it (not a blank screen)",
+            "label": "OMA-tables.phone.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "31/34/38",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · tables · phone: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 241, dark 37",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · table: its words are the scenario's",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · table: a title, a caption and a description that doesn't name a device (the website adds it)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · table: a picture for every device the scenario runs on",
+            "ok": true,
+            "detail": "tablet-portrait,phone",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · table · tablet-portrait: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-table.tablet-portrait.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/oma-table.tablet-portrait.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-table.tablet-portrait.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-table.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-table.tablet-portrait.light: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-table.tablet-portrait.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "38 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-table.tablet-portrait.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "41/39/23",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-table.tablet-portrait.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/oma-table.tablet-portrait.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-table.tablet-portrait.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-table.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-table.tablet-portrait.dark: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-table.tablet-portrait.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "37 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-table.tablet-portrait.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "21/22/35",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · table · tablet-portrait: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 242, dark 33",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · table · phone: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-table.phone.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/oma-table.phone.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-table.phone.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-table.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-table.phone.light: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-table.phone.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "45 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-table.phone.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "52/49/33",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-table.phone.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/oma-table.phone.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-table.phone.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-table.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-table.phone.dark: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-table.phone.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "44 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-table.phone.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "33/34/46",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · table · phone: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 236, dark 40",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · take-order: its words are the scenario's",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · take-order: a title, a caption and a description that doesn't name a device (the website adds it)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · take-order: a picture for every device the scenario runs on",
+            "ok": true,
+            "detail": "tablet-landscape,tablet-portrait,phone",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · take-order · tablet-landscape: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.tablet-landscape.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/oma-take-order.tablet-landscape.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.tablet-landscape.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.tablet-landscape.light: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.tablet-landscape.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "76 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.tablet-landscape.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "47/47/38",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.tablet-landscape.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/oma-take-order.tablet-landscape.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.tablet-landscape.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.tablet-landscape.dark: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.tablet-landscape.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "72 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.tablet-landscape.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "33/32/39",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · take-order · tablet-landscape: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 239, dark 41",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · take-order · tablet-portrait: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.tablet-portrait.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/oma-take-order.tablet-portrait.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.tablet-portrait.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.tablet-portrait.light: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.tablet-portrait.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "64 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.tablet-portrait.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "50/49/36",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.tablet-portrait.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/oma-take-order.tablet-portrait.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.tablet-portrait.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.tablet-portrait.dark: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.tablet-portrait.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "61 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.tablet-portrait.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "31/29/41",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · take-order · tablet-portrait: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 237, dark 39",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · take-order · phone: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.phone.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/oma-take-order.phone.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.phone.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.phone.light: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.phone.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "53 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.phone.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "59/57/43",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.phone.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/oma-take-order.phone.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.phone.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.phone.dark: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.phone.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "50 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-take-order.phone.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "38/37/49",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · take-order · phone: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 232, dark 45",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · orders: its words are the scenario's",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · orders: a title, a caption and a description that doesn't name a device (the website adds it)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · orders: a picture for every device the scenario runs on",
+            "ok": true,
+            "detail": "tablet-landscape,tablet-portrait,phone",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · orders · tablet-landscape: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.tablet-landscape.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/oma-orders.tablet-landscape.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.tablet-landscape.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.tablet-landscape.light: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.tablet-landscape.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "51 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.tablet-landscape.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "60/57/29",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.tablet-landscape.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/oma-orders.tablet-landscape.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.tablet-landscape.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.tablet-landscape.dark: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.tablet-landscape.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "48 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.tablet-landscape.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "25/27/49",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · orders · tablet-landscape: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 234, dark 42",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · orders · tablet-portrait: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.tablet-portrait.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/oma-orders.tablet-portrait.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.tablet-portrait.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.tablet-portrait.light: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.tablet-portrait.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "76 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.tablet-portrait.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "60/57/31",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.tablet-portrait.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/oma-orders.tablet-portrait.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.tablet-portrait.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.tablet-portrait.dark: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.tablet-portrait.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "71 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.tablet-portrait.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "28/29/49",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · orders · tablet-portrait: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 233, dark 43",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · orders · phone: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.phone.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/oma-orders.phone.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.phone.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.phone.light: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.phone.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "42 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.phone.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "63/59/33",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.phone.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/oma-orders.phone.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.phone.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.phone.dark: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.phone.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "40 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-orders.phone.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "32/33/53",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · orders · phone: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 231, dark 44",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · options: its words are the scenario's",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · options: a title, a caption and a description that doesn't name a device (the website adds it)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · options: a picture for every device the scenario runs on",
+            "ok": true,
+            "detail": "tablet-landscape,tablet-portrait,phone",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · options · tablet-landscape: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.tablet-landscape.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/oma-options.tablet-landscape.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.tablet-landscape.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.tablet-landscape.light: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.tablet-landscape.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "46 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.tablet-landscape.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "62/61/58",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.tablet-landscape.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/oma-options.tablet-landscape.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.tablet-landscape.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.tablet-landscape.dark: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.tablet-landscape.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "38 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.tablet-landscape.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "20/20/32",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · options · tablet-landscape: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 165, dark 23",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · options · tablet-portrait: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.tablet-portrait.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/oma-options.tablet-portrait.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.tablet-portrait.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.tablet-portrait.light: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.tablet-portrait.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "42 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.tablet-portrait.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "64/63/59",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.tablet-portrait.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/oma-options.tablet-portrait.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.tablet-portrait.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.tablet-portrait.dark: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.tablet-portrait.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "35 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.tablet-portrait.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "20/21/32",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · options · tablet-portrait: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 164, dark 23",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · options · phone: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.phone.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/oma-options.phone.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.phone.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.phone.light: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.phone.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "33 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.phone.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "66/65/59",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.phone.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/oma-options.phone.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.phone.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.phone.dark: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.phone.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "30 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA-options.phone.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "29/30/41",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA · options · phone: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 208, dark 34",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA: at least three screenshots, each with its own name",
+            "ok": true,
+            "detail": "4",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA: the list and the scenarios agree on which screens, in which order",
+            "ok": true,
+            "detail": "board,prep,dishes,today",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · board: its words are the scenario's",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · board: a title, a caption and a description that doesn't name a device (the website adds it)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · board: a picture for every device the scenario runs on",
+            "ok": true,
+            "detail": "tablet-landscape,tablet-portrait,phone",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · board · tablet-landscape: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.tablet-landscape.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/kda-board.tablet-landscape.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.tablet-landscape.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.tablet-landscape.light: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.tablet-landscape.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "74 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.tablet-landscape.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "62/45/48",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.tablet-landscape.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/kda-board.tablet-landscape.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.tablet-landscape.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.tablet-landscape.dark: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.tablet-landscape.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "73 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.tablet-landscape.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "37/39/37",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · board · tablet-landscape: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 234, dark 37",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · board · tablet-portrait: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.tablet-portrait.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/kda-board.tablet-portrait.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.tablet-portrait.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.tablet-portrait.light: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.tablet-portrait.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "93 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.tablet-portrait.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "63/48/52",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.tablet-portrait.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/kda-board.tablet-portrait.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.tablet-portrait.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.tablet-portrait.dark: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.tablet-portrait.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "91 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.tablet-portrait.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "42/42/39",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · board · tablet-portrait: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 231, dark 39",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · board · phone: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.phone.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/kda-board.phone.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.phone.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.phone.light: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.phone.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "36 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.phone.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "77/50/55",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.phone.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/kda-board.phone.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.phone.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.phone.dark: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.phone.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "35 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-board.phone.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "38/43/39",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · board · phone: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 226, dark 39",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · prep: its words are the scenario's",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · prep: a title, a caption and a description that doesn't name a device (the website adds it)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · prep: a picture for every device the scenario runs on",
+            "ok": true,
+            "detail": "tablet-landscape,tablet-portrait,phone",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · prep · tablet-landscape: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.tablet-landscape.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/kda-prep.tablet-landscape.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.tablet-landscape.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.tablet-landscape.light: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.tablet-landscape.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "33 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.tablet-landscape.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "23/22/22",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.tablet-landscape.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/kda-prep.tablet-landscape.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.tablet-landscape.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.tablet-landscape.dark: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.tablet-landscape.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "33 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.tablet-landscape.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "21/22/22",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · prep · tablet-landscape: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 249, dark 29",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · prep · tablet-portrait: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.tablet-portrait.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/kda-prep.tablet-portrait.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.tablet-portrait.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.tablet-portrait.light: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.tablet-portrait.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "45 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.tablet-portrait.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "26/24/25",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.tablet-portrait.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/kda-prep.tablet-portrait.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.tablet-portrait.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.tablet-portrait.dark: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.tablet-portrait.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "45 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.tablet-portrait.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "24/25/25",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · prep · tablet-portrait: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 248, dark 29",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · prep · phone: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.phone.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/kda-prep.phone.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.phone.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.phone.light: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.phone.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "45 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.phone.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "37/35/36",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.phone.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/kda-prep.phone.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.phone.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.phone.dark: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.phone.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "45 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-prep.phone.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "35/36/36",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · prep · phone: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 244, dark 33",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · dishes: its words are the scenario's",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · dishes: a title, a caption and a description that doesn't name a device (the website adds it)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · dishes: a picture for every device the scenario runs on",
+            "ok": true,
+            "detail": "tablet-landscape,tablet-portrait,phone",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · dishes · tablet-landscape: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.tablet-landscape.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/kda-dishes.tablet-landscape.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.tablet-landscape.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.tablet-landscape.light: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.tablet-landscape.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "37 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.tablet-landscape.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "28/22/24",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.tablet-landscape.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/kda-dishes.tablet-landscape.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.tablet-landscape.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.tablet-landscape.dark: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.tablet-landscape.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "37 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.tablet-landscape.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "20/23/21",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · dishes · tablet-landscape: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 247, dark 28",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · dishes · tablet-portrait: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.tablet-portrait.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/kda-dishes.tablet-portrait.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.tablet-portrait.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.tablet-portrait.light: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.tablet-portrait.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "56 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.tablet-portrait.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "33/26/28",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.tablet-portrait.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/kda-dishes.tablet-portrait.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.tablet-portrait.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.tablet-portrait.dark: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.tablet-portrait.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "55 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.tablet-portrait.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "23/26/25",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · dishes · tablet-portrait: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 246, dark 30",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · dishes · phone: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.phone.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/kda-dishes.phone.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.phone.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.phone.light: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.phone.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "49 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.phone.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "42/34/37",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.phone.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/kda-dishes.phone.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.phone.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.phone.dark: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.phone.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "47 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-dishes.phone.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "32/35/34",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · dishes · phone: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 242, dark 32",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · today: its words are the scenario's",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · today: a title, a caption and a description that doesn't name a device (the website adds it)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · today: a picture for every device the scenario runs on",
+            "ok": true,
+            "detail": "tablet-landscape,tablet-portrait,phone",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · today · tablet-landscape: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.tablet-landscape.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/kda-today.tablet-landscape.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.tablet-landscape.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.tablet-landscape.light: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.tablet-landscape.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "27 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.tablet-landscape.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "20/19/19",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.tablet-landscape.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/kda-today.tablet-landscape.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.tablet-landscape.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.tablet-landscape.dark: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.tablet-landscape.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "27 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.tablet-landscape.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "19/20/19",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · today · tablet-landscape: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 249, dark 26",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · today · tablet-portrait: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.tablet-portrait.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/kda-today.tablet-portrait.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.tablet-portrait.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.tablet-portrait.light: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.tablet-portrait.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "29 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.tablet-portrait.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "20/19/19",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.tablet-portrait.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/kda-today.tablet-portrait.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.tablet-portrait.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.tablet-portrait.dark: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.tablet-portrait.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "29 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.tablet-portrait.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "19/20/20",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · today · tablet-portrait: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 247, dark 24",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · today · phone: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.phone.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/kda-today.phone.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.phone.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.phone.light: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.phone.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "34 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.phone.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "33/30/31",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.phone.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/kda-today.phone.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.phone.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.phone.dark: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.phone.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "33 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA-today.phone.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "30/31/31",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA · today · phone: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 246, dark 30",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA: at least three screenshots, each with its own name",
+            "ok": true,
+            "detail": "3",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA: the list and the scenarios agree on which screens, in which order",
+            "ok": true,
+            "detail": "deliveries,pickup,code",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA · deliveries: its words are the scenario's",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA · deliveries: a title, a caption and a description that doesn't name a device (the website adds it)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA · deliveries: a picture for every device the scenario runs on",
+            "ok": true,
+            "detail": "tablet-landscape,tablet-portrait,phone",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA · deliveries · tablet-landscape: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.tablet-landscape.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/rda-deliveries.tablet-landscape.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.tablet-landscape.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.tablet-landscape.light: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.tablet-landscape.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "41 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.tablet-landscape.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "43/50/25",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.tablet-landscape.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/rda-deliveries.tablet-landscape.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.tablet-landscape.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.tablet-landscape.dark: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.tablet-landscape.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "40 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.tablet-landscape.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "32/28/51",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA · deliveries · tablet-landscape: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 239, dark 39",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA · deliveries · tablet-portrait: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.tablet-portrait.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/rda-deliveries.tablet-portrait.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.tablet-portrait.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.tablet-portrait.light: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.tablet-portrait.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "62 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.tablet-portrait.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "51/60/32",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.tablet-portrait.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/rda-deliveries.tablet-portrait.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.tablet-portrait.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.tablet-portrait.dark: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.tablet-portrait.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "59 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.tablet-portrait.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "39/33/59",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA · deliveries · tablet-portrait: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 234, dark 47",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA · deliveries · phone: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.phone.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/rda-deliveries.phone.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.phone.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.phone.light: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.phone.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "59 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.phone.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "55/58/38",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.phone.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/rda-deliveries.phone.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.phone.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.phone.dark: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.phone.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "56 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-deliveries.phone.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "42/41/57",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA · deliveries · phone: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 233, dark 48",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA · pickup: its words are the scenario's",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA · pickup: a title, a caption and a description that doesn't name a device (the website adds it)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA · pickup: a picture for every device the scenario runs on",
+            "ok": true,
+            "detail": "tablet-landscape,tablet-portrait,phone",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA · pickup · tablet-landscape: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.tablet-landscape.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/rda-pickup.tablet-landscape.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.tablet-landscape.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.tablet-landscape.light: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.tablet-landscape.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "40 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.tablet-landscape.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "42/50/26",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.tablet-landscape.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/rda-pickup.tablet-landscape.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.tablet-landscape.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.tablet-landscape.dark: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.tablet-landscape.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "37 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.tablet-landscape.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "33/27/50",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA · pickup · tablet-landscape: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 240, dark 39",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA · pickup · tablet-portrait: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.tablet-portrait.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/rda-pickup.tablet-portrait.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.tablet-portrait.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.tablet-portrait.light: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.tablet-portrait.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "60 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.tablet-portrait.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "50/60/31",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.tablet-portrait.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/rda-pickup.tablet-portrait.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.tablet-portrait.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.tablet-portrait.dark: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.tablet-portrait.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "57 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.tablet-portrait.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "38/32/58",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA · pickup · tablet-portrait: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 235, dark 47",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA · pickup · phone: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.phone.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/rda-pickup.phone.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.phone.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.phone.light: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.phone.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "55 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.phone.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "56/63/42",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.phone.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/rda-pickup.phone.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.phone.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.phone.dark: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.phone.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "52 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-pickup.phone.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "45/39/61",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA · pickup · phone: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 230, dark 50",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA · code: its words are the scenario's",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA · code: a title, a caption and a description that doesn't name a device (the website adds it)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA · code: a picture for every device the scenario runs on",
+            "ok": true,
+            "detail": "tablet-landscape,tablet-portrait,phone",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA · code · tablet-landscape: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.tablet-landscape.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/rda-code.tablet-landscape.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.tablet-landscape.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.tablet-landscape.light: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.tablet-landscape.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "38 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.tablet-landscape.light: has real content on it (not a blank screen)",
             "ok": true,
             "detail": "45/47/43",
             "kind": "expect"
           },
           {
-            "label": "rda-code.webp: has a title, a caption and a description for screen readers",
+            "label": "RDA-code.tablet-landscape.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/rda-code.tablet-landscape.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.tablet-landscape.dark: is a real WebP file",
             "ok": true,
             "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.tablet-landscape.dark: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.tablet-landscape.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "33 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.tablet-landscape.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "26/21/39",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA · code · tablet-landscape: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 146, dark 20",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA · code · tablet-portrait: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.tablet-portrait.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/rda-code.tablet-portrait.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.tablet-portrait.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.tablet-portrait.light: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.tablet-portrait.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "52 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.tablet-portrait.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "49/52/45",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.tablet-portrait.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/rda-code.tablet-portrait.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.tablet-portrait.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.tablet-portrait.dark: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.tablet-portrait.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "43 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.tablet-portrait.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "26/21/39",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA · code · tablet-portrait: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 143, dark 22",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA · code · phone: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.phone.light: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/rda-code.phone.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.phone.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.phone.light: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.phone.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "46 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.phone.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "66/69/62",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.phone.dark: has the expected path",
+            "ok": true,
+            "detail": "/app-screens/rda-code.phone.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.phone.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.phone.dark: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.phone.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "39 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA-code.phone.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "36/31/52",
+            "kind": "expect"
+          },
+          {
+            "label": "RDA · code · phone: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 169, dark 32",
             "kind": "expect"
           },
           {
@@ -42949,24 +45691,6 @@
             "kind": "expect"
           },
           {
-            "label": "OMA: the scenarios and the list agree on which screens, in which order",
-            "ok": true,
-            "detail": "tables,take-order,orders",
-            "kind": "expect"
-          },
-          {
-            "label": "KDA: the scenarios and the list agree on which screens, in which order",
-            "ok": true,
-            "detail": "board,prep,dishes,today",
-            "kind": "expect"
-          },
-          {
-            "label": "RDA: the scenarios and the list agree on which screens, in which order",
-            "ok": true,
-            "detail": "deliveries,pickup,code",
-            "kind": "expect"
-          },
-          {
             "label": "the restaurant in the pictures is fictional (Saffron Table), not a real customer",
             "ok": true,
             "detail": "",
@@ -42977,507 +45701,27 @@
             "ok": true,
             "detail": "",
             "kind": "expect"
-          }
-        ]
-      },
-      {
-        "n": 3,
-        "title": "The gallery on each app's page",
-        "checks": [
+          },
           {
-            "label": "/apps/oma: has the 'See it' section",
+            "label": "every device and look starts from a freshly installed app (nothing an earlier picture left behind can show)",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "/apps/oma: it is headed 'OMA on a tablet'",
+            "label": "dark mode is the phone's own dark mode (cmd uimode night), not a filter",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "/apps/oma: it sits between the top of the page and the install steps",
+            "label": "the phone is a Galaxy S-Ultra-sized screen (1440 × 3120, 19.5 : 9)",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "/apps/oma: one tab per screenshot, named as listed",
-            "ok": true,
-            "detail": "Every table at a glance | Take the order at the table | Every order in one list",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/oma: the first picture is showing, and only that one",
-            "ok": true,
-            "detail": "[true,false,false]",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/oma: the first picture loaded at full size",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/oma: the picture has a description and its size (so the page doesn't jump)",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/oma: the picture sits in a rounded tablet frame",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/oma: the bezel is an even 22 px all round",
-            "ok": true,
-            "detail": "[22,22,22]",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/oma: the body and the glass have rounded corners, the glass less than the body",
-            "ok": true,
-            "detail": "42 / 18",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/oma: the picture sits inside the glass, one bezel in from the edge",
-            "ok": true,
-            "detail": "22 vs 22",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/oma: a front camera in the middle of the top bezel",
-            "ok": true,
-            "detail": "x off 0.0, y 11.0, 7.9 px",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/oma: power and volume buttons stand on the top edge",
-            "ok": true,
-            "detail": "[{\"above\":true,\"touches\":true,\"inside\":true},{\"above\":true,\"touches\":true,\"inside\":true}]",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/oma: the glass has a faint sheen that never blocks a tap or click",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/oma: the body is a metal-rimmed gradient with a soft shadow",
-            "ok": true,
-            "detail": "6 shadow layers",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/oma: the bezel really is dark on the page",
-            "ok": true,
-            "detail": "32/33/37",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/oma: the caption under it is the first screenshot's",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/oma: clicking the second tab shows the second picture only",
-            "ok": true,
-            "detail": "[false,true,false]",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/oma: the chosen tab is lit and the others are not",
-            "ok": true,
-            "detail": "rgb(255, 255, 255) · color(srgb 0.211765 0.256941 0.604235) · rgb(255, 255, 255)",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/oma: …in the app's own colour",
-            "ok": true,
-            "detail": "color(srgb 0.211765 0.256941 0.604235) vs color(srgb 0.211765 0.256941 0.604235)",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/oma: the second picture loaded too",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/oma: the arrow key moves to the next picture",
-            "ok": true,
-            "detail": "[false,false,true]",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/oma: …and back",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/oma: the tab you are on with the keyboard shows a focus ring",
-            "ok": true,
-            "detail": "solid",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/kda: has the 'See it' section",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/kda: it is headed 'KDA on a tablet'",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/kda: it sits between the top of the page and the install steps",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/kda: one tab per screenshot, named as listed",
-            "ok": true,
-            "detail": "The kitchen board | Prep list | Sold out in one tap | Today at a glance",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/kda: the first picture is showing, and only that one",
-            "ok": true,
-            "detail": "[true,false,false,false]",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/kda: the first picture loaded at full size",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/kda: the picture has a description and its size (so the page doesn't jump)",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/kda: the picture sits in a rounded tablet frame",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/kda: the bezel is an even 22 px all round",
-            "ok": true,
-            "detail": "[22,22,22]",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/kda: the body and the glass have rounded corners, the glass less than the body",
-            "ok": true,
-            "detail": "42 / 18",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/kda: the picture sits inside the glass, one bezel in from the edge",
-            "ok": true,
-            "detail": "22 vs 22",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/kda: a front camera in the middle of the top bezel",
-            "ok": true,
-            "detail": "x off 0.0, y 10.9, 7.9 px",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/kda: power and volume buttons stand on the top edge",
-            "ok": true,
-            "detail": "[{\"above\":true,\"touches\":true,\"inside\":true},{\"above\":true,\"touches\":true,\"inside\":true}]",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/kda: the glass has a faint sheen that never blocks a tap or click",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/kda: the body is a metal-rimmed gradient with a soft shadow",
-            "ok": true,
-            "detail": "6 shadow layers",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/kda: the bezel really is dark on the page",
-            "ok": true,
-            "detail": "32/33/37",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/kda: the caption under it is the first screenshot's",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/kda: clicking the second tab shows the second picture only",
-            "ok": true,
-            "detail": "[false,true,false,false]",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/kda: the chosen tab is lit and the others are not",
-            "ok": true,
-            "detail": "rgb(255, 255, 255) · color(srgb 0.0508235 0.465882 0.389647) · rgb(255, 255, 255) · rgb(255, 255, 255)",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/kda: …in the app's own colour",
-            "ok": true,
-            "detail": "color(srgb 0.0508235 0.465882 0.389647) vs color(srgb 0.0508235 0.465882 0.389647)",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/kda: the second picture loaded too",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/kda: the arrow key moves to the next picture",
-            "ok": true,
-            "detail": "[false,false,true,false]",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/kda: …and back",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/kda: the tab you are on with the keyboard shows a focus ring",
-            "ok": true,
-            "detail": "solid",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/rda: has the 'See it' section",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/rda: it is headed 'RDA on a tablet'",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/rda: it sits between the top of the page and the install steps",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/rda: one tab per screenshot, named as listed",
-            "ok": true,
-            "detail": "Your deliveries, one by one | Pick up when it is ready | Hand over with the customer's code",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/rda: the first picture is showing, and only that one",
-            "ok": true,
-            "detail": "[true,false,false]",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/rda: the first picture loaded at full size",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/rda: the picture has a description and its size (so the page doesn't jump)",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/rda: the picture sits in a rounded tablet frame",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/rda: the bezel is an even 22 px all round",
-            "ok": true,
-            "detail": "[22,22,22]",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/rda: the body and the glass have rounded corners, the glass less than the body",
-            "ok": true,
-            "detail": "42 / 18",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/rda: the picture sits inside the glass, one bezel in from the edge",
-            "ok": true,
-            "detail": "22 vs 22",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/rda: a front camera in the middle of the top bezel",
-            "ok": true,
-            "detail": "x off 0.0, y 10.9, 7.9 px",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/rda: power and volume buttons stand on the top edge",
-            "ok": true,
-            "detail": "[{\"above\":true,\"touches\":true,\"inside\":true},{\"above\":true,\"touches\":true,\"inside\":true}]",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/rda: the glass has a faint sheen that never blocks a tap or click",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/rda: the body is a metal-rimmed gradient with a soft shadow",
-            "ok": true,
-            "detail": "6 shadow layers",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/rda: the bezel really is dark on the page",
-            "ok": true,
-            "detail": "32/33/37",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/rda: the caption under it is the first screenshot's",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/rda: clicking the second tab shows the second picture only",
-            "ok": true,
-            "detail": "[false,true,false]",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/rda: the chosen tab is lit and the others are not",
-            "ok": true,
-            "detail": "rgb(255, 255, 255) · color(srgb 0.392471 0.259765 0.694588) · rgb(255, 255, 255)",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/rda: …in the app's own colour",
-            "ok": true,
-            "detail": "color(srgb 0.392471 0.259765 0.694588) vs color(srgb 0.392471 0.259765 0.694588)",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/rda: the second picture loaded too",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/rda: the arrow key moves to the next picture",
-            "ok": true,
-            "detail": "[false,false,true]",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/rda: …and back",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "/apps/rda: the tab you are on with the keyboard shows a focus ring",
-            "ok": true,
-            "detail": "solid",
-            "kind": "expect"
-          }
-        ]
-      },
-      {
-        "n": 4,
-        "title": "Works without script, on a phone, in the dark, and with reduced motion",
-        "checks": [
-          {
-            "label": "with JavaScript switched off the tabs still switch the picture",
-            "ok": true,
-            "detail": "[false,false,true]",
-            "kind": "expect"
-          },
-          {
-            "label": "oma at 390 px: nothing sticks out sideways, the picture fits (348px), the tabs fit",
-            "ok": true,
-            "detail": "{\"over\":0,\"frame\":348,\"tabsRight\":296}",
-            "kind": "expect"
-          },
-          {
-            "label": "kda at 390 px: nothing sticks out sideways, the picture fits (346px), the tabs fit",
-            "ok": true,
-            "detail": "{\"over\":0,\"frame\":346,\"tabsRight\":346}",
-            "kind": "expect"
-          },
-          {
-            "label": "rda at 390 px: nothing sticks out sideways, the picture fits (347px), the tabs fit",
-            "ok": true,
-            "detail": "{\"over\":0,\"frame\":347,\"tabsRight\":327}",
-            "kind": "expect"
-          },
-          {
-            "label": "in dark mode the heading and the tab labels are light on the dark page",
-            "ok": true,
-            "detail": "{\"tab\":\"rgb(217, 211, 203)\",\"tabBg\":\"rgb(27, 25, 23)\",\"h2\":\"rgb(243, 239, 233)\",\"bg\":\"rgb(18, 17, 15)\"}",
-            "kind": "expect"
-          },
-          {
-            "label": "in dark mode the tablet's bezel is still a dark frame, visible against the dark page",
-            "ok": true,
-            "detail": "43/44/49",
-            "kind": "expect"
-          },
-          {
-            "label": "with reduced motion the picture does not slide in",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "every picture on the pages was served (no 404)",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "the apps index still shows its three cards, without a gallery",
-            "ok": true,
-            "detail": "",
-            "kind": "expect"
-          },
-          {
-            "label": "no errors in the browser",
+            "label": "a tablet's picture has the status band and the taskbar cropped off",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -45137,8 +47381,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T08:54:42.227Z",
-    "durationMs": 2070,
+    "at": "2026-11-28T10:09:27.898Z",
+    "durationMs": 1817,
     "steps": [
       {
         "n": 1,
@@ -46755,12 +48999,12 @@
     "id": "t140-app-management-api",
     "title": "App Management: the platform admin adds an app (a name is enough), edits its words, makes it public or private, uploads its versions and removes it; built-in apps can't be removed; nothing is hard-coded in the console",
     "status": "pass",
-    "pass": 69,
+    "pass": 70,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T08:54:20.747Z",
-    "durationMs": 4124,
+    "at": "2026-11-28T10:09:32.905Z",
+    "durationMs": 4283,
     "steps": [
       {
         "n": 1,
@@ -47163,6 +49407,12 @@
         "title": "Removing an app",
         "checks": [
           {
+            "label": "an app that still has versions can't be removed (nothing is lost by accident)",
+            "ok": true,
+            "detail": "Rasoi Pulse Counter still has 1 version. Delete them first (App Management → its Versions), then remove the app.",
+            "kind": "expect"
+          },
+          {
             "label": "a built-in app can't be removed — it can be made private instead",
             "ok": true,
             "detail": "Rasoi Pulse Business ships with Rasoi Pulse and can't be removed. You can make it private instead.",
@@ -47473,8 +49723,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T08:55:16.988Z",
-    "durationMs": 33840,
+    "at": "2026-11-28T10:09:03.877Z",
+    "durationMs": 34252,
     "steps": [
       {
         "n": 1,
@@ -47752,8 +50002,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T08:46:25.248Z",
-    "durationMs": 7285,
+    "at": "2026-11-28T10:10:11.612Z",
+    "durationMs": 6940,
     "steps": [
       {
         "n": 1,
@@ -47780,7 +50030,7 @@
           {
             "label": "the glow has melted into the page colour well below the hero",
             "ok": true,
-            "detail": "0 away at 255 px below",
+            "detail": "1 away at 255 px below",
             "kind": "expect"
           },
           {
@@ -47816,7 +50066,7 @@
           {
             "label": "the glow has melted into the page colour well below the hero",
             "ok": true,
-            "detail": "0 away at 255 px below",
+            "detail": "1 away at 255 px below",
             "kind": "expect"
           },
           {
@@ -47977,8 +50227,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T08:47:05.170Z",
-    "durationMs": 10490,
+    "at": "2026-11-28T10:10:22.548Z",
+    "durationMs": 10196,
     "steps": [
       {
         "n": 1,
@@ -48178,8 +50428,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T08:51:21.846Z",
-    "durationMs": 4057,
+    "at": "2026-11-28T10:09:38.048Z",
+    "durationMs": 4411,
     "steps": [
       {
         "n": 0,
@@ -48409,8 +50659,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T08:55:23.871Z",
-    "durationMs": 5925,
+    "at": "2026-11-28T10:09:44.794Z",
+    "durationMs": 6005,
     "steps": [
       {
         "n": 1,
@@ -48640,6 +50890,1497 @@
           },
           {
             "label": "the Refresh interval card is back to 'the backup'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser console",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t146-app-screenshots-api": {
+    "id": "t146-app-screenshots-api",
+    "title": "App Management → Screenshots (API): the platform admin adds, edits, hides, reorders and removes an app's screenshots and puts a picture in each slot (3 devices × light / dark); the website's data carries only what should be shown",
+    "status": "pass",
+    "pass": 73,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-28T10:08:14.629Z",
+    "durationMs": 5073,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The pictures that ship with the website are copied in once",
+        "checks": [
+          {
+            "label": "OMA starts with the two screens that ship with the website, in order",
+            "ok": true,
+            "detail": "Every table at a glance|Every order in one list",
+            "kind": "expect"
+          },
+          {
+            "label": "…marked as coming with the website, and shown",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the console gets the picture's full address (it is on another site)",
+            "ok": true,
+            "detail": "https://site.example.test/app-screens/oma-tables.tablet-landscape.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "…and knows these are not uploaded files",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "reading it again does not copy them again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the public page data has them, with the picture's path on the website",
+            "ok": true,
+            "detail": "/app-screens/oma-tables.tablet-landscape.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "…and lists only the devices that have a picture",
+            "ok": true,
+            "detail": "[\"tablet-landscape\",\"phone\"]",
+            "kind": "expect"
+          },
+          {
+            "label": "…with the usual heading and intro, and the wide tablet first",
+            "ok": true,
+            "detail": "OMA on every screen / tablet-landscape",
+            "kind": "expect"
+          },
+          {
+            "label": "…and no internal field or storage key",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an app with no screenshots has no section (null)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(the app's own words are still in the same answer)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Only the platform admin manages them",
+        "checks": [
+          {
+            "label": "a store owner cannot read the list",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a store owner cannot add one",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a waiter cannot read the list",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a waiter cannot add one",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "nobody signed in cannot read the list",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "nobody signed in cannot add one",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a store owner cannot upload a picture",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a waiter cannot remove one",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and nothing changed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "The section: switch, words, first device",
+        "checks": [
+          {
+            "label": "heading, intro and first device are saved",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the website's data follows at once",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an empty heading means the usual one",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a heading over 80 characters: 400",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an unknown device: 400",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "nothing to change: 400",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an app that doesn't exist: 404",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a first device with no picture falls back to one that has",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "switched off: no section on the website, the screenshots are kept",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "switched on again: they are back",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Add a screenshot and put pictures in its slots",
+        "checks": [
+          {
+            "label": "a screenshot needs a title (2 characters at least): 400",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a title over 60 characters: 400",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "added: shown, not built in, no pictures yet",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a screenshot with no picture is not shown on the website",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a picture goes into a slot",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "…its real size is kept in shape (16:10), after the usual resizing",
+            "ok": true,
+            "detail": "1600×1000",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the file is in the platform's storage",
+            "ok": true,
+            "detail": "1 file",
+            "kind": "expect"
+          },
+          {
+            "label": "the website now shows it, last, with the file's address",
+            "ok": true,
+            "detail": "http://localhost:3119/uploads/platform/website/app-screens/52e630e9-ddfb-4b55-b68f-66f7f76b2920.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "pictures go into other slots too (dark, a phone, a tall tablet)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…four files now",
+            "ok": true,
+            "detail": "4",
+            "kind": "expect"
+          },
+          {
+            "label": "all three devices are offered now",
+            "ok": true,
+            "detail": "[\"tablet-landscape\",\"tablet-portrait\",\"phone\"]",
+            "kind": "expect"
+          },
+          {
+            "label": "…and a slot has its light and dark pictures",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "putting another picture in the same slot replaces it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the old file is removed from storage (still four files)",
+            "ok": true,
+            "detail": "4",
+            "kind": "expect"
+          },
+          {
+            "label": "something that is not a picture is refused with a reason (415)",
+            "ok": true,
+            "detail": "That file isn't an image we can read. Try JPEG, PNG, WebP, AVIF or HEIC.",
+            "kind": "expect"
+          },
+          {
+            "label": "…and nothing was stored",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an unknown device or look: 400",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a screenshot that doesn't exist: 404",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an upload with nothing in it: 400",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Edit the words, hide, reorder",
+        "checks": [
+          {
+            "label": "the words can be changed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the website's data follows",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an empty title, or nothing to change: 400",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "hidden: not on the website, still in the console",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the order can be changed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the website follows it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a screenshot left out of the list keeps its place after the ones named",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "something that is not a list of ids: 400",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "repeated and unknown ids are ignored",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Remove a picture, remove a screenshot",
+        "checks": [
+          {
+            "label": "a picture can be removed from its slot",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…its file is gone from storage",
+            "ok": true,
+            "detail": "3",
+            "kind": "expect"
+          },
+          {
+            "label": "removing an empty slot: 404",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a device with no picture left is no longer offered",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "removing a screenshot removes it and every file it had",
+            "ok": true,
+            "detail": "0 files left",
+            "kind": "expect"
+          },
+          {
+            "label": "removing it again: 404",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a screenshot that came with the website can be removed too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and it is not copied in again when the list is read again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "Limits",
+        "checks": [
+          {
+            "label": "an app can have 12 screenshots: the 13th is refused with a reason",
+            "ok": true,
+            "detail": "An app can have 12 screenshots at most. Remove one first.",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "An app added in the console, and removing it",
+        "checks": [
+          {
+            "label": "a new app starts with no screenshots and no section",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…it can have its own, with the heading made from its code",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(one file stored for it)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the app is removed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and its screenshots and files go with it",
+            "ok": true,
+            "detail": "0 files left",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 9,
+        "title": "Nothing reaches the website but what should",
+        "checks": [
+          {
+            "label": "the list of apps carries no screenshot data (it is only on an app's own page data)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t147-app-screens-gallery-ui": {
+    "id": "t147-app-screens-gallery-ui",
+    "title": "Website → an app's page → 'See it': the app's screens in a tablet (wide or tall) or phone frame; light, dark or Auto (follows the browser live); flip with buttons, keys or a swipe; works on a phone",
+    "status": "pass",
+    "pass": 82,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-28T10:08:01.456Z",
+    "durationMs": 20664,
+    "steps": [
+      {
+        "n": 0,
+        "title": "Setup",
+        "checks": [
+          {
+            "label": "(a test app is added in the console)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(picture 1 tablet-landscape light stored)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(picture 1 tablet-landscape dark stored)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(picture 1 tablet-portrait light stored)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(picture 1 tablet-portrait dark stored)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(picture 1 phone light stored)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(picture 1 phone dark stored)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(picture 2 tablet-landscape light stored)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(picture 2 tablet-landscape dark stored)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(picture 2 tablet-portrait light stored)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(picture 2 tablet-portrait dark stored)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(picture 2 phone light stored)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(picture 2 phone dark stored)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(picture 3 tablet-landscape light stored)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(picture 3 tablet-landscape dark stored)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(picture 3 phone light stored)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(picture 4 tablet-landscape light stored)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(picture 4 tablet-landscape dark stored)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(picture 4 tablet-portrait light stored)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(picture 4 tablet-portrait dark stored)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(picture 4 phone light stored)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(picture 4 phone dark stored)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 1,
+        "title": "The section",
+        "checks": [
+          {
+            "label": "the heading is 'TUR on every screen', its last word in the app's colour",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…with the usual line under it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the device switch offers the three devices (each has a picture somewhere)",
+            "ok": true,
+            "detail": "tablet-landscape,tablet-portrait,phone",
+            "kind": "expect"
+          },
+          {
+            "label": "the look switch has Auto, Light and Dark",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it opens on the wide tablet, on Auto",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the list has the three screens that are shown, in order (not the hidden one, not the one with no picture)",
+            "ok": true,
+            "detail": "Tables at a glance | Orders in one list | Menu with dish photos",
+            "kind": "expect"
+          },
+          {
+            "label": "the counter reads 1 / 3",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the chosen screen shows its caption",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "each picture has a description that says the app, the device, the look and what is on the screen",
+            "ok": true,
+            "detail": "TUR on a tablet held sideways, light mode: The tables grouped by area. | TUR on a tablet held sideways, dark mode: The tables grouped by area.",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "The frame",
+        "checks": [
+          {
+            "label": "the wide tablet's screen is 16:10",
+            "ok": true,
+            "detail": "1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "…with the camera in the bezel, two keys on the edge and an even bezel",
+            "ok": true,
+            "detail": "{\"camIn\":false,\"keys\":2,\"bezel\":14}",
+            "kind": "expect"
+          },
+          {
+            "label": "the tall tablet's screen is 5:8, and the device stands upright",
+            "ok": true,
+            "detail": "0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "…and only the two screens that have a picture for it are listed (1 / 2)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the phone's screen is 19.5:9 and its camera is a punch-hole inside the screen",
+            "ok": true,
+            "detail": "0.462 dev-cam dev-cam-hole",
+            "kind": "expect"
+          },
+          {
+            "label": "…a narrow, tall device",
+            "ok": true,
+            "detail": "290×616",
+            "kind": "expect"
+          },
+          {
+            "label": "…with all three screens (the Menu one has a light picture for the phone)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Auto follows the browser, live",
+        "checks": [
+          {
+            "label": "the browser is light: the light picture is on the screen",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the hint says it follows the browser (light)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the browser goes dark (nothing reloaded): the dark picture fades in",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the hint follows too (dark)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "back to light: the light picture again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Choosing a look by hand",
+        "checks": [
+          {
+            "label": "Dark shows the dark picture although the browser is light",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and says so",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Light shows the light picture although the browser is dark",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Auto goes back to following the browser (dark)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the chosen look stays when another screen is chosen",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the choice is remembered on this browser",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "after a reload the device (phone) and the look (Light) are the ones chosen last time",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "A look the screen doesn't have",
+        "checks": [
+          {
+            "label": "the Menu screen has only a light phone picture: it is shown even when Dark is chosen",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…while the other screens do go dark",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Flipping through the screens",
+        "checks": [
+          {
+            "label": "Next moves to the second screen",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and its caption opens",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Next from the last screen goes round to the first",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Previous from the first goes round to the last",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the arrow keys move along the list, and the focus goes with them",
+            "ok": true,
+            "detail": "true / shot-tab-1",
+            "kind": "expect"
+          },
+          {
+            "label": "End jumps to the last",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Home jumps to the first",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a swipe to the left on the picture goes to the next screen",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and a swipe to the right goes back",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…but scrolling the page with a finger is not mistaken for a swipe",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the controls are labelled for a screen reader (tabs, a panel tied to its tab, two radio groups)",
+            "ok": true,
+            "detail": "{\"list\":\"Screens of TUR\",\"panel\":\"shots-tour-title-t0\",\"tab0\":\"shots-tour-title-t0\",\"groups\":[\"Device\",\"Light or dark screens\"]}",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "Pictures are fetched when wanted",
+        "checks": [
+          {
+            "label": "at first only the first screen and the next one are on the page (2 of 3)",
+            "ok": true,
+            "detail": "2",
+            "kind": "expect"
+          },
+          {
+            "label": "…the third is added when it is wanted, and only then fetched",
+            "ok": true,
+            "detail": "4 → 6 requests",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "A pointer leans the device (a mouse only)",
+        "checks": [
+          {
+            "label": "the device leans towards a mouse pointer",
+            "ok": true,
+            "detail": "2.80deg",
+            "kind": "expect"
+          },
+          {
+            "label": "…and stands straight again when the pointer leaves",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 9,
+        "title": "A phone-sized screen",
+        "checks": [
+          {
+            "label": "nothing sticks out sideways",
+            "ok": true,
+            "detail": "0px",
+            "kind": "expect"
+          },
+          {
+            "label": "the controls come first, then the device, then the row of screens",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the device fills the width",
+            "ok": true,
+            "detail": "350px",
+            "kind": "expect"
+          },
+          {
+            "label": "the switch buttons are big enough to touch",
+            "ok": true,
+            "detail": "42,42,42,42,42,42",
+            "kind": "expect"
+          },
+          {
+            "label": "the screens are a row you can scroll sideways (when they don't fit)",
+            "ok": true,
+            "detail": "true",
+            "kind": "expect"
+          },
+          {
+            "label": "the chosen screen's caption sits under the device (not inside the chips)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "tapping a chip chooses that screen",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the phone view fits too",
+            "ok": true,
+            "detail": "290px wide, 0px over",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 10,
+        "title": "The first paint needs no script",
+        "checks": [
+          {
+            "label": "with no script the first screen is still drawn",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…in the browser's own look (dark here), chosen by CSS alone",
+            "ok": true,
+            "detail": "[[\"light\",\"0\"],[\"dark\",\"1\"]]",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 11,
+        "title": "Less motion",
+        "checks": [
+          {
+            "label": "with 'reduce motion' the device does not lean, nothing animates in and the switch thumb jumps",
+            "ok": true,
+            "detail": "{\"lean\":\"0deg\",\"anim\":\"none\",\"thumb\":\"0s\"}",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 12,
+        "title": "Switching the section off, and the words",
+        "checks": [
+          {
+            "label": "the heading and the line written in the console show on the page",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the page opens on the device chosen there (phone)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "switched off in the console: the section is not on the page",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser console",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t148-app-screenshots-manager-ui": {
+    "id": "t148-app-screenshots-manager-ui",
+    "title": "App Management → 'Screenshots on the website': add a screenshot, upload a picture for each device and look, get warned about a wrong shape, replace / remove pictures, hide, reorder, edit, remove; set the section's heading, intro and first device",
+    "status": "pass",
+    "pass": 53,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-28T10:12:13.742Z",
+    "durationMs": 6565,
+    "steps": [
+      {
+        "n": 1,
+        "title": "An app with no screenshots",
+        "checks": [
+          {
+            "label": "the card says there are none, and has 'Add a screenshot'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the heading and intro boxes show the usual words as hints",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the first device is the wide tablet, and Save is off until something changes",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the section's switch is there, on",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'View on the website' goes to the app's page, at the screenshots",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Add a screenshot",
+        "checks": [
+          {
+            "label": "'Add it' is off until there is a title",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…a one-letter title is not enough",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the new screenshot is in the list with its words",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…with six empty slots (3 devices × light and dark)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the summary says it has no picture yet, so nothing is shown",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the server has it (shown, not built in)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Put pictures in the slots",
+        "checks": [
+          {
+            "label": "a picture goes into its slot and is shown there",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…with its size, and 'uploaded'",
+            "ok": true,
+            "detail": "Replace 1600 × 1000 · uploaded",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the slot now offers Replace and Remove",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a picture of the right shape has no warning",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the summary counts the pictures and names the devices that will be offered",
+            "ok": true,
+            "detail": "1 screenshot, 3 pictures · shown on the page for tablet · wide, phone",
+            "kind": "expect"
+          },
+          {
+            "label": "the server holds the three pictures in the right slots",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…as stored files with an address",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "A picture of the wrong shape is warned about",
+        "checks": [
+          {
+            "label": "a wide picture in a phone slot says it will look squashed",
+            "ok": true,
+            "detail": "This picture is wide (1600 × 1000) but phone pictures are tall (about 1440 × 3120). It will look squashed in the frame.",
+            "kind": "expect"
+          },
+          {
+            "label": "putting the right shape in its place (Replace) clears the warning",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the picture is the new one (replaced, not added)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Not a picture, and removing a picture",
+        "checks": [
+          {
+            "label": "a file that is not a picture is refused, in words that name the slot",
+            "ok": true,
+            "detail": "Tablet · tall, light: That file isn't an image we can read. Try JPEG, PNG, WebP, AVIF or HEIC.",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the slot stays empty",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Remove empties a slot",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…on the server too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Add another, reorder, hide",
+        "checks": [
+          {
+            "label": "the first can't move up and the last can't move down",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Move down swaps the two",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the server has the new order",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Move up swaps them back",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Hide marks the second one 'Hidden'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the server has it hidden",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Show brings it back",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "Edit the words",
+        "checks": [
+          {
+            "label": "the form opens with the current words",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an empty title can't be saved",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the card shows the new words",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the server has them",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "The section: switch, heading, intro, first device",
+        "checks": [
+          {
+            "label": "Save turns on when something changes",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the server has the heading, the intro and the first device",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "switching the section off is said in the summary",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and saved at once",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "switching it on again takes the words back",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(the heading box takes 80 characters)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an empty heading means the usual one",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 9,
+        "title": "Remove a screenshot",
+        "checks": [
+          {
+            "label": "pressing Remove asks first, by name",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Cancel changes nothing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Remove it deletes the screenshot",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the list shows what is left",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(the API is still fine)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 10,
+        "title": "A phone-sized console",
+        "checks": [
+          {
+            "label": "nothing runs off the screen at 390 px",
+            "ok": true,
+            "detail": "{\"over\":0,\"card\":353}",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 11,
+        "title": "The screenshots that come with the website (an app that has them)",
+        "checks": [
+          {
+            "label": "OMA's screenshots are marked 'Came with the website'",
+            "ok": true,
+            "detail": "5 screenshots",
+            "kind": "expect"
+          },
+          {
+            "label": "…and every picture shows (they come from the website's own files)",
+            "ok": true,
+            "detail": "28 pictures",
+            "kind": "expect"
+          },
+          {
+            "label": "each has light and dark pictures, for the wide tablet, the tall tablet and the phone (where the screen exists there)",
             "ok": true,
             "detail": "",
             "kind": "expect"

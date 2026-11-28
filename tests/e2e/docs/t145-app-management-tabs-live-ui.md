@@ -1,6 +1,6 @@
 # T145 — App Management → the tabs share the whole width with the app's icon and short name; the 'Live connection' card chooses, per app, the live connection first or polling only (polling is the backup either way)
 
-**Area:** platform · **Last result:** ✅ PASSED (36 passed, 0 failed · 2026-11-28 14:25 · headless · 5.9 s)
+**Area:** platform · **Last result:** ✅ PASSED (36 passed, 0 failed · 2026-11-28 15:39 · headless · 6.0 s)
 
 **Run it alone:** `node run.mjs --only t145` (add `--visible` to watch it)
 
@@ -87,6 +87,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-28 15:39 | pass | 36 | 0 | headless | 6.0 s |
+| 2026-11-28 15:31 | pass | 36 | 0 | headless | 9.6 s |
 | 2026-11-28 14:25 | pass | 36 | 0 | headless | 5.9 s |
 | 2026-11-28 14:22 | pass | 36 | 0 | headless | 6.2 s |
 

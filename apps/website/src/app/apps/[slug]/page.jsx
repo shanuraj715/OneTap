@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { APP_CATALOG, formatBytes } from "@rasoipulse/config-schema";
+import { APP_CATALOG, SCREENSHOT_DEVICE_INFO, formatBytes } from "@rasoipulse/config-schema";
 import { Download, ShieldCheck, Smartphone } from "lucide-react";
 import { AppScreens } from "@/components/AppScreens";
 import { AppsBackdrop } from "@/components/AppsBackdrop";
@@ -150,7 +150,7 @@ export default async function AppPage({ params }) {
         </div>
       </section>
 
-      <AppScreens app={app} />
+      <AppScreens app={app} screens={data?.screens ?? null} deviceInfo={SCREENSHOT_DEVICE_INFO} />
 
       <section className="section band" id="install">
         <div className="wrap">

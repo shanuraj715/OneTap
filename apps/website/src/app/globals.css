@@ -941,63 +941,134 @@ p { margin: 0; text-wrap: pretty; }
 }
 
 
-/* ----------------------------------------------------------------- app pages: "See it" (tablet screenshots)
- * One big picture in a tablet frame, a row of tabs under the heading. The tabs are radio buttons and labels, switched by CSS only, so it
- * works without script and with the keyboard (arrow keys move between tabs). The page wears the app's colour (--brand comes from --app). */
+/* ----------------------------------------------------------------- app pages: "See it" (the app's screens in a device frame)
+ * Left: which device and which look (light / dark / auto), then the screens to choose from. Right: the device, leaning a little towards the pointer, the screen
+ * cross-fading. On a phone the controls come first, then the device, then the screens as a row of chips. The page wears the app's colour (--brand comes from .app-themed).
+ * Both looks of a picture are on the page, stacked: Auto shows the one that matches the browser (prefers-color-scheme), so the pictures follow the page with no script. */
 .app-screens { position: relative; isolation: isolate; overflow-x: clip; }
 .app-screens::before { content: ""; position: absolute; z-index: -1; left: 50%; top: 38%; width: min(1100px, 130vw); aspect-ratio: 2; translate: -50% -10%; border-radius: 50%; background: radial-gradient(closest-side, color-mix(in srgb, var(--app, var(--brand)) 22%, transparent), transparent); filter: blur(30px); pointer-events: none; }
 .app-screens .section-head h2 em { font-style: normal; color: var(--brand); }
-.shots { position: relative; display: grid; justify-items: center; gap: 28px; }
-.shots-radio { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
-.shots-tabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
-.shots-tab { cursor: pointer; padding: 10px 18px; border-radius: 999px; border: 1.5px solid var(--line); background: var(--surface); color: var(--ink-2); font-weight: 600; font-size: 15px; line-height: 1.2; transition: background-color 160ms, color 160ms, border-color 160ms, transform 160ms; }
-.shots-tab:hover { border-color: color-mix(in srgb, var(--brand) 50%, var(--line)); color: var(--ink); }
-.shots-stage { width: min(100%, 1060px); }
-.shots-panel { display: none; margin: 0; }
-/* the Android tablet: a metal rim, an even dark bezel, a front camera, the power and volume buttons on the top edge (it is held sideways), rounded
- * glass with a soft reflection. Sizes follow --bezel, so the whole device scales with the page. The picture is the bare screen. */
-.tablet { --bezel: clamp(9px, 1.9vw, 22px); position: relative; padding: var(--bezel); border-radius: calc(var(--bezel) * 1.9); background: linear-gradient(158deg, #3b3c42 0%, #1a1b1e 34%, #0b0b0d 100%);
-  box-shadow: 0 0 0 1.5px #5b5c64, 0 0 0 calc(1.5px + 1.5px) #0a0a0c, 0 52px 90px -44px color-mix(in srgb, var(--app, var(--brand)) 85%, #000), 0 26px 44px -26px rgb(0 0 0 / 0.55), inset 0 0 0 1px rgb(255 255 255 / 0.09), inset 0 calc(var(--bezel) * 0.12) 0 rgb(255 255 255 / 0.05); }
-.tablet-screen { position: relative; overflow: hidden; border-radius: calc(var(--bezel) * 0.8); background: #000; box-shadow: 0 0 0 calc(var(--bezel) * 0.1) #020203; }
-.tablet-screen img { display: block; width: 100%; height: auto; }
-/* the glass: a faint diagonal sheen across the screen (it never takes a click) */
-.tablet-screen::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(116deg, rgb(255 255 255 / 0.13) 0%, rgb(255 255 255 / 0) 30%, rgb(255 255 255 / 0) 68%, rgb(255 255 255 / 0.05) 100%); }
-/* the front camera, in the middle of the top bezel, with a little sensor beside it */
-.tablet-cam { position: absolute; left: 50%; top: calc(var(--bezel) * 0.5); width: calc(var(--bezel) * 0.36); aspect-ratio: 1; translate: -50% -50%; border-radius: 50%; background: radial-gradient(circle at 34% 32%, #4a5b86 0%, #12141c 46%, #050507 100%); box-shadow: 0 0 0 calc(var(--bezel) * 0.07) #1b1c21, 0 0 0 calc(var(--bezel) * 0.1) #08080a; }
-.tablet-cam::after { content: ""; position: absolute; left: calc(var(--bezel) * 0.78); top: 50%; width: calc(var(--bezel) * 0.14); aspect-ratio: 1; translate: 0 -50%; border-radius: 50%; background: #1d1e24; }
-/* power and volume keys stand a little proud of the top edge */
-.tablet-btn { position: absolute; top: -3px; height: 3px; border-radius: 2px 2px 0 0; background: linear-gradient(180deg, #6a6b73, #34353b); box-shadow: 0 -1px 0 rgb(255 255 255 / 0.08); }
-.tablet-btn-power { right: 14%; width: 5.5%; }
-.tablet-btn-vol { right: 23%; width: 9%; }
-.shots-panel figcaption { display: grid; gap: 4px; justify-items: center; text-align: center; max-width: 640px; margin: 22px auto 0; }
-.shots-panel figcaption b { font-family: var(--font-display), system-ui, sans-serif; font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
-.shots-panel figcaption span { color: var(--muted); font-size: 16px; }
 
-/* which tab is chosen: the Nth radio shows the Nth picture and lights the Nth tab (up to 6 pictures) */
-.shots-radio:nth-of-type(1):checked ~ .shots-stage .shots-panel:nth-child(1),
-.shots-radio:nth-of-type(2):checked ~ .shots-stage .shots-panel:nth-child(2),
-.shots-radio:nth-of-type(3):checked ~ .shots-stage .shots-panel:nth-child(3),
-.shots-radio:nth-of-type(4):checked ~ .shots-stage .shots-panel:nth-child(4),
-.shots-radio:nth-of-type(5):checked ~ .shots-stage .shots-panel:nth-child(5),
-.shots-radio:nth-of-type(6):checked ~ .shots-stage .shots-panel:nth-child(6) { display: block; }
-.shots-radio:nth-of-type(1):checked ~ .shots-tabs .shots-tab:nth-child(1),
-.shots-radio:nth-of-type(2):checked ~ .shots-tabs .shots-tab:nth-child(2),
-.shots-radio:nth-of-type(3):checked ~ .shots-tabs .shots-tab:nth-child(3),
-.shots-radio:nth-of-type(4):checked ~ .shots-tabs .shots-tab:nth-child(4),
-.shots-radio:nth-of-type(5):checked ~ .shots-tabs .shots-tab:nth-child(5),
-.shots-radio:nth-of-type(6):checked ~ .shots-tabs .shots-tab:nth-child(6) { background: var(--brand); border-color: var(--brand); color: var(--brand-ink); }
-.shots-radio:nth-of-type(1):focus-visible ~ .shots-tabs .shots-tab:nth-child(1),
-.shots-radio:nth-of-type(2):focus-visible ~ .shots-tabs .shots-tab:nth-child(2),
-.shots-radio:nth-of-type(3):focus-visible ~ .shots-tabs .shots-tab:nth-child(3),
-.shots-radio:nth-of-type(4):focus-visible ~ .shots-tabs .shots-tab:nth-child(4),
-.shots-radio:nth-of-type(5):focus-visible ~ .shots-tabs .shots-tab:nth-child(5),
-.shots-radio:nth-of-type(6):focus-visible ~ .shots-tabs .shots-tab:nth-child(6) { outline: 2px solid var(--brand); outline-offset: 3px; }
-@media (prefers-reduced-motion: no-preference) {
-  .shots-panel { animation: shots-in 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) backwards; }
-  @keyframes shots-in { from { opacity: 0; translate: 0 14px; scale: 0.985; } }
-  .shots-tab:active { transform: scale(0.96); }
+.shots-ui { position: relative; display: grid; gap: 26px 56px; grid-template-columns: minmax(0, 1fr); grid-template-areas: "controls" "stage" "list"; }
+.shots-side { display: contents; }
+@media (min-width: 960px) {
+  .shots-ui { grid-template-columns: minmax(300px, 380px) minmax(0, 1fr); grid-template-areas: "side stage"; align-items: center; }
+  .shots-side { grid-area: side; display: grid; gap: 26px; align-content: center; min-width: 0; }
+  .shots-side > .shots-controls, .shots-side > .shots-list { grid-area: auto; }
 }
-@media (max-width: 560px) {
-  .shots-tabs { gap: 6px; }
-  .shots-tab { padding: 8px 14px; font-size: 14px; }
+.shots-controls { grid-area: controls; display: grid; gap: 12px; justify-items: stretch; min-width: 0; }
+.shots-list { grid-area: list; min-width: 0; }
+.shots-stage { grid-area: stage; }
+
+/* the two switches: a pill with a thumb that slides to the chosen button */
+.seg { --pad: 4px; position: relative; isolation: isolate; display: grid; grid-template-columns: repeat(var(--n, 3), minmax(0, 1fr)); padding: var(--pad); border-radius: 999px; background: color-mix(in srgb, var(--ink) 6%, var(--surface)); border: 1px solid var(--line); }
+.seg-thumb { position: absolute; z-index: -1; top: var(--pad); bottom: var(--pad); left: var(--pad); width: calc((100% - 2 * var(--pad)) / var(--n, 3)); border-radius: 999px; background: var(--brand); box-shadow: 0 8px 18px -8px color-mix(in srgb, var(--brand) 75%, transparent); transform: translateX(calc(var(--i, 0) * 100%)); transition: transform 0.4s cubic-bezier(0.3, 1.25, 0.5, 1); }
+.seg-btn { appearance: none; border: 0; background: transparent; color: var(--ink-2); font: inherit; font-size: 14px; font-weight: 650; display: flex; align-items: center; justify-content: center; gap: 8px; min-width: 0; padding: 9px 8px; border-radius: 999px; cursor: pointer; white-space: nowrap; transition: color 0.25s; -webkit-tap-highlight-color: transparent; }
+.seg-btn > span { display: grid; text-align: left; line-height: 1.15; }
+.seg-btn small { font-size: 11px; font-weight: 500; opacity: 0.8; }
+.seg-btn[aria-checked="true"] { color: var(--brand-ink); }
+.seg-btn:not([aria-checked="true"]):hover { color: var(--brand); }
+.seg-btn:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+.seg-btn svg { flex: none; }
+.shots-hint { margin: 0; font-size: 13px; line-height: 1.45; color: var(--muted); min-height: 2.9em; }
+
+/* the screens: a line with a dot for each (the chosen one opens its caption); a scrolling row of chips on a phone */
+.shots-list { position: relative; display: grid; gap: 2px; }
+.shots-list::before { content: ""; position: absolute; left: 11px; top: 22px; bottom: 22px; width: 2px; border-radius: 2px; background: var(--line); }
+.shots-tab { appearance: none; position: relative; display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 12px; text-align: left; font: inherit; color: inherit; background: transparent; border: 0; border-radius: 14px; padding: 11px 12px 11px 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.shots-tab-dot { position: relative; z-index: 1; width: 14px; height: 14px; margin: 3px 5px; border-radius: 50%; background: var(--surface); border: 2px solid var(--line); transition: background 0.3s, border-color 0.3s, box-shadow 0.3s, transform 0.3s; }
+.shots-tab[aria-selected="true"] .shots-tab-dot { background: var(--brand); border-color: var(--brand); box-shadow: 0 0 0 5px color-mix(in srgb, var(--brand) 20%, transparent); transform: scale(1.1); }
+.shots-tab:not([aria-selected="true"]):hover .shots-tab-dot { border-color: var(--brand); }
+.shots-tab-text { display: grid; min-width: 0; }
+.shots-tab-text b { font-family: var(--font-display), system-ui, sans-serif; font-size: 17px; font-weight: 700; letter-spacing: -0.01em; transition: color 0.25s; }
+.shots-tab:not([aria-selected="true"]) .shots-tab-text b { color: var(--ink-2); }
+.shots-tab:not([aria-selected="true"]):hover .shots-tab-text b { color: var(--brand); }
+.shots-tab-text > span { display: block; color: var(--muted); font-size: 15px; line-height: 1.5; max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.45s ease, opacity 0.3s ease, margin 0.3s ease; }
+.shots-tab[aria-selected="true"] .shots-tab-text > span { max-height: 12em; opacity: 1; margin-top: 4px; }
+.shots-tab:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+/* the stage: a glow in the app's colour behind the device */
+.shots-stage { position: relative; isolation: isolate; display: grid; justify-items: center; gap: 18px; perspective: 1600px; touch-action: pan-y; --rx: 0deg; --ry: 0deg; --gx: 50%; }
+.shots-stage::before { content: ""; position: absolute; z-index: -1; inset: -6% -10% 6%; border-radius: 50%; background: radial-gradient(closest-side, color-mix(in srgb, var(--app, var(--brand)) 28%, transparent), transparent); filter: blur(26px); pointer-events: none; }
+
+/* the device. Every size is a share of its width (cqw = 1% of .dev-wrap), so it scales with the page. */
+.dev-wrap { container-type: inline-size; position: relative; width: min(100%, var(--max, 760px)); transform: rotateX(var(--rx)) rotateY(var(--ry)); transform-style: preserve-3d; transition: transform 0.3s ease-out; }
+.dev-wrap-tablet-landscape { --max: 760px; }
+.dev-wrap-tablet-portrait { --max: 440px; }
+.dev-wrap-phone { --max: 290px; }
+/* a titanium-grey body with a bright rim, an even dark bezel and the glass inside */
+.dev { --b: 2.1cqw; --rad: 4.6cqw; position: relative; padding: var(--b); border-radius: var(--rad);
+  background: linear-gradient(145deg, #4a4c55 0%, #17181d 38%, #2b2d35 72%, #15161a 100%);
+  box-shadow: 0 0 0 0.3cqw #7c7e88, 0 0 0 0.6cqw #0a0a0d, inset 0 0 0 0.25cqw rgb(255 255 255 / 0.14), 0 5cqw 8cqw -3cqw color-mix(in srgb, var(--app, var(--brand)) 80%, #000), 0 2.2cqw 4cqw -1.5cqw rgb(0 0 0 / 0.5); }
+.dev-tablet.dev { --b: 2.1cqw; --rad: 4.6cqw; }
+.dev-wrap-tablet-portrait .dev { --b: 3cqw; --rad: 7.4cqw; }
+.dev-wrap-phone .dev { --b: 1.9cqw; --rad: 11.5cqw; box-shadow: 0 0 0 0.45cqw #8a8c96, 0 0 0 0.9cqw #0a0a0d, inset 0 0 0 0.3cqw rgb(255 255 255 / 0.16), 0 8cqw 11cqw -4cqw color-mix(in srgb, var(--app, var(--brand)) 80%, #000), 0 3cqw 5cqw -2cqw rgb(0 0 0 / 0.5); }
+.dev-screen { position: relative; isolation: isolate; overflow: hidden; aspect-ratio: var(--ratio, 16 / 10); border-radius: calc(var(--rad) - var(--b)); background: #000; }
+.dev-layer { position: absolute; inset: 0; opacity: 0; transition: opacity 0.55s ease; }
+.dev-layer[data-on="true"] { opacity: 1; z-index: 1; }
+.dev-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; opacity: 0; transition: opacity 0.5s ease; user-select: none; -webkit-user-drag: none; }
+/* which look shows: the chosen one — or, on Auto, light unless the browser is dark (a picture that has only one look shows it always) */
+.dev-img[data-only="true"] { opacity: 1; }
+.shots-ui[data-look="light"] .dev-img[data-look="light"],
+.shots-ui[data-look="dark"] .dev-img[data-look="dark"],
+.shots-ui[data-look="auto"] .dev-img[data-look="light"] { opacity: 1; }
+@media (prefers-color-scheme: dark) {
+  .shots-ui[data-look="auto"] .dev-img[data-look="light"]:not([data-only="true"]) { opacity: 0; }
+  .shots-ui[data-look="auto"] .dev-img[data-look="dark"] { opacity: 1; }
+}
+/* the glass: a faint sheen across the screen that follows the pointer (it never takes a click) */
+.dev-glare { position: absolute; inset: 0; z-index: 3; pointer-events: none; background: linear-gradient(116deg, rgb(255 255 255 / 0.12) 0%, rgb(255 255 255 / 0.03) 30%, transparent 46%), radial-gradient(60% 35% at var(--gx, 50%) 0%, rgb(255 255 255 / 0.1), transparent 70%); }
+/* front cameras: a tablet's sits in the top bezel, a phone's is a punch-hole in the top of the screen */
+.dev-cam { position: absolute; border-radius: 50%; background: radial-gradient(circle at 35% 32%, #2c3b5c, #07080d 62%); box-shadow: 0 0 0 1px #000; }
+.dev-cam-bezel { left: 50%; top: calc(var(--b) / 2); width: calc(var(--b) * 0.34); aspect-ratio: 1; translate: -50% -50%; }
+.dev-cam-hole { z-index: 4; left: 50%; top: 2.9%; width: 3.9cqw; aspect-ratio: 1; translate: -50% -50%; box-shadow: 0 0 0 0.35cqw #000, inset 0 0 0 0.25cqw #1b1d27; }
+/* power and volume keys: on the top edge of a tablet held sideways, on the right edge of the others */
+.dev-key { position: absolute; background: linear-gradient(180deg, #8a8c96, #3a3c44); }
+.dev-wrap-tablet-landscape .dev-key { top: -0.9cqw; height: 0.9cqw; border-radius: 0.5cqw 0.5cqw 0 0; }
+.dev-wrap-tablet-landscape .dev-key-a { right: 23%; width: 9%; }
+.dev-wrap-tablet-landscape .dev-key-b { right: 14%; width: 5.5%; }
+.dev-wrap-tablet-portrait .dev-key, .dev-wrap-phone .dev-key { right: -1.2cqw; width: 1.2cqw; border-radius: 0 0.6cqw 0.6cqw 0; background: linear-gradient(90deg, #3a3c44, #8a8c96); }
+.dev-wrap-tablet-portrait .dev-key-a, .dev-wrap-phone .dev-key-a { top: 20%; height: 9%; }
+.dev-wrap-tablet-portrait .dev-key-b, .dev-wrap-phone .dev-key-b { top: 33%; height: 5.5%; }
+/* a soft shadow on the "floor" under it */
+.dev-floor { position: absolute; z-index: -1; left: 10%; right: 10%; bottom: -4cqw; height: 6cqw; border-radius: 50%; background: radial-gradient(closest-side, color-mix(in srgb, var(--app, var(--brand)) 40%, #000), transparent); filter: blur(10px); opacity: 0.55; }
+
+/* back / next, and "2 / 4" */
+.shots-nav { display: flex; align-items: center; gap: 14px; }
+.shots-arrow { appearance: none; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; transition: border-color 0.2s, color 0.2s, transform 0.2s; -webkit-tap-highlight-color: transparent; }
+.shots-arrow:hover { border-color: var(--brand); color: var(--brand); transform: scale(1.07); }
+.shots-arrow:active { transform: scale(0.94); }
+.shots-arrow:focus-visible { outline: 2px solid var(--brand); outline-offset: 3px; }
+.shots-count { min-width: 58px; text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; }
+.shots-count i { font-style: normal; opacity: 0.35; margin: 0 2px; }
+.shots-cap { margin: 0; max-width: 460px; text-align: center; color: var(--muted); font-size: 15px; line-height: 1.5; }
+@media (min-width: 960px) { .shots-cap { display: none; } }
+
+@media (prefers-reduced-motion: no-preference) {
+  .dev-wrap { animation: dev-in 0.65s cubic-bezier(0.2, 0.8, 0.2, 1) backwards; }
+  @keyframes dev-in { from { opacity: 0; scale: 0.93; translate: 0 22px; } }
+  .shots-stage::before { animation: shots-glow 8s ease-in-out infinite alternate; }
+  @keyframes shots-glow { from { opacity: 0.7; scale: 0.96; } to { opacity: 1; scale: 1.06; } }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dev-wrap, .seg-thumb, .dev-layer, .dev-img, .shots-tab-text > span { transition: none !important; }
+}
+
+/* a phone: the controls, the device, then the screens as a row of chips (the chosen one's caption sits under the device) */
+@media (max-width: 959px) {
+  .shots-controls { justify-items: center; }
+  .shots-controls .seg { width: 100%; max-width: 420px; }
+  .shots-hint { text-align: center; min-height: 0; }
+  .shots-list { display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x proximity; margin-inline: calc(var(--gutter) * -1); padding: 4px var(--gutter) 10px; scrollbar-width: none; }
+  .shots-list::-webkit-scrollbar { display: none; }
+  .shots-list::before, .shots-tab-dot, .shots-tab-text > span { display: none; }
+  .shots-tab { flex: none; scroll-snap-align: center; display: block; padding: 9px 16px; border: 1.5px solid var(--line); border-radius: 999px; background: var(--surface); }
+  .shots-tab-text b { font-size: 14.5px; white-space: nowrap; }
+  .shots-tab[aria-selected="true"] { background: var(--brand); border-color: var(--brand); }
+  .shots-tab[aria-selected="true"] .shots-tab-text b { color: var(--brand-ink); }
+}
+@media (max-width: 959px) { .seg-btn { min-height: 42px; } }
+@media (max-width: 420px) {
+  .seg-btn { font-size: 13px; gap: 6px; padding: 9px 4px; }
+  .seg-btn small { display: none; }
 }

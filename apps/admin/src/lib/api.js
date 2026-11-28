@@ -990,6 +990,16 @@ export const createApp = (body) => req("/api/platform/app-releases/apps", json("
 export const updateApp = (app, body) => req(`/api/platform/app-releases/apps/${encodeURIComponent(app)}`, json("PATCH", body));
 export const deleteApp = (app) => req(`/api/platform/app-releases/apps/${encodeURIComponent(app)}`, json("DELETE"));
 export const setAppLiveMode = (app, liveMode) => req(`/api/platform/app-releases/live-mode/${encodeURIComponent(app)}`, json("PUT", { liveMode }));
+/* the screenshots on an app's page of the website */
+const SHOTS = "/api/platform/app-releases/screenshots";
+export const listAppShots = (app) => req(`${SHOTS}/${encodeURIComponent(app)}`);
+export const saveAppShotsSection = (app, body) => req(`${SHOTS}/${encodeURIComponent(app)}/section`, json("PUT", body));
+export const createAppShot = (app, body) => req(`${SHOTS}/${encodeURIComponent(app)}`, json("POST", body));
+export const updateAppShot = (id, body) => req(`${SHOTS}/item/${id}`, json("PATCH", body));
+export const deleteAppShot = (id) => req(`${SHOTS}/item/${id}`, { method: "DELETE" });
+export const orderAppShots = (app, ids) => req(`${SHOTS}/${encodeURIComponent(app)}/order`, json("PUT", { ids }));
+export const uploadAppShotImage = (id, device, theme, file) => req(`${SHOTS}/item/${id}/image?device=${device}&theme=${theme}`, { method: "PUT", body: file, headers: { "content-type": file.type || "application/octet-stream" } });
+export const removeAppShotImage = (id, device, theme) => req(`${SHOTS}/item/${id}/image?device=${device}&theme=${theme}`, { method: "DELETE" });
 export const setAppVisibility = (app, isPublic) => req(`/api/platform/app-releases/visibility/${app}`, json("PUT", { public: isPublic }));
 export const updateAppRelease = (id, body) => req(`/api/platform/app-releases/${id}`, json("PATCH", body));
 export const deleteAppRelease = (id) => req(`/api/platform/app-releases/${id}`, { method: "DELETE" });

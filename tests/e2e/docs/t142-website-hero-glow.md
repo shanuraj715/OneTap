@@ -1,6 +1,6 @@
 # T142 — Website → an app's page: the purple (app-coloured) glow at the bottom of the top section is kept and fades out smoothly instead of ending in a straight line; the heartbeat line's corners are softly rounded
 
-**Area:** website · **Last result:** ✅ PASSED (29 passed, 0 failed · 2026-11-28 14:16 · headless · 7.3 s)
+**Area:** website · **Last result:** ✅ PASSED (29 passed, 0 failed · 2026-11-28 15:40 · headless · 6.9 s)
 
 **Run it alone:** `node run.mjs --only t142` (add `--visible` to watch it)
 
@@ -45,7 +45,7 @@ _Nothing failed._
 - the colour is still there inside the hero, near its bottom (not faded away) — _33 away from the page colour_
 - the heartbeat sits at the very bottom of an app's top section — _20px from the edge_
 - no straight edge: the rows just above and just below the hero's bottom are the same colour — _step 0.8_
-- the glow has melted into the page colour well below the hero — _0 away at 255 px below_
+- the glow has melted into the page colour well below the hero — _1 away at 255 px below_
 - nothing sticks out sideways — _0px over_
 
 **Step 2 — an app's page, dark**
@@ -53,7 +53,7 @@ _Nothing failed._
 - the colour is still there inside the hero, near its bottom (not faded away) — _38 away from the page colour_
 - the heartbeat sits at the very bottom of an app's top section — _20px from the edge_
 - no straight edge: the rows just above and just below the hero's bottom are the same colour — _step 0.8_
-- the glow has melted into the page colour well below the hero — _0 away at 255 px below_
+- the glow has melted into the page colour well below the hero — _1 away at 255 px below_
 - nothing sticks out sideways — _0px over_
 
 **Step 3 — the apps page, light**
@@ -91,6 +91,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-28 15:40 | pass | 29 | 0 | headless | 6.9 s |
 | 2026-11-28 14:16 | pass | 29 | 0 | headless | 7.3 s |
 | 2026-11-28 14:13 | pass | 29 | 0 | headless | 7.8 s |
 | 2026-11-28 14:12 | pass | 29 | 0 | headless | 7.6 s |

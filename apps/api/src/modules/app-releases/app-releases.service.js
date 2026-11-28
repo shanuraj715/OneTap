@@ -10,6 +10,7 @@ import { HttpError } from "../../middleware/error.js";
 import { notifyWebsite } from "../site/revalidate.js";
 import { getApp, invalidateApps, isKnownApp, loadApps } from "./app-registry.js";
 import { openStoredFile, putLargeFile, removePlatformFile } from "../storage/storage.service.js";
+import { deleteShotsOf, publicScreens } from "./app-screenshots.service.js";
 
 /**
  * The staff app's releases: the APK files, the records about them, and the decision "does this phone have to update?". The files live in
@@ -107,7 +108,7 @@ export async function publicReleases({ app = DEFAULT_APP, limit = 20 } = {}) {
   const meta = await getApp(app);
   if (!meta) throw new HttpError(404, "That app doesn't exist.");
   const releases = await publishedOf(app);
-  return { latest: releases[0] ? publicShape(releases[0]) : null, releases: releases.slice(0, limit).map(publicShape), pageUrl: pageUrl(app), app: { ...publicApp(meta), listed: meta.isPublic } };
+  return { latest: releases[0] ? publicShape(releases[0]) : null, releases: releases.slice(0, limit).map(publicShape), pageUrl: pageUrl(app), app: { ...publicApp(meta), listed: meta.isPublic }, screens: await publicScreens(app) };
 }
 
 /** An app as the website and the phones may read it (no internal fields). */
@@ -517,6 +518,7 @@ export async function deleteApp(slug) {
   if (app.builtIn) throw new HttpError(400, `${app.name} ships with Rasoi Pulse and can't be removed. You can make it private instead.`);
   const n = await AppReleaseModel.countDocuments({ app: slug });
   if (n > 0) throw new HttpError(409, `${app.name} still has ${n} version${n === 1 ? "" : "s"}. Delete them first (App Management → its Versions), then remove the app.`);
+  await deleteShotsOf(slug);
   await AppModel.deleteOne({ slug });
   await AppSettingModel.deleteOne({ app: slug });
   invalidateApps();

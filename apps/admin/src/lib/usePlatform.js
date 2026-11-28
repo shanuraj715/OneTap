@@ -96,6 +96,9 @@ export function usePlatformMutation(fn) {
   });
 }
 
+/** The screenshots of an app's page on the website (and the words of that section). */
+export const useAppShots = (app, enabled = true) => useQuery({ queryKey: ["platform", "app-shots", app], queryFn: () => api.listAppShots(app), enabled: Boolean(app) && enabled });
+
 /** How often each app asks for new data (the console's Refresh interval card). */
 export const useAppSettings = () => useQuery({ queryKey: ["platform", "app-settings"], queryFn: () => api.listAppSettings() });
 

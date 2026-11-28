@@ -77,9 +77,39 @@ const appSchema = new Schema(
     /** one of the apps that ship with Rasoi Pulse: their sign-in rules live in the code, so they cannot be deleted */
     builtIn: { type: Boolean, default: false },
     sortOrder: { type: Number, default: 100 },
+    /** the "See it" screenshots section of the app's page: shown or not, its words ("" = the usual ones), the device shown first, and whether the built-in pictures were copied in yet */
+    shotsEnabled: { type: Boolean, default: true },
+    shotsHeading: { type: String, default: "" },
+    shotsIntro: { type: String, default: "" },
+    shotsDefaultDevice: { type: String, enum: ["tablet-landscape", "tablet-portrait", "phone"], default: "tablet-landscape" },
+    shotsSeeded: { type: Boolean, default: false },
     createdBy: { type: String, default: null },
     updatedBy: { type: String, default: null },
   },
   { timestamps: true },
 );
 export const AppModel = models.App ?? model("App", appSchema);
+
+/**
+ * One screenshot of an app on its website page: a screen (title, a few words, a description for screen readers) with up to six pictures —
+ * `images[device][theme] = { src, key, width, height }` for the devices tablet-landscape / tablet-portrait / phone and the themes light / dark.
+ * `src` is a path on the website ("/app-screens/…", the ones that ship with it) or an uploaded file ("/uploads/…", `key` says where it is stored so it can be removed).
+ * `builtInName` marks the ones copied in from the pictures that ship with the website (so copying twice makes no duplicates). Platform-level.
+ */
+const appShotSchema = new Schema(
+  {
+    app: { type: String, required: true, index: true },
+    title: { type: String, required: true },
+    caption: { type: String, default: "" },
+    alt: { type: String, default: "" },
+    order: { type: Number, default: 0 },
+    enabled: { type: Boolean, default: true },
+    builtInName: { type: String, default: null },
+    images: { type: Schema.Types.Mixed, default: {} },
+    createdBy: { type: String, default: null },
+    updatedBy: { type: String, default: null },
+  },
+  { timestamps: true, minimize: false },
+);
+appShotSchema.index({ app: 1, builtInName: 1 }, { unique: true, partialFilterExpression: { builtInName: { $type: "string" } } });
+export const AppShotModel = models.AppShot ?? model("AppShot", appShotSchema);

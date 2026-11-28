@@ -1,6 +1,6 @@
 # T121 — Rasoi Pulse team roles: only the super admin makes roles and people; a team member can do exactly what their role holds, in every part of the platform API
 
-**Area:** platform · **Last result:** ✅ PASSED (61 passed, 0 failed · 2026-11-28 01:55 · headless · 8.6 s)
+**Area:** platform · **Last result:** ✅ PASSED (61 passed, 0 failed · 2026-11-28 15:40 · headless · 7.5 s)
 
 **Run it alone:** `node run.mjs --only t121` (add `--visible` to watch it)
 
@@ -128,7 +128,7 @@ _Nothing failed._
 
 **Step 10 — Every route of the platform API has been decided on**
 
-- all 101 routes of /api/platform have a rule in the table
+- all 114 routes of /api/platform have a rule in the table
 - a route nobody wrote a rule for is closed to everybody but the super admin
 - roles, team and the log are super-admin-only in the table too
 - the website's own platform routes (12) are guarded by their own feature check (tested above: pages/settings → website, leads → leads)
@@ -137,6 +137,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-28 15:40 | pass | 61 | 0 | headless | 7.5 s |
+| 2026-11-28 15:27 | pass | 61 | 0 | headless | 7.3 s |
 | 2026-11-28 01:55 | pass | 61 | 0 | headless | 8.6 s |
 | 2026-11-27 22:06 | pass | 61 | 0 | headless | 8.5 s |
 | 2026-11-27 21:03 | pass | 61 | 0 | headless | 8.0 s |

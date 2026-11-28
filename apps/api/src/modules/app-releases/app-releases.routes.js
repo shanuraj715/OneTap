@@ -1,10 +1,11 @@
 import { raw, Router } from "express";
 import { z } from "zod";
-import { DEFAULT_APP } from "@rasoipulse/config-schema";
+import { DEFAULT_APP, IMAGE_RULES } from "@rasoipulse/config-schema";
 import { limiter } from "../../middleware/rate-limit.js";
 import { HttpError } from "../../middleware/error.js";
 import { requireUser } from "../../middleware/auth.js";
 import * as svc from "./app-releases.service.js";
+import * as shots from "./app-screenshots.service.js";
 
 /** What the staff app and the website ask — no sign-in: the app checks before anyone has signed in, and the page is public. */
 export const appUpdatesRouter = Router();
@@ -95,6 +96,49 @@ appReleasesAdminRouter.patch("/apps/:slug", async (req, res) => {
 
 appReleasesAdminRouter.delete("/apps/:slug", async (req, res) => {
   res.json(await svc.deleteApp(req.params.slug));
+});
+
+/* ---- the screenshots on an app's page (App Management → the app's tab → Screenshots). These paths come before "/:id" below. */
+
+/** An app's screenshots and the words of its section. */
+appReleasesAdminRouter.get("/screenshots/:app", async (req, res) => {
+  res.json(await shots.listScreenshots(req.params.app));
+});
+
+appReleasesAdminRouter.put("/screenshots/:app/section", async (req, res) => {
+  res.json(await shots.saveSection(req.params.app, req.body ?? {}, requireUser(req)));
+});
+
+appReleasesAdminRouter.put("/screenshots/:app/order", async (req, res) => {
+  res.json(await shots.reorderShots(req.params.app, req.body?.ids, requireUser(req)));
+});
+
+appReleasesAdminRouter.post("/screenshots/:app", async (req, res) => {
+  res.status(201).json(await shots.createShot(req.params.app, req.body ?? {}, requireUser(req)));
+});
+
+appReleasesAdminRouter.patch("/screenshots/item/:id", async (req, res) => {
+  res.json(await shots.updateShot(req.params.id, req.body ?? {}, requireUser(req)));
+});
+
+appReleasesAdminRouter.delete("/screenshots/item/:id", async (req, res) => {
+  res.json(await shots.deleteShot(req.params.id));
+});
+
+/** A picture for one slot (?device=tablet-landscape|tablet-portrait|phone&theme=light|dark): the raw image bytes, stored like every image the platform keeps. */
+appReleasesAdminRouter.put(
+  "/screenshots/item/:id/image",
+  limiter("upload"),
+  raw({ type: () => true, limit: IMAGE_RULES.maxUploadBytes + 4096 }),
+  async (req, res) => {
+    const body = Buffer.isBuffer(req.body) ? req.body : null;
+    if (!body?.length) throw new HttpError(400, "Send the picture as the request body.");
+    res.json(await shots.setImage(req.params.id, req.query.device, req.query.theme, body, requireUser(req)));
+  },
+);
+
+appReleasesAdminRouter.delete("/screenshots/item/:id/image", async (req, res) => {
+  res.json(await shots.removeImage(req.params.id, req.query.device, req.query.theme, requireUser(req)));
 });
 
 appReleasesAdminRouter.get("/", async (req, res) => {

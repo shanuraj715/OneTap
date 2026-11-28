@@ -1,6 +1,6 @@
 # T103 — Website → header keeps to Product / Pricing / Apps / FAQ (About + Contact in the footer); homepage has a short animated 'We have apps too' note (no cards); hero backdrop fades out; livelier Features and moments; motion that stops under reduce-motion; no text selection or text cursor
 
-**Area:** website · **Last result:** ✅ PASSED (61 passed, 0 failed · 2026-11-28 14:16 · headless · 8.9 s)
+**Area:** website · **Last result:** ✅ PASSED (61 passed, 0 failed · 2026-11-28 15:40 · headless · 8.2 s)
 
 **Run it alone:** `node run.mjs --only t103` (add `--visible` to watch it)
 
@@ -151,6 +151,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-28 15:40 | pass | 61 | 0 | headless | 8.2 s |
 | 2026-11-28 14:16 | pass | 61 | 0 | headless | 8.9 s |
 | 2026-11-28 14:15 | fail | 56 | 5 | headless | 8.8 s |
 | 2026-11-28 14:01 | pass | 61 | 0 | headless | 9.2 s |
