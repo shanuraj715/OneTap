@@ -7,13 +7,13 @@ const record = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "app-versio
 const at = (y: number, m: number, d: number) => new Date(y, m - 1, d, 12, 0, 0);
 
 describe("the version is v-YY.MM.DD-NNN", () => {
-  it("the shipped app-version.json is valid, in the new form, and is v-26.11.27-001 (reset to the initial version on 2026-11-27)", () => {
+  it("the shipped app-version.json is valid, in the new form, and is v-26.11.28-002 (the first upgrade, asked for by the owner on 2026-11-28; the first version was v-26.11.27-001)", () => {
     expect(problems(record)).toEqual([]);
     expect(parseVersion(record.version)).toMatchObject({ legacy: false });
     // It changes only when the owner asks for an upgrade, so this test names it on purpose: if someone bumps the version
     // without being asked, this fails and says so. (When the owner asks for the next upgrade, update this line.)
-    expect(record.version).toBe("v-26.11.27-001");
-    expect(record.versionCode).toBe(1);
+    expect(record.version).toBe("v-26.11.28-002");
+    expect(record.versionCode).toBe(2);
   });
 
   it("formats a date and a build number: year.month.day then the build", () => {

@@ -31894,8 +31894,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T10:48:08.035Z",
-    "durationMs": 5589,
+    "at": "2026-11-28T11:08:20.302Z",
+    "durationMs": 7958,
     "steps": [
       {
         "n": 1,
@@ -32041,7 +32041,7 @@
           {
             "label": "the file is in the platform storage (this disk, by default), under app-releases/oma/",
             "ok": true,
-            "detail": "app-releases/oma/v-26.11.26-001-301f47dfc7e3.apk",
+            "detail": "app-releases/oma/v-26.11.26-001-f64b3e60da3e.apk",
             "kind": "expect"
           },
           {
@@ -32479,7 +32479,7 @@
           {
             "label": "the finished upload lands in the bucket, under app-releases/oma/",
             "ok": true,
-            "detail": "app-releases/oma/v-26.11.26-020-57e80335029c.apk",
+            "detail": "app-releases/oma/v-26.11.26-020-87bb92af2a0f.apk",
             "kind": "expect"
           },
           {
@@ -54175,6 +54175,201 @@
           },
           {
             "label": "no errors in the browser console",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t149-app-release-publish-api": {
+    "id": "t149-app-release-publish-api",
+    "title": "Publishing an app release from a file (apps/api/src/scripts/publish-app-release.js): the same checks and storage as the console's upload; draft by default, --publish, optional or --force-required, a version used once per app",
+    "status": "fail",
+    "pass": 24,
+    "fail": 2,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-28T11:08:36.154Z",
+    "durationMs": 14222,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Checks before anything is stored",
+        "checks": [
+          {
+            "label": "--dry-run says the file is an APK",
+            "ok": true,
+            "detail": "DRY RUN — oma v-26.11.28-002: oma.apk → platform storage: THIS SERVER'S DISK (the console has not configured a bucket); saved as a draft; update optional | the file is an APK",
+            "kind": "expect"
+          },
+          {
+            "label": "…and stores and saves nothing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a file that is not an APK is refused with the console's words",
+            "ok": true,
+            "detail": "failed: That file isn't an APK (it isn't a zip archive).",
+            "kind": "expect"
+          },
+          {
+            "label": "a version in the wrong form is refused",
+            "ok": true,
+            "detail": "failed: [",
+            "kind": "expect"
+          },
+          {
+            "label": "an app that doesn't exist is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a file that isn't there is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "missing arguments print how to use it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "(none of those stored anything)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "A draft (no --publish): saved, but not visible to phones or the website",
+        "checks": [
+          {
+            "label": "the draft is saved, and the script says the update is optional",
+            "ok": true,
+            "detail": "done: oma v-26.11.28-002 (build 2) is draft, update required — 2.0 MB, sha256 6f6fcaa42d259d39c65ef53cc8309c5019b6d1648cdd22df1996fdae65576ec2",
+            "kind": "expect"
+          },
+          {
+            "label": "the record has the version, build number, notes, not forced",
+            "ok": false,
+            "detail": "{\"v\":\"v-26.11.28-002\",\"c\":2,\"s\":\"draft\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "…the file's real size and SHA-256",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the file is in the platform's storage, under app-releases/oma/",
+            "ok": true,
+            "detail": "app-releases/oma/v-26.11.28-002-4794f0f9f687.apk",
+            "kind": "expect"
+          },
+          {
+            "label": "a draft is not offered to phones and can't be downloaded",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…recorded under the platform admin",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Published, optional: phones are told, the website lists it, the file downloads",
+        "checks": [
+          {
+            "label": "--publish publishes it, optional",
+            "ok": true,
+            "detail": "oma v-26.11.28-003: oma3.apk → platform storage: THIS SERVER'S DISK (the console has not configured a bucket); will be PUBLISHED; update optional | done: oma v-26.11.28-003 (build 3) is published, upd",
+            "kind": "expect"
+          },
+          {
+            "label": "a phone on build 1 is told about the new version, and it is optional",
+            "ok": false,
+            "detail": "{\"u\":true,\"f\":true,\"v\":\"v-26.11.28-003\"}",
+            "kind": "expect"
+          },
+          {
+            "label": "the website's data lists it (the draft is not there)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the file downloads under a clear name",
+            "ok": true,
+            "detail": "attachment; filename=rasoi-pulse-oma-v-26.11.28-003.apk",
+            "kind": "expect"
+          },
+          {
+            "label": "…byte for byte",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "A required update, and a version that already exists",
+        "checks": [
+          {
+            "label": "--force makes it required, and says so",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…phones on an older build are told they must update",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the same version again is refused (each build number is used once)",
+            "ok": true,
+            "detail": "failed: Version v-26.11.28-003 (build 3) already exists. Each build number can be used once.",
+            "kind": "expect"
+          },
+          {
+            "label": "…and no file was stored for it (3 files in all: OMA draft, OMA published, KDA)",
+            "ok": true,
+            "detail": "3",
+            "kind": "expect"
+          },
+          {
+            "label": "(the build number is per app: KDA's 002 is taken too)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a different app's 002 is fine (build numbers are per app)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…four files in storage now",
             "ok": true,
             "detail": "",
             "kind": "expect"

@@ -1,6 +1,6 @@
 # Rasoi Pulse end-to-end tests — catalog
 
-**149 tests** · 142 passing · 3 failing/error · 4 not run yet
+**150 tests** · 142 passing · 4 failing/error · 4 not run yet
 
 | Test | Area | Result | Checks | Last run |
 |---|---|---|---|---|
@@ -68,6 +68,7 @@
 | [t146-app-screenshots-api](t146-app-screenshots-api.md) — App Management → Screenshots (API): the platform admin adds, edits, hides, reorders and removes an app's screenshots and puts a picture in each slot (3 devices × light / dark); the website's data carries only what should be shown | app | ✅ PASSED | 92/92 | 2026-11-28 16:17 |
 | [t147-app-screens-gallery-ui](t147-app-screens-gallery-ui.md) — Website → an app's page → 'See it': the app's screens in a tablet (wide or tall) or phone frame; light, dark or Auto (follows the browser live); flip with buttons, keys or a swipe; works on a phone | website | ✅ PASSED | 82/82 | 2026-11-28 16:16 |
 | [t148-app-screenshots-manager-ui](t148-app-screenshots-manager-ui.md) — App Management → 'Screenshots on the website': add a screenshot, upload a picture for each device and look, get warned about a wrong shape, replace / remove pictures, hide, reorder, edit, remove; set the section's heading, intro and first device | platform | ✅ PASSED | 54/54 | 2026-11-28 16:15 |
+| [t149-app-release-publish-api](t149-app-release-publish-api.md) — Publishing an app release from a file (apps/api/src/scripts/publish-app-release.js): the same checks and storage as the console's upload; draft by default, --publish, optional or --force-required, a version used once per app | app | ❌ FAILED | 24/26 | 2026-11-28 16:38 |
 | [t15-login-protection](t15-login-protection.md) — Sign-in protection — wrong guesses block the network, blocks grow longer, a blocked network sees no login form, the platform can unblock | security | ✅ PASSED | 28/28 | 2026-11-21 13:10 |
 | [t16-whatsapp-plan-gating](t16-whatsapp-plan-gating.md) — WhatsApp chat off (plan or per-store lock) — numbers unlinked at once, no WhatsApp requests, every WhatsApp address is a 404 | whatsapp | ✅ PASSED | 37/37 | 2026-11-21 13:12 |
 | [t17-analytics](t17-analytics.md) — Analytics — sales, per-outlet graphs, compare outlets, best sellers + what to prepare, profit & loss, weekly/monthly/yearly exports, plan and role access | analytics | ✅ PASSED | 93/93 | 2026-11-28 03:18 |
@@ -146,7 +147,7 @@
 | [t90-staff-outlet-access-api](t90-staff-outlet-access-api.md) — Team members mapped to outlets: they see (and can work in) only those outlets; nothing mapped = every outlet; the owner can change it later | security | ✅ PASSED | 33/33 | 2026-11-26 22:10 |
 | [t91-staff-order-customer-view-api](t91-staff-order-customer-view-api.md) — An order a waiter took for a customer's number shows in that customer's 'My orders' and tracking page when they sign in on the storefront with the same number | orders | ✅ PASSED | 18/18 | 2026-11-26 17:45 |
 | [t92-dashboard-reopen-outlets-ui](t92-dashboard-reopen-outlets-ui.md) — Dashboard: an order put back from Completed seats its table again (or asks which free table); Users & roles gives team members outlets | orders | ✅ PASSED | 52/52 | 2026-11-27 10:02 |
-| [t93-app-releases-api](t93-app-releases-api.md) — App Management: the platform admin uploads an APK in pieces and publishes it (optionally forcing an update); phones ask 'is there a newer version?'; old builds are turned away at sign-in when an update is forced | app | ✅ PASSED | 99/99 | 2026-11-28 16:18 |
+| [t93-app-releases-api](t93-app-releases-api.md) — App Management: the platform admin uploads an APK in pieces and publishes it (optionally forcing an update); phones ask 'is there a newer version?'; old builds are turned away at sign-in when an update is forced | app | ✅ PASSED | 99/99 | 2026-11-28 16:38 |
 | [t94-app-releases-ui](t94-app-releases-ui.md) — Console → App Management: choose an .apk, see the upload progress, publish it, make an update required, edit the notes, withdraw and delete | app | ✅ PASSED | 54/54 | 2026-11-28 15:39 |
 | [t95-app-releases-website-ui](t95-app-releases-website-ui.md) — Website → /app: the staff app's download page shows the latest published version, its notes and every version, and follows publish / withdraw / required in seconds | app | ✅ PASSED | 37/37 | 2026-11-28 16:16 |
 | [t96-icons-map-ui](t96-icons-map-ui.md) — Icons: the website has the Rasoi Pulse icon (navy), the admin panel a different one (red), and the storefront shows the shop owner's own icon (the Rasoi Pulse one until they upload theirs) | branding | ✅ PASSED | 20/20 | 2026-11-27 11:07 |

@@ -1700,3 +1700,7 @@
 {"id":"t140-app-management-api","status":"pass","pass":70,"fail":0,"mode":"headless","at":"2026-11-28T10:48:01.568Z","durationMs":4562}
 {"id":"t93-app-releases-api","status":"pass","pass":99,"fail":0,"mode":"headless","at":"2026-11-28T10:48:08.035Z","durationMs":5589}
 {"id":"t144-app-live-mode-api","status":"pass","pass":29,"fail":0,"mode":"headless","at":"2026-11-28T10:48:13.395Z","durationMs":4090}
+{"id":"t149-app-release-publish-api","status":"pass","pass":26,"fail":0,"mode":"headless","at":"2026-11-28T11:07:47.865Z","durationMs":14910}
+{"id":"t149-app-release-publish-api","status":"pass","pass":26,"fail":0,"mode":"headless","at":"2026-11-28T11:08:10.982Z","durationMs":14642}
+{"id":"t93-app-releases-api","status":"pass","pass":99,"fail":0,"mode":"headless","at":"2026-11-28T11:08:20.302Z","durationMs":7958}
+{"id":"t149-app-release-publish-api","status":"fail","pass":24,"fail":2,"mode":"headless","at":"2026-11-28T11:08:36.154Z","durationMs":14222}

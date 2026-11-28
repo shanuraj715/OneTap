@@ -335,12 +335,17 @@ export async function completeUpload(id, input, user) {
   await fsp.rm(metaFile(id), { force: true });
   uploads.delete(id);
 
+  return recordRelease({ app, body, versionCode, name: u.name, size: u.size, key, sha256, user });
+}
+
+/** Save the record of a release whose file is already in the platform storage; if saving fails the stored file is removed again. */
+async function recordRelease({ app, body, versionCode, name, size, key, sha256, user }) {
   let r;
   try {
     r = await AppReleaseModel.create({
       app, platform: PLATFORM, version: body.version, versionCode, notes: body.notes, force: body.force,
       status: body.publish ? "published" : "draft", publishedAt: body.publish ? new Date() : null,
-      file: { name: u.name, key, size: u.size, sha256 }, createdBy: String(user._id), updatedBy: String(user._id),
+      file: { name, key, size, sha256 }, createdBy: String(user._id), updatedBy: String(user._id),
     });
   } catch (e) {
     await removePlatformFile(key);
@@ -349,6 +354,26 @@ export async function completeUpload(id, input, user) {
   }
   if (body.publish) notifyWebsite();
   return adminShape(r.toObject());
+}
+
+/**
+ * Add a release from an APK file that is already on this machine (the same checks and the same storage as the console's upload, which sends the file in pieces).
+ * Used by apps/api/src/scripts/publish-app-release.js when the file is too big to push through a browser session or the admin isn't at the console.
+ */
+export async function publishReleaseFromFile({ app, filePath, fileName, version, notes = "", force = false, publish = false }, user) {
+  const body = appReleaseInputSchema.parse({ version, notes, force, publish });
+  if (!(await isKnownApp(app))) throw new HttpError(404, "That app doesn't exist.");
+  const stat = await fsp.stat(filePath).catch(() => null);
+  if (!stat?.isFile() || !stat.size) throw new HttpError(400, "The file isn't there.");
+  if (stat.size > maxBytes()) throw new HttpError(413, `That file is too big (the limit is ${Math.round(maxBytes() / 1024 / 1024)} MB).`);
+  const versionCode = versionCodeOf(body.version);
+  if (await AppReleaseModel.exists({ app, platform: PLATFORM, versionCode })) throw new HttpError(409, `Version ${body.version} (build ${versionCode}) already exists. Each build number can be used once.`);
+  const apk = await inspectApk(filePath);
+  if (!apk.ok) throw new HttpError(400, apk.why);
+  const sha256 = await sha256Of(filePath);
+  const key = `app-releases/${app}/${body.version}-${randomBytes(6).toString("hex")}.apk`;
+  await putLargeFile({ key, filePath, size: stat.size, sha256, contentType: "application/vnd.android.package-archive" });
+  return recordRelease({ app, body, versionCode, name: fileName ?? path.basename(filePath), size: stat.size, key, sha256, user });
 }
 
 /* ------------------------------------------------------------------ how often an app asks for new data */
