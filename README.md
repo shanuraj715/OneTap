@@ -392,7 +392,7 @@ The top of the dashboard — **"Rasoi Pulse business"**, in the web console and 
 - **Interactive:** charts draw themselves and can be touched and dragged to read a day; the date picker and dropdowns are our own sheets (never the phone's native boxes); phones get a floating tab bar
   (3 areas + More), tablets (wider than 700) a side rail with every area.
 - **What it has:** Dashboard (**Rasoi Pulse business** first — total sales, new sales, re-subscribed, one Day / Week / Month chart; then the stores' own sales), Stores (+ a store's page with its **Subscription payments**), Onboarding (list + the requirement form: plan first, outlets with a map point, "allow anyway" beyond the plan, the server's ready-check, Publish as
-  store with a made-for-you owner password shown once), Plans (read only), Leads, Server, Security, Cache, Settings, Team & roles. **Web console only:** the website editor, Storage, AI keys, the plan editor, App Management,
+  store with a made-for-you owner password shown once), Plans (read only), Leads, **App Management** (each app's Public / Private switch and a Share-link button), Server, Security, Cache, Settings, Team & roles. **Web console only:** the website editor, Storage, AI keys, the plan editor, uploading app versions,
   the form's PDF / print and its look-and-feel (kept untouched when the app saves).
 - **Sign-in:** `x-app-id: admin`; not in the apps catalog, so no update gate and no page on the website — install the APK yourself (the same company signing key as the other apps).
 - **Tests:** `npm test` in the app (access rules, API client, every screen against a fake server, reduced motion, onboarding rules incl. mutation checks); server side t121/t122.

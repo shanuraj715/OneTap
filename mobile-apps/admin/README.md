@@ -18,13 +18,14 @@ Each person sees **only the areas their role holds** (the owner sees all); the s
 | **Onboarding** | Requirement forms for new clients: plan first, outlets, features (with "allow anyway" beyond the plan), save as a draft, the server's "ready?" check, **Publish as store** |
 | **Plans** | What each plan includes: limits, price, features, how many stores use it (read only) |
 | **Leads** | Website enquiries: call, WhatsApp, email, mark contacted / won / lost, notes |
+| **App Management** | Every Rasoi Pulse app with its **Public / Private** switch (public = in the website's list; making one public asks first) and a Share-link button. Uploading a new version stays on the web console |
 | **Server** | A 0–10 health score with the reasons, processor, memory, disks, network, the API (refreshes itself) |
 | **Security** | Blocked and watched networks, unblock one or all, how the guard works |
 | **Cache** | What the API remembers, its lifetime, expire everything or one store |
 | **Settings** | Grace days and the live-updates switch |
 | **Team & roles** | The owner only: roles, people, their activity |
 
-Still on the web console only: the website editor, storage, AI picture keys, the plan editor (the app only reads plans), App Management, the PDF / print of an onboarding form,
+Still on the web console only: the website editor, storage, AI picture keys, the plan editor (the app only reads plans), uploading app versions (App Management in the app has only the Public / Private switch), the PDF / print of an onboarding form,
 and the look-and-feel of a form (it is kept untouched when the app saves).
 
 ## What you need

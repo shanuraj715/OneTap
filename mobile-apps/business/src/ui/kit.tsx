@@ -34,7 +34,7 @@ export function KpiTile({ icon, label, value, delta, invert, sub, spark, onPress
       {delta !== undefined || (spark && spark.length > 1) ? (
         <View style={{ flexDirection: "row", alignItems: "center", gap: 8, justifyContent: "space-between" }}>
           <View style={{ flexShrink: 1 }}>{delta !== undefined ? <Delta pct={delta} invert={invert} /> : null}</View>
-          {spark && spark.length > 1 ? <Sparkline values={spark} color={accent} /> : null}
+          {spark && spark.length > 1 ? <Sparkline values={spark} width={56} color={accent} /> : null}
         </View>
       ) : null}
       {sub ? <Text variant="caption" tone="muted">{sub}</Text> : null}

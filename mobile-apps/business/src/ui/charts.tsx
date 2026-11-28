@@ -115,7 +115,8 @@ export function BarChart({ data, height = 180, format = (n) => String(n), color,
         </View>
       ) : null}
       <View style={{ flexDirection: "row", paddingHorizontal: 8 }}>
-        {data.map((d, i) => <View key={d.label + i} style={{ flex: 1, alignItems: "center" }}><Text variant="caption" tone={sel === i ? "normal" : "muted"} numberOfLines={1}>{d.label}</Text></View>)}
+        {/* a label may be wider than its bar's slot (30 days across a phone): it overflows evenly to both sides instead of being cut to "…"; blank labels draw nothing */}
+        {data.map((d, i) => <View key={d.label + i} style={{ flex: 1, alignItems: "center" }}>{d.label ? <Text variant="caption" tone={sel === i ? "normal" : "muted"} numberOfLines={1} style={{ width: 64, textAlign: "center" }}>{d.label}</Text> : null}</View>)}
       </View>
     </View>
   );

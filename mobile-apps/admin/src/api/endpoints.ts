@@ -126,6 +126,8 @@ export interface CacheEntries {
 /** What to expire: everything, the admin panel's own items, one store, or one outlet of a store. */
 export type ExpireScope = { scope: "all" } | { scope: "admin" } | { scope: "store"; storeId: string } | { scope: "outlet"; storeId: string; outletId: string };
 
+export interface AppSetting { app: string; code: string; name: string; public: boolean; publicByDefault: boolean; usesRefreshInterval: boolean; pageUrl: string; refreshSeconds: number; updatedAt: string | null }
+
 export function createApi(client: ApiClient) {
   const r = client.request;
   const json = (method: "POST" | "PUT" | "PATCH" | "DELETE", body?: unknown) => ({ method, body });
@@ -164,6 +166,10 @@ export function createApi(client: ApiClient) {
     setCacheTtl: (ttlSeconds: number) => r<unknown>("/api/platform/cache/settings", json("PUT", { ttlSeconds })),
     settings: () => r<{ settings: { graceDays: number; realtimeWebsocket: boolean; subdomainBase: string } }>("/api/platform/settings"),
     saveSettings: (body: { graceDays?: number; realtimeWebsocket?: boolean }) => r<unknown>("/api/platform/settings", json("PUT", body)),
+
+    /** every app of Rasoi Pulse with whether it is public (in the website's list) or private */
+    appSettings: () => r<{ settings: AppSetting[] }>("/api/platform/app-releases/settings"),
+    setAppVisibility: (app: string, isPublic: boolean) => r<unknown>(`/api/platform/app-releases/visibility/${app}`, json("PUT", { public: isPublic })),
 
     roles: () => r<{ roles: Role[]; features: { key: string; group: string; label: string; hint: string }[]; groups: string[] }>("/api/platform/roles"),
     createRole: (body: { name: string; description: string; features: string[] }) => r<{ role: Role }>("/api/platform/roles", json("POST", body)),

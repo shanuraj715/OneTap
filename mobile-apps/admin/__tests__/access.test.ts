@@ -32,7 +32,8 @@ describe("who sees what", () => {
     }
   });
   it("what the web console keeps for itself is not offered in the app", () => {
-    for (const id of ["website", "storage", "ai", "app-management"]) expect(APP_AREAS.has(id)).toBe(false);
+    for (const id of ["website", "storage", "ai"]) expect(APP_AREAS.has(id)).toBe(false);
+    expect(APP_AREAS.has("app-management")).toBe(true); // the Public / Private switch is in the app; uploading a version is not
   });
 
   it("uses the same areas and features as the server (packages/config-schema PLATFORM_AREAS)", () => {

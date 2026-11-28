@@ -30,5 +30,5 @@ export interface Me {
 
 export const canDo = (me: Me | null | undefined, feature: string) => Boolean(me && (me.isSuperAdmin || me.platform?.features?.includes(feature)));
 export const areasFor = (me: Me | null | undefined): Area[] => (me ? AREAS.filter((a) => (a.superAdminOnly ? me.isSuperAdmin : me.isSuperAdmin || a.features.some((f) => me.platform?.features?.includes(f)))) : []);
-/** Areas the app has a screen for. (The rest of the console — the website editor, storage, AI keys, App Management — stays on the web console.) */
-export const APP_AREAS = new Set(["dashboard", "stores", "onboarding", "plans", "leads", "server", "security", "cache", "settings", "team"]);
+/** Areas the app has a screen for. (The rest of the console — the website editor, storage, AI keys — stays on the web console. (App Management is here for the Public / Private switch only; uploading a version stays on the web.)) */
+export const APP_AREAS = new Set(["dashboard", "stores", "onboarding", "plans", "leads", "app-management", "server", "security", "cache", "settings", "team"]);
