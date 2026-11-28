@@ -148,8 +148,24 @@ export const inventoryReport = (over: Record<string, unknown> = {}) => ({
   switchedOff: [{ id: "d9", name: "Winter Soup", outlet: "Acme Noida", reason: "Seasonal" }], ...over,
 });
 export const stockPlan = (over: Record<string, unknown> = {}) => ({ weeks: 4, safetyPct: 15, range: { from: "2026-11-01", to: "2026-11-28" }, tomorrow: { day: "2026-11-29", weekday: "Sunday", items: [{ name: "Veg Momos", suggested: 62, avg: 54, max: 70 }, { name: "Tea", suggested: 30, avg: 26, max: 40 }] }, ...over });
-export const rating = (over: Record<string, unknown> = {}) => ({ id: "r1", orderId: "ord1", orderNumber: "A-102", channel: "dine-in", rating: 5, comment: "Loved the momos!", tags: ["Tasty"], items: ["2× Veg Momos"], orderTotal: 45_000, customerName: "Priya", customerPhone: "9855555555", createdAt: "2026-11-27T19:00:00Z", updatedAt: "2026-11-27T19:00:00Z", ...over });
-export const ratingsPage = (over: Record<string, unknown> = {}) => ({ summary: { days: 30, count: 20, average: 4.3, byStars: { 1: 1, 2: 1, 3: 2, 4: 6, 5: 10 }, withComments: 7 }, ratings: [rating(), rating({ id: "r2", rating: 2, comment: "", customerName: "", orderNumber: "A-99", tags: [], createdAt: "2026-11-26T19:00:00Z" })], nextBefore: null, ...over });
+export const rating = (over: Record<string, unknown> = {}) => ({ id: "r1", orderId: "ord1", orderNumber: "A-102", channel: "dine-in", rating: 5, comment: "Loved the momos!", tags: ["Tasty"], items: ["2× Veg Momos"], orderTotal: 45_000, customerName: "Priya", customerPhone: "9855555555", createdAt: "2026-11-27T19:00:00Z", updatedAt: "2026-11-27T19:00:00Z", itemRatings: [{ itemId: "d1", name: "Veg Momos", rating: 5, comment: "Crispy" }, { itemId: "d2", name: "Masala Chai", rating: 3, comment: "" }], ...over });
+export const ratingsPage = (over: Record<string, unknown> = {}) => ({ summary: { days: 30, count: 20, average: 4.3, byStars: { 1: 1, 2: 1, 3: 2, 4: 6, 5: 10 }, withComments: 7 }, ratings: [rating(), rating({ id: "r2", rating: 2, comment: "", customerName: "", orderNumber: "A-99", tags: [], createdAt: "2026-11-26T19:00:00Z", itemRatings: [] })], nextBefore: null, ...over });
+
+const stars = (a: number, b: number, c: number, d: number, e: number) => ({ 1: a, 2: b, 3: c, 4: d, 5: e });
+export const ratingsByOutlet = (over: Record<string, unknown> = {}) => ({
+  days: 30,
+  outlets: [
+    { id: "o1", name: "Noida", title: "Acme Noida", count: 12, average: 4.4, byStars: stars(0, 1, 1, 4, 6), withComments: 5, dishRatings: 9, happyShare: 83 },
+    { id: "o2", name: "Delhi", title: "Acme Delhi", count: 8, average: 4.1, byStars: stars(1, 0, 1, 3, 3), withComments: 2, dishRatings: 4, happyShare: 75 },
+    { id: "o3", name: "Gurgaon", title: "Acme Gurgaon", count: 0, average: 0, byStars: stars(0, 0, 0, 0, 0), withComments: 0, dishRatings: 0, happyShare: 0 },
+  ],
+  total: { count: 20, average: 4.3, byStars: stars(1, 1, 2, 7, 9), withComments: 7, dishRatings: 13 }, ...over,
+});
+export const customerRating = (over: Record<string, unknown> = {}) => ({ id: "c1", name: "Asha Rao", phone: "9811700001", count: 4, average: 4.5, lowest: 4, highest: 5, last: "2026-11-27T19:00:00Z", lastRating: 5, lastComment: "Best momos in town", lastOrder: "A-102", withComments: 3, dishRatings: 6, outlets: ["Acme Noida"], ...over });
+export const ratingsByCustomer = (over: Record<string, unknown> = {}) => ({ days: 30, sort: "recent", page: 1, pageSize: 20, total: 2, pages: 1, customers: [customerRating(), customerRating({ id: "c2", name: "Ravi Kumar", phone: "9811700002", count: 1, average: 2, lowest: 2, highest: 2, lastRating: 2, lastComment: "", lastOrder: "A-99", withComments: 0, dishRatings: 0 })], ...over });
+export const dishRating = (over: Record<string, unknown> = {}) => ({ key: "veg momos", name: "Veg Momos", count: 9, average: 4.3, byStars: stars(0, 1, 1, 3, 4), withNotes: 4, last: "2026-11-27T19:00:00Z", outlets: [{ id: "o1", name: "Acme Noida", count: 6, average: 4.5 }, { id: "o2", name: "Acme Delhi", count: 3, average: 3.7 }], ...over });
+export const ratingsByDish = (over: Record<string, unknown> = {}) => ({ days: 30, sort: "most", items: [dishRating(), dishRating({ key: "masala chai", name: "Masala Chai", count: 3, average: 3, byStars: stars(0, 0, 3, 0, 0), withNotes: 0, outlets: [{ id: "o1", name: "Acme Noida", count: 3, average: 3 }] })], ...over });
+export const dishReviews = (over: Record<string, unknown> = {}) => ({ key: "veg momos", reviews: [{ id: "r1", dishRating: 5, dishNote: "Crispy outside", orderRating: 5, orderComment: "Best day!", customerName: "Priya", orderNumber: "A-102", outlet: "Acme Noida", createdAt: "2026-11-27T19:00:00Z" }, { id: "r2", dishRating: 2, dishNote: "", orderRating: 3, orderComment: "", customerName: "Ravi Kumar", orderNumber: "A-99", outlet: "Acme Delhi", createdAt: "2026-11-26T19:00:00Z" }], ...over });
 
 /** A pretend server that knows every report. A test passes the answers it wants different; every call is remembered (`server.calls`). */
 export function reportsServer(routes: Record<string, Handler> = {}) {
@@ -175,6 +191,10 @@ export function reportsServer(routes: Record<string, Handler> = {}) {
     "GET /api/reservations": { json: { reservations: [booking(), booking({ id: "b2", at: "2026-11-29T16:00:00Z", status: "requested", statusLabel: "Waiting to be confirmed", partySize: 2, customer: { name: "Meera", phone: "9866666666" }, tableNumber: "", pricing: { amountPaise: 0, prepayPaise: 0, remainingPaise: 0 } }), booking({ id: "b3", at: "2026-11-30T14:00:00Z" })], counts: { bookings: 3, guests: 9, requested: 1, waitingAhead: 1 }, more: false } },
     "GET /api/coupons": { json: { coupons: [storeCoupon(), storeCoupon({ id: "k2", code: "FLAT50", discountType: "fixed", value: 50, maxDiscount: 0, active: false })] } },
     "GET /api/feedback": { json: ratingsPage() },
+    "GET /api/feedback/by-outlet": { json: ratingsByOutlet() },
+    "GET /api/feedback/by-customer": { json: ratingsByCustomer() },
+    "GET /api/feedback/by-item": { json: ratingsByDish() },
+    "GET /api/feedback/by-item/:key": { json: dishReviews() },
     ...routes,
   });
 }

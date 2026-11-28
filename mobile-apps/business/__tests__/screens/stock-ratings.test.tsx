@@ -99,14 +99,17 @@ describe("Ratings", () => {
     await renderApp(<Ratings />, { server: reportsServer() });
     expect(await screen.findByTestId("ratings-average")).toHaveTextContent("4.3");
     const s = screen.getByTestId("ratings-summary");
-    expect(s).toHaveTextContent(/20 ratings/); expect(s).toHaveTextContent(/5 ★/); expect(s).toHaveTextContent(/10/);
+    expect(s).toHaveTextContent(/20 ratings/); expect(s).toHaveTextContent(/5 stars/); expect(s).toHaveTextContent(/10/);
   });
-  it("lists ratings with stars, comment, customer, order and date; a nameless customer is still shown", async () => {
+  it("lists ratings with stars, comment, customer, order, date and the dishes rated; a nameless customer is still shown", async () => {
     await renderApp(<Ratings />, { server: reportsServer() });
     const r1 = await screen.findByTestId("rating-r1");
-    expect(r1).toHaveTextContent(/★★★★★ Priya/); expect(r1).toHaveTextContent(/Loved the momos!/); expect(r1).toHaveTextContent(/Order A-102 · ₹450 · 27 Nov 2026/); expect(r1).toHaveTextContent(/Tasty/);
+    expect(r1).toHaveTextContent(/Priya/); expect(r1).toHaveTextContent(/Loved the momos!/); expect(r1).toHaveTextContent(/Order A-102 · ₹450 · 27 Nov 2026/); expect(r1).toHaveTextContent(/Tasty/);
+    expect(within(r1).getByLabelText("5 out of 5 stars")).toBeOnTheScreen();
+    expect(r1).toHaveTextContent(/Veg Momos 5★ “Crispy”/); expect(r1).toHaveTextContent(/Masala Chai 3★/);
     const r2 = screen.getByTestId("rating-r2");
-    expect(r2).toHaveTextContent(/★★☆☆☆ Customer/); expect(r2).not.toHaveTextContent(/“/);
+    expect(r2).toHaveTextContent(/Customer/); expect(r2).not.toHaveTextContent(/“/);
+    expect(within(r2).getByLabelText("2 out of 5 stars")).toBeOnTheScreen();
   });
   it("the days, a star and 'with a comment' narrow what the server is asked for", async () => {
     const server = reportsServer();
@@ -116,9 +119,9 @@ describe("Ratings", () => {
     expect(last()).toMatchObject({ days: "30" });
     await fireEvent.press(screen.getByTestId("ratings-days-7"));
     await waitFor(() => expect(last().days).toBe("7"));
-    await fireEvent.press(screen.getByTestId("ratings-filter-2"));
+    await fireEvent.press(await screen.findByTestId("ratings-filter-2")); // (the list is reloading for a moment after the days change)
     await waitFor(() => expect(last().stars).toBe("2"));
-    await fireEvent.press(screen.getByTestId("ratings-filter-comments"));
+    await fireEvent.press(await screen.findByTestId("ratings-filter-comments"));
     await waitFor(() => expect(last().withComment).toBe("1"));
     expect(last().stars).toBeUndefined();
   });

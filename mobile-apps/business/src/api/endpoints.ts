@@ -97,8 +97,19 @@ export interface Booking {
   customer?: { name: string; phone: string; whatsapp?: string }; event: string; note: string; tableNumber?: string;
   pricing: { amountPaise: number; prepayPaise: number; remainingPaise: number; couponCode?: string }; payment: { status: string };
 }
+/* ratings: by outlet, by customer, by dish (the store's views across outlets) */
+export type StarCounts = Record<"1" | "2" | "3" | "4" | "5", number>;
+export interface RatingTotals { count: number; average: number; byStars: StarCounts; withComments: number; dishRatings: number }
+export interface OutletRating extends RatingTotals { id: string; name: string; title: string; happyShare: number }
+export interface RatingsByOutlet { days: number; outlets: OutletRating[]; total: RatingTotals }
+export interface CustomerRating { id: string; name: string; phone: string; count: number; average: number; lowest: number; highest: number; last: string; lastRating: number; lastComment: string; lastOrder: string; withComments: number; dishRatings: number; outlets: string[] }
+export interface RatingsByCustomer { days: number; sort: string; page: number; pageSize: number; total: number; pages: number; customers: CustomerRating[] }
+export interface DishRating { key: string; name: string; count: number; average: number; byStars: StarCounts; withNotes: number; last: string; outlets: { id: string; name: string; count: number; average: number }[] }
+export interface RatingsByDish { days: number; sort: string; items: DishRating[] }
+export interface DishReview { id: string; dishRating: number; dishNote: string; orderRating: number; orderComment: string; customerName: string; orderNumber: string; outlet: string; createdAt: string }
 export interface BookingsPage { reservations: Booking[]; counts: { bookings: number; guests: number; requested: number; waitingAhead: number }; more: boolean }
-export interface Rating { id: string; orderId: string; orderNumber: string; channel: string; rating: number; comment: string; tags: string[]; items: string[]; orderTotal: number; customerName: string; customerPhone: string; createdAt: string; updatedAt: string }
+export interface DishRatingGiven { itemId: string; name: string; rating: number; comment: string }
+export interface Rating { id: string; orderId: string; orderNumber: string; channel: string; rating: number; comment: string; tags: string[]; items: string[]; itemRatings: DishRatingGiven[]; orderTotal: number; customerName: string; customerPhone: string; createdAt: string; updatedAt: string }
 export interface RatingsPage { summary: { days: number; count: number; average: number; byStars: Record<"1" | "2" | "3" | "4" | "5", number>; withComments: number }; ratings: Rating[]; nextBefore: string | null }
 export interface StoreCoupon { id: string; code: string; description: string; discountType: string; value: number; maxDiscount: number; minOrderValue: number; validFrom?: string | null; validUntil: string | null; maxRedemptions: number; redemptionCount: number; active: boolean }
 export interface UpdateCheck { updateAvailable: boolean; force: boolean; latest: { version: string; notes?: string; fileSize?: number } | null; pageUrl?: string }
@@ -160,6 +171,11 @@ export function createApi(client: ApiClient) {
     bookings: (outletId: string, scope: "upcoming" | "earlier" | "all", day = "") => r<BookingsPage>(`/api/reservations${q({ scope, day })}`, { headers: outletHeader(outletId) }),
     ratings: (outletId: string, o: { days: number; stars?: number[]; withComment?: boolean; before?: string | null }) =>
       r<RatingsPage>(`/api/feedback${q({ days: o.days, stars: o.stars?.join(","), withComment: o.withComment ? "1" : undefined, before: o.before ?? undefined, limit: 30 })}`, { headers: outletHeader(outletId) }),
+    /** ratings across outlets (`outlets` = "a,b" or "" for all) */
+    ratingsByOutlet: (outlets: string, days: number) => r<RatingsByOutlet>(`/api/feedback/by-outlet${q({ days, outlets })}`),
+    ratingsByCustomer: (outlets: string, days: number, o: { search?: string; sort?: string; page?: number }) => r<RatingsByCustomer>(`/api/feedback/by-customer${q({ days, outlets, search: o.search, sort: o.sort, page: o.page, limit: 20 })}`),
+    ratingsByDish: (outlets: string, days: number, o: { search?: string; sort?: string }) => r<RatingsByDish>(`/api/feedback/by-item${q({ days, outlets, search: o.search, sort: o.sort })}`),
+    dishReviews: (key: string, outlets: string, days: number) => r<{ key: string; reviews: DishReview[] }>(`/api/feedback/by-item/${encodeURIComponent(key)}${q({ days, outlets })}`),
     storeCoupons: (outletId: string) => r<{ coupons: StoreCoupon[] }>("/api/coupons", { headers: outletHeader(outletId) }),
     setCouponActive: (outletId: string, id: string, active: boolean) => r<{ coupon: StoreCoupon }>(`/api/coupons/${id}`, { ...json("PATCH", { active }), headers: outletHeader(outletId) }),
     /** change a dish's counted stock or switch it on / off — the dish belongs to ONE outlet */
