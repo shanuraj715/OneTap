@@ -86,6 +86,27 @@ async function ensureMenu(c) {
   }
 }
 
+/**
+ * Open one of the Business app's areas, whichever way this screen shows them: a navigation rail (wide screens: nav-<area>), the bottom tab bar (tab-home, tab-sales,
+ * tab-money) or the "More" list (more-<area>, which can sit behind the floating tab bar until it is scrolled).
+ */
+async function openArea(c, area) {
+  const find = async (id) => (await c.screen()).find((n) => n.id === id);
+  let n = (await find(`nav-${area}`)) ?? (await find(`tab-${area}`));
+  if (!n) {
+    for (let attempt = 0; attempt < 3 && !n; attempt++) {
+      const more = (await find("tab-more")) ?? (await find("nav-more"));
+      if (more) { c.tapAt(more.cx, more.cy); await c.sleep(1200); }
+      for (let i = 0; i < 4 && !(n = await find(`more-${area}`)); i++) { c.swipeBy(0.5, 0.75, 0.5, 0.35, 350); await c.sleep(600); }
+      if (!n) { c.key(4); await c.sleep(800); } // back out of the area we were in, and look again
+    }
+    if (!n) throw new Error(`could not find the ${area} area`);
+    if (n.cy > c.inset + c.h * 0.8) { c.swipeBy(0.5, 0.7, 0.5, 0.4, 350); await c.sleep(600); n = await find(`more-${area}`); }
+  }
+  c.tapAt(n.cx, n.cy);
+  await c.sleep(3800); // the numbers count up and the charts draw
+}
+
 export const SHOTS = {
   oma: [
     {
@@ -258,6 +279,56 @@ export const SHOTS = {
         await c.tap({ id: "action-0008" });
         await c.sleep(1500);
       },
+    },
+  ],
+  business: [
+    {
+      name: "home",
+      rank: 0,
+      title: "Your whole business on one screen",
+      caption: "Today, this week, this month and this year, each against the days just before it, with your monthly target and what is worth knowing in plain words.",
+      alt: "Home: sales for today, this week, this month and this year with how each compares, the monthly sales target as a ring, and highlights.",
+      run: async (c) => openArea(c, "home"),
+    },
+    {
+      name: "sales",
+      rank: 1,
+      title: "Sales you can compare",
+      caption: "Day, week, month or year — against the period before or the same dates last year. See where the money comes from, outlet by outlet, and which weekdays are best.",
+      alt: "Sales: headline numbers each with its change, a line chart with the comparison dashed, orders per day and sales by outlet.",
+      run: async (c) => openArea(c, "sales"),
+    },
+    {
+      name: "money",
+      rank: 2,
+      title: "Profit and loss, from your own bills",
+      caption: "Write the bills down once and see profit, food cost and the break-even day. Expenses, GST and the daily till are one tap away.",
+      alt: "Money: the profit and loss for the period with the break-even per day and charts of where the money went.",
+      run: async (c) => openArea(c, "money"),
+    },
+    {
+      name: "dishes",
+      rank: 3,
+      title: "What sells, and what doesn't",
+      caption: "Best sellers for the whole store and for each outlet, the dishes that are rising or falling, and the ones that did not sell at all.",
+      alt: "Dishes: the best-selling dishes by quantity and by money, with the rising and falling ones.",
+      run: async (c) => openArea(c, "dishes"),
+    },
+    {
+      name: "customers",
+      rank: 4,
+      title: "Who comes back",
+      caption: "New and returning customers, your best customers, and the regulars who went quiet — each one tap from a call.",
+      alt: "Customers: new against returning customers, orders per customer, the best customers and who stopped coming.",
+      run: async (c) => openArea(c, "customers"),
+    },
+    {
+      name: "outlets",
+      rank: 5,
+      title: "Every outlet side by side",
+      caption: "Sales, orders, average order and cancellations for each outlet, with one line per outlet by day.",
+      alt: "Outlets: each outlet's sales, orders, average order and cancelled orders side by side with a line per outlet.",
+      run: async (c) => openArea(c, "outlets"),
     },
   ],
 };

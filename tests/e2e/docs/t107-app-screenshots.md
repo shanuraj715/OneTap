@@ -1,12 +1,12 @@
-# T107 — App screenshots (the pictures that ship with the website): OMA, KDA and RDA on a wide tablet, a tall tablet and a phone, in light and dark — real, the right shape, not blank, small; the tooling that takes them can't touch anything real
+# T107 — App screenshots (the pictures that ship with the website): OMA, KDA, RDA and Business on a wide tablet, a tall tablet and a phone, in light and dark — real, the right shape, not blank, small; the tooling that takes them can't touch anything real
 
-**Area:** website · **Last result:** ✅ PASSED (555 passed, 0 failed · 2026-11-28 15:38 · headless · 4.1 s)
+**Area:** website · **Last result:** ✅ PASSED (830 passed, 0 failed · 2026-11-28 16:15 · headless · 7.2 s)
 
 **Run it alone:** `node run.mjs --only t107` (add `--visible` to watch it)
 
 ## What this test does
 
-Runs suites/app-screenshots.mjs (no browser). The list the platform copies in the first time (apps/api/src/modules/app-releases/app-shots-builtin.js) covers the three apps; it agrees with the scenarios in mobile-apps/screenshots/scenarios.mjs on which screens, in which order, with which words (a description that names no device, because the website adds that); for every screen and every device the scenario runs on there is a light and a dark picture; each file is a real WebP of the right width (1600 / 1040 / 720) and the right shape for its device (16:10, 5:8, 19.5:9), under 260 KB, with real content on it, and the dark one is clearly darker than the light one; no file sits in apps/website/public/app-screens without being listed, and the old app-shots.json is gone. The tooling: valid JavaScript; builds go to screenshots/.build, never an app's build-output; no signing key is handed over; the apps point at the throwaway server on localhost, which listens on this machine only, with an in-memory database that never reads a .env; adb reverse and the emulator's screen settings are put back; every device and look starts on a freshly installed app; dark is the phone's own dark mode; the restaurant in the pictures is fictional and the phone numbers made-up.
+Runs suites/app-screenshots.mjs (no browser). The list the platform copies into storage the first time (apps/api/src/modules/app-releases/app-shots-builtin.js) covers the four apps; it agrees with the scenarios in mobile-apps/screenshots/scenarios.mjs on which screens, in which order, with which words (a description that names no device, because the website adds that); for every screen and every device the scenario runs on there is a light and a dark picture; each file is a real WebP of the right width (1600 / 1040 / 720) and the right shape for its device (16:10, 5:8, 19.5:9), under 260 KB, with real content on it, and the dark one is clearly darker than the light one; no file sits in apps/api/assets/app-screens without being listed, the old app-shots.json is gone, and the website has no screenshot files of its own (they are copied into the platform's storage, R2, by the API). The tooling: valid JavaScript; builds go to screenshots/.build, never an app's build-output; no signing key is handed over; the apps point at the throwaway server on localhost, which listens on this machine only, with an in-memory database that never reads a .env; adb reverse and the emulator's screen settings are put back; every device and look starts on a freshly installed app; dark is the phone's own dark mode; the restaurant in the pictures is fictional and the phone numbers made-up.
 
 ## Steps
 
@@ -31,25 +31,27 @@ Runs suites/app-screenshots.mjs (no browser). The list the platform copies in th
 
 _Nothing failed._
 
-### ✅ Passed (555)
+### ✅ Passed (830)
 
 **Step 1 — The list of screenshots and the pictures**
 
-- there are screenshots for all three apps — _oma,kda,rda_
+- there are screenshots for all four apps (OMA, KDA, RDA, Business) — _oma,kda,rda,business_
 - the old list (app-shots.json) is gone: the platform's database is the only list now
+- the website has no screenshot files of its own to serve: they are copied into the platform's storage (R2) by the API
+- nothing in the website's code points at /app-screens/
 - OMA: at least three screenshots, each with its own name — _5_
 - OMA: the list and the scenarios agree on which screens, in which order — _tables,table,take-order,orders,options_
 - OMA · tables: its words are the scenario's
 - OMA · tables: a title, a caption and a description that doesn't name a device (the website adds it)
 - OMA · tables: a picture for every device the scenario runs on — _tablet-landscape,tablet-portrait,phone_
 - OMA · tables · tablet-landscape: a light and a dark picture — _light,dark_
-- OMA-tables.tablet-landscape.light: has the expected path — _/app-screens/oma-tables.tablet-landscape.light.webp_
+- OMA-tables.tablet-landscape.light: has the expected file name — _oma-tables.tablet-landscape.light.webp_
 - OMA-tables.tablet-landscape.light: is a real WebP file
 - OMA-tables.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
 - OMA-tables.tablet-landscape.light: the shape of a tablet wide screen — _1.600 vs 1.600_
 - OMA-tables.tablet-landscape.light: small enough for a web page (under 260 KB) — _66 KB_
 - OMA-tables.tablet-landscape.light: has real content on it (not a blank screen) — _42/39/30_
-- OMA-tables.tablet-landscape.dark: has the expected path — _/app-screens/oma-tables.tablet-landscape.dark.webp_
+- OMA-tables.tablet-landscape.dark: has the expected file name — _oma-tables.tablet-landscape.dark.webp_
 - OMA-tables.tablet-landscape.dark: is a real WebP file
 - OMA-tables.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
 - OMA-tables.tablet-landscape.dark: the shape of a tablet wide screen — _1.600 vs 1.600_
@@ -57,13 +59,13 @@ _Nothing failed._
 - OMA-tables.tablet-landscape.dark: has real content on it (not a blank screen) — _27/29/37_
 - OMA · tables · tablet-landscape: the dark picture is clearly darker than the light one — _light 241, dark 35_
 - OMA · tables · tablet-portrait: a light and a dark picture — _light,dark_
-- OMA-tables.tablet-portrait.light: has the expected path — _/app-screens/oma-tables.tablet-portrait.light.webp_
+- OMA-tables.tablet-portrait.light: has the expected file name — _oma-tables.tablet-portrait.light.webp_
 - OMA-tables.tablet-portrait.light: is a real WebP file
 - OMA-tables.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
 - OMA-tables.tablet-portrait.light: the shape of a tablet tall screen — _0.625 vs 0.625_
 - OMA-tables.tablet-portrait.light: small enough for a web page (under 260 KB) — _32 KB_
 - OMA-tables.tablet-portrait.light: has real content on it (not a blank screen) — _26/23/20_
-- OMA-tables.tablet-portrait.dark: has the expected path — _/app-screens/oma-tables.tablet-portrait.dark.webp_
+- OMA-tables.tablet-portrait.dark: has the expected file name — _oma-tables.tablet-portrait.dark.webp_
 - OMA-tables.tablet-portrait.dark: is a real WebP file
 - OMA-tables.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
 - OMA-tables.tablet-portrait.dark: the shape of a tablet tall screen — _0.625 vs 0.625_
@@ -71,13 +73,13 @@ _Nothing failed._
 - OMA-tables.tablet-portrait.dark: has real content on it (not a blank screen) — _19/20/23_
 - OMA · tables · tablet-portrait: the dark picture is clearly darker than the light one — _light 246, dark 28_
 - OMA · tables · phone: a light and a dark picture — _light,dark_
-- OMA-tables.phone.light: has the expected path — _/app-screens/oma-tables.phone.light.webp_
+- OMA-tables.phone.light: has the expected file name — _oma-tables.phone.light.webp_
 - OMA-tables.phone.light: is a real WebP file
 - OMA-tables.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)
 - OMA-tables.phone.light: the shape of a phone  screen — _0.462 vs 0.462_
 - OMA-tables.phone.light: small enough for a web page (under 260 KB) — _40 KB_
 - OMA-tables.phone.light: has real content on it (not a blank screen) — _44/40/33_
-- OMA-tables.phone.dark: has the expected path — _/app-screens/oma-tables.phone.dark.webp_
+- OMA-tables.phone.dark: has the expected file name — _oma-tables.phone.dark.webp_
 - OMA-tables.phone.dark: is a real WebP file
 - OMA-tables.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)
 - OMA-tables.phone.dark: the shape of a phone  screen — _0.462 vs 0.462_
@@ -88,13 +90,13 @@ _Nothing failed._
 - OMA · table: a title, a caption and a description that doesn't name a device (the website adds it)
 - OMA · table: a picture for every device the scenario runs on — _tablet-portrait,phone_
 - OMA · table · tablet-portrait: a light and a dark picture — _light,dark_
-- OMA-table.tablet-portrait.light: has the expected path — _/app-screens/oma-table.tablet-portrait.light.webp_
+- OMA-table.tablet-portrait.light: has the expected file name — _oma-table.tablet-portrait.light.webp_
 - OMA-table.tablet-portrait.light: is a real WebP file
 - OMA-table.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
 - OMA-table.tablet-portrait.light: the shape of a tablet tall screen — _0.625 vs 0.625_
 - OMA-table.tablet-portrait.light: small enough for a web page (under 260 KB) — _38 KB_
 - OMA-table.tablet-portrait.light: has real content on it (not a blank screen) — _41/39/23_
-- OMA-table.tablet-portrait.dark: has the expected path — _/app-screens/oma-table.tablet-portrait.dark.webp_
+- OMA-table.tablet-portrait.dark: has the expected file name — _oma-table.tablet-portrait.dark.webp_
 - OMA-table.tablet-portrait.dark: is a real WebP file
 - OMA-table.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
 - OMA-table.tablet-portrait.dark: the shape of a tablet tall screen — _0.625 vs 0.625_
@@ -102,13 +104,13 @@ _Nothing failed._
 - OMA-table.tablet-portrait.dark: has real content on it (not a blank screen) — _21/22/35_
 - OMA · table · tablet-portrait: the dark picture is clearly darker than the light one — _light 242, dark 33_
 - OMA · table · phone: a light and a dark picture — _light,dark_
-- OMA-table.phone.light: has the expected path — _/app-screens/oma-table.phone.light.webp_
+- OMA-table.phone.light: has the expected file name — _oma-table.phone.light.webp_
 - OMA-table.phone.light: is a real WebP file
 - OMA-table.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)
 - OMA-table.phone.light: the shape of a phone  screen — _0.462 vs 0.462_
 - OMA-table.phone.light: small enough for a web page (under 260 KB) — _45 KB_
 - OMA-table.phone.light: has real content on it (not a blank screen) — _52/49/33_
-- OMA-table.phone.dark: has the expected path — _/app-screens/oma-table.phone.dark.webp_
+- OMA-table.phone.dark: has the expected file name — _oma-table.phone.dark.webp_
 - OMA-table.phone.dark: is a real WebP file
 - OMA-table.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)
 - OMA-table.phone.dark: the shape of a phone  screen — _0.462 vs 0.462_
@@ -119,13 +121,13 @@ _Nothing failed._
 - OMA · take-order: a title, a caption and a description that doesn't name a device (the website adds it)
 - OMA · take-order: a picture for every device the scenario runs on — _tablet-landscape,tablet-portrait,phone_
 - OMA · take-order · tablet-landscape: a light and a dark picture — _light,dark_
-- OMA-take-order.tablet-landscape.light: has the expected path — _/app-screens/oma-take-order.tablet-landscape.light.webp_
+- OMA-take-order.tablet-landscape.light: has the expected file name — _oma-take-order.tablet-landscape.light.webp_
 - OMA-take-order.tablet-landscape.light: is a real WebP file
 - OMA-take-order.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
 - OMA-take-order.tablet-landscape.light: the shape of a tablet wide screen — _1.600 vs 1.600_
 - OMA-take-order.tablet-landscape.light: small enough for a web page (under 260 KB) — _76 KB_
 - OMA-take-order.tablet-landscape.light: has real content on it (not a blank screen) — _47/47/38_
-- OMA-take-order.tablet-landscape.dark: has the expected path — _/app-screens/oma-take-order.tablet-landscape.dark.webp_
+- OMA-take-order.tablet-landscape.dark: has the expected file name — _oma-take-order.tablet-landscape.dark.webp_
 - OMA-take-order.tablet-landscape.dark: is a real WebP file
 - OMA-take-order.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
 - OMA-take-order.tablet-landscape.dark: the shape of a tablet wide screen — _1.600 vs 1.600_
@@ -133,13 +135,13 @@ _Nothing failed._
 - OMA-take-order.tablet-landscape.dark: has real content on it (not a blank screen) — _33/32/39_
 - OMA · take-order · tablet-landscape: the dark picture is clearly darker than the light one — _light 239, dark 41_
 - OMA · take-order · tablet-portrait: a light and a dark picture — _light,dark_
-- OMA-take-order.tablet-portrait.light: has the expected path — _/app-screens/oma-take-order.tablet-portrait.light.webp_
+- OMA-take-order.tablet-portrait.light: has the expected file name — _oma-take-order.tablet-portrait.light.webp_
 - OMA-take-order.tablet-portrait.light: is a real WebP file
 - OMA-take-order.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
 - OMA-take-order.tablet-portrait.light: the shape of a tablet tall screen — _0.625 vs 0.625_
 - OMA-take-order.tablet-portrait.light: small enough for a web page (under 260 KB) — _64 KB_
 - OMA-take-order.tablet-portrait.light: has real content on it (not a blank screen) — _50/49/36_
-- OMA-take-order.tablet-portrait.dark: has the expected path — _/app-screens/oma-take-order.tablet-portrait.dark.webp_
+- OMA-take-order.tablet-portrait.dark: has the expected file name — _oma-take-order.tablet-portrait.dark.webp_
 - OMA-take-order.tablet-portrait.dark: is a real WebP file
 - OMA-take-order.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
 - OMA-take-order.tablet-portrait.dark: the shape of a tablet tall screen — _0.625 vs 0.625_
@@ -147,13 +149,13 @@ _Nothing failed._
 - OMA-take-order.tablet-portrait.dark: has real content on it (not a blank screen) — _31/29/41_
 - OMA · take-order · tablet-portrait: the dark picture is clearly darker than the light one — _light 237, dark 39_
 - OMA · take-order · phone: a light and a dark picture — _light,dark_
-- OMA-take-order.phone.light: has the expected path — _/app-screens/oma-take-order.phone.light.webp_
+- OMA-take-order.phone.light: has the expected file name — _oma-take-order.phone.light.webp_
 - OMA-take-order.phone.light: is a real WebP file
 - OMA-take-order.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)
 - OMA-take-order.phone.light: the shape of a phone  screen — _0.462 vs 0.462_
 - OMA-take-order.phone.light: small enough for a web page (under 260 KB) — _53 KB_
 - OMA-take-order.phone.light: has real content on it (not a blank screen) — _59/57/43_
-- OMA-take-order.phone.dark: has the expected path — _/app-screens/oma-take-order.phone.dark.webp_
+- OMA-take-order.phone.dark: has the expected file name — _oma-take-order.phone.dark.webp_
 - OMA-take-order.phone.dark: is a real WebP file
 - OMA-take-order.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)
 - OMA-take-order.phone.dark: the shape of a phone  screen — _0.462 vs 0.462_
@@ -164,13 +166,13 @@ _Nothing failed._
 - OMA · orders: a title, a caption and a description that doesn't name a device (the website adds it)
 - OMA · orders: a picture for every device the scenario runs on — _tablet-landscape,tablet-portrait,phone_
 - OMA · orders · tablet-landscape: a light and a dark picture — _light,dark_
-- OMA-orders.tablet-landscape.light: has the expected path — _/app-screens/oma-orders.tablet-landscape.light.webp_
+- OMA-orders.tablet-landscape.light: has the expected file name — _oma-orders.tablet-landscape.light.webp_
 - OMA-orders.tablet-landscape.light: is a real WebP file
 - OMA-orders.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
 - OMA-orders.tablet-landscape.light: the shape of a tablet wide screen — _1.600 vs 1.600_
 - OMA-orders.tablet-landscape.light: small enough for a web page (under 260 KB) — _51 KB_
 - OMA-orders.tablet-landscape.light: has real content on it (not a blank screen) — _60/57/29_
-- OMA-orders.tablet-landscape.dark: has the expected path — _/app-screens/oma-orders.tablet-landscape.dark.webp_
+- OMA-orders.tablet-landscape.dark: has the expected file name — _oma-orders.tablet-landscape.dark.webp_
 - OMA-orders.tablet-landscape.dark: is a real WebP file
 - OMA-orders.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
 - OMA-orders.tablet-landscape.dark: the shape of a tablet wide screen — _1.600 vs 1.600_
@@ -178,13 +180,13 @@ _Nothing failed._
 - OMA-orders.tablet-landscape.dark: has real content on it (not a blank screen) — _25/27/49_
 - OMA · orders · tablet-landscape: the dark picture is clearly darker than the light one — _light 234, dark 42_
 - OMA · orders · tablet-portrait: a light and a dark picture — _light,dark_
-- OMA-orders.tablet-portrait.light: has the expected path — _/app-screens/oma-orders.tablet-portrait.light.webp_
+- OMA-orders.tablet-portrait.light: has the expected file name — _oma-orders.tablet-portrait.light.webp_
 - OMA-orders.tablet-portrait.light: is a real WebP file
 - OMA-orders.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
 - OMA-orders.tablet-portrait.light: the shape of a tablet tall screen — _0.625 vs 0.625_
 - OMA-orders.tablet-portrait.light: small enough for a web page (under 260 KB) — _76 KB_
 - OMA-orders.tablet-portrait.light: has real content on it (not a blank screen) — _60/57/31_
-- OMA-orders.tablet-portrait.dark: has the expected path — _/app-screens/oma-orders.tablet-portrait.dark.webp_
+- OMA-orders.tablet-portrait.dark: has the expected file name — _oma-orders.tablet-portrait.dark.webp_
 - OMA-orders.tablet-portrait.dark: is a real WebP file
 - OMA-orders.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
 - OMA-orders.tablet-portrait.dark: the shape of a tablet tall screen — _0.625 vs 0.625_
@@ -192,13 +194,13 @@ _Nothing failed._
 - OMA-orders.tablet-portrait.dark: has real content on it (not a blank screen) — _28/29/49_
 - OMA · orders · tablet-portrait: the dark picture is clearly darker than the light one — _light 233, dark 43_
 - OMA · orders · phone: a light and a dark picture — _light,dark_
-- OMA-orders.phone.light: has the expected path — _/app-screens/oma-orders.phone.light.webp_
+- OMA-orders.phone.light: has the expected file name — _oma-orders.phone.light.webp_
 - OMA-orders.phone.light: is a real WebP file
 - OMA-orders.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)
 - OMA-orders.phone.light: the shape of a phone  screen — _0.462 vs 0.462_
 - OMA-orders.phone.light: small enough for a web page (under 260 KB) — _42 KB_
 - OMA-orders.phone.light: has real content on it (not a blank screen) — _63/59/33_
-- OMA-orders.phone.dark: has the expected path — _/app-screens/oma-orders.phone.dark.webp_
+- OMA-orders.phone.dark: has the expected file name — _oma-orders.phone.dark.webp_
 - OMA-orders.phone.dark: is a real WebP file
 - OMA-orders.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)
 - OMA-orders.phone.dark: the shape of a phone  screen — _0.462 vs 0.462_
@@ -209,13 +211,13 @@ _Nothing failed._
 - OMA · options: a title, a caption and a description that doesn't name a device (the website adds it)
 - OMA · options: a picture for every device the scenario runs on — _tablet-landscape,tablet-portrait,phone_
 - OMA · options · tablet-landscape: a light and a dark picture — _light,dark_
-- OMA-options.tablet-landscape.light: has the expected path — _/app-screens/oma-options.tablet-landscape.light.webp_
+- OMA-options.tablet-landscape.light: has the expected file name — _oma-options.tablet-landscape.light.webp_
 - OMA-options.tablet-landscape.light: is a real WebP file
 - OMA-options.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
 - OMA-options.tablet-landscape.light: the shape of a tablet wide screen — _1.600 vs 1.600_
 - OMA-options.tablet-landscape.light: small enough for a web page (under 260 KB) — _46 KB_
 - OMA-options.tablet-landscape.light: has real content on it (not a blank screen) — _62/61/58_
-- OMA-options.tablet-landscape.dark: has the expected path — _/app-screens/oma-options.tablet-landscape.dark.webp_
+- OMA-options.tablet-landscape.dark: has the expected file name — _oma-options.tablet-landscape.dark.webp_
 - OMA-options.tablet-landscape.dark: is a real WebP file
 - OMA-options.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
 - OMA-options.tablet-landscape.dark: the shape of a tablet wide screen — _1.600 vs 1.600_
@@ -223,13 +225,13 @@ _Nothing failed._
 - OMA-options.tablet-landscape.dark: has real content on it (not a blank screen) — _20/20/32_
 - OMA · options · tablet-landscape: the dark picture is clearly darker than the light one — _light 165, dark 23_
 - OMA · options · tablet-portrait: a light and a dark picture — _light,dark_
-- OMA-options.tablet-portrait.light: has the expected path — _/app-screens/oma-options.tablet-portrait.light.webp_
+- OMA-options.tablet-portrait.light: has the expected file name — _oma-options.tablet-portrait.light.webp_
 - OMA-options.tablet-portrait.light: is a real WebP file
 - OMA-options.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
 - OMA-options.tablet-portrait.light: the shape of a tablet tall screen — _0.625 vs 0.625_
 - OMA-options.tablet-portrait.light: small enough for a web page (under 260 KB) — _42 KB_
 - OMA-options.tablet-portrait.light: has real content on it (not a blank screen) — _64/63/59_
-- OMA-options.tablet-portrait.dark: has the expected path — _/app-screens/oma-options.tablet-portrait.dark.webp_
+- OMA-options.tablet-portrait.dark: has the expected file name — _oma-options.tablet-portrait.dark.webp_
 - OMA-options.tablet-portrait.dark: is a real WebP file
 - OMA-options.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
 - OMA-options.tablet-portrait.dark: the shape of a tablet tall screen — _0.625 vs 0.625_
@@ -237,13 +239,13 @@ _Nothing failed._
 - OMA-options.tablet-portrait.dark: has real content on it (not a blank screen) — _20/21/32_
 - OMA · options · tablet-portrait: the dark picture is clearly darker than the light one — _light 164, dark 23_
 - OMA · options · phone: a light and a dark picture — _light,dark_
-- OMA-options.phone.light: has the expected path — _/app-screens/oma-options.phone.light.webp_
+- OMA-options.phone.light: has the expected file name — _oma-options.phone.light.webp_
 - OMA-options.phone.light: is a real WebP file
 - OMA-options.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)
 - OMA-options.phone.light: the shape of a phone  screen — _0.462 vs 0.462_
 - OMA-options.phone.light: small enough for a web page (under 260 KB) — _33 KB_
 - OMA-options.phone.light: has real content on it (not a blank screen) — _66/65/59_
-- OMA-options.phone.dark: has the expected path — _/app-screens/oma-options.phone.dark.webp_
+- OMA-options.phone.dark: has the expected file name — _oma-options.phone.dark.webp_
 - OMA-options.phone.dark: is a real WebP file
 - OMA-options.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)
 - OMA-options.phone.dark: the shape of a phone  screen — _0.462 vs 0.462_
@@ -256,13 +258,13 @@ _Nothing failed._
 - KDA · board: a title, a caption and a description that doesn't name a device (the website adds it)
 - KDA · board: a picture for every device the scenario runs on — _tablet-landscape,tablet-portrait,phone_
 - KDA · board · tablet-landscape: a light and a dark picture — _light,dark_
-- KDA-board.tablet-landscape.light: has the expected path — _/app-screens/kda-board.tablet-landscape.light.webp_
+- KDA-board.tablet-landscape.light: has the expected file name — _kda-board.tablet-landscape.light.webp_
 - KDA-board.tablet-landscape.light: is a real WebP file
 - KDA-board.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
 - KDA-board.tablet-landscape.light: the shape of a tablet wide screen — _1.600 vs 1.600_
 - KDA-board.tablet-landscape.light: small enough for a web page (under 260 KB) — _74 KB_
 - KDA-board.tablet-landscape.light: has real content on it (not a blank screen) — _62/45/48_
-- KDA-board.tablet-landscape.dark: has the expected path — _/app-screens/kda-board.tablet-landscape.dark.webp_
+- KDA-board.tablet-landscape.dark: has the expected file name — _kda-board.tablet-landscape.dark.webp_
 - KDA-board.tablet-landscape.dark: is a real WebP file
 - KDA-board.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
 - KDA-board.tablet-landscape.dark: the shape of a tablet wide screen — _1.600 vs 1.600_
@@ -270,13 +272,13 @@ _Nothing failed._
 - KDA-board.tablet-landscape.dark: has real content on it (not a blank screen) — _37/39/37_
 - KDA · board · tablet-landscape: the dark picture is clearly darker than the light one — _light 234, dark 37_
 - KDA · board · tablet-portrait: a light and a dark picture — _light,dark_
-- KDA-board.tablet-portrait.light: has the expected path — _/app-screens/kda-board.tablet-portrait.light.webp_
+- KDA-board.tablet-portrait.light: has the expected file name — _kda-board.tablet-portrait.light.webp_
 - KDA-board.tablet-portrait.light: is a real WebP file
 - KDA-board.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
 - KDA-board.tablet-portrait.light: the shape of a tablet tall screen — _0.625 vs 0.625_
 - KDA-board.tablet-portrait.light: small enough for a web page (under 260 KB) — _93 KB_
 - KDA-board.tablet-portrait.light: has real content on it (not a blank screen) — _63/48/52_
-- KDA-board.tablet-portrait.dark: has the expected path — _/app-screens/kda-board.tablet-portrait.dark.webp_
+- KDA-board.tablet-portrait.dark: has the expected file name — _kda-board.tablet-portrait.dark.webp_
 - KDA-board.tablet-portrait.dark: is a real WebP file
 - KDA-board.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
 - KDA-board.tablet-portrait.dark: the shape of a tablet tall screen — _0.625 vs 0.625_
@@ -284,13 +286,13 @@ _Nothing failed._
 - KDA-board.tablet-portrait.dark: has real content on it (not a blank screen) — _42/42/39_
 - KDA · board · tablet-portrait: the dark picture is clearly darker than the light one — _light 231, dark 39_
 - KDA · board · phone: a light and a dark picture — _light,dark_
-- KDA-board.phone.light: has the expected path — _/app-screens/kda-board.phone.light.webp_
+- KDA-board.phone.light: has the expected file name — _kda-board.phone.light.webp_
 - KDA-board.phone.light: is a real WebP file
 - KDA-board.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)
 - KDA-board.phone.light: the shape of a phone  screen — _0.462 vs 0.462_
 - KDA-board.phone.light: small enough for a web page (under 260 KB) — _36 KB_
 - KDA-board.phone.light: has real content on it (not a blank screen) — _77/50/55_
-- KDA-board.phone.dark: has the expected path — _/app-screens/kda-board.phone.dark.webp_
+- KDA-board.phone.dark: has the expected file name — _kda-board.phone.dark.webp_
 - KDA-board.phone.dark: is a real WebP file
 - KDA-board.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)
 - KDA-board.phone.dark: the shape of a phone  screen — _0.462 vs 0.462_
@@ -301,13 +303,13 @@ _Nothing failed._
 - KDA · prep: a title, a caption and a description that doesn't name a device (the website adds it)
 - KDA · prep: a picture for every device the scenario runs on — _tablet-landscape,tablet-portrait,phone_
 - KDA · prep · tablet-landscape: a light and a dark picture — _light,dark_
-- KDA-prep.tablet-landscape.light: has the expected path — _/app-screens/kda-prep.tablet-landscape.light.webp_
+- KDA-prep.tablet-landscape.light: has the expected file name — _kda-prep.tablet-landscape.light.webp_
 - KDA-prep.tablet-landscape.light: is a real WebP file
 - KDA-prep.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
 - KDA-prep.tablet-landscape.light: the shape of a tablet wide screen — _1.600 vs 1.600_
 - KDA-prep.tablet-landscape.light: small enough for a web page (under 260 KB) — _33 KB_
 - KDA-prep.tablet-landscape.light: has real content on it (not a blank screen) — _23/22/22_
-- KDA-prep.tablet-landscape.dark: has the expected path — _/app-screens/kda-prep.tablet-landscape.dark.webp_
+- KDA-prep.tablet-landscape.dark: has the expected file name — _kda-prep.tablet-landscape.dark.webp_
 - KDA-prep.tablet-landscape.dark: is a real WebP file
 - KDA-prep.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
 - KDA-prep.tablet-landscape.dark: the shape of a tablet wide screen — _1.600 vs 1.600_
@@ -315,13 +317,13 @@ _Nothing failed._
 - KDA-prep.tablet-landscape.dark: has real content on it (not a blank screen) — _21/22/22_
 - KDA · prep · tablet-landscape: the dark picture is clearly darker than the light one — _light 249, dark 29_
 - KDA · prep · tablet-portrait: a light and a dark picture — _light,dark_
-- KDA-prep.tablet-portrait.light: has the expected path — _/app-screens/kda-prep.tablet-portrait.light.webp_
+- KDA-prep.tablet-portrait.light: has the expected file name — _kda-prep.tablet-portrait.light.webp_
 - KDA-prep.tablet-portrait.light: is a real WebP file
 - KDA-prep.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
 - KDA-prep.tablet-portrait.light: the shape of a tablet tall screen — _0.625 vs 0.625_
 - KDA-prep.tablet-portrait.light: small enough for a web page (under 260 KB) — _45 KB_
 - KDA-prep.tablet-portrait.light: has real content on it (not a blank screen) — _26/24/25_
-- KDA-prep.tablet-portrait.dark: has the expected path — _/app-screens/kda-prep.tablet-portrait.dark.webp_
+- KDA-prep.tablet-portrait.dark: has the expected file name — _kda-prep.tablet-portrait.dark.webp_
 - KDA-prep.tablet-portrait.dark: is a real WebP file
 - KDA-prep.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
 - KDA-prep.tablet-portrait.dark: the shape of a tablet tall screen — _0.625 vs 0.625_
@@ -329,13 +331,13 @@ _Nothing failed._
 - KDA-prep.tablet-portrait.dark: has real content on it (not a blank screen) — _24/25/25_
 - KDA · prep · tablet-portrait: the dark picture is clearly darker than the light one — _light 248, dark 29_
 - KDA · prep · phone: a light and a dark picture — _light,dark_
-- KDA-prep.phone.light: has the expected path — _/app-screens/kda-prep.phone.light.webp_
+- KDA-prep.phone.light: has the expected file name — _kda-prep.phone.light.webp_
 - KDA-prep.phone.light: is a real WebP file
 - KDA-prep.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)
 - KDA-prep.phone.light: the shape of a phone  screen — _0.462 vs 0.462_
 - KDA-prep.phone.light: small enough for a web page (under 260 KB) — _45 KB_
 - KDA-prep.phone.light: has real content on it (not a blank screen) — _37/35/36_
-- KDA-prep.phone.dark: has the expected path — _/app-screens/kda-prep.phone.dark.webp_
+- KDA-prep.phone.dark: has the expected file name — _kda-prep.phone.dark.webp_
 - KDA-prep.phone.dark: is a real WebP file
 - KDA-prep.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)
 - KDA-prep.phone.dark: the shape of a phone  screen — _0.462 vs 0.462_
@@ -346,13 +348,13 @@ _Nothing failed._
 - KDA · dishes: a title, a caption and a description that doesn't name a device (the website adds it)
 - KDA · dishes: a picture for every device the scenario runs on — _tablet-landscape,tablet-portrait,phone_
 - KDA · dishes · tablet-landscape: a light and a dark picture — _light,dark_
-- KDA-dishes.tablet-landscape.light: has the expected path — _/app-screens/kda-dishes.tablet-landscape.light.webp_
+- KDA-dishes.tablet-landscape.light: has the expected file name — _kda-dishes.tablet-landscape.light.webp_
 - KDA-dishes.tablet-landscape.light: is a real WebP file
 - KDA-dishes.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
 - KDA-dishes.tablet-landscape.light: the shape of a tablet wide screen — _1.600 vs 1.600_
 - KDA-dishes.tablet-landscape.light: small enough for a web page (under 260 KB) — _37 KB_
 - KDA-dishes.tablet-landscape.light: has real content on it (not a blank screen) — _28/22/24_
-- KDA-dishes.tablet-landscape.dark: has the expected path — _/app-screens/kda-dishes.tablet-landscape.dark.webp_
+- KDA-dishes.tablet-landscape.dark: has the expected file name — _kda-dishes.tablet-landscape.dark.webp_
 - KDA-dishes.tablet-landscape.dark: is a real WebP file
 - KDA-dishes.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
 - KDA-dishes.tablet-landscape.dark: the shape of a tablet wide screen — _1.600 vs 1.600_
@@ -360,13 +362,13 @@ _Nothing failed._
 - KDA-dishes.tablet-landscape.dark: has real content on it (not a blank screen) — _20/23/21_
 - KDA · dishes · tablet-landscape: the dark picture is clearly darker than the light one — _light 247, dark 28_
 - KDA · dishes · tablet-portrait: a light and a dark picture — _light,dark_
-- KDA-dishes.tablet-portrait.light: has the expected path — _/app-screens/kda-dishes.tablet-portrait.light.webp_
+- KDA-dishes.tablet-portrait.light: has the expected file name — _kda-dishes.tablet-portrait.light.webp_
 - KDA-dishes.tablet-portrait.light: is a real WebP file
 - KDA-dishes.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
 - KDA-dishes.tablet-portrait.light: the shape of a tablet tall screen — _0.625 vs 0.625_
 - KDA-dishes.tablet-portrait.light: small enough for a web page (under 260 KB) — _56 KB_
 - KDA-dishes.tablet-portrait.light: has real content on it (not a blank screen) — _33/26/28_
-- KDA-dishes.tablet-portrait.dark: has the expected path — _/app-screens/kda-dishes.tablet-portrait.dark.webp_
+- KDA-dishes.tablet-portrait.dark: has the expected file name — _kda-dishes.tablet-portrait.dark.webp_
 - KDA-dishes.tablet-portrait.dark: is a real WebP file
 - KDA-dishes.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
 - KDA-dishes.tablet-portrait.dark: the shape of a tablet tall screen — _0.625 vs 0.625_
@@ -374,13 +376,13 @@ _Nothing failed._
 - KDA-dishes.tablet-portrait.dark: has real content on it (not a blank screen) — _23/26/25_
 - KDA · dishes · tablet-portrait: the dark picture is clearly darker than the light one — _light 246, dark 30_
 - KDA · dishes · phone: a light and a dark picture — _light,dark_
-- KDA-dishes.phone.light: has the expected path — _/app-screens/kda-dishes.phone.light.webp_
+- KDA-dishes.phone.light: has the expected file name — _kda-dishes.phone.light.webp_
 - KDA-dishes.phone.light: is a real WebP file
 - KDA-dishes.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)
 - KDA-dishes.phone.light: the shape of a phone  screen — _0.462 vs 0.462_
 - KDA-dishes.phone.light: small enough for a web page (under 260 KB) — _49 KB_
 - KDA-dishes.phone.light: has real content on it (not a blank screen) — _42/34/37_
-- KDA-dishes.phone.dark: has the expected path — _/app-screens/kda-dishes.phone.dark.webp_
+- KDA-dishes.phone.dark: has the expected file name — _kda-dishes.phone.dark.webp_
 - KDA-dishes.phone.dark: is a real WebP file
 - KDA-dishes.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)
 - KDA-dishes.phone.dark: the shape of a phone  screen — _0.462 vs 0.462_
@@ -391,13 +393,13 @@ _Nothing failed._
 - KDA · today: a title, a caption and a description that doesn't name a device (the website adds it)
 - KDA · today: a picture for every device the scenario runs on — _tablet-landscape,tablet-portrait,phone_
 - KDA · today · tablet-landscape: a light and a dark picture — _light,dark_
-- KDA-today.tablet-landscape.light: has the expected path — _/app-screens/kda-today.tablet-landscape.light.webp_
+- KDA-today.tablet-landscape.light: has the expected file name — _kda-today.tablet-landscape.light.webp_
 - KDA-today.tablet-landscape.light: is a real WebP file
 - KDA-today.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
 - KDA-today.tablet-landscape.light: the shape of a tablet wide screen — _1.600 vs 1.600_
 - KDA-today.tablet-landscape.light: small enough for a web page (under 260 KB) — _27 KB_
 - KDA-today.tablet-landscape.light: has real content on it (not a blank screen) — _20/19/19_
-- KDA-today.tablet-landscape.dark: has the expected path — _/app-screens/kda-today.tablet-landscape.dark.webp_
+- KDA-today.tablet-landscape.dark: has the expected file name — _kda-today.tablet-landscape.dark.webp_
 - KDA-today.tablet-landscape.dark: is a real WebP file
 - KDA-today.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
 - KDA-today.tablet-landscape.dark: the shape of a tablet wide screen — _1.600 vs 1.600_
@@ -405,13 +407,13 @@ _Nothing failed._
 - KDA-today.tablet-landscape.dark: has real content on it (not a blank screen) — _19/20/19_
 - KDA · today · tablet-landscape: the dark picture is clearly darker than the light one — _light 249, dark 26_
 - KDA · today · tablet-portrait: a light and a dark picture — _light,dark_
-- KDA-today.tablet-portrait.light: has the expected path — _/app-screens/kda-today.tablet-portrait.light.webp_
+- KDA-today.tablet-portrait.light: has the expected file name — _kda-today.tablet-portrait.light.webp_
 - KDA-today.tablet-portrait.light: is a real WebP file
 - KDA-today.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
 - KDA-today.tablet-portrait.light: the shape of a tablet tall screen — _0.625 vs 0.625_
 - KDA-today.tablet-portrait.light: small enough for a web page (under 260 KB) — _29 KB_
 - KDA-today.tablet-portrait.light: has real content on it (not a blank screen) — _20/19/19_
-- KDA-today.tablet-portrait.dark: has the expected path — _/app-screens/kda-today.tablet-portrait.dark.webp_
+- KDA-today.tablet-portrait.dark: has the expected file name — _kda-today.tablet-portrait.dark.webp_
 - KDA-today.tablet-portrait.dark: is a real WebP file
 - KDA-today.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
 - KDA-today.tablet-portrait.dark: the shape of a tablet tall screen — _0.625 vs 0.625_
@@ -419,13 +421,13 @@ _Nothing failed._
 - KDA-today.tablet-portrait.dark: has real content on it (not a blank screen) — _19/20/20_
 - KDA · today · tablet-portrait: the dark picture is clearly darker than the light one — _light 247, dark 24_
 - KDA · today · phone: a light and a dark picture — _light,dark_
-- KDA-today.phone.light: has the expected path — _/app-screens/kda-today.phone.light.webp_
+- KDA-today.phone.light: has the expected file name — _kda-today.phone.light.webp_
 - KDA-today.phone.light: is a real WebP file
 - KDA-today.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)
 - KDA-today.phone.light: the shape of a phone  screen — _0.462 vs 0.462_
 - KDA-today.phone.light: small enough for a web page (under 260 KB) — _34 KB_
 - KDA-today.phone.light: has real content on it (not a blank screen) — _33/30/31_
-- KDA-today.phone.dark: has the expected path — _/app-screens/kda-today.phone.dark.webp_
+- KDA-today.phone.dark: has the expected file name — _kda-today.phone.dark.webp_
 - KDA-today.phone.dark: is a real WebP file
 - KDA-today.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)
 - KDA-today.phone.dark: the shape of a phone  screen — _0.462 vs 0.462_
@@ -438,13 +440,13 @@ _Nothing failed._
 - RDA · deliveries: a title, a caption and a description that doesn't name a device (the website adds it)
 - RDA · deliveries: a picture for every device the scenario runs on — _tablet-landscape,tablet-portrait,phone_
 - RDA · deliveries · tablet-landscape: a light and a dark picture — _light,dark_
-- RDA-deliveries.tablet-landscape.light: has the expected path — _/app-screens/rda-deliveries.tablet-landscape.light.webp_
+- RDA-deliveries.tablet-landscape.light: has the expected file name — _rda-deliveries.tablet-landscape.light.webp_
 - RDA-deliveries.tablet-landscape.light: is a real WebP file
 - RDA-deliveries.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
 - RDA-deliveries.tablet-landscape.light: the shape of a tablet wide screen — _1.600 vs 1.600_
 - RDA-deliveries.tablet-landscape.light: small enough for a web page (under 260 KB) — _41 KB_
 - RDA-deliveries.tablet-landscape.light: has real content on it (not a blank screen) — _43/50/25_
-- RDA-deliveries.tablet-landscape.dark: has the expected path — _/app-screens/rda-deliveries.tablet-landscape.dark.webp_
+- RDA-deliveries.tablet-landscape.dark: has the expected file name — _rda-deliveries.tablet-landscape.dark.webp_
 - RDA-deliveries.tablet-landscape.dark: is a real WebP file
 - RDA-deliveries.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
 - RDA-deliveries.tablet-landscape.dark: the shape of a tablet wide screen — _1.600 vs 1.600_
@@ -452,13 +454,13 @@ _Nothing failed._
 - RDA-deliveries.tablet-landscape.dark: has real content on it (not a blank screen) — _32/28/51_
 - RDA · deliveries · tablet-landscape: the dark picture is clearly darker than the light one — _light 239, dark 39_
 - RDA · deliveries · tablet-portrait: a light and a dark picture — _light,dark_
-- RDA-deliveries.tablet-portrait.light: has the expected path — _/app-screens/rda-deliveries.tablet-portrait.light.webp_
+- RDA-deliveries.tablet-portrait.light: has the expected file name — _rda-deliveries.tablet-portrait.light.webp_
 - RDA-deliveries.tablet-portrait.light: is a real WebP file
 - RDA-deliveries.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
 - RDA-deliveries.tablet-portrait.light: the shape of a tablet tall screen — _0.625 vs 0.625_
 - RDA-deliveries.tablet-portrait.light: small enough for a web page (under 260 KB) — _62 KB_
 - RDA-deliveries.tablet-portrait.light: has real content on it (not a blank screen) — _51/60/32_
-- RDA-deliveries.tablet-portrait.dark: has the expected path — _/app-screens/rda-deliveries.tablet-portrait.dark.webp_
+- RDA-deliveries.tablet-portrait.dark: has the expected file name — _rda-deliveries.tablet-portrait.dark.webp_
 - RDA-deliveries.tablet-portrait.dark: is a real WebP file
 - RDA-deliveries.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
 - RDA-deliveries.tablet-portrait.dark: the shape of a tablet tall screen — _0.625 vs 0.625_
@@ -466,13 +468,13 @@ _Nothing failed._
 - RDA-deliveries.tablet-portrait.dark: has real content on it (not a blank screen) — _39/33/59_
 - RDA · deliveries · tablet-portrait: the dark picture is clearly darker than the light one — _light 234, dark 47_
 - RDA · deliveries · phone: a light and a dark picture — _light,dark_
-- RDA-deliveries.phone.light: has the expected path — _/app-screens/rda-deliveries.phone.light.webp_
+- RDA-deliveries.phone.light: has the expected file name — _rda-deliveries.phone.light.webp_
 - RDA-deliveries.phone.light: is a real WebP file
 - RDA-deliveries.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)
 - RDA-deliveries.phone.light: the shape of a phone  screen — _0.462 vs 0.462_
 - RDA-deliveries.phone.light: small enough for a web page (under 260 KB) — _59 KB_
 - RDA-deliveries.phone.light: has real content on it (not a blank screen) — _55/58/38_
-- RDA-deliveries.phone.dark: has the expected path — _/app-screens/rda-deliveries.phone.dark.webp_
+- RDA-deliveries.phone.dark: has the expected file name — _rda-deliveries.phone.dark.webp_
 - RDA-deliveries.phone.dark: is a real WebP file
 - RDA-deliveries.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)
 - RDA-deliveries.phone.dark: the shape of a phone  screen — _0.462 vs 0.462_
@@ -483,13 +485,13 @@ _Nothing failed._
 - RDA · pickup: a title, a caption and a description that doesn't name a device (the website adds it)
 - RDA · pickup: a picture for every device the scenario runs on — _tablet-landscape,tablet-portrait,phone_
 - RDA · pickup · tablet-landscape: a light and a dark picture — _light,dark_
-- RDA-pickup.tablet-landscape.light: has the expected path — _/app-screens/rda-pickup.tablet-landscape.light.webp_
+- RDA-pickup.tablet-landscape.light: has the expected file name — _rda-pickup.tablet-landscape.light.webp_
 - RDA-pickup.tablet-landscape.light: is a real WebP file
 - RDA-pickup.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
 - RDA-pickup.tablet-landscape.light: the shape of a tablet wide screen — _1.600 vs 1.600_
 - RDA-pickup.tablet-landscape.light: small enough for a web page (under 260 KB) — _40 KB_
 - RDA-pickup.tablet-landscape.light: has real content on it (not a blank screen) — _42/50/26_
-- RDA-pickup.tablet-landscape.dark: has the expected path — _/app-screens/rda-pickup.tablet-landscape.dark.webp_
+- RDA-pickup.tablet-landscape.dark: has the expected file name — _rda-pickup.tablet-landscape.dark.webp_
 - RDA-pickup.tablet-landscape.dark: is a real WebP file
 - RDA-pickup.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
 - RDA-pickup.tablet-landscape.dark: the shape of a tablet wide screen — _1.600 vs 1.600_
@@ -497,13 +499,13 @@ _Nothing failed._
 - RDA-pickup.tablet-landscape.dark: has real content on it (not a blank screen) — _33/27/50_
 - RDA · pickup · tablet-landscape: the dark picture is clearly darker than the light one — _light 240, dark 39_
 - RDA · pickup · tablet-portrait: a light and a dark picture — _light,dark_
-- RDA-pickup.tablet-portrait.light: has the expected path — _/app-screens/rda-pickup.tablet-portrait.light.webp_
+- RDA-pickup.tablet-portrait.light: has the expected file name — _rda-pickup.tablet-portrait.light.webp_
 - RDA-pickup.tablet-portrait.light: is a real WebP file
 - RDA-pickup.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
 - RDA-pickup.tablet-portrait.light: the shape of a tablet tall screen — _0.625 vs 0.625_
 - RDA-pickup.tablet-portrait.light: small enough for a web page (under 260 KB) — _60 KB_
 - RDA-pickup.tablet-portrait.light: has real content on it (not a blank screen) — _50/60/31_
-- RDA-pickup.tablet-portrait.dark: has the expected path — _/app-screens/rda-pickup.tablet-portrait.dark.webp_
+- RDA-pickup.tablet-portrait.dark: has the expected file name — _rda-pickup.tablet-portrait.dark.webp_
 - RDA-pickup.tablet-portrait.dark: is a real WebP file
 - RDA-pickup.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
 - RDA-pickup.tablet-portrait.dark: the shape of a tablet tall screen — _0.625 vs 0.625_
@@ -511,13 +513,13 @@ _Nothing failed._
 - RDA-pickup.tablet-portrait.dark: has real content on it (not a blank screen) — _38/32/58_
 - RDA · pickup · tablet-portrait: the dark picture is clearly darker than the light one — _light 235, dark 47_
 - RDA · pickup · phone: a light and a dark picture — _light,dark_
-- RDA-pickup.phone.light: has the expected path — _/app-screens/rda-pickup.phone.light.webp_
+- RDA-pickup.phone.light: has the expected file name — _rda-pickup.phone.light.webp_
 - RDA-pickup.phone.light: is a real WebP file
 - RDA-pickup.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)
 - RDA-pickup.phone.light: the shape of a phone  screen — _0.462 vs 0.462_
 - RDA-pickup.phone.light: small enough for a web page (under 260 KB) — _55 KB_
 - RDA-pickup.phone.light: has real content on it (not a blank screen) — _56/63/42_
-- RDA-pickup.phone.dark: has the expected path — _/app-screens/rda-pickup.phone.dark.webp_
+- RDA-pickup.phone.dark: has the expected file name — _rda-pickup.phone.dark.webp_
 - RDA-pickup.phone.dark: is a real WebP file
 - RDA-pickup.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)
 - RDA-pickup.phone.dark: the shape of a phone  screen — _0.462 vs 0.462_
@@ -528,13 +530,13 @@ _Nothing failed._
 - RDA · code: a title, a caption and a description that doesn't name a device (the website adds it)
 - RDA · code: a picture for every device the scenario runs on — _tablet-landscape,tablet-portrait,phone_
 - RDA · code · tablet-landscape: a light and a dark picture — _light,dark_
-- RDA-code.tablet-landscape.light: has the expected path — _/app-screens/rda-code.tablet-landscape.light.webp_
+- RDA-code.tablet-landscape.light: has the expected file name — _rda-code.tablet-landscape.light.webp_
 - RDA-code.tablet-landscape.light: is a real WebP file
 - RDA-code.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
 - RDA-code.tablet-landscape.light: the shape of a tablet wide screen — _1.600 vs 1.600_
 - RDA-code.tablet-landscape.light: small enough for a web page (under 260 KB) — _38 KB_
 - RDA-code.tablet-landscape.light: has real content on it (not a blank screen) — _45/47/43_
-- RDA-code.tablet-landscape.dark: has the expected path — _/app-screens/rda-code.tablet-landscape.dark.webp_
+- RDA-code.tablet-landscape.dark: has the expected file name — _rda-code.tablet-landscape.dark.webp_
 - RDA-code.tablet-landscape.dark: is a real WebP file
 - RDA-code.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
 - RDA-code.tablet-landscape.dark: the shape of a tablet wide screen — _1.600 vs 1.600_
@@ -542,13 +544,13 @@ _Nothing failed._
 - RDA-code.tablet-landscape.dark: has real content on it (not a blank screen) — _26/21/39_
 - RDA · code · tablet-landscape: the dark picture is clearly darker than the light one — _light 146, dark 20_
 - RDA · code · tablet-portrait: a light and a dark picture — _light,dark_
-- RDA-code.tablet-portrait.light: has the expected path — _/app-screens/rda-code.tablet-portrait.light.webp_
+- RDA-code.tablet-portrait.light: has the expected file name — _rda-code.tablet-portrait.light.webp_
 - RDA-code.tablet-portrait.light: is a real WebP file
 - RDA-code.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
 - RDA-code.tablet-portrait.light: the shape of a tablet tall screen — _0.625 vs 0.625_
 - RDA-code.tablet-portrait.light: small enough for a web page (under 260 KB) — _52 KB_
 - RDA-code.tablet-portrait.light: has real content on it (not a blank screen) — _49/52/45_
-- RDA-code.tablet-portrait.dark: has the expected path — _/app-screens/rda-code.tablet-portrait.dark.webp_
+- RDA-code.tablet-portrait.dark: has the expected file name — _rda-code.tablet-portrait.dark.webp_
 - RDA-code.tablet-portrait.dark: is a real WebP file
 - RDA-code.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
 - RDA-code.tablet-portrait.dark: the shape of a tablet tall screen — _0.625 vs 0.625_
@@ -556,19 +558,291 @@ _Nothing failed._
 - RDA-code.tablet-portrait.dark: has real content on it (not a blank screen) — _26/21/39_
 - RDA · code · tablet-portrait: the dark picture is clearly darker than the light one — _light 143, dark 22_
 - RDA · code · phone: a light and a dark picture — _light,dark_
-- RDA-code.phone.light: has the expected path — _/app-screens/rda-code.phone.light.webp_
+- RDA-code.phone.light: has the expected file name — _rda-code.phone.light.webp_
 - RDA-code.phone.light: is a real WebP file
 - RDA-code.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)
 - RDA-code.phone.light: the shape of a phone  screen — _0.462 vs 0.462_
 - RDA-code.phone.light: small enough for a web page (under 260 KB) — _46 KB_
 - RDA-code.phone.light: has real content on it (not a blank screen) — _66/69/62_
-- RDA-code.phone.dark: has the expected path — _/app-screens/rda-code.phone.dark.webp_
+- RDA-code.phone.dark: has the expected file name — _rda-code.phone.dark.webp_
 - RDA-code.phone.dark: is a real WebP file
 - RDA-code.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)
 - RDA-code.phone.dark: the shape of a phone  screen — _0.462 vs 0.462_
 - RDA-code.phone.dark: small enough for a web page (under 260 KB) — _39 KB_
 - RDA-code.phone.dark: has real content on it (not a blank screen) — _36/31/52_
 - RDA · code · phone: the dark picture is clearly darker than the light one — _light 169, dark 32_
+- Business: at least three screenshots, each with its own name — _6_
+- Business: the list and the scenarios agree on which screens, in which order — _home,sales,money,dishes,customers,outlets_
+- Business · home: its words are the scenario's
+- Business · home: a title, a caption and a description that doesn't name a device (the website adds it)
+- Business · home: a picture for every device the scenario runs on — _tablet-landscape,tablet-portrait,phone_
+- Business · home · tablet-landscape: a light and a dark picture — _light,dark_
+- Business-home.tablet-landscape.light: has the expected file name — _business-home.tablet-landscape.light.webp_
+- Business-home.tablet-landscape.light: is a real WebP file
+- Business-home.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
+- Business-home.tablet-landscape.light: the shape of a tablet wide screen — _1.600 vs 1.600_
+- Business-home.tablet-landscape.light: small enough for a web page (under 260 KB) — _57 KB_
+- Business-home.tablet-landscape.light: has real content on it (not a blank screen) — _24/29/28_
+- Business-home.tablet-landscape.dark: has the expected file name — _business-home.tablet-landscape.dark.webp_
+- Business-home.tablet-landscape.dark: is a real WebP file
+- Business-home.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
+- Business-home.tablet-landscape.dark: the shape of a tablet wide screen — _1.600 vs 1.600_
+- Business-home.tablet-landscape.dark: small enough for a web page (under 260 KB) — _60 KB_
+- Business-home.tablet-landscape.dark: has real content on it (not a blank screen) — _34/27/27_
+- Business · home · tablet-landscape: the dark picture is clearly darker than the light one — _light 237, dark 38_
+- Business · home · tablet-portrait: a light and a dark picture — _light,dark_
+- Business-home.tablet-portrait.light: has the expected file name — _business-home.tablet-portrait.light.webp_
+- Business-home.tablet-portrait.light: is a real WebP file
+- Business-home.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
+- Business-home.tablet-portrait.light: the shape of a tablet tall screen — _0.625 vs 0.625_
+- Business-home.tablet-portrait.light: small enough for a web page (under 260 KB) — _77 KB_
+- Business-home.tablet-portrait.light: has real content on it (not a blank screen) — _27/32/30_
+- Business-home.tablet-portrait.dark: has the expected file name — _business-home.tablet-portrait.dark.webp_
+- Business-home.tablet-portrait.dark: is a real WebP file
+- Business-home.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
+- Business-home.tablet-portrait.dark: the shape of a tablet tall screen — _0.625 vs 0.625_
+- Business-home.tablet-portrait.dark: small enough for a web page (under 260 KB) — _84 KB_
+- Business-home.tablet-portrait.dark: has real content on it (not a blank screen) — _36/30/30_
+- Business · home · tablet-portrait: the dark picture is clearly darker than the light one — _light 236, dark 40_
+- Business · home · phone: a light and a dark picture — _light,dark_
+- Business-home.phone.light: has the expected file name — _business-home.phone.light.webp_
+- Business-home.phone.light: is a real WebP file
+- Business-home.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)
+- Business-home.phone.light: the shape of a phone  screen — _0.462 vs 0.462_
+- Business-home.phone.light: small enough for a web page (under 260 KB) — _62 KB_
+- Business-home.phone.light: has real content on it (not a blank screen) — _35/43/41_
+- Business-home.phone.dark: has the expected file name — _business-home.phone.dark.webp_
+- Business-home.phone.dark: is a real WebP file
+- Business-home.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)
+- Business-home.phone.dark: the shape of a phone  screen — _0.462 vs 0.462_
+- Business-home.phone.dark: small enough for a web page (under 260 KB) — _65 KB_
+- Business-home.phone.dark: has real content on it (not a blank screen) — _49/39/39_
+- Business · home · phone: the dark picture is clearly darker than the light one — _light 228, dark 52_
+- Business · sales: its words are the scenario's
+- Business · sales: a title, a caption and a description that doesn't name a device (the website adds it)
+- Business · sales: a picture for every device the scenario runs on — _tablet-landscape,tablet-portrait,phone_
+- Business · sales · tablet-landscape: a light and a dark picture — _light,dark_
+- Business-sales.tablet-landscape.light: has the expected file name — _business-sales.tablet-landscape.light.webp_
+- Business-sales.tablet-landscape.light: is a real WebP file
+- Business-sales.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
+- Business-sales.tablet-landscape.light: the shape of a tablet wide screen — _1.600 vs 1.600_
+- Business-sales.tablet-landscape.light: small enough for a web page (under 260 KB) — _62 KB_
+- Business-sales.tablet-landscape.light: has real content on it (not a blank screen) — _23/33/28_
+- Business-sales.tablet-landscape.dark: has the expected file name — _business-sales.tablet-landscape.dark.webp_
+- Business-sales.tablet-landscape.dark: is a real WebP file
+- Business-sales.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
+- Business-sales.tablet-landscape.dark: the shape of a tablet wide screen — _1.600 vs 1.600_
+- Business-sales.tablet-landscape.dark: small enough for a web page (under 260 KB) — _68 KB_
+- Business-sales.tablet-landscape.dark: has real content on it (not a blank screen) — _36/26/27_
+- Business · sales · tablet-landscape: the dark picture is clearly darker than the light one — _light 235, dark 39_
+- Business · sales · tablet-portrait: a light and a dark picture — _light,dark_
+- Business-sales.tablet-portrait.light: has the expected file name — _business-sales.tablet-portrait.light.webp_
+- Business-sales.tablet-portrait.light: is a real WebP file
+- Business-sales.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
+- Business-sales.tablet-portrait.light: the shape of a tablet tall screen — _0.625 vs 0.625_
+- Business-sales.tablet-portrait.light: small enough for a web page (under 260 KB) — _80 KB_
+- Business-sales.tablet-portrait.light: has real content on it (not a blank screen) — _41/36/29_
+- Business-sales.tablet-portrait.dark: has the expected file name — _business-sales.tablet-portrait.dark.webp_
+- Business-sales.tablet-portrait.dark: is a real WebP file
+- Business-sales.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
+- Business-sales.tablet-portrait.dark: the shape of a tablet tall screen — _0.625 vs 0.625_
+- Business-sales.tablet-portrait.dark: small enough for a web page (under 260 KB) — _87 KB_
+- Business-sales.tablet-portrait.dark: has real content on it (not a blank screen) — _36/40/43_
+- Business · sales · tablet-portrait: the dark picture is clearly darker than the light one — _light 231, dark 44_
+- Business · sales · phone: a light and a dark picture — _light,dark_
+- Business-sales.phone.light: has the expected file name — _business-sales.phone.light.webp_
+- Business-sales.phone.light: is a real WebP file
+- Business-sales.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)
+- Business-sales.phone.light: the shape of a phone  screen — _0.462 vs 0.462_
+- Business-sales.phone.light: small enough for a web page (under 260 KB) — _53 KB_
+- Business-sales.phone.light: has real content on it (not a blank screen) — _34/43/37_
+- Business-sales.phone.dark: has the expected file name — _business-sales.phone.dark.webp_
+- Business-sales.phone.dark: is a real WebP file
+- Business-sales.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)
+- Business-sales.phone.dark: the shape of a phone  screen — _0.462 vs 0.462_
+- Business-sales.phone.dark: small enough for a web page (under 260 KB) — _55 KB_
+- Business-sales.phone.dark: has real content on it (not a blank screen) — _45/36/38_
+- Business · sales · phone: the dark picture is clearly darker than the light one — _light 229, dark 50_
+- Business · money: its words are the scenario's
+- Business · money: a title, a caption and a description that doesn't name a device (the website adds it)
+- Business · money: a picture for every device the scenario runs on — _tablet-landscape,tablet-portrait,phone_
+- Business · money · tablet-landscape: a light and a dark picture — _light,dark_
+- Business-money.tablet-landscape.light: has the expected file name — _business-money.tablet-landscape.light.webp_
+- Business-money.tablet-landscape.light: is a real WebP file
+- Business-money.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
+- Business-money.tablet-landscape.light: the shape of a tablet wide screen — _1.600 vs 1.600_
+- Business-money.tablet-landscape.light: small enough for a web page (under 260 KB) — _46 KB_
+- Business-money.tablet-landscape.light: has real content on it (not a blank screen) — _24/32/27_
+- Business-money.tablet-landscape.dark: has the expected file name — _business-money.tablet-landscape.dark.webp_
+- Business-money.tablet-landscape.dark: is a real WebP file
+- Business-money.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
+- Business-money.tablet-landscape.dark: the shape of a tablet wide screen — _1.600 vs 1.600_
+- Business-money.tablet-landscape.dark: small enough for a web page (under 260 KB) — _49 KB_
+- Business-money.tablet-landscape.dark: has real content on it (not a blank screen) — _33/26/26_
+- Business · money · tablet-landscape: the dark picture is clearly darker than the light one — _light 236, dark 37_
+- Business · money · tablet-portrait: a light and a dark picture — _light,dark_
+- Business-money.tablet-portrait.light: has the expected file name — _business-money.tablet-portrait.light.webp_
+- Business-money.tablet-portrait.light: is a real WebP file
+- Business-money.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
+- Business-money.tablet-portrait.light: the shape of a tablet tall screen — _0.625 vs 0.625_
+- Business-money.tablet-portrait.light: small enough for a web page (under 260 KB) — _61 KB_
+- Business-money.tablet-portrait.light: has real content on it (not a blank screen) — _26/43/35_
+- Business-money.tablet-portrait.dark: has the expected file name — _business-money.tablet-portrait.dark.webp_
+- Business-money.tablet-portrait.dark: is a real WebP file
+- Business-money.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
+- Business-money.tablet-portrait.dark: the shape of a tablet tall screen — _0.625 vs 0.625_
+- Business-money.tablet-portrait.dark: small enough for a web page (under 260 KB) — _67 KB_
+- Business-money.tablet-portrait.dark: has real content on it (not a blank screen) — _42/28/29_
+- Business · money · tablet-portrait: the dark picture is clearly darker than the light one — _light 233, dark 40_
+- Business · money · phone: a light and a dark picture — _light,dark_
+- Business-money.phone.light: has the expected file name — _business-money.phone.light.webp_
+- Business-money.phone.light: is a real WebP file
+- Business-money.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)
+- Business-money.phone.light: the shape of a phone  screen — _0.462 vs 0.462_
+- Business-money.phone.light: small enough for a web page (under 260 KB) — _52 KB_
+- Business-money.phone.light: has real content on it (not a blank screen) — _34/47/40_
+- Business-money.phone.dark: has the expected file name — _business-money.phone.dark.webp_
+- Business-money.phone.dark: is a real WebP file
+- Business-money.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)
+- Business-money.phone.dark: the shape of a phone  screen — _0.462 vs 0.462_
+- Business-money.phone.dark: small enough for a web page (under 260 KB) — _55 KB_
+- Business-money.phone.dark: has real content on it (not a blank screen) — _47/37/38_
+- Business · money · phone: the dark picture is clearly darker than the light one — _light 227, dark 50_
+- Business · dishes: its words are the scenario's
+- Business · dishes: a title, a caption and a description that doesn't name a device (the website adds it)
+- Business · dishes: a picture for every device the scenario runs on — _tablet-landscape,tablet-portrait,phone_
+- Business · dishes · tablet-landscape: a light and a dark picture — _light,dark_
+- Business-dishes.tablet-landscape.light: has the expected file name — _business-dishes.tablet-landscape.light.webp_
+- Business-dishes.tablet-landscape.light: is a real WebP file
+- Business-dishes.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
+- Business-dishes.tablet-landscape.light: the shape of a tablet wide screen — _1.600 vs 1.600_
+- Business-dishes.tablet-landscape.light: small enough for a web page (under 260 KB) — _38 KB_
+- Business-dishes.tablet-landscape.light: has real content on it (not a blank screen) — _22/45/35_
+- Business-dishes.tablet-landscape.dark: has the expected file name — _business-dishes.tablet-landscape.dark.webp_
+- Business-dishes.tablet-landscape.dark: is a real WebP file
+- Business-dishes.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
+- Business-dishes.tablet-landscape.dark: the shape of a tablet wide screen — _1.600 vs 1.600_
+- Business-dishes.tablet-landscape.dark: small enough for a web page (under 260 KB) — _40 KB_
+- Business-dishes.tablet-landscape.dark: has real content on it (not a blank screen) — _41/23/24_
+- Business · dishes · tablet-landscape: the dark picture is clearly darker than the light one — _light 234, dark 38_
+- Business · dishes · tablet-portrait: a light and a dark picture — _light,dark_
+- Business-dishes.tablet-portrait.light: has the expected file name — _business-dishes.tablet-portrait.light.webp_
+- Business-dishes.tablet-portrait.light: is a real WebP file
+- Business-dishes.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
+- Business-dishes.tablet-portrait.light: the shape of a tablet tall screen — _0.625 vs 0.625_
+- Business-dishes.tablet-portrait.light: small enough for a web page (under 260 KB) — _59 KB_
+- Business-dishes.tablet-portrait.light: has real content on it (not a blank screen) — _26/42/34_
+- Business-dishes.tablet-portrait.dark: has the expected file name — _business-dishes.tablet-portrait.dark.webp_
+- Business-dishes.tablet-portrait.dark: is a real WebP file
+- Business-dishes.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
+- Business-dishes.tablet-portrait.dark: the shape of a tablet tall screen — _0.625 vs 0.625_
+- Business-dishes.tablet-portrait.dark: small enough for a web page (under 260 KB) — _62 KB_
+- Business-dishes.tablet-portrait.dark: has real content on it (not a blank screen) — _39/27/28_
+- Business · dishes · tablet-portrait: the dark picture is clearly darker than the light one — _light 234, dark 39_
+- Business · dishes · phone: a light and a dark picture — _light,dark_
+- Business-dishes.phone.light: has the expected file name — _business-dishes.phone.light.webp_
+- Business-dishes.phone.light: is a real WebP file
+- Business-dishes.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)
+- Business-dishes.phone.light: the shape of a phone  screen — _0.462 vs 0.462_
+- Business-dishes.phone.light: small enough for a web page (under 260 KB) — _44 KB_
+- Business-dishes.phone.light: has real content on it (not a blank screen) — _32/54/43_
+- Business-dishes.phone.dark: has the expected file name — _business-dishes.phone.dark.webp_
+- Business-dishes.phone.dark: is a real WebP file
+- Business-dishes.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)
+- Business-dishes.phone.dark: the shape of a phone  screen — _0.462 vs 0.462_
+- Business-dishes.phone.dark: small enough for a web page (under 260 KB) — _45 KB_
+- Business-dishes.phone.dark: has real content on it (not a blank screen) — _50/34/36_
+- Business · dishes · phone: the dark picture is clearly darker than the light one — _light 226, dark 51_
+- Business · customers: its words are the scenario's
+- Business · customers: a title, a caption and a description that doesn't name a device (the website adds it)
+- Business · customers: a picture for every device the scenario runs on — _tablet-landscape,tablet-portrait,phone_
+- Business · customers · tablet-landscape: a light and a dark picture — _light,dark_
+- Business-customers.tablet-landscape.light: has the expected file name — _business-customers.tablet-landscape.light.webp_
+- Business-customers.tablet-landscape.light: is a real WebP file
+- Business-customers.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
+- Business-customers.tablet-landscape.light: the shape of a tablet wide screen — _1.600 vs 1.600_
+- Business-customers.tablet-landscape.light: small enough for a web page (under 260 KB) — _43 KB_
+- Business-customers.tablet-landscape.light: has real content on it (not a blank screen) — _31/29/24_
+- Business-customers.tablet-landscape.dark: has the expected file name — _business-customers.tablet-landscape.dark.webp_
+- Business-customers.tablet-landscape.dark: is a real WebP file
+- Business-customers.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
+- Business-customers.tablet-landscape.dark: the shape of a tablet wide screen — _1.600 vs 1.600_
+- Business-customers.tablet-landscape.dark: small enough for a web page (under 260 KB) — _46 KB_
+- Business-customers.tablet-landscape.dark: has real content on it (not a blank screen) — _31/30/33_
+- Business · customers · tablet-landscape: the dark picture is clearly darker than the light one — _light 237, dark 37_
+- Business · customers · tablet-portrait: a light and a dark picture — _light,dark_
+- Business-customers.tablet-portrait.light: has the expected file name — _business-customers.tablet-portrait.light.webp_
+- Business-customers.tablet-portrait.light: is a real WebP file
+- Business-customers.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
+- Business-customers.tablet-portrait.light: the shape of a tablet tall screen — _0.625 vs 0.625_
+- Business-customers.tablet-portrait.light: small enough for a web page (under 260 KB) — _62 KB_
+- Business-customers.tablet-portrait.light: has real content on it (not a blank screen) — _33/31/27_
+- Business-customers.tablet-portrait.dark: has the expected file name — _business-customers.tablet-portrait.dark.webp_
+- Business-customers.tablet-portrait.dark: is a real WebP file
+- Business-customers.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
+- Business-customers.tablet-portrait.dark: the shape of a tablet tall screen — _0.625 vs 0.625_
+- Business-customers.tablet-portrait.dark: small enough for a web page (under 260 KB) — _68 KB_
+- Business-customers.tablet-portrait.dark: has real content on it (not a blank screen) — _34/33/35_
+- Business · customers · tablet-portrait: the dark picture is clearly darker than the light one — _light 235, dark 40_
+- Business · customers · phone: a light and a dark picture — _light,dark_
+- Business-customers.phone.light: has the expected file name — _business-customers.phone.light.webp_
+- Business-customers.phone.light: is a real WebP file
+- Business-customers.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)
+- Business-customers.phone.light: the shape of a phone  screen — _0.462 vs 0.462_
+- Business-customers.phone.light: small enough for a web page (under 260 KB) — _36 KB_
+- Business-customers.phone.light: has real content on it (not a blank screen) — _42/40/33_
+- Business-customers.phone.dark: has the expected file name — _business-customers.phone.dark.webp_
+- Business-customers.phone.dark: is a real WebP file
+- Business-customers.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)
+- Business-customers.phone.dark: the shape of a phone  screen — _0.462 vs 0.462_
+- Business-customers.phone.dark: small enough for a web page (under 260 KB) — _39 KB_
+- Business-customers.phone.dark: has real content on it (not a blank screen) — _42/41/45_
+- Business · customers · phone: the dark picture is clearly darker than the light one — _light 229, dark 51_
+- Business · outlets: its words are the scenario's
+- Business · outlets: a title, a caption and a description that doesn't name a device (the website adds it)
+- Business · outlets: a picture for every device the scenario runs on — _tablet-landscape,tablet-portrait,phone_
+- Business · outlets · tablet-landscape: a light and a dark picture — _light,dark_
+- Business-outlets.tablet-landscape.light: has the expected file name — _business-outlets.tablet-landscape.light.webp_
+- Business-outlets.tablet-landscape.light: is a real WebP file
+- Business-outlets.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
+- Business-outlets.tablet-landscape.light: the shape of a tablet wide screen — _1.600 vs 1.600_
+- Business-outlets.tablet-landscape.light: small enough for a web page (under 260 KB) — _48 KB_
+- Business-outlets.tablet-landscape.light: has real content on it (not a blank screen) — _21/37/29_
+- Business-outlets.tablet-landscape.dark: has the expected file name — _business-outlets.tablet-landscape.dark.webp_
+- Business-outlets.tablet-landscape.dark: is a real WebP file
+- Business-outlets.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)
+- Business-outlets.tablet-landscape.dark: the shape of a tablet wide screen — _1.600 vs 1.600_
+- Business-outlets.tablet-landscape.dark: small enough for a web page (under 260 KB) — _52 KB_
+- Business-outlets.tablet-landscape.dark: has real content on it (not a blank screen) — _36/22/25_
+- Business · outlets · tablet-landscape: the dark picture is clearly darker than the light one — _light 235, dark 38_
+- Business · outlets · tablet-portrait: a light and a dark picture — _light,dark_
+- Business-outlets.tablet-portrait.light: has the expected file name — _business-outlets.tablet-portrait.light.webp_
+- Business-outlets.tablet-portrait.light: is a real WebP file
+- Business-outlets.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
+- Business-outlets.tablet-portrait.light: the shape of a tablet tall screen — _0.625 vs 0.625_
+- Business-outlets.tablet-portrait.light: small enough for a web page (under 260 KB) — _62 KB_
+- Business-outlets.tablet-portrait.light: has real content on it (not a blank screen) — _25/41/34_
+- Business-outlets.tablet-portrait.dark: has the expected file name — _business-outlets.tablet-portrait.dark.webp_
+- Business-outlets.tablet-portrait.dark: is a real WebP file
+- Business-outlets.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)
+- Business-outlets.tablet-portrait.dark: the shape of a tablet tall screen — _0.625 vs 0.625_
+- Business-outlets.tablet-portrait.dark: small enough for a web page (under 260 KB) — _69 KB_
+- Business-outlets.tablet-portrait.dark: has real content on it (not a blank screen) — _39/27/28_
+- Business · outlets · tablet-portrait: the dark picture is clearly darker than the light one — _light 234, dark 40_
+- Business · outlets · phone: a light and a dark picture — _light,dark_
+- Business-outlets.phone.light: has the expected file name — _business-outlets.phone.light.webp_
+- Business-outlets.phone.light: is a real WebP file
+- Business-outlets.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)
+- Business-outlets.phone.light: the shape of a phone  screen — _0.462 vs 0.462_
+- Business-outlets.phone.light: small enough for a web page (under 260 KB) — _47 KB_
+- Business-outlets.phone.light: has real content on it (not a blank screen) — _30/45/37_
+- Business-outlets.phone.dark: has the expected file name — _business-outlets.phone.dark.webp_
+- Business-outlets.phone.dark: is a real WebP file
+- Business-outlets.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)
+- Business-outlets.phone.dark: the shape of a phone  screen — _0.462 vs 0.462_
+- Business-outlets.phone.dark: small enough for a web page (under 260 KB) — _49 KB_
+- Business-outlets.phone.dark: has real content on it (not a blank screen) — _46/31/35_
+- Business · outlets · phone: the dark picture is clearly darker than the light one — _light 228, dark 50_
 - no picture sits in the folder without being listed (so nothing old is left behind)
 
 **Step 2 — The tooling that takes them**
@@ -589,6 +863,7 @@ _Nothing failed._
 - the debug-signed builds and the huge raw pictures are never committed (.gitignore)
 - the restaurant in the pictures is fictional (Saffron Table), not a real customer
 - only made-up phone numbers are used
+- the Business app's 75 days of made-up sales are added only for its own pictures (they would show in the other apps' lists)
 - every device and look starts from a freshly installed app (nothing an earlier picture left behind can show)
 - dark mode is the phone's own dark mode (cmd uimode night), not a filter
 - the phone is a Galaxy S-Ultra-sized screen (1440 × 3120, 19.5 : 9)
@@ -598,6 +873,9 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-28 16:15 | pass | 830 | 0 | headless | 7.2 s |
+| 2026-11-28 16:10 | fail | 556 | 4 | headless | 6.1 s |
+| 2026-11-28 15:58 | pass | 557 | 0 | headless | 4.4 s |
 | 2026-11-28 15:38 | pass | 555 | 0 | headless | 4.1 s |
 | 2026-11-28 15:37 | pass | 555 | 0 | headless | 4.2 s |
 | 2026-11-28 15:37 | fail | 553 | 2 | headless | 4.9 s |

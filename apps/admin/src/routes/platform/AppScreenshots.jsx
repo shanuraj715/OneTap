@@ -94,7 +94,7 @@ export function AppScreenshots({ app, meta }) {
         <Modal onClose={remove.isPending ? () => undefined : () => setAsking(null)} width={440} panelStyle={{ padding: 22 }} ariaLabel="Remove the screenshot">
           <h2 style={modalTitle}>Remove “{asking.title}”?</h2>
           <p style={{ ...muted, margin: "0 0 14px", lineHeight: 1.55 }}>
-            It disappears from the app's page on the website, and the pictures you uploaded for it are deleted. {asking.builtIn ? "(The pictures that come with the website stay in its files; they are just no longer used.) " : ""}This can't be undone.
+            It disappears from the app's page on the website, and the pictures you uploaded for it are deleted. {asking.builtIn ? "(The original picture files stay with Rasoi Pulse; only the copies in your storage are deleted.) " : ""}This can't be undone.
           </p>
           {remove.error ? <Toast kind="error">{remove.error.message}</Toast> : null}
           <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
@@ -158,7 +158,7 @@ function ShotCard({ n, shot, first, last, busy, onUp, onDown, onToggle, onEdit, 
           <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
             <strong style={{ fontSize: 15 }} data-testid={`shot-title-${n}`}>{shot.title}</strong>
             {!shot.enabled ? <Pill tone="warn">Hidden</Pill> : null}
-            {shot.builtIn ? <Pill tone="neutral">Came with the website</Pill> : null}
+            {shot.builtIn ? <Pill tone="neutral">Came with Rasoi Pulse</Pill> : null}
           </div>
           <div style={{ ...muted, marginTop: 3, lineHeight: 1.45 }} data-testid={`shot-caption-${n}`}>{shot.caption || "No caption yet."}</div>
         </div>

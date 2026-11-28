@@ -1,6 +1,6 @@
 # T146 — App Management → Screenshots (API): the platform admin adds, edits, hides, reorders and removes an app's screenshots and puts a picture in each slot (3 devices × light / dark); the website's data carries only what should be shown
 
-**Area:** app · **Last result:** ✅ PASSED (73 passed, 0 failed · 2026-11-28 15:38 · headless · 5.1 s)
+**Area:** app · **Last result:** ✅ PASSED (92 passed, 0 failed · 2026-11-28 16:17 · headless · 7.9 s)
 
 **Run it alone:** `node run.mjs --only t146` (add `--visible` to watch it)
 
@@ -10,15 +10,18 @@ Runs suites/app-screenshots-api.mjs on a private API with an in-memory database 
 
 ## Steps
 
-1. The pictures that ship with the website are copied in once
-2. Only the platform admin manages them
-3. The section: switch, words, first device
-4. Add a screenshot and put pictures in its slots
-5. Edit the words, hide, reorder
-6. Remove a picture, remove a screenshot
-7. Limits
-8. An app added in the console, and removing it
-9. Nothing reaches the website but what should
+1. The pictures that come with Rasoi Pulse are copied INTO STORAGE, once
+2. 1b. A picture file that is missing is not recorded half-done, and the next read finishes the job
+3. 1c. Pictures an earlier version left as paths on the website's disk are moved into storage
+4. 1d. The seed script (run on the server at deploy time) does the same copy with the REAL pictures, and only says what it would do with --dry-run
+5. Only the platform admin manages them
+6. The section: switch, words, first device
+7. Add a screenshot and put pictures in its slots
+8. Edit the words, hide, reorder
+9. Remove a picture, remove a screenshot
+10. Limits
+11. An app added in the console, and removing it
+12. Nothing reaches the website but what should
 
 ## What to expect (these must happen)
 
@@ -39,23 +42,51 @@ Runs suites/app-screenshots-api.mjs on a private API with an in-memory database 
 
 _Nothing failed._
 
-### ✅ Passed (73)
+### ✅ Passed (92)
 
-**Step 1 — The pictures that ship with the website are copied in once**
+**Step 1 — The pictures that come with Rasoi Pulse are copied INTO STORAGE, once**
 
-- OMA starts with the two screens that ship with the website, in order — _Every table at a glance\|Every order in one list_
-- …marked as coming with the website, and shown
-- the console gets the picture's full address (it is on another site) — _https://site.example.test/app-screens/oma-tables.tablet-landscape.light.webp_
-- …and knows these are not uploaded files
-- reading it again does not copy them again
-- the public page data has them, with the picture's path on the website — _/app-screens/oma-tables.tablet-landscape.light.webp_
+- (nothing is in storage before the first read)
+- OMA starts with the two screens that come with Rasoi Pulse, in order — _Every table at a glance\|Every order in one list_
+- …marked as coming with Rasoi Pulse, and shown
+- their four pictures were put into the platform's storage (the folder the API stores files in), not left on any other disk — _4 files_
+- …each is recorded with the address of the STORED file (and as an uploaded one), never a path on the website
+- …no picture anywhere points at a path on the website
+- …and the stored file is the very picture that was shipped, byte for byte
+- reading it again copies nothing more (no new rows, no new files)
+- the app is marked as done
+- the public page data has them, with the stored file's address
 - …and lists only the devices that have a picture — _["tablet-landscape","phone"]_
 - …with the usual heading and intro, and the wide tablet first — _OMA on every screen / tablet-landscape_
 - …and no internal field or storage key
 - an app with no screenshots has no section (null)
 - (the app's own words are still in the same answer)
 
-**Step 2 — Only the platform admin manages them**
+**Step 2 — 1b. A picture file that is missing is not recorded half-done, and the next read finishes the job**
+
+- the screenshot whose pictures could be stored is there; the one whose file is missing is not recorded, and left no stray file — _1 screenshot, 1 new file_
+- …and the app is NOT marked as done
+- once the file is there the next read records the rest and marks the app done — _2 screenshots_
+- …without copying the first one again — _2 files for 2 screenshots_
+
+**Step 3 — 1c. Pictures an earlier version left as paths on the website's disk are moved into storage**
+
+- the old path is replaced by the stored file's address
+- …one file was stored, and the app is marked as done
+- …and a second read changes nothing
+
+**Step 4 — 1d. The seed script (run on the server at deploy time) does the same copy with the REAL pictures, and only says what it would do with --dry-run**
+
+- (the real KDA pictures are the ones used here) — _4 screenshots, 24 pictures_
+- --dry-run says what it would add
+- …and says where the pictures would go (here nothing is configured, so the API's own folder — on the real server it says the R2 bucket)
+- …and changes nothing
+- the real run copies them and says it is done — _kda: 0 screenshots now; 4 to add, 0 picture(s) to move off the website's disk_
+- …every picture stored, every screenshot recorded — _24 files_
+- …each recorded with its stored file's key and address, none with a website path
+- running it again changes nothing
+
+**Step 5 — Only the platform admin manages them**
 
 - a store owner cannot read the list
 - a store owner cannot add one
@@ -67,7 +98,7 @@ _Nothing failed._
 - a waiter cannot remove one
 - …and nothing changed
 
-**Step 3 — The section: switch, words, first device**
+**Step 6 — The section: switch, words, first device**
 
 - heading, intro and first device are saved
 - …and the website's data follows at once
@@ -80,7 +111,7 @@ _Nothing failed._
 - switched off: no section on the website, the screenshots are kept
 - switched on again: they are back
 
-**Step 4 — Add a screenshot and put pictures in its slots**
+**Step 7 — Add a screenshot and put pictures in its slots**
 
 - a screenshot needs a title (2 characters at least): 400
 - a title over 60 characters: 400
@@ -88,21 +119,21 @@ _Nothing failed._
 - a screenshot with no picture is not shown on the website
 - a picture goes into a slot — _200_
 - …its real size is kept in shape (16:10), after the usual resizing — _1600×1000_
-- …and the file is in the platform's storage — _1 file_
+- …and the file is in the platform's storage — _1 new file_
 - the website now shows it, last, with the file's address
 - pictures go into other slots too (dark, a phone, a tall tablet)
-- …four files now — _4_
+- …four new files now — _4_
 - all three devices are offered now — _["tablet-landscape","tablet-portrait","phone"]_
 - …and a slot has its light and dark pictures
 - putting another picture in the same slot replaces it
-- …and the old file is removed from storage (still four files) — _4_
+- …and the old file is removed from storage (still four new files) — _4_
 - something that is not a picture is refused with a reason (415) — _That file isn't an image we can read. Try JPEG, PNG, WebP, AVIF or HEIC._
 - …and nothing was stored
 - an unknown device or look: 400
 - a screenshot that doesn't exist: 404
 - an upload with nothing in it: 400
 
-**Step 5 — Edit the words, hide, reorder**
+**Step 8 — Edit the words, hide, reorder**
 
 - the words can be changed
 - …and the website's data follows
@@ -114,22 +145,22 @@ _Nothing failed._
 - something that is not a list of ids: 400
 - repeated and unknown ids are ignored
 
-**Step 6 — Remove a picture, remove a screenshot**
+**Step 9 — Remove a picture, remove a screenshot**
 
 - a picture can be removed from its slot
-- …its file is gone from storage — _3_
+- …its file is gone from storage — _3 new files left_
 - removing an empty slot: 404
 - a device with no picture left is no longer offered
-- removing a screenshot removes it and every file it had — _0 files left_
+- removing a screenshot removes it and every file it had — _0 extra files left_
 - removing it again: 404
-- a screenshot that came with the website can be removed too
+- a screenshot that came with Rasoi Pulse can be removed too, and its stored pictures go — _4 → 3 files_
 - …and it is not copied in again when the list is read again
 
-**Step 7 — Limits**
+**Step 10 — Limits**
 
 - an app can have 12 screenshots: the 13th is refused with a reason — _An app can have 12 screenshots at most. Remove one first._
 
-**Step 8 — An app added in the console, and removing it**
+**Step 11 — An app added in the console, and removing it**
 
 - a new app starts with no screenshots and no section
 - …it can have its own, with the heading made from its code
@@ -137,7 +168,7 @@ _Nothing failed._
 - the app is removed
 - …and its screenshots and files go with it — _0 files left_
 
-**Step 9 — Nothing reaches the website but what should**
+**Step 12 — Nothing reaches the website but what should**
 
 - the list of apps carries no screenshot data (it is only on an app's own page data)
 
@@ -145,12 +176,16 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
-| 2026-11-28 15:38 | pass | 73 | 0 | headless | 5.1 s |
-| 2026-11-28 15:35 | pass | 73 | 0 | headless | 4.9 s |
-| 2026-11-28 15:34 | fail | 72 | 1 | headless | 5.9 s |
-| 2026-11-28 15:28 | pass | 73 | 0 | headless | 4.9 s |
-| 2026-11-28 14:34 | fail | 66 | 7 | headless | 7.0 s |
-| 2026-11-28 14:34 | pass | 73 | 0 | headless | 5.6 s |
+| 2026-11-28 16:17 | pass | 92 | 0 | headless | 7.9 s |
+| 2026-11-28 16:16 | fail | 90 | 2 | headless | 6.9 s |
+| 2026-11-28 16:15 | fail | 91 | 1 | headless | 7.5 s |
+| 2026-11-28 16:09 | pass | 92 | 0 | headless | 7.8 s |
+| 2026-11-28 16:09 | fail | 86 | 4 | headless | 7.2 s |
+| 2026-11-28 16:09 | fail | 86 | 4 | headless | 8.6 s |
+| 2026-11-28 16:08 | fail | 85 | 5 | headless | 23.1 s |
+| 2026-11-28 15:58 | fail | 3 | 4 | headless | 4.0 s |
+| 2026-11-28 15:57 | pass | 84 | 0 | headless | 5.1 s |
+| 2026-11-28 15:57 | pass | 84 | 0 | headless | 5.0 s |
 
 ---
 _Generated by `tests/e2e/run.mjs` — edit the test file (`tests/t146-app-screenshots-api.mjs`), not this page._

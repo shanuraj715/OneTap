@@ -3,7 +3,7 @@
  * Builds a SCREENSHOT copy of each app: the app with its code inside (a release-type build, so there is no developer overlay on the screen),
  * pointed at the throwaway screenshot server (http://localhost:3098, reached through `adb reverse`), signed with Android's shared DEBUG key.
  *
- *   node mobile-apps/screenshots/build.mjs            all three apps
+ *   node mobile-apps/screenshots/build.mjs            all four apps (OMA, KDA, RDA, Business)
  *   node mobile-apps/screenshots/build.mjs oma kda    only these
  *
  * The files go to mobile-apps/screenshots/.build/<app>.apk — NEVER to an app's build-output/ — and no signing key is passed in, so one of
@@ -18,7 +18,7 @@ import { fileURLToPath } from "node:url";
 import { API_URL } from "./serve.mjs";
 
 const HERE = fileURLToPath(new URL(".", import.meta.url));
-const APPS = ["oma", "kda", "rda"];
+const APPS = ["oma", "kda", "rda", "business"];
 export const BUILD_DIR = join(HERE, ".build");
 
 const sdkDir = () => [process.env.ANDROID_HOME, process.env.ANDROID_SDK_ROOT, join(homedir(), "Library/Android/sdk"), join(homedir(), "Android/Sdk")].find((p) => p && existsSync(join(p, "platforms")));

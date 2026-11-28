@@ -10,11 +10,11 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 const REPO = fileURLToPath(new URL("../../..", import.meta.url)).replace(/\/$/, "");
 const SHOTS_DIR = path.join(REPO, "mobile-apps/screenshots");
-const PUBLIC = path.join(REPO, "apps/website/public/app-screens");
+const PUBLIC = path.join(REPO, "apps/api/assets/app-screens");
 let pass = 0, fail = 0;
 const ok = (c, l, x = "") => { c ? pass++ : fail++; console.log(`${c ? "PASS" : "FAIL"}  ${l}${x ? "  — " + x : ""}`); };
 const say = (s) => console.log(`\n=== ${s}`);
-const APPS = { oma: "OMA", kda: "KDA", rda: "RDA" };
+const APPS = { oma: "OMA", kda: "KDA", rda: "RDA", business: "Business" };
 const sharp = createRequire(path.join(REPO, "apps/api/package.json"))("sharp");
 const schema = await import(pathToFileURL(path.join(REPO, "packages/config-schema/src/index.js")).href);
 const { BUILTIN_APP_SHOTS: manifest } = await import(pathToFileURL(path.join(REPO, "apps/api/src/modules/app-releases/app-shots-builtin.js")).href);
@@ -24,8 +24,11 @@ const WEB_WIDTH = { "tablet-landscape": 1600, "tablet-portrait": 1040, phone: 72
 
 /* ---------------------------------------------------------------- 1. the list and the pictures */
 say("1. The list of screenshots and the pictures");
-ok(Object.keys(manifest).sort().join() === "kda,oma,rda", "there are screenshots for all three apps", Object.keys(manifest).join(","));
+ok(Object.keys(manifest).sort().join() === "business,kda,oma,rda", "there are screenshots for all four apps (OMA, KDA, RDA, Business)", Object.keys(manifest).join(","));
 ok(!fs.existsSync(path.join(REPO, "apps/website/src/lib/app-shots.json")), "the old list (app-shots.json) is gone: the platform's database is the only list now");
+ok(!fs.existsSync(path.join(REPO, "apps/website/public/app-screens")), "the website has no screenshot files of its own to serve: they are copied into the platform's storage (R2) by the API");
+const webSrc = fs.readdirSync(path.join(REPO, "apps/website/src"), { recursive: true }).filter((f) => /\.(jsx?|css)$/.test(String(f))).map((f) => fs.readFileSync(path.join(REPO, "apps/website/src", String(f)), "utf8")).join("\n");
+ok(!/\/app-screens\//.test(webSrc), "nothing in the website's code points at /app-screens/");
 const files = new Set(fs.readdirSync(PUBLIC).filter((f) => !f.startsWith(".")));
 const used = new Set();
 const { SHOTS } = await import(pathToFileURL(path.join(SHOTS_DIR, "scenarios.mjs")).href + `?t=${Date.now()}`);
@@ -47,8 +50,8 @@ for (const app of Object.keys(APPS)) {
       for (const t of THEMES) {
         const im = s.images[d]?.[t];
         const label = `${APPS[app]}-${s.name}.${d}.${t}`;
-        const name = im?.src?.replace("/app-screens/", "");
-        ok(im?.src === `/app-screens/${label.replace(`${APPS[app]}-`, `${app}-`)}.webp`, `${label}: has the expected path`, im?.src);
+        const name = im?.file;
+        ok(name === `${label.replace(`${APPS[app]}-`, `${app}-`)}.webp`, `${label}: has the expected file name`, name);
         used.add(name);
         const f = path.join(PUBLIC, name ?? "missing");
         if (!files.has(name)) { ok(false, `${label}: the file is in public/app-screens`); continue; }
@@ -93,6 +96,7 @@ ok(fictional.every((n) => serve.includes(n)) && !/Gazab|rasoipulse\.in\/noida|rp
 ok(!/(\+?91)?[6-9]\d{9}/.test(serve.replace(/9876543210|98765 43210|9811122233|98111 22233|98\d{8,}/g, "")), "only made-up phone numbers are used");
 
 
+ok(/seedBusiness/.test(capture) && /app === "business"/.test(capture), "the Business app's 75 days of made-up sales are added only for its own pictures (they would show in the other apps' lists)");
 ok(/launch\(app, \{ fresh: true \}\)/.test(capture) && /adb\("uninstall", pkg\)/.test(capture), "every device and look starts from a freshly installed app (nothing an earlier picture left behind can show)");
 ok(/cmd uimode night/.test(capture) && /setTheme/.test(capture), "dark mode is the phone's own dark mode (cmd uimode night), not a filter");
 ok(/1440/.test(capture) && /3120/.test(capture) && /density: 560/.test(capture), "the phone is a Galaxy S-Ultra-sized screen (1440 × 3120, 19.5 : 9)");

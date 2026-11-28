@@ -83,6 +83,8 @@ const appSchema = new Schema(
     shotsIntro: { type: String, default: "" },
     shotsDefaultDevice: { type: String, enum: ["tablet-landscape", "tablet-portrait", "phone"], default: "tablet-landscape" },
     shotsSeeded: { type: Boolean, default: false },
+    /** which version of "copy the built-in pictures into storage" has run for this app (0 = never; version 2 stores them in the platform's storage, not on a disk) */
+    shotsSeedVersion: { type: Number, default: 0 },
     createdBy: { type: String, default: null },
     updatedBy: { type: String, default: null },
   },

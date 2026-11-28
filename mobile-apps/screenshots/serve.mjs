@@ -29,6 +29,7 @@ export const LOGINS = {
   oma: { email: "asha@saffrontable.test", password: "Staff123!", who: "Asha (waiter)" },
   kda: { email: "meena@saffrontable.test", password: "Staff123!", who: "Meena (kitchen manager)" },
   rda: { phone: "9876543210", pin: "4821", who: "Ramesh (rider)" },
+  business: { email: "owner@saffrontable.test", password: "Owner123!", who: "the owner" },
 };
 
 const FOOD = { steamed: "steamed.webp", paneer: "paneer.webp", tandoori: "tandoori.webp", coffee: "cold-coffee.webp" };

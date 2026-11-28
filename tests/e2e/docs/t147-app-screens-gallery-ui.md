@@ -1,6 +1,6 @@
 # T147 — Website → an app's page → 'See it': the app's screens in a tablet (wide or tall) or phone frame; light, dark or Auto (follows the browser live); flip with buttons, keys or a swipe; works on a phone
 
-**Area:** website · **Last result:** ✅ PASSED (82 passed, 0 failed · 2026-11-28 15:38 · headless · 20.7 s)
+**Area:** website · **Last result:** ✅ PASSED (82 passed, 0 failed · 2026-11-28 16:16 · headless · 20.9 s)
 
 **Run it alone:** `node run.mjs --only t147` (add `--visible` to watch it)
 
@@ -170,6 +170,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-28 16:16 | pass | 82 | 0 | headless | 20.9 s |
+| 2026-11-28 16:10 | pass | 82 | 0 | headless | 23.0 s |
 | 2026-11-28 15:38 | pass | 82 | 0 | headless | 20.7 s |
 | 2026-11-28 15:14 | fail | 26 | 3 | headless | 57.5 s |
 | 2026-11-28 15:12 | error | 12 | 0 | headless | 48.0 s |

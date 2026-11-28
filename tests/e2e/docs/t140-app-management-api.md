@@ -1,6 +1,6 @@
 # T140 — App Management: the platform admin adds an app (a name is enough), edits its words, makes it public or private, uploads its versions and removes it; built-in apps can't be removed; nothing is hard-coded in the console
 
-**Area:** app · **Last result:** ✅ PASSED (70 passed, 0 failed · 2026-11-28 15:39 · headless · 4.3 s)
+**Area:** app · **Last result:** ✅ PASSED (70 passed, 0 failed · 2026-11-28 16:18 · headless · 4.6 s)
 
 **Run it alone:** `node run.mjs --only t140` (add `--visible` to watch it)
 
@@ -150,6 +150,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-28 16:18 | pass | 70 | 0 | headless | 4.6 s |
 | 2026-11-28 15:39 | pass | 70 | 0 | headless | 4.3 s |
 | 2026-11-28 15:28 | pass | 70 | 0 | headless | 4.9 s |
 | 2026-11-28 14:24 | pass | 69 | 0 | headless | 4.1 s |

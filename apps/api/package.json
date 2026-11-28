@@ -9,7 +9,8 @@
     "start": "node src/server.js",
     "seed": "node src/scripts/seed.js",
     "clean": "rm -rf dist .turbo",
-    "speed": "node src/scripts/speed-test.js"
+    "speed": "node src/scripts/speed-test.js",
+    "seed:screenshots": "node src/scripts/seed-app-screenshots.js"
   },
   "dependencies": {
     "@rasoipulse/config-schema": "workspace:*",

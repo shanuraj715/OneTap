@@ -1,12 +1,12 @@
 # T148 — App Management → 'Screenshots on the website': add a screenshot, upload a picture for each device and look, get warned about a wrong shape, replace / remove pictures, hide, reorder, edit, remove; set the section's heading, intro and first device
 
-**Area:** platform · **Last result:** ✅ PASSED (53 passed, 0 failed · 2026-11-28 15:42 · headless · 6.6 s)
+**Area:** platform · **Last result:** ✅ PASSED (54 passed, 0 failed · 2026-11-28 16:15 · headless · 8.0 s)
 
 **Run it alone:** `node run.mjs --only t148` (add `--visible` to watch it)
 
 ## What this test does
 
-Chrome against the bench console (super admin) and API, on a throwaway app that is removed at the end. An app with no screenshots says so, shows the usual heading and intro as hints, a section switch and a 'View on the website' link. 'Add a screenshot' needs a title of two characters; the new one shows with six empty slots (3 devices × light / dark). Pictures are put in through each slot's file box: they show in the slot with their size and 'uploaded', the slot then offers Replace and Remove, the summary counts pictures and names the devices that will be offered, and the server holds them in the right slots. A wide picture in a phone slot is warned about ('will look squashed') and the warning goes when the right shape replaces it; a text file is refused with words that name the slot; Remove empties a slot (on the server too). Move up / down swaps (the ends are disabled, the server follows), Hide / Show marks it 'Hidden', Edit changes the words (an empty title can't be saved), Remove asks by name and Cancel changes nothing. The section's heading / intro / first device save and reach the server, switching the section off saves at once and is said in the summary, an empty heading means the usual one. At 390 px nothing runs off the screen. When pictures came with the website (OMA), they are marked as such, all load, and each has light and dark pictures.
+Chrome against the bench console (super admin) and API, on a throwaway app that is removed at the end. An app with no screenshots says so, shows the usual heading and intro as hints, a section switch and a 'View on the website' link. 'Add a screenshot' needs a title of two characters; the new one shows with six empty slots (3 devices × light / dark). Pictures are put in through each slot's file box: they show in the slot with their size and 'uploaded', the slot then offers Replace and Remove, the summary counts pictures and names the devices that will be offered, and the server holds them in the right slots. A wide picture in a phone slot is warned about ('will look squashed') and the warning goes when the right shape replaces it; a text file is refused with words that name the slot; Remove empties a slot (on the server too). Move up / down swaps (the ends are disabled, the server follows), Hide / Show marks it 'Hidden', Edit changes the words (an empty title can't be saved), Remove asks by name and Cancel changes nothing. The section's heading / intro / first device save and reach the server, switching the section off saves at once and is said in the summary, an empty heading means the usual one. At 390 px nothing runs off the screen. When pictures came with Rasoi Pulse (OMA), they are marked as such, are files in the platform's storage (never a path on the website), all load, and each has light and dark pictures.
 
 ## Steps
 
@@ -20,13 +20,13 @@ Chrome against the bench console (super admin) and API, on a throwaway app that 
 8. The section: switch, heading, intro, first device
 9. Remove a screenshot
 10. A phone-sized console
-11. The screenshots that come with the website (an app that has them)
+11. The screenshots that come with Rasoi Pulse (an app that has them) are stored files
 
 ## What to expect (these must happen)
 
 - A picture put in a slot shows there and is stored in the right slot; a wrong shape is warned about.
 - Reorder, hide, edit, remove and the section settings all reach the server.
-- Pictures that came with the website show in the console and are marked as such.
+- Pictures that came with Rasoi Pulse show in the console, marked as such, as stored files.
 
 ## What must NOT happen
 
@@ -41,7 +41,7 @@ Chrome against the bench console (super admin) and API, on a throwaway app that 
 
 _Nothing failed._
 
-### ✅ Passed (53)
+### ✅ Passed (54)
 
 **Step 1 — An app with no screenshots**
 
@@ -122,10 +122,11 @@ _Nothing failed._
 
 - nothing runs off the screen at 390 px — _{"over":0,"card":353}_
 
-**Step 11 — The screenshots that come with the website (an app that has them)**
+**Step 11 — The screenshots that come with Rasoi Pulse (an app that has them) are stored files**
 
-- OMA's screenshots are marked 'Came with the website' — _5 screenshots_
-- …and every picture shows (they come from the website's own files) — _28 pictures_
+- OMA's screenshots are marked 'Came with Rasoi Pulse' — _5 screenshots_
+- …and every picture shows (they are files in the platform's storage, not on the website) — _28 pictures_
+- …each is a stored file (in the platform's storage), never a path on the website
 - each has light and dark pictures, for the wide tablet, the tall tablet and the phone (where the screen exists there)
 - no errors in the browser console
 
@@ -133,6 +134,9 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-28 16:15 | pass | 54 | 0 | headless | 8.0 s |
+| 2026-11-28 16:11 | pass | 54 | 0 | headless | 8.6 s |
+| 2026-11-28 16:10 | fail | 53 | 1 | headless | 8.3 s |
 | 2026-11-28 15:42 | pass | 53 | 0 | headless | 6.6 s |
 | 2026-11-28 15:38 | pass | 53 | 0 | headless | 6.4 s |
 

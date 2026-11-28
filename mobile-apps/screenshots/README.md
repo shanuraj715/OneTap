@@ -1,15 +1,15 @@
 # App screenshots for the website
 
-Takes the screenshots shown on the apps' pages of the website (`/apps/oma`, `/apps/kda`, `/apps/rda`) **from the real apps**, running on an
+Takes the screenshots shown on the apps' pages of the website (`/apps/oma`, `/apps/kda`, `/apps/rda`, `/apps/business`) **from the real apps**, running on an
 Android emulator set to three different screens — a **tablet held sideways** (2560 × 1600 px at 320 dpi = 1280 × 800 dp), a **tablet held upright**
 (1600 × 2560) and a **phone** the shape of a Galaxy S-Ultra (1440 × 3120 px at 560 dpi = 411 × 891 dp, 19.5 : 9) — each in **light** and in **dark**
 (the phone's own dark mode), talking to a **throwaway copy of the real API** filled with a made-up restaurant ("Saffron Table"). Nothing real is
 involved: not the live server, not a real database, not your release APKs or signing key.
 
 ```
-node mobile-apps/screenshots/capture.mjs                 everything: 3 apps × 3 devices × light + dark (builds the apps first if they are not built yet)
+node mobile-apps/screenshots/capture.mjs                 everything: 4 apps (OMA, KDA, RDA, Business) × 3 devices × light + dark (builds the apps first if they are not built yet)
 node mobile-apps/screenshots/capture.mjs --build         build the three apps again first (after the app's code changed)
-node mobile-apps/screenshots/capture.mjs --only kda      just one app (oma, kda, rda; comma separated)
+node mobile-apps/screenshots/capture.mjs --only kda      just one app (oma, kda, rda, business; comma separated)
 node mobile-apps/screenshots/capture.mjs --device phone --theme dark       just one device (tablet-landscape, tablet-portrait, phone) and / or one look
 node mobile-apps/screenshots/capture.mjs --shots tables,orders             just these screens (names in scenarios.mjs)
 node mobile-apps/screenshots/capture.mjs --look oma --device phone --steps "tap:tab-orders;sleep:1000;look;shot:try"
@@ -32,7 +32,7 @@ emulator is running it starts one headless and stops it again when it is done. A
    mode), **installs the app fresh** (so an order half built by an earlier picture can't show), signs in, runs each scenario from `scenarios.mjs`, takes the
    picture and writes:
    - `mobile-apps/screenshots/raw/*.png` — full-size pictures (not committed)
-   - `apps/website/public/app-screens/<app>-<screen>.<device>.<look>.webp` — 1600 / 1040 / 720 px wide, what the website serves
+   - `apps/api/assets/app-screens/<app>-<screen>.<device>.<look>.webp` — 1600 / 1040 / 720 px wide: SOURCE files; the API copies them into the platform's storage (R2) the first time an app's screenshots are read, so nothing is served from a disk
    - `apps/api/src/modules/app-releases/app-shots-builtin.js` — the list (title, caption, description, the pictures) the platform copies into its database the
      first time an app's screenshots are read; after that the console (App Management → Screenshots) owns the list
 4. It puts the emulator's screen, look and status bar back, removes `adb reverse`, stops the server, and stops the emulator if it started it.
@@ -49,8 +49,8 @@ sits in it) and its gesture bar.
 - **Different data** (names, dishes, orders): edit `serve.mjs`. The restaurant is fictional on purpose: keep real customers' names and numbers out.
 - **A different phone or tablet:** the `DEVICES` table at the top of `capture.mjs` (size, dpi, whether the status band is cropped, the website copy's width).
   The website's frames (`SCREENSHOT_DEVICE_INFO` in `packages/config-schema/src/app-screenshots.js`) are drawn for those shapes.
-- After a retake, commit the new `apps/website/public/app-screens/*.webp` and `app-shots-builtin.js`, and redeploy the website. An app that is already in the
-  platform's database keeps the list it has: to change one of its pictures use the console (Replace).
+- After a retake, commit the new `apps/api/assets/app-screens/*.webp` and `app-shots-builtin.js`, and redeploy the API (then `npm run seed:screenshots` in
+  `apps/api` on the server copies new pictures into R2). An app that is already in the platform's database keeps the list it has: to change one of its pictures use the console (Replace).
 
 Test **t107** checks the pictures (real WebP, the right shape per device, not blank, small, the dark one darker than the light one), the list, and that this
 tooling can't touch anything real. The gallery itself is tested by t147 and the console's manager by t148.

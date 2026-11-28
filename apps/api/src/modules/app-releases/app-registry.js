@@ -28,6 +28,7 @@ const shape = (a) => ({
   shotsIntro: a.shotsIntro ?? "",
   shotsDefaultDevice: a.shotsDefaultDevice || "tablet-landscape",
   shotsSeeded: Boolean(a.shotsSeeded),
+  shotsSeedVersion: Number(a.shotsSeedVersion) || 0,
   builtIn: Boolean(a.builtIn),
   sortOrder: a.sortOrder ?? 100,
   createdAt: a.createdAt ?? null,

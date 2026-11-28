@@ -9345,8 +9345,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T10:09:54.952Z",
-    "durationMs": 9407,
+    "at": "2026-11-28T10:47:45.885Z",
+    "durationMs": 9924,
     "steps": [
       {
         "n": 1,
@@ -31894,8 +31894,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T10:10:36.728Z",
-    "durationMs": 4844,
+    "at": "2026-11-28T10:48:08.035Z",
+    "durationMs": 5589,
     "steps": [
       {
         "n": 1,
@@ -32041,7 +32041,7 @@
           {
             "label": "the file is in the platform storage (this disk, by default), under app-releases/oma/",
             "ok": true,
-            "detail": "app-releases/oma/v-26.11.26-001-d59e1490948c.apk",
+            "detail": "app-releases/oma/v-26.11.26-001-301f47dfc7e3.apk",
             "kind": "expect"
           },
           {
@@ -32479,7 +32479,7 @@
           {
             "label": "the finished upload lands in the bucket, under app-releases/oma/",
             "ok": true,
-            "detail": "app-releases/oma/v-26.11.26-020-7624d57b94fe.apk",
+            "detail": "app-releases/oma/v-26.11.26-020-57e80335029c.apk",
             "kind": "expect"
           },
           {
@@ -32973,8 +32973,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T10:09:25.069Z",
-    "durationMs": 3922,
+    "at": "2026-11-28T10:46:47.529Z",
+    "durationMs": 2591,
     "steps": [
       {
         "n": 1,
@@ -33037,7 +33037,7 @@
           {
             "label": "…and points at the API's download address",
             "ok": true,
-            "detail": "http://localhost:3097/api/app-updates/download/6b0aa8527ffdeabc9bc46bdc",
+            "detail": "http://localhost:3097/api/app-updates/download/6b0ab1167f4f813af3c71491",
             "kind": "expect"
           },
           {
@@ -33115,7 +33115,7 @@
           {
             "label": "'Check the file' shows the file's SHA-256",
             "ok": true,
-            "detail": "25f9f39a2a2f…",
+            "detail": "bfbb667b51b3…",
             "kind": "expect"
           }
         ]
@@ -40607,8 +40607,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T10:10:30.909Z",
-    "durationMs": 7451,
+    "at": "2026-11-28T10:47:54.269Z",
+    "durationMs": 7378,
     "steps": [
       {
         "n": 1,
@@ -40707,7 +40707,7 @@
           {
             "label": "the session says: a team member, role Sales, the one feature Onboarding (not even 'Plans' in the sidebar), no store, no store permissions",
             "ok": true,
-            "detail": "{\"access\":true,\"features\":[\"onboarding:manage\"],\"role\":{\"id\":\"6b0aa893b2a8202d57e746c5\",\"name\":\"Sales\"}}",
+            "detail": "{\"access\":true,\"features\":[\"onboarding:manage\"],\"role\":{\"id\":\"6b0ab1560f2c0f8484f28b59\",\"name\":\"Sales\"}}",
             "kind": "expect"
           },
           {
@@ -42377,27 +42377,39 @@
   },
   "t107-app-screenshots": {
     "id": "t107-app-screenshots",
-    "title": "App screenshots (the pictures that ship with the website): OMA, KDA and RDA on a wide tablet, a tall tablet and a phone, in light and dark — real, the right shape, not blank, small; the tooling that takes them can't touch anything real",
+    "title": "App screenshots (the pictures that ship with the website): OMA, KDA, RDA and Business on a wide tablet, a tall tablet and a phone, in light and dark — real, the right shape, not blank, small; the tooling that takes them can't touch anything real",
     "status": "pass",
-    "pass": 555,
+    "pass": 830,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T10:08:19.652Z",
-    "durationMs": 4052,
+    "at": "2026-11-28T10:45:29.572Z",
+    "durationMs": 7178,
     "steps": [
       {
         "n": 1,
         "title": "The list of screenshots and the pictures",
         "checks": [
           {
-            "label": "there are screenshots for all three apps",
+            "label": "there are screenshots for all four apps (OMA, KDA, RDA, Business)",
             "ok": true,
-            "detail": "oma,kda,rda",
+            "detail": "oma,kda,rda,business",
             "kind": "expect"
           },
           {
             "label": "the old list (app-shots.json) is gone: the platform's database is the only list now",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the website has no screenshot files of its own to serve: they are copied into the platform's storage (R2) by the API",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "nothing in the website's code points at /app-screens/",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -42439,9 +42451,9 @@
             "kind": "expect"
           },
           {
-            "label": "OMA-tables.tablet-landscape.light: has the expected path",
+            "label": "OMA-tables.tablet-landscape.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/oma-tables.tablet-landscape.light.webp",
+            "detail": "oma-tables.tablet-landscape.light.webp",
             "kind": "expect"
           },
           {
@@ -42475,9 +42487,9 @@
             "kind": "expect"
           },
           {
-            "label": "OMA-tables.tablet-landscape.dark: has the expected path",
+            "label": "OMA-tables.tablet-landscape.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/oma-tables.tablet-landscape.dark.webp",
+            "detail": "oma-tables.tablet-landscape.dark.webp",
             "kind": "expect"
           },
           {
@@ -42523,9 +42535,9 @@
             "kind": "expect"
           },
           {
-            "label": "OMA-tables.tablet-portrait.light: has the expected path",
+            "label": "OMA-tables.tablet-portrait.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/oma-tables.tablet-portrait.light.webp",
+            "detail": "oma-tables.tablet-portrait.light.webp",
             "kind": "expect"
           },
           {
@@ -42559,9 +42571,9 @@
             "kind": "expect"
           },
           {
-            "label": "OMA-tables.tablet-portrait.dark: has the expected path",
+            "label": "OMA-tables.tablet-portrait.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/oma-tables.tablet-portrait.dark.webp",
+            "detail": "oma-tables.tablet-portrait.dark.webp",
             "kind": "expect"
           },
           {
@@ -42607,9 +42619,9 @@
             "kind": "expect"
           },
           {
-            "label": "OMA-tables.phone.light: has the expected path",
+            "label": "OMA-tables.phone.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/oma-tables.phone.light.webp",
+            "detail": "oma-tables.phone.light.webp",
             "kind": "expect"
           },
           {
@@ -42643,9 +42655,9 @@
             "kind": "expect"
           },
           {
-            "label": "OMA-tables.phone.dark: has the expected path",
+            "label": "OMA-tables.phone.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/oma-tables.phone.dark.webp",
+            "detail": "oma-tables.phone.dark.webp",
             "kind": "expect"
           },
           {
@@ -42709,9 +42721,9 @@
             "kind": "expect"
           },
           {
-            "label": "OMA-table.tablet-portrait.light: has the expected path",
+            "label": "OMA-table.tablet-portrait.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/oma-table.tablet-portrait.light.webp",
+            "detail": "oma-table.tablet-portrait.light.webp",
             "kind": "expect"
           },
           {
@@ -42745,9 +42757,9 @@
             "kind": "expect"
           },
           {
-            "label": "OMA-table.tablet-portrait.dark: has the expected path",
+            "label": "OMA-table.tablet-portrait.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/oma-table.tablet-portrait.dark.webp",
+            "detail": "oma-table.tablet-portrait.dark.webp",
             "kind": "expect"
           },
           {
@@ -42793,9 +42805,9 @@
             "kind": "expect"
           },
           {
-            "label": "OMA-table.phone.light: has the expected path",
+            "label": "OMA-table.phone.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/oma-table.phone.light.webp",
+            "detail": "oma-table.phone.light.webp",
             "kind": "expect"
           },
           {
@@ -42829,9 +42841,9 @@
             "kind": "expect"
           },
           {
-            "label": "OMA-table.phone.dark: has the expected path",
+            "label": "OMA-table.phone.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/oma-table.phone.dark.webp",
+            "detail": "oma-table.phone.dark.webp",
             "kind": "expect"
           },
           {
@@ -42895,9 +42907,9 @@
             "kind": "expect"
           },
           {
-            "label": "OMA-take-order.tablet-landscape.light: has the expected path",
+            "label": "OMA-take-order.tablet-landscape.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/oma-take-order.tablet-landscape.light.webp",
+            "detail": "oma-take-order.tablet-landscape.light.webp",
             "kind": "expect"
           },
           {
@@ -42931,9 +42943,9 @@
             "kind": "expect"
           },
           {
-            "label": "OMA-take-order.tablet-landscape.dark: has the expected path",
+            "label": "OMA-take-order.tablet-landscape.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/oma-take-order.tablet-landscape.dark.webp",
+            "detail": "oma-take-order.tablet-landscape.dark.webp",
             "kind": "expect"
           },
           {
@@ -42979,9 +42991,9 @@
             "kind": "expect"
           },
           {
-            "label": "OMA-take-order.tablet-portrait.light: has the expected path",
+            "label": "OMA-take-order.tablet-portrait.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/oma-take-order.tablet-portrait.light.webp",
+            "detail": "oma-take-order.tablet-portrait.light.webp",
             "kind": "expect"
           },
           {
@@ -43015,9 +43027,9 @@
             "kind": "expect"
           },
           {
-            "label": "OMA-take-order.tablet-portrait.dark: has the expected path",
+            "label": "OMA-take-order.tablet-portrait.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/oma-take-order.tablet-portrait.dark.webp",
+            "detail": "oma-take-order.tablet-portrait.dark.webp",
             "kind": "expect"
           },
           {
@@ -43063,9 +43075,9 @@
             "kind": "expect"
           },
           {
-            "label": "OMA-take-order.phone.light: has the expected path",
+            "label": "OMA-take-order.phone.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/oma-take-order.phone.light.webp",
+            "detail": "oma-take-order.phone.light.webp",
             "kind": "expect"
           },
           {
@@ -43099,9 +43111,9 @@
             "kind": "expect"
           },
           {
-            "label": "OMA-take-order.phone.dark: has the expected path",
+            "label": "OMA-take-order.phone.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/oma-take-order.phone.dark.webp",
+            "detail": "oma-take-order.phone.dark.webp",
             "kind": "expect"
           },
           {
@@ -43165,9 +43177,9 @@
             "kind": "expect"
           },
           {
-            "label": "OMA-orders.tablet-landscape.light: has the expected path",
+            "label": "OMA-orders.tablet-landscape.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/oma-orders.tablet-landscape.light.webp",
+            "detail": "oma-orders.tablet-landscape.light.webp",
             "kind": "expect"
           },
           {
@@ -43201,9 +43213,9 @@
             "kind": "expect"
           },
           {
-            "label": "OMA-orders.tablet-landscape.dark: has the expected path",
+            "label": "OMA-orders.tablet-landscape.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/oma-orders.tablet-landscape.dark.webp",
+            "detail": "oma-orders.tablet-landscape.dark.webp",
             "kind": "expect"
           },
           {
@@ -43249,9 +43261,9 @@
             "kind": "expect"
           },
           {
-            "label": "OMA-orders.tablet-portrait.light: has the expected path",
+            "label": "OMA-orders.tablet-portrait.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/oma-orders.tablet-portrait.light.webp",
+            "detail": "oma-orders.tablet-portrait.light.webp",
             "kind": "expect"
           },
           {
@@ -43285,9 +43297,9 @@
             "kind": "expect"
           },
           {
-            "label": "OMA-orders.tablet-portrait.dark: has the expected path",
+            "label": "OMA-orders.tablet-portrait.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/oma-orders.tablet-portrait.dark.webp",
+            "detail": "oma-orders.tablet-portrait.dark.webp",
             "kind": "expect"
           },
           {
@@ -43333,9 +43345,9 @@
             "kind": "expect"
           },
           {
-            "label": "OMA-orders.phone.light: has the expected path",
+            "label": "OMA-orders.phone.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/oma-orders.phone.light.webp",
+            "detail": "oma-orders.phone.light.webp",
             "kind": "expect"
           },
           {
@@ -43369,9 +43381,9 @@
             "kind": "expect"
           },
           {
-            "label": "OMA-orders.phone.dark: has the expected path",
+            "label": "OMA-orders.phone.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/oma-orders.phone.dark.webp",
+            "detail": "oma-orders.phone.dark.webp",
             "kind": "expect"
           },
           {
@@ -43435,9 +43447,9 @@
             "kind": "expect"
           },
           {
-            "label": "OMA-options.tablet-landscape.light: has the expected path",
+            "label": "OMA-options.tablet-landscape.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/oma-options.tablet-landscape.light.webp",
+            "detail": "oma-options.tablet-landscape.light.webp",
             "kind": "expect"
           },
           {
@@ -43471,9 +43483,9 @@
             "kind": "expect"
           },
           {
-            "label": "OMA-options.tablet-landscape.dark: has the expected path",
+            "label": "OMA-options.tablet-landscape.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/oma-options.tablet-landscape.dark.webp",
+            "detail": "oma-options.tablet-landscape.dark.webp",
             "kind": "expect"
           },
           {
@@ -43519,9 +43531,9 @@
             "kind": "expect"
           },
           {
-            "label": "OMA-options.tablet-portrait.light: has the expected path",
+            "label": "OMA-options.tablet-portrait.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/oma-options.tablet-portrait.light.webp",
+            "detail": "oma-options.tablet-portrait.light.webp",
             "kind": "expect"
           },
           {
@@ -43555,9 +43567,9 @@
             "kind": "expect"
           },
           {
-            "label": "OMA-options.tablet-portrait.dark: has the expected path",
+            "label": "OMA-options.tablet-portrait.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/oma-options.tablet-portrait.dark.webp",
+            "detail": "oma-options.tablet-portrait.dark.webp",
             "kind": "expect"
           },
           {
@@ -43603,9 +43615,9 @@
             "kind": "expect"
           },
           {
-            "label": "OMA-options.phone.light: has the expected path",
+            "label": "OMA-options.phone.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/oma-options.phone.light.webp",
+            "detail": "oma-options.phone.light.webp",
             "kind": "expect"
           },
           {
@@ -43639,9 +43651,9 @@
             "kind": "expect"
           },
           {
-            "label": "OMA-options.phone.dark: has the expected path",
+            "label": "OMA-options.phone.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/oma-options.phone.dark.webp",
+            "detail": "oma-options.phone.dark.webp",
             "kind": "expect"
           },
           {
@@ -43717,9 +43729,9 @@
             "kind": "expect"
           },
           {
-            "label": "KDA-board.tablet-landscape.light: has the expected path",
+            "label": "KDA-board.tablet-landscape.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/kda-board.tablet-landscape.light.webp",
+            "detail": "kda-board.tablet-landscape.light.webp",
             "kind": "expect"
           },
           {
@@ -43753,9 +43765,9 @@
             "kind": "expect"
           },
           {
-            "label": "KDA-board.tablet-landscape.dark: has the expected path",
+            "label": "KDA-board.tablet-landscape.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/kda-board.tablet-landscape.dark.webp",
+            "detail": "kda-board.tablet-landscape.dark.webp",
             "kind": "expect"
           },
           {
@@ -43801,9 +43813,9 @@
             "kind": "expect"
           },
           {
-            "label": "KDA-board.tablet-portrait.light: has the expected path",
+            "label": "KDA-board.tablet-portrait.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/kda-board.tablet-portrait.light.webp",
+            "detail": "kda-board.tablet-portrait.light.webp",
             "kind": "expect"
           },
           {
@@ -43837,9 +43849,9 @@
             "kind": "expect"
           },
           {
-            "label": "KDA-board.tablet-portrait.dark: has the expected path",
+            "label": "KDA-board.tablet-portrait.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/kda-board.tablet-portrait.dark.webp",
+            "detail": "kda-board.tablet-portrait.dark.webp",
             "kind": "expect"
           },
           {
@@ -43885,9 +43897,9 @@
             "kind": "expect"
           },
           {
-            "label": "KDA-board.phone.light: has the expected path",
+            "label": "KDA-board.phone.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/kda-board.phone.light.webp",
+            "detail": "kda-board.phone.light.webp",
             "kind": "expect"
           },
           {
@@ -43921,9 +43933,9 @@
             "kind": "expect"
           },
           {
-            "label": "KDA-board.phone.dark: has the expected path",
+            "label": "KDA-board.phone.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/kda-board.phone.dark.webp",
+            "detail": "kda-board.phone.dark.webp",
             "kind": "expect"
           },
           {
@@ -43987,9 +43999,9 @@
             "kind": "expect"
           },
           {
-            "label": "KDA-prep.tablet-landscape.light: has the expected path",
+            "label": "KDA-prep.tablet-landscape.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/kda-prep.tablet-landscape.light.webp",
+            "detail": "kda-prep.tablet-landscape.light.webp",
             "kind": "expect"
           },
           {
@@ -44023,9 +44035,9 @@
             "kind": "expect"
           },
           {
-            "label": "KDA-prep.tablet-landscape.dark: has the expected path",
+            "label": "KDA-prep.tablet-landscape.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/kda-prep.tablet-landscape.dark.webp",
+            "detail": "kda-prep.tablet-landscape.dark.webp",
             "kind": "expect"
           },
           {
@@ -44071,9 +44083,9 @@
             "kind": "expect"
           },
           {
-            "label": "KDA-prep.tablet-portrait.light: has the expected path",
+            "label": "KDA-prep.tablet-portrait.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/kda-prep.tablet-portrait.light.webp",
+            "detail": "kda-prep.tablet-portrait.light.webp",
             "kind": "expect"
           },
           {
@@ -44107,9 +44119,9 @@
             "kind": "expect"
           },
           {
-            "label": "KDA-prep.tablet-portrait.dark: has the expected path",
+            "label": "KDA-prep.tablet-portrait.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/kda-prep.tablet-portrait.dark.webp",
+            "detail": "kda-prep.tablet-portrait.dark.webp",
             "kind": "expect"
           },
           {
@@ -44155,9 +44167,9 @@
             "kind": "expect"
           },
           {
-            "label": "KDA-prep.phone.light: has the expected path",
+            "label": "KDA-prep.phone.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/kda-prep.phone.light.webp",
+            "detail": "kda-prep.phone.light.webp",
             "kind": "expect"
           },
           {
@@ -44191,9 +44203,9 @@
             "kind": "expect"
           },
           {
-            "label": "KDA-prep.phone.dark: has the expected path",
+            "label": "KDA-prep.phone.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/kda-prep.phone.dark.webp",
+            "detail": "kda-prep.phone.dark.webp",
             "kind": "expect"
           },
           {
@@ -44257,9 +44269,9 @@
             "kind": "expect"
           },
           {
-            "label": "KDA-dishes.tablet-landscape.light: has the expected path",
+            "label": "KDA-dishes.tablet-landscape.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/kda-dishes.tablet-landscape.light.webp",
+            "detail": "kda-dishes.tablet-landscape.light.webp",
             "kind": "expect"
           },
           {
@@ -44293,9 +44305,9 @@
             "kind": "expect"
           },
           {
-            "label": "KDA-dishes.tablet-landscape.dark: has the expected path",
+            "label": "KDA-dishes.tablet-landscape.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/kda-dishes.tablet-landscape.dark.webp",
+            "detail": "kda-dishes.tablet-landscape.dark.webp",
             "kind": "expect"
           },
           {
@@ -44341,9 +44353,9 @@
             "kind": "expect"
           },
           {
-            "label": "KDA-dishes.tablet-portrait.light: has the expected path",
+            "label": "KDA-dishes.tablet-portrait.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/kda-dishes.tablet-portrait.light.webp",
+            "detail": "kda-dishes.tablet-portrait.light.webp",
             "kind": "expect"
           },
           {
@@ -44377,9 +44389,9 @@
             "kind": "expect"
           },
           {
-            "label": "KDA-dishes.tablet-portrait.dark: has the expected path",
+            "label": "KDA-dishes.tablet-portrait.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/kda-dishes.tablet-portrait.dark.webp",
+            "detail": "kda-dishes.tablet-portrait.dark.webp",
             "kind": "expect"
           },
           {
@@ -44425,9 +44437,9 @@
             "kind": "expect"
           },
           {
-            "label": "KDA-dishes.phone.light: has the expected path",
+            "label": "KDA-dishes.phone.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/kda-dishes.phone.light.webp",
+            "detail": "kda-dishes.phone.light.webp",
             "kind": "expect"
           },
           {
@@ -44461,9 +44473,9 @@
             "kind": "expect"
           },
           {
-            "label": "KDA-dishes.phone.dark: has the expected path",
+            "label": "KDA-dishes.phone.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/kda-dishes.phone.dark.webp",
+            "detail": "kda-dishes.phone.dark.webp",
             "kind": "expect"
           },
           {
@@ -44527,9 +44539,9 @@
             "kind": "expect"
           },
           {
-            "label": "KDA-today.tablet-landscape.light: has the expected path",
+            "label": "KDA-today.tablet-landscape.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/kda-today.tablet-landscape.light.webp",
+            "detail": "kda-today.tablet-landscape.light.webp",
             "kind": "expect"
           },
           {
@@ -44563,9 +44575,9 @@
             "kind": "expect"
           },
           {
-            "label": "KDA-today.tablet-landscape.dark: has the expected path",
+            "label": "KDA-today.tablet-landscape.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/kda-today.tablet-landscape.dark.webp",
+            "detail": "kda-today.tablet-landscape.dark.webp",
             "kind": "expect"
           },
           {
@@ -44611,9 +44623,9 @@
             "kind": "expect"
           },
           {
-            "label": "KDA-today.tablet-portrait.light: has the expected path",
+            "label": "KDA-today.tablet-portrait.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/kda-today.tablet-portrait.light.webp",
+            "detail": "kda-today.tablet-portrait.light.webp",
             "kind": "expect"
           },
           {
@@ -44647,9 +44659,9 @@
             "kind": "expect"
           },
           {
-            "label": "KDA-today.tablet-portrait.dark: has the expected path",
+            "label": "KDA-today.tablet-portrait.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/kda-today.tablet-portrait.dark.webp",
+            "detail": "kda-today.tablet-portrait.dark.webp",
             "kind": "expect"
           },
           {
@@ -44695,9 +44707,9 @@
             "kind": "expect"
           },
           {
-            "label": "KDA-today.phone.light: has the expected path",
+            "label": "KDA-today.phone.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/kda-today.phone.light.webp",
+            "detail": "kda-today.phone.light.webp",
             "kind": "expect"
           },
           {
@@ -44731,9 +44743,9 @@
             "kind": "expect"
           },
           {
-            "label": "KDA-today.phone.dark: has the expected path",
+            "label": "KDA-today.phone.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/kda-today.phone.dark.webp",
+            "detail": "kda-today.phone.dark.webp",
             "kind": "expect"
           },
           {
@@ -44809,9 +44821,9 @@
             "kind": "expect"
           },
           {
-            "label": "RDA-deliveries.tablet-landscape.light: has the expected path",
+            "label": "RDA-deliveries.tablet-landscape.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/rda-deliveries.tablet-landscape.light.webp",
+            "detail": "rda-deliveries.tablet-landscape.light.webp",
             "kind": "expect"
           },
           {
@@ -44845,9 +44857,9 @@
             "kind": "expect"
           },
           {
-            "label": "RDA-deliveries.tablet-landscape.dark: has the expected path",
+            "label": "RDA-deliveries.tablet-landscape.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/rda-deliveries.tablet-landscape.dark.webp",
+            "detail": "rda-deliveries.tablet-landscape.dark.webp",
             "kind": "expect"
           },
           {
@@ -44893,9 +44905,9 @@
             "kind": "expect"
           },
           {
-            "label": "RDA-deliveries.tablet-portrait.light: has the expected path",
+            "label": "RDA-deliveries.tablet-portrait.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/rda-deliveries.tablet-portrait.light.webp",
+            "detail": "rda-deliveries.tablet-portrait.light.webp",
             "kind": "expect"
           },
           {
@@ -44929,9 +44941,9 @@
             "kind": "expect"
           },
           {
-            "label": "RDA-deliveries.tablet-portrait.dark: has the expected path",
+            "label": "RDA-deliveries.tablet-portrait.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/rda-deliveries.tablet-portrait.dark.webp",
+            "detail": "rda-deliveries.tablet-portrait.dark.webp",
             "kind": "expect"
           },
           {
@@ -44977,9 +44989,9 @@
             "kind": "expect"
           },
           {
-            "label": "RDA-deliveries.phone.light: has the expected path",
+            "label": "RDA-deliveries.phone.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/rda-deliveries.phone.light.webp",
+            "detail": "rda-deliveries.phone.light.webp",
             "kind": "expect"
           },
           {
@@ -45013,9 +45025,9 @@
             "kind": "expect"
           },
           {
-            "label": "RDA-deliveries.phone.dark: has the expected path",
+            "label": "RDA-deliveries.phone.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/rda-deliveries.phone.dark.webp",
+            "detail": "rda-deliveries.phone.dark.webp",
             "kind": "expect"
           },
           {
@@ -45079,9 +45091,9 @@
             "kind": "expect"
           },
           {
-            "label": "RDA-pickup.tablet-landscape.light: has the expected path",
+            "label": "RDA-pickup.tablet-landscape.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/rda-pickup.tablet-landscape.light.webp",
+            "detail": "rda-pickup.tablet-landscape.light.webp",
             "kind": "expect"
           },
           {
@@ -45115,9 +45127,9 @@
             "kind": "expect"
           },
           {
-            "label": "RDA-pickup.tablet-landscape.dark: has the expected path",
+            "label": "RDA-pickup.tablet-landscape.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/rda-pickup.tablet-landscape.dark.webp",
+            "detail": "rda-pickup.tablet-landscape.dark.webp",
             "kind": "expect"
           },
           {
@@ -45163,9 +45175,9 @@
             "kind": "expect"
           },
           {
-            "label": "RDA-pickup.tablet-portrait.light: has the expected path",
+            "label": "RDA-pickup.tablet-portrait.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/rda-pickup.tablet-portrait.light.webp",
+            "detail": "rda-pickup.tablet-portrait.light.webp",
             "kind": "expect"
           },
           {
@@ -45199,9 +45211,9 @@
             "kind": "expect"
           },
           {
-            "label": "RDA-pickup.tablet-portrait.dark: has the expected path",
+            "label": "RDA-pickup.tablet-portrait.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/rda-pickup.tablet-portrait.dark.webp",
+            "detail": "rda-pickup.tablet-portrait.dark.webp",
             "kind": "expect"
           },
           {
@@ -45247,9 +45259,9 @@
             "kind": "expect"
           },
           {
-            "label": "RDA-pickup.phone.light: has the expected path",
+            "label": "RDA-pickup.phone.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/rda-pickup.phone.light.webp",
+            "detail": "rda-pickup.phone.light.webp",
             "kind": "expect"
           },
           {
@@ -45283,9 +45295,9 @@
             "kind": "expect"
           },
           {
-            "label": "RDA-pickup.phone.dark: has the expected path",
+            "label": "RDA-pickup.phone.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/rda-pickup.phone.dark.webp",
+            "detail": "rda-pickup.phone.dark.webp",
             "kind": "expect"
           },
           {
@@ -45349,9 +45361,9 @@
             "kind": "expect"
           },
           {
-            "label": "RDA-code.tablet-landscape.light: has the expected path",
+            "label": "RDA-code.tablet-landscape.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/rda-code.tablet-landscape.light.webp",
+            "detail": "rda-code.tablet-landscape.light.webp",
             "kind": "expect"
           },
           {
@@ -45385,9 +45397,9 @@
             "kind": "expect"
           },
           {
-            "label": "RDA-code.tablet-landscape.dark: has the expected path",
+            "label": "RDA-code.tablet-landscape.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/rda-code.tablet-landscape.dark.webp",
+            "detail": "rda-code.tablet-landscape.dark.webp",
             "kind": "expect"
           },
           {
@@ -45433,9 +45445,9 @@
             "kind": "expect"
           },
           {
-            "label": "RDA-code.tablet-portrait.light: has the expected path",
+            "label": "RDA-code.tablet-portrait.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/rda-code.tablet-portrait.light.webp",
+            "detail": "rda-code.tablet-portrait.light.webp",
             "kind": "expect"
           },
           {
@@ -45469,9 +45481,9 @@
             "kind": "expect"
           },
           {
-            "label": "RDA-code.tablet-portrait.dark: has the expected path",
+            "label": "RDA-code.tablet-portrait.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/rda-code.tablet-portrait.dark.webp",
+            "detail": "rda-code.tablet-portrait.dark.webp",
             "kind": "expect"
           },
           {
@@ -45517,9 +45529,9 @@
             "kind": "expect"
           },
           {
-            "label": "RDA-code.phone.light: has the expected path",
+            "label": "RDA-code.phone.light: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/rda-code.phone.light.webp",
+            "detail": "rda-code.phone.light.webp",
             "kind": "expect"
           },
           {
@@ -45553,9 +45565,9 @@
             "kind": "expect"
           },
           {
-            "label": "RDA-code.phone.dark: has the expected path",
+            "label": "RDA-code.phone.dark: has the expected file name",
             "ok": true,
-            "detail": "/app-screens/rda-code.phone.dark.webp",
+            "detail": "rda-code.phone.dark.webp",
             "kind": "expect"
           },
           {
@@ -45592,6 +45604,1638 @@
             "label": "RDA · code · phone: the dark picture is clearly darker than the light one",
             "ok": true,
             "detail": "light 169, dark 32",
+            "kind": "expect"
+          },
+          {
+            "label": "Business: at least three screenshots, each with its own name",
+            "ok": true,
+            "detail": "6",
+            "kind": "expect"
+          },
+          {
+            "label": "Business: the list and the scenarios agree on which screens, in which order",
+            "ok": true,
+            "detail": "home,sales,money,dishes,customers,outlets",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · home: its words are the scenario's",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · home: a title, a caption and a description that doesn't name a device (the website adds it)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · home: a picture for every device the scenario runs on",
+            "ok": true,
+            "detail": "tablet-landscape,tablet-portrait,phone",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · home · tablet-landscape: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.tablet-landscape.light: has the expected file name",
+            "ok": true,
+            "detail": "business-home.tablet-landscape.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.tablet-landscape.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.tablet-landscape.light: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.tablet-landscape.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "57 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.tablet-landscape.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "24/29/28",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.tablet-landscape.dark: has the expected file name",
+            "ok": true,
+            "detail": "business-home.tablet-landscape.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.tablet-landscape.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.tablet-landscape.dark: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.tablet-landscape.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "60 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.tablet-landscape.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "34/27/27",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · home · tablet-landscape: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 237, dark 38",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · home · tablet-portrait: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.tablet-portrait.light: has the expected file name",
+            "ok": true,
+            "detail": "business-home.tablet-portrait.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.tablet-portrait.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.tablet-portrait.light: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.tablet-portrait.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "77 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.tablet-portrait.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "27/32/30",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.tablet-portrait.dark: has the expected file name",
+            "ok": true,
+            "detail": "business-home.tablet-portrait.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.tablet-portrait.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.tablet-portrait.dark: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.tablet-portrait.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "84 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.tablet-portrait.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "36/30/30",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · home · tablet-portrait: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 236, dark 40",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · home · phone: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.phone.light: has the expected file name",
+            "ok": true,
+            "detail": "business-home.phone.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.phone.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.phone.light: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.phone.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "62 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.phone.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "35/43/41",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.phone.dark: has the expected file name",
+            "ok": true,
+            "detail": "business-home.phone.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.phone.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.phone.dark: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.phone.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "65 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-home.phone.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "49/39/39",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · home · phone: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 228, dark 52",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · sales: its words are the scenario's",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · sales: a title, a caption and a description that doesn't name a device (the website adds it)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · sales: a picture for every device the scenario runs on",
+            "ok": true,
+            "detail": "tablet-landscape,tablet-portrait,phone",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · sales · tablet-landscape: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.tablet-landscape.light: has the expected file name",
+            "ok": true,
+            "detail": "business-sales.tablet-landscape.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.tablet-landscape.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.tablet-landscape.light: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.tablet-landscape.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "62 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.tablet-landscape.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "23/33/28",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.tablet-landscape.dark: has the expected file name",
+            "ok": true,
+            "detail": "business-sales.tablet-landscape.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.tablet-landscape.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.tablet-landscape.dark: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.tablet-landscape.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "68 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.tablet-landscape.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "36/26/27",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · sales · tablet-landscape: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 235, dark 39",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · sales · tablet-portrait: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.tablet-portrait.light: has the expected file name",
+            "ok": true,
+            "detail": "business-sales.tablet-portrait.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.tablet-portrait.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.tablet-portrait.light: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.tablet-portrait.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "80 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.tablet-portrait.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "41/36/29",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.tablet-portrait.dark: has the expected file name",
+            "ok": true,
+            "detail": "business-sales.tablet-portrait.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.tablet-portrait.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.tablet-portrait.dark: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.tablet-portrait.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "87 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.tablet-portrait.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "36/40/43",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · sales · tablet-portrait: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 231, dark 44",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · sales · phone: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.phone.light: has the expected file name",
+            "ok": true,
+            "detail": "business-sales.phone.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.phone.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.phone.light: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.phone.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "53 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.phone.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "34/43/37",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.phone.dark: has the expected file name",
+            "ok": true,
+            "detail": "business-sales.phone.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.phone.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.phone.dark: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.phone.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "55 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-sales.phone.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "45/36/38",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · sales · phone: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 229, dark 50",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · money: its words are the scenario's",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · money: a title, a caption and a description that doesn't name a device (the website adds it)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · money: a picture for every device the scenario runs on",
+            "ok": true,
+            "detail": "tablet-landscape,tablet-portrait,phone",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · money · tablet-landscape: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.tablet-landscape.light: has the expected file name",
+            "ok": true,
+            "detail": "business-money.tablet-landscape.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.tablet-landscape.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.tablet-landscape.light: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.tablet-landscape.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "46 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.tablet-landscape.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "24/32/27",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.tablet-landscape.dark: has the expected file name",
+            "ok": true,
+            "detail": "business-money.tablet-landscape.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.tablet-landscape.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.tablet-landscape.dark: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.tablet-landscape.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "49 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.tablet-landscape.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "33/26/26",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · money · tablet-landscape: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 236, dark 37",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · money · tablet-portrait: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.tablet-portrait.light: has the expected file name",
+            "ok": true,
+            "detail": "business-money.tablet-portrait.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.tablet-portrait.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.tablet-portrait.light: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.tablet-portrait.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "61 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.tablet-portrait.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "26/43/35",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.tablet-portrait.dark: has the expected file name",
+            "ok": true,
+            "detail": "business-money.tablet-portrait.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.tablet-portrait.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.tablet-portrait.dark: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.tablet-portrait.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "67 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.tablet-portrait.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "42/28/29",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · money · tablet-portrait: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 233, dark 40",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · money · phone: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.phone.light: has the expected file name",
+            "ok": true,
+            "detail": "business-money.phone.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.phone.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.phone.light: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.phone.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "52 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.phone.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "34/47/40",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.phone.dark: has the expected file name",
+            "ok": true,
+            "detail": "business-money.phone.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.phone.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.phone.dark: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.phone.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "55 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-money.phone.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "47/37/38",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · money · phone: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 227, dark 50",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · dishes: its words are the scenario's",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · dishes: a title, a caption and a description that doesn't name a device (the website adds it)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · dishes: a picture for every device the scenario runs on",
+            "ok": true,
+            "detail": "tablet-landscape,tablet-portrait,phone",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · dishes · tablet-landscape: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.tablet-landscape.light: has the expected file name",
+            "ok": true,
+            "detail": "business-dishes.tablet-landscape.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.tablet-landscape.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.tablet-landscape.light: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.tablet-landscape.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "38 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.tablet-landscape.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "22/45/35",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.tablet-landscape.dark: has the expected file name",
+            "ok": true,
+            "detail": "business-dishes.tablet-landscape.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.tablet-landscape.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.tablet-landscape.dark: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.tablet-landscape.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "40 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.tablet-landscape.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "41/23/24",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · dishes · tablet-landscape: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 234, dark 38",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · dishes · tablet-portrait: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.tablet-portrait.light: has the expected file name",
+            "ok": true,
+            "detail": "business-dishes.tablet-portrait.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.tablet-portrait.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.tablet-portrait.light: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.tablet-portrait.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "59 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.tablet-portrait.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "26/42/34",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.tablet-portrait.dark: has the expected file name",
+            "ok": true,
+            "detail": "business-dishes.tablet-portrait.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.tablet-portrait.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.tablet-portrait.dark: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.tablet-portrait.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "62 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.tablet-portrait.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "39/27/28",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · dishes · tablet-portrait: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 234, dark 39",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · dishes · phone: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.phone.light: has the expected file name",
+            "ok": true,
+            "detail": "business-dishes.phone.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.phone.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.phone.light: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.phone.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "44 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.phone.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "32/54/43",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.phone.dark: has the expected file name",
+            "ok": true,
+            "detail": "business-dishes.phone.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.phone.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.phone.dark: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.phone.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "45 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-dishes.phone.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "50/34/36",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · dishes · phone: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 226, dark 51",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · customers: its words are the scenario's",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · customers: a title, a caption and a description that doesn't name a device (the website adds it)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · customers: a picture for every device the scenario runs on",
+            "ok": true,
+            "detail": "tablet-landscape,tablet-portrait,phone",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · customers · tablet-landscape: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.tablet-landscape.light: has the expected file name",
+            "ok": true,
+            "detail": "business-customers.tablet-landscape.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.tablet-landscape.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.tablet-landscape.light: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.tablet-landscape.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "43 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.tablet-landscape.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "31/29/24",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.tablet-landscape.dark: has the expected file name",
+            "ok": true,
+            "detail": "business-customers.tablet-landscape.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.tablet-landscape.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.tablet-landscape.dark: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.tablet-landscape.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "46 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.tablet-landscape.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "31/30/33",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · customers · tablet-landscape: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 237, dark 37",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · customers · tablet-portrait: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.tablet-portrait.light: has the expected file name",
+            "ok": true,
+            "detail": "business-customers.tablet-portrait.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.tablet-portrait.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.tablet-portrait.light: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.tablet-portrait.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "62 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.tablet-portrait.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "33/31/27",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.tablet-portrait.dark: has the expected file name",
+            "ok": true,
+            "detail": "business-customers.tablet-portrait.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.tablet-portrait.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.tablet-portrait.dark: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.tablet-portrait.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "68 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.tablet-portrait.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "34/33/35",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · customers · tablet-portrait: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 235, dark 40",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · customers · phone: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.phone.light: has the expected file name",
+            "ok": true,
+            "detail": "business-customers.phone.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.phone.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.phone.light: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.phone.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "36 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.phone.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "42/40/33",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.phone.dark: has the expected file name",
+            "ok": true,
+            "detail": "business-customers.phone.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.phone.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.phone.dark: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.phone.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "39 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-customers.phone.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "42/41/45",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · customers · phone: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 229, dark 51",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · outlets: its words are the scenario's",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · outlets: a title, a caption and a description that doesn't name a device (the website adds it)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · outlets: a picture for every device the scenario runs on",
+            "ok": true,
+            "detail": "tablet-landscape,tablet-portrait,phone",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · outlets · tablet-landscape: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.tablet-landscape.light: has the expected file name",
+            "ok": true,
+            "detail": "business-outlets.tablet-landscape.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.tablet-landscape.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.tablet-landscape.light: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.tablet-landscape.light: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.tablet-landscape.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "48 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.tablet-landscape.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "21/37/29",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.tablet-landscape.dark: has the expected file name",
+            "ok": true,
+            "detail": "business-outlets.tablet-landscape.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.tablet-landscape.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.tablet-landscape.dark: the list says 1600×1000 and the picture is 1600×1000 (1600 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.tablet-landscape.dark: the shape of a tablet wide screen",
+            "ok": true,
+            "detail": "1.600 vs 1.600",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.tablet-landscape.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "52 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.tablet-landscape.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "36/22/25",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · outlets · tablet-landscape: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 235, dark 38",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · outlets · tablet-portrait: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.tablet-portrait.light: has the expected file name",
+            "ok": true,
+            "detail": "business-outlets.tablet-portrait.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.tablet-portrait.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.tablet-portrait.light: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.tablet-portrait.light: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.tablet-portrait.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "62 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.tablet-portrait.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "25/41/34",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.tablet-portrait.dark: has the expected file name",
+            "ok": true,
+            "detail": "business-outlets.tablet-portrait.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.tablet-portrait.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.tablet-portrait.dark: the list says 1040×1664 and the picture is 1040×1664 (1040 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.tablet-portrait.dark: the shape of a tablet tall screen",
+            "ok": true,
+            "detail": "0.625 vs 0.625",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.tablet-portrait.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "69 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.tablet-portrait.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "39/27/28",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · outlets · tablet-portrait: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 234, dark 40",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · outlets · phone: a light and a dark picture",
+            "ok": true,
+            "detail": "light,dark",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.phone.light: has the expected file name",
+            "ok": true,
+            "detail": "business-outlets.phone.light.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.phone.light: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.phone.light: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.phone.light: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.phone.light: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "47 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.phone.light: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "30/45/37",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.phone.dark: has the expected file name",
+            "ok": true,
+            "detail": "business-outlets.phone.dark.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.phone.dark: is a real WebP file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.phone.dark: the list says 720×1560 and the picture is 720×1560 (720 wide)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.phone.dark: the shape of a phone  screen",
+            "ok": true,
+            "detail": "0.462 vs 0.462",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.phone.dark: small enough for a web page (under 260 KB)",
+            "ok": true,
+            "detail": "49 KB",
+            "kind": "expect"
+          },
+          {
+            "label": "Business-outlets.phone.dark: has real content on it (not a blank screen)",
+            "ok": true,
+            "detail": "46/31/35",
+            "kind": "expect"
+          },
+          {
+            "label": "Business · outlets · phone: the dark picture is clearly darker than the light one",
+            "ok": true,
+            "detail": "light 228, dark 50",
             "kind": "expect"
           },
           {
@@ -45698,6 +47342,12 @@
           },
           {
             "label": "only made-up phone numbers are used",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the Business app's 75 days of made-up sales are added only for its own pictures (they would show in the other apps' lists)",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -49003,8 +50653,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T10:09:32.905Z",
-    "durationMs": 4283,
+    "at": "2026-11-28T10:48:01.568Z",
+    "durationMs": 4562,
     "steps": [
       {
         "n": 1,
@@ -49723,8 +51373,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T10:09:03.877Z",
-    "durationMs": 34252,
+    "at": "2026-11-28T10:46:43.911Z",
+    "durationMs": 34239,
     "steps": [
       {
         "n": 1,
@@ -50428,8 +52078,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T10:09:38.048Z",
-    "durationMs": 4411,
+    "at": "2026-11-28T10:48:13.395Z",
+    "durationMs": 4090,
     "steps": [
       {
         "n": 0,
@@ -50910,51 +52560,75 @@
     "id": "t146-app-screenshots-api",
     "title": "App Management → Screenshots (API): the platform admin adds, edits, hides, reorders and removes an app's screenshots and puts a picture in each slot (3 devices × light / dark); the website's data carries only what should be shown",
     "status": "pass",
-    "pass": 73,
+    "pass": 92,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T10:08:14.629Z",
-    "durationMs": 5073,
+    "at": "2026-11-28T10:47:17.337Z",
+    "durationMs": 7906,
     "steps": [
       {
         "n": 1,
-        "title": "The pictures that ship with the website are copied in once",
+        "title": "The pictures that come with Rasoi Pulse are copied INTO STORAGE, once",
         "checks": [
           {
-            "label": "OMA starts with the two screens that ship with the website, in order",
+            "label": "(nothing is in storage before the first read)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA starts with the two screens that come with Rasoi Pulse, in order",
             "ok": true,
             "detail": "Every table at a glance|Every order in one list",
             "kind": "expect"
           },
           {
-            "label": "…marked as coming with the website, and shown",
+            "label": "…marked as coming with Rasoi Pulse, and shown",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "the console gets the picture's full address (it is on another site)",
+            "label": "their four pictures were put into the platform's storage (the folder the API stores files in), not left on any other disk",
             "ok": true,
-            "detail": "https://site.example.test/app-screens/oma-tables.tablet-landscape.light.webp",
+            "detail": "4 files",
             "kind": "expect"
           },
           {
-            "label": "…and knows these are not uploaded files",
+            "label": "…each is recorded with the address of the STORED file (and as an uploaded one), never a path on the website",
+            "ok": true,
+            "detail": "http://localhost:3119/uploads/platform/website/app-screens/24aee645-31b5-4880-930b-18b6f08a7520.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "…no picture anywhere points at a path on the website",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "reading it again does not copy them again",
+            "label": "…and the stored file is the very picture that was shipped, byte for byte",
             "ok": true,
             "detail": "",
             "kind": "expect"
           },
           {
-            "label": "the public page data has them, with the picture's path on the website",
+            "label": "reading it again copies nothing more (no new rows, no new files)",
             "ok": true,
-            "detail": "/app-screens/oma-tables.tablet-landscape.light.webp",
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the app is marked as done",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the public page data has them, with the stored file's address",
+            "ok": true,
+            "detail": "http://localhost:3119/uploads/platform/website/app-screens/24aee645-31b5-4880-930b-18b6f08a7520.webp",
             "kind": "expect"
           },
           {
@@ -50991,6 +52665,114 @@
       },
       {
         "n": 2,
+        "title": "1b. A picture file that is missing is not recorded half-done, and the next read finishes the job",
+        "checks": [
+          {
+            "label": "the screenshot whose pictures could be stored is there; the one whose file is missing is not recorded, and left no stray file",
+            "ok": true,
+            "detail": "1 screenshot, 1 new file",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the app is NOT marked as done",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "once the file is there the next read records the rest and marks the app done",
+            "ok": true,
+            "detail": "2 screenshots",
+            "kind": "expect"
+          },
+          {
+            "label": "…without copying the first one again",
+            "ok": true,
+            "detail": "2 files for 2 screenshots",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "1c. Pictures an earlier version left as paths on the website's disk are moved into storage",
+        "checks": [
+          {
+            "label": "the old path is replaced by the stored file's address",
+            "ok": true,
+            "detail": "http://localhost:3119/uploads/platform/website/app-screens/32699ceb-e22a-4318-bdd5-84a32bec067d.webp",
+            "kind": "expect"
+          },
+          {
+            "label": "…one file was stored, and the app is marked as done",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and a second read changes nothing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "1d. The seed script (run on the server at deploy time) does the same copy with the REAL pictures, and only says what it would do with --dry-run",
+        "checks": [
+          {
+            "label": "(the real KDA pictures are the ones used here)",
+            "ok": true,
+            "detail": "4 screenshots, 24 pictures",
+            "kind": "expect"
+          },
+          {
+            "label": "--dry-run says what it would add",
+            "ok": true,
+            "detail": "DRY RUN (nothing is changed) — pictures go to the platform storage: THIS SERVER'S DISK (the console has not configured a bucket) | kda: 0 screenshots now; 4 to add, 0 picture(s) to move off the website's disk",
+            "kind": "expect"
+          },
+          {
+            "label": "…and says where the pictures would go (here nothing is configured, so the API's own folder — on the real server it says the R2 bucket)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and changes nothing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the real run copies them and says it is done",
+            "ok": true,
+            "detail": "kda: 0 screenshots now; 4 to add, 0 picture(s) to move off the website's disk",
+            "kind": "expect"
+          },
+          {
+            "label": "…every picture stored, every screenshot recorded",
+            "ok": true,
+            "detail": "24 files",
+            "kind": "expect"
+          },
+          {
+            "label": "…each recorded with its stored file's key and address, none with a website path",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "running it again changes nothing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
         "title": "Only the platform admin manages them",
         "checks": [
           {
@@ -51050,7 +52832,7 @@
         ]
       },
       {
-        "n": 3,
+        "n": 6,
         "title": "The section: switch, words, first device",
         "checks": [
           {
@@ -51116,7 +52898,7 @@
         ]
       },
       {
-        "n": 4,
+        "n": 7,
         "title": "Add a screenshot and put pictures in its slots",
         "checks": [
           {
@@ -51158,13 +52940,13 @@
           {
             "label": "…and the file is in the platform's storage",
             "ok": true,
-            "detail": "1 file",
+            "detail": "1 new file",
             "kind": "expect"
           },
           {
             "label": "the website now shows it, last, with the file's address",
             "ok": true,
-            "detail": "http://localhost:3119/uploads/platform/website/app-screens/52e630e9-ddfb-4b55-b68f-66f7f76b2920.webp",
+            "detail": "http://localhost:3119/uploads/platform/website/app-screens/4fc29afd-42b9-48fa-813b-ba5b1ffc0110.webp",
             "kind": "expect"
           },
           {
@@ -51174,7 +52956,7 @@
             "kind": "expect"
           },
           {
-            "label": "…four files now",
+            "label": "…four new files now",
             "ok": true,
             "detail": "4",
             "kind": "expect"
@@ -51198,7 +52980,7 @@
             "kind": "expect"
           },
           {
-            "label": "…and the old file is removed from storage (still four files)",
+            "label": "…and the old file is removed from storage (still four new files)",
             "ok": true,
             "detail": "4",
             "kind": "expect"
@@ -51236,7 +53018,7 @@
         ]
       },
       {
-        "n": 5,
+        "n": 8,
         "title": "Edit the words, hide, reorder",
         "checks": [
           {
@@ -51296,7 +53078,7 @@
         ]
       },
       {
-        "n": 6,
+        "n": 9,
         "title": "Remove a picture, remove a screenshot",
         "checks": [
           {
@@ -51308,7 +53090,7 @@
           {
             "label": "…its file is gone from storage",
             "ok": true,
-            "detail": "3",
+            "detail": "3 new files left",
             "kind": "expect"
           },
           {
@@ -51326,7 +53108,7 @@
           {
             "label": "removing a screenshot removes it and every file it had",
             "ok": true,
-            "detail": "0 files left",
+            "detail": "0 extra files left",
             "kind": "expect"
           },
           {
@@ -51336,9 +53118,9 @@
             "kind": "expect"
           },
           {
-            "label": "a screenshot that came with the website can be removed too",
+            "label": "a screenshot that came with Rasoi Pulse can be removed too, and its stored pictures go",
             "ok": true,
-            "detail": "",
+            "detail": "4 → 3 files",
             "kind": "expect"
           },
           {
@@ -51350,7 +53132,7 @@
         ]
       },
       {
-        "n": 7,
+        "n": 10,
         "title": "Limits",
         "checks": [
           {
@@ -51362,7 +53144,7 @@
         ]
       },
       {
-        "n": 8,
+        "n": 11,
         "title": "An app added in the console, and removing it",
         "checks": [
           {
@@ -51398,7 +53180,7 @@
         ]
       },
       {
-        "n": 9,
+        "n": 12,
         "title": "Nothing reaches the website but what should",
         "checks": [
           {
@@ -51421,8 +53203,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T10:08:01.456Z",
-    "durationMs": 20664,
+    "at": "2026-11-28T10:46:08.738Z",
+    "durationMs": 20852,
     "steps": [
       {
         "n": 0,
@@ -52002,12 +53784,12 @@
     "id": "t148-app-screenshots-manager-ui",
     "title": "App Management → 'Screenshots on the website': add a screenshot, upload a picture for each device and look, get warned about a wrong shape, replace / remove pictures, hide, reorder, edit, remove; set the section's heading, intro and first device",
     "status": "pass",
-    "pass": 53,
+    "pass": 54,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T10:12:13.742Z",
-    "durationMs": 6565,
+    "at": "2026-11-28T10:45:46.979Z",
+    "durationMs": 8022,
     "steps": [
       {
         "n": 1,
@@ -52365,18 +54147,24 @@
       },
       {
         "n": 11,
-        "title": "The screenshots that come with the website (an app that has them)",
+        "title": "The screenshots that come with Rasoi Pulse (an app that has them) are stored files",
         "checks": [
           {
-            "label": "OMA's screenshots are marked 'Came with the website'",
+            "label": "OMA's screenshots are marked 'Came with Rasoi Pulse'",
             "ok": true,
             "detail": "5 screenshots",
             "kind": "expect"
           },
           {
-            "label": "…and every picture shows (they come from the website's own files)",
+            "label": "…and every picture shows (they are files in the platform's storage, not on the website)",
             "ok": true,
             "detail": "28 pictures",
+            "kind": "expect"
+          },
+          {
+            "label": "…each is a stored file (in the platform's storage), never a path on the website",
+            "ok": true,
+            "detail": "",
             "kind": "expect"
           },
           {

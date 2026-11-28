@@ -4,23 +4,23 @@ import { env } from "../../env.js";
 import { logger } from "../../logger.js";
 import { HttpError } from "../../middleware/error.js";
 import { notifyWebsite } from "../site/revalidate.js";
-import { putImage, removeObject } from "../storage/storage.service.js";
+import { putFile, putImage, removeObject } from "../storage/storage.service.js";
+import fs from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { BUILTIN_APP_SHOTS } from "./app-shots-builtin.js";
 import { getApp, invalidateApps } from "./app-registry.js";
 
 /**
  * The screenshots on an app's page of the website, managed in the console (App Management → the app's tab → Screenshots).
  * A screenshot is a screen of the app (title, caption, description) with up to six pictures: devices × light / dark. See config-schema/app-screenshots.js.
- * The pictures that ship with the website (taken from the real apps by mobile-apps/screenshots) are copied in the first time an app's list is read; from then on the
- * console owns the list: anything can be edited, replaced, hidden or removed, and new screenshots added.
+ * The pictures taken from the real apps by mobile-apps/screenshots live in apps/api/assets/app-screens as source files. The first time an app's list is read they are
+ * COPIED INTO THE PLATFORM'S STORAGE — the Cloudflare R2 bucket (or whatever the console's Storage page has configured), never served from a disk — and recorded as
+ * the app's screenshots; from then on the console owns the list: anything can be edited, replaced, hidden or removed, and new screenshots added.
  */
 
 /** pictures are stored and removed in the same place the website's own images go */
 const IMAGE_CTX = { brandId: "platform", outletId: "website" };
-
-const siteBase = () => (env.WEBSITE_URL || "").replace(/\/$/, "");
-/** a path on the website ("/app-screens/…") made absolute for the console, which is on another address; uploaded files already come with their own address */
-const absolute = (src) => (typeof src === "string" && src.startsWith("/app-screens/") ? `${siteBase()}${src}` : src);
 
 const imageOf = (v) => (v && typeof v.src === "string" && v.src ? v : null);
 const slotsOf = (images = {}) => {
@@ -32,23 +32,81 @@ const slotsOf = (images = {}) => {
   return out;
 };
 
-/* ------------------------------------------------------------------ the built-in pictures, copied in once */
+/* ------------------------------------------------------------------ the built-in pictures, copied into storage once */
 
-/** Copy the pictures that ship with the website into the database, once per app (safe to run again and from several processes at once). */
-export async function ensureShotsSeeded(slug) {
+/** where the source pictures are (they are code, like an icon: only ever read from here to be put into storage) */
+const ASSETS = fileURLToPath(new URL("../../../assets/app-screens/", import.meta.url));
+/** 2 = the pictures are in the platform's storage (1 was the website's own disk, which this version moves away from) */
+export const SEED_VERSION = 2;
+
+/** one source picture → the platform's storage (R2 when that is what the console configured) */
+async function storeBuiltIn(fileName) {
+  if (!/^[a-z0-9._-]+\.webp$/i.test(String(fileName))) throw new Error(`not a built-in picture name: ${fileName}`);
+  const body = await fs.readFile(path.join(ASSETS, path.basename(fileName)));
+  const put = await putFile(IMAGE_CTX, { body, contentType: "image/webp", kind: "app-screens", ext: "webp" });
+  return { src: put.url, key: put.key };
+}
+
+const inFlight = new Map();
+const coolingDown = new Map();
+const RETRY_AFTER_MS = 60_000;
+/** forget that copying failed a moment ago, so the next read tries again at once (the seed script and the tests use this) */
+export const retrySeedingNow = (slug) => coolingDown.delete(slug);
+
+/**
+ * Copy the built-in pictures of an app into the platform's storage and record them, once per app (safe to run again and from several processes at once: a screenshot
+ * is found by its built-in name). Anything an admin removed stays removed. Pictures an earlier version left as paths on the website's disk ("/app-screens/…") are moved
+ * into storage too. If storage can't take them (not set up, a picture file missing) nothing is half-recorded as done: it is logged and tried again a minute later.
+ */
+export function ensureShotsSeeded(slug) {
+  if (!inFlight.has(slug)) inFlight.set(slug, seed(slug).finally(() => inFlight.delete(slug)));
+  return inFlight.get(slug);
+}
+
+async function seed(slug) {
   const app = await getApp(slug);
-  if (!app || app.shotsSeeded) return;
+  if (!app || app.shotsSeedVersion >= SEED_VERSION) return;
+  if (Date.now() < (coolingDown.get(slug) ?? 0)) return;
   const builtin = BUILTIN_APP_SHOTS[slug] ?? [];
-  let order = 0;
-  for (const b of builtin) {
-    await AppShotModel.updateOne(
-      { app: slug, builtInName: b.name },
-      { $setOnInsert: { app: slug, builtInName: b.name, title: b.title, caption: b.caption ?? "", alt: b.alt ?? "", order: (order += 10), enabled: true, images: b.images ?? {} } },
-      { upsert: true },
-    ).catch((e) => { if (e?.code !== 11000) throw e; });
+  try {
+    let order = 0;
+    for (const b of builtin) {
+      order += 10;
+      const row = await AppShotModel.findOne({ app: slug, builtInName: b.name });
+      if (!row) {
+        const stored = [];
+        try {
+          const images = {};
+          for (const [device, byTheme] of Object.entries(b.images ?? {})) for (const [theme, im] of Object.entries(byTheme)) {
+            const f = await storeBuiltIn(im.file);
+            stored.push(f.key);
+            (images[device] ??= {})[theme] = { ...f, width: im.width, height: im.height };
+          }
+          await AppShotModel.create({ app: slug, builtInName: b.name, title: b.title, caption: b.caption ?? "", alt: b.alt ?? "", order, enabled: true, images });
+        } catch (e) {
+          for (const k of stored) await removeObject(IMAGE_CTX, k); // nothing is left behind by a screenshot that didn't get recorded
+          if (e?.code === 11000) continue; // another process recorded it first
+          throw e;
+        }
+      } else {
+        // pictures recorded by the earlier version as paths on the website's disk: put them in storage and point at them
+        const images = row.images ?? {};
+        let moved = false;
+        for (const [device, byTheme] of Object.entries(images)) for (const [theme, im] of Object.entries(byTheme ?? {})) {
+          if (!im || im.key || typeof im.src !== "string" || !im.src.startsWith("/app-screens/")) continue;
+          const f = await storeBuiltIn(path.basename(im.src));
+          images[device][theme] = { ...im, ...f };
+          moved = true;
+        }
+        if (moved) await AppShotModel.updateOne({ _id: row._id }, { $set: { images } });
+      }
+    }
+    await AppModel.updateOne({ slug }, { $set: { shotsSeeded: true, shotsSeedVersion: SEED_VERSION } });
+    invalidateApps();
+  } catch (e) {
+    coolingDown.set(slug, Date.now() + RETRY_AFTER_MS);
+    logger.warn({ err: e, app: slug }, "could not copy the built-in screenshots into storage; will try again in a minute");
   }
-  await AppModel.updateOne({ slug }, { $set: { shotsSeeded: true } });
-  invalidateApps();
 }
 
 /* ------------------------------------------------------------------ what the website reads */
@@ -87,7 +145,7 @@ const adminShape = (r) => ({
   enabled: r.enabled !== false,
   builtIn: Boolean(r.builtInName),
   order: r.order ?? 0,
-  images: Object.fromEntries(Object.entries(slotsOf(r.images)).map(([d, byTheme]) => [d, Object.fromEntries(Object.entries(byTheme).map(([t, v]) => [t, { src: absolute(v.src), width: v.width ?? 0, height: v.height ?? 0, uploaded: Boolean(v.key) }]))])),
+  images: Object.fromEntries(Object.entries(slotsOf(r.images)).map(([d, byTheme]) => [d, Object.fromEntries(Object.entries(byTheme).map(([t, v]) => [t, { src: v.src, width: v.width ?? 0, height: v.height ?? 0, uploaded: Boolean(v.key) }]))])),
   updatedAt: r.updatedAt ?? null,
 });
 

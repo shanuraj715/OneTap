@@ -168,14 +168,15 @@ try {
   ok(over.over <= 0 && over.card <= 392, "nothing runs off the screen at 390 px", JSON.stringify(over));
   await page.setViewportSize({ width: 1400, height: 1100 });
 
-  say("11. The screenshots that come with the website (an app that has them)");
+  say("11. The screenshots that come with Rasoi Pulse (an app that has them) are stored files");
   await page.goto(AD + "/platform/app-management?app=oma", { waitUntil: "load" });
   await T("app-shots").waitFor({ timeout: 15000 });
   const oma = (await call("GET", `${A}/screenshots/oma`)).json;
   if (oma.shots.length) {
-    ok(oma.shots.every((s) => s.builtIn) && /Came with the website/.test(await T("shot-card-0").innerText()), "OMA's screenshots are marked 'Came with the website'", `${oma.shots.length} screenshots`);
+    ok(oma.shots.every((s) => s.builtIn) && /Came with Rasoi Pulse/.test(await T("shot-card-0").innerText()), "OMA's screenshots are marked 'Came with Rasoi Pulse'", `${oma.shots.length} screenshots`);
     const loaded = await T("app-shots").locator("img").evaluateAll((els) => Promise.all(els.map((e) => (e.complete ? Promise.resolve(e.naturalWidth > 0) : new Promise((r) => { e.onload = () => r(true); e.onerror = () => r(false); })))));
-    ok(loaded.length >= 6 && loaded.every(Boolean), "…and every picture shows (they come from the website's own files)", `${loaded.length} pictures`);
+    ok(loaded.length >= 6 && loaded.every(Boolean), "…and every picture shows (they are files in the platform's storage, not on the website)", `${loaded.length} pictures`);
+    ok(oma.shots.every((s) => Object.values(s.images).every((by) => Object.values(by).every((v) => v.uploaded && !/^\/app-screens\//.test(v.src) && /\/uploads\//.test(v.src)))), "…each is a stored file (in the platform's storage), never a path on the website");
     ok(oma.shots[0].images["tablet-landscape"] && oma.shots[0].images["tablet-portrait"] && oma.shots[0].images.phone && oma.shots.every((s) => Object.values(s.images).every((by) => by.light && by.dark)), "each has light and dark pictures, for the wide tablet, the tall tablet and the phone (where the screen exists there)");
   } else ok(true, "(no screenshots came with this build of the website: nothing to check)");
 

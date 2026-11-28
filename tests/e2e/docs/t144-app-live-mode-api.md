@@ -1,6 +1,6 @@
 # T144 — App Management → Live connection: the platform admin chooses, per app, whether OMA / KDA / RDA use the live connection (WebSocket) first or only ask on a timer (polling); polling stays the backup
 
-**Area:** app · **Last result:** ✅ PASSED (29 passed, 0 failed · 2026-11-28 15:39 · headless · 4.4 s)
+**Area:** app · **Last result:** ✅ PASSED (29 passed, 0 failed · 2026-11-28 16:18 · headless · 4.1 s)
 
 **Run it alone:** `node run.mjs --only t144` (add `--visible` to watch it)
 
@@ -92,6 +92,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-28 16:18 | pass | 29 | 0 | headless | 4.1 s |
 | 2026-11-28 15:39 | pass | 29 | 0 | headless | 4.4 s |
 | 2026-11-28 14:21 | pass | 29 | 0 | headless | 4.1 s |
 | 2026-11-28 14:21 | fail | 26 | 3 | headless | 8.2 s |
