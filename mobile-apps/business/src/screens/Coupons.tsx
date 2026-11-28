@@ -12,7 +12,7 @@ import { AppSwitch, Async, Empty, ErrorState, Glass, Grid, KpiTile, LoadingCards
 
 type Tab = "usage" | "manage";
 const offerText = (c: { discountType: string; value: number; maxDiscount: number; minOrderValue: number }) => {
-  const what = c.discountType === "percent" ? `${c.value}% off` : c.discountType === "flat" ? `${money(c.value)} off` : c.discountType === "bogo" ? "Buy one, get one" : String(c.discountType);
+  const what = c.discountType === "percent" ? `${c.value}% off` : c.discountType === "fixed" ? `${money(c.value)} off` : c.discountType === "bogo" ? "Buy one, get one" : String(c.discountType);
   return [what, c.maxDiscount ? `up to ${money(c.maxDiscount)}` : "", c.minOrderValue ? `on ${money(c.minOrderValue)}+` : ""].filter(Boolean).join(" ");
 };
 

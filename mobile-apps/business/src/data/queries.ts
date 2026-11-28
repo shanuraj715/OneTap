@@ -15,7 +15,7 @@ export function useOutlets() {
   const setHome = useScope((s) => s.setHome);
   const q = useQuery({ queryKey: ["outlets"], queryFn: () => api.outlets(), enabled: Boolean(me), staleTime: 10 * 60_000 });
   const list = useMemo(() => q.data?.outlets ?? [], [q.data]);
-  useEffect(() => { if (!home && list[0]) setHome(list[0].id); }, [home, list, setHome]);
+  useEffect(() => { if (!home && list[0]?._id) setHome(list[0]._id); }, [home, list, setHome]);
   return { ...q, ready: Boolean(home) };
 }
 

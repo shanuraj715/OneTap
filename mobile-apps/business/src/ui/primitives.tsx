@@ -230,7 +230,7 @@ export function CountUp({ value, format, style, variant = "title" }: { value: nu
     return () => { t.removeListener(id); from.current = value; };
   }, [value, reduced]);
   const text = useMemo(() => format(Math.round(reduced ? value : shown)), [reduced, value, shown, format]);
-  return <Text variant={variant} style={style} accessibilityLabel={format(value)}>{text}</Text>;
+  return <Text variant={variant} style={style} accessibilityLabel={format(value)} numberOfLines={1} adjustsFontSizeToFit>{text}</Text>;
 }
 
 /**

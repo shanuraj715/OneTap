@@ -20,7 +20,7 @@ storefront, team dashboard, menu, orders and look — switched on and limited by
 | `packages/config-schema` | Zod schemas and shared rules (store config, plans, pricing, menu, orders…) | — |
 | `packages/db` | Mongoose models, the tenant-scoping plugin, the write-event hooks | — |
 | `packages/ui` | Shared components (headers, cards, menu sections, pinned bars…) and design tokens | — |
-| `mobile-apps/` | Phone and tablet apps (React Native). One folder per app — today **Rasoi Pulse OMA** (Order Management App, for staff who take orders at the table) **Rasoi Pulse KDA** (Kitchen Display App, for the kitchen) and **Rasoi Pulse RDA** (Rider Delivery App, for delivery riders). **Not** part of the pnpm workspace: each app has its own `package.json` and uses npm — see [Mobile apps](#mobile-apps) | — |
+| `mobile-apps/` | Phone and tablet apps (React Native). One folder per app — today **Rasoi Pulse OMA** (Order Management App, for staff who take orders at the table), **Rasoi Pulse KDA** (Kitchen Display App, for the kitchen), **Rasoi Pulse RDA** (Rider Delivery App, for delivery riders), **Rasoi Pulse Admin** (for the Rasoi Pulse team) and **Rasoi Pulse Business** (for store owners). **Not** part of the pnpm workspace: each app has its own `package.json` and uses npm — see [Mobile apps](#mobile-apps) | — |
 | `tests/e2e` | The end-to-end test library and its throwaway test bench — see [Tests](#tests) | 3097 / 3171 / 3170 |
 | `deploy/`, `docs/` | Server and operations notes — see [More documentation](#more-documentation) | — |
 
@@ -89,6 +89,7 @@ permission and limit.
 | **Rasoi Pulse KDA** | Kitchen staff and the kitchen manager: the live order board, the prep list, sold-out / unavailable / available for every dish | Android 11+ phones and tablets | [`mobile-apps/kda`](mobile-apps/kda/README.md) |
 | **Rasoi Pulse RDA** | Delivery riders: the deliveries handed to them, directions in their own maps app, call / WhatsApp the customer, picked up and delivered (with the customer's 4-digit code) | Android 11+ phones | [`mobile-apps/rda`](mobile-apps/rda/README.md) |
 | **Rasoi Pulse Admin** | The Rasoi Pulse team only (the owner and the roles under them): dashboard, stores, onboarding, leads, server, security, cache, settings, team — each person sees only what their role holds. **Not on the website, not in the apps catalog** | Android 11+ phones and tablets | [`mobile-apps/admin`](mobile-apps/admin/README.md) |
+| **Rasoi Pulse Business** | **Store owners** (and the managers and accountants they share reports with): sales by day, week, month and year with comparisons, profit and loss, expenses, GST, best dishes by store and outlet, customers, outlet comparison, bookings, coupons, stock, staff and ratings — and **Excel / PDF / CSV / JSON reports to download and share**. **Private until you make it public** (Console → App Management) | Android 11+ phones and tablets | [`mobile-apps/business`](mobile-apps/business/README.md) |
 
 Rules for the apps (decided with the owner):
 
@@ -333,6 +334,8 @@ abandoned-cart reminders) · Outlets · Payments · Notifications and message se
 On the storefront customers also see "only N left" and combo savings on the cards, pick a pickup time for a takeaway,
 book a table, rate an order and order it again from their Account page. Each order has its own page (`/<outlet>/order/<id>`) that follows it live — accepted, preparing, ready, out for delivery — and says so when the restaurant is running late.
 
+**CHT01 (the stacked area chart, `packages/ui/src/AnalyticsChart.jsx`) in the dashboards.** It draws real layers now (`layers`, `labels`, a `palette`, a reading bubble on hover or touch, a legend, `bare` for use inside a card; with no data it still draws the catalogue's sample). The **platform dashboard** has "Where sales come from" (violet): the last 12 months' sales stacked by order type — `sales.monthlyChannels` from the platform dashboard API. A **store's dashboard** shows its revenue widget as the same chart in green: the last 14 days stacked by order type — `revenueTrend[].channels`. With nothing to stack the card is not shown (the platform) or the plain line chart stays (the store). Tests t133 (API) and t134 (browser).
+
 ### Platform console (apps/admin: the super admin, and team members by role)
 
 Stores (plan, limits, features, owners, people, outlets, domains and Rasoi Pulse address, store name, **subscription payments**, disable or delete) ·
@@ -393,6 +396,20 @@ The top of the dashboard — **"Rasoi Pulse business"**, in the web console and 
   the form's PDF / print and its look-and-feel (kept untouched when the app saves).
 - **Sign-in:** `x-app-id: admin`; not in the apps catalog, so no update gate and no page on the website — install the APK yourself (the same company signing key as the other apps).
 - **Tests:** `npm test` in the app (access rules, API client, every screen against a fake server, reduced motion, onboarding rules incl. mutation checks); server side t121/t122.
+
+### Business app (Rasoi Pulse Business)
+
+`mobile-apps/business` (id `business`, `com.rasoipulse.business`, rose colour) — the owner's view of the store. Sign-in is `POST /api/auth/app-login` with `x-app-id: business`; the server lets in the roles that hold `analytics:read` (owner, manager, accountant) and turns the others away in words. Nothing is worked out in the app except the profit calculation, which is a ported copy of the web dashboard's and is compared with it by a test.
+
+- **One filter for everything:** a period (Today … Last year, or two chosen days) and the outlets (all, or some). The choice is shared by every screen and kept on the phone. Every report asks the server with `from`, `to` and `outlets`; money is in paise. The outlet the app sends in `x-rasoipulse-outlet` is the first outlet the person may see (the server only needs *an* outlet to know whose store it is).
+- **Areas** (each person sees what their role and the store's plan allow — `src/lib/access.ts`, a test checks that every area has a screen): **Home** (today / this week / this month / this year against the days before, the monthly target, highlights in plain words, order types, payments, busy times) · **Sales** (compare with the period before or the same dates last year, day / week / month, stacked sales by outlet, best weekdays, this year against last year) · **Money** (profit and loss from the bills written down or from monthly estimates, the **Expenses** list — add, change, remove — GST, the daily cash) · **Dishes** (best sellers for the store and for each outlet, rising and falling, not selling) · **Customers** · **Outlets** (side by side) · **Bookings** (report + who is coming up) · **Coupons** (usage; plan feature) · **Stock** (counted stock, prep list for tomorrow, change a count) · **Staff** (add, change role / outlets, switch off, reset a password, remove — owner only; owner accounts stay with Rasoi Pulse) · **Reports** · **Ratings** (plan feature) · **Account** (app lock, check for updates, sign out).
+- **Reports:** choose the file (**Excel**, PDF, CSV, JSON), the sections and the period → the app downloads it from `/api/analytics/export`, keeps a copy on the phone (the last 15, "Recent reports") and opens the phone's share sheet. The profit section uses the food-cost percentage and the monthly estimates set on the Money screen.
+- **Server side (deployed):** `/api/analytics/{coupons,reservations,inventory,insights,goals,expenses}` (+ P&L `recorded`, new export sections). Coupons and bookings answer `{ enabled: false }` when the plan lacks the feature. The expenses ledger is tenant-scoped and keeps the money in paise.
+- **App lock:** Account → App lock asks for the phone's fingerprint / face / screen lock when the app opens and when it comes back after 30 seconds away; turning it on or off also asks.
+- **Look:** the same glass look as the Admin app in rose (`#C2185B` = the icon's colour, a test keeps them equal); charts are drawn by the app (line, bars, donut, a stacked area like CHT01, a heat map, a gauge) and read by touch.
+- **Visibility:** private by default (not on the website's list; its page `/apps/business` opens by link). Console → App Management → Make public when you are ready.
+- **Tests:** `npm test` in the app (~280: every screen against a fake server, access rules, files, app lock, profit maths against the web code) · server side t131 and the **contract test t135**, which asks the real API for every address the app uses and checks the fields and types the app reads (it found that `/api/outlets` says `_id`, not `id`).
+- **Verified on a real emulator** against the throwaway API with a few weeks of made-up sales (scripts: `mobile-apps/screenshots`). Not verified: a real phone, a release-signed APK, iOS.
 
 ### Table bookings: a stay, a price, a 50% advance
 

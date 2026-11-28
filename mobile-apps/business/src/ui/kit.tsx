@@ -30,14 +30,14 @@ export function KpiTile({ icon, label, value, delta, invert, sub, spark, onPress
         {icon ? <View style={{ width: 28, height: 28, borderRadius: 9, backgroundColor: c.glassStrong, alignItems: "center", justifyContent: "center" }}><Icon name={icon} size={15} color={accent ?? c.primaryText} /></View> : null}
         <Text variant="caption" tone="muted" numberOfLines={1} style={{ flex: 1 }}>{label}</Text>
       </View>
-      <View style={{ flexDirection: "row", alignItems: "flex-end", justifyContent: "space-between", gap: 8 }}>
-        <View style={{ flexShrink: 1 }}>{typeof value === "string" ? <Text variant="title" numberOfLines={1} adjustsFontSizeToFit>{value}</Text> : value}</View>
-        {spark && spark.length > 1 ? <Sparkline values={spark} color={accent} /> : null}
-      </View>
-      <View style={{ flexDirection: "row", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-        {delta !== undefined ? <Delta pct={delta} invert={invert} /> : null}
-        {sub ? <Text variant="caption" tone="muted" style={{ flexShrink: 1 }}>{sub}</Text> : null}
-      </View>
+      <View>{typeof value === "string" ? <Text variant="title" numberOfLines={1} adjustsFontSizeToFit>{value}</Text> : value}</View>
+      {delta !== undefined || (spark && spark.length > 1) ? (
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 8, justifyContent: "space-between" }}>
+          <View style={{ flexShrink: 1 }}>{delta !== undefined ? <Delta pct={delta} invert={invert} /> : null}</View>
+          {spark && spark.length > 1 ? <Sparkline values={spark} color={accent} /> : null}
+        </View>
+      ) : null}
+      {sub ? <Text variant="caption" tone="muted">{sub}</Text> : null}
     </View>
   );
   return <Glass onPress={onPress} testID={testID} accessibilityLabel={`${label}`} padding={14}>{body}</Glass>;
@@ -160,8 +160,9 @@ export function InsightCard({ insight, testID }: { insight: Insight; testID?: st
 /* ------------------------------------------------------------------------------------------------ loading / error wrapper */
 /** The three states of a report in one place: still loading (grey cards), failed (a sentence and a way to try again), or the data. */
 export function Async<T>({ q, children, lines = 3 }: { q: { isLoading: boolean; isError: boolean; error: unknown; data: T | undefined; refetch: () => unknown }; children: (data: T) => ReactNode; lines?: number }) {
-  if (q.isLoading) return <LoadingCards n={lines} />;
-  if (q.isError || q.data === undefined) return <ErrorState error={q.error} onRetry={() => void q.refetch()} />;
+  if (q.isError) return <ErrorState error={q.error} onRetry={() => void q.refetch()} />;
+  // no answer yet and no failure: still loading — or not started (a report that waits for the outlet to be known): never an error box
+  if (q.isLoading || q.data === undefined) return <LoadingCards n={lines} />;
   return <>{children(q.data)}</>;
 }
 

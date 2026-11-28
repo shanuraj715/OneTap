@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { Children, useEffect, useState, type ReactNode } from "react";
 import { Animated, Pressable, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useStore } from "zustand";
@@ -77,7 +77,8 @@ export function Section({ title, action, children, hint, icon }: { title: string
 export function Grid({ children, min = 300, gap = 12 }: { children: ReactNode[] | ReactNode; min?: number; gap?: number }) {
   const { columns } = useResponsive();
   const cols = columns(min);
-  const items = ([] as ReactNode[]).concat(children as ReactNode[]).filter(Boolean);
+  // (children can be a list inside a list — `{LIST.map(...)}` next to one more tile — so flatten before laying them out)
+  const items = Children.toArray(children);
   return (
     <View style={{ flexDirection: "row", flexWrap: "wrap", gap }}>
       {items.map((child, i) => <View key={i} style={{ width: cols === 1 ? "100%" : `${100 / cols - (gap * (cols - 1)) / cols / 8}%`, flexGrow: 1, flexBasis: cols === 1 ? "100%" : `${Math.floor(100 / cols) - 3}%` }}>{child}</View>)}

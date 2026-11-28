@@ -5,7 +5,8 @@ import { presetRange } from "../src/lib/dates";
 import { useScope } from "../src/data/scope";
 
 /** Made-up answers of the store API, in the shapes the real server sends. Two outlets: Noida and Delhi. */
-export const OUTLETS = [{ id: "o1", name: "Noida", slug: "noida", brandName: "Acme Momos", config: { identity: { name: "Acme Noida" } } }, { id: "o2", name: "Delhi", slug: "delhi", brandName: "Acme Momos", config: { identity: { name: "Acme Delhi" } } }];
+// (the real /api/outlets answers with `_id`; the analytics options say `id`)
+export const OUTLETS = [{ _id: "o1", name: "Noida", slug: "noida", brandName: "Acme Momos", config: { identity: { name: "Acme Noida" } } }, { _id: "o2", name: "Delhi", slug: "delhi", brandName: "Acme Momos", config: { identity: { name: "Acme Delhi" } } }];
 
 export const queryOf = (call: Call): Record<string, string> => Object.fromEntries(new URLSearchParams(call.query));
 
@@ -48,7 +49,7 @@ export const insights = [
 ];
 
 export const options = (over: Record<string, unknown> = {}) => ({
-  outlets: OUTLETS.map((o) => ({ id: o.id, name: o.name, title: o.config.identity.name })),
+  outlets: OUTLETS.map((o) => ({ id: o._id, name: o.name, title: o.config.identity.name })),
   canFinance: true, canExport: true, canWriteExpenses: true,
   formats: [{ id: "xlsx", label: "Excel", help: "Every section as its own sheet." }, { id: "csv", label: "CSV", help: "One section as a plain table." }, { id: "pdf", label: "PDF", help: "A printable summary report." }, { id: "json", label: "JSON", help: "Everything, for other software." }],
   sections: [{ id: "summary", label: "Summary", csv: true }, { id: "daily", label: "Sales by day", csv: true }, { id: "items", label: "Items sold", csv: true }, { id: "coupons", label: "Coupon usage", csv: true }, { id: "reservations", label: "Table reservations", csv: true }, { id: "gst", label: "GST", csv: true }, { id: "pnl", label: "Profit & loss", csv: true, finance: true }, { id: "expenses", label: "Expenses recorded", csv: true, finance: true }],
@@ -171,8 +172,8 @@ export function reportsServer(routes: Record<string, Handler> = {}) {
     "GET /api/analytics/coupons": { json: couponsReport() },
     "GET /api/analytics/inventory": { json: inventoryReport() },
     "GET /api/analytics/stock": { json: stockPlan() },
-    "GET /api/reservations": { json: { reservations: [booking(), booking({ id: "b2", at: "2026-11-29T16:00:00Z", status: "requested", statusLabel: "Waiting to be confirmed", partySize: 2, customer: { name: "Meera", phone: "9866666666" }, tableNumber: "", pricing: { amountPaise: 0, prepayPaise: 0, remainingPaise: 0 } }), booking({ id: "b3", at: "2026-11-30T14:00:00Z" })], waiting: 1 } },
-    "GET /api/coupons": { json: { coupons: [storeCoupon(), storeCoupon({ id: "k2", code: "FLAT50", discountType: "flat", value: 50, maxDiscount: 0, active: false })] } },
+    "GET /api/reservations": { json: { reservations: [booking(), booking({ id: "b2", at: "2026-11-29T16:00:00Z", status: "requested", statusLabel: "Waiting to be confirmed", partySize: 2, customer: { name: "Meera", phone: "9866666666" }, tableNumber: "", pricing: { amountPaise: 0, prepayPaise: 0, remainingPaise: 0 } }), booking({ id: "b3", at: "2026-11-30T14:00:00Z" })], counts: { bookings: 3, guests: 9, requested: 1, waitingAhead: 1 }, more: false } },
+    "GET /api/coupons": { json: { coupons: [storeCoupon(), storeCoupon({ id: "k2", code: "FLAT50", discountType: "fixed", value: 50, maxDiscount: 0, active: false })] } },
     "GET /api/feedback": { json: ratingsPage() },
     ...routes,
   });

@@ -65,8 +65,13 @@ describe("Bookings — coming up", () => {
     await waitFor(() => expect(server.to("GET", "/api/reservations").some((c) => outletHeader(c) === "o2")).toBe(true));
   });
   it("says so when nothing is coming up", async () => {
-    await open(reportsServer({ "GET /api/reservations": { json: { reservations: [], waiting: 0 } } }));
+    await open(reportsServer({ "GET /api/reservations": { json: { reservations: [], counts: { bookings: 0, guests: 0, requested: 0, waitingAhead: 0 }, more: false } } }));
     expect(await screen.findByText("No bookings coming up")).toBeOnTheScreen();
+  });
+  it("when the server holds back some bookings it says only the first are shown", async () => {
+    await open(reportsServer({ "GET /api/reservations": { json: { reservations: [], counts: { bookings: 0, guests: 0, requested: 0, waitingAhead: 0 }, more: true } } }));
+    await screen.findByText("No bookings coming up");
+    expect(screen.getByTestId("bookings-more")).toBeOnTheScreen();
   });
   it("a role without booking access is told so", async () => {
     await open(reportsServer({ "GET /api/reservations": { status: 403, json: { error: "Forbidden" } } }));

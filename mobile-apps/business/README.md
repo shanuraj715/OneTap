@@ -1,38 +1,26 @@
-# Rasoi Pulse Admin
+# Rasoi Pulse Business
 
-An Android app (phones **and** tablets, Android 11 or newer) for the **Rasoi Pulse team**: the owner (super admin) and the people who
-work under them (sales, support …). It is the app version of the platform console and uses the same API (`/api/platform/…`).
-It is **not** for restaurants or customers, and it is **not** on the website or in the apps catalog (no update channel: you install the APK yourself).
+An Android app (phones **and** tablets, Android 11 or newer) for **restaurant owners** — and for the managers and accountants they share reports
+with. It shows how the store is doing: sales by day, week, month and year with comparisons, profit and loss, expenses, GST, best dishes, customers,
+outlets side by side, bookings, coupons, stock, staff and ratings — and it makes **Excel / PDF / CSV / JSON reports** to download and share.
+It uses the store's own API (`/api/analytics/*`, `/api/users`, …); the server decides everything a person may see or do.
 
-> The whole project is described in the root [`README.md`](../../README.md) (see "Platform team and roles" and "Admin app" there). This file
-> only says how to **run, build, version and test this app**.
+> The whole project is described in the root [`README.md`](../../README.md) (see "Business app" there). This file only says how to **run, build,
+> version and test this app**.
 
 ## What is in it
 
-Each person sees **only the areas their role holds** (the owner sees all); the server refuses everything else anyway.
+Each person sees only the areas their role and the store's plan allow (owner: everything; manager: no money, staff or reports; accountant: money
+and reports but no staff). The list is in `src/lib/access.ts`; a test checks that every area has a screen.
 
-| Area | What it does |
-| --- | --- |
-| **Dashboard** | **Rasoi Pulse business** first: what the shops pay you — total sales, new sales, re-subscribed, who ran out, one chart that switches Day / Week / Month against the period before. Below it, under "Across every store": sales this month against last month (touch and drag to read a day), totals, month-by-month, top stores, where orders come from |
-| **Stores** | Every client: search, filter, plan, standing. Open one to rename it, change its plan, switch it off or on, block an outlet or a person, delete it, and see / write down its **subscription payments** (each only if the role may) |
-| **Onboarding** | Requirement forms for new clients: plan first, outlets, features (with "allow anyway" beyond the plan), save as a draft, the server's "ready?" check, **Publish as store** |
-| **Plans** | What each plan includes: limits, price, features, how many stores use it (read only) |
-| **Leads** | Website enquiries: call, WhatsApp, email, mark contacted / won / lost, notes |
-| **Server** | A 0–10 health score with the reasons, processor, memory, disks, network, the API (refreshes itself) |
-| **Security** | Blocked and watched networks, unblock one or all, how the guard works |
-| **Cache** | What the API remembers, its lifetime, expire everything or one store |
-| **Settings** | Grace days and the live-updates switch |
-| **Team & roles** | The owner only: roles, people, their activity |
-
-Still on the web console only: the website editor, storage, AI picture keys, the plan editor (the app only reads plans), App Management, the PDF / print of an onboarding form,
-and the look-and-feel of a form (it is kept untouched when the app saves).
+Home · Sales · Money (profit & loss, expenses, GST, cash) · Dishes · Customers · Outlets · Bookings · Coupons · Stock · Staff · Reports · Ratings · Account.
 
 ## What you need
 
 Node 20.9+, JDK 17, the Android SDK (no Android Studio, no Expo account). See [`../oma/README.md`](../oma/README.md#what-you-need) for the one-time setup.
 
 ```bash
-cd mobile-apps/admin
+cd mobile-apps/business
 npm install
 npm run check          # type check + lint + all tests + version check
 ```
@@ -40,26 +28,25 @@ npm run check          # type check + lint + all tests + version check
 ## See it live on your phone
 
 ```bash
-node tests/e2e/bench/bench.mjs up   # from the repository root: the throwaway TEST server (fake data)
-cd mobile-apps/admin
+node tests/e2e/bench/bench.mjs up   # from the repository root: the throwaway TEST server (fake data; owner o@acme.test / Owner123!)
+cd mobile-apps/business
 npm run phone                       # the code server, pointed at the test server on this Mac, with a QR code
 ```
 
-**Restart it after changing `app.config.ts` or adding a package.** Expo reads the config only when the code server starts, and Expo Go keeps what it was told: a change that "does nothing" on the phone (the light/dark setting did exactly this) is usually a code server that is still running from before. Press Ctrl+C, start `npm run phone` again, and on Android swipe the project away in Expo Go before opening it again. JS changes need none of this (they reload by themselves).
-
-`npm run phone:usb` is the same through a USB cable; `npm run phone:live` talks to the live server. Sign in with a platform account
-(the bench's super admin, or a team member made in Console → Team & roles). A restaurant owner's account is turned away with a sentence.
+Restart the code server after changing `app.config.ts` or adding a package. `npm run phone:usb` is the same through a USB cable; `npm run phone:live`
+talks to the live server. Sign in with a store owner, manager or accountant account; anyone else is turned away with a sentence.
 
 ## Build an APK
 
 ```bash
 npm run build:debug      # a test build, loads its code from `npm start`
-npm run build:release    # the code is inside the app
+npm run build:release    # the code is inside the app (needs the company signing key)
 ```
 
-The APK lands in `build-output/rasoi-pulse-admin-<version>-<mode>.apk`. The native `android/` folder is generated from `app.config.ts`
-(git-ignored, never edit it). The app id is **`com.rasoipulse.admin`**, so it installs beside the other Rasoi Pulse apps. Release builds are
-signed with the same company key as the other apps (`~/.rasoi-pulse/signing/oma/`); `npm run signing:show` says where it is.
+The APK lands in `build-output/rasoi-pulse-business-<version>-<mode>.apk`. The native `android/` folder is generated from `app.config.ts`
+(git-ignored, never edit it). The app id is **`com.rasoipulse.business`**, so it installs beside the other Rasoi Pulse apps. Release builds are signed
+with the same company key as the other apps (`~/.rasoi-pulse/signing/oma/`); `npm run signing:show` says where it is. The app is **private** on the
+website until you make it public (Console → App Management).
 
 ## Version management
 
@@ -68,17 +55,21 @@ signed with the same company key as the other apps (`~/.rasoi-pulse/signing/oma/
 ## Tests
 
 ```bash
-npm test            # jest: the access rules (compared with the server's list), the API client, every screen against a fake server
+npm test            # jest, --no-watchman: every screen against a fake server, access rules, files, app lock, profit maths against the web code
 ```
 
-The server side (roles, the API gate, the app's sign-in) is tested by t121 and t122 in `tests/e2e`.
+The server side is tested by t131 (the reports) and **t135, the contract test**: it asks the real API for every address the app uses and checks the
+fields and types the app reads. When you change what the app reads, change `src/api/endpoints.ts`, the fixtures in `test/data.ts` **and** the field
+list in `tests/e2e/suites/business-app-contract-api.mjs` together.
 
 ## Project layout
 
 ```
-src/app/            routes (Expo Router): sign-in, (app)/[area], (app)/stores/[id], (app)/onboarding/[id]
-src/screens/        Dashboard, Stores, StoreDetail, Onboarding, OnboardingForm, Leads, Server, Security, Cache, Settings, Team, More
-src/ui/             the glass kit: Background (the one scenery everything blurs), Glass, Frost, charts, sheets, dropdown, date picker, nav
+src/app/            routes (Expo Router): sign-in, (app)/[area]
+src/screens/        Home, Sales, Money (+ money/), Dishes, Customers, Outlets, Bookings, Coupons, Stock, Staff, Reports, Ratings, More (Account)
+src/ui/             the glass kit: Background, Glass, Frost, charts (line, bars, donut, stacked area, heat map, gauge), sheets, dropdown, date picker, nav, lock screen
 src/api/            the client and the endpoints (what the API answers, only the parts the app uses)
-src/lib/            access (areas by role), onboarding rules, formats, password maker
+src/data/           the period / outlet filter, report queries, the profit plan, report history, the app lock
+src/lib/            access (areas by role), dates (India's time), the profit maths, formats, files (save + share)
+test/               the fake server and made-up answers the tests use
 ```

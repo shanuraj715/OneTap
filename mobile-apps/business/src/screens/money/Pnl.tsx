@@ -59,7 +59,7 @@ export function PnlTab() {
                 <Text variant="caption" tone="muted">Profit for {rangeLabel(range)}</Text>
                 <Text variant="hero" testID="pnl-net" style={{ color: pnl.net >= 0 ? c.ok : c.danger }}>{money(Math.round(pnl.net))}</Text>
                 <View style={{ flexDirection: "row", gap: 8, flexWrap: "wrap" }}>
-                  <Pill tone={pnl.net >= 0 ? "ok" : "danger"} icon={pnl.net >= 0 ? "trend" : "trendDown"}>{pnl.marginPct === null ? "No sales yet" : `${Math.round(pnl.marginPct * 10) / 10}% margin`}</Pill>
+                  <Pill tone={pnl.net >= 0 ? "ok" : "danger"} icon={pnl.net >= 0 ? "trend" : "trendDown"}>{pnl.marginPct === null ? "No sales yet" : `${pnl.marginPct < 0 ? "−" : ""}${Math.abs(Math.round(pnl.marginPct * 10) / 10)}% margin`}</Pill>
                   <Pill tone="neutral">{`${pnl.days} ${pnl.days === 1 ? "day" : "days"}`}</Pill>
                 </View>
               </View>

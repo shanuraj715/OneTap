@@ -88,7 +88,7 @@ function Upcoming({ outlets }: { outlets: { id: string; name: string; title: str
       <OutletPick outlets={outlets} value={outletId} onChange={setOutletId} />
       {q.isLoading ? <LoadingCards n={3} /> : q.isError ? <ErrorState error={q.error} onRetry={() => void q.refetch()} /> : (
         <>
-          {q.data && (q.data.waiting ?? 0) > 0 ? <Pill tone="warn" icon="clock">{`${q.data.waiting} waiting to be confirmed`}</Pill> : null}
+          {q.data && q.data.counts.waitingAhead > 0 ? <Pill tone="warn" icon="clock">{`${q.data.counts.waitingAhead} waiting to be confirmed`}</Pill> : null}
           {byDay.length === 0 ? <Empty icon="calendarCheck" title="No bookings coming up" message="New ones show here as soon as they are made." /> : byDay.map(([day, list]) => (
             <Section key={day} title={prettyDay(day)} hint={`${list.length} ${list.length === 1 ? "booking" : "bookings"} · ${count(list.reduce((n, b) => n + b.partySize, 0))} guests`}>
               <View style={{ gap: 10 }}>
@@ -100,6 +100,7 @@ function Upcoming({ outlets }: { outlets: { id: string; name: string; title: str
               </View>
             </Section>
           ))}
+          {q.data?.more ? <Text variant="caption" tone="muted" testID="bookings-more">Only the first bookings are shown. The web dashboard lists the rest.</Text> : null}
         </>
       )}
     </>

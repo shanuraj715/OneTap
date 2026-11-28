@@ -12,7 +12,7 @@ It uses the same API as the dashboard (its own routes, `/api/rider/…`) and nee
 | Tab | What it does |
 | --- | --- |
 | **Deliveries** | Your deliveries, on the way first, then ready to pick up, then the ones the kitchen is still making. Each card: order number and state, the address with its landmark, the distance from the restaurant, the customer and their number, what is in the bag, whether it was paid online, an order note. Buttons: **Navigate** (the phone's maps app, at the customer's pin), **Call**, **WhatsApp** (a chat with an "I'm outside" message ready) and the one big step button — **Picked up**, then **Delivered**. A new delivery vibrates the phone and says which |
-| **Done** | What you delivered today |
+| **Done** | What you delivered today, with **your day in four numbers** on top: how many, the distance, the average time from "picked up" to "delivered", the fastest trip, and your first and last delivery times (a trip over six hours is a forgotten tap and is left out of the average; a day with more than 30 shows "30+") |
 | **Account** | Who you are, your store and outlet, the new-delivery alert, version, update check, sign out |
 
 **The delivery code.** When a customer orders delivery they get a 4-digit code on their order page while the food is on its way. **Delivered**

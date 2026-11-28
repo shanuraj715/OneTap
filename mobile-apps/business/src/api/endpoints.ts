@@ -97,6 +97,7 @@ export interface Booking {
   customer?: { name: string; phone: string; whatsapp?: string }; event: string; note: string; tableNumber?: string;
   pricing: { amountPaise: number; prepayPaise: number; remainingPaise: number; couponCode?: string }; payment: { status: string };
 }
+export interface BookingsPage { reservations: Booking[]; counts: { bookings: number; guests: number; requested: number; waitingAhead: number }; more: boolean }
 export interface Rating { id: string; orderId: string; orderNumber: string; channel: string; rating: number; comment: string; tags: string[]; items: string[]; orderTotal: number; customerName: string; customerPhone: string; createdAt: string; updatedAt: string }
 export interface RatingsPage { summary: { days: number; count: number; average: number; byStars: Record<"1" | "2" | "3" | "4" | "5", number>; withComments: number }; ratings: Rating[]; nextBefore: string | null }
 export interface StoreCoupon { id: string; code: string; description: string; discountType: string; value: number; maxDiscount: number; minOrderValue: number; validFrom?: string | null; validUntil: string | null; maxRedemptions: number; redemptionCount: number; active: boolean }
@@ -123,7 +124,7 @@ export function createApi(client: ApiClient) {
     updateCheck: (versionCode: number) => r<UpdateCheck>(`/api/app-updates/check?app=business&versionCode=${versionCode}`, { auth: false }),
 
     /** the outlets (the app needs one to send as the header) — before the options are known */
-    outlets: () => r<{ outlets: { id: string; name: string; slug: string; brandName?: string; config?: { identity?: { name?: string } } }[] }>("/api/outlets"),
+    outlets: () => r<{ outlets: { _id: string; name: string; slug: string; brandName?: string; config?: { identity?: { name?: string } } }[] }>("/api/outlets"),
     options: () => r<AnalyticsOptions>("/api/analytics/options"),
     overview: (scope: string) => report<Overview>("overview", scope),
     sales: (scope: string) => report<SalesReport>("sales", scope),
@@ -156,7 +157,7 @@ export function createApi(client: ApiClient) {
     removeStaff: (id: string) => r<void>(`/api/users/${id}`, json("DELETE")),
 
     /** these four belong to ONE outlet: it is sent in the header (the person picks which on the screen) */
-    bookings: (outletId: string, scope: "upcoming" | "earlier" | "all", day = "") => r<{ reservations: Booking[]; waiting?: number }>(`/api/reservations${q({ scope, day })}`, { headers: outletHeader(outletId) }),
+    bookings: (outletId: string, scope: "upcoming" | "earlier" | "all", day = "") => r<BookingsPage>(`/api/reservations${q({ scope, day })}`, { headers: outletHeader(outletId) }),
     ratings: (outletId: string, o: { days: number; stars?: number[]; withComment?: boolean; before?: string | null }) =>
       r<RatingsPage>(`/api/feedback${q({ days: o.days, stars: o.stars?.join(","), withComment: o.withComment ? "1" : undefined, before: o.before ?? undefined, limit: 30 })}`, { headers: outletHeader(outletId) }),
     storeCoupons: (outletId: string) => r<{ coupons: StoreCoupon[] }>("/api/coupons", { headers: outletHeader(outletId) }),

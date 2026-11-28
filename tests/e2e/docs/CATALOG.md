@@ -1,6 +1,6 @@
 # Rasoi Pulse end-to-end tests — catalog
 
-**135 tests** · 129 passing · 3 failing/error · 3 not run yet
+**136 tests** · 130 passing · 3 failing/error · 3 not run yet
 
 | Test | Area | Result | Checks | Last run |
 |---|---|---|---|---|
@@ -53,6 +53,7 @@
 | [t132-app-visibility-ui](t132-app-visibility-ui.md) — App Management → every app has a Public / Private button; the Admin app has its own tab and starts private (not in the website's list, its page still opens by its link) | platform | ✅ PASSED | 31/31 | 2026-11-28 03:10 |
 | [t133-cht01-dashboards-api](t133-cht01-dashboards-api.md) — CHT01 data: the platform dashboard sends each of the last 12 months' sales split by order type, a store dashboard sends each of the last 14 days' sales split by order type — and the layers always add up to the totals | dashboard | ✅ PASSED | 15/15 | 2026-11-28 04:09 |
 | [t134-cht01-dashboards-ui](t134-cht01-dashboards-ui.md) — CHT01 in the dashboards: the platform console's 'Where sales come from' (violet) and the store dashboard's revenue widget (green) — real layers, legend, reading on hover — and the catalogue sample unchanged (sky blue) | dashboard | ✅ PASSED | 33/33 | 2026-11-28 04:09 |
+| [t135-business-app-contract-api](t135-business-app-contract-api.md) — Business app contract: every address the app calls (outlets, options, 15 reports, people, bookings, ratings, coupons, stock, expenses, report files) answers with the fields and types the app reads | platform | ✅ PASSED | 43/43 | 2026-11-28 12:28 |
 | [t14-marketing-plan](t14-marketing-plan.md) — Marketing is a plan feature — Basic doesn't have it, Pro does, and it can be unlocked or locked for one store | plans | ✅ PASSED | 16/16 | 2026-11-27 10:11 |
 | [t15-login-protection](t15-login-protection.md) — Sign-in protection — wrong guesses block the network, blocks grow longer, a blocked network sees no login form, the platform can unblock | security | ✅ PASSED | 28/28 | 2026-11-21 13:10 |
 | [t16-whatsapp-plan-gating](t16-whatsapp-plan-gating.md) — WhatsApp chat off (plan or per-store lock) — numbers unlinked at once, no WhatsApp requests, every WhatsApp address is a 404 | whatsapp | ✅ PASSED | 37/37 | 2026-11-21 13:12 |

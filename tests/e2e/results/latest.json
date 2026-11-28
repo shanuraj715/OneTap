@@ -45980,5 +45980,307 @@
     ],
     "findings": [],
     "problems": []
+  },
+  "t135-business-app-contract-api": {
+    "id": "t135-business-app-contract-api",
+    "title": "Business app contract: every address the app calls (outlets, options, 15 reports, people, bookings, ratings, coupons, stock, expenses, report files) answers with the fields and types the app reads",
+    "status": "pass",
+    "pass": 43,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-28T06:58:48.870Z",
+    "durationMs": 5091,
+    "steps": [
+      {
+        "n": 1,
+        "title": "Made-up data: orders in two outlets, coupons, bookings, dishes with counted stock, ratings, a bill and a target",
+        "checks": []
+      },
+      {
+        "n": 2,
+        "title": "Signing in and the outlet list",
+        "checks": [
+          {
+            "label": "sign-in answers token, expiry and the person with what they may do",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "/api/outlets: each outlet has `_id` (not `id`), a name, a slug and its settings",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and says `_id` ONLY — the app must read `_id`",
+            "ok": true,
+            "detail": "_id,name,slug,hostnames,canonicalHostname,config",
+            "kind": "expect"
+          },
+          {
+            "label": "the update check says whether there is a newer version",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "The reports (each with real data)",
+        "checks": [
+          {
+            "label": "options",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "overview",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…its heat map is 7 weekdays × 24 hours",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "sales (by outlet, by weekday)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "items",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "customers",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "compare (outlets side by side)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "gst",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "cash",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "pnl inputs",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "tomorrow's prep list",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "coupon usage",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "booking report",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "inventory",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "insights",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "setting the monthly target works",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "goal",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "writing a bill down works (201)",
+            "ok": true,
+            "detail": "201",
+            "kind": "expect"
+          },
+          {
+            "label": "the saved bill",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "expenses",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "changing a bill works",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "removing a bill answers its id",
+            "ok": true,
+            "detail": "200 {\"id\":\"6b0a7ba8480afac3413fc34f\"}",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "People, bookings, ratings, coupons, dishes",
+        "checks": [
+          {
+            "label": "/api/users",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "adding a person answers the person (201)",
+            "ok": true,
+            "detail": "201 {\"user\":{\"id\":\"6b0a7ba8480afac3413fc367\",\"email\":\"nina@acme.test\",\"name\":\"Nina New\",\"isActive\":true,",
+            "kind": "expect"
+          },
+          {
+            "label": "changing a person works",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "removing a person answers 204",
+            "ok": true,
+            "detail": "204",
+            "kind": "expect"
+          },
+          {
+            "label": "upcoming bookings of the outlet",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "ratings",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the outlet's coupons",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…their discount type is one of fixed / percent / bogo (the app words each)",
+            "ok": true,
+            "detail": "fixed",
+            "kind": "expect"
+          },
+          {
+            "label": "switching a coupon off answers the coupon",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and it is off",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "changing a dish's counted stock works and answers the dish",
+            "ok": true,
+            "detail": "200 {\"item\":{\"id\":\"6b0a7ba7480afac3413fc2c5\",\"categoryId\":\"6b0a7ba7480afac3413fc2c3\",\"name\":\"Veg Momos\",",
+            "kind": "expect"
+          },
+          {
+            "label": "…and an empty 'each day' (null) is accepted",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the inventory report shows the new count",
+            "ok": true,
+            "detail": "{\"id\":\"6b0a7ba7480afac3413fc2c5\",\"name\":\"Veg Momos\",\"category\":\"Mains\",\"outletId\":\"6b0a7ba7480afac3413fc270\",\"outlet\":\"M",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Report files",
+        "checks": [
+          {
+            "label": "xlsx: 200, the right kind of file, named .xlsx in content-disposition",
+            "ok": true,
+            "detail": "200 application/vnd.openxmlformats-officedocument.spreadsheetml.sheet | attachment; filename=\"rasoipulse-acme-2026-10-30_to_2026-11-28.xlsx\"",
+            "kind": "expect"
+          },
+          {
+            "label": "pdf: 200, the right kind of file, named .pdf in content-disposition",
+            "ok": true,
+            "detail": "200 application/pdf | attachment; filename=\"rasoipulse-acme-2026-10-30_to_2026-11-28.pdf\"",
+            "kind": "expect"
+          },
+          {
+            "label": "csv: 200, the right kind of file, named .csv in content-disposition",
+            "ok": true,
+            "detail": "200 text/csv; charset=utf-8 | attachment; filename=\"rasoipulse-acme-2026-10-30_to_2026-11-28-daily.csv\"",
+            "kind": "expect"
+          },
+          {
+            "label": "json: 200, the right kind of file, named .json in content-disposition",
+            "ok": true,
+            "detail": "200 application/json; charset=utf-8 | attachment; filename=\"rasoipulse-acme-2026-10-30_to_2026-11-28.json\"",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
   }
 }
