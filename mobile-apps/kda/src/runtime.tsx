@@ -95,8 +95,8 @@ export function useRuntime(): Runtime {
 export const useApi = (): Api => useRuntime().api;
 /**
  * How long each thing the app refreshes by itself waits between asks: the server's number for this app (see lib/config.ts → refreshPlan) —
- * but `false` (never) while the live connection is up or coming back: the server says when something changed, so nobody asks on a timer.
- * If the server refuses live updates the numbers apply again.
+ * but `false` (never) while the live connection is up: the server says when something changed, so nobody asks on a timer.
+ * In every other state (no line yet, line lost, live updates refused) the numbers apply: polling is the backup that is always there.
  */
 export function useRefreshPlan() {
   const runtime = useRuntime();

@@ -7,7 +7,7 @@
  *    happened while the line was down is never missed;
  *  - passes on every `{ type: "changed", what: [...] }` message (`onChange`); the server never sends data, only what to load again;
  *  - when the line drops it tries again by itself — after 1 s, 2 s, 4 s … up to 30 s (a little random, so a restaurant's tablets don't all
- *    knock at the same moment after the server restarts) — and reports `"reconnecting"` the whole time, so the screen can show a loader;
+ *    knock at the same moment after the server restarts) — and reports `"reconnecting"` the whole time, so the screen can show a loader (and the lists ask on their timer meanwhile — the backup);
  *  - the server sends a small "tick" every 20 s; a line that has said nothing for 55 s is dead (a phone that slept, a Wi-Fi that dropped
  *    silently) and is replaced;
  *  - `wake()` (the app came back to the front, the internet came back) reconnects at once instead of waiting out the pause;

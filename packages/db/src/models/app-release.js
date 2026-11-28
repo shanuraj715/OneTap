@@ -72,6 +72,8 @@ const appSchema = new Schema(
     isPublic: { type: Boolean, default: false },
     /** the app asks the server for new data by the console's "Refresh interval" number (the staff apps) */
     usesRefreshInterval: { type: Boolean, default: false },
+    /** how the app that can listen gets new data: "websocket" = the live connection first (polling stays as the backup), "polling" = no live connection */
+    liveMode: { type: String, enum: ["websocket", "polling"], default: "websocket" },
     /** one of the apps that ship with Rasoi Pulse: their sign-in rules live in the code, so they cannot be deleted */
     builtIn: { type: Boolean, default: false },
     sortOrder: { type: Number, default: 100 },

@@ -2,7 +2,7 @@ import { createHash, randomBytes } from "node:crypto";
 import fs from "node:fs";
 import fsp from "node:fs/promises";
 import path from "node:path";
-import { APP_CATALOG, APP_REFRESH, DEFAULT_APP, appCreateSchema, appPagePath, appPatchSchema, appReleaseInputSchema, appSettingsInputSchema, appReleasePatchSchema, codeFromAppName, decideUpdate, slugifyAppName, versionCodeOf, MAX_APK_MB } from "@rasoipulse/config-schema";
+import { APPS_WITH_LIVE, APP_CATALOG, APP_REFRESH, appLiveModeInputSchema, DEFAULT_APP, appCreateSchema, appPagePath, appPatchSchema, appReleaseInputSchema, appSettingsInputSchema, appReleasePatchSchema, codeFromAppName, decideUpdate, slugifyAppName, versionCodeOf, MAX_APK_MB } from "@rasoipulse/config-schema";
 import { AppModel, AppReleaseModel, AppSettingModel } from "@rasoipulse/db";
 import { env, publicApiUrl } from "../../env.js";
 import { logger } from "../../logger.js";
@@ -406,6 +406,9 @@ export async function listAppSettings() {
       public: a.isPublic,
       publicByDefault: a.builtIn ? APP_CATALOG[a.slug]?.listed !== false : false,
       usesRefreshInterval: a.usesRefreshInterval,
+      // how the app gets new data: "websocket" (the live connection first, the timer as the backup) or "polling" (the timer only); only OMA, KDA and RDA can listen
+      supportsLive: APPS_WITH_LIVE.includes(a.slug),
+      liveMode: a.liveMode,
       pageUrl: pageUrl(a.slug),
       refreshSeconds: map[a.slug] ?? APP_REFRESH.default,
       // "the default" is about the number, not about whether it was ever saved: an admin who typed 8 is on the default too
@@ -420,6 +423,30 @@ export async function listAppSettings() {
 }
 
 const settingOf = async (app) => (await listAppSettings()).settings.find((x) => x.app === app);
+
+/* ------------------------------------------------------------------ live connection or polling */
+
+/** Who wants to know when an app's live mode changes (the realtime hub: it lets the app's open connections go when the app is switched to polling). */
+const liveModeListeners = new Set();
+export const onAppLiveModeChange = (fn) => { liveModeListeners.add(fn); return () => liveModeListeners.delete(fn); };
+
+/**
+ * Choose how an app gets new data: the live connection first ("websocket", the default) or no live connection at all ("polling"). Either way the app asks on its
+ * Refresh interval when the live connection is not up, so polling is always the backup. Only the apps that can listen (OMA, KDA, RDA) have the choice.
+ * Switching to "polling" lets that app's open connections go at once (they start asking on the timer straight away).
+ */
+export async function setAppLiveMode(app, input, user) {
+  const meta = await getApp(app);
+  if (!meta) throw new HttpError(404, "That app doesn't exist.");
+  if (!APPS_WITH_LIVE.includes(app)) throw new HttpError(400, `${meta.name} doesn't use a live connection, so there is nothing to choose.`);
+  const parsed = appLiveModeInputSchema.safeParse(input ?? {});
+  if (!parsed.success) throw new HttpError(400, parsed.error.issues[0]?.message ?? "Choose how the app gets new data.");
+  const previous = meta.liveMode;
+  await AppModel.updateOne({ slug: app }, { $set: { liveMode: parsed.data.liveMode, updatedBy: String(user?._id ?? "") } });
+  invalidateApps();
+  if (previous !== parsed.data.liveMode) for (const fn of liveModeListeners) { try { fn(app, parsed.data.liveMode, previous); } catch (e) { logger.warn({ err: e }, "live mode listener failed"); } }
+  return { setting: await settingOf(app) };
+}
 
 /** Make an app public (listed on the website) or private (not listed; its page still opens for anyone with the link). */
 export async function setAppVisibility(app, isPublic, user) {

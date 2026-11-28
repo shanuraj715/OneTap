@@ -98,7 +98,7 @@ try {
   await page.getByTestId("app-form-save").click();
   await form.waitFor({ state: "detached" });
   ok(await until(async () => /Rasoi Pulse Counter/.test(await page.getByTestId("app-about-name").innerText())) && /Billing, faster/.test(await page.getByTestId("app-about").innerText()), "the About card shows the new words");
-  ok(/Rasoi Pulse Counter/.test(await page.getByTestId("app-tab-rasoi-pulse-pos").innerText()), "…and so does its tab (the address stayed rasoi-pulse-pos)");
+  ok((await page.getByTestId("app-tab-rasoi-pulse-pos").getAttribute("title")) === "Rasoi Pulse Counter" && /Billing, faster/.test(await page.getByTestId("app-tab-rasoi-pulse-pos").innerText()), "…and so does its tab (its new tagline, the new name on hover; the address stayed rasoi-pulse-pos)");
 
   say("5. Private: its page opens by the link, the list leaves it out");
   execFileSync(process.execPath, [BENCH, "website"], { stdio: "inherit" });

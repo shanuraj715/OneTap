@@ -22,6 +22,7 @@ const shape = (a) => ({
   description: a.description ?? "",
   isPublic: Boolean(a.isPublic),
   usesRefreshInterval: Boolean(a.usesRefreshInterval),
+  liveMode: a.liveMode === "polling" ? "polling" : "websocket",
   builtIn: Boolean(a.builtIn),
   sortOrder: a.sortOrder ?? 100,
   createdAt: a.createdAt ?? null,

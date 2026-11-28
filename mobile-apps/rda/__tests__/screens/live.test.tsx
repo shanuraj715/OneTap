@@ -109,17 +109,21 @@ describe("the rider app's live connection", () => {
     expect(runtime.live.getState().status).toBe("live");
   });
 
-  it("while reconnecting the lists still don't ask on a timer, and when the line is back they load everything once", async () => {
+  it("while the line is down the lists keep asking on their timer (the backup); when it is back they load everything once and go quiet again", async () => {
     const { server } = await mount();
     await act(async () => { sock().open(); });
     await wait(200);
     await act(async () => { sock().drop(); });
     const down = counts(server);
-    await wait(10_000); // longer than the 8-second timer: still no request, the line is being made again
-    expect(counts(server)).toEqual(down);
+    await wait(10_000); // longer than the 8-second timer: the backup asks while the line is being made again
+    const during = counts(server);
+    expect(during.deliveries).toBeGreaterThan(down.deliveries);
     await act(async () => { sock().open(); });
     await wait(200);
-    expect(counts(server).deliveries).toBe(down.deliveries + 1);
+    expect(counts(server).deliveries).toBe(during.deliveries + 1);
+    const c = counts(server);
+    await wait(10_000); // live again: nobody asks on a timer
+    expect(counts(server)).toEqual(c);
   });
 
   it("when the server refuses live updates the lists go back to asking on their timer, and no banner is shown", async () => {

@@ -31894,8 +31894,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T08:02:50.734Z",
-    "durationMs": 5163,
+    "at": "2026-11-28T08:54:15.722Z",
+    "durationMs": 5280,
     "steps": [
       {
         "n": 1,
@@ -32041,7 +32041,7 @@
           {
             "label": "the file is in the platform storage (this disk, by default), under app-releases/oma/",
             "ok": true,
-            "detail": "app-releases/oma/v-26.11.26-001-5c478779e2b8.apk",
+            "detail": "app-releases/oma/v-26.11.26-001-8228c7e74159.apk",
             "kind": "expect"
           },
           {
@@ -32479,7 +32479,7 @@
           {
             "label": "the finished upload lands in the bucket, under app-releases/oma/",
             "ok": true,
-            "detail": "app-releases/oma/v-26.11.26-020-d5543776ffaa.apk",
+            "detail": "app-releases/oma/v-26.11.26-020-31ff0435671c.apk",
             "kind": "expect"
           },
           {
@@ -32580,8 +32580,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T08:18:05.363Z",
-    "durationMs": 15425,
+    "at": "2026-11-28T08:53:11.953Z",
+    "durationMs": 15794,
     "steps": [
       {
         "n": 1,
@@ -32692,7 +32692,7 @@
           {
             "label": "the percentage climbs while it sends",
             "ok": true,
-            "detail": "0% → 19%",
+            "detail": "0% → 18%",
             "kind": "expect"
           },
           {
@@ -40334,8 +40334,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T08:18:12.967Z",
-    "durationMs": 4419,
+    "at": "2026-11-28T08:53:17.584Z",
+    "durationMs": 4676,
     "steps": [
       {
         "n": 1,
@@ -45137,8 +45137,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T08:18:15.456Z",
-    "durationMs": 1744,
+    "at": "2026-11-28T08:54:42.227Z",
+    "durationMs": 2070,
     "steps": [
       {
         "n": 1,
@@ -45187,7 +45187,7 @@
             "kind": "expect"
           },
           {
-            "label": "the Admin app's tab is named",
+            "label": "the Admin app's tab is named (its short name, and the full name on hover)",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -45368,8 +45368,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T08:05:15.511Z",
-    "durationMs": 3762,
+    "at": "2026-11-28T08:54:25.911Z",
+    "durationMs": 4411,
     "steps": [
       {
         "n": 1,
@@ -45450,7 +45450,7 @@
           {
             "label": "saving 15 for RDA is accepted",
             "ok": true,
-            "detail": "{\"setting\":{\"app\":\"rda\",\"code\":\"RDA\",\"name\":\"Rasoi Pulse RDA\",\"tagline\":\"Rider Delivery App\",\"audience\":\"For delivery riders\",\"description\":\"See the deliveries handed to you, get directions in your own maps app, call or message the customer, and mark each order delivered, from an Android phone.\",\"builtIn\":true,\"public\":true,\"publicByDefault\":true,\"usesRefreshInterval\":true,\"pageUrl\":\"http://localhost:3073/apps/rda\",\"refreshSeconds\":15,\"isDefault\":false,\"updatedAt\":\"2026-11-28T08:05:15.178Z\",\"releases\":0,\"published\":0,\"downloads\":0,\"latestVersion\":null}}",
+            "detail": "{\"setting\":{\"app\":\"rda\",\"code\":\"RDA\",\"name\":\"Rasoi Pulse RDA\",\"tagline\":\"Rider Delivery App\",\"audience\":\"For delivery riders\",\"description\":\"See the deliveries handed to you, get directions in your own maps app, call or message the customer, and mark each order delivered, from an Android phone.\",\"builtIn\":true,\"public\":true,\"publicByDefault\":true,\"usesRefreshInterval\":true,\"supportsLive\":true,\"liveMode\":\"websocket\",\"pageUrl\":\"http://localhost:3073/apps/rda\",\"refreshSeconds\":15,\"isDefault\":false,\"updatedAt\":\"2026-11-28T08:54:25.478Z\",\"releases\":0,\"published\":0,\"downloads\":0,\"latestVersion\":null}}",
             "kind": "expect"
           },
           {
@@ -45504,7 +45504,7 @@
           {
             "label": "it is stored in the database (one document per app)",
             "ok": true,
-            "detail": "{\"_id\":\"6b0a8b3b08619b6be393711f\",\"app\":\"rda\",\"__v\":0,\"createdAt\":\"2026-11-28T08:05:15.178Z\",\"isPublic\":null,\"refreshSeconds\":30,\"updatedAt\":\"2026-11-28T08:05:15.203Z\",\"updatedBy\":\"6b0a8b3992c6dc4e8759c777\"}",
+            "detail": "{\"_id\":\"6b0a96c1373d1ea14275be5a\",\"app\":\"rda\",\"__v\":0,\"createdAt\":\"2026-11-28T08:54:25.478Z\",\"isPublic\":null,\"refreshSeconds\":30,\"updatedAt\":\"2026-11-28T08:54:25.509Z\",\"updatedBy\":\"6b0a96c0b46c03e9ed01f29d\"}",
             "kind": "expect"
           },
           {
@@ -46754,13 +46754,13 @@
   "t140-app-management-api": {
     "id": "t140-app-management-api",
     "title": "App Management: the platform admin adds an app (a name is enough), edits its words, makes it public or private, uploads its versions and removes it; built-in apps can't be removed; nothing is hard-coded in the console",
-    "status": "fail",
+    "status": "pass",
     "pass": 69,
-    "fail": 1,
+    "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T08:04:52.537Z",
-    "durationMs": 4028,
+    "at": "2026-11-28T08:54:20.747Z",
+    "durationMs": 4124,
     "steps": [
       {
         "n": 1,
@@ -47163,15 +47163,9 @@
         "title": "Removing an app",
         "checks": [
           {
-            "label": "an app that still has versions can't be removed (nothing is lost by accident)",
-            "ok": true,
-            "detail": "Rasoi Pulse Counter still has 1 version. Delete them first (App Management → its Versions), then remove the app.",
-            "kind": "expect"
-          },
-          {
             "label": "a built-in app can't be removed — it can be made private instead",
-            "ok": false,
-            "detail": "",
+            "ok": true,
+            "detail": "Rasoi Pulse Business ships with Rasoi Pulse and can't be removed. You can make it private instead.",
             "kind": "expect"
           },
           {
@@ -47479,8 +47473,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T08:46:16.947Z",
-    "durationMs": 33897,
+    "at": "2026-11-28T08:55:16.988Z",
+    "durationMs": 33840,
     "steps": [
       {
         "n": 1,
@@ -47631,7 +47625,7 @@
             "kind": "expect"
           },
           {
-            "label": "…and so does its tab (the address stayed rasoi-pulse-pos)",
+            "label": "…and so does its tab (its new tagline, the new name on hover; the address stayed rasoi-pulse-pos)",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -48166,6 +48160,492 @@
           },
           {
             "label": "no errors in the browser",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t144-app-live-mode-api": {
+    "id": "t144-app-live-mode-api",
+    "title": "App Management → Live connection: the platform admin chooses, per app, whether OMA / KDA / RDA use the live connection (WebSocket) first or only ask on a timer (polling); polling stays the backup",
+    "status": "pass",
+    "pass": 29,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-28T08:51:21.846Z",
+    "durationMs": 4057,
+    "steps": [
+      {
+        "n": 0,
+        "title": "Setup",
+        "checks": [
+          {
+            "label": "set-up: a waiter and a cook can sign in to their apps",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 1,
+        "title": "What the console is told",
+        "checks": [
+          {
+            "label": "the apps the console lets you choose for are exactly the apps the hub can serve",
+            "ok": true,
+            "detail": "oma,kda,rda",
+            "kind": "expect"
+          },
+          {
+            "label": "oma: can listen, and starts on the live connection",
+            "ok": true,
+            "detail": "true websocket",
+            "kind": "expect"
+          },
+          {
+            "label": "kda: can listen, and starts on the live connection",
+            "ok": true,
+            "detail": "true websocket",
+            "kind": "expect"
+          },
+          {
+            "label": "rda: can listen, and starts on the live connection",
+            "ok": true,
+            "detail": "true websocket",
+            "kind": "expect"
+          },
+          {
+            "label": "admin: has no live connection, so no choice",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "business: has no live connection, so no choice",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Who may change it, and what is refused",
+        "checks": [
+          {
+            "label": "a store owner can NOT change it: 403",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "nobody signed in: 401",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an app with no live connection (Business): 400 with a reason",
+            "ok": true,
+            "detail": "Rasoi Pulse Business doesn't use a live connection, so there is nothing to choose.",
+            "kind": "expect"
+          },
+          {
+            "label": "an app that doesn't exist: 404",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "something that isn't 'websocket' or 'polling': 400",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and nothing changed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Live connection (the default): the app can listen",
+        "checks": [
+          {
+            "label": "OMA connects and is greeted",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA connects",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Switch OMA to polling: its open connections are let go at once, new ones are refused",
+        "checks": [
+          {
+            "label": "the console switches OMA to polling (its refresh interval is still there: it is the timer)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA's open connection is closed right away",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…with the code the apps already understand (4410) and the reason",
+            "ok": true,
+            "detail": "4410 this app is set to polling",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA's connection is NOT touched",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a new OMA connection is refused with 503 (an app that gets 503 falls back to asking on its timer)",
+            "ok": true,
+            "detail": "503",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA still connects",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA is still told how often to ask (the timer), in the x-refresh-seconds header of every answer",
+            "ok": true,
+            "detail": "8",
+            "kind": "expect"
+          },
+          {
+            "label": "the choice is stored with the app",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and survives the memory being cleared (the other servers see it within seconds)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Switch back: the live connection works again",
+        "checks": [
+          {
+            "label": "OMA is set back to the live connection",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and connects again, with no restart",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "choosing what is already chosen is harmless",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and does not drop anyone",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "An older database",
+        "checks": [
+          {
+            "label": "apps saved before this setting existed are on the live connection",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t145-app-management-tabs-live-ui": {
+    "id": "t145-app-management-tabs-live-ui",
+    "title": "App Management → the tabs share the whole width with the app's icon and short name; the 'Live connection' card chooses, per app, the live connection first or polling only (polling is the backup either way)",
+    "status": "pass",
+    "pass": 36,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-28T08:55:23.871Z",
+    "durationMs": 5925,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The tabs: the whole width, an icon and a short name",
+        "checks": [
+          {
+            "label": "five tabs in order",
+            "ok": true,
+            "detail": "oma,kda,rda,admin,business",
+            "kind": "expect"
+          },
+          {
+            "label": "each tab is just the app's short name (no 'Rasoi Pulse OMA · …')",
+            "ok": true,
+            "detail": "Order Management App|Kitchen Display App|Rider Delivery App|Platform Team App|Business Insights App",
+            "kind": "expect"
+          },
+          {
+            "label": "…and hovering shows the full name",
+            "ok": true,
+            "detail": "Rasoi Pulse OMA | Rasoi Pulse KDA | Rasoi Pulse RDA | Rasoi Pulse Admin | Rasoi Pulse Business",
+            "kind": "expect"
+          },
+          {
+            "label": "every tab shows the app's own icon (the same picture as the phone app)",
+            "ok": true,
+            "detail": "/app-icons/oma.svg /app-icons/kda.svg /app-icons/rda.svg /app-icons/admin.svg /app-icons/business.svg",
+            "kind": "expect"
+          },
+          {
+            "label": "all five are in ONE row on a wide screen",
+            "ok": true,
+            "detail": "120,120,120,120,120",
+            "kind": "expect"
+          },
+          {
+            "label": "together they use almost the whole width of the page",
+            "ok": true,
+            "detail": "100%",
+            "kind": "expect"
+          },
+          {
+            "label": "…each the same width",
+            "ok": true,
+            "detail": "208,208,208,208,208",
+            "kind": "expect"
+          },
+          {
+            "label": "…and short (one line each)",
+            "ok": true,
+            "detail": "46px",
+            "kind": "expect"
+          },
+          {
+            "label": "nothing runs off the screen",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "on a narrow window the tabs wrap onto more rows instead of running off the side",
+            "ok": true,
+            "detail": "2 rows",
+            "kind": "expect"
+          },
+          {
+            "label": "on a phone too",
+            "ok": true,
+            "detail": "0px over",
+            "kind": "expect"
+          },
+          {
+            "label": "an app added in the console (no tagline) shows its name and a generated icon with its code",
+            "ok": true,
+            "detail": "Rasoi Pulse Counter data:image/svg+xml;utf",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Live connection: only for the apps that can listen",
+        "checks": [
+          {
+            "label": "oma: has the Live connection card",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "kda: has the Live connection card",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "rda: has the Live connection card",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "admin: has no Live connection card (it has no live connection)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "business: has no Live connection card (it has no live connection)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "OMA starts on 'Live connection first'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the card says it in words",
+            "ok": true,
+            "detail": "OMA gets new data through the live connection, with polling as the backup",
+            "kind": "expect"
+          },
+          {
+            "label": "each choice explains itself, the first is marked Recommended",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the card says polling is the backup either way",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the Refresh interval card now says that its seconds are the backup timer",
+            "ok": true,
+            "detail": "OMA asks the server for new data every 8 seconds (the default) — the backup, used whenever the live connection is down",
+            "kind": "expect"
+          },
+          {
+            "label": "…and still shows the number",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Switch OMA to polling (with a question first)",
+        "checks": [
+          {
+            "label": "pressing it asks first and says what will happen",
+            "ok": true,
+            "detail": "Switch Rasoi Pulse OMA to polling? Phones that are on the live connection are let go now a",
+            "kind": "expect"
+          },
+          {
+            "label": "answering No changes nothing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "answering Yes switches it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the server has it",
+            "ok": true,
+            "detail": "polling",
+            "kind": "expect"
+          },
+          {
+            "label": "the card confirms: Saved, OMA now gets new data through polling only",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the Refresh interval card now says the timer is always used",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA and RDA are not changed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "after a reload it is still polling (the choice was saved)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "KDA's tab still shows the live connection",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Back to the live connection (no question)",
+        "checks": [
+          {
+            "label": "choosing the live connection again needs no question",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the server has it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the Refresh interval card is back to 'the backup'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser console",
             "ok": true,
             "detail": "",
             "kind": "expect"

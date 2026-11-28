@@ -4,6 +4,8 @@ import { logger } from "../logger.js";
 import { HttpError } from "../middleware/error.js";
 import { SESSION_COOKIE, requireOutletContext } from "../middleware/auth.js";
 import { allowUpgrade, refuseUpgrade } from "../middleware/rate-limit.js";
+import { getApp } from "../modules/app-releases/app-registry.js";
+import { onAppLiveModeChange } from "../modules/app-releases/app-releases.service.js";
 import { onPlatformConfigChange, platformConfig } from "../modules/cache/platform-config.js";
 import { userFromToken } from "../modules/auth/auth.service.js";
 import { storePlan } from "../modules/platform/plan.service.js";
@@ -143,10 +145,13 @@ export function attachRealtime(server) {
     const gate = allowUpgrade(req);
     if (!gate.ok) return refuseUpgrade(socket, gate.retryAfterSec);
 
-    // the platform can switch live connections off for everyone; dashboards and apps then ask the API on a timer instead
+    // the platform can switch live connections off for everyone, and the console can switch one APP to polling (App Management → Live connection);
+    // dashboards and apps then ask the API on a timer instead
+    const asked = url.searchParams.get("app");
     void platformConfig()
-      .then((cfg) => {
+      .then(async (cfg) => {
         if (cfg.realtimeWebsocket === false) return "off";
+        if (asked && LIVE_APPS[asked] && (await getApp(asked))?.liveMode === "polling") return "off";
         return authorize(req);
       })
       .then((auth) => {
@@ -200,6 +205,20 @@ export function attachRealtime(server) {
         } catch {
           /* already gone */
         }
+      }
+    }
+  });
+
+  // An app switched to polling in the console: its open connections are let go at once (4410), so its phones start asking on the timer straight away.
+  // Switching it back needs nothing: an app that was refused tries the live connection again by itself within a minute.
+  onAppLiveModeChange((app, mode) => {
+    if (mode !== "polling") return;
+    for (const client of [...clients]) {
+      if (client.app !== app) continue;
+      try {
+        client.socket.close(4410, "this app is set to polling");
+      } catch {
+        /* already gone */
       }
     }
   });

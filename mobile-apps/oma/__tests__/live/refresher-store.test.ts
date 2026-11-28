@@ -100,11 +100,11 @@ describe("the refresher", () => {
 });
 
 describe("whether a list asks on a timer", () => {
-  it("never while the live connection is up, being made or coming back — the server says when something changed", () => {
-    for (const s of ["live", "connecting", "reconnecting"] as const) expect(pollEvery(s, 8000)).toBe(false);
+  it("never while the live connection is up — the server says when something changed", () => {
+    expect(pollEvery("live", 8000)).toBe(false);
   });
-  it("on its timer when there is no live connection, or the server refused it (the way the app always worked)", () => {
-    expect(pollEvery("idle", 8000)).toBe(8000);
+  it("on its timer in EVERY other state: polling is the backup that is always there (no line yet, being made, lost and coming back, refused)", () => {
+    for (const s of ["idle", "connecting", "reconnecting", "fallback"] as const) expect(pollEvery(s, 8000)).toBe(8000);
     expect(pollEvery("fallback", 15000)).toBe(15000);
   });
   it("the status lives in a small store the screens read", () => {

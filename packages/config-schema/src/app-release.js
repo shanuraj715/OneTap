@@ -170,6 +170,20 @@ export const appSettingsInputSchema = z.object({
     .max(APP_REFRESH.max, `At most ${APP_REFRESH.max} seconds (${APP_REFRESH.max / 60} minutes): longer than that and new orders would show far too late.`),
 });
 
+/**
+ * HOW AN APP GETS NEW DATA (console → App Management → the app's tab → Live connection). The apps that can listen (`APPS_WITH_LIVE`: OMA, KDA, RDA)
+ * keep ONE live connection (a WebSocket) to the server; the server says "something changed" and the app asks for the new data at once.
+ *   "websocket" — the live connection is used (the default). If it is down or can't be made, the app asks on a timer — the Refresh interval above — until it is back.
+ *   "polling"   — no live connection at all: the app only asks on that timer.
+ * Polling is the backup in BOTH modes; the choice is only whether the live connection is tried first.
+ */
+export const LIVE_MODES = ["websocket", "polling"];
+export const DEFAULT_LIVE_MODE = "websocket";
+export const APPS_WITH_LIVE = ["oma", "kda", "rda"];
+export const appLiveModeInputSchema = z.object({
+  liveMode: z.enum(LIVE_MODES, { errorMap: () => ({ message: "Choose “live connection” (websocket) or “polling”." }) }),
+});
+
 export const APP_PLATFORMS = ["android"];
 export const RELEASE_STATUSES = ["draft", "published", "withdrawn"];
 export const RELEASE_STATUS_LABELS = { draft: "Draft", published: "Published", withdrawn: "Withdrawn" };

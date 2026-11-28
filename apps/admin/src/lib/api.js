@@ -989,6 +989,7 @@ export const saveAppSettings = (app, refreshSeconds) => req(`/api/platform/app-r
 export const createApp = (body) => req("/api/platform/app-releases/apps", json("POST", body));
 export const updateApp = (app, body) => req(`/api/platform/app-releases/apps/${encodeURIComponent(app)}`, json("PATCH", body));
 export const deleteApp = (app) => req(`/api/platform/app-releases/apps/${encodeURIComponent(app)}`, json("DELETE"));
+export const setAppLiveMode = (app, liveMode) => req(`/api/platform/app-releases/live-mode/${encodeURIComponent(app)}`, json("PUT", { liveMode }));
 export const setAppVisibility = (app, isPublic) => req(`/api/platform/app-releases/visibility/${app}`, json("PUT", { public: isPublic }));
 export const updateAppRelease = (id, body) => req(`/api/platform/app-releases/${id}`, json("PATCH", body));
 export const deleteAppRelease = (id) => req(`/api/platform/app-releases/${id}`, { method: "DELETE" });

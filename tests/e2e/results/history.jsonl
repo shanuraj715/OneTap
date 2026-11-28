@@ -1622,3 +1622,17 @@
 {"id":"t143-website-apps-cards","status":"pass","pass":27,"fail":0,"mode":"headless","at":"2026-11-28T08:46:36.492Z","durationMs":10252}
 {"id":"t103-website-home-apps-motion","status":"pass","pass":61,"fail":0,"mode":"headless","at":"2026-11-28T08:46:53.793Z","durationMs":8854}
 {"id":"t143-website-apps-cards","status":"pass","pass":27,"fail":0,"mode":"headless","at":"2026-11-28T08:47:05.170Z","durationMs":10490}
+{"id":"t144-app-live-mode-api","status":"pass","pass":30,"fail":0,"mode":"headless","at":"2026-11-28T08:51:00.395Z","durationMs":4694}
+{"id":"t144-app-live-mode-api","status":"fail","pass":26,"fail":3,"mode":"headless","at":"2026-11-28T08:51:16.835Z","durationMs":8182}
+{"id":"t144-app-live-mode-api","status":"pass","pass":29,"fail":0,"mode":"headless","at":"2026-11-28T08:51:21.846Z","durationMs":4057}
+{"id":"t145-app-management-tabs-live-ui","status":"pass","pass":36,"fail":0,"mode":"headless","at":"2026-11-28T08:52:50.708Z","durationMs":6153}
+{"id":"t94-app-releases-ui","status":"pass","pass":54,"fail":0,"mode":"headless","at":"2026-11-28T08:53:11.953Z","durationMs":15794}
+{"id":"t105-app-refresh-interval-ui","status":"pass","pass":35,"fail":0,"mode":"headless","at":"2026-11-28T08:53:17.584Z","durationMs":4676}
+{"id":"t132-app-visibility-ui","status":"fail","pass":30,"fail":1,"mode":"headless","at":"2026-11-28T08:53:34.547Z","durationMs":15911}
+{"id":"t141-app-management-ui","status":"fail","pass":34,"fail":3,"mode":"headless","at":"2026-11-28T08:54:09.500Z","durationMs":33962}
+{"id":"t93-app-releases-api","status":"pass","pass":99,"fail":0,"mode":"headless","at":"2026-11-28T08:54:15.722Z","durationMs":5280}
+{"id":"t140-app-management-api","status":"pass","pass":69,"fail":0,"mode":"headless","at":"2026-11-28T08:54:20.747Z","durationMs":4124}
+{"id":"t104-app-refresh-interval-api","status":"pass","pass":34,"fail":0,"mode":"headless","at":"2026-11-28T08:54:25.911Z","durationMs":4411}
+{"id":"t132-app-visibility-ui","status":"pass","pass":31,"fail":0,"mode":"headless","at":"2026-11-28T08:54:42.227Z","durationMs":2070}
+{"id":"t141-app-management-ui","status":"pass","pass":37,"fail":0,"mode":"headless","at":"2026-11-28T08:55:16.988Z","durationMs":33840}
+{"id":"t145-app-management-tabs-live-ui","status":"pass","pass":36,"fail":0,"mode":"headless","at":"2026-11-28T08:55:23.871Z","durationMs":5925}

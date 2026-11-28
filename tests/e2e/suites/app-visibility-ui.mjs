@@ -49,7 +49,7 @@ try {
   await page.getByTestId("app-tab-admin").waitFor({ timeout: 15000 });
   const tabs = await page.locator('[data-testid^="app-tab-"]').evaluateAll((els) => els.map((e) => e.getAttribute("data-testid").replace("app-tab-", "")));
   ok(["oma", "kda", "rda", "admin", "business"].every((a) => tabs.includes(a)), "App Management has a tab for every app, the Admin app and the Business app included", tabs.join());
-  ok(/Rasoi Pulse Admin/.test(await page.getByTestId("app-tab-admin").innerText()), "the Admin app's tab is named");
+  ok(/Platform Team App/.test(await page.getByTestId("app-tab-admin").innerText()) && (await page.getByTestId("app-tab-admin").getAttribute("title")) === "Rasoi Pulse Admin", "the Admin app's tab is named (its short name, and the full name on hover)");
 
   await page.getByTestId("app-tab-oma").click();
   await page.getByTestId("app-visibility").waitFor();

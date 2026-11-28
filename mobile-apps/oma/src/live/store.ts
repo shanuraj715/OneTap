@@ -13,7 +13,9 @@ export function createLiveStore() {
 export type LiveStore = ReturnType<typeof createLiveStore>;
 
 /**
- * How long a list waits before asking the server again: `false` (never — the server will say when something changed) while the live
- * connection is up OR coming back, `ms` otherwise (no connection yet, or the server refused live updates: the old timer).
+ * How long a list waits before asking the server again: `false` (never — the server will say when something changed) ONLY while the live connection is up.
+ * In every other state — no connection yet, being made, lost and being made again, or refused by the server (the platform or this app is set to polling) —
+ * the list asks on its timer. The timer is the backup that is always there: if the live line can't be had (a network that blocks it, a restarting server), the
+ * screens still never go stale by more than one interval.
  */
-export const pollEvery = (status: LiveStatus, ms: number): number | false => (status === "live" || status === "connecting" || status === "reconnecting" ? false : ms);
+export const pollEvery = (status: LiveStatus, ms: number): number | false => (status === "live" ? false : ms);

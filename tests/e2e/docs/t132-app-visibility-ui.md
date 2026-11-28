@@ -1,6 +1,6 @@
 # T132 — App Management → every app has a Public / Private button; the Admin app has its own tab and starts private (not in the website's list, its page still opens by its link)
 
-**Area:** platform · **Last result:** ✅ PASSED (31 passed, 0 failed · 2026-11-28 13:48 · headless · 1.7 s)
+**Area:** platform · **Last result:** ✅ PASSED (31 passed, 0 failed · 2026-11-28 14:24 · headless · 2.1 s)
 
 **Run it alone:** `node run.mjs --only t132` (add `--visible` to watch it)
 
@@ -47,7 +47,7 @@ _Nothing failed._
 **Step 2 — The console: a tab for the Admin app with a Public / Private button**
 
 - App Management has a tab for every app, the Admin app and the Business app included — _oma,kda,rda,admin,business_
-- the Admin app's tab is named
+- the Admin app's tab is named (its short name, and the full name on hover)
 - OMA's tab: Public, the button says 'Make private', no link box
 - …and OMA still has its Refresh interval card
 - the Admin tab says Private: not in the list of apps on the website
@@ -86,6 +86,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-28 14:24 | pass | 31 | 0 | headless | 2.1 s |
+| 2026-11-28 14:23 | fail | 30 | 1 | headless | 15.9 s |
 | 2026-11-28 13:48 | pass | 31 | 0 | headless | 1.7 s |
 | 2026-11-28 13:36 | pass | 31 | 0 | headless | 1.7 s |
 | 2026-11-28 03:10 | pass | 31 | 0 | headless | 2.4 s |

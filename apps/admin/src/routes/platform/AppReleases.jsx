@@ -1,10 +1,11 @@
 import { useRef, useState } from "react";
 import { APP_REFRESH, MAX_APK_MB, appSlugSchema, codeFromAppName, formatBytes, parseAppVersion, slugifyAppName } from "@rasoipulse/config-schema";
-import { Archive, Check, Copy, Download, ExternalLink, Eye, EyeOff, Globe, Lock, Pencil, Plus, RefreshCw, Rocket, ShieldAlert, Smartphone, Trash2, Upload } from "lucide-react";
+import { Archive, Check, Copy, Download, ExternalLink, Eye, EyeOff, Globe, Lock, Pencil, Plus, Radio, RefreshCw, Rocket, ShieldAlert, Smartphone, Trash2, Upload } from "lucide-react";
 import * as api from "../../lib/api";
 import { uploadApk, versionFromFileName } from "../../lib/uploadApk";
 import { useAppReleases, useAppSettings, usePlatformMutation } from "../../lib/usePlatform";
 import { Button, Card, Checkbox, Empty, Field, Modal, Note, PageHeader, Pill, TextInput, Toast } from "../../ui";
+import { appIconUrl } from "../../lib/appIcons";
 import { fmtDate, muted } from "./shared";
 
 const STATUS = {
@@ -54,7 +55,7 @@ export function AppReleases() {
         }
       />
 
-      <div role="tablist" aria-label="Apps" style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 14 }}>
+      <div role="tablist" aria-label="Apps" style={tabList}>
         {apps.map((a) => (
           <button
             key={a.app}
@@ -62,11 +63,12 @@ export function AppReleases() {
             role="tab"
             aria-selected={a.app === app}
             data-testid={`app-tab-${a.app}`}
+            title={a.name}
             onClick={() => pick(a.app)}
             style={{ ...appTab, ...(a.app === app ? appTabOn : {}) }}
           >
-            <Smartphone size={15} aria-hidden="true" /> {a.name}
-            {a.tagline ? <span style={{ opacity: 0.7, fontWeight: 500 }}>· {a.tagline}</span> : null}
+            <img src={appIconUrl(a)} alt="" width="30" height="30" style={tabIcon} data-testid={`tab-icon-${a.app}`} />
+            <span style={tabText}>{a.tagline || a.name}</span>
           </button>
         ))}
       </div>
@@ -84,6 +86,7 @@ export function AppReleases() {
           <AboutApp meta={meta} onEdit={() => setEditingApp(true)} onRemoved={() => setChosen("")} />
           <Summary data={data} />
           <AppVisibility app={app} meta={meta} />
+          {meta.supportsLive ? <LiveConnection app={app} meta={meta} /> : null}
           {meta.usesRefreshInterval !== false ? <RefreshInterval app={app} meta={meta} /> : null}
           <Card>
             {releases.length === 0 ? (
@@ -287,6 +290,56 @@ const REFRESH_COVERS = {
  * The server states it in every answer it gives the app, so a change reaches each phone with its very next request, with no new version to install
  * (an app version made before this setting existed keeps asking at its own fixed pace until it is updated).
  */
+function LiveConnection({ app, meta }) {
+  const q = useAppSettings();
+  const setting = q.data?.settings.find((x) => x.app === app) ?? meta;
+  const mode = setting.liveMode === "polling" ? "polling" : "websocket";
+  const save = usePlatformMutation((next) => api.setAppLiveMode(app, next));
+  const choose = (next) => {
+    if (next === mode || save.isPending) return;
+    // switching to polling lets every connected phone go at once, so it asks first; switching back needs no question
+    if (next === "polling" && !window.confirm(`Switch ${meta.name} to polling? Phones that are on the live connection are let go now and start asking the server on the timer.`)) return;
+    save.mutate(next);
+  };
+  const options = [
+    { id: "websocket", title: "Live connection first", tag: "Recommended", icon: <Radio size={16} aria-hidden="true" />, text: `${meta.code} keeps one live connection (a WebSocket) to the server. A new order shows within about a second and the app doesn’t ask over and over. If the connection is down or can’t be made, the app asks on the timer below until it is back.` },
+    { id: "polling", title: "Polling only", tag: null, icon: <RefreshCw size={16} aria-hidden="true" />, text: `${meta.code} never opens a live connection. It asks the server on the timer below. New things can take up to one interval to show, and the server answers more requests.` },
+  ];
+  return (
+    <div style={{ marginBottom: 14 }}>
+      <Card>
+        <div data-testid="app-live">
+          <div style={label}>
+            <Radio size={12} aria-hidden="true" style={{ verticalAlign: "-1px", marginRight: 5 }} />
+            Live connection
+          </div>
+          <div style={{ fontSize: 14.5 }} data-testid="live-mode-now">
+            {meta.code} gets new data through <strong>{mode === "polling" ? "polling only" : "the live connection, with polling as the backup"}</strong>
+          </div>
+          <div role="radiogroup" aria-label="How the app gets new data" style={liveOptions}>
+            {options.map((o) => (
+              <button key={o.id} type="button" role="radio" aria-checked={mode === o.id} disabled={save.isPending} data-testid={`live-mode-${o.id}`} onClick={() => choose(o.id)} style={{ ...liveOption, ...(mode === o.id ? liveOptionOn : {}) }}>
+                <span style={liveOptionHead}>
+                  <span style={{ ...liveDot, ...(mode === o.id ? liveDotOn : {}) }} aria-hidden="true">{mode === o.id ? <Check size={11} /> : null}</span>
+                  {o.icon}
+                  <strong>{o.title}</strong>
+                  {o.tag ? <Pill tone="ok">{o.tag}</Pill> : null}
+                </span>
+                <span style={{ ...muted, fontSize: 13, lineHeight: 1.5 }}>{o.text}</span>
+              </button>
+            ))}
+          </div>
+          <p style={{ ...muted, margin: "10px 0 0", fontSize: 12.5, lineHeight: 1.5 }}>
+            Either way, <strong>polling is always the backup</strong>: whenever the live connection isn’t up, the app asks on the refresh interval below, so its lists never go stale. The platform can also switch live updates off for everyone (Platform settings). Apps pick the change up within a minute; a phone on an older version of the app keeps working either way.
+          </p>
+        </div>
+        {save.error ? <Toast kind="error"><span data-testid="live-mode-error">{save.error.message}</span></Toast> : null}
+        {save.isSuccess && !save.isPending ? <Toast kind="ok"><span data-testid="live-mode-saved">Saved. {meta.code} now gets new data through {save.variables === "polling" ? "polling only" : "the live connection first"}.</span></Toast> : null}
+      </Card>
+    </div>
+  );
+}
+
 function RefreshInterval({ app, meta }) {
   const q = useAppSettings();
   const setting = q.data?.settings.find((s) => s.app === app);
@@ -314,6 +367,7 @@ function RefreshForm({ app, meta, setting }) {
           <div style={{ fontSize: 14.5 }} data-testid="app-refresh-now">
             {meta.code} asks the server for new data every <strong>{setting.refreshSeconds} seconds</strong>
             <span style={muted}>{setting.isDefault ? " (the default)" : ""}</span>
+            {setting.supportsLive ? <span style={muted}>{setting.liveMode === "polling" ? " — always, because it is set to polling" : " — the backup, used whenever the live connection is down"}</span> : null}
           </div>
           <p style={{ ...muted, margin: "6px 0 0", fontSize: 13, lineHeight: 1.5 }}>
             This covers {REFRESH_COVERS[app] ?? "everything the app refreshes by itself"}. A longer wait means fewer requests to the server but new things show later. Slower lists (for example today’s totals, or the dishes that
@@ -679,8 +733,18 @@ function NewVersion({ data, app, meta, onClose }) {
 
 /* ------------------------------------------------------------------ styles */
 
-const appTab = { display: "inline-flex", alignItems: "center", gap: 7, font: "inherit", fontSize: 13.5, fontWeight: 650, padding: "8px 14px", borderRadius: 999, border: "1px solid var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)", cursor: "pointer" };
+// the tabs share the whole width (one row on a wide screen, wrapping into more rows on a narrow one — never running off the side)
+const tabList = { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: 8, width: "100%", marginBottom: 14 };
+const appTab = { display: "flex", alignItems: "center", gap: 10, minWidth: 0, textAlign: "left", font: "inherit", fontSize: 13.5, fontWeight: 650, padding: "7px 12px 7px 8px", borderRadius: 14, border: "1px solid var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)", cursor: "pointer" };
+const tabIcon = { display: "block", flex: "none", width: 30, height: 30, borderRadius: 8 };
+const tabText = { minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" };
 const appTabOn = { background: "var(--color-text)", borderColor: "var(--color-text)", color: "var(--color-bg)" };
+const liveOptions = { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 10, marginTop: 12 };
+const liveOption = { display: "flex", flexDirection: "column", gap: 6, textAlign: "left", font: "inherit", padding: "12px 14px", borderRadius: 12, border: "1px solid var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)", cursor: "pointer" };
+const liveOptionOn = { borderColor: "var(--color-primary)", boxShadow: "0 0 0 1px var(--color-primary)", background: "color-mix(in srgb, var(--color-primary) 6%, var(--color-bg))" };
+const liveOptionHead = { display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", fontSize: 14 };
+const liveDot = { display: "inline-flex", alignItems: "center", justifyContent: "center", width: 16, height: 16, borderRadius: "50%", border: "1.5px solid var(--color-border)", flex: "none", color: "var(--color-bg)" };
+const liveDotOn = { background: "var(--color-primary)", borderColor: "var(--color-primary)" };
 const label = { fontSize: 11.5, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--color-text-muted)", marginBottom: 4 };
 const bigVersion = { fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace", fontSize: 20, fontWeight: 700, letterSpacing: "-0.01em" };
 const link = { display: "inline-flex", alignItems: "center", gap: 6, color: "var(--color-primary)", fontWeight: 600, fontSize: 14, textDecoration: "none", overflowWrap: "anywhere" };
