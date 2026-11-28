@@ -78,10 +78,13 @@ function newestMtime(dir, skip = /node_modules|\.next|dist|\.turbo/) {
 const mtime = (f) => (existsSync(f) ? statSync(f).mtimeMs : 0);
 const sharedNewest = () => Math.max(newestMtime(join(REPO, "packages/config-schema/src")), newestMtime(join(REPO, "packages/ui/src")));
 
+/** the web version (version.json at the root): the storefront and the website are built from a COPY here, where their own config can't find that file, so it is handed over */
+export const rootVersion = () => { try { return JSON.parse(readFileSync(join(REPO, "version.json"), "utf8")).version; } catch { return "dev"; } };
+
 /** true when the code of the dashboard changed after the bench's build of it */
-export const adminStale = () => mtime(join(BENCH_DIR, "admin-dist/index.html")) < Math.max(newestMtime(join(REPO, "apps/admin/src")), mtime(join(REPO, "apps/admin/index.html")), sharedNewest());
-export const websiteStale = () => mtime(join(BENCH_DIR, "website/.next/BUILD_ID")) < Math.max(newestMtime(join(REPO, "apps/website/src")), newestMtime(join(REPO, "apps/website/public")), mtime(join(REPO, "apps/website/next.config.mjs")), sharedNewest());
-export const storefrontStale = () => mtime(join(BENCH_DIR, "storefront/.next/BUILD_ID")) < Math.max(newestMtime(join(REPO, "apps/storefront/src")), newestMtime(join(REPO, "apps/storefront/public")), sharedNewest());
+export const adminStale = () => mtime(join(BENCH_DIR, "admin-dist/index.html")) < Math.max(newestMtime(join(REPO, "apps/admin/src")), mtime(join(REPO, "apps/admin/index.html")), mtime(join(REPO, "apps/admin/vite.config.js")), mtime(join(REPO, "version.json")), sharedNewest());
+export const websiteStale = () => mtime(join(BENCH_DIR, "website/.next/BUILD_ID")) < Math.max(newestMtime(join(REPO, "apps/website/src")), newestMtime(join(REPO, "apps/website/public")), mtime(join(REPO, "apps/website/next.config.mjs")), mtime(join(REPO, "version.json")), sharedNewest());
+export const storefrontStale = () => mtime(join(BENCH_DIR, "storefront/.next/BUILD_ID")) < Math.max(newestMtime(join(REPO, "apps/storefront/src")), newestMtime(join(REPO, "apps/storefront/public")), mtime(join(REPO, "version.json")), sharedNewest());
 
 /* ---------------------------------------------------------------- the three services */
 async function startApi() {
@@ -133,7 +136,7 @@ function buildStorefront() {
   rmSync(join(sf, ".next"), { recursive: true, force: true });
   const ok = runToLog(NEXT, ["build"], "storefront-build.log", {
     cwd: sf,
-    env: { ...process.env, API_INTERNAL_URL: `http://127.0.0.1:${PORTS.api}`, NEXT_PUBLIC_API_URL: `http://localhost:${PORTS.api}` },
+    env: { ...process.env, API_INTERNAL_URL: `http://127.0.0.1:${PORTS.api}`, NEXT_PUBLIC_API_URL: `http://localhost:${PORTS.api}`, APP_VERSION: rootVersion() },
   });
   if (!ok) log("storefront build failed:\n" + tail("storefront-build.log", 15));
   return ok;
@@ -170,7 +173,7 @@ function buildWebsite() {
   if (!ok) log("website build failed:\n" + tail("website-build.log", 15));
   return ok;
 }
-const websiteEnv = () => ({ ...process.env, API_INTERNAL_URL: `http://127.0.0.1:${PORTS.api}`, NEXT_PUBLIC_API_URL: `http://localhost:${PORTS.api}`, NEXT_PUBLIC_SITE_URL: `http://localhost:${PORTS.website}` });
+const websiteEnv = () => ({ ...process.env, APP_VERSION: rootVersion(), API_INTERNAL_URL: `http://127.0.0.1:${PORTS.api}`, NEXT_PUBLIC_API_URL: `http://localhost:${PORTS.api}`, NEXT_PUBLIC_SITE_URL: `http://localhost:${PORTS.website}` });
 export async function website() {
   if (!(await startApi())) return false;
   const w = join(BENCH_DIR, "website");

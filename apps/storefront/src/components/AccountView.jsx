@@ -3,10 +3,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FEEDBACK_TAGS, formatDuration, formatINR, formatRange, formatWhen, GATEWAY_LABELS, statusLabelFor } from "@rasoipulse/config-schema";
-import { fx, PaginationJoined } from "@rasoipulse/ui";
-import { Banknote, Bike, CalendarDays, CheckCircle2, ChevronDown, Clock, Coins, CreditCard, LogOut, Phone, Receipt, RotateCcw, ShoppingBag, Star, Trash2, XCircle } from "lucide-react";
+import { formatDuration, formatINR, formatRange, formatWhen, GATEWAY_LABELS, statusLabelFor } from "@rasoipulse/config-schema";
+import { fx, PaginationJoined, StarShape } from "@rasoipulse/ui";
+import { Banknote, Bike, CalendarDays, CheckCircle2, ChevronDown, Clock, Coins, CreditCard, LogOut, Phone, Receipt, RotateCcw, ShoppingBag, Trash2, XCircle } from "lucide-react";
 import { api, apiDelete, payBookingAdvance } from "@/lib/clientApi";
+import { GivenRating, RateBox } from "./Rating";
 import { useCustomer } from "@/lib/useCustomer";
 import { CustomerGate } from "./CustomerGate";
 import { startNavProgress } from "./NavProgress";
@@ -356,7 +357,7 @@ export function AccountView({ outletId, menuHref, outletSlug, reservationsEnable
                 <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap", marginTop: 10 }}>
                   {o.feedback ? (
                     <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13 }} data-testid="order-rating">
-                      <StarRow value={o.feedback.rating} /> You rated it
+                      <GivenRating feedback={o.feedback} /> You rated it
                       {o.feedback.editable ? (
                         <button type="button" style={{ ...linkBtn, padding: 0 }} onClick={() => setRating(rating === o.id ? null : o.id)}>
                           Change
@@ -365,7 +366,7 @@ export function AccountView({ outletId, menuHref, outletSlug, reservationsEnable
                     </span>
                   ) : o.canRate ? (
                     <button type="button" className="ot-press" style={rateBtn} onClick={() => setRating(rating === o.id ? null : o.id)} data-testid="order-rate">
-                      <Star size={14} /> Rate this order
+                      <StarShape fill={1} size={15} color="var(--color-primary)" uid="rate-btn" /> Rate this order
                     </button>
                   ) : null}
                   {!active && o.outlet?.slug ? (
@@ -555,99 +556,6 @@ const trackerStep = { display: "flex", flexDirection: "column", alignItems: "cen
 const dot = { display: "grid", placeItems: "center", width: 16, height: 16, borderRadius: 999 };
 const detailBox = { marginTop: 10, paddingTop: 12, borderTop: "1px dashed var(--color-border)" };
 
-/* ----------------------------------------------------------------- ratings */
-
-function StarRow({ value, size = 14 }) {
-  return (
-    <span style={{ display: "inline-flex", gap: 1 }} aria-label={`${value} out of 5 stars`}>
-      {[1, 2, 3, 4, 5].map((n) => (
-        <Star key={n} size={size} fill={n <= value ? "#F5A524" : "none"} color={n <= value ? "#F5A524" : "var(--color-border)"} />
-      ))}
-    </span>
-  );
-}
-
-/**
- * Rate one completed order: stars, a few quick tags (praise for 4–5 stars, what went wrong for 1–3) and an optional
- * comment. A happy rating is offered the store's Google review page, when it has one.
- */
-function RateBox({ outletId, order, onDone, onClose }) {
-  const [stars, setStars] = useState(order.feedback?.rating ?? 0);
-  const [tags, setTags] = useState(order.feedback?.tags ?? []);
-  const [comment, setComment] = useState(order.feedback?.comment ?? "");
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState(null);
-  const [done, setDone] = useState(null);
-  const pool = stars >= 4 ? FEEDBACK_TAGS.good : FEEDBACK_TAGS.bad;
-  const send = async () => {
-    setBusy(true);
-    setError(null);
-    try {
-      const r = await api(`/api/customer/orders/${order.id}/feedback`, { outletId, rating: stars, comment: comment.trim(), tags: tags.filter((t) => pool.includes(t)) });
-      setDone(r);
-      onDone(r.feedback);
-    } catch (e) {
-      setError(e.message);
-    } finally {
-      setBusy(false);
-    }
-  };
-  if (done) {
-    return (
-      <div style={rateBox} data-testid="rate-thanks">
-        <p style={{ margin: 0, fontWeight: 700 }}>Thank you for rating your order!</p>
-        {done.google ? (
-          <p style={{ margin: "6px 0 0", fontSize: 13.5 }}>
-            Glad you enjoyed it. Would you tell others on Google?{" "}
-            <a href={done.google} target="_blank" rel="noopener noreferrer" style={{ fontWeight: 700, color: "var(--color-primary-text, var(--color-primary))" }} data-testid="rate-google">
-              Write a Google review
-            </a>
-          </p>
-        ) : null}
-        <button type="button" style={{ ...linkBtn, padding: "8px 0 0" }} onClick={onClose}>
-          Close
-        </button>
-      </div>
-    );
-  }
-  return (
-    <div style={rateBox} data-testid="rate-box">
-      <p style={{ margin: "0 0 8px", fontWeight: 700, fontSize: 14 }}>How was order #{order.orderNumber}?</p>
-      <div style={{ display: "flex", gap: 6 }} role="radiogroup" aria-label="Stars">
-        {[1, 2, 3, 4, 5].map((n) => (
-          <button key={n} type="button" role="radio" aria-checked={stars === n} aria-label={`${n} star${n === 1 ? "" : "s"}`} onClick={() => setStars(n)} style={starBtn} data-testid={`rate-${n}`}>
-            <Star size={28} fill={n <= stars ? "#F5A524" : "none"} color={n <= stars ? "#F5A524" : "var(--color-border)"} />
-          </button>
-        ))}
-      </div>
-      {stars ? (
-        <>
-          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", margin: "10px 0" }}>
-            {pool.map((t) => {
-              const on = tags.includes(t);
-              return (
-                <button key={t} type="button" aria-pressed={on} onClick={() => setTags((x) => (on ? x.filter((y) => y !== t) : [...x, t]))} style={{ ...tagBtn, ...(on ? tagBtnOn : {}) }}>
-                  {t}
-                </button>
-              );
-            })}
-          </div>
-          <textarea value={comment} onChange={(e) => setComment(e.target.value)} maxLength={500} rows={2} placeholder={stars >= 4 ? "What did you like? (optional)" : "What went wrong? (optional)"} style={commentBox} aria-label="Comment" />
-          {error ? <p style={{ color: "var(--tone-danger)", fontSize: 12.5, margin: "6px 0 0" }}>{error}</p> : null}
-          <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
-            <button type="button" className="ot-press" style={sendBtn} onClick={send} disabled={busy} data-testid="rate-send">
-              {busy ? "Sending…" : "Send rating"}
-            </button>
-            <button type="button" className="ot-press" style={ghostBtn} onClick={onClose} disabled={busy}>
-              Not now
-            </button>
-          </div>
-        </>
-      ) : null}
-    </div>
-  );
-}
-
 /* ---------------------------------------------------------------- bookings */
 
 const BOOKING_TONE = { requested: "warning", confirmed: "success", seated: "success", completed: "neutral", declined: "danger", cancelled: "neutral", no_show: "danger" };
@@ -758,9 +666,3 @@ const riderBox = { display: "flex", alignItems: "center", gap: 10, marginTop: 12
 const callLink = { display: "inline-flex", alignItems: "center", gap: 5, fontWeight: 700, fontSize: 13, color: "inherit", textDecoration: "none", padding: "6px 10px", borderRadius: 999, background: "var(--color-bg)" };
 const rateBtn = { font: "inherit", fontSize: 13, fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 6, padding: "7px 12px", borderRadius: 999, border: "1px solid #F5A524", background: "color-mix(in srgb, #F5A524 12%, var(--color-bg))", color: "var(--color-text)", cursor: "pointer" };
 const againBtn = { font: "inherit", fontSize: 13, fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 6, padding: "7px 12px", borderRadius: 999, border: "1px solid var(--color-primary)", background: "var(--color-bg)", color: "var(--color-primary-text, var(--color-primary))", cursor: "pointer" };
-const rateBox = { marginTop: 10, padding: "12px 14px", borderRadius: "calc(var(--radius-card) - 2px)", background: "var(--color-surface)", border: "1px solid var(--color-border)" };
-const starBtn = { border: "none", background: "none", padding: 2, cursor: "pointer", lineHeight: 0 };
-const tagBtn = { font: "inherit", fontSize: 12.5, fontWeight: 600, padding: "5px 10px", borderRadius: 999, border: "1px solid var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)", cursor: "pointer" };
-const tagBtnOn = { borderColor: "var(--color-primary)", background: "color-mix(in srgb, var(--color-primary) 10%, var(--color-bg))", color: "var(--color-primary-text, var(--color-primary))" };
-const commentBox = { width: "100%", boxSizing: "border-box", font: "inherit", fontSize: 13.5, padding: "8px 10px", borderRadius: 9, border: "1px solid var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)", resize: "vertical" };
-const sendBtn = { font: "inherit", fontSize: 13, fontWeight: 700, padding: "8px 14px", borderRadius: "var(--radius-card)", border: "none", background: "var(--color-primary)", color: "var(--color-on-primary)", cursor: "pointer" };

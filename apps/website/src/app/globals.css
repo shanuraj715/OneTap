@@ -381,6 +381,7 @@ p { margin: 0; text-wrap: pretty; }
 .social { display: flex; gap: 10px; flex-wrap: wrap; }
 .social a { width: 38px; height: 38px; border-radius: 999px; border: 1px solid #3a352f; display: grid; place-items: center; color: #ece7df; }
 .social a:hover { border-color: #ece7df; }
+.foot-version { font-variant-numeric: tabular-nums; letter-spacing: 0.02em; }
 .foot-bottom { margin-top: 44px; padding-top: 22px; border-top: 1px solid #2e2a25; display: flex; flex-wrap: wrap; gap: 10px 24px; justify-content: space-between; color: #8c847a; font-size: 13.5px; }
 
 /* ------------------------------------------------------------ misc pages */

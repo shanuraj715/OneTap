@@ -198,6 +198,7 @@ export function SiteFooter({ settings, pages }) {
             © {year} {settings.brandName}. All rights reserved.
           </span>
           {settings.footerNote ? <span>{settings.footerNote}</span> : null}
+          <span className="foot-version" data-testid="app-version">{process.env.NEXT_PUBLIC_APP_VERSION || "dev"}</span>
         </div>
       </div>
     </footer>

@@ -47,6 +47,14 @@ export function useFeedback(outlet, filters, enabled = true) {
   return useQuery({ queryKey: ["feedback", outlet?._id, JSON.stringify(filters)], queryFn: () => api.listFeedback(outlet, filters), enabled: Boolean(outlet) && enabled });
 }
 
+export function useFeedbackView(kind, outlet, filters, enabled = true) {
+  const fn = { outlet: api.feedbackByOutlet, customer: api.feedbackByCustomer, item: api.feedbackByItem }[kind];
+  return useQuery({ queryKey: ["feedback", kind, outlet?._id, JSON.stringify(filters)], queryFn: () => fn(outlet, filters), enabled: Boolean(outlet) && enabled, placeholderData: (prev) => prev });
+}
+export function useFeedbackForItem(outlet, key, filters, enabled = true) {
+  return useQuery({ queryKey: ["feedback", "item-reviews", outlet?._id, key, JSON.stringify(filters)], queryFn: () => api.feedbackForItem(outlet, key, filters), enabled: Boolean(outlet) && Boolean(key) && enabled });
+}
+
 export function useCartReminders(outlet, enabled = true) {
   return useQuery({ queryKey: ["cart-reminders", outlet?._id], queryFn: () => api.getCartReminders(outlet), enabled: Boolean(outlet) && enabled });
 }

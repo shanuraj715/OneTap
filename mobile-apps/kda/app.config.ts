@@ -15,7 +15,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   version: appVersion.version,
   // phones AND tablets, portrait and landscape
   orientation: "default",
-  // light/dark follows the phone's setting (Android's default) — nothing to configure, and no extra package needed
+  // light/dark follows the phone's setting, live. Expo's default is "light" (the app would ignore the phone's dark mode), and on Android the setting only
+  // works when the `expo-system-ui` package is installed — so both are needed (a test keeps them in place).
+  userInterfaceStyle: "automatic",
   icon: "./assets/icon.png",
   platforms: ["android"],
   android: {

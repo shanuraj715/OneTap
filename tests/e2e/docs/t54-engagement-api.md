@@ -1,6 +1,6 @@
 # T54 — Bringing customers back — table bookings, ratings, order again, suggestions and abandoned-cart reminders (API rules)
 
-**Area:** customers · **Last result:** ✅ PASSED (89 passed, 0 failed · 2026-11-27 17:00 · headless · 8.8 s)
+**Area:** customers · **Last result:** ✅ PASSED (89 passed, 0 failed · 2026-11-28 13:20 · headless · 5.5 s)
 
 **Run it alone:** `node run.mjs --only t54` (add `--visible` to watch it)
 
@@ -45,8 +45,8 @@ _Nothing failed._
 **Step 1 — table bookings — what can be booked**
 
 - booking is off until the outlet switches it on — _{"enabled":false,"settings":{"minPartySize":1,"maxPartySize":10,"durationMinutes_
-- now: today plus 7 days to choose from — _8 2026-11-28_
-- tomorrow 7 PM is free for 4 (10 seats) — _{"at":"2026-11-28T13:30:00.000Z","label":"7:00 PM","available":true,"seatsLeft":10}_
+- now: today plus 7 days to choose from — _8 2026-11-29_
+- tomorrow 7 PM is free for 4 (10 seats) — _{"at":"2026-11-29T13:30:00.000Z","label":"7:00 PM","available":true,"seatsLeft":10}_
 - the guest note and party limits come with it
 - nothing sooner than an hour from now is offered (minimum notice)
 
@@ -117,12 +117,12 @@ _Nothing failed._
 
 **Step 6 — 'goes well with your order'**
 
-- the owner picks what goes with momos (the dish itself and unknown dishes are dropped) — _["6b0969ea005ac69f2c92abf5","6b0969ea005ac69f2c92abfc","6b0969ea005ac69f2c92abf7"]_
-- with momos in the cart: chai and lassi are suggested (the curry needs a spice choice, so it can't be one tap) — _["6b0969ea005ac69f2c92abf5","6b0969ea005ac69f2c92abf7"]_
+- the owner picks what goes with momos (the dish itself and unknown dishes are dropped) — _["6b0a87d555a2ad93f1193478","6b0a87d555a2ad93f119347e","6b0a87d555a2ad93f119347a"]_
+- with momos in the cart: chai and lassi are suggested (the curry needs a spice choice, so it can't be one tap) — _["6b0a87d555a2ad93f1193478","6b0a87d555a2ad93f119347a"]_
 - under the outlet's title
 - nothing already in the cart is suggested
 - a sold-out dish isn't suggested
-- with no picks, what others often ordered with it is suggested (roll → cola, ordered together 3 times) — _[{"itemId":"6b0969ea005ac69f2c92abfa","variantId":null}]_
+- with no picks, what others often ordered with it is suggested (roll → cola, ordered together 3 times) — _[{"itemId":"6b0a87d555a2ad93f119347c","variantId":null}]_
 - switched off, nothing is suggested
 
 **Step 7 — abandoned-cart reminders**
@@ -156,6 +156,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-28 13:20 | pass | 89 | 0 | headless | 5.5 s |
 | 2026-11-27 17:00 | pass | 89 | 0 | headless | 8.8 s |
 | 2026-11-27 16:14 | pass | 89 | 0 | headless | 5.4 s |
 | 2026-11-27 12:06 | pass | 89 | 0 | headless | 5.9 s |

@@ -13,10 +13,9 @@ import {
   CreditCard,
   PackageX,
   RefreshCw,
-  Star,
   Truck,
 } from "lucide-react";
-import { AnalyticsChart } from "@rasoipulse/ui";
+import { AnalyticsChart, RatingStars } from "@rasoipulse/ui";
 import { BarChart, DonutChart, HBarList, LineChart, Sparkline, tint } from "../charts";
 import { FALLBACK_LOOK, WIDGET_LOOK } from "../lib/dashboardLook";
 import { Link } from "../lib/nav";
@@ -98,7 +97,7 @@ export function Dashboard() {
           <Attention widgets={widgets} s={s} />
           <div style={{ ...grid, gridTemplateColumns: `repeat(${phone ? 2 : 3}, minmax(0, 1fr))`, gap: phone ? 10 : 16 }} data-testid="dashboard-grid">
             {widgets.map((w) => (
-              <WidgetFrame key={w.id} id={w.id} cols={phone ? 2 : 3} s={s} phone={phone} />
+              <WidgetFrame brand={outlet.config?.theme?.light?.colorPrimary || undefined} key={w.id} id={w.id} cols={phone ? 2 : 3} s={s} phone={phone} />
             ))}
           </div>
         </>
@@ -168,7 +167,7 @@ const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 
 /* -------------------------------------------------------------- widget shell */
 
-function WidgetFrame({ id, cols = 3, s, phone }) {
+function WidgetFrame({ id, cols = 3, s, phone, brand }) {
   const meta = DASHBOARD_WIDGET_CATALOG[id];
   const look = WIDGET_LOOK[id] ?? FALLBACK_LOOK;
   const stat = meta.category === "stat";
@@ -182,7 +181,7 @@ function WidgetFrame({ id, cols = 3, s, phone }) {
           <h2 style={{ margin: 0, fontSize: stat ? 13 : 14, fontWeight: 650, color: stat ? "var(--color-text-muted)" : "var(--color-text)", minWidth: 0, flex: 1, overflowWrap: "anywhere", lineHeight: 1.25 }}>{meta.label}</h2>
           <InfoHint title={meta.label} text={meta.description} />
         </header>
-        {renderWidget(id, s, { tone: look.tone, phone })}
+        {renderWidget(id, s, { tone: look.tone, phone, brand })}
       </section>
     </div>
   );
@@ -190,7 +189,7 @@ function WidgetFrame({ id, cols = 3, s, phone }) {
 
 /* ---------------------------------------------------------------- renderers */
 
-function renderWidget(id, s, { tone, phone }) {
+function renderWidget(id, s, { tone, phone, brand }) {
   const t = s.today;
   switch (id) {
     case "revenue-today": {
@@ -236,7 +235,7 @@ function renderWidget(id, s, { tone, phone }) {
       return (
         <Stat
           value={t.ratingCount ? t.ratingAverage.toFixed(1) : "—"}
-          suffix={t.ratingCount ? <Stars value={t.ratingAverage} /> : null}
+          suffix={t.ratingCount ? <Stars value={t.ratingAverage} color={brand} /> : null}
           hint={t.ratingCount ? `${t.ratingCount} rating${t.ratingCount === 1 ? "" : "s"}, last 30 days` : "no ratings yet"}
         />
       );
@@ -362,15 +361,9 @@ function Stat({ value, hint, tone, badge, spark, suffix }) {
   );
 }
 
-/** Five stars, filled to the average (a half star counts when it is .5 or more). */
-function Stars({ value }) {
-  return (
-    <span aria-label={`${value.toFixed(1)} out of 5`} style={{ display: "inline-flex", gap: 1, color: "var(--tone-warning)" }}>
-      {[1, 2, 3, 4, 5].map((n) => (
-        <Star key={n} size={14} fill={value >= n - 0.25 ? "currentColor" : "none"} strokeWidth={1.8} style={{ opacity: value >= n - 0.75 ? 1 : 0.35 }} />
-      ))}
-    </span>
-  );
+/** The average as five stars in the store's own colour (a part of a star is filled for the decimals). */
+function Stars({ value, color }) {
+  return <RatingStars value={value} size={15} color={color} />;
 }
 
 const grid = { display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 16 };

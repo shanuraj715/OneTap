@@ -961,6 +961,18 @@ export const listFeedback = (o, { days = 30, stars = [], withComment = false, be
   return req(`/api/feedback?${q}`, { outletId: o._id });
 };
 
+/** Ratings across the store: by outlet, by customer and by dish (`outlets` = ids; none = all the person may see). */
+const feedbackView = (o, path, { days = 30, outlets = [], ...rest } = {}) => {
+  const q = new URLSearchParams({ days: String(days) });
+  if (outlets.length) q.set("outlets", outlets.join(","));
+  for (const [k, v] of Object.entries(rest)) if (v !== undefined && v !== null && v !== "") q.set(k, String(v));
+  return req(`/api/feedback/${path}?${q}`, { outletId: o._id });
+};
+export const feedbackByOutlet = (o, f) => feedbackView(o, "by-outlet", f);
+export const feedbackByCustomer = (o, f) => feedbackView(o, "by-customer", f);
+export const feedbackByItem = (o, f) => feedbackView(o, "by-item", f);
+export const feedbackForItem = (o, key, f) => feedbackView(o, `by-item/${encodeURIComponent(key)}`, f);
+
 export const getCartReminders = (o) => req("/api/cart-reminders", { outletId: o._id });
 export const saveCartReminders = (o, body) => req("/api/cart-reminders", { method: "PUT", body: JSON.stringify(body), outletId: o._id });
 

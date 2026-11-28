@@ -19,6 +19,8 @@ jest.mock("@react-native-community/netinfo", () => ({
 // the phone's preference storage: the library's own in-memory stand-in
 jest.mock("@react-native-async-storage/async-storage", () => jest.requireActual("@react-native-async-storage/async-storage/jest/async-storage-mock"));
 
+jest.mock("expo-system-ui", () => ({ setBackgroundColorAsync: jest.fn().mockResolvedValue(true), getBackgroundColorAsync: jest.fn().mockResolvedValue(null) }));
+
 jest.mock("expo-constants", () => ({
   __esModule: true,
   default: { expoConfig: { name: "Rasoi Pulse RDA", version: "v-26.11.27-001", extra: { apiUrl: "https://api.example.test" } } },

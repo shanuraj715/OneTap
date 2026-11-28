@@ -1,4 +1,7 @@
-import { contrast, darkColors, lightColors, themeFor, type Colors } from "@/ui/theme";
+import fs from "node:fs";
+import path from "node:path";
+import type { ConfigContext } from "expo/config";
+import { contrast, darkColors, lightColors, navigationTheme, themeFor, type Colors } from "@/ui/theme";
 
 const READABLE = 4.5;
 const pairs = (c: Colors): Array<[string, string, string]> => [
@@ -53,5 +56,41 @@ describe("OMA is indigo (one colour for the app, its icon and its page on the we
     expect(hue(lightColors.danger)).toBeLessThan(20);
     expect(hue(lightColors.success)).toBeGreaterThan(110);
     expect(hue(lightColors.success)).toBeLessThan(160);
+  });
+});
+
+describe("the app follows the phone's light / dark setting, live", () => {
+  it("the config asks for automatic (Expo's default is light: the app would ignore the phone's dark mode)", () => {
+    let cfg: Record<string, any> = {}; // eslint-disable-line @typescript-eslint/no-explicit-any
+    jest.isolateModules(() => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      cfg = (require("../app.config").default as (c: ConfigContext) => Record<string, any>)({ config: {} } as ConfigContext); // eslint-disable-line @typescript-eslint/no-explicit-any
+    });
+    expect(cfg.userInterfaceStyle).toBe("automatic");
+    expect(cfg.ios?.userInterfaceStyle ?? "automatic").toBe("automatic");
+    expect(cfg.android?.userInterfaceStyle ?? "automatic").toBe("automatic");
+  });
+  it("expo-system-ui is installed (on Android the setting does nothing without it)", () => {
+    const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, "..", "package.json"), "utf8")) as { dependencies: Record<string, string> };
+    expect(pkg.dependencies["expo-system-ui"]).toBeDefined();
+  });
+  it("the root layout hands the navigator the app's own colours and sets the bottom layer's colour", () => {
+    const src = fs.readFileSync(path.join(__dirname, "..", "src", "app", "_layout.tsx"), "utf8");
+    expect(src).toMatch(/ThemeProvider value=\{navTheme\}/);
+    expect(src).toMatch(/SystemUI\.setBackgroundColorAsync\(c\.bg\)/);
+  });
+});
+
+describe("the navigator paints the app's own colours (not React Navigation's grey)", () => {
+  const base = { dark: false, colors: { primary: "#007AFF", background: "rgb(242, 242, 242)", card: "rgb(255, 255, 255)", text: "rgb(28, 28, 30)", border: "rgb(216, 216, 216)", notification: "rgb(255, 59, 48)" }, fonts: { regular: { fontFamily: "System", fontWeight: "400" } } };
+  it.each([["light", lightColors, false], ["dark", darkColors, true]] as const)("in %s the screen, card and border are the app's, and text and accent follow it", (_n, c, dark) => {
+    const t = navigationTheme(base, c, dark);
+    expect(t.dark).toBe(dark);
+    expect(t.colors.background).toBe(c.bg);
+    expect(t.colors.card).toBe(c.bg);
+    expect(t.colors.border).toBe(c.border);
+    expect(t.colors.text).toBe(c.text);
+    expect(t.colors.primary).toBe(c.primary);
+    expect((t as unknown as { fonts: unknown }).fonts).toEqual(base.fonts); // everything else is kept
   });
 });

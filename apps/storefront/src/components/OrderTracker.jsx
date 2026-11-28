@@ -3,12 +3,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { statusLabelFor } from "@rasoipulse/config-schema";
-import { fx } from "@rasoipulse/ui";
+import { fx, StarShape } from "@rasoipulse/ui";
 import { AlertTriangle, ArrowLeft, Bike, Clock, Phone, RefreshCw, XCircle } from "lucide-react";
 import { api } from "@/lib/clientApi";
 import { useCustomer } from "@/lib/useCustomer";
 import { ACTIVE, CHANNEL_LABEL, Details, Pill, paymentInfo, STATUS_TONE, statusLine, Tracker } from "./AccountView";
 import { CustomerGate } from "./CustomerGate";
+import { GivenRating, RateBox } from "./Rating";
 
 /**
  * Follow one order — `/<outlet>/order/<id>`. Where the order is right now (accepted, being prepared, ready, on its way…),
@@ -27,6 +28,8 @@ export function OrderTracker({ outletId, outletSlug, orderId }) {
   const [updatedAt, setUpdatedAt] = useState(null);
   const [fetching, setFetching] = useState(false);
   const [now, setNow] = useState(Date.now());
+  const [feedbackCfg, setFeedbackCfg] = useState({ enabled: false, googleReviewUrl: "", googleMinStars: 4 });
+  const [rating, setRating] = useState(false);
   const done = useRef(false);
 
   const load = useCallback(async () => {
@@ -34,6 +37,7 @@ export function OrderTracker({ outletId, outletSlug, orderId }) {
     try {
       const r = await api(`/api/customer/orders/${encodeURIComponent(orderId)}?outletId=${encodeURIComponent(outletId)}`);
       setOrder(r.order);
+      if (r.feedback) setFeedbackCfg(r.feedback);
       setError(null);
       setUpdatedAt(Date.now());
       done.current = !ACTIVE.includes(r.order.status);
@@ -199,6 +203,25 @@ export function OrderTracker({ outletId, outletSlug, orderId }) {
         <span>{pay.mode}</span>
       </div>
 
+      {/* once the order is completed (and the store asks for ratings): rate it, and each dish, right here */}
+      {order.status === "completed" && (order.canRate || order.feedback) ? (
+        <div style={{ marginTop: 18 }} data-testid="tracker-rating">
+          {order.feedback ? (
+            <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", fontSize: 13.5 }} data-testid="order-rating">
+              <GivenRating feedback={order.feedback} size={18} /> <span>You rated it</span>
+              {order.feedback.editable ? <button type="button" className="ot-press" style={linkBtnSm} onClick={() => setRating(!rating)}>Change</button> : null}
+            </div>
+          ) : (
+            <button type="button" className="ot-press" style={rateBtn} onClick={() => setRating(!rating)} data-testid="order-rate">
+              <StarShape fill={1} size={16} color="var(--color-primary)" uid="trk-rate" /> Rate this order
+            </button>
+          )}
+          {rating ? (
+            <RateBox outletId={outletId} order={order} onDone={(fb) => setOrder((o) => ({ ...o, feedback: fb, canRate: false }))} onClose={() => setRating(false)} />
+          ) : null}
+        </div>
+      ) : null}
+
       <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap", marginTop: 22 }}>
         <Link href={`${menuHref}/account`} style={primaryLink}>
           All my orders
@@ -227,6 +250,8 @@ const card = { background: "var(--color-bg)", border: "1px solid var(--color-bor
 const backLink = { display: "inline-flex", alignItems: "center", gap: 6, fontSize: 13, fontWeight: 600, color: "var(--color-text-muted)", textDecoration: "none" };
 const primaryLink = { display: "inline-block", font: "inherit", fontWeight: 700, fontSize: 14, padding: "11px 20px", borderRadius: "var(--radius-card)", background: "var(--color-primary)", color: "var(--color-on-primary)", textDecoration: "none" };
 const ghostBtn = { font: "inherit", fontSize: 13, fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 6, padding: "9px 14px", borderRadius: "var(--radius-card)", border: "1px solid var(--color-border)", background: "var(--color-bg)", color: "var(--color-text)", cursor: "pointer" };
+const linkBtnSm = { font: "inherit", fontSize: 13, fontWeight: 700, background: "none", border: "none", padding: 0, color: "var(--color-primary-text, var(--color-primary))", cursor: "pointer" };
+const rateBtn = { font: "inherit", fontSize: 14, fontWeight: 700, display: "inline-flex", alignItems: "center", gap: 8, padding: "10px 16px", borderRadius: 999, border: "1px solid color-mix(in srgb, var(--color-primary) 40%, var(--color-border))", background: "color-mix(in srgb, var(--color-primary) 9%, transparent)", color: "inherit", cursor: "pointer" };
 const lateBox = { display: "flex", gap: 10, alignItems: "flex-start", marginTop: 14, padding: "11px 13px", borderRadius: "calc(var(--radius-card) - 2px)", background: "var(--tone-warning-wash)", color: "var(--tone-warning)", fontSize: 13.5, fontWeight: 600, lineHeight: 1.45 };
 const cancelBox = { display: "flex", gap: 10, alignItems: "flex-start", marginTop: 14, padding: "11px 13px", borderRadius: "calc(var(--radius-card) - 2px)", background: "var(--tone-danger-wash)", color: "var(--tone-danger)", fontSize: 13.5, fontWeight: 600, lineHeight: 1.45 };
 const riderBox = { display: "flex", alignItems: "center", gap: 10, marginTop: 14, padding: "10px 12px", borderRadius: "calc(var(--radius-card) - 2px)", background: "var(--tone-info-wash)", color: "var(--tone-info)", fontSize: 13.5 };

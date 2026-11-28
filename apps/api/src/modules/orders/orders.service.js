@@ -923,7 +923,7 @@ function shapeCustomerOrder(o, { byId, ratingOf, now, feedbackEnabled }) {
     status: o.status,
     payment: { gateway: o.payment?.gateway ?? "cod", status: o.payment?.status ?? "pending" },
     outlet: byId.get(o.outletId) ?? { id: o.outletId, name: "", slug: "" },
-    items: (o.lines ?? []).map((l) => ({ name: l.name, variantLabel: l.variantLabel ?? null, quantity: l.quantity, lineTotal: l.lineTotal, modifiers: (l.modifiers ?? []).map((m) => m.name ?? m.label ?? "").filter(Boolean) })),
+    items: (o.lines ?? []).map((l) => ({ itemId: l.itemId ?? null, name: l.name, variantLabel: l.variantLabel ?? null, quantity: l.quantity, lineTotal: l.lineTotal, modifiers: (l.modifiers ?? []).map((m) => m.name ?? m.label ?? "").filter(Boolean) })),
     totals: o.totals,
     couponCode: o.couponCode ?? null,
     deliveryAddress: o.deliveryAddress?.text ?? null,
@@ -934,7 +934,7 @@ function shapeCustomerOrder(o, { byId, ratingOf, now, feedbackEnabled }) {
     // the 4-digit code to tell the rider when the food arrives: shown for as long as the delivery is still to come (so the customer can find it
     // again), never after it is delivered or cancelled; older orders have none
     deliveryCode: o.channel === "delivery" && o.deliveryCode && !["completed", "cancelled"].includes(o.status) ? o.deliveryCode : null,
-    feedback: f ? { rating: f.rating, comment: f.comment ?? "", tags: f.tags ?? [], editable: now - new Date(f.createdAt).getTime() < FEEDBACK_EDIT_DAYS * 86_400_000 } : null,
+    feedback: f ? { rating: f.rating, comment: f.comment ?? "", tags: f.tags ?? [], items: (f.itemRatings ?? []).map((i) => ({ itemId: i.itemId, name: i.name ?? "", rating: i.rating, comment: i.comment ?? "" })), editable: now - new Date(f.createdAt).getTime() < FEEDBACK_EDIT_DAYS * 86_400_000 } : null,
     canRate: feedbackEnabled && o.status === "completed" && recent && !f,
   };
 }

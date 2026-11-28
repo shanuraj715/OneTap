@@ -1562,3 +1562,14 @@
 {"id":"t111-dashboard-roles-api","status":"pass","pass":46,"fail":0,"mode":"headless","at":"2026-11-27T22:39:55.742Z","durationMs":6962}
 {"id":"t112-dashboard-ui","status":"pass","pass":48,"fail":0,"mode":"headless","at":"2026-11-27T22:40:03.731Z","durationMs":7950}
 {"id":"t135-business-app-contract-api","status":"pass","pass":43,"fail":0,"mode":"headless","at":"2026-11-28T06:58:48.870Z","durationMs":5091}
+{"id":"t137-version-ui","status":"fail","pass":16,"fail":5,"mode":"headless","at":"2026-11-28T07:38:34.409Z","durationMs":17949}
+{"id":"t137-version-ui","status":"fail","pass":19,"fail":2,"mode":"headless","at":"2026-11-28T07:39:25.853Z","durationMs":17541}
+{"id":"t137-version-ui","status":"pass","pass":21,"fail":0,"mode":"headless","at":"2026-11-28T07:40:06.354Z","durationMs":17615}
+{"id":"t139-ratings-ui","status":"fail","pass":31,"fail":4,"mode":"headless","at":"2026-11-28T07:49:45.611Z","durationMs":5965}
+{"id":"t139-ratings-ui","status":"pass","pass":35,"fail":0,"mode":"headless","at":"2026-11-28T07:50:09.428Z","durationMs":6229}
+{"id":"t108-plan-features","status":"pass","pass":51,"fail":0,"mode":"headless","at":"2026-11-28T07:50:25.457Z","durationMs":7199}
+{"id":"t28-rate-limits-api","status":"pass","pass":133,"fail":0,"mode":"headless","at":"2026-11-28T07:50:33.808Z","durationMs":8332}
+{"id":"t53-orders-growth-api","status":"pass","pass":84,"fail":0,"mode":"headless","at":"2026-11-28T07:50:41.108Z","durationMs":7280}
+{"id":"t54-engagement-api","status":"pass","pass":89,"fail":0,"mode":"headless","at":"2026-11-28T07:50:46.665Z","durationMs":5539}
+{"id":"t55-growth-dashboard","status":"pass","pass":27,"fail":0,"mode":"headless","at":"2026-11-28T07:50:51.225Z","durationMs":4541}
+{"id":"t56-growth-storefront","status":"pass","pass":22,"fail":0,"mode":"headless","at":"2026-11-28T07:50:59.641Z","durationMs":8396}

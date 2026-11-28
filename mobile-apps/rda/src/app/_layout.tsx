@@ -1,6 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { View } from "react-native";
-import { Stack } from "expo-router";
+import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useStore } from "zustand";
@@ -8,7 +8,8 @@ import { wireQueryClient } from "@/data/setup";
 import { APP_NAME, APP_TAGLINE } from "@/lib/config";
 import { RuntimeProvider, sharedRuntime } from "@/runtime";
 import { UpdateGate } from "@/updates/UpdateGate";
-import { AppIcon, ErrorState, QueryProgress, Spinner, Text, ToastHost, useTheme } from "@/ui";
+import * as SystemUI from "expo-system-ui";
+import { AppIcon, ErrorState, QueryProgress, Spinner, Text, ToastHost, navigationTheme, useTheme } from "@/ui";
 import { LiveBanner } from "@/live/LiveBanner";
 import { LiveBridge } from "@/live/LiveBridge";
 import { PushBridge } from "@/notifications/PushBridge";
@@ -39,6 +40,10 @@ function Splash() {
 
 export default function RootLayout() {
   const status = useStore(runtime.session, (s) => s.status);
+  const { dark, c } = useTheme();
+  const navTheme = useMemo(() => navigationTheme(dark ? DarkTheme : DefaultTheme, c, dark), [dark, c]);
+  // the very bottom layer of the app (behind the keyboard, while Android resizes, where a list bounces past its end) takes the theme's colour
+  useEffect(() => { SystemUI.setBackgroundColorAsync(c.bg).catch(() => undefined); }, [c.bg]);
   const updateRequired = useStore(runtime.updates, (s) => s.status === "required");
   // the app has just opened: connect to the phone's state (background/online) and look for a kept sign-in
   useEffect(() => {
@@ -52,11 +57,13 @@ export default function RootLayout() {
         <StatusBar style="auto" />
         {/* while the "update needed" screen is up, screen readers must not wander into the app underneath */}
         <View style={{ flex: 1 }} importantForAccessibility={updateRequired ? "no-hide-descendants" : "auto"} accessibilityElementsHidden={updateRequired}>
+        <ThemeProvider value={navTheme}>
         <Stack screenOptions={{ headerShown: false, animation: "fade" }}>
           {/* nothing past the sign-in is reachable until a rider has signed in */}
           <Stack.Protected guard={status === "signed-in"}><Stack.Screen name="(app)" /></Stack.Protected>
           <Stack.Protected guard={status !== "signed-in"}><Stack.Screen name="sign-in" /></Stack.Protected>
         </Stack>
+        </ThemeProvider>
         <QueryProgress />
         {/* one live connection while a rider is signed in; "Reconnecting…" while it comes back */}
         <LiveBridge />

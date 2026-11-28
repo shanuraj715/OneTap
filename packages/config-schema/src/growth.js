@@ -29,11 +29,20 @@ export const FEEDBACK_TAGS = {
   bad: ["Cold", "Late", "Small portion", "Missing item", "Packing", "Too spicy"],
 };
 
+/** One dish of the order rated on its own: which dish, 1–5 stars and an optional short note. */
+export const feedbackItemInputSchema = z.object({
+  itemId: z.string().min(1).max(40),
+  rating: z.number().int().min(1).max(5),
+  comment: z.string().trim().max(200).default(""),
+});
+
 export const feedbackInputSchema = z.object({
   outletId: z.string().min(1),
   rating: z.number().int().min(1).max(5),
   comment: z.string().trim().max(500).default(""),
   tags: z.array(z.string().max(30)).max(6).default([]),
+  /** each dish rated on its own (optional). Left out = the dish ratings stay as they were; an empty list = remove them. */
+  items: z.array(feedbackItemInputSchema).max(30).optional(),
 });
 
 /* ----------------------------------------------------------------- suggestions */

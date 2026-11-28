@@ -1,6 +1,7 @@
 import { uploadUrls } from "./middleware/upload-urls.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import { APP_VERSION, VERSION_HEADER } from "./version.js";
 import express, {              } from "express";
 import helmet from "helmet";
 import { pinoHttp } from "pino-http";
@@ -83,7 +84,9 @@ export function createApp()          {
   );
 
   app.use(helmet());
-  app.use(cors({ origin: corsOrigins, credentials: true }));
+  // every answer says which version of the API gave it (and a browser page may read it)
+  app.use((_req, res, next) => { res.setHeader(VERSION_HEADER, APP_VERSION); next(); });
+  app.use(cors({ origin: corsOrigins, credentials: true, exposedHeaders: [VERSION_HEADER] }));
 
   // A table-card design embeds its background photo, logo and QR centre-mark as
   // data URLs — a canvas that drew a remote image is tainted and cannot be

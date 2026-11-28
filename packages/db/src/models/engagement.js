@@ -118,12 +118,18 @@ const feedbackSchema = new Schema(
     /** what was ordered, for reading the comment in context */
     items: { type: [String], default: [] },
     orderTotal: { type: Number, default: 0 },
+    /** how the customer rated EACH dish (optional): the dish's id and name as they were on the order, 1–5 stars and a short note */
+    itemRatings: {
+      type: [new Schema({ itemId: { type: String, required: true }, name: { type: String, default: "" }, rating: { type: Number, required: true, min: 1, max: 5 }, comment: { type: String, default: "" } }, { _id: false })],
+      default: [],
+    },
   },
   { timestamps: true },
 );
 feedbackSchema.plugin(tenantScope);
 feedbackSchema.index({ brandId: 1, orderId: 1 }, { unique: true });
 feedbackSchema.index({ brandId: 1, outletId: 1, createdAt: -1 });
+feedbackSchema.index({ brandId: 1, customerId: 1, createdAt: -1 });
 
 export const FeedbackModel = models.Feedback ?? model("Feedback", feedbackSchema);
 

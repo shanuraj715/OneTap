@@ -572,6 +572,11 @@ function Shell({ can }                                     ) {
               </button>
             </div>
           )}
+
+          {/* which version of Rasoi Pulse this is (version.json at the build) */}
+          <div data-testid="app-version" title={`Rasoi Pulse ${APP_VERSION}`} style={{ ...versionTag, textAlign: railCollapsed ? "center" : "left", ...(railCollapsed ? { fontSize: 9, overflowWrap: "anywhere" } : null) }}>
+            {railCollapsed ? APP_VERSION : `Rasoi Pulse ${APP_VERSION}`}
+          </div>
         </div>
       </aside>
 
@@ -837,6 +842,10 @@ const shell                = {
   overflow: "hidden",
   transition: "grid-template-columns var(--motion-base) var(--ease-out)",
 };
+/** The web version, from version.json at the build (see vite.config.js). */
+const APP_VERSION = typeof __APP_VERSION__ === "undefined" ? "dev" : __APP_VERSION__;
+const versionTag = { fontSize: 11, color: "var(--color-text-muted)", opacity: 0.85, padding: "0 2px", fontVariantNumeric: "tabular-nums", letterSpacing: "0.02em" };
+
 const sidebar                = {
   borderRight: "1px solid var(--color-border)",
   background: "var(--color-surface)",

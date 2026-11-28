@@ -47,3 +47,4 @@ export * from "./kitchen-display.js";
 export * from "./growth.js";
 export * from "./app-release.js";
 export * from "./platform-access.js";
+export * from "./version.js";

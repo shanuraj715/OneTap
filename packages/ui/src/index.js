@@ -22,6 +22,7 @@ export { SearchSelect } from "./SearchSelect";
 export { useAnchoredPopover } from "./popover";
 export { StatCard } from "./StatCard";
 export { AnalyticsChart } from "./AnalyticsChart";
+export { RATING_LABELS, RatingBadge, RatingStars, StarShape } from "./RatingStars";
 
 export {
   VARIANT_SLOTS,

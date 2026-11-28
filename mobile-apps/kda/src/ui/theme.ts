@@ -45,6 +45,15 @@ export function useTheme(): Theme {
   return themeFor(useColorScheme() === "dark");
 }
 
+/**
+ * The theme the NAVIGATOR paints with. React Navigation's own light theme paints a pale grey behind every screen (and its dark theme a near-black):
+ * on iOS that grey shows through and hides the other mode. Here the screen, card and border colours are the app's own, so light and dark both look
+ * as designed. `base` is React Navigation's DefaultTheme or DarkTheme (passed in so this stays plain and testable).
+ */
+export function navigationTheme<T extends { dark: boolean; colors: object }>(base: T, c: Colors, dark: boolean): T {
+  return { ...base, dark, colors: { ...base.colors, background: c.bg, card: c.bg, border: c.border, text: c.text, primary: c.primary, notification: c.primary } } as T;
+}
+
 /** WCAG contrast ratio between two #RRGGBB colours (used by the tests and by anything that must pick a readable colour). */
 export function contrast(a: string, b: string): number {
   const lum = (hex: string) => {

@@ -1,12 +1,13 @@
 import { getAnnouncementVariant, getFooterVariant, getHeaderVariant, StickyBar } from "@rasoipulse/ui";
 import { storeName } from "@/lib/outlet";
+import { AppVersion } from "./AppVersion";
 
 /**
  * What every storefront page shares above and below its own content, built from the outlet's settings:
  *
  *   StoreTop     the message bar (when switched on), then the header — the header stays pinned to the top of the screen
  *                while the page scrolls (the message bar scrolls away)
- *   StoreBottom  the footer, with the store's page links inside it
+ *   StoreBottom  the footer, with the store's page links inside it, and the Rasoi Pulse version under it
  *
  * One place, so the menu page, the table-QR page and the store's own pages can never drift apart.
  */
@@ -68,14 +69,17 @@ export function StoreBottom({ outlet, outletSlug, pages = [] }) {
   const { identity, layout } = outlet.config;
   const Footer = getFooterVariant(layout.footerVariant).Component;
   return (
-    <Footer
-      name={storeName(outlet)}
-      address={identity.address || undefined}
-      phone={identity.phone || undefined}
-      fssaiLicense={identity.fssaiLicense || undefined}
-      gstin={identity.gstin || undefined}
-      // the store's own pages (About us, Contact…) that it chose to show in the footer
-      links={pages.filter((p) => p.showInFooter).map((p) => ({ label: p.title, href: `/${outletSlug}/${p.slug}` }))}
-    />
+    <>
+      <Footer
+        name={storeName(outlet)}
+        address={identity.address || undefined}
+        phone={identity.phone || undefined}
+        fssaiLicense={identity.fssaiLicense || undefined}
+        gstin={identity.gstin || undefined}
+        // the store's own pages (About us, Contact…) that it chose to show in the footer
+        links={pages.filter((p) => p.showInFooter).map((p) => ({ label: p.title, href: `/${outletSlug}/${p.slug}` }))}
+      />
+      <AppVersion />
+    </>
   );
 }

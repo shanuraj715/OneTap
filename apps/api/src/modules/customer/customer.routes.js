@@ -175,6 +175,7 @@ customerRouter.get("/orders/:id", limiter("order-tracking"), async (req, res) =>
       feedbackEnabled: Boolean(config.feedback?.enabled),
       sla: config.operations?.sla ?? null,
     }),
+    feedback: { enabled: Boolean(config.feedback?.enabled), googleReviewUrl: config.feedback?.enabled ? config.feedback.googleReviewUrl : "", googleMinStars: config.feedback?.googleMinStars ?? 4 },
   });
 });
 
