@@ -148,6 +148,7 @@ try {
   await nd.locator("textarea").fill("Two: faster menu and a fix for the table list.");
   await nd.getByRole("button", { name: "Save notes" }).click();
   await nd.waitFor({ state: "detached" });
+  await until(async () => /fix for the table list/.test(await card2.innerText())); // the list is read again after the save (a moment, not instant)
   ok(/fix for the table list/.test(await card2.innerText()), "edited release notes show on the card");
   ok((await (await fetch(`${API}/api/app-updates/check?versionCode=1`)).json()).latest.notes.includes("table list"), "…and reach phones");
   await card2.getByRole("button", { name: "Withdraw" }).click();

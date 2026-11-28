@@ -7,7 +7,7 @@ const day = (d) => (d ? new Date(d).toLocaleDateString("en-IN", { day: "numeric"
 
 /** One app's card on the /apps page: its icon floating over a glow in the app's own colour, its name, who it is for, its latest version and the download. */
 export function AppCard({ app: a, index = 0 }) {
-  const art = appArt(a.id);
+  const art = appArt(a.id, a);
   return (
     <li className="apps-card" style={{ "--app": art.accent, "--i": index }}>
       <div className="apps-card-head">

@@ -1,4 +1,5 @@
-import { APP_REFRESH_HEADER, isAppId } from "@rasoipulse/config-schema";
+import { APP_REFRESH_HEADER } from "@rasoipulse/config-schema";
+import { isKnownApp } from "../modules/app-releases/app-registry.js";
 import { refreshSecondsOf } from "../modules/app-releases/app-releases.service.js";
 
 /**
@@ -9,6 +10,6 @@ import { refreshSecondsOf } from "../modules/app-releases/app-releases.service.j
  */
 export async function appRefreshHeader(req, res, next) {
   const id = String(req.header("x-app-id") ?? "");
-  if (isAppId(id)) res.set(APP_REFRESH_HEADER, String(await refreshSecondsOf(id)));
+  if (id && (await isKnownApp(id))) res.set(APP_REFRESH_HEADER, String(await refreshSecondsOf(id)));
   next();
 }

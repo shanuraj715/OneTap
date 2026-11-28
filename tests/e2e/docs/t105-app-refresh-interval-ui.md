@@ -1,6 +1,6 @@
 # T105 — Console → App Management → Refresh interval: set how often OMA, KDA and RDA ask for new data (default 8 s, per app, 3–600), and the apps are told with their next request
 
-**Area:** app · **Last result:** ✅ PASSED (35 passed, 0 failed · 2026-11-28 03:10 · headless · 4.4 s)
+**Area:** app · **Last result:** ✅ PASSED (35 passed, 0 failed · 2026-11-28 13:48 · headless · 4.4 s)
 
 **Run it alone:** `node run.mjs --only t105` (add `--visible` to watch it)
 
@@ -102,6 +102,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-28 13:48 | pass | 35 | 0 | headless | 4.4 s |
+| 2026-11-28 13:36 | pass | 35 | 0 | headless | 4.5 s |
 | 2026-11-28 03:10 | pass | 35 | 0 | headless | 4.4 s |
 | 2026-11-27 16:42 | pass | 35 | 0 | headless | 3.9 s |
 | 2026-11-27 16:35 | pass | 35 | 0 | headless | 4.3 s |

@@ -11,9 +11,12 @@ import { z } from "zod";
  */
 
 /**
- * The apps: one entry each. The id is what the app sends, the page address is /apps/<slug>. To add an app: add it here.
+ * The apps that SHIP with Rasoi Pulse: their defaults. This is NOT the list of apps any more — the list lives in the database and is managed in the
+ * console (App Management: add an app, change its words, make it public or private, upload its versions). These entries are copied into the database
+ * the first time it is read (so a new install starts with them), and they carry what code has to know about a built-in app: the sign-in rules
+ * (`APP_REQUIRED_PERMISSION`, `APP_ACCESS_NOTE` below). An app added in the console has no sign-in rule here: it is a download page with versions.
  *   listed              the app's default on the website: true = in the public list of apps; false = private (not listed; its page still opens
- *                       for anyone with the link, so a team can download it). The platform admin can flip any app in App Management.
+ *                       for anyone with the link, so a team can download it).
  *   usesRefreshInterval the app asks the server for new data by the console's "Refresh interval" number (the staff apps); the others refresh on their own.
  */
 export const APP_CATALOG = {
@@ -73,6 +76,7 @@ export const APP_CATALOG = {
     description: "See your sales by day, week, month and year, compare them, find your best-selling dishes, track expenses, stock, bookings and staff, and download Excel and PDF reports, from an Android phone or tablet.",
   },
 };
+/** The ids of the built-in apps (an app added in the console has its own id; ask the registry). */
 export const APP_IDS = Object.keys(APP_CATALOG);
 export const OMA_APP = "oma";
 export const KDA_APP = "kda";
@@ -86,7 +90,67 @@ export const APP_ACCESS_NOTE = {
   kda: "the kitchen team (kitchen staff, kitchen managers and owners)",
   business: "store owners and the people they share reports with (managers and accountants)",
 };
-export const isAppId = (v) => typeof v === "string" && Object.prototype.hasOwnProperty.call(APP_CATALOG, v);
+/** Is this one of the BUILT-IN apps? (Any app, including those added in the console, is checked against the database: see the API's app registry.) */
+export const isBuiltInApp = (v) => typeof v === "string" && Object.prototype.hasOwnProperty.call(APP_CATALOG, v);
+/** @deprecated the old name of {@link isBuiltInApp}: it only knows the built-in apps */
+export const isAppId = isBuiltInApp;
+
+/* ---- apps added in the console */
+
+/** An app's id: lowercase letters, digits and single hyphens, 2–30 long (it is also its page's address). */
+export const APP_SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+export const appSlugSchema = z
+  .string({ required_error: "Give the app an address (letters, numbers and hyphens)." })
+  .trim()
+  .min(2, "The address needs at least 2 characters.")
+  .max(30, "The address can be 30 characters at most.")
+  .regex(APP_SLUG_PATTERN, "Use lowercase letters, numbers and single hyphens only, for example rasoi-pulse-pos.");
+/** "Rasoi Pulse POS" → "rasoi-pulse-pos" (cut to 30, never ending in a hyphen). */
+export function slugifyAppName(name) {
+  return String(name ?? "")
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 30)
+    .replace(/-+$/g, "");
+}
+/** The short code on an app's icon, from its name: the capitals of its words, or its first letters ("Rasoi Pulse POS" → "RPP"). 2–5 letters or digits. */
+export function codeFromAppName(name) {
+  const words = String(name ?? "").replace(/[^A-Za-z0-9 ]+/g, " ").split(/\s+/).filter(Boolean);
+  const caps = words.map((w) => w[0].toUpperCase()).join("");
+  const code = caps.length >= 2 ? caps : (words[0] ?? "").slice(0, 3).toUpperCase();
+  return code.slice(0, 5);
+}
+const appText = (label, max) => z.string().trim().max(max, `${label} can be ${max} characters at most.`);
+const appFields = {
+  name: z.string({ required_error: "Give the app a name." }).trim().min(2, "The name needs at least 2 characters.").max(60, "The name can be 60 characters at most."),
+  code: z.string().trim().toUpperCase().regex(/^[A-Z0-9]{2,5}$/, "The code is 2 to 5 letters or numbers, for example POS."),
+  tagline: appText("The tagline", 60),
+  audience: appText("The 'who it is for' line", 100),
+  description: appText("The description", 400),
+};
+/** Adding an app in the console. The address (`slug`) is made from the name when it is left out; the code too. */
+export const appCreateSchema = z.object({
+  name: appFields.name,
+  slug: appSlugSchema.optional(),
+  code: appFields.code.optional(),
+  tagline: appFields.tagline.default(""),
+  audience: appFields.audience.default(""),
+  description: appFields.description.default(""),
+  isPublic: z.boolean().default(false),
+  usesRefreshInterval: z.boolean().default(false),
+});
+/** Changing an app's words (its address never changes: releases and phones know the app by it). */
+export const appPatchSchema = z.object({
+  name: appFields.name.optional(),
+  code: appFields.code.optional(),
+  tagline: appFields.tagline.optional(),
+  audience: appFields.audience.optional(),
+  description: appFields.description.optional(),
+  usesRefreshInterval: z.boolean().optional(),
+});
 /** The public address of an app's page on the website: `/apps/oma`. */
 export const appPagePath = (app) => `/apps/${APP_CATALOG[app]?.slug ?? app}`;
 
@@ -141,7 +205,7 @@ export const appReleaseInputSchema = z.object({
     .trim()
     .refine(isCurrentAppVersion, "Use a version like v-26.11.27-003 (v-YY.MM.DD-NNN)."),
   /** which app this file is for */
-  app: z.enum(APP_IDS).optional(),
+  app: z.string().trim().max(40).optional(),
   notes: z.string().max(3000, "Keep the release notes under 3,000 characters.").default(""),
   /** staff on any older version must update before they can use the app */
   force: z.boolean().default(false),

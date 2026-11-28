@@ -66,7 +66,8 @@ await t.run(async () => {
   await dish({ name: "Paneer Tikka", stock: { tracked: true, left: 4, daily: null, lowAt: 5 } });
   const off = await dish({ name: "Old Special" });
   await call("PATCH", `/api/menu/items/${off.id}`, { cookie: s.owner, headers: { "x-rasoipulse-outlet": A }, body: { isAvailable: false } });
-  await raw("feedbacks").insertMany([{ brandId: s.brand, outletId: A, orderId: "o1", orderNumber: "T-0001", channel: "takeaway", rating: 5, comment: "Great", tags: ["Tasty"], items: ["2× Veg Momos"], orderTotal: 45000, customerName: "Priya", customerPhone: "9855555555", createdAt: new Date(), updatedAt: new Date() }]).catch(() => undefined);
+  const rated = (orderId, outletId, rating, extra = {}) => ({ brandId: s.brand, outletId, orderId, customerId: "cu1", orderNumber: `T-000${orderId.slice(1)}`, channel: "takeaway", rating, comment: "Great", tags: ["Tasty"], items: ["2× Veg Momos"], itemRatings: [{ itemId: veg.id, name: "Veg Momos", rating: 5, comment: "Crispy" }], orderTotal: 45000, customerName: "Priya", customerPhone: "9855555555", createdAt: new Date(), updatedAt: new Date(), ...extra });
+  await raw("feedbacks").insertMany([rated("o1", A, 5), rated("o2", B, 3, { customerId: "cu2", customerName: "Ravi", itemRatings: [{ itemId: veg.id, name: "veg momos", rating: 2, comment: "" }] })]);
 
   // sign in the way the app does
   const login = await fetch(`${t.base}/api/auth/app-login`, { method: "POST", headers: { "content-type": "application/json", "x-app-id": "business", "x-forwarded-for": "198.51.100.77" }, body: JSON.stringify({ email: s.ownerEmail, password: "Owner123!" }) });
@@ -145,7 +146,19 @@ await t.run(async () => {
   const bk = await app("GET", "/api/reservations?scope=upcoming");
   matches("upcoming bookings of the outlet", bk.json, { reservations: [{ id: "string", code: "string", status: "string", statusLabel: "string", at: "string", endsAt: "string", partySize: "number", event: "string", note: "string", tableNumber: "string", pricing: { amountPaise: "number", prepayPaise: "number", remainingPaise: "number" }, payment: { status: "string" }, customer: { name: "string", phone: "string" } }], counts: { bookings: "number", guests: "number", requested: "number", waitingAhead: "number" }, more: "boolean" });
   const fb = await app("GET", "/api/feedback?days=30&limit=30");
-  matches("ratings", fb.json, { summary: { days: "number", count: "number", average: "number", byStars: { 1: "number", 2: "number", 3: "number", 4: "number", 5: "number" }, withComments: "number" }, ratings: [{ id: "string", orderId: "string", orderNumber: "string", channel: "string", rating: "number", comment: "string", tags: ["string"], items: ["string"], orderTotal: "number", customerName: "string", customerPhone: "string", createdAt: "string", updatedAt: "string" }], nextBefore: "string?" });
+  matches("ratings", fb.json, { summary: { days: "number", count: "number", average: "number", byStars: { 1: "number", 2: "number", 3: "number", 4: "number", 5: "number" }, withComments: "number" }, ratings: [{ id: "string", orderId: "string", orderNumber: "string", channel: "string", rating: "number", comment: "string", tags: ["string"], items: ["string"], itemRatings: [{ itemId: "string", name: "string", rating: "number", comment: "string" }], orderTotal: "number", customerName: "string", customerPhone: "string", createdAt: "string", updatedAt: "string" }], nextBefore: "string?" });
+  const STARS = { 1: "number", 2: "number", 3: "number", 4: "number", 5: "number" };
+  const TOT = { count: "number", average: "number", byStars: STARS, withComments: "number", dishRatings: "number" };
+  const rbo = await app("GET", "/api/feedback/by-outlet?days=30");
+  matches("ratings by outlet", rbo.json, { days: "number", outlets: [{ id: "string", name: "string", title: "string", happyShare: "number", ...TOT }], total: TOT });
+  ok(rbo.json.outlets.length === 2 && rbo.json.total.count === 2 && rbo.json.total.average === 4, "…two outlets, two ratings (5 and 3), average 4.0", JSON.stringify(rbo.json.total));
+  const rbc = await app("GET", "/api/feedback/by-customer?days=30&limit=20");
+  matches("ratings by customer", rbc.json, { days: "number", sort: "string", page: "number", pageSize: "number", total: "number", pages: "number", customers: [{ id: "string", name: "string", phone: "string", count: "number", average: "number", lowest: "number", highest: "number", last: "string", lastRating: "number", lastComment: "string", lastOrder: "string", withComments: "number", dishRatings: "number", outlets: ["string"] }] });
+  const rbd = await app("GET", "/api/feedback/by-item?days=30");
+  matches("ratings by dish", rbd.json, { days: "number", sort: "string", items: [{ key: "string", name: "string", count: "number", average: "number", byStars: STARS, withNotes: "number", last: "string", outlets: [{ id: "string", name: "string", count: "number", average: "number" }] }] });
+  ok(rbd.json.items.length === 1 && rbd.json.items[0].count === 2 && rbd.json.items[0].outlets.length === 2, "…one dish row for both outlets (Veg Momos / veg momos), rated twice", JSON.stringify(rbd.json.items[0] ?? {}).slice(0, 160));
+  const rdr = await app("GET", "/api/feedback/by-item/veg%20momos?days=30");
+  matches("the reviews of one dish", rdr.json, { key: "string", reviews: [{ id: "string", dishRating: "number", dishNote: "string", orderRating: "number", orderComment: "string", customerName: "string", orderNumber: "string", outlet: "string", createdAt: "string" }] });
   const cps = await app("GET", "/api/coupons");
   const COUPON = { id: "string", code: "string", description: "string", discountType: "string", value: "number", maxDiscount: "number", minOrderValue: "number", validUntil: "string?", maxRedemptions: "number", redemptionCount: "number", active: "boolean" };
   matches("the outlet's coupons", cps.json, { coupons: [COUPON] });

@@ -31890,12 +31890,12 @@
     "id": "t93-app-releases-api",
     "title": "App Management: the platform admin uploads an APK in pieces and publishes it (optionally forcing an update); phones ask 'is there a newer version?'; old builds are turned away at sign-in when an update is forced",
     "status": "pass",
-    "pass": 98,
+    "pass": 99,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T21:41:45.754Z",
-    "durationMs": 6628,
+    "at": "2026-11-28T08:02:50.734Z",
+    "durationMs": 5163,
     "steps": [
       {
         "n": 1,
@@ -32041,7 +32041,7 @@
           {
             "label": "the file is in the platform storage (this disk, by default), under app-releases/oma/",
             "ok": true,
-            "detail": "app-releases/oma/v-26.11.26-001-e090db329f0a.apk",
+            "detail": "app-releases/oma/v-26.11.26-001-5c478779e2b8.apk",
             "kind": "expect"
           },
           {
@@ -32429,7 +32429,13 @@
             "kind": "expect"
           },
           {
-            "label": "an unknown app in the check is refused",
+            "label": "an unknown app in the check is refused (404: there is no such app)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and something that is not even an app address is a 400",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -32473,7 +32479,7 @@
           {
             "label": "the finished upload lands in the bucket, under app-releases/oma/",
             "ok": true,
-            "detail": "app-releases/oma/v-26.11.26-020-1a9e494a6e42.apk",
+            "detail": "app-releases/oma/v-26.11.26-020-d5543776ffaa.apk",
             "kind": "expect"
           },
           {
@@ -32574,8 +32580,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T21:40:46.411Z",
-    "durationMs": 15973,
+    "at": "2026-11-28T08:18:05.363Z",
+    "durationMs": 15425,
     "steps": [
       {
         "n": 1,
@@ -32686,7 +32692,7 @@
           {
             "label": "the percentage climbs while it sends",
             "ok": true,
-            "detail": "0% → 18%",
+            "detail": "0% → 19%",
             "kind": "expect"
           },
           {
@@ -32967,8 +32973,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T21:40:48.782Z",
-    "durationMs": 2347,
+    "at": "2026-11-28T08:18:07.815Z",
+    "durationMs": 1564,
     "steps": [
       {
         "n": 1,
@@ -33031,7 +33037,7 @@
           {
             "label": "…and points at the API's download address",
             "ok": true,
-            "detail": "http://localhost:3097/api/app-updates/download/6b09f8df13c61ed53d8749c2",
+            "detail": "http://localhost:3097/api/app-updates/download/6b0a8e3f732495540353c105",
             "kind": "expect"
           },
           {
@@ -33109,7 +33115,7 @@
           {
             "label": "'Check the file' shows the file's SHA-256",
             "ok": true,
-            "detail": "1764073e12c7…",
+            "detail": "d06b7ab88b7a…",
             "kind": "expect"
           }
         ]
@@ -33399,8 +33405,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T21:40:54.841Z",
-    "durationMs": 6041,
+    "at": "2026-11-28T08:05:04.435Z",
+    "durationMs": 5053,
     "steps": [
       {
         "n": 1,
@@ -33517,7 +33523,7 @@
           {
             "label": "the staff app's 'unavailable now' list has it at once, labelled Sold out",
             "ok": true,
-            "detail": "[{\"id\":\"6b09f8e6116a99d70dd93ffb\",\"label\":\"Sold out\"},{\"id\":\"6b09f8e6116a99d70dd93ff8\",\"label\":\"Sold out\"}]",
+            "detail": "[{\"id\":\"6b0a8b2f21bc731fb6feebe3\",\"label\":\"Sold out\"},{\"id\":\"6b0a8b2f21bc731fb6feebe1\",\"label\":\"Sold out\"}]",
             "kind": "expect"
           },
           {
@@ -35747,8 +35753,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T16:36:44.520Z",
-    "durationMs": 7513,
+    "at": "2026-11-28T08:05:11.006Z",
+    "durationMs": 5778,
     "steps": [
       {
         "n": 1,
@@ -35931,7 +35937,7 @@
           {
             "label": "the right PIN signs in (the number may be typed with +91 and spaces), and says who and where",
             "ok": true,
-            "detail": "{\"id\":\"6b09b1985a6eb51ea8db304d\",\"name\":\"Ramesh\",\"phone\":\"98765 43210\",\"outletId\":\"6b09b1985a6eb51ea8db3016\",\"outletName\":\"Main\",\"storeName\":\"acme\"}",
+            "detail": "{\"id\":\"6b0a8b34735afe8ed15966c4\",\"name\":\"Ramesh\",\"phone\":\"98765 43210\",\"outletId\":\"6b0a8b34735afe8ed1596686\",\"outletName\":\"Main\",\"storeName\":\"acme\"}",
             "kind": "expect"
           },
           {
@@ -36231,13 +36237,13 @@
           {
             "label": "a delivery order is placed (from a pin on the map)",
             "ok": true,
-            "detail": "201 {\"order\":{\"id\":\"6b09b1995a6eb51ea8db31bf\",\"orderNumber\":\"0001\",\"channel\":\"delivery\",\"placedBy\":\"staff\",\"staffName\":\"Owner\",\"status\":\"placed\",\"lines\":[{\"itemId\":\"6b09b1995a6eb51ea8db3120\",\"name\":\"Masal",
+            "detail": "201 {\"order\":{\"id\":\"6b0a8b35735afe8ed159683b\",\"orderNumber\":\"0001\",\"channel\":\"delivery\",\"placedBy\":\"staff\",\"staffName\":\"Owner\",\"status\":\"placed\",\"lines\":[{\"itemId\":\"6b0a8b35735afe8ed159679f\",\"name\":\"Masal",
             "kind": "expect"
           },
           {
             "label": "it has a 4-digit delivery code",
             "ok": true,
-            "detail": "6035",
+            "detail": "1185",
             "kind": "expect"
           },
           {
@@ -40328,8 +40334,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T21:40:15.719Z",
-    "durationMs": 4431,
+    "at": "2026-11-28T08:18:12.967Z",
+    "durationMs": 4419,
     "steps": [
       {
         "n": 1,
@@ -44474,8 +44480,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T21:46:37.168Z",
-    "durationMs": 6928,
+    "at": "2026-11-28T07:58:19.744Z",
+    "durationMs": 5499,
     "steps": [
       {
         "n": 1,
@@ -44520,7 +44526,7 @@
           {
             "label": "the console's app list names Rasoi Pulse Business (code BIZ); it starts private, so it is not on the website yet",
             "ok": true,
-            "detail": "{\"app\":\"business\",\"code\":\"BIZ\",\"name\":\"Rasoi Pulse Business\",\"public\":false,\"publicByDefault\":false,\"usesRefreshInterval\":false,\"pageUrl\":\"h",
+            "detail": "{\"app\":\"business\",\"code\":\"BIZ\",\"name\":\"Rasoi Pulse Business\",\"tagline\":\"Business Insights App\",\"audience\":\"For restaurant owners\",\"descripti",
             "kind": "expect"
           },
           {
@@ -44850,7 +44856,7 @@
           {
             "label": "an expense is written (rupees in, rupees out, paise kept exactly), with its outlet and who wrote it",
             "ok": true,
-            "detail": "{\"expense\":{\"id\":\"6b09fa3b1ab2d2f3a697c175\",\"day\":\"2026-11-27\",\"category\":\"raw_materials\",\"categoryLabel\":\"Raw materials & groceries\",\"label\":\"Vegetables\",\"amou",
+            "detail": "{\"expense\":{\"id\":\"6b0a899a66a70705cea16837\",\"day\":\"2026-11-27\",\"category\":\"raw_materials\",\"categoryLabel\":\"Raw materials & groceries\",\"label\":\"Vegetables\",\"amou",
             "kind": "expect"
           },
           {
@@ -45131,8 +45137,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T21:40:01.191Z",
-    "durationMs": 2381,
+    "at": "2026-11-28T08:18:15.456Z",
+    "durationMs": 1744,
     "steps": [
       {
         "n": 1,
@@ -45165,7 +45171,7 @@
           {
             "label": "a private app's own page data is still available (so its page opens for anyone with the link) and says it is not listed",
             "ok": true,
-            "detail": "{\"id\":\"admin\",\"slug\":\"admin\",\"listed\":false,\"usesRefreshInterval\":false,\"code\":\"ADM\",\"name\":\"Rasoi P",
+            "detail": "{\"id\":\"admin\",\"slug\":\"admin\",\"code\":\"ADM\",\"name\":\"Rasoi Pulse Admin\",\"tagline\":\"Platform Team App\",\"",
             "kind": "expect"
           }
         ]
@@ -45362,8 +45368,8 @@
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-27T21:41:39.093Z",
-    "durationMs": 5751,
+    "at": "2026-11-28T08:05:15.511Z",
+    "durationMs": 3762,
     "steps": [
       {
         "n": 1,
@@ -45444,7 +45450,7 @@
           {
             "label": "saving 15 for RDA is accepted",
             "ok": true,
-            "detail": "{\"setting\":{\"app\":\"rda\",\"code\":\"RDA\",\"name\":\"Rasoi Pulse RDA\",\"public\":true,\"publicByDefault\":true,\"usesRefreshInterval\":true,\"pageUrl\":\"http://localhost:3073/apps/rda\",\"refreshSeconds\":15,\"isDefault\":false,\"updatedAt\":\"2026-11-27T21:41:38.455Z\"}}",
+            "detail": "{\"setting\":{\"app\":\"rda\",\"code\":\"RDA\",\"name\":\"Rasoi Pulse RDA\",\"tagline\":\"Rider Delivery App\",\"audience\":\"For delivery riders\",\"description\":\"See the deliveries handed to you, get directions in your own maps app, call or message the customer, and mark each order delivered, from an Android phone.\",\"builtIn\":true,\"public\":true,\"publicByDefault\":true,\"usesRefreshInterval\":true,\"pageUrl\":\"http://localhost:3073/apps/rda\",\"refreshSeconds\":15,\"isDefault\":false,\"updatedAt\":\"2026-11-28T08:05:15.178Z\",\"releases\":0,\"published\":0,\"downloads\":0,\"latestVersion\":null}}",
             "kind": "expect"
           },
           {
@@ -45498,7 +45504,7 @@
           {
             "label": "it is stored in the database (one document per app)",
             "ok": true,
-            "detail": "{\"_id\":\"6b09f912cbcecbbe2cd18961\",\"app\":\"rda\",\"__v\":0,\"createdAt\":\"2026-11-27T21:41:38.455Z\",\"isPublic\":null,\"refreshSeconds\":30,\"updatedAt\":\"2026-11-27T21:41:38.499Z\",\"updatedBy\":\"6b09f910514963baccbd7b21\"}",
+            "detail": "{\"_id\":\"6b0a8b3b08619b6be393711f\",\"app\":\"rda\",\"__v\":0,\"createdAt\":\"2026-11-28T08:05:15.178Z\",\"isPublic\":null,\"refreshSeconds\":30,\"updatedAt\":\"2026-11-28T08:05:15.203Z\",\"updatedBy\":\"6b0a8b3992c6dc4e8759c777\"}",
             "kind": "expect"
           },
           {
@@ -45985,12 +45991,12 @@
     "id": "t135-business-app-contract-api",
     "title": "Business app contract: every address the app calls (outlets, options, 15 reports, people, bookings, ratings, coupons, stock, expenses, report files) answers with the fields and types the app reads",
     "status": "pass",
-    "pass": 43,
+    "pass": 49,
     "fail": 0,
     "error": "",
     "mode": "headless",
-    "at": "2026-11-28T06:58:48.870Z",
-    "durationMs": 5091,
+    "at": "2026-11-28T08:05:20.461Z",
+    "durationMs": 4205,
     "steps": [
       {
         "n": 1,
@@ -46160,7 +46166,7 @@
           {
             "label": "removing a bill answers its id",
             "ok": true,
-            "detail": "200 {\"id\":\"6b0a7ba8480afac3413fc34f\"}",
+            "detail": "200 {\"id\":\"6b0a8b3f68d6d84146abd242\"}",
             "kind": "expect"
           }
         ]
@@ -46178,7 +46184,7 @@
           {
             "label": "adding a person answers the person (201)",
             "ok": true,
-            "detail": "201 {\"user\":{\"id\":\"6b0a7ba8480afac3413fc367\",\"email\":\"nina@acme.test\",\"name\":\"Nina New\",\"isActive\":true,",
+            "detail": "201 {\"user\":{\"id\":\"6b0a8b3f68d6d84146abd25e\",\"email\":\"nina@acme.test\",\"name\":\"Nina New\",\"isActive\":true,",
             "kind": "expect"
           },
           {
@@ -46201,6 +46207,42 @@
           },
           {
             "label": "ratings",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "ratings by outlet",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…two outlets, two ratings (5 and 3), average 4.0",
+            "ok": true,
+            "detail": "{\"count\":2,\"average\":4,\"byStars\":{\"1\":0,\"2\":0,\"3\":1,\"4\":0,\"5\":1},\"withComments\":2,\"dishRatings\":2}",
+            "kind": "expect"
+          },
+          {
+            "label": "ratings by customer",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "ratings by dish",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…one dish row for both outlets (Veg Momos / veg momos), rated twice",
+            "ok": true,
+            "detail": "{\"key\":\"veg momos\",\"name\":\"veg momos\",\"count\":2,\"average\":3.5,\"byStars\":{\"1\":0,\"2\":1,\"3\":0,\"4\":0,\"5\":1},\"withNotes\":1,\"last\":\"2026-11-28T08:05:19.528Z\",\"outlets",
+            "kind": "expect"
+          },
+          {
+            "label": "the reviews of one dish",
             "ok": true,
             "detail": "",
             "kind": "expect"
@@ -46232,7 +46274,7 @@
           {
             "label": "changing a dish's counted stock works and answers the dish",
             "ok": true,
-            "detail": "200 {\"item\":{\"id\":\"6b0a7ba7480afac3413fc2c5\",\"categoryId\":\"6b0a7ba7480afac3413fc2c3\",\"name\":\"Veg Momos\",",
+            "detail": "200 {\"item\":{\"id\":\"6b0a8b3f68d6d84146abd1b2\",\"categoryId\":\"6b0a8b3f68d6d84146abd1b0\",\"name\":\"Veg Momos\",",
             "kind": "expect"
           },
           {
@@ -46244,7 +46286,7 @@
           {
             "label": "…and the inventory report shows the new count",
             "ok": true,
-            "detail": "{\"id\":\"6b0a7ba7480afac3413fc2c5\",\"name\":\"Veg Momos\",\"category\":\"Mains\",\"outletId\":\"6b0a7ba7480afac3413fc270\",\"outlet\":\"M",
+            "detail": "{\"id\":\"6b0a8b3f68d6d84146abd1b2\",\"name\":\"Veg Momos\",\"category\":\"Mains\",\"outletId\":\"6b0a8b3f68d6d84146abd157\",\"outlet\":\"M",
             "kind": "expect"
           }
         ]
@@ -46699,6 +46741,1005 @@
         "checks": [
           {
             "label": "the rating box fits a phone's width (no sideways scroll)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t140-app-management-api": {
+    "id": "t140-app-management-api",
+    "title": "App Management: the platform admin adds an app (a name is enough), edits its words, makes it public or private, uploads its versions and removes it; built-in apps can't be removed; nothing is hard-coded in the console",
+    "status": "fail",
+    "pass": 69,
+    "fail": 1,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-28T08:04:52.537Z",
+    "durationMs": 4028,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The built-in apps are rows in the database, in a fixed order",
+        "checks": [
+          {
+            "label": "the console lists the five built-in apps in order",
+            "ok": true,
+            "detail": "oma,kda,rda,admin,business",
+            "kind": "expect"
+          },
+          {
+            "label": "…each marked as built in",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and they were written to the apps collection (so the console owns them from now on)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "Business and Admin start PRIVATE: not in the website's list",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…while Staff, Kitchen and Rider are public",
+            "ok": true,
+            "detail": "oma,kda,rda",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Only the platform admin adds, edits, removes",
+        "checks": [
+          {
+            "label": "a store owner cannot add an app",
+            "ok": true,
+            "detail": "403",
+            "kind": "expect"
+          },
+          {
+            "label": "a waiter cannot add an app",
+            "ok": true,
+            "detail": "403",
+            "kind": "expect"
+          },
+          {
+            "label": "nobody signed in cannot add an app",
+            "ok": true,
+            "detail": "401",
+            "kind": "expect"
+          },
+          {
+            "label": "…nor change one",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…nor remove one",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "Add an app with just a name",
+        "checks": [
+          {
+            "label": "the address is made from the name",
+            "ok": true,
+            "detail": "rasoi-pulse-pos",
+            "kind": "expect"
+          },
+          {
+            "label": "…and so is the code on its icon (capitals of the words)",
+            "ok": true,
+            "detail": "RPP",
+            "kind": "expect"
+          },
+          {
+            "label": "it starts PRIVATE and is not built in",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…so it is not in the website's list yet",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "its own page still opens for anyone with the link (the website reads the app from here)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…at /apps/<address>, with no versions yet",
+            "ok": true,
+            "detail": "https://site.example.test/apps/rasoi-pulse-pos",
+            "kind": "expect"
+          },
+          {
+            "label": "…and no internal fields are shown to the public",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the new app comes after the built-in ones in the console",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Wrong details are refused with a clear sentence",
+        "checks": [
+          {
+            "label": "no name: 400",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a one-letter name: 400",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the same name (same address) again: 409 and says so",
+            "ok": true,
+            "detail": "There is already an app at the address “rasoi-pulse-pos”. Choose another address.",
+            "kind": "expect"
+          },
+          {
+            "label": "an address that a built-in app already has: 409",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an address with capitals and spaces: 400",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an address that starts or ends with a hyphen: 400",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an address over 30 characters: 400",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a code over 5 characters: 400",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a code with a symbol: 400",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a name with no letters or numbers to make an address from: 400",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "none of those left an app behind",
+            "ok": true,
+            "detail": "6 apps",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Change an app's words — never its address",
+        "checks": [
+          {
+            "label": "name changed; the code is upper-cased",
+            "ok": true,
+            "detail": "Rasoi Pulse Counter / POS",
+            "kind": "expect"
+          },
+          {
+            "label": "the public page shows the new words at once (not after the cache runs out)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the address stayed the same",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an address, 'built in' or 'public' sent in an edit is ignored",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an edit with nothing in it: 400",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an empty name: 400",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an app that doesn't exist: 404",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a built-in app's words can be changed too (the console owns them)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Public / private",
+        "checks": [
+          {
+            "label": "make it public",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it is in the website's list with its name, code, page and no version yet",
+            "ok": true,
+            "detail": "{\"id\":\"rasoi-pulse-pos\",\"slug\":\"rasoi-pulse-pos\",\"code\":\"POS\",\"name\":\"Rasoi Pulse Counter\",\"tagline\":\"Billing at the counter\",\"audience\":\"For cashiers\",\"description\":\"Bill a walk-in guest in seconds.\",\"usesRefreshInterval\":false,\"listed\":true,\"page\":\"/apps/rasoi-pulse-pos\",\"latest\":null}",
+            "kind": "expect"
+          },
+          {
+            "label": "…after the built-in apps",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'public' must be true or false",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an app that doesn't exist: 404",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "make it private again: gone from the list, page still opens",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "the Business app can be made public (and it shows in the list)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "Versions of an app that was added in the console",
+        "checks": [
+          {
+            "label": "a file can be uploaded and published for the new app",
+            "ok": true,
+            "detail": "201",
+            "kind": "expect"
+          },
+          {
+            "label": "…but not for an app that doesn't exist",
+            "ok": true,
+            "detail": "400",
+            "kind": "expect"
+          },
+          {
+            "label": "a phone running that app is told about its version",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the other apps are not affected",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "its page lists the version",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the file downloads under a name that tells which app it is",
+            "ok": true,
+            "detail": "attachment; filename=rasoi-pulse-rasoi-pulse-pos-v-26.11.28-002.apk",
+            "kind": "expect"
+          },
+          {
+            "label": "a request from the app is answered normally (the refresh number is told only if set)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 8,
+        "title": "Refresh interval is per app, also for the new one",
+        "checks": [
+          {
+            "label": "its refresh interval can be set",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and its requests are answered with that number",
+            "ok": true,
+            "detail": "30",
+            "kind": "expect"
+          },
+          {
+            "label": "an app nobody knows is told nothing",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a refresh number for an unknown app: 404",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 9,
+        "title": "Signing in from an app that was added in the console",
+        "checks": [
+          {
+            "label": "any account may sign in (the new app has no role rule of its own)",
+            "ok": true,
+            "detail": "200",
+            "kind": "expect"
+          },
+          {
+            "label": "…while the built-in Kitchen app still turns a waiter away",
+            "ok": true,
+            "detail": "403",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 10,
+        "title": "Removing an app",
+        "checks": [
+          {
+            "label": "an app that still has versions can't be removed (nothing is lost by accident)",
+            "ok": true,
+            "detail": "Rasoi Pulse Counter still has 1 version. Delete them first (App Management → its Versions), then remove the app.",
+            "kind": "expect"
+          },
+          {
+            "label": "a built-in app can't be removed — it can be made private instead",
+            "ok": false,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an app that doesn't exist: 404",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "after its versions are deleted the app can be removed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "its page is gone (404)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and it is not in the console or the website's list any more",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and its refresh setting is cleaned up too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the same address can be used again afterwards",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 11,
+        "title": "An older database: what was chosen before apps became data is kept",
+        "checks": [
+          {
+            "label": "the five built-in apps are written again, in order",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…carrying over what was chosen: Business public, Rider private",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the usual start for apps nobody chose for (Staff public, Admin private)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the refresh seconds saved before are still in force",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the website's list follows",
+            "ok": true,
+            "detail": "oma,kda,business",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t136-version-api": {
+    "id": "t136-version-api",
+    "title": "Web version: version.json is the one place, `bump` refuses without --confirm, a bad version is refused in words, and the API sends X-RasoiPulse-Version on every answer (errors and pre-flights too)",
+    "status": "pass",
+    "pass": 31,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-28T08:05:24.797Z",
+    "durationMs": 3591,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The rules for a version",
+        "checks": [
+          {
+            "label": "v-YY.MM.DD-NNN is a good version",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "\"26.11.28-001\" is not a good version",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "\"v-26.13.28-001\" is not a good version",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "\"v-26.11.32-001\" is not a good version",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "\"v-26.11.28-1\" is not a good version",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "\"v-26.11.28-000\" is not a good version",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "\"dev\" is not a good version",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "\"\" is not a good version",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "null is not a good version",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "undefined is not a good version",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a bad version says what is wrong, in words",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the same day counts up: 001 → 002",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…keeping three digits and going past 99",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a new day starts again at 001",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…across a new year too",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the day is India's day: 01:30 in India on the 29th is already the 29th",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "nothing usable before it: start at 001",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "The one file and the script",
+        "checks": [
+          {
+            "label": "version.json holds one good version",
+            "ok": true,
+            "detail": "v-26.11.28-001",
+            "kind": "expect"
+          },
+          {
+            "label": "`show` prints exactly what is in the file",
+            "ok": true,
+            "detail": "v-26.11.28-001",
+            "kind": "expect"
+          },
+          {
+            "label": "`check` passes for the file as it is",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "`bump` without --confirm refuses, and says why (a build or a deploy must never change the version)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the file is untouched",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an unknown command is refused",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "The API says its version on every answer",
+        "checks": [
+          {
+            "label": "the health check carries the version in the X-RasoiPulse-Version header",
+            "ok": true,
+            "detail": "v-26.11.28-001",
+            "kind": "expect"
+          },
+          {
+            "label": "…and in its body",
+            "ok": true,
+            "detail": "v-26.11.28-001",
+            "kind": "expect"
+          },
+          {
+            "label": "even an error answer (a 404) carries it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and a refused answer (401)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and a sign-in",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a browser page on another address is allowed to READ the header (Access-Control-Expose-Headers)",
+            "ok": true,
+            "detail": "X-RasoiPulse-Version",
+            "kind": "expect"
+          },
+          {
+            "label": "even the browser's pre-flight question carries it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the header is exactly the version string, nothing else added (no build or machine details)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      }
+    ],
+    "findings": [],
+    "problems": []
+  },
+  "t141-app-management-ui": {
+    "id": "t141-app-management-ui",
+    "title": "App Management → 'Add an app': the super admin types a name, the address and icon code are made from it; the app starts private, opens by its link, can be edited, made public (website card with a generated icon) and removed — built-in apps can't be removed",
+    "status": "pass",
+    "pass": 37,
+    "fail": 0,
+    "error": "",
+    "mode": "headless",
+    "at": "2026-11-28T08:17:48.997Z",
+    "durationMs": 34089,
+    "steps": [
+      {
+        "n": 1,
+        "title": "The console lists the built-in apps; they can be edited but not removed",
+        "checks": [
+          {
+            "label": "five tabs, in order: OMA, KDA, RDA, Admin, Business",
+            "ok": true,
+            "detail": "oma,kda,rda,admin,business",
+            "kind": "expect"
+          },
+          {
+            "label": "an 'Add an app' button is at the top",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a built-in app says 'Built in' and its Remove button is off",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…with the reason, and what to do instead (make it private)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "editing shows the address, and it can't be changed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 2,
+        "title": "Add an app: only a name is needed",
+        "checks": [
+          {
+            "label": "the Add button is off until there is a name",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the address (rasoi-pulse-pos) and the icon code (RPP) are made from the name",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the form says where its page will be",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "a bad address (spaces, symbols) is explained and the Add button stays off",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the code box takes 5 characters at most",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the new app has its own tab after the built-in ones",
+            "ok": true,
+            "detail": "oma,kda,rda,admin,business,rasoi-pulse-pos",
+            "kind": "expect"
+          },
+          {
+            "label": "…and it is open",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the About card shows its name, code, 'Added here', tagline, audience, description and address",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "it starts PRIVATE",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and, having no versions, it can be removed",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no Refresh interval card (this app does not ask for it)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "'New version' is there to upload its first file",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "title": "The same address can't be used twice",
+        "checks": [
+          {
+            "label": "adding it again says there is already an app at that address",
+            "ok": true,
+            "detail": "There is already an app at the address “rasoi-pulse-pos”. Choose another address.",
+            "kind": "expect"
+          },
+          {
+            "label": "…and no second tab appeared",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "title": "Edit its words",
+        "checks": [
+          {
+            "label": "the form opens with its current words; the address is locked",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the About card shows the new words",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and so does its tab (the address stayed rasoi-pulse-pos)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 5,
+        "title": "Private: its page opens by the link, the list leaves it out",
+        "checks": [
+          {
+            "label": "the website's /apps page does not list it while it is private",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "its own page opens by the link with the words written in the console",
+            "ok": true,
+            "detail": "200 Skip to content Rasoi Pulse Apps Talk to us FOR CASHIERS WHO BILL WALK-IN GUESTS Rasoi Pulse Counter BILLING, FASTER Bill a walk-in guest in seconds and print the receipt. No version has been published yet. Please check again in a little while, or ask your manager. INSTALL Three steps, about a minut",
+            "kind": "expect"
+          },
+          {
+            "label": "…and tells search engines to skip it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and, with no version yet, shows no Download button",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "an address that is no app says it couldn't find that page (like every unknown address on the site)",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 6,
+        "title": "Public: it joins the website's list with a generated icon",
+        "checks": [
+          {
+            "label": "the server's public list has it, after the built-in apps",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the website's /apps page has a card for it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…with its name, tagline and 'No version published yet'",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and an icon made from its code (POS) in a colour of its own",
+            "ok": true,
+            "detail": "data:image/svg+xml;utf8,%3Csvg%20xmlns%3",
+            "kind": "expect"
+          },
+          {
+            "label": "its own page shows the same generated icon",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          }
+        ]
+      },
+      {
+        "n": 7,
+        "title": "Remove it",
+        "checks": [
+          {
+            "label": "the tab goes away",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "…and the console shows the first app again",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "the public list no longer has it",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "its page on the website says it couldn't find that page now",
+            "ok": true,
+            "detail": "",
+            "kind": "expect"
+          },
+          {
+            "label": "no errors in the browser console",
             "ok": true,
             "detail": "",
             "kind": "expect"

@@ -36,9 +36,9 @@ function Orbit({ apps }) {
       {shown.map((a, i) => {
         const p = orbitPlace(i, shown.length);
         return (
-          <span key={a.id} className="apps-orb" style={{ left: `${p.x}%`, top: `${p.y}%`, "--i": i, "--app": appArt(a.id).accent }}>
+          <span key={a.id} className="apps-orb" style={{ left: `${p.x}%`, top: `${p.y}%`, "--i": i, "--app": appArt(a.id, a).accent }}>
             <span className="apps-orb-float">
-              <img src={appArt(a.id).icon} alt="" width="96" height="96" />
+              <img src={appArt(a.id, a).icon} alt="" width="96" height="96" />
             </span>
           </span>
         );

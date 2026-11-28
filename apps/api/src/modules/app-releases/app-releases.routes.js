@@ -1,6 +1,6 @@
 import { raw, Router } from "express";
 import { z } from "zod";
-import { APP_IDS, DEFAULT_APP } from "@rasoipulse/config-schema";
+import { DEFAULT_APP } from "@rasoipulse/config-schema";
 import { limiter } from "../../middleware/rate-limit.js";
 import { HttpError } from "../../middleware/error.js";
 import { requireUser } from "../../middleware/auth.js";
@@ -9,8 +9,11 @@ import * as svc from "./app-releases.service.js";
 /** What the staff app and the website ask — no sign-in: the app checks before anyone has signed in, and the page is public. */
 export const appUpdatesRouter = Router();
 
+/** An app's id as written in a request: a plain address like "oma" or "rasoi-pulse-pos". Whether such an app exists is the service's question (404 / 400). */
+const appId = z.string().trim().min(1).max(40).regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "That isn't an app address.").default(DEFAULT_APP);
+
 const checkQuery = z.object({
-  app: z.enum(APP_IDS).default(DEFAULT_APP),
+  app: appId,
   platform: z.string().max(20).default("android"),
   versionCode: z.coerce.number().int().min(0).max(10_000_000).default(0),
 });
@@ -21,7 +24,7 @@ appUpdatesRouter.get("/check", limiter("app-update-check"), async (req, res) => 
   res.json(await svc.checkForUpdate({ app: q.app, versionCode: q.versionCode }));
 });
 
-const appQuery = z.object({ app: z.enum(APP_IDS).default(DEFAULT_APP) });
+const appQuery = z.object({ app: appId });
 
 /** One app's published versions (newest first) — what its page on the website shows. */
 appUpdatesRouter.get("/releases", limiter("app-update-check"), async (req, res) => {
@@ -76,12 +79,25 @@ appReleasesAdminRouter.put("/visibility/:app", async (req, res) => {
   res.json(await svc.setAppVisibility(req.params.app, req.body?.public, requireUser(req)));
 });
 
+/** Add an app (App Management → Add an app), change its words, or remove it. The address of an app never changes once it exists. */
+appReleasesAdminRouter.post("/apps", async (req, res) => {
+  res.status(201).json(await svc.createApp(req.body ?? {}, requireUser(req)));
+});
+
+appReleasesAdminRouter.patch("/apps/:slug", async (req, res) => {
+  res.json(await svc.updateApp(req.params.slug, req.body ?? {}, requireUser(req)));
+});
+
+appReleasesAdminRouter.delete("/apps/:slug", async (req, res) => {
+  res.json(await svc.deleteApp(req.params.slug));
+});
+
 appReleasesAdminRouter.get("/", async (req, res) => {
   res.json(await svc.listReleases(appQuery.parse(req.query).app));
 });
 
 appReleasesAdminRouter.post("/uploads", limiter("release-upload"), async (req, res) => {
-  const body = z.object({ fileName: z.string().min(1).max(200), size: z.number().int(), app: z.enum(APP_IDS).default(DEFAULT_APP) }).parse(req.body);
+  const body = z.object({ fileName: z.string().min(1).max(200), size: z.number().int(), app: appId }).parse(req.body);
   res.status(201).json(await svc.startUpload(body, requireUser(req)));
 });
 

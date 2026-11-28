@@ -1,6 +1,6 @@
 # T104 — Apps → the refresh interval is one number per app (default 8 s), set by the platform admin, and announced to the app in every answer
 
-**Area:** app · **Last result:** ✅ PASSED (34 passed, 0 failed · 2026-11-28 03:11 · headless · 5.8 s)
+**Area:** app · **Last result:** ✅ PASSED (34 passed, 0 failed · 2026-11-28 13:35 · headless · 3.8 s)
 
 **Run it alone:** `node run.mjs --only t104` (add `--visible` to watch it)
 
@@ -97,6 +97,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-28 13:35 | pass | 34 | 0 | headless | 3.8 s |
 | 2026-11-28 03:11 | pass | 34 | 0 | headless | 5.8 s |
 | 2026-11-28 03:10 | fail | 31 | 3 | headless | 4.5 s |
 | 2026-11-27 16:42 | pass | 34 | 0 | headless | 3.7 s |

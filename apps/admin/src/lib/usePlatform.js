@@ -100,4 +100,4 @@ export function usePlatformMutation(fn) {
 export const useAppSettings = () => useQuery({ queryKey: ["platform", "app-settings"], queryFn: () => api.listAppSettings() });
 
 /** The staff app's releases (APK versions, forced updates) — refreshed while the page is open so download counts move. */
-export const useAppReleases = (app = "oma") => useQuery({ queryKey: ["platform", "app-releases", app], queryFn: () => api.listAppReleases(app), refetchInterval: 30_000 });
+export const useAppReleases = (app = "oma", enabled = true) => useQuery({ queryKey: ["platform", "app-releases", app], queryFn: () => api.listAppReleases(app), refetchInterval: 30_000, enabled });

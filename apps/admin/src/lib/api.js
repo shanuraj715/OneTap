@@ -985,6 +985,10 @@ export const completeAppUpload = (uploadId, body) => req(`/api/platform/app-rele
 export const listAppSettings = () => req("/api/platform/app-releases/settings");
 export const saveAppSettings = (app, refreshSeconds) => req(`/api/platform/app-releases/settings/${encodeURIComponent(app)}`, json("PUT", { refreshSeconds }));
 /** Public (listed on the website) or private (not listed; its page still opens for anyone with the link). */
+/** Add an app, change its words, or remove it (App Management). */
+export const createApp = (body) => req("/api/platform/app-releases/apps", json("POST", body));
+export const updateApp = (app, body) => req(`/api/platform/app-releases/apps/${encodeURIComponent(app)}`, json("PATCH", body));
+export const deleteApp = (app) => req(`/api/platform/app-releases/apps/${encodeURIComponent(app)}`, json("DELETE"));
 export const setAppVisibility = (app, isPublic) => req(`/api/platform/app-releases/visibility/${app}`, json("PUT", { public: isPublic }));
 export const updateAppRelease = (id, body) => req(`/api/platform/app-releases/${id}`, json("PATCH", body));
 export const deleteAppRelease = (id) => req(`/api/platform/app-releases/${id}`, { method: "DELETE" });

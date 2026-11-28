@@ -1,6 +1,6 @@
 # T135 — Business app contract: every address the app calls (outlets, options, 15 reports, people, bookings, ratings, coupons, stock, expenses, report files) answers with the fields and types the app reads
 
-**Area:** platform · **Last result:** ✅ PASSED (43 passed, 0 failed · 2026-11-28 12:28 · headless · 5.1 s)
+**Area:** platform · **Last result:** ✅ PASSED (49 passed, 0 failed · 2026-11-28 13:35 · headless · 4.2 s)
 
 **Run it alone:** `node run.mjs --only t135` (add `--visible` to watch it)
 
@@ -33,7 +33,7 @@ A private API on an in-memory database with orders in two outlets, a coupon, a b
 
 _Nothing failed._
 
-### ✅ Passed (43)
+### ✅ Passed (49)
 
 **Step 2 — Signing in and the outlet list**
 
@@ -65,7 +65,7 @@ _Nothing failed._
 - the saved bill
 - expenses
 - changing a bill works — _200_
-- removing a bill answers its id — _200 {"id":"6b0a7ba8480afac3413fc34f"}_
+- removing a bill answers its id — _200 {"id":"6b0a8b3f68d6d84146abd242"}_
 
 **Step 4 — People, bookings, ratings, coupons, dishes**
 
@@ -75,6 +75,12 @@ _Nothing failed._
 - removing a person answers 204 — _204_
 - upcoming bookings of the outlet
 - ratings
+- ratings by outlet
+- …two outlets, two ratings (5 and 3), average 4.0
+- ratings by customer
+- ratings by dish
+- …one dish row for both outlets (Veg Momos / veg momos), rated twice
+- the reviews of one dish
 - the outlet's coupons
 - …their discount type is one of fixed / percent / bogo (the app words each) — _fixed_
 - switching a coupon off answers the coupon
@@ -94,6 +100,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-28 13:35 | pass | 49 | 0 | headless | 4.2 s |
 | 2026-11-28 12:28 | pass | 43 | 0 | headless | 5.1 s |
 
 ---

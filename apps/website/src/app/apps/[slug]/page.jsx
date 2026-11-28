@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { APP_CATALOG, APP_IDS, formatBytes } from "@rasoipulse/config-schema";
+import { APP_CATALOG, formatBytes } from "@rasoipulse/config-schema";
 import { Download, ShieldCheck, Smartphone } from "lucide-react";
 import { AppScreens } from "@/components/AppScreens";
 import { AppsBackdrop } from "@/components/AppsBackdrop";
@@ -10,14 +10,20 @@ import { getAppReleases, getSettings, siteUrl } from "@/lib/site";
 // Served from cache, refreshed every 5 minutes — and the moment a version is published, withdrawn or changed in the console.
 export const revalidate = 300;
 
-// every app has its own page: /apps/oma, /apps/kda … (an unknown name is a 404, answered below)
+// every app has its own page: /apps/oma, /apps/kda, and any app added in the console (/apps/<its address>). The built-in ones are built ahead of time; the
+// others the first time they are asked for. An address that is no app is a 404, answered below.
 export const dynamicParams = true;
-export const generateStaticParams = () => APP_IDS.map((slug) => ({ slug }));
-const appOf = (slug) => Object.values(APP_CATALOG).find((a) => a.slug === slug) ?? null;
+export const generateStaticParams = () => Object.keys(APP_CATALOG).map((slug) => ({ slug }));
+/** The app and its versions from the API — and, for a built-in app only, its defaults when the API can't be reached (so its page never disappears). */
+async function load(slug) {
+  const data = await getAppReleases(slug);
+  const app = data?.app ?? (APP_CATALOG[slug] ? { ...APP_CATALOG[slug], id: slug } : null);
+  return { data, app: app ? { ...app, id: app.id ?? slug, slug: app.slug ?? slug } : null };
+}
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const app = appOf(slug);
+  const { app } = await load(slug);
   if (!app) return {};
   const settings = await getSettings();
   const base = siteUrl(settings);
@@ -36,6 +42,16 @@ export async function generateMetadata({ params }) {
 const day = (d) => (d ? new Date(d).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Kolkata" }) : "");
 const lines = (text) => String(text ?? "").split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
 
+/**
+ * The big heading: "Rasoi Pulse" with the app's code in the accent colour for the built-in apps ("Rasoi Pulse OMA"); for an app added in the console its
+ * own name — "Rasoi Pulse Counter" keeps the same look with "Counter" in the accent colour, any other name is shown as it is.
+ */
+function headline(app) {
+  if (APP_CATALOG[app.id]) return { lead: "Rasoi Pulse", em: app.code };
+  const m = /^Rasoi Pulse\s+(.+)$/i.exec(app.name);
+  return m ? { lead: "Rasoi Pulse", em: m[1] } : { lead: app.name, em: "" };
+}
+
 const steps = (app) => [
   ["Download the file", `Tap the Download button. Your phone saves a file called rasoi-pulse-${app.id}… .apk in Downloads.`],
   ["Open it and allow the install", "Android asks if this browser may install apps. Allow it for this one time, then tap Install."],
@@ -44,13 +60,13 @@ const steps = (app) => [
 
 export default async function AppPage({ params }) {
   const { slug } = await params;
-  const app = appOf(slug);
+  const { data, app } = await load(slug);
   if (!app) notFound();
-  const data = await getAppReleases(app.id);
   const releases = data?.releases ?? [];
   const latest = data?.latest ?? releases[0] ?? null;
   const older = releases.filter((r) => r.id !== latest?.id);
-  const art = appArt(app.id);
+  const art = appArt(app.id, app);
+  const title = headline(app);
 
   return (
     // the page wears the app's own colour (the same as its card on /apps): .app-themed turns it into the page's accent
@@ -66,7 +82,7 @@ export default async function AppPage({ params }) {
               <div className="app-ident-text">
                 <span className="eyebrow">{app.audience}</span>
                 <h1>
-                  Rasoi Pulse <em>{app.code}</em>
+                  {title.lead} {title.em ? <em>{title.em}</em> : null}
                 </h1>
                 <span className="app-pill app-pill-brand">{app.tagline}</span>
               </div>

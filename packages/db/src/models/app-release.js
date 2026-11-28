@@ -54,3 +54,30 @@ const appSettingSchema = new Schema(
   { timestamps: true },
 );
 export const AppSettingModel = models.AppSetting ?? model("AppSetting", appSettingSchema);
+
+/**
+ * An app of Rasoi Pulse (OMA, KDA, … and any the platform admin adds in App Management): its name, the short code on its icon, the words on its page and
+ * whether it is PUBLIC (in the website's list of apps) or private (not listed; its page still opens for anyone with the link). The built-in apps are put here
+ * the first time the registry is read, from the defaults in config-schema (`APP_CATALOG`); after that the console owns them. Platform-level, not tenant-scoped.
+ */
+const appSchema = new Schema(
+  {
+    /** the app's id: what the app sends as `x-app-id`, what its releases are filed under, and the address of its page (/apps/<slug>) */
+    slug: { type: String, required: true, unique: true },
+    name: { type: String, required: true },
+    code: { type: String, required: true },
+    tagline: { type: String, default: "" },
+    audience: { type: String, default: "" },
+    description: { type: String, default: "" },
+    isPublic: { type: Boolean, default: false },
+    /** the app asks the server for new data by the console's "Refresh interval" number (the staff apps) */
+    usesRefreshInterval: { type: Boolean, default: false },
+    /** one of the apps that ship with Rasoi Pulse: their sign-in rules live in the code, so they cannot be deleted */
+    builtIn: { type: Boolean, default: false },
+    sortOrder: { type: Number, default: 100 },
+    createdBy: { type: String, default: null },
+    updatedBy: { type: String, default: null },
+  },
+  { timestamps: true },
+);
+export const AppModel = models.App ?? model("App", appSchema);

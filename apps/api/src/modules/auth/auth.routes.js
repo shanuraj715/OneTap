@@ -88,7 +88,7 @@ authRouter.post("/app-login", loginFlood, usesPolicy("login-account"), async (re
   }
   // an app build that is too old (and a forced update is out) is turned away BEFORE any password is checked
   await assertAppCurrent(req);
-  const app = appOfRequest(req);
+  const app = await appOfRequest(req);
   const result = await signIn(req);
   // some apps are for certain roles only (the Kitchen app: the kitchen team): everyone else is turned away, and the session just opened ends
   const needed = APP_REQUIRED_PERMISSION[app];

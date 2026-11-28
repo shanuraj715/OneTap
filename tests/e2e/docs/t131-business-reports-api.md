@@ -1,6 +1,6 @@
 # T131 — Business app server side: owners / managers / accountants may sign in, others are turned away; coupon usage, table bookings, counted stock, plain-English insights, the sales goal, the expenses ledger (+ profit & loss from it) and Excel / PDF / CSV reports hold the right numbers
 
-**Area:** analytics · **Last result:** ✅ PASSED (94 passed, 0 failed · 2026-11-28 03:16 · headless · 6.9 s)
+**Area:** analytics · **Last result:** ✅ PASSED (94 passed, 0 failed · 2026-11-28 13:28 · headless · 5.5 s)
 
 **Run it alone:** `node run.mjs --only t131` (add `--visible` to watch it)
 
@@ -183,6 +183,7 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-28 13:28 | pass | 94 | 0 | headless | 5.5 s |
 | 2026-11-28 03:16 | pass | 94 | 0 | headless | 6.9 s |
 | 2026-11-28 03:16 | fail | 93 | 1 | headless | 7.0 s |
 | 2026-11-28 03:16 | fail | 93 | 1 | headless | 7.2 s |

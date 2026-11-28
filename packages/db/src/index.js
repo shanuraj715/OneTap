@@ -5,7 +5,7 @@ export { BrandModel } from "./models/brand.js";
 export { OutletModel } from "./models/outlet.js";
 export { PlanModel, PlatformSettingsModel } from "./models/plan.js";
 export { LeadModel, SitePageModel, SiteSettingsModel } from "./models/site.js";
-export { AppReleaseModel, AppSettingModel } from "./models/app-release.js";
+export { AppModel, AppReleaseModel, AppSettingModel } from "./models/app-release.js";
 export { UserModel, SessionModel } from "./models/user.js";
 export { PlatformRoleModel, PlatformAuditModel } from "./models/platform-role.js";
 export { SubscriptionPaymentModel } from "./models/subscription.js";

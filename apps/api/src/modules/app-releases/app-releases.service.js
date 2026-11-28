@@ -2,12 +2,13 @@ import { createHash, randomBytes } from "node:crypto";
 import fs from "node:fs";
 import fsp from "node:fs/promises";
 import path from "node:path";
-import { APP_CATALOG, APP_IDS, APP_REFRESH, DEFAULT_APP, appPagePath, appReleaseInputSchema, appSettingsInputSchema, appReleasePatchSchema, decideUpdate, isAppId, versionCodeOf, MAX_APK_MB } from "@rasoipulse/config-schema";
-import { AppReleaseModel, AppSettingModel } from "@rasoipulse/db";
+import { APP_CATALOG, APP_REFRESH, DEFAULT_APP, appCreateSchema, appPagePath, appPatchSchema, appReleaseInputSchema, appSettingsInputSchema, appReleasePatchSchema, codeFromAppName, decideUpdate, slugifyAppName, versionCodeOf, MAX_APK_MB } from "@rasoipulse/config-schema";
+import { AppModel, AppReleaseModel, AppSettingModel } from "@rasoipulse/db";
 import { env, publicApiUrl } from "../../env.js";
 import { logger } from "../../logger.js";
 import { HttpError } from "../../middleware/error.js";
 import { notifyWebsite } from "../site/revalidate.js";
+import { getApp, invalidateApps, isKnownApp, loadApps } from "./app-registry.js";
 import { openStoredFile, putLargeFile, removePlatformFile } from "../storage/storage.service.js";
 
 /**
@@ -30,7 +31,7 @@ const maxBytes = () => Math.min(env.APP_RELEASE_MAX_MB, MAX_APK_MB * 7) * 1024 *
 export const pageUrl = (app = DEFAULT_APP) => `${(env.WEBSITE_URL || "").replace(/\/$/, "")}${appPagePath(app)}`;
 
 /** Which app is asking: the `x-app-id` header (every app sends it); the first OMA builds sent nothing, so that means OMA. */
-export const appOfRequest = (req) => { const id = String(req.header?.("x-app-id") ?? ""); return isAppId(id) ? id : DEFAULT_APP; };
+export const appOfRequest = async (req) => { const id = String(req.header?.("x-app-id") ?? ""); return (await isKnownApp(id)) ? id : DEFAULT_APP; };
 const downloadUrl = (r) => `${publicApiUrl}/api/app-updates/download/${r._id ?? r.id}`;
 
 /* ------------------------------------------------------------------ shapes */
@@ -73,6 +74,7 @@ const publishedOf = async (app = DEFAULT_APP) => AppReleaseModel.find({ app, pla
 
 /** The answer to "is there a newer version than build `versionCode`?" — what the app shows at start. Public. */
 export async function checkForUpdate({ app = DEFAULT_APP, versionCode }) {
+  if (!(await isKnownApp(app))) throw new HttpError(404, "That app doesn't exist.");
   const releases = await publishedOf(app);
   const d = decideUpdate(versionCode, releases);
   return {
@@ -90,7 +92,7 @@ export async function checkForUpdate({ app = DEFAULT_APP, versionCode }) {
  * screen: an old build that skips the check still can't get in. A request with no build number (the dashboard, an old app) is let through.
  */
 export async function assertAppCurrent(req) {
-  const app = appOfRequest(req);
+  const app = await appOfRequest(req);
   // the build number: `x-app-version-code` (every app); the first OMA builds sent `x-oma-version-code`
   const code = Number.parseInt(String(req.header("x-app-version-code") ?? req.header("x-oma-version-code") ?? ""), 10);
   if (!(code > 0)) return;
@@ -102,14 +104,18 @@ export async function assertAppCurrent(req) {
 
 /** For the website's app page: the newest release and the history. Public. */
 export async function publicReleases({ app = DEFAULT_APP, limit = 20 } = {}) {
+  const meta = await getApp(app);
+  if (!meta) throw new HttpError(404, "That app doesn't exist.");
   const releases = await publishedOf(app);
-  return { latest: releases[0] ? publicShape(releases[0]) : null, releases: releases.slice(0, limit).map(publicShape), pageUrl: pageUrl(app), app: { ...APP_CATALOG[app], listed: await isListed(app) } };
+  return { latest: releases[0] ? publicShape(releases[0]) : null, releases: releases.slice(0, limit).map(publicShape), pageUrl: pageUrl(app), app: { ...publicApp(meta), listed: meta.isPublic } };
 }
 
-/** Is this app in the website's public list? The console's choice if it made one, else the app's own default (`listed` in the catalog). */
+/** An app as the website and the phones may read it (no internal fields). */
+const publicApp = (a) => ({ id: a.slug, slug: a.slug, code: a.code, name: a.name, tagline: a.tagline, audience: a.audience, description: a.description, usesRefreshInterval: a.usesRefreshInterval });
+
+/** Is this app in the website's public list? (The console's choice: App Management → Public / Private.) */
 export async function isListed(app) {
-  const row = await AppSettingModel.findOne({ app }).select("isPublic").lean();
-  return typeof row?.isPublic === "boolean" ? row.isPublic : APP_CATALOG[app]?.listed !== false;
+  return Boolean((await getApp(app))?.isPublic);
 }
 
 /**
@@ -118,10 +124,9 @@ export async function isListed(app) {
  */
 export async function publicApps() {
   const apps = [];
-  for (const id of APP_IDS) {
-    if (!(await isListed(id))) continue;
-    const [latest] = await publishedOf(id);
-    apps.push({ ...APP_CATALOG[id], listed: true, page: appPagePath(id), latest: latest ? publicShape(latest) : null });
+  for (const a of (await loadApps()).filter((x) => x.isPublic)) {
+    const [latest] = await publishedOf(a.slug);
+    apps.push({ ...publicApp(a), listed: true, page: appPagePath(a.slug), latest: latest ? publicShape(latest) : null });
   }
   return { apps };
 }
@@ -151,6 +156,8 @@ export const countDownload = (id) => void AppReleaseModel.updateOne({ _id: id },
 /* ------------------------------------------------------------------ the console */
 
 export async function listReleases(app = DEFAULT_APP) {
+  const meta = await getApp(app);
+  if (!meta) throw new HttpError(404, "That app doesn't exist.");
   const rows = await AppReleaseModel.find({ app, platform: PLATFORM }).sort({ versionCode: -1 }).lean();
   const published = rows.filter((r) => r.status === "published");
   // "apps older than this must update": the newest published release that is forced
@@ -160,7 +167,7 @@ export async function listReleases(app = DEFAULT_APP) {
     latest: published[0] ? adminShape(published[0]) : null,
     forcedBelow: forcedBelow ? { version: forcedBelow.version, versionCode: forcedBelow.versionCode } : null,
     pageUrl: pageUrl(app),
-    app: APP_CATALOG[app],
+    app: { ...publicApp(meta), listed: meta.isPublic, builtIn: meta.builtIn },
     chunkSize: CHUNK_SIZE,
     maxBytes: maxBytes(),
   };
@@ -229,7 +236,7 @@ async function clearStaleUploads() {
 }
 
 export async function startUpload({ fileName, size, app = DEFAULT_APP }, user) {
-  if (!isAppId(app)) throw new HttpError(400, "Choose which app this file is for.");
+  if (!(await isKnownApp(app))) throw new HttpError(400, "Choose which app this file is for.");
   const name = String(fileName ?? "").trim();
   if (!/^[\w.\- ()]{1,120}\.apk$/i.test(name)) throw new HttpError(400, "Choose an .apk file.");
   if (!Number.isInteger(size) || size < 1024) throw new HttpError(400, "That file is empty or too small to be an app.");
@@ -313,8 +320,8 @@ export async function completeUpload(id, input, user) {
 
   const versionCode = versionCodeOf(body.version);
   // the file was uploaded FOR an app; the version the admin types must be that app's (a different `app` in the body is a mistake)
-  const app = isAppId(u.app) ? u.app : DEFAULT_APP;
-  if (body.app && body.app !== app) throw new HttpError(400, `This file was uploaded for ${APP_CATALOG[app].name}, not ${APP_CATALOG[body.app].name}.`);
+  const app = (await isKnownApp(u.app)) ? u.app : DEFAULT_APP;
+  if (body.app && body.app !== app) throw new HttpError(400, `This file was uploaded for ${(await getApp(app))?.name ?? app}, not ${(await getApp(body.app))?.name ?? body.app}.`);
   if (await AppReleaseModel.exists({ app, platform: PLATFORM, versionCode })) throw new HttpError(409, `Version ${body.version} (build ${versionCode}) already exists. Each build number can be used once.`);
   const apk = await inspectApk(part);
   if (!apk.ok) throw new HttpError(400, apk.why);
@@ -356,7 +363,7 @@ let settingsCache = { at: 0, map: /** @type {Record<string, number>} */ ({}) };
 async function loadRefreshSeconds() {
   const rows = await AppSettingModel.find().lean();
   const map = {};
-  for (const r of rows) if (isAppId(r.app)) map[r.app] = r.refreshSeconds;
+  for (const r of rows) map[r.app] = r.refreshSeconds;
   settingsCache = { at: Date.now(), map };
   return map;
 }
@@ -372,47 +379,121 @@ export async function refreshSecondsOf(app) {
   }
 }
 
-/** The console's list: every app with its refresh interval (and whether that is the default), plus the limits the input is held to. */
+/** The console's list: every app with its words, whether it is public, its refresh interval (and whether that is the default), and its releases. */
 export async function listAppSettings() {
   const map = await loadRefreshSeconds();
-  const rows = await AppSettingModel.find().lean();
+  const [apps, rows, releases] = await Promise.all([
+    loadApps({ fresh: true }),
+    AppSettingModel.find().lean(),
+    AppReleaseModel.aggregate([{ $group: { _id: "$app", releases: { $sum: 1 }, downloads: { $sum: "$downloads" }, published: { $sum: { $cond: [{ $eq: ["$status", "published"] }, 1, 0] } }, latest: { $max: { $cond: [{ $eq: ["$status", "published"] }, "$versionCode", null] } } } }]),
+  ]);
   const stamp = Object.fromEntries(rows.map((r) => [r.app, r.updatedAt]));
-  const chosen = Object.fromEntries(rows.map((r) => [r.app, r.isPublic]));
+  const stats = Object.fromEntries(releases.map((r) => [r._id, r]));
+  const latestRows = await AppReleaseModel.find({ status: "published" }).select("app version versionCode").sort({ versionCode: -1 }).lean();
+  const latestOf = new Map();
+  for (const r of latestRows) if (!latestOf.has(r.app)) latestOf.set(r.app, r.version);
   return {
     limits: { ...APP_REFRESH },
-    settings: APP_IDS.map((id) => ({
-      app: id,
-      code: APP_CATALOG[id].code,
-      name: APP_CATALOG[id].name,
-      // public = in the website's list of apps; `publicByDefault` is what the app is when the console has not chosen
-      public: typeof chosen[id] === "boolean" ? chosen[id] : APP_CATALOG[id].listed !== false,
-      publicByDefault: APP_CATALOG[id].listed !== false,
-      usesRefreshInterval: APP_CATALOG[id].usesRefreshInterval !== false,
-      pageUrl: pageUrl(id),
-      refreshSeconds: map[id] ?? APP_REFRESH.default,
+    settings: apps.map((a) => ({
+      app: a.slug,
+      code: a.code,
+      name: a.name,
+      tagline: a.tagline,
+      audience: a.audience,
+      description: a.description,
+      builtIn: a.builtIn,
+      // public = in the website's list of apps; `publicByDefault` is what a built-in app is when nothing was chosen (kept for the older console)
+      public: a.isPublic,
+      publicByDefault: a.builtIn ? APP_CATALOG[a.slug]?.listed !== false : false,
+      usesRefreshInterval: a.usesRefreshInterval,
+      pageUrl: pageUrl(a.slug),
+      refreshSeconds: map[a.slug] ?? APP_REFRESH.default,
       // "the default" is about the number, not about whether it was ever saved: an admin who typed 8 is on the default too
-      isDefault: (map[id] ?? APP_REFRESH.default) === APP_REFRESH.default,
-      updatedAt: stamp[id] ?? null,
+      isDefault: (map[a.slug] ?? APP_REFRESH.default) === APP_REFRESH.default,
+      updatedAt: stamp[a.slug] ?? a.updatedAt ?? null,
+      releases: stats[a.slug]?.releases ?? 0,
+      published: stats[a.slug]?.published ?? 0,
+      downloads: stats[a.slug]?.downloads ?? 0,
+      latestVersion: latestOf.get(a.slug) ?? null,
     })),
   };
 }
 
+const settingOf = async (app) => (await listAppSettings()).settings.find((x) => x.app === app);
+
 /** Make an app public (listed on the website) or private (not listed; its page still opens for anyone with the link). */
 export async function setAppVisibility(app, isPublic, user) {
-  if (!isAppId(app)) throw new HttpError(404, "That app doesn't exist.");
+  if (!(await isKnownApp(app))) throw new HttpError(404, "That app doesn't exist.");
   if (typeof isPublic !== "boolean") throw new HttpError(400, "Say whether the app is public (true) or private (false).");
-  // an app with no settings yet gets the default refresh number along with the choice (it is a required field)
-  await AppSettingModel.findOneAndUpdate({ app }, { $set: { isPublic, updatedBy: String(user?._id ?? "") }, $setOnInsert: { refreshSeconds: APP_REFRESH.default } }, { upsert: true, new: true });
+  await AppModel.updateOne({ slug: app }, { $set: { isPublic, updatedBy: String(user?._id ?? "") } });
+  invalidateApps();
   notifyWebsite(); // the website's list and home page change at once, not in five minutes
-  return { setting: (await listAppSettings()).settings.find((x) => x.app === app) };
+  return { setting: await settingOf(app) };
 }
 
 export async function saveAppSettings(app, input, user) {
-  if (!isAppId(app)) throw new HttpError(404, "That app doesn't exist.");
+  if (!(await isKnownApp(app))) throw new HttpError(404, "That app doesn't exist.");
   const parsed = appSettingsInputSchema.safeParse(input);
   if (!parsed.success) throw new HttpError(400, parsed.error.issues[0]?.message ?? "Check the refresh interval.");
   await AppSettingModel.findOneAndUpdate({ app }, { $set: { refreshSeconds: parsed.data.refreshSeconds, updatedBy: String(user?._id ?? "") } }, { upsert: true, new: true });
   settingsCache = { at: 0, map: {} }; // the next request reads the new number
-  return { setting: (await listAppSettings()).settings.find((s) => s.app === app) };
+  return { setting: await settingOf(app) };
 }
 
+/* ------------------------------------------------------------------ adding, editing and removing apps (the console) */
+
+/** Add an app: a name (and optionally an address, a code, the words for its page); it starts PRIVATE unless told otherwise. */
+export async function createApp(input, user) {
+  const parsed = appCreateSchema.safeParse(input ?? {});
+  if (!parsed.success) throw new HttpError(400, parsed.error.issues[0]?.message ?? "Check the app's details.");
+  const b = parsed.data;
+  const slug = b.slug ?? slugifyAppName(b.name);
+  if (slug.length < 2) throw new HttpError(400, "The name needs letters or numbers so an address can be made from it. Type an address yourself.");
+  const code = b.code ?? codeFromAppName(b.name);
+  if (!/^[A-Z0-9]{2,5}$/.test(code)) throw new HttpError(400, "Give the app a code of 2 to 5 letters or numbers.");
+  if (await getApp(slug)) throw new HttpError(409, `There is already an app at the address “${slug}”. Choose another address.`);
+  const last = (await loadApps({ fresh: true })).at(-1);
+  try {
+    await AppModel.create({
+      slug, name: b.name, code, tagline: b.tagline, audience: b.audience, description: b.description, isPublic: b.isPublic, usesRefreshInterval: b.usesRefreshInterval,
+      builtIn: false, sortOrder: (last?.sortOrder ?? 0) + 10, createdBy: String(user?._id ?? ""), updatedBy: String(user?._id ?? ""),
+    });
+  } catch (e) {
+    if (e?.code === 11000) throw new HttpError(409, `There is already an app at the address “${slug}”. Choose another address.`);
+    throw e;
+  }
+  invalidateApps();
+  notifyWebsite();
+  return { setting: await settingOf(slug) };
+}
+
+/** Change an app's words (and whether it uses the refresh interval). The address and the built-in sign-in rules never change. */
+export async function updateApp(slug, input, user) {
+  if (!(await isKnownApp(slug))) throw new HttpError(404, "That app doesn't exist.");
+  const parsed = appPatchSchema.safeParse(input ?? {});
+  if (!parsed.success) throw new HttpError(400, parsed.error.issues[0]?.message ?? "Check the app's details.");
+  const set = { ...parsed.data, updatedBy: String(user?._id ?? "") };
+  if (!Object.keys(parsed.data).length) throw new HttpError(400, "Nothing to change.");
+  await AppModel.updateOne({ slug }, { $set: set });
+  invalidateApps();
+  notifyWebsite();
+  return { setting: await settingOf(slug) };
+}
+
+/**
+ * Remove an app added in the console. A built-in app can't be removed (the code knows it), and an app that still has versions can't either:
+ * remove or withdraw those first, so no download is lost by accident.
+ */
+export async function deleteApp(slug) {
+  const app = await getApp(slug);
+  if (!app) throw new HttpError(404, "That app doesn't exist.");
+  if (app.builtIn) throw new HttpError(400, `${app.name} ships with Rasoi Pulse and can't be removed. You can make it private instead.`);
+  const n = await AppReleaseModel.countDocuments({ app: slug });
+  if (n > 0) throw new HttpError(409, `${app.name} still has ${n} version${n === 1 ? "" : "s"}. Delete them first (App Management → its Versions), then remove the app.`);
+  await AppModel.deleteOne({ slug });
+  await AppSettingModel.deleteOne({ app: slug });
+  invalidateApps();
+  settingsCache = { at: 0, map: {} };
+  notifyWebsite();
+  return { ok: true };
+}

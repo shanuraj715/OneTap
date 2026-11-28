@@ -183,7 +183,8 @@ await t.run(async () => {
   const kc = (await call("GET", "/api/app-updates/check?app=kda&versionCode=1")).json;
   ok(kc.updateAvailable && kc.force === true && kc.latest.version === "v-26.11.28-002" && kc.pageUrl === "https://site.example.test/apps/kda", "a Kitchen-app phone on build 1 must update to ITS latest, and is sent to its own page", kc.latest?.version);
   ok((await call("GET", "/api/app-updates/check?app=oma&versionCode=4")).json.latest?.version?.startsWith("v-261126-") === false || true, "(the OMA answer is its own)");
-  ok((await call("GET", "/api/app-updates/check?app=zzz&versionCode=1")).status === 400, "an unknown app in the check is refused");
+  ok((await call("GET", "/api/app-updates/check?app=zzz&versionCode=1")).status === 404, "an unknown app in the check is refused (404: there is no such app)");
+  ok((await call("GET", "/api/app-updates/check?app=Not%20An%20Address&versionCode=1")).status === 400, "…and something that is not even an app address is a 400");
   const pubK = (await call("GET", "/api/app-updates/releases?app=kda")).json;
   const pubO = (await call("GET", "/api/app-updates/releases?app=oma")).json;
   ok(pubK.releases.length === 2 && pubK.app.name === "Rasoi Pulse KDA" && !pubO.releases.some((r) => r.id === k1.id || r.id === k2.id), "the website's list is per app too");

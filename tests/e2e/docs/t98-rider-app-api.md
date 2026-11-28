@@ -1,6 +1,6 @@
 # T98 — Rider app (RDA) API: a rider signs in with their phone number and a PIN the manager sets, sees only the deliveries handed to them, marks them picked up and delivered (with the customer's 4-digit code); a new delivery order needs a map pin and gets a code; nothing else of the store opens to a rider
 
-**Area:** delivery · **Last result:** ✅ PASSED (105 passed, 0 failed · 2026-11-27 22:06 · headless · 7.5 s)
+**Area:** delivery · **Last result:** ✅ PASSED (105 passed, 0 failed · 2026-11-28 13:35 · headless · 5.8 s)
 
 **Run it alone:** `node run.mjs --only t98` (add `--visible` to watch it)
 
@@ -143,7 +143,7 @@ _Nothing failed._
 **Step 9 — A new delivery order gets a code**
 
 - a delivery order is placed (from a pin on the map)
-- it has a 4-digit delivery code — _6035_
+- it has a 4-digit delivery code — _1185_
 - the distance was measured by the server from the chosen pin to the outlet — _1_
 - a delivery order with NO pin is refused (the location is mandatory) — _400_
 - a pin outside the delivery area is refused — _409_
@@ -193,6 +193,8 @@ _Nothing failed._
 
 | When | Result | Passed | Failed | Mode | Time |
 |---|---|---|---|---|---|
+| 2026-11-28 13:35 | pass | 105 | 0 | headless | 5.8 s |
+| 2026-11-28 13:28 | pass | 105 | 0 | headless | 6.4 s |
 | 2026-11-27 22:06 | pass | 105 | 0 | headless | 7.5 s |
 | 2026-11-27 17:01 | pass | 105 | 0 | headless | 7.8 s |
 | 2026-11-27 16:16 | pass | 105 | 0 | headless | 6.5 s |

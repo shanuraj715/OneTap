@@ -57,9 +57,9 @@ export async function AppsShowcase() {
               // the ticket is at this app's middle (4% + 72% of the way along the loop, spread evenly), so its ring starts just before that moment
               const arrives = (0.04 + 0.72 * (n > 1 ? i / (n - 1) : 0)) * LOOP;
               return (
-                <li key={a.id} className="apps-flow-node" style={{ "--app": appArt(a.id).accent, "--i": i, "--d": `${(arrives - 0.3).toFixed(2)}s` }}>
+                <li key={a.id} className="apps-flow-node" style={{ "--app": appArt(a.id, a).accent, "--i": i, "--d": `${(arrives - 0.3).toFixed(2)}s` }}>
                   <span className="apps-flow-icon">
-                    <img src={appArt(a.id).icon} alt="" width="88" height="88" />
+                    <img src={appArt(a.id, a).icon} alt="" width="88" height="88" />
                   </span>
                   <b>{step?.verb ?? a.tagline}</b>
                   <small>{step?.line ?? a.audience}</small>

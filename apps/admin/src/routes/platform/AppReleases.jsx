@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
-import { APP_CATALOG, APP_IDS, APP_REFRESH, MAX_APK_MB, formatBytes, parseAppVersion } from "@rasoipulse/config-schema";
-import { Archive, Check, Copy, Download, ExternalLink, Eye, EyeOff, Globe, Lock, Pencil, RefreshCw, Rocket, ShieldAlert, Smartphone, Trash2, Upload } from "lucide-react";
+import { APP_REFRESH, MAX_APK_MB, appSlugSchema, codeFromAppName, formatBytes, parseAppVersion, slugifyAppName } from "@rasoipulse/config-schema";
+import { Archive, Check, Copy, Download, ExternalLink, Eye, EyeOff, Globe, Lock, Pencil, Plus, RefreshCw, Rocket, ShieldAlert, Smartphone, Trash2, Upload } from "lucide-react";
 import * as api from "../../lib/api";
 import { uploadApk, versionFromFileName } from "../../lib/uploadApk";
 import { useAppReleases, useAppSettings, usePlatformMutation } from "../../lib/usePlatform";
@@ -19,52 +19,69 @@ const STATUS = {
  * the website's /app page lets people download.
  */
 export function AppReleases() {
-  const [app, setApp] = useState(() => { try { const a = new URLSearchParams(window.location.search).get("app"); return APP_IDS.includes(a) ? a : "oma"; } catch { return "oma"; } });
-  const meta = APP_CATALOG[app];
-  const q = useAppReleases(app);
+  const list = useAppSettings();
+  const apps = list.data?.settings ?? [];
+  const [chosen, setChosen] = useState(() => { try { return new URLSearchParams(window.location.search).get("app") || ""; } catch { return ""; } });
+  // the tab that is open: the one chosen if the server still has it, else the first app
+  const meta = apps.find((a) => a.app === chosen) ?? apps[0];
+  const app = meta?.app ?? "";
+  const q = useAppReleases(app, Boolean(app));
   const [creating, setCreating] = useState(false);
   const [editing, setEditing] = useState(null);
+  const [adding, setAdding] = useState(false);
+  const [editingApp, setEditingApp] = useState(false);
   const data = q.data;
   const releases = data?.releases ?? [];
+  const pick = (id) => { setChosen(id); setCreating(false); setEditing(null); setEditingApp(false); };
 
   return (
     <>
       <PageHeader
         title="App Management"
         icon={<Smartphone size={23} />}
-        subtitle="One page for every Rasoi Pulse app. Choose the app, upload a new version, decide whether staff can skip it or must install it first, and share its download page."
+        subtitle="One page for every Rasoi Pulse app. Add an app, change its words, upload its versions, decide whether people can skip an update or must install it first, and make it public or private."
         action={
-          <Button onClick={() => setCreating(true)}>
-            <Upload size={15} aria-hidden="true" /> New version
-          </Button>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            <Button variant="outline" onClick={() => setAdding(true)} data-testid="app-add">
+              <Plus size={15} aria-hidden="true" /> Add an app
+            </Button>
+            {meta ? (
+              <Button onClick={() => setCreating(true)} data-testid="app-new-version">
+                <Upload size={15} aria-hidden="true" /> New version
+              </Button>
+            ) : null}
+          </div>
         }
       />
 
       <div role="tablist" aria-label="Apps" style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 14 }}>
-        {APP_IDS.map((id) => (
+        {apps.map((a) => (
           <button
-            key={id}
+            key={a.app}
             type="button"
             role="tab"
-            aria-selected={id === app}
-            data-testid={`app-tab-${id}`}
-            onClick={() => { setApp(id); setCreating(false); setEditing(null); }}
-            style={{ ...appTab, ...(id === app ? appTabOn : {}) }}
+            aria-selected={a.app === app}
+            data-testid={`app-tab-${a.app}`}
+            onClick={() => pick(a.app)}
+            style={{ ...appTab, ...(a.app === app ? appTabOn : {}) }}
           >
-            <Smartphone size={15} aria-hidden="true" /> {APP_CATALOG[id].name}
-            <span style={{ opacity: 0.7, fontWeight: 500 }}>· {APP_CATALOG[id].tagline}</span>
+            <Smartphone size={15} aria-hidden="true" /> {a.name}
+            {a.tagline ? <span style={{ opacity: 0.7, fontWeight: 500 }}>· {a.tagline}</span> : null}
           </button>
         ))}
       </div>
 
-      {q.isLoading ? (
+      {list.isLoading || (app && q.isLoading) ? (
         <Card>
           <p style={muted}>Loading…</p>
         </Card>
-      ) : q.error ? (
-        <Toast kind="error">{q.error.message}</Toast>
+      ) : list.error || q.error ? (
+        <Toast kind="error">{(list.error ?? q.error).message}</Toast>
+      ) : !meta ? (
+        <Card><Empty icon={<Smartphone size={34} />} title="No apps yet">Press “Add an app” to add the first one.</Empty></Card>
       ) : (
         <>
+          <AboutApp meta={meta} onEdit={() => setEditingApp(true)} onRemoved={() => setChosen("")} />
           <Summary data={data} />
           <AppVisibility app={app} meta={meta} />
           {meta.usesRefreshInterval !== false ? <RefreshInterval app={app} meta={meta} /> : null}
@@ -84,9 +101,121 @@ export function AppReleases() {
         </>
       )}
 
-      {creating ? <NewVersion data={data} app={app} meta={meta} onClose={() => setCreating(false)} /> : null}
+      {creating && meta ? <NewVersion data={data} app={app} meta={meta} onClose={() => setCreating(false)} /> : null}
       {editing ? <EditNotes release={editing} onClose={() => setEditing(null)} /> : null}
+      {adding ? <AppForm onClose={() => setAdding(false)} onSaved={(slug) => { setAdding(false); pick(slug); }} /> : null}
+      {editingApp && meta ? <AppForm app={meta} onClose={() => setEditingApp(false)} onSaved={() => setEditingApp(false)} /> : null}
     </>
+  );
+}
+
+/** The app's own words (what its page on the website says) with Edit, and Remove for an app that was added here. */
+function AboutApp({ meta, onEdit, onRemoved }) {
+  const [asking, setAsking] = useState(false);
+  const remove = usePlatformMutation(() => api.deleteApp(meta.app));
+  const blocked = meta.builtIn ? `${meta.name} ships with Rasoi Pulse, so it can't be removed (make it private instead).` : meta.releases > 0 ? `${meta.name} still has ${meta.releases} version${meta.releases === 1 ? "" : "s"}. Delete them below first.` : "";
+  return (
+    <div style={{ marginBottom: 14 }}>
+      <Card>
+        <div data-testid="app-about" style={{ display: "flex", flexWrap: "wrap", gap: "14px 28px", alignItems: "flex-start", justifyContent: "space-between" }}>
+          <div style={{ minWidth: 0, flex: "1 1 340px" }}>
+            <div style={label}>About this app</div>
+            <div style={{ fontSize: 16, fontWeight: 700, display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+              <span data-testid="app-about-name">{meta.name}</span>
+              <Pill tone="neutral">{meta.code}</Pill>
+              {meta.builtIn ? <Pill tone="neutral">Built in</Pill> : <Pill tone="ok">Added here</Pill>}
+            </div>
+            <div style={{ ...muted, fontSize: 13, marginTop: 4 }}>{[meta.tagline, meta.audience].filter(Boolean).join(" · ") || "No tagline or audience written yet."}</div>
+            <p style={{ margin: "8px 0 0", fontSize: 13.5, lineHeight: 1.55 }}>{meta.description || <span style={muted}>No description written yet. The app's page on the website shows it.</span>}</p>
+            <div style={{ ...muted, fontSize: 12.5, marginTop: 8 }}>
+              Address: <code>{meta.app}</code> · {meta.releases} version{meta.releases === 1 ? "" : "s"} · {meta.downloads} download{meta.downloads === 1 ? "" : "s"}
+            </div>
+          </div>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            <Button variant="outline" onClick={onEdit} data-testid="app-edit"><Pencil size={14} aria-hidden="true" /> Edit</Button>
+            <Button variant="outline" onClick={() => setAsking(true)} disabled={Boolean(blocked)} title={blocked || undefined} data-testid="app-remove"><Trash2 size={14} aria-hidden="true" /> Remove</Button>
+          </div>
+        </div>
+        {blocked ? <p style={{ ...muted, margin: "10px 0 0", fontSize: 12.5 }} data-testid="app-remove-why">{blocked}</p> : null}
+      </Card>
+      {asking ? (
+        <Modal onClose={remove.isPending ? () => undefined : () => setAsking(false)} width={440} panelStyle={{ padding: 22 }} ariaLabel="Remove the app">
+          <h2 style={modalTitle}>Remove {meta.name}?</h2>
+          <p style={{ ...muted, margin: "0 0 14px", lineHeight: 1.55 }}>Its page on the website goes away and phones can no longer check it for updates. This can't be undone (you can add it again).</p>
+          {remove.error ? <Toast kind="error">{remove.error.message}</Toast> : null}
+          <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+            <Button variant="outline" onClick={() => setAsking(false)} disabled={remove.isPending}>Cancel</Button>
+            <Button onClick={() => remove.mutate(undefined, { onSuccess: () => { setAsking(false); onRemoved(); } })} disabled={remove.isPending} data-testid="app-remove-confirm">{remove.isPending ? "Removing…" : "Remove"}</Button>
+          </div>
+        </Modal>
+      ) : null}
+    </div>
+  );
+}
+
+/**
+ * Add an app (a name is enough: its address and code are made from it, and you can change them before saving), or change the words of one
+ * (the address never changes). A new app starts private. Built-in apps keep their sign-in rules in the code; an app added here is a download page
+ * with versions.
+ */
+function AppForm({ app, onClose, onSaved }) {
+  const editing = Boolean(app);
+  const [name, setName] = useState(app?.name ?? "");
+  const [slug, setSlug] = useState(app?.app ?? "");
+  const [slugTouched, setSlugTouched] = useState(editing);
+  const [code, setCode] = useState(app?.code ?? "");
+  const [codeTouched, setCodeTouched] = useState(editing);
+  const [tagline, setTagline] = useState(app?.tagline ?? "");
+  const [audience, setAudience] = useState(app?.audience ?? "");
+  const [description, setDescription] = useState(app?.description ?? "");
+  const [refresh, setRefresh] = useState(app?.usesRefreshInterval ?? false);
+  const [isPublic, setIsPublic] = useState(false);
+  const save = usePlatformMutation((body) => (editing ? api.updateApp(app.app, body) : api.createApp(body)));
+  const shownSlug = slugTouched ? slug : slugifyAppName(name);
+  const shownCode = codeTouched ? code : codeFromAppName(name);
+  const slugProblem = editing || !shownSlug ? "" : appSlugSchema.safeParse(shownSlug).success ? "" : "Use lowercase letters, numbers and single hyphens only.";
+  const codeProblem = shownCode && !/^[A-Za-z0-9]{2,5}$/.test(shownCode) ? "The code is 2 to 5 letters or numbers." : "";
+  const ready = name.trim().length >= 2 && shownSlug.length >= 2 && !slugProblem && /^[A-Za-z0-9]{2,5}$/.test(shownCode) && !save.isPending;
+  const submit = (e) => {
+    e.preventDefault();
+    if (!ready) return;
+    const common = { name: name.trim(), code: shownCode.toUpperCase(), tagline: tagline.trim(), audience: audience.trim(), description: description.trim(), usesRefreshInterval: refresh };
+    save.mutate(editing ? common : { ...common, slug: shownSlug, isPublic }, { onSuccess: (r) => onSaved(r?.setting?.app ?? shownSlug) });
+  };
+  return (
+    <Modal onClose={save.isPending ? () => undefined : onClose} width={560} panelStyle={{ padding: 24, overflowY: "auto" }} ariaLabel={editing ? "Edit the app" : "Add an app"}>
+      <h2 style={modalTitle}>{editing ? `Edit ${app.name}` : "Add an app"}</h2>
+      <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 12 }} data-testid="app-form">
+        <Field label="Name" hint="What people see, for example “Rasoi Pulse POS”.">
+          <TextInput value={name} onChange={(e) => { setName(e.target.value); save.reset(); }} maxLength={60} autoFocus data-testid="app-form-name" />
+        </Field>
+        <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+          <Field label="Address" hint={editing ? "The address never changes: phones and versions know the app by it." : `The app's page will be /apps/${shownSlug || "…"}`} style={{ flex: "2 1 220px" }}>
+            <TextInput value={editing ? app.app : shownSlug} onChange={(e) => { setSlug(e.target.value.toLowerCase()); setSlugTouched(true); save.reset(); }} disabled={editing} maxLength={30} data-testid="app-form-slug" />
+          </Field>
+          <Field label="Code" hint="2–5 letters on its icon." style={{ flex: "1 1 100px" }}>
+            <TextInput value={shownCode} onChange={(e) => { setCode(e.target.value.toUpperCase()); setCodeTouched(true); save.reset(); }} maxLength={5} data-testid="app-form-code" />
+          </Field>
+        </div>
+        {slugProblem ? <Toast kind="error"><span data-testid="app-form-problem">{slugProblem}</span></Toast> : codeProblem ? <Toast kind="error"><span data-testid="app-form-problem">{codeProblem}</span></Toast> : null}
+        <Field label="Tagline" hint="A few words under the name, for example “Point of sale”.">
+          <TextInput value={tagline} onChange={(e) => setTagline(e.target.value)} maxLength={60} data-testid="app-form-tagline" />
+        </Field>
+        <Field label="Who it is for">
+          <TextInput value={audience} onChange={(e) => setAudience(e.target.value)} maxLength={100} placeholder="For restaurant staff who…" data-testid="app-form-audience" />
+        </Field>
+        <Field label="Description" hint="Two or three sentences for the app's page on the website.">
+          <textarea value={description} onChange={(e) => setDescription(e.target.value)} maxLength={400} rows={3} style={{ font: "inherit", padding: "9px 11px", borderRadius: 8, border: "1px solid var(--color-border)", background: "var(--color-surface)", color: "inherit", resize: "vertical" }} data-testid="app-form-description" />
+        </Field>
+        <Checkbox checked={refresh} onChange={setRefresh} label="It asks the server for new data on a schedule (the staff apps do; then it gets a Refresh interval setting)" />
+        {!editing ? <Checkbox checked={isPublic} onChange={setIsPublic} label="Make it public now (it starts private: only people with its link can open its page)" /> : null}
+        {save.error ? <Toast kind="error"><span data-testid="app-form-error">{save.error.message}</span></Toast> : null}
+        <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", marginTop: 4 }}>
+          <Button type="button" variant="outline" onClick={onClose} disabled={save.isPending}>Cancel</Button>
+          <Button type="submit" disabled={!ready} data-testid="app-form-save">{save.isPending ? "Saving…" : editing ? "Save" : "Add the app"}</Button>
+        </div>
+      </form>
+    </Modal>
   );
 }
 
